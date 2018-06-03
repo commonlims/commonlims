@@ -1,0 +1,33 @@
+from __future__ import absolute_import, print_function
+    from django.db import models
+from django.utils import timezone
+from uuid import uuid4
+
+from sentry.db.models import (
+    Model, BaseManager, BoundedPositiveIntegerField, EncryptedTextField, FlexibleForeignKey,
+    sane_repr
+)
+
+# {{TODO_TEMPLATE}}
+
+
+class MODEL_NAME(Model):
+    __core__ = True
+    name = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    category = models.TextField(blank=True, null=True, db_index=True)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'sentry'
+        db_table = 'sentry_MODELNAME'
+
+    __repr__ = sane_repr('name')
+
+    def __unicode__(self):
+        return self.name
+
+    def get_audit_log_data(self):
+        return {
+            'name': self.name,
+        }
