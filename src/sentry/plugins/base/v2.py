@@ -23,7 +23,10 @@ from sentry.plugins.base.configuration import (
     default_plugin_config,
     default_plugin_options,
 )
+import inspect
+import os
 from sentry.utils.hashlib import md5_text
+logger = logging.getLogger(__name__)
 
 
 class PluginMount(type):
@@ -473,6 +476,17 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
 
     def handle_signal(self, name, payload, **kwargs):
         pass
+
+    def workflow_definitions(self):
+        """Returns the path to all workflow definitions for this plugin"""
+        module_path = os.path.dirname(inspect.getfile(inspect.getmodule(self)))
+        try:
+            workflows_dir_path = os.path.join(module_path, "workflows")
+            for file_path in os.listdir(workflows_dir_path):
+                if file_path.endswith(".bpmn"):
+                    yield os.path.join(workflows_dir_path, file_path)
+        except OSError:
+            pass
 
 
 @six.add_metaclass(PluginMount)

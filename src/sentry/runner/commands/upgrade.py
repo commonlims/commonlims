@@ -12,12 +12,38 @@ import django
 
 from django.conf import settings
 from sentry.runner.decorators import configuration
+import logging
+from clims.workflow import WorkflowEngine, WorkflowEngineException
+
+logger = logging.getLogger(__name__)
 
 DJANGO_17 = django.VERSION[0] > 1 or (django.VERSION[0] == 1 and django.VERSION[1] >= 7)
 
 
 def _upgrade(interactive, traceback, verbosity, repair):
     from django.core.management import call_command as dj_call_command
+    logger.info("Updating workflow definitions")
+
+    from sentry.plugins import plugins
+    for plugin in plugins.all(2):
+        definitions = list(plugin.workflow_definitions())
+        workflows = WorkflowEngine()
+        # TODO: Validate that each workflow has a valid name, corresponding with
+        # the name of the plugin
+        if definitions:
+            for definition in definitions:
+                import os
+                file_name = os.path.basename(definition)
+                try:
+                    workflows.deploy(definition)
+                    logger.info(
+                        "Uploaded workflow definition {} for plugin {}".format(
+                            file_name, plugin))
+                except WorkflowEngineException:
+                    # TODO: Disable the plugin in this case (if not in dev mode)
+                    logger.warning(
+                        "Can't upload workflow definition {} for plugin {}".format(
+                            file_name, plugin))
 
     if 'south' in settings.INSTALLED_APPS or DJANGO_17:
         dj_call_command(

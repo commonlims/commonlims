@@ -23,6 +23,12 @@ class PluginManager(InstanceManager):
         return sum(1 for i in self.all())
 
     def all(self, version=1):
+        """
+        Returns all enabled plugins with the specified interface version.
+
+        :param version: The version of the plugin interface. None will return all enabled plugins.
+        :return: A generator that iterates over the plugins
+        """
         for plugin in sorted(super(PluginManager, self).all(), key=lambda x: x.get_title()):
             if not plugin.is_enabled():
                 continue
