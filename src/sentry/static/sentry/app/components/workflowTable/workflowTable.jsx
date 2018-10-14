@@ -4,44 +4,33 @@ import classNames from 'classnames';
 
 import {t} from 'app/locale';
 import CustomPropTypes from 'app/sentryTypes';
-import EventsTableRow from 'app/components/eventsTable/eventsTableRow';
+import WorkflowTableRow from 'app/components/workflowTable/workflowTableRow';
 
 class WorkflowTable extends React.Component {
   static propTypes = {
     workflows: PropTypes.arrayOf(CustomPropTypes.Event),
   };
 
-  static defaultProps = {
-    fixedDimensions: false,
-  };
-
   render() {
-    // let {className, events, fixedDimensions, tagList} = this.props;
+    let className = "";
+    let fixedDimensions = null;
 
     let cx = classNames('table events-table', className);  // TODO: style name
-    // let hasUser = !!events.find(event => event.user);
-    // let {orgId, projectId, groupId} = this.props.params;
+    let {orgId, projectId, groupId} = this.props.params;
+    let workflows = this.props.workflows;
     let tagList = [{"key": "1", "name": "mama"}];
-    let workflows = [
-        
-    ];
 
     return (
       <table className={cx}>
         <thead>
           <tr>
-            <th>{t('ID')}</th>
-            <th>bro</th>
-
-            {tagList.map(tag => {
-              return <th key={tag.key}>{tag.name}</th>;
-            })}
+            <th>{t('Workflow')}</th>
           </tr>
         </thead>
         <tbody>
           {workflows.map(workflow => {
             return (
-              <EventsTableRow
+              <WorkflowTableRow
                 truncate={fixedDimensions}
                 key={workflow.id}
                 workflow={workflow}
@@ -49,7 +38,6 @@ class WorkflowTable extends React.Component {
                 projectId={projectId}
                 groupId={groupId}
                 tagList={tagList}
-                hasUser={hasUser}
               />
             );
           })}

@@ -11,6 +11,10 @@ class WorkflowEngine(object):
     A client that interfaces with the Camunda workflow engine API
 
     # TODO: **kwargs the bunch
+
+
+    Modifying a process:
+    https://docs.camunda.org/manual/7.4/reference/rest/process-instance/post-modification/
     """
     def __init__(self):
         self.base_url = "http://localhost:8080/engine-rest/"

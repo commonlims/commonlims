@@ -177,7 +177,6 @@ const SampleGroups = createReactClass({
         <SampleGroupRow
           key={app.id}
           app={app}
-          mofo={'yes!'}
           projectId={this.props.params.projectId}
           onRemove={this.onRemoveApplication.bind(this, app)}
         />
@@ -190,7 +189,6 @@ const SampleGroups = createReactClass({
   },
 
   render() {
-    //console.log('HERE bro', this.props.params['projectId']);
     return (
       <DocumentTitle title={this.getTitle()}>
         <div>

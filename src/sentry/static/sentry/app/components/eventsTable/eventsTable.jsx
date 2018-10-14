@@ -8,12 +8,13 @@ import EventsTableRow from 'app/components/eventsTable/eventsTableRow';
 
 class EventsTable extends React.Component {
   static propTypes = {
-    workflows: PropTypes.arrayOf(CustomPropTypes.Workflow),
+    fixedDimensions: PropTypes.bool,
+    events: PropTypes.arrayOf(CustomPropTypes.Event),
+    tagList: PropTypes.arrayOf(CustomPropTypes.Tag),
   };
 
   render() {
     let {className, events, tagList} = this.props;
-
     return (
         <h1>stuff</h1>
     );

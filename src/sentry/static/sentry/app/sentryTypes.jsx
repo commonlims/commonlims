@@ -870,7 +870,7 @@ export const SeriesUnit = PropTypes.shape({
 export const Series = PropTypes.arrayOf(SeriesUnit);
 
 
-// NOLIMS
+// NOLIMS: Move to another file (climsTypes)
 export const Workflow = PropTypes.shape({
   definitionKey: PropTypes.string,
 });

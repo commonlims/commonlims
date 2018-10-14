@@ -10,6 +10,7 @@ import LoadingError from '../components/loadingError';
 import LoadingIndicator from '../components/loadingIndicator';
 import WorkflowTable from '../components/workflowTable/workflowTable';
 import {t} from '../locale';
+import {Client} from 'app/api';
 
 const SampleDetails = createReactClass({
   displayName: 'SampleDetails',
@@ -41,9 +42,6 @@ const SampleDetails = createReactClass({
   getFormData(sample) {
     return {
       name: sample.name,
-      //description: app.description,
-      //csv: app.csv,
-      //status: 'created',
     };
   },
 
@@ -54,19 +52,14 @@ const SampleDetails = createReactClass({
 
     this.api.request(`/samples/${this.props.params.sampleId}/`, {
       success: (data, _, jqXHR) => {
-        this.setState({
-          loading: false,
-          error: false,
-          app: data,
-          formData: {...this.getFormData(data)},
-          errors: {},
+
+        this.setState({ loading: false, error: false, sample: data,
+          formData: {...this.getFormData(data)}, errors: {},
         });
+
       },
       error: () => {
-        this.setState({
-          loading: false,
-          error: true,
-        });
+        this.setState({ loading: false, error: true, });
       },
     });
   },
@@ -161,11 +154,72 @@ const SampleDetails = createReactClass({
               </button>
             </fieldset>
           </form>
-          <WorkflowTable />
+          <SampleWorkflows params={this.props.params} />
         </div>
       </DocumentTitle>
     );
   },
 });
+
+class SampleWorkflows extends React.Component {
+
+  getInitialState() {
+    return {
+      loading: true,
+      error: false,
+      sampleId: null,
+      formData: null,
+      workflows: null,
+      errors: {},
+    };
+  }
+
+  componentWillMount() {
+    this.api = new Client();
+    this.fetchData();
+  }
+
+  componentWillUnmount() {
+    this.api.clear();
+  }
+
+  remountComponent() {
+    this.setState(this.getInitialState(), this.fetchData);
+  }
+
+  fetchData() {
+    this.setState({
+      loading: true,
+    });
+
+    this.api.request(`/samples/${this.props.params.sampleId}/workflows/`, {
+      success: (data, _, jqXHR) => {
+        this.setState({ loading: false, error: false, workflows: data, errors: {} });
+      },
+      error: () => {
+        this.setState({ loading: false, error: true, });
+      },
+    });
+  }
+
+  render() {
+    let isSaving = this.state.state === FormState.SAVING;
+
+    if (this.state.loading) return <LoadingIndicator />;
+    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
+
+    return (
+        <div>
+            <WorkflowTable workflows={this.state.workflows} params={this.props.params} />
+            <fieldset>
+              <button type="submit" className="btn btn-primary" disabled={isSaving}>
+                {t('Add workflow')}
+              </button>
+            </fieldset>
+        </div>
+    );
+  }
+}
+
 
 export default SampleDetails;
