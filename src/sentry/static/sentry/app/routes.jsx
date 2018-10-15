@@ -42,6 +42,7 @@ import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import Samples from 'app/views/sample'; // TODO: Pluralize filename?
+import SamplesContainer from 'app/views/samples/index'
 import SampleDetails from 'app/views/sampleDetails';
 import ProjectPlugins from 'app/views/projectPlugins';
 import ProjectPluginDetails from 'app/views/projectPluginDetails';
