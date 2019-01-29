@@ -51,7 +51,7 @@ update-submodules:
 	@echo ""
 
 node-version-check:
-	@test "$$(node -v)" = v"$$(cat .nvmrc)" || (echo 'node version does not match .nvmrc. Recommended to use https://github.com/creationix/nvm'; exit 1)
+	@test "$$(node -v)" = v"$$(cat .nvmrc)" || (echo 'node version does not match .nvmrc. Recommended to use https://github.com/creationix/nvm or `source ./devboot`'; exit 1)
 
 install-system-pkgs: node-version-check
 	@echo "--> Installing system packages (from Brewfile)"
