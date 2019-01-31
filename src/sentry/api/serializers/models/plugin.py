@@ -85,6 +85,14 @@ class PluginWithConfigSerializer(PluginSerializer):
             serialize_field(self.project, obj, c)
             for c in obj.get_config(project=self.project, user=user, add_additial_fields=True)
         ]
+
+        # TODO: This is temporary, we would want another endpoint for views, e.g.
+        # /plugins/<slug>/views/
+        try:
+            d['views'] = obj.get_views()
+        except AttributeError:
+            d['views'] = None
+
         return d
 
 
