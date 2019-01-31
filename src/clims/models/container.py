@@ -21,7 +21,6 @@ class Container(Model):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_container'
-        # unique_together = (('project', 'name'), )
 
     __repr__ = sane_repr('container_type_id', 'name')
 
@@ -36,14 +35,31 @@ class Container(Model):
 
 
 class ContainerType(Model):
-    """
-    """
     __core__ = True
 
+    # TODO: limited char field
     name = models.TextField(null=True)
+    rows = models.IntegerField('rows')
+    cols = models.IntegerField('cols')
+
+    # To support freezers (and any other 3D containers, we also support levels, which by
+    # default is 1
+    levels = models.IntegerField('levels', default=1)
 
     class Meta:
         app_label = 'clims'
+        # TODO: wrong name
         db_table = 'clims_container_type'
 
     __repr__ = sane_repr('name')
+
+
+class ContainerLocationProperties(Model):
+    """
+    Properties for a container location (e.g. a well). Used to e.g.
+    """
+    __core__ = True
+
+    # Specifies that this location is not allowed
+    allowed = models.BooleanField('allowed')
+    container_type = FlexibleForeignKey('clims.ContainerType')
