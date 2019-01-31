@@ -112,10 +112,10 @@ exports[`OrganizationReleases renders 1`] = `
     }
   >
     <SideEffect(DocumentTitle)
-      title="Releases - org-slug - Sentry"
+      title="Releases - org-slug - Common LIMS"
     >
       <DocumentTitle
-        title="Releases - org-slug - Sentry"
+        title="Releases - org-slug - Common LIMS"
       >
         <FeatureContainer
           features={

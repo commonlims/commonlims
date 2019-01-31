@@ -9,10 +9,10 @@ exports[`OrganizationProjects Should render the projects in the store 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Organization Name Projects - Sentry"
+    title="Organization Name Projects - Common LIMS"
   >
     <DocumentTitle
-      title="Organization Name Projects - Sentry"
+      title="Organization Name Projects - Common LIMS"
     >
       <div>
         <SettingsPageHeading

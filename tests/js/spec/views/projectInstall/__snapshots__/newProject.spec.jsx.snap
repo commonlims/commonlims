@@ -28,7 +28,7 @@ exports[`NewProjectPlatform render() should render 1`] = `
   >
     <Content>
       <SideEffect(DocumentTitle)
-        title="Sentry"
+        title="Common LIMS"
       />
       <CreateProject
         getDocsUrl={[Function]}

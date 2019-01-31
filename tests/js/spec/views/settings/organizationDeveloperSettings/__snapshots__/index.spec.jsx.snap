@@ -9,10 +9,10 @@ exports[`Organization Developer Settings when no Apps exist displays empty state
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <div>
         <SettingsPageHeading
@@ -272,10 +272,10 @@ exports[`Organization Developer Settings with published apps trash button is dis
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <div>
         <SettingsPageHeading
@@ -844,10 +844,10 @@ exports[`Organization Developer Settings with unpublished apps displays all Apps
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <div>
         <SettingsPageHeading

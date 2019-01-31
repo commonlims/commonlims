@@ -10,10 +10,10 @@ exports[`OrganizationApiKeyDetails renders 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Organization Name Edit API Key - Sentry"
+    title="Organization Name Edit API Key - Common LIMS"
   >
     <DocumentTitle
-      title="Organization Name Edit API Key - Sentry"
+      title="Organization Name Edit API Key - Common LIMS"
     >
       <div>
         <div

@@ -19,7 +19,7 @@ exports[`ResolveActions with confirmation step renders 1`] = `
       }
     }
   >
-    <CustomResolutionModal
+    <AssignProcessVarsModal
       onCanceled={[Function]}
       onSelected={[Function]}
       orgId="org-1"
@@ -78,7 +78,7 @@ exports[`ResolveActions with confirmation step renders 1`] = `
           show={false}
         />
       </Modal>
-    </CustomResolutionModal>
+    </AssignProcessVarsModal>
     <div
       className="btn-group"
     >
@@ -479,7 +479,7 @@ exports[`ResolveActions without confirmation renders 1`] = `
       }
     }
   >
-    <CustomResolutionModal
+    <AssignProcessVarsModal
       onCanceled={[Function]}
       onSelected={[Function]}
       orgId="org-1"
@@ -538,7 +538,7 @@ exports[`ResolveActions without confirmation renders 1`] = `
           show={false}
         />
       </Modal>
-    </CustomResolutionModal>
+    </AssignProcessVarsModal>
     <div
       className="btn-group"
     >

@@ -2,7 +2,7 @@
 
 exports[`AdminQueue render() renders 1`] = `
 <SideEffect(DocumentTitle)
-  title="Sentry"
+  title="Common LIMS"
 >
   <div>
     <div

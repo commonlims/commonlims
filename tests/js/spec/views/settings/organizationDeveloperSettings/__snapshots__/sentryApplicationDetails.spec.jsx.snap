@@ -10,10 +10,10 @@ exports[`Sentry Application Details edit existing application renders() it shows
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry Application Details - Sentry"
+    title="Sentry Application Details - Common LIMS"
   >
     <DocumentTitle
-      title="Sentry Application Details - Sentry"
+      title="Sentry Application Details - Common LIMS"
     >
       <div>
         <SettingsPageHeading
@@ -18905,10 +18905,10 @@ exports[`Sentry Application Details new sentry application renders() it shows em
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry Application Details - Sentry"
+    title="Sentry Application Details - Common LIMS"
   >
     <DocumentTitle
-      title="Sentry Application Details - Sentry"
+      title="Sentry Application Details - Common LIMS"
     >
       <div>
         <SettingsPageHeading
