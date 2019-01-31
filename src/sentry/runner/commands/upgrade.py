@@ -39,11 +39,12 @@ def _upgrade(interactive, traceback, verbosity, repair):
                     logger.info(
                         "Uploaded workflow definition {} for plugin {}".format(
                             file_name, plugin))
-                except WorkflowEngineException:
+                except WorkflowEngineException as e:
                     # TODO: Disable the plugin in this case (if not in dev mode)
-                    logger.warning(
+                    logger.error(
                         "Can't upload workflow definition {} for plugin {}".format(
                             file_name, plugin))
+                    logger.error(e)
 
     if 'south' in settings.INSTALLED_APPS or DJANGO_17:
         dj_call_command(
