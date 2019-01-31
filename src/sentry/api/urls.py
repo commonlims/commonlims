@@ -201,6 +201,8 @@ from .endpoints.user_social_identity_details import UserSocialIdentityDetailsEnd
 from .endpoints.user_subscriptions import UserSubscriptionsEndpoint
 from .endpoints.event_file_committers import EventFileCommittersEndpoint
 from .endpoints.setup_wizard import SetupWizard
+from .endpoints.sample import SampleEndpoint
+from .endpoints.samples_details import SampleDetailsEndpoint
 
 
 urlpatterns = patterns(
@@ -765,6 +767,13 @@ urlpatterns = patterns(
         TeamAvatarEndpoint.as_view(),
         name='sentry-api-0-team-avatar'
     ),
+
+    # Samples: TODO: have them per organization (that is in projects that are per organization)
+    url(r'^samples/$', SampleEndpoint.as_view(), name='sentry-api-0-samples'),
+    url(r'^samples/(?P<sample_id>[^\/]+)/$',
+        SampleDetailsEndpoint.as_view(),
+        name='sentry-api-0-sample-details'
+        ),
 
     # Projects
     url(r'^projects/$', ProjectIndexEndpoint.as_view(),
