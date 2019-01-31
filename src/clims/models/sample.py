@@ -49,3 +49,7 @@ class Sample(Model):
 #     # that the process is already inactive and it hasn't been synced yet.
 #     #active = models.BooleanField()
 
+
+class SampleBatch(Model):
+    __core__ = True  # TODO: how is this used?
+    pass
