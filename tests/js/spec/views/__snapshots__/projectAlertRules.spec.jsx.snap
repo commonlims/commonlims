@@ -11,10 +11,10 @@ exports[`projectAlertRules renders 1`] = `
   routes={Array []}
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <SettingsPageHeading
         action={

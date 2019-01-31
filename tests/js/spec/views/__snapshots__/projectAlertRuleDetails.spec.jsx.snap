@@ -62,10 +62,10 @@ exports[`ProjectAlertRuleDetails Edit alert rule renders 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <RuleEditor
         actions={
@@ -2594,10 +2594,10 @@ exports[`ProjectAlertRuleDetails New alert rule renders 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <RuleEditor
         actions={

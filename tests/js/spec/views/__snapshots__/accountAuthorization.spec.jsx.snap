@@ -2,7 +2,7 @@
 
 exports[`AccountAuthorizations renders empty 1`] = `
 <SideEffect(DocumentTitle)
-  title="Approved Applications - Sentry"
+  title="Approved Applications - Common LIMS"
 >
   <div>
     <SettingsPageHeading

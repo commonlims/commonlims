@@ -10,10 +10,10 @@ exports[`ProjectTags renders 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Sentry"
+    title="Common LIMS"
   >
     <DocumentTitle
-      title="Sentry"
+      title="Common LIMS"
     >
       <SettingsPageHeading
         noTitleStyles={false}

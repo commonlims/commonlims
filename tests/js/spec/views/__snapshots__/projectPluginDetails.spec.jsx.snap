@@ -116,10 +116,10 @@ exports[`ProjectPluginDetails renders 1`] = `
     }
   >
     <SideEffect(DocumentTitle)
-      title="Sentry - Sentry"
+      title="Sentry - Common LIMS"
     >
       <DocumentTitle
-        title="Sentry - Sentry"
+        title="Sentry - Common LIMS"
       >
         <div>
           <SettingsPageHeading

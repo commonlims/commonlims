@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Settings from 'app/plugins/components/settings';
+import ProcessSettings from 'app/plugins/components/processSettings';
 
 class BasePlugin {
   constructor(data) {
@@ -9,6 +10,10 @@ class BasePlugin {
 
   renderSettings(props) {
     return <Settings plugin={this} {...props} />;
+  }
+
+  renderProcessVars(props) {
+    return <ProcessSettings plugin={this} {...props} />;
   }
 }
 

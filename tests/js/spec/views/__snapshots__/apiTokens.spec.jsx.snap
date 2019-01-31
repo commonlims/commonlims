@@ -2,7 +2,7 @@
 
 exports[`ApiTokens renders empty result 1`] = `
 <SideEffect(DocumentTitle)
-  title="API Tokens - Sentry"
+  title="API Tokens - Common LIMS"
 >
   <div>
     <SettingsPageHeading
@@ -94,7 +94,7 @@ exports[`ApiTokens renders empty result 1`] = `
 
 exports[`ApiTokens renders with result 1`] = `
 <SideEffect(DocumentTitle)
-  title="API Tokens - Sentry"
+  title="API Tokens - Common LIMS"
 >
   <div>
     <SettingsPageHeading

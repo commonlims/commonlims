@@ -10,10 +10,10 @@ exports[`ProjectSavedSearches renders 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Saved Searches - Sentry"
+    title="Saved Searches - Common LIMS"
   >
     <DocumentTitle
-      title="Saved Searches - Sentry"
+      title="Saved Searches - Common LIMS"
     >
       <div>
         <SettingsPageHeading
@@ -847,10 +847,10 @@ exports[`ProjectSavedSearches renders empty 1`] = `
   }
 >
   <SideEffect(DocumentTitle)
-    title="Saved Searches - Sentry"
+    title="Saved Searches - Common LIMS"
   >
     <DocumentTitle
-      title="Saved Searches - Sentry"
+      title="Saved Searches - Common LIMS"
     >
       <div>
         <SettingsPageHeading

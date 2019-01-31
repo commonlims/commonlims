@@ -2,7 +2,7 @@
 
 exports[`OrganizationCreate render() renders with terms 1`] = `
 <SideEffect(DocumentTitle)
-  title="Create Organization - Sentry"
+  title="Create Organization - Common LIMS"
 >
   <NarrowLayout
     showLogout={true}
@@ -80,7 +80,7 @@ exports[`OrganizationCreate render() renders with terms 1`] = `
 
 exports[`OrganizationCreate render() renders without terms 1`] = `
 <SideEffect(DocumentTitle)
-  title="Create Organization - Sentry"
+  title="Create Organization - Common LIMS"
 >
   <NarrowLayout
     showLogout={true}
