@@ -5,8 +5,6 @@ import styled from 'react-emotion';
 
 import SentryTypes from 'app/sentryTypes';
 import ProjectLink from 'app/components/projectLink';
-import ProjectSelector from 'app/components/projectHeader/projectSelector';
-import BookmarkToggle from 'app/components/projects/bookmarkToggle';
 import DropdownLink from 'app/components/dropdownLink';
 import MenuItem from 'app/components/menuItem';
 import Button from 'app/components/button';
@@ -19,6 +17,9 @@ import {
   clearActiveEnvironment,
 } from 'app/actionCreators/environments';
 
+// NOLIMS: In clims, the projects are not as central as in sentry. The user might want
+// to filter on it, but not all the time, so this header is really not a "ProjectHeader" but
+// just the general page header
 class ProjectHeader extends React.Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
@@ -55,12 +56,22 @@ class ProjectHeader extends React.Component {
       <div className="sub-header flex flex-container flex-vertically-centered">
         <div className="project-header">
           <div className="project-header-main">
-            <div className="project-select-wrapper">
-              <ProjectSelector organization={org} projectId={project.slug} />
-              <BookmarkToggle />
-            </div>
+            {/*<div className="project-select-wrapper">
+                 <ProjectSelector organization={org} projectId={project.slug} />
+                 <BookmarkToggle />
+             </div>*/}
 
             <NavTabs>
+              <li className={navSection == 'dashboard' ? 'active' : ''}>
+                <ProjectLink to={`/${org.slug}/${project.slug}/dashboard/`}>
+                  {t('Overview')}
+                </ProjectLink>
+              </li>
+              <li className={navSection == 'processes' ? 'active' : ''}>
+                <ProjectLink to={`/${org.slug}/${project.slug}/tasks/`}>
+                  {t('Tasks')}
+                </ProjectLink>
+              </li>
               <li className={navSection == 'samples' ? 'active' : ''}>
                 <ProjectLink to={`/${org.slug}/${project.slug}/samples/`}>
                   {t('Samples')}
@@ -71,21 +82,16 @@ class ProjectHeader extends React.Component {
                   {t('Issues')}
                 </ProjectLink>
               </li>
-              <li className={navSection == 'dashboard' ? 'active' : ''}>
-                <ProjectLink to={`/${org.slug}/${project.slug}/dashboard/`}>
-                  {t('Overview')}
-                </ProjectLink>
-              </li>
-              <li className={navSection == 'user-feedback' ? 'active' : ''}>
+              {/*<li className={navSection == 'user-feedback' ? 'active' : ''}>
                 <ProjectLink to={`/${org.slug}/${project.slug}/user-feedback/`}>
                   {t('User Feedback')}
                 </ProjectLink>
-              </li>
-              <li className={navSection == 'releases' ? 'active' : ''}>
+              </li>*/}
+              {/*<li className={navSection == 'releases' ? 'active' : ''}>
                 <ProjectLink to={`/${org.slug}/${project.slug}/releases/`}>
                   {t('Releases')}
                 </ProjectLink>
-              </li>
+              </li>*/}
               <li className={navSection == 'settings' ? 'active' : ''}>
                 <Link to={`/settings/${org.slug}/${project.slug}/`}>{t('Settings')}</Link>
               </li>
