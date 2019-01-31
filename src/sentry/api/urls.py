@@ -133,8 +133,13 @@ from .endpoints.project_key_details import ProjectKeyDetailsEndpoint
 from .endpoints.project_key_stats import ProjectKeyStatsEndpoint
 from .endpoints.project_member_index import ProjectMemberIndexEndpoint
 from .endpoints.project_ownership import ProjectOwnershipEndpoint
+
 from .endpoints.project_plugins import ProjectPluginsEndpoint
 from .endpoints.project_plugin_details import ProjectPluginDetailsEndpoint
+
+from .endpoints.plugin_actions import PluginActionsEndpoint
+from .endpoints.plugin_views import PluginViewsEndpoint
+
 from .endpoints.project_release_details import ProjectReleaseDetailsEndpoint
 from .endpoints.project_release_files import ProjectReleaseFilesEndpoint
 from .endpoints.project_release_file_details import ProjectReleaseFileDetailsEndpoint
@@ -201,8 +206,18 @@ from .endpoints.user_social_identity_details import UserSocialIdentityDetailsEnd
 from .endpoints.user_subscriptions import UserSubscriptionsEndpoint
 from .endpoints.event_file_committers import EventFileCommittersEndpoint
 from .endpoints.setup_wizard import SetupWizard
-from .endpoints.sample import SampleEndpoint
-from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint
+
+# CLIMS
+#
+from .endpoints.user_task import UserTaskEndpoint, UserTaskDetailsEndpoint
+
+from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint, SampleBatchDetailsEndpoint
+from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint, SampleProcessesEndpoint, SampleWorkflowsBatchEndpoint
+
+from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
+from .endpoints.process_definitions import ProcessDefinitionsEndpoint
+
+from .endpoints.task_types import TaskTypesEndpoint
 
 
 urlpatterns = patterns(
@@ -775,12 +790,72 @@ urlpatterns = patterns(
         name='sentry-api-0-sample-details'
         ),
 
+    url(r'^sample-batches/(?P<batch_id>[^\/]+)/$',
+        SampleBatchDetailsEndpoint.as_view(),
+        name='sentry-api-0-sample-batch-details'),
+
+    url(r'^user-tasks/$', UserTaskEndpoint.as_view(), name='sentry-api-0-user-task'),
+    url(r'^user-tasks/(?P<user_task_id>[^\/]+)/$',
+        UserTaskDetailsEndpoint.as_view(),
+        name='sentry-api-0-user-task-details'
+        ),
+
+    url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='sentry-api-0-sample-batches'),
+
     # Sample level workflows for this sample
     url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
         SampleWorkflowsEndpoint.as_view(),
         name='sentry-api-0-sample-details-workflows'
+        ),
+
+    # Sample level workflows for this sample
+    url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
+        SampleWorkflowsEndpoint.as_view(),
+        name='sentry-api-0-sample-details-workflows'
+        ),
+
+    # TODO: Only use the name process, not workflows
+    url(r'^samples/(?P<sample_id>[^\/]+)/processes/$',
+        SampleProcessesEndpoint.as_view(),
+        name='sentry-api-0-sample-details-processes'
+        ),
+
+    url(
+        r'^processes/(?P<organization_slug>[^\/]+)/sample-processes/$',
+        SampleWorkflowsBatchEndpoint.as_view(),
+        name='sentry-api-0-sample-workflows-batch'
     ),
 
+    # Processes and Tasks
+    url(
+        r'^task-groups/$',
+        TaskGroupsEndpoint.as_view(),
+        name='clims-api-0-task-groups'
+    ),
+
+    url(
+        r'^processes/(?P<organization_slug>[^\/]+)/$',
+        ProcessesEndpoint.as_view(),
+        name='clims-api-0-processes'
+    ),
+
+    url(
+        r'^process-definitions/(?P<organization_slug>[^\/]+)/$',
+        ProcessDefinitionsEndpoint.as_view(),
+        name='clims-api-0-process-definitions'
+    ),
+
+    url(
+        r'^task-types/(?P<organization_slug>[^\/]+)/$',
+        TaskTypesEndpoint.as_view(),
+        name='clims-api-0-task-types'
+    ),
+
+    # url(
+    #     r'^processes/(?P<organization_slug>[^\/]+)/$',
+    #     ProcessesEndpoint.as_view(),
+    #     name='clims-api-0-processes'
+    # ),
 
     # Projects
     url(r'^projects/$', ProjectIndexEndpoint.as_view(),
@@ -1073,10 +1148,22 @@ urlpatterns = patterns(
     ),
 
     # Load plugin project urls
+    # TODO: Not project specific in clims (TODO: if we have orgs, we might
+    # want to have plugins per org)
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/$',
         ProjectPluginsEndpoint.as_view(),
         name='sentry-api-0-project-plugins'
+    ),
+    url(
+        r'^plugins/(?P<organization_slug>[^\/]+)/(?P<plugin_id>[^\/]+)/actions/$',
+        PluginActionsEndpoint.as_view(),
+        name='sentry-api-0-plugin-actions'
+    ),
+    url(
+        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/(?P<plugin_id>[^\/]+)/views/$',
+        PluginViewsEndpoint.as_view(),
+        name='sentry-api-0-plugin-views'
     ),
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/(?P<plugin_id>[^\/]+)/$',
