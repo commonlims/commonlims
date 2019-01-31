@@ -29,3 +29,23 @@ class Sample(Model):
     #
     # def has_scope(self, scope):
     #     return scope in self.get_scopes()
+
+
+# WORKFLOW_ENGINE_CAMUNDA = 1
+# class SampleWorkflows(Model):
+#     """
+#     Lists all sample level workflow instances for this sample
+#
+#     This model only knows about the mapping from samples to workflows. The workflow engine itself will
+#     know the details about the status, but when the
+#     """
+#     __core__ = True
+#
+#     workflow_id = models.TextField(null=True)
+#     workflow_engine = models.IntegerField(default=WORKFLOW_ENGINE_CAMUNDA)
+#     sample = FlexibleForeignKey('clims.Sample', null=True)
+#
+#     # The workflow engine has more detail about the actual status of the workflow process. It's possible
+#     # that the process is already inactive and it hasn't been synced yet.
+#     #active = models.BooleanField()
+

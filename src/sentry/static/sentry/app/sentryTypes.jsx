@@ -869,6 +869,13 @@ export const SeriesUnit = PropTypes.shape({
 
 export const Series = PropTypes.arrayOf(SeriesUnit);
 
+
+// NOLIMS
+export const Workflow = PropTypes.shape({
+  definitionKey: PropTypes.string,
+});
+
+
 let SentryTypes = {
   AnyModel: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -917,6 +924,7 @@ let SentryTypes = {
   EChartsLegend,
   EChartsDataZoom,
   EChartsToolBox,
+  Workflow,
 };
 
 export default SentryTypes;

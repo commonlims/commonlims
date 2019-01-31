@@ -6,28 +6,32 @@ import {t} from 'app/locale';
 import CustomPropTypes from 'app/sentryTypes';
 import EventsTableRow from 'app/components/eventsTable/eventsTableRow';
 
-class EventsTable extends React.Component {
+class WorkflowTable extends React.Component {
   static propTypes = {
-    workflows: PropTypes.arrayOf(CustomPropTypes.Workflow),
+    workflows: PropTypes.arrayOf(CustomPropTypes.Event),
+  };
+
+  static defaultProps = {
+    fixedDimensions: false,
   };
 
   render() {
-    let {className, events, tagList} = this.props;
+    // let {className, events, fixedDimensions, tagList} = this.props;
 
-    return (
-        <h1>stuff</h1>
-    );
-
-    let cx = classNames('table events-table', className);
-    let hasUser = !!events.find(event => event.user);
-    let {orgId, projectId, groupId} = this.props.params;
+    let cx = classNames('table events-table', className);  // TODO: style name
+    // let hasUser = !!events.find(event => event.user);
+    // let {orgId, projectId, groupId} = this.props.params;
+    let tagList = [{"key": "1", "name": "mama"}];
+    let workflows = [
+        
+    ];
 
     return (
       <table className={cx}>
         <thead>
           <tr>
             <th>{t('ID')}</th>
-            {hasUser && <th>{t('User')}</th>}
+            <th>bro</th>
 
             {tagList.map(tag => {
               return <th key={tag.key}>{tag.name}</th>;
@@ -35,11 +39,12 @@ class EventsTable extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {events.map(event => {
+          {workflows.map(workflow => {
             return (
               <EventsTableRow
-                key={event.id}
-                event={event}
+                truncate={fixedDimensions}
+                key={workflow.id}
+                workflow={workflow}
                 orgId={orgId}
                 projectId={projectId}
                 groupId={groupId}
@@ -49,9 +54,8 @@ class EventsTable extends React.Component {
             );
           })}
         </tbody>
-      </table>
-    );
+      </table>);
   }
 }
 
-export default EventsTable;
+export default WorkflowTable;

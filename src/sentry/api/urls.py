@@ -202,7 +202,7 @@ from .endpoints.user_subscriptions import UserSubscriptionsEndpoint
 from .endpoints.event_file_committers import EventFileCommittersEndpoint
 from .endpoints.setup_wizard import SetupWizard
 from .endpoints.sample import SampleEndpoint
-from .endpoints.samples_details import SampleDetailsEndpoint
+from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint
 
 
 urlpatterns = patterns(
@@ -774,6 +774,13 @@ urlpatterns = patterns(
         SampleDetailsEndpoint.as_view(),
         name='sentry-api-0-sample-details'
         ),
+
+    # Sample level workflows for this sample
+    url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
+        SampleWorkflowsEndpoint.as_view(),
+        name='sentry-api-0-sample-details-workflows'
+    ),
+
 
     # Projects
     url(r'^projects/$', ProjectIndexEndpoint.as_view(),

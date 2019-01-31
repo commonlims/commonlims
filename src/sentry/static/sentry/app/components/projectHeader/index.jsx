@@ -61,6 +61,11 @@ class ProjectHeader extends React.Component {
             </div>
 
             <NavTabs>
+              <li className={navSection == 'samples' ? 'active' : ''}>
+                <ProjectLink to={`/${org.slug}/${project.slug}/samples/`}>
+                  {t('Samples')}
+                </ProjectLink>
+              </li>
               <li className={navSection == 'stream' ? 'active' : ''}>
                 <ProjectLink to={`/${org.slug}/${project.slug}/`}>
                   {t('Issues')}

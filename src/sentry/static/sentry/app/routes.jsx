@@ -41,6 +41,8 @@ import ProjectInstallOverview from 'app/views/projectInstall/overview';
 import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
+import Samples from 'app/views/sample'; // TODO: Pluralize filename?
+import SampleDetails from 'app/views/sampleDetails';
 import ProjectPlugins from 'app/views/projectPlugins';
 import ProjectPluginDetails from 'app/views/projectPluginDetails';
 import RouteNotFound from 'app/views/routeNotFound';
@@ -1049,7 +1051,12 @@ function routes() {
               import(/* webpackChunkName: "ProjectUserFeedback" */ './views/userFeedback/projectUserFeedback')}
             component={errorHandler(LazyLoad)}
           />
-
+          <Route path="samples/" component={errorHandler(Samples)} />
+          <Route
+            path="samples/:sampleId/"
+            name="Sample details"
+            component={errorHandler(SampleDetails)}
+          />
           <Route path="settings/" component={errorHandler(ProjectSettings)}>
             <Redirect from="teams/" to="/settings/:orgId/:projectId/teams/" />
             <Redirect from="alerts/" to="/settings/:orgId/:projectId/alerts/" />
@@ -1065,6 +1072,7 @@ function routes() {
               from="alerts/rules/:ruleId/"
               to="/settings/:orgId/:projectId/alerts/rules/:ruleId/"
             />
+
             <Redirect
               from="environments/"
               to="/settings/:orgId/:projectId/environments/"
@@ -1107,6 +1115,7 @@ function routes() {
               from="user-feedback/"
               to="/settings/:orgId/:projectId/user-feedback/"
             />
+            <Redirect from="samples/" to="/settings/:orgId/:projectId/samples/" />
             <Redirect
               from="security-headers/"
               to="/settings/:orgId/:projectId/security-headers/"

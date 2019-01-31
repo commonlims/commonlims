@@ -96,3 +96,44 @@ class SampleDetailsEndpoint(Endpoint):
             )
 
         return Response(status=204)
+
+
+class SampleWorkflowsEndpoint(Endpoint):
+    """
+    Lists relations between samples and workflows
+    """
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, sample_id):
+        # TODO: get this from plugins
+        sample_level_workflows = ["snpseq.poc.sequence", "clims_snpseq.sequence"]
+
+        # 1. Get all workflow definitions that are top level/sample level (from plugins). This should be a per-process cached list
+        #    NOTE: We might actually have several top level/sample level workflows, which would lead to a bunch of calls
+        #    here, so we might want to revisit that from a perf. perspective later. But currently, that's unlikely.
+        # 2. Query the workflow backend for those
+        # 3.
+
+        # First, simply get the list of all workflows this process is in. Note that if this list is large, it might
+        # make sense to add processDefinitionKey to the query, but then we would have to execute more queries
+        from clims.workflow import WorkflowEngine
+        engine = WorkflowEngine()
+        instances = engine.process_instances(business_key="sample-1", active="true", suspended="false")
+
+        # todo: paging
+        # TODO: ended, suspended should be query parameters
+        # TODO Have the engine service group this:
+        def should_include(instance):
+            for workflow in sample_level_workflows:
+                if instance["definitionId"].startswith(workflow):
+                    return True
+            return False
+
+        instances = filter(should_include, instances)
+        ret = list()
+        for instance in instances:
+            ret.append(instance)
+        return Response(ret, status=200)
+
+
