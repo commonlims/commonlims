@@ -2767,6 +2767,34 @@ boxen@^2.0.0:
     term-size "^1.2.0"
     widest-line "^2.0.0"
 
+bpmn-font@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/bpmn-font/-/bpmn-font-0.8.0.tgz#85b18715faede345cd33c8a48f50bbe557ff76c2"
+
+bpmn-js@^3.0.4:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/bpmn-js/-/bpmn-js-3.1.1.tgz#c8cdd4cd36e786676a79edf8c28ebbbf28205b6e"
+  dependencies:
+    bpmn-font "^0.8.0"
+    bpmn-moddle "^5.1.5"
+    css.escape "^1.5.1"
+    diagram-js "^3.1.1"
+    diagram-js-direct-editing "^1.4.0"
+    ids "^0.2.0"
+    inherits "^2.0.1"
+    min-dash "^3.2.0"
+    min-dom "^3.0.0"
+    object-refs "^0.3.0"
+    tiny-svg "^2.0.0"
+
+bpmn-moddle@^5.1.5:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/bpmn-moddle/-/bpmn-moddle-5.1.6.tgz#98e9d38524a1c8971e3c3404fbba261130887d39"
+  dependencies:
+    min-dash "^3.0.0"
+    moddle "^4.1.0"
+    moddle-xml "^7.2.3"
+
 brace-expansion@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
@@ -3337,6 +3365,12 @@ clorox@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/clorox/-/clorox-1.0.3.tgz#6fa63653f280c33d69f548fb14d239ddcfa1590d"
 
+closest@*, closest@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/closest/-/closest-0.0.1.tgz#26da6f80b3e0e17e71f80f12782819e9f653495c"
+  dependencies:
+    matches-selector "0.0.1"
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -3457,6 +3491,14 @@ component-emitter@1.2.0:
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
+
+component-event@*:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/component-event/-/component-event-0.2.0.tgz#8689a7c25a7dd0afe7e2e8408091d5b9e12ce196"
+
+component-event@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/component-event/-/component-event-0.1.4.tgz#3de78fc28782381787e24bf2a7c536bf0142c9b4"
 
 component-raf@1.2.0:
   version "1.2.0"
@@ -3870,6 +3912,10 @@ css-what@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-2.1.2.tgz#c0876d9d0480927d7d4920dcd72af3595649554d"
 
+css.escape@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/css.escape/-/css.escape-1.5.1.tgz#42e27d4fa04ae32f931a4b4d4191fa9cddee97cb"
+
 cssesc@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-0.1.0.tgz#c814903e45623371a0477b40109aaafbeeaddbb4"
@@ -4122,6 +4168,13 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
 
+delegate-events@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/delegate-events/-/delegate-events-1.1.1.tgz#dab490a9c1f1d40ca40ebcd21edaf717b671d4d4"
+  dependencies:
+    closest "*"
+    component-event "*"
+
 delegate@^3.1.2:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.2.0.tgz#b66b71c3158522e8ab5744f720d8ca0c2af59166"
@@ -4180,6 +4233,31 @@ detect-port@^1.2.3:
   dependencies:
     address "^1.0.1"
     debug "^2.6.0"
+
+diagram-js-direct-editing@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/diagram-js-direct-editing/-/diagram-js-direct-editing-1.4.0.tgz#93c6c1798dcff790ba842262f3176d5722f9d6d4"
+  dependencies:
+    min-dash "^3.0.0"
+    min-dom "^3.0.0"
+
+diagram-js@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/diagram-js/-/diagram-js-3.1.2.tgz#8309933503c9c933f11732f8205517d5ea4a4fc0"
+  dependencies:
+    css.escape "^1.5.1"
+    didi "^4.0.0"
+    hammerjs "^2.0.1"
+    inherits "^2.0.1"
+    min-dash "^3.2.0"
+    min-dom "^3.0.0"
+    object-refs "^0.3.0"
+    path-intersection "^1.0.2"
+    tiny-svg "^2.0.0"
+
+didi@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/didi/-/didi-4.0.0.tgz#2b89d892a67fd3777f7642d3bf06697b69e9b622"
 
 diff@^3.2.0, diff@^3.3.0:
   version "3.4.0"
@@ -4292,6 +4370,10 @@ domhandler@^2.3.0:
   resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-2.4.2.tgz#8805097e933d65e85546f726d60f5eb88b44f803"
   dependencies:
     domelementtype "1"
+
+domify@^1.3.1:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/domify/-/domify-1.4.0.tgz#11483617f764f8695975b4bdc79b14f0803b629b"
 
 domready@1.0.8:
   version "1.0.8"
@@ -5683,6 +5765,10 @@ gzip-size@5.0.0:
     duplexer "^0.1.1"
     pify "^3.0.0"
 
+hammerjs@^2.0.1:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+
 handle-thing@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.0.tgz#0e039695ff50c93fc288557d696f3c1dc6776754"
@@ -5829,6 +5915,10 @@ hastscript@^5.0.0:
     hast-util-parse-selector "^2.2.0"
     property-information "^5.0.1"
     space-separated-tokens "^1.0.0"
+
+hat@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/hat/-/hat-0.0.3.tgz#bb014a9e64b3788aed8005917413d4ff3d502d8a"
 
 hawk@3.1.3, hawk@~3.1.3:
   version "3.1.3"
@@ -6085,6 +6175,12 @@ icss-utils@^4.0.0:
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-4.0.0.tgz#d52cf4bcdcfa1c45c2dbefb4ffdf6b00ef608098"
   dependencies:
     postcss "^7.0.5"
+
+ids@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/ids/-/ids-0.2.2.tgz#c23140dd06f5e5e95b1a5e5e98877ea734965540"
+  dependencies:
+    hat "^0.0.3"
 
 ieee754@^1.1.4:
   version "1.1.8"
@@ -7599,6 +7695,14 @@ marksy@^6.1.0:
     he "^1.1.1"
     marked "^0.3.12"
 
+matches-selector@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/matches-selector/-/matches-selector-0.0.1.tgz#1df5262243ae341c1a0804dd302048267ac713bb"
+
+matches-selector@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/matches-selector/-/matches-selector-1.2.0.tgz#d1814e7e8f43e69d22ac33c9af727dc884ecf12a"
+
 material-colors@^1.2.1:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.5.tgz#5292593e6754cb1bcc2b98030e4e0d6a3afc9ea1"
@@ -7811,11 +7915,26 @@ mimic-fn@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-1.1.0.tgz#e667783d92e89dbd342818b5230b9d62a672ad18"
 
+min-dash@^3.0.0, min-dash@^3.2.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/min-dash/-/min-dash-3.4.0.tgz#994346eb1fe831516f47467b72cca78bdf8a961c"
+
 min-document@^2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
   dependencies:
     dom-walk "^0.1.0"
+
+min-dom@^3.0.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/min-dom/-/min-dom-3.1.1.tgz#53440d23d32a0a8bb6b2e657ca4cfd39d998a29a"
+  dependencies:
+    closest "0.0.1"
+    component-event "^0.1.4"
+    delegate-events "^1.1.1"
+    domify "^1.3.1"
+    indexof "0.0.1"
+    matches-selector "^1.2.0"
 
 mini-css-extract-plugin@^0.4.4:
   version "0.4.5"
@@ -7931,6 +8050,21 @@ mobx@^3.2.2:
 mockdate@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/mockdate/-/mockdate-2.0.2.tgz#5ae0c0eaf8fe23e009cd01f9889b42c4f634af12"
+
+moddle-xml@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/moddle-xml/-/moddle-xml-7.2.3.tgz#99c13bc026976361252518d657368b3c78eae483"
+  dependencies:
+    min-dash "^3.0.0"
+    moddle "^4.1.0"
+    saxen "^8.0.0"
+    tiny-stack "^1.0.0"
+
+moddle@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/moddle/-/moddle-4.1.0.tgz#1b49f60dbe6c9565875605555c9fabe661e400b6"
+  dependencies:
+    min-dash "^3.0.0"
 
 moment-timezone@0.5.23:
   version "0.5.23"
@@ -8326,6 +8460,10 @@ object-keys@^1.0.11, object-keys@^1.0.12, object-keys@~1.0.0:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.12.tgz#09c53855377575310cca62f55bb334abff7b3ed2"
 
+object-refs@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/object-refs/-/object-refs-0.3.0.tgz#934f4f0fb6b409e78be15fa60f616108aed63786"
+
 object-visit@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/object-visit/-/object-visit-1.0.1.tgz#f79c4493af0c5377b59fe39d395e41042dd045bb"
@@ -8667,6 +8805,10 @@ path-exists@^2.0.0:
 path-exists@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-3.0.0.tgz#ce0ebeaa5f78cb18925ea7d810d7b59b010fd515"
+
+path-intersection@^1.0.2:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/path-intersection/-/path-intersection-1.1.1.tgz#a1185ebae7cd9f6d86fd299533c3f7c638a01559"
 
 path-is-absolute@^1.0.0, path-is-absolute@^1.0.1:
   version "1.0.1"
@@ -10607,6 +10749,10 @@ sax@^1.2.1, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
+saxen@^8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/saxen/-/saxen-8.1.0.tgz#d2c91cff7fdcc9458600e32a7d1dc504a9c61011"
+
 schedule@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
@@ -11743,6 +11889,14 @@ timsort@^0.3.0:
 tiny-emitter@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
+
+tiny-stack@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-stack/-/tiny-stack-1.1.0.tgz#a5d65c5753709ea43b29e903e6f6323185b9ac21"
+
+tiny-svg@^2.0.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tiny-svg/-/tiny-svg-2.2.0.tgz#5e4bc43520f76c48a61d6cd790b84095d58e1449"
 
 tinycolor2@^1.4.1:
   version "1.4.1"
