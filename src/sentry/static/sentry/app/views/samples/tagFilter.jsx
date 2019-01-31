@@ -134,6 +134,7 @@ class SamplesTagFilter extends React.Component {
 
   render() {
     let {tag} = this.props;
+
     return (
       <div className="stream-tag-filter">
         <h6 className="nav-header">{tag.key}</h6>

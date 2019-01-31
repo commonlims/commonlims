@@ -1,33 +1,59 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
+import Reflux from 'reflux';
+import {browserHistory} from 'react-router';
 import DocumentTitle from 'react-document-title';
 
-import ApiMixin from '../mixins/apiMixin';
-import {FormState, TextField} from '../components/forms';
-import IndicatorStore from '../stores/indicatorStore';
-import LoadingError from '../components/loadingError';
-import LoadingIndicator from '../components/loadingIndicator';
-import WorkflowTable from '../components/workflowTable/workflowTable';
-import {t} from '../locale';
-import {Client} from 'app/api';
+import ApiMixin from 'app/mixins/apiMixin';
+import SampleDetailsHeader from 'app/views/sampleDetails/header';
+
+// TODO: SampleStore
+import GroupStore from 'app/stores/groupStore';
+import LoadingError from 'app/components/loadingError';
+import LoadingIndicator from 'app/components/loadingIndicator';
+import SentryTypes from 'app/sentryTypes';
+import {t} from 'app/locale';
+import withEnvironment from 'app/utils/withEnvironment';
+
+let ERROR_TYPES = {
+  GROUP_NOT_FOUND: 'GROUP_NOT_FOUND',
+};
 
 const SampleDetails = createReactClass({
   displayName: 'SampleDetails',
 
-  contextTypes: {
-    router: PropTypes.object.isRequired,
+  propTypes: {
+    memberList: PropTypes.array,
+    environment: SentryTypes.Environment,
   },
 
-  mixins: [ApiMixin],
+  childContextTypes: {
+    group: SentryTypes.Group, // TODO: Sample!!
+    location: PropTypes.object,
+  },
+
+  mixins: [ApiMixin, Reflux.listenTo(GroupStore, 'onGroupChange')],
+
+  getDefaultProps() {
+    return {
+      memberList: [],
+    };
+  },
 
   getInitialState() {
     return {
+      group: null,
       loading: true,
       error: false,
-      sampleId: null,
-      formData: null,
-      errors: {},
+      errorType: null,
+    };
+  },
+
+  getChildContext() {
+    return {
+      group: this.state.group,
+      location: this.props.location,
     };
   },
 
@@ -35,191 +61,162 @@ const SampleDetails = createReactClass({
     this.fetchData();
   },
 
-  remountComponent() {
-    this.setState(this.getInitialState(), this.fetchData);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params.groupId !== this.props.params.groupId) {
+      this.remountComponent();
+    }
   },
 
-  getFormData(sample) {
-    return {
-      name: sample.name,
-    };
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.params.groupId !== this.props.params.groupId ||
+      prevProps.environment !== this.props.environment
+    ) {
+      this.fetchData();
+    }
+  },
+
+  remountComponent() {
+    this.setState(this.getInitialState());
   },
 
   fetchData() {
-    this.setState({
-      loading: true,
-    });
+    const query = {};
 
-    this.api.request(`/samples/${this.props.params.sampleId}/`, {
-      success: (data, _, jqXHR) => {
+    if (this.props.environment) {
+      query.environment = this.props.environment.name;
+    }
 
-        this.setState({ loading: false, error: false, sample: data,
-          formData: {...this.getFormData(data)}, errors: {},
+    this.api.request(this.getSampleDetailsEndpoint(), {
+      query,
+      success: data => {
+        // TODO: Ideally, this would rebuild the route before parameter
+        // interpolation, replace the `groupId` field of `this.routeParams`,
+        // and use `formatPattern` from `react-router` to rebuild the URL,
+        // rather than blindly pattern matching like we do here. Unfortunately,
+        // `formatPattern` isn't actually exported until `react-router` 2.0.1:
+        // https://github.com/reactjs/react-router/blob/v2.0.1/modules/index.js#L25
+        //
+        // TODO: Climsify this
+        if (this.props.params.sampleId != data.id) {
+          let location = this.props.location;
+          return void browserHistory.push(
+            location.pathname.replace(
+              `/issues/${this.props.params.groupId}/`,
+              `/issues/${data.id}/`
+            ) +
+              location.search +
+              location.hash
+          );
+        }
+
+        this.setState({
+          loading: false,
+          error: false,
+          errorType: null,
         });
 
+        return void GroupStore.loadInitialData([data]);
       },
-      error: () => {
-        this.setState({ loading: false, error: true, });
+      error: (_, textStatus, errorThrown) => {
+        let errorType = null;
+        switch (errorThrown) {
+          case 'NOT FOUND':
+            errorType = ERROR_TYPES.GROUP_NOT_FOUND;
+            break;
+          default:
+        }
+        this.setState({
+          loading: false,
+          error: true,
+          errorType,
+        });
       },
     });
   },
 
-  onFieldChange(name, value) {
-    let formData = this.state.formData;
-    formData[name] = value;
-    this.setState({
-      formData,
-    });
-  },
-
-  onSubmit(e) {
-    e.preventDefault();
-
-    if (this.state.state == FormState.SAVING) {
-      return;
-    }
-    this.setState(
-      {
-        state: FormState.SAVING,
-      },
-      () => {
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let formData = this.state.formData;
-        this.api.request(`/samples/${this.props.params.sampleId}/`, {
-          method: 'PUT',
-          data: {
-            ...formData,
-          },
-          success: data => {
-            IndicatorStore.remove(loadingIndicator);
-            this.setState({
-              state: FormState.READY,
-              formData: {...this.getFormData(data)},
-              errors: {},
-            });
-            //this.context.router.push('/api/applications/');
-          },
-          error: error => {
-            IndicatorStore.remove(loadingIndicator);
-            this.setState({
-              state: FormState.ERROR,
-              errors: error.responseJSON,
-            });
-          },
+  onGroupChange(itemIds) {
+    let id = this.props.params.sampleId;
+    if (itemIds.has(id)) {
+      let group = GroupStore.get(id);
+      if (group) {
+        if (group.stale) {
+          this.fetchData();
+          return;
+        }
+        this.setState({
+          group,
         });
       }
-    );
+    }
   },
 
-  onRemoveSample(sample) {},
+  getSampleDetailsEndpoint() {
+    let id = this.props.params.sampleId;
+
+    return '/samples/' + id + '/';
+  },
 
   getTitle() {
-    return 'Sample Details';
+    let group = this.state.group;
+
+    if (!group) return 'Sentry';
+
+    switch (group.type) {
+      case 'error':
+        if (group.metadata.type && group.metadata.value)
+          return `${group.metadata.type}: ${group.metadata.value}`;
+        return group.metadata.type || group.metadata.value;
+      case 'csp':
+        return group.metadata.message;
+      case 'expectct':
+      case 'expectstaple':
+      case 'hpkp':
+        return group.metadata.message;
+      case 'default':
+        return group.metadata.title;
+      default:
+        return group.message.split('\n')[0];
+    }
   },
 
   render() {
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
+    let group = this.state.group;
+    let params = this.props.params;
 
-    let isSaving = this.state.state === FormState.SAVING;
-    let errors = this.state.errors;
+    if (this.state.error) {
+      switch (this.state.errorType) {
+        // TODO: Rename to SAMPLE_NOT_FOUND
+        case ERROR_TYPES.GROUP_NOT_FOUND:
+          return (
+            <div className="alert alert-block">
+              {t('The sample you were looking for was not found.')}
+            </div>
+          );
+        default:
+          return <LoadingError onRetry={this.remountComponent} />;
+      }
+    } else if (this.state.loading || !group) {
+      return <LoadingIndicator />;
+    }
 
+    // NOTE: The children elements are defined in the routes
     return (
       <DocumentTitle title={this.getTitle()}>
-        <div>
-          <form onSubmit={this.onSubmit} className="form-stacked">
-            <h4>{t('Sample details')}</h4>
-            {this.state.state === FormState.ERROR && (
-              <div className="alert alert-error alert-block">
-                {t(
-                  'Unable to save your changes. Please ensure all fields are valid and try again.'
-                )}
-              </div>
-            )}
-            <fieldset>
-              <TextField
-                key="name"
-                name="name"
-                label={t('Name')}
-                placeholder={t('e.g. submission-org1-2018-01-01')}
-                value={this.state.formData.name}
-                required={true}
-                error={errors.name}
-                onChange={this.onFieldChange.bind(this, 'name')}
-              />
-            </fieldset>
-            <fieldset className="form-actions">
-              <button type="submit" className="btn btn-primary" disabled={isSaving}>
-                {t('Save Changes')}
-              </button>
-            </fieldset>
-          </form>
-          <SampleWorkflows params={this.props.params} />
+        <div className={this.props.className}>
+          <SampleDetailsHeader
+            orgId={params.orgId}
+            group={group}
+            memberList={this.props.memberList}
+          />
+          {React.cloneElement(this.props.children, {
+            memberList: this.props.memberList,
+            group,
+          })}
         </div>
       </DocumentTitle>
     );
   },
 });
 
-class SampleWorkflows extends React.Component {
-
-  getInitialState() {
-    return {
-      loading: true,
-      error: false,
-      sampleId: null,
-      formData: null,
-      workflows: null,
-      errors: {},
-    };
-  }
-
-  componentWillMount() {
-    this.api = new Client();
-    this.fetchData();
-  }
-
-  componentWillUnmount() {
-    this.api.clear();
-  }
-
-  remountComponent() {
-    this.setState(this.getInitialState(), this.fetchData);
-  }
-
-  fetchData() {
-    this.setState({
-      loading: true,
-    });
-
-    this.api.request(`/samples/${this.props.params.sampleId}/workflows/`, {
-      success: (data, _, jqXHR) => {
-        this.setState({ loading: false, error: false, workflows: data, errors: {} });
-      },
-      error: () => {
-        this.setState({ loading: false, error: true, });
-      },
-    });
-  }
-
-  render() {
-    let isSaving = this.state.state === FormState.SAVING;
-
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
-
-    return (
-        <div>
-            <WorkflowTable workflows={this.state.workflows} params={this.props.params} />
-            <fieldset>
-              <button type="submit" className="btn btn-primary" disabled={isSaving}>
-                {t('Add workflow')}
-              </button>
-            </fieldset>
-        </div>
-    );
-  }
-}
-
-
-export default SampleDetails;
+export default withEnvironment(SampleDetails);

@@ -110,6 +110,7 @@ const SamplesSidebar = createReactClass({
 
   render() {
     let {loading, orgId, projectId, tags} = this.props;
+
     return (
       <div className="stream-sidebar">
         {loading ? (

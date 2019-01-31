@@ -19,7 +19,7 @@ import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
 import EnvironmentStore from 'app/stores/environmentStore';
 import ErrorRobot from 'app/components/errorRobot';
-import GroupStore from 'app/stores/groupStore';
+import SampleStore from 'app/stores/sampleStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
@@ -27,10 +27,9 @@ import ProjectState from 'app/mixins/projectState';
 import SentryTypes from 'app/sentryTypes';
 import SamplesActions from 'app/views/samples/actions';
 import SamplesFilters from 'app/views/samples/filters';
-import SamplesGroup from 'app/components/samples/group';
+import SamplesGroup from 'app/components/samples/sample';
 import SamplesSidebar from 'app/views/samples/sidebar';
 import TimeSince from 'app/components/timeSince';
-import analytics from 'app/utils/analytics';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
 import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
@@ -41,7 +40,6 @@ const DEFAULT_STATS_PERIOD = '24h';
 const STATS_PERIODS = new Set(['14d', '24h']);
 
 const Samples = createReactClass({
-
   // This class was based on the Stream class in Sentry
 
   displayName: 'Samples',
@@ -53,8 +51,7 @@ const Samples = createReactClass({
     tagsLoading: PropTypes.bool,
   },
 
-  // TODO: Investigate
-  mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ApiMixin, ProjectState],
+  mixins: [Reflux.listenTo(SampleStore, 'onSampleChange'), ApiMixin, ProjectState],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
@@ -99,7 +96,7 @@ const Samples = createReactClass({
   },
 
   componentWillMount() {
-    this._samplesManager = new utils.SamplesManager(GroupStore);
+    this._samplesManager = new utils.SamplesManager(SampleStore);
     this._poller = new utils.CursorPoller({
       success: this.onRealtimePoll,
     });
@@ -157,7 +154,7 @@ const Samples = createReactClass({
 
   componentWillUnmount() {
     this._poller.disable();
-    GroupStore.reset();
+    SampleStore.reset();
   },
 
   fetchSavedSearches() {
@@ -168,6 +165,7 @@ const Samples = createReactClass({
     const {orgId, projectId} = this.props.params;
     const {searchId} = this.state;
 
+    // TODO: searches should be on organization level
     this.api.request(`/projects/${orgId}/${projectId}/searches/`, {
       success: data => {
         const newState = {
@@ -338,7 +336,7 @@ const Samples = createReactClass({
   },
 
   fetchData() {
-    GroupStore.loadInitialData([]);
+    SampleStore.loadInitialData([]);
 
     this.setState({
       dataLoading: true,
@@ -390,6 +388,7 @@ const Samples = createReactClass({
         // we have to use the project slug from the result data instead of the
         // the current props one as the shortIdLookup can return results for
         // different projects.
+        // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
             let {project, id, matchingEventId, matchingEventEnvironment} = data[0];
@@ -407,6 +406,121 @@ const Samples = createReactClass({
             return void browserHistory.push(redirect);
           }
         }
+
+        data = [
+          {
+            numComments: 16,
+            userCount: 1,
+            culprit: 'hello_world',
+            title: 'asdfjksafdjkafds',
+            name: 'RC-0123-Hund-1',
+            container: 'RC-0123-Hund',
+            position: 'A:1',
+            id: '5',
+            assignedTo: null,
+            logger: null,
+            type: 'error',
+            annotations: [],
+            metadata: {
+              type: 'Exception 2',
+              value: 'will this happen?',
+            },
+            status: 'unresolved',
+            subscriptionDetails: null,
+            isPublic: true,
+            hasSeen: true,
+            shortId: 'RC-0123-4',
+            shareId: 'd7da866462cb4894a56b57abd85ca1fd',
+            firstSeen: '2018-10-14T22:05:12Z',
+            count: '6',
+            permalink: 'sentry/rc-0123/issues/5/',
+            level: 'error',
+            isSubscribed: true,
+            isBookmarked: false,
+            project: {
+              slug: 'rc-0123',
+              id: '2',
+              name: 'RC-0123',
+            },
+            statusDetails: {},
+          },
+          {
+            lastSeen: '2018-10-14T22:01:47Z',
+            numComments: 0,
+            userCount: 0,
+            culprit: '__main__ in <module>',
+            title: "NameError: name 'Flask' is not defined",
+            name: 'RC-0123-Hund-2',
+            container: 'RC-0123-Hund',
+            position: 'A:1',
+            id: '3',
+            assignedTo: null,
+            logger: null,
+            type: 'error',
+            annotations: [],
+            metadata: {
+              type: 'NameError',
+              value: "name 'Flask' is not defined",
+            },
+            status: 'unresolved',
+            subscriptionDetails: null,
+            isPublic: false,
+            hasSeen: true,
+            shortId: 'RC-0123-2',
+            shareId: null,
+            firstSeen: '2018-10-14T22:01:39Z',
+            count: '2',
+            permalink: 'sentry/rc-0123/issues/3/',
+            level: 'error',
+            isSubscribed: true,
+            isBookmarked: false,
+            project: {
+              slug: 'rc-0123',
+              id: '2',
+              name: 'RC-0123',
+            },
+            statusDetails: {},
+          },
+          {
+            lastSeen: '2018-10-11T11:43:30Z',
+            numComments: 3,
+            userCount: 0,
+            culprit: 'poll(../../sentry/scripts/views.js)',
+            title: "TypeError: Object [object Object] has no method 'updateFrom'",
+            name: 'RC-0123-Hund-3',
+            container: 'RC-0123-Hund',
+            position: 'B:1',
+            id: '2',
+            assignedTo: null,
+            logger: null,
+            type: 'error',
+            annotations: [],
+            metadata: {
+              type: 'TypeError',
+              value: "Object [object Object] has no method 'updateFrom'",
+            },
+            status: 'unresolved',
+            subscriptionDetails: {
+              reason: 'mentioned',
+            },
+            isPublic: false,
+            hasSeen: true,
+            shortId: 'RC-0123-1',
+            shareId: null,
+            firstSeen: '2018-10-11T11:43:30Z',
+            count: '1',
+            permalink: 'sentry/rc-0123/issues/2/',
+            level: 'error',
+            isSubscribed: true,
+            isBookmarked: false,
+            project: {
+              slug: 'rc-0123',
+              id: '2',
+              name: 'RC-0123',
+            },
+            statusDetails: {},
+          },
+        ];
 
         this._samplesManager.push(data);
 
@@ -464,20 +578,6 @@ const Samples = createReactClass({
     });
   },
 
-  onSelectStatsPeriod(period) {
-    if (period != this.state.statsPeriod) {
-      // TODO(dcramer): all charts should now suggest "loading"
-      this.setState(
-        {
-          statsPeriod: period,
-        },
-        function() {
-          this.transitionTo();
-        }
-      );
-    }
-  },
-
   onRealtimePoll(data, links) {
     this._samplesManager.unshift(data);
     if (!utils.valueIsEqual(this.state.pageLinks, links, true)) {
@@ -487,7 +587,7 @@ const Samples = createReactClass({
     }
   },
 
-  onGroupChange() {
+  onSampleChange() {
     let groupIds = this._samplesManager.getAllItems().map(item => item.id);
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
@@ -524,6 +624,7 @@ const Samples = createReactClass({
     }
 
     // Ignore saved searches
+    /*
     if (this.state.savedSearchList.map(s => s.query == this.state.query).length > 0) {
       let {orgId, projectId} = this.props.params;
       analytics('issue.search', {
@@ -532,6 +633,7 @@ const Samples = createReactClass({
         project_id: projectId,
       });
     }
+    */
   },
 
   onSortChange(sort) {
@@ -775,7 +877,6 @@ const Samples = createReactClass({
               environment={this.state.environment}
               query={this.state.query}
               queryCount={this.state.queryCount}
-              onSelectStatsPeriod={this.onSelectStatsPeriod}
               onRealtimeChange={this.onRealtimeChange}
               realtimeActive={this.state.realtimeActive}
               statsPeriod={this.state.statsPeriod}

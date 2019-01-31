@@ -125,7 +125,7 @@ const SaveSearchButton = createReactClass({
         <Modal show={this.state.isModalOpen} animation={false} onHide={this.onToggle}>
           <form onSubmit={this.onSubmit}>
             <div className="modal-header">
-              <h4>{t('Save Current Search')}</h4>
+              <h4>{t('Save Current Search 2')}</h4>
             </div>
             <div className="modal-body">
               {this.state.state === FormState.ERROR && (
