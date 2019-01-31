@@ -41,9 +41,12 @@ import ProjectInstallOverview from 'app/views/projectInstall/overview';
 import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
-import Samples from 'app/views/sample'; // TODO: Pluralize filename?
-import SamplesContainer from 'app/views/samples/index'
+//import Samples from 'app/views/sample';  // TODO: Pluralize filename?
+import SamplesContainer from 'app/views/samples/index';
+import WaitingContainer from 'app/views/waiting/index';
+import ProcessesContainer from 'app/views/processes/index';
 import SampleDetails from 'app/views/sampleDetails';
+import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';
 import ProjectPluginDetails from 'app/views/projectPluginDetails';
 import RouteNotFound from 'app/views/routeNotFound';
@@ -51,6 +54,8 @@ import SettingsProjectProvider from 'app/views/settings/components/settingsProje
 import SettingsWrapper from 'app/views/settings/components/settingsWrapper';
 import Stream from 'app/views/stream';
 import errorHandler from 'app/utils/errorHandler';
+
+import FragmentAnalyzeView from 'app/views/fragmentAnalyze';
 
 function appendTrailingSlash(nextState, replace) {
   let lastChar = nextState.location.pathname.slice(-1);
@@ -992,7 +997,35 @@ function routes() {
         </Route>
 
         <Route path=":projectId/" component={errorHandler(ProjectDetails)}>
-          <IndexRoute component={errorHandler(Stream)} />
+          <IndexRoute component={errorHandler(ProcessesContainer)} />
+          <Route path="tasks/" component={errorHandler(ProcessesContainer)} />
+
+          {/* TODO: This route must be provided by the plugin */}
+          <Route
+            path="plugins/clims_snpseq/fragment_analyze/:batchId/"
+            component={errorHandler(FragmentAnalyzeView)}
+          />
+
+          <Route
+            path="waiting/:processId/:taskId/"
+            component={errorHandler(WaitingContainer)}
+          />
+
+          <Route
+            path="samples/:sampleId/"
+            component={errorHandler(SampleDetails)}
+            ignoreScrollBehavior
+          >
+            <Route
+              path="activity/"
+              componentPromise={() =>
+                import(/*webpackChunkName: "GroupActivity"*/ './views/groupActivity')}
+              component={errorHandler(LazyLoad)}
+            />
+
+            <Route path="processes/" component={errorHandler(SampleProcesses)} />
+          </Route>
+
           <Route path="issues/" component={errorHandler(Stream)} />
 
           <Route path="searches/:searchId/" component={errorHandler(Stream)} />
@@ -1046,13 +1079,9 @@ function routes() {
               component={errorHandler(LazyLoad)}
             />
           </Route>
-          <Route
-            path="user-feedback/"
-            componentPromise={() =>
-              import(/* webpackChunkName: "ProjectUserFeedback" */ './views/userFeedback/projectUserFeedback')}
-            component={errorHandler(LazyLoad)}
-          />
-          <Route path="samples/" component={errorHandler(Samples)} />
+          <Route path="samples/" component={errorHandler(SamplesContainer)} />
+          {/* NOTE: This has nothing to do with projects, but we keep it under there for the prototype,
+              as sentry heavily depends on projects being in context all the time */}
           <Route
             path="samples/:sampleId/"
             name="Sample details"

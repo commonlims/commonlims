@@ -170,7 +170,7 @@ describe('ResolveActions', function() {
     await tick();
     wrapper.update();
 
-    expect(wrapper.find('CustomResolutionModal Select').prop('options')).toEqual([
+    expect(wrapper.find('AssignProcessVarsModal Select').prop('options')).toEqual([
       expect.objectContaining({
         value: '92eccef279d966b2319f0802fa4b22b430a5f72b',
         label: expect.anything(),
@@ -184,7 +184,7 @@ describe('ResolveActions', function() {
 
     wrapper.find('input[id="version"]').simulate('keyDown', {keyCode: 13});
 
-    wrapper.find('CustomResolutionModal form').simulate('submit');
+    wrapper.find('AssignProcessVarsModal form').simulate('submit');
     expect(onUpdate).toHaveBeenCalledWith({
       status: 'resolved',
       statusDetails: {
