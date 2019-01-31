@@ -6,6 +6,8 @@ import Collection from 'app/utils/collection';
 import PendingChangeQueue from 'app/utils/pendingChangeQueue';
 import CursorPoller from 'app/utils/cursorPoller';
 import StreamManager from 'app/utils/streamManager';
+import SamplesManager from 'app/utils/samplesManager';
+import ProcessesManager from 'app/utils/processesManager';
 
 /*eslint no-use-before-define:0*/
 
@@ -291,5 +293,7 @@ export default {
   Collection,
   PendingChangeQueue,
   StreamManager,
+  SamplesManager,
+  ProcessesManager,
   CursorPoller,
 };
