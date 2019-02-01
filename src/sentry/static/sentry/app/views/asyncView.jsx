@@ -11,7 +11,7 @@ export default class AsyncView extends AsyncComponent {
   render() {
     let title = this.getTitle();
     return (
-      <DocumentTitle title={`${title ? `${title} - ` : ''}Sentry`}>
+      <DocumentTitle title={`${title ? `${title} - ` : ''}Common LIMS`}>
         {this.renderComponent()}
       </DocumentTitle>
     );
