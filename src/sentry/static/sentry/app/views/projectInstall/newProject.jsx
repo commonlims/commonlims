@@ -23,7 +23,7 @@ const NewProject = createReactClass({
         </div>
         <div className="container">
           <Content>
-            <DocumentTitle title={'Sentry'} />
+            <DocumentTitle title={'Common LIMS'} />
             <CreateProject
               getDocsUrl={({slug, projectSlug, platform}) => {
                 if (platform === 'other') platform = '';
