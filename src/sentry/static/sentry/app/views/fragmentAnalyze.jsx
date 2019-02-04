@@ -158,7 +158,7 @@ Well.propTypes = {
 };
 
 class ContainerComponent extends React.Component {
-  displayName: 'ContainerComponent';
+  //displayName: 'ContainerComponent';
 
   // Receives a prop container, that can e.g. come from the sample-batch endpoint
 
@@ -232,9 +232,10 @@ ContainerComponent.propTypes = {
   container: ContainerPropType,
 };
 
+ContainerComponent.displayName = 'ContainerComponent';
+
 class ContainerCollection extends React.Component {
   // A ContainerCollection allows the user to move between 1..n different containers
-  displayName: 'ContainerCollection';
 
   render() {
     return (
@@ -271,6 +272,8 @@ ContainerCollection.propTypes = {
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
 };
+
+ContainerCollection.displayName = 'ContainerCollection';
 
 class Location {
   // Location is an indexable location within a container, e.g. a well

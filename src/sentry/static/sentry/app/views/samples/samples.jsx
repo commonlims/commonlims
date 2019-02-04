@@ -18,7 +18,6 @@ import {t, tn, tct} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
 import EnvironmentStore from 'app/stores/environmentStore';
-import ErrorRobot from 'app/components/errorRobot';
 import SampleStore from 'app/stores/sampleStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
@@ -785,19 +784,7 @@ const Samples = createReactClass({
     return <PanelBody className="ref-group-list">{groupNodes}</PanelBody>;
   },
 
-  renderAwaitingEvents() {
-    let org = this.getOrganization();
-    let project = this.getProject();
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
-    return (
-      <ErrorRobot
-        org={org}
-        project={project}
-        sampleIssueId={sampleIssueId}
-        gradient={true}
-      />
-    );
-  },
+  renderAwaitingEvents() {},
 
   renderEmpty() {
     const {environment} = this.state;

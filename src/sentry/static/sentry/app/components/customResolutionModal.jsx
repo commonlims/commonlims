@@ -9,7 +9,7 @@ import Button from 'app/components/button';
 import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
-export default class CustomResolutionModal extends React.Component {
+export default class AssignProcessVarsModal extends React.Component {
   static propTypes = {
     onSelected: PropTypes.func.isRequired,
     onCanceled: PropTypes.func.isRequired,

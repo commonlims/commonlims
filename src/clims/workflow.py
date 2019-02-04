@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import requests
 import logging
-from six.moves.urllib import urljoin
+from six.moves.urllib.parse import urljoin
 import os
 from functools32 import lru_cache
 from clims.camunda import CamundaApi, UnexpectedHttpResponse, ProcessDefinition

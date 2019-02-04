@@ -7,6 +7,7 @@ import Button from 'app/components/button';
 import ExternalLink from 'app/components/externalLink';
 import IndicatorStore from 'app/stores/indicatorStore';
 import PluginConfig from 'app/components/pluginConfig';
+
 import SettingsPageHeader from 'app/views/settings/components/settingsPageHeader';
 import withPlugins from 'app/utils/withPlugins';
 
@@ -118,6 +119,14 @@ class ProjectPluginDetails extends AsyncView {
         <SettingsPageHeader title={pluginDetails.name} action={this.renderActions()} />
         <div className="row">
           <div className="col-md-7">
+            {/*<ProcessTaskSettings
+              organization={node["organization"]}
+              project={node["project"]}
+              data={node["data"]}
+              enabled={node["enabled"]}
+              onDisablePlugin={node["onDisabledPlugin"]}
+            />*/}
+
             <PluginConfig
               organization={organization}
               project={project}

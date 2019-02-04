@@ -844,12 +844,6 @@ function routes() {
               component={errorHandler(LazyLoad)}
             />
             <Route
-              path="/organizations/:orgId/issues/:groupId/activity/"
-              componentPromise={() =>
-                import(/* webpackChunkName: "GroupActivity" */ './views/groupDetails/shared/groupActivity')}
-              component={errorHandler(LazyLoad)}
-            />
-            <Route
               path="/organizations/:orgId/issues/:groupId/events/:eventId/"
               componentPromise={() =>
                 import(/* webpackChunkName: "OrganizationGroupEventDetails" */ './views/groupDetails/organization/groupEventDetails')}
@@ -1016,13 +1010,6 @@ function routes() {
             component={errorHandler(SampleDetails)}
             ignoreScrollBehavior
           >
-            <Route
-              path="activity/"
-              componentPromise={() =>
-                import(/*webpackChunkName: "GroupActivity"*/ './views/groupActivity')}
-              component={errorHandler(LazyLoad)}
-            />
-
             <Route path="processes/" component={errorHandler(SampleProcesses)} />
           </Route>
 
@@ -1186,13 +1173,6 @@ function routes() {
             ignoreScrollBehavior
           >
             <IndexRoute component={errorHandler(ProjectGroupEventDetails)} />
-
-            <Route
-              path="activity/"
-              componentPromise={() =>
-                import(/* webpackChunkName: "GroupActivity" */ './views/groupDetails/shared/groupActivity')}
-              component={errorHandler(LazyLoad)}
-            />
 
             <Route
               path="events/:eventId/"

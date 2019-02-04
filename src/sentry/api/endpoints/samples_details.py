@@ -9,7 +9,6 @@ from uuid import uuid4
 from sentry.api.base import Endpoint, SessionAuthentication
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
-from sentry.api.serializers.sample import SampleSerializer
 from sentry.models import ApiApplication, ApiApplicationStatus
 from clims.models.sample import Sample
 from sentry.tasks.deletion import delete_api_application
@@ -673,32 +672,33 @@ class SampleDetailsEndpoint(Endpoint):
         return Response(s)
 
     def put(self, request, app_id):
-        try:
-            instance = Sample.objects.get(
-                # owner=request.user,
-                id=app_id,
-                # status=ApiApplicationStatus.active,
-            )
-        except ApiApplication.DoesNotExist:
-            raise ResourceDoesNotExist
+        pass
+        # try:
+        #     instance = Sample.objects.get(
+        #         # owner=request.user,
+        #         id=app_id,
+        #         # status=ApiApplicationStatus.active,
+        #     )
+        # except ApiApplication.DoesNotExist:
+        #     raise ResourceDoesNotExist
 
-        serializer = SampleSerializer(data=request.DATA, partial=True)
+        # serializer = SampleSerializer(data=request.DATA, partial=True)
 
-        if serializer.is_valid():
-            result = serializer.object
-            csv = result['csv'].split("\n")
-            header = csv[0]
-            body = csv[1:]
-            keys = header.split(";")
-            obj = dict()
-            for line in body:
-                values = line.split(";")
-                obj.update(zip(keys, values))
+        # if serializer.is_valid():
+        #     result = serializer.object
+        #     csv = result['csv'].split("\n")
+        #     header = csv[0]
+        #     body = csv[1:]
+        #     keys = header.split(";")
+        #     obj = dict()
+        #     for line in body:
+        #         values = line.split(";")
+        #         obj.update(zip(keys, values))
 
-            if result:
-                instance.update(**result)
-            return Response(serialize(instance, request.user), status=200)
-        return Response(serializer.errors, status=400)
+        #     if result:
+        #         instance.update(**result)
+        #     return Response(serialize(instance, request.user), status=200)
+        # return Response(serializer.errors, status=400)
 
     def delete(self, request, app_id):
         try:
