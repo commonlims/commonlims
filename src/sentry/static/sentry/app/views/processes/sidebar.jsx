@@ -117,6 +117,7 @@ const ProcessesSidebar = createReactClass({
           <LoadingIndicator />
         ) : (
           <div>
+            {/* TODO: Temp disable, failure in console.log
             <div className="stream-tag-filter">
               <h6 className="nav-header">{t('Text')}</h6>
               <form onSubmit={this.onTextFilterSubmit}>
@@ -133,7 +134,7 @@ const ProcessesSidebar = createReactClass({
                 )}
               </form>
               <hr />
-            </div>
+            </div>*/}
 
             {_.map(tags, tag => {
               return (
