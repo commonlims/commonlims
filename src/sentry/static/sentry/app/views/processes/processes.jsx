@@ -18,7 +18,6 @@ import {t, tn, tct} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
 import EnvironmentStore from 'app/stores/environmentStore';
-import ErrorRobot from 'app/components/errorRobot';
 import ProcessStore from 'app/stores/processStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
@@ -33,6 +32,7 @@ import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
 import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
+import styled from 'react-emotion';
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
@@ -640,17 +640,10 @@ const Processes = createReactClass({
     return <PanelBody className="ref-group-list">{groupNodes}</PanelBody>;
   },
 
-  renderAwaitingEvents() {
-    let org = this.getOrganization();
-    let project = this.getProject();
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
+  renderNoTasksFound() {
+    // TODO: Render a pretty "nothing found" message
     return (
-      <ErrorRobot
-        org={org}
-        project={project}
-        sampleIssueId={sampleIssueId}
-        gradient={true}
-      />
+      <div></div>
     );
   },
 
@@ -683,7 +676,7 @@ const Processes = createReactClass({
     } else if (this.state.error) {
       body = <LoadingError message={this.state.error} onRetry={this.fetchData} />;
     } else if (!project.firstEvent) {
-      body = this.renderAwaitingEvents();
+      body = this.renderNoTasksFound();
     } else if (this.state.groupIds.length > 0) {
       body = this.renderGroupNodes(this.state.groupIds, this.state.statsPeriod);
     } else {
@@ -757,4 +750,16 @@ const Processes = createReactClass({
     );
   },
 });
+
+const NothingFoundWrapper = styled('div')`
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 0 0 3px 3px;
+  ${p =>
+    p.gradient
+      ? `
+          background-image: linear-gradient(to bottom, #F8F9FA, #ffffff);
+         `
+      : ''};
+`;
+
 export default Processes;
