@@ -17,6 +17,10 @@ HIDDEN_PLUGINS = (
     'jira_ac',
 )
 
+# TODO: A quick test!!
+poor_mans_handler_registry = dict()
+
 from sentry.plugins.base import *  # NOQA
 from sentry.plugins.bases import *  # NOQA
 from sentry.plugins.interfaces import *  # NOQA
+from sentry.plugins.decorators import *  # NOQA

@@ -13,6 +13,7 @@ import SelectedSampleStore from 'app/stores/selectedSampleStore';
 import SentryTypes from 'app/sentryTypes';
 import ToolbarHeader from 'app/components/toolbarHeader';
 import AssignToWorkflowButton from 'app/views/samples/assignToWorkflow';
+import UploadSamplesButton from 'app/views/samples/uploadSamples';
 
 const BULK_LIMIT = 1000;
 const BULK_LIMIT_STR = BULK_LIMIT.toLocaleString();
@@ -172,7 +173,6 @@ const SamplesActions = createReactClass({
   },
 
   render() {
-    // TODO(mitsuhiko): very unclear how to translate this
     let {allResultsVisible, queryCount} = this.props;
     let issues = this.state.selectedIds;
     let numIssues = issues.size;
@@ -194,6 +194,12 @@ const SamplesActions = createReactClass({
             >
               {t('Assign to workflow')}
             </AssignToWorkflowButton>
+            <UploadSamplesButton
+              className="btn btn-sm btn-default"
+              disabled={false}
+            >
+              {t('Import samples')}
+            </UploadSamplesButton>
           </ActionSet>
           <Box w={[40, 60, 80, 80]} mx={2} className="align-right">
             <ToolbarHeader>{t('Workflows')}</ToolbarHeader>

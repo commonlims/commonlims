@@ -77,69 +77,8 @@ class ProjectHeader extends React.Component {
                   {t('Samples')}
                 </ProjectLink>
               </li>
-              <li className={navSection == 'stream' ? 'active' : ''}>
-                <ProjectLink to={`/${org.slug}/${project.slug}/`}>
-                  {t('Issues')}
-                </ProjectLink>
-              </li>
-              {/*<li className={navSection == 'user-feedback' ? 'active' : ''}>
-                <ProjectLink to={`/${org.slug}/${project.slug}/user-feedback/`}>
-                  {t('User Feedback')}
-                </ProjectLink>
-              </li>*/}
-              {/*<li className={navSection == 'releases' ? 'active' : ''}>
-                <ProjectLink to={`/${org.slug}/${project.slug}/releases/`}>
-                  {t('Releases')}
-                </ProjectLink>
-              </li>*/}
-              <li className={navSection == 'settings' ? 'active' : ''}>
-                <Link to={`/settings/${org.slug}/${project.slug}/`}>{t('Settings')}</Link>
-              </li>
             </NavTabs>
           </div>
-          {showEnvironmentsToggle && (
-            <EnvironmentsToggle>
-              <div className="project-header-toggle">
-                <label>{t('Environment')}</label>
-                <DropdownLink
-                  anchorRight={true}
-                  title={activeEnvironmentTitle}
-                  className="environment-selector-toggle"
-                >
-                  <MenuItem
-                    onClick={clearActiveEnvironment}
-                    className={activeEnvironment === null && 'active'}
-                    linkClassName="truncate"
-                  >
-                    {allEnvironmentsLabel}
-                  </MenuItem>
-                  {environments.map(env => (
-                    <MenuItem
-                      key={env.id}
-                      onClick={() => setActiveEnvironment(env)}
-                      className={
-                        activeEnvironment &&
-                        activeEnvironment.name === env.name &&
-                        'active'
-                      }
-                      linkClassName="truncate"
-                    >
-                      {env.displayName}
-                    </MenuItem>
-                  ))}
-                  <MenuItem divider={true} />
-                  <div style={{textAlign: 'center', padding: '5px 0px'}}>
-                    <Button
-                      to={`/settings/${org.slug}/${project.slug}/environments/`}
-                      size="small"
-                    >
-                      {t('Manage environments')}
-                    </Button>
-                  </div>
-                </DropdownLink>
-              </div>
-            </EnvironmentsToggle>
-          )}
         </div>
       </div>
     );

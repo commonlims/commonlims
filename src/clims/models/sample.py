@@ -3,6 +3,9 @@ from __future__ import absolute_import, print_function
 from django.db import models
 from sentry.db.models import (Model, FlexibleForeignKey, sane_repr)
 
+# TODO: We need latest django for this! Using a TextField for the POC
+#from django.contrib.postgres.fields import JsonField
+
 
 class Sample(Model):
     """
@@ -13,6 +16,19 @@ class Sample(Model):
     # users can generate tokens without being application-bound
     project = FlexibleForeignKey('sentry.Project', null=True)
     name = models.TextField(null=True)
+    type = models.TextField(null=True)
+    concentration = models.IntegerField(null=True)
+    volume = models.IntegerField(null=True)
+    custom_fields = models.TextField(null=True)
+
+
+# class Sample(object):
+#     def __init__(self, sample_name, sample_type, concentration, volume, custom_fields):
+#         self.sample_name = sample_name
+#         self.sample_type = sample_type
+#         self.concentration = concentration
+#         self.volume = volume
+#         self.custom_fields = custom_fields
 
     class Meta:
         app_label = 'clims'

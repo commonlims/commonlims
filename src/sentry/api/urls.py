@@ -219,6 +219,8 @@ from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
 from .endpoints.task_types import TaskTypesEndpoint
 
+from .endpoints.user_files import UserFilesEndpoint
+
 
 urlpatterns = patterns(
     '',
@@ -849,6 +851,12 @@ urlpatterns = patterns(
         r'^task-types/(?P<organization_slug>[^\/]+)/$',
         TaskTypesEndpoint.as_view(),
         name='clims-api-0-task-types'
+    ),
+
+    url(
+        r'^user-files/$',
+        UserFilesEndpoint.as_view(),
+        name='clims-api-0-user-files'
     ),
 
     # url(
