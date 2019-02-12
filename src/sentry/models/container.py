@@ -12,15 +12,16 @@ class Container(Model):
     __core__ = True
 
     # Parent is the container in which this Container lies. If null, it lies in no container.
-    parent = FlexibleForeignKey('clims.Container', null=True)
-    # TODO: Is FlexibleForeignKey required? does it matter
-    # TODO: Data migration for containers
-    container_type = FlexibleForeignKey('clims.ContainerType', null=True)
+    parent = FlexibleForeignKey('clims.Container', null=True, related_name="children_set")
+
+    # TODO: Benefits of FlexibleForeignKey
+    # TODO: Decide on naming for related_name
+    container_type = FlexibleForeignKey('clims.ContainerType', null=True, related_name="containers")
     name = models.TextField(null=True)
 
     class Meta:
-        app_label = 'clims'
-        db_table = 'clims_container'
+        app_label = 'sentry'
+        db_table = 'sentry_container'
 
     __repr__ = sane_repr('container_type_id', 'name')
 
@@ -47,9 +48,8 @@ class ContainerType(Model):
     levels = models.IntegerField('levels', default=1)
 
     class Meta:
-        app_label = 'clims'
-        # TODO: wrong name
-        db_table = 'clims_container_type'
+        app_label = 'sentry'
+        db_table = 'sentry_container_type'
 
     __repr__ = sane_repr('name')
 
