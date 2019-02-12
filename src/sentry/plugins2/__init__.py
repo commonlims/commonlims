@@ -55,6 +55,8 @@ class FileHandlersRegistry(object):
         self.handlers.add(fn)
 
     def handle_file_uploaded(self, file_like):
+        print("in that upload handler!", self.handlers)
+
         for handler in self.handlers:
             if type(handler) == type:
                 obj = handler()

@@ -343,7 +343,7 @@ const Samples = createReactClass({
       error: false,
     });
 
-    let url = this.getGroupListEndpoint();
+    let url = this.getSamplesEndpoint();
 
     // Remove leading and trailing whitespace
     let query = queryString.formatQueryString(this.state.query);
@@ -406,121 +406,6 @@ const Samples = createReactClass({
           }
         }
 
-        data = [
-          {
-            numComments: 16,
-            userCount: 1,
-            culprit: 'hello_world',
-            title: 'asdfjksafdjkafds',
-            name: 'RC-0123-Hund-1',
-            container: 'RC-0123-Hund',
-            position: 'A:1',
-            id: '5',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'Exception 2',
-              value: 'will this happen?',
-            },
-            status: 'unresolved',
-            subscriptionDetails: null,
-            isPublic: true,
-            hasSeen: true,
-            shortId: 'RC-0123-4',
-            shareId: 'd7da866462cb4894a56b57abd85ca1fd',
-            firstSeen: '2018-10-14T22:05:12Z',
-            count: '6',
-            permalink: 'sentry/rc-0123/issues/5/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-          {
-            lastSeen: '2018-10-14T22:01:47Z',
-            numComments: 0,
-            userCount: 0,
-            culprit: '__main__ in <module>',
-            title: "NameError: name 'Flask' is not defined",
-            name: 'RC-0123-Hund-2',
-            container: 'RC-0123-Hund',
-            position: 'A:1',
-            id: '3',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'NameError',
-              value: "name 'Flask' is not defined",
-            },
-            status: 'unresolved',
-            subscriptionDetails: null,
-            isPublic: false,
-            hasSeen: true,
-            shortId: 'RC-0123-2',
-            shareId: null,
-            firstSeen: '2018-10-14T22:01:39Z',
-            count: '2',
-            permalink: 'sentry/rc-0123/issues/3/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-          {
-            lastSeen: '2018-10-11T11:43:30Z',
-            numComments: 3,
-            userCount: 0,
-            culprit: 'poll(../../sentry/scripts/views.js)',
-            title: "TypeError: Object [object Object] has no method 'updateFrom'",
-            name: 'RC-0123-Hund-3',
-            container: 'RC-0123-Hund',
-            position: 'B:1',
-            id: '2',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'TypeError',
-              value: "Object [object Object] has no method 'updateFrom'",
-            },
-            status: 'unresolved',
-            subscriptionDetails: {
-              reason: 'mentioned',
-            },
-            isPublic: false,
-            hasSeen: true,
-            shortId: 'RC-0123-1',
-            shareId: null,
-            firstSeen: '2018-10-11T11:43:30Z',
-            count: '1',
-            permalink: 'sentry/rc-0123/issues/2/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-        ];
-
         this._samplesManager.push(data);
 
         let queryCount = jqXHR.getResponseHeader('X-Hits');
@@ -564,10 +449,11 @@ const Samples = createReactClass({
     }
   },
 
-  getGroupListEndpoint() {
+  getSamplesEndpoint() {
     let params = this.props.params;
 
-    return '/projects/' + params.orgId + '/' + params.projectId + '/issues/';
+    // TODO: Support some searching in this endpoint
+    return '/samples/';
   },
 
   onRealtimeChange(realtime) {
@@ -784,7 +670,19 @@ const Samples = createReactClass({
     return <PanelBody className="ref-group-list">{groupNodes}</PanelBody>;
   },
 
-  renderAwaitingEvents() {},
+  renderAwaitingEvents() {
+    let org = this.getOrganization();
+    let project = this.getProject();
+    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
+    return (
+      <ErrorRobot
+        org={org}
+        project={project}
+        sampleIssueId={sampleIssueId}
+        gradient={true}
+      />
+    );
+  },
 
   renderEmpty() {
     const {environment} = this.state;
@@ -814,8 +712,6 @@ const Samples = createReactClass({
       body = this.renderLoading();
     } else if (this.state.error) {
       body = <LoadingError message={this.state.error} onRetry={this.fetchData} />;
-    } else if (!project.firstEvent) {
-      body = this.renderAwaitingEvents();
     } else if (this.state.groupIds.length > 0) {
       body = this.renderGroupNodes(this.state.groupIds, this.state.statsPeriod);
     } else {

@@ -135,7 +135,6 @@ class OrganizationDetailsBody extends Component {
       }
     return (
       <React.Fragment>
-        <InstallPromptBanner organization={organization} />
         <ErrorBoundary>{this.props.children}</ErrorBoundary>
         <Footer />
       </React.Fragment>

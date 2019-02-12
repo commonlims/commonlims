@@ -6,10 +6,8 @@ from rest_framework.response import Response
 from sentry.api.base import Endpoint, SessionAuthentication
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.serializers import serialize
-from clims.models import Sample
+from sentry.models import Sample
 from sentry.plugins import plugins
-
-# NOLIMS: Move to the clims module
 
 
 class SampleEndpoint(Endpoint):

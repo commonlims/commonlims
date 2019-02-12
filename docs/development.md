@@ -44,6 +44,13 @@ During the POC we are still keeping the models in sentry.models.
 * Run `lims django makemigrations --auto`
 * Run `lims upgrade`
 
+## Create a rest layer
+
+* Add an endpoint class, e.g. `SamplesEndpoint` in e.g. `sentry/api/endpoints/samples.py`
+* Add a details class, e.g. `SamplesDetailsEndpoint` in e.g. `sentry/api/endpoints/samples.py`
+* Register the route to these endpoints in `sentry/api/urls.py`
+* Create serializers for the domain objects in `sentry/api/serializers/models/samples.py`
+
 # Adding workflows
 
 (TODO: Add more details)

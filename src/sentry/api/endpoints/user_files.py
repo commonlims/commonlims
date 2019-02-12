@@ -34,13 +34,13 @@ class UserFilesEndpoint(Endpoint):
         # 2. registered handlers (defined in plugins) should run on this data
         # 3. profit
 
-        # But for now (poc) we'll just use the snp&seq sample submission sheet handler
         import io
+        from sentry.plugins2 import file_handlers_registry
+        print("about to do some damage")
+
         content_bytes = content.decode('base64')
         f = io.BytesIO(content_bytes)
-
-        submission_sheet = HandleSampleSubmissionSheet()
-        submission_sheet.handle_file(f)
+        file_handlers_registry.handle_file_uploaded(f)
 
         return Response({}, status=201)
 
