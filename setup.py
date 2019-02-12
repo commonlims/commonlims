@@ -147,7 +147,7 @@ setup(
     entry_points={
         'console_scripts': [
             'sentry = sentry.runner:main',
-            'clims = sentry.runner:main'
+            'lims = sentry.runner:main'
         ],
     },
     classifiers=[
