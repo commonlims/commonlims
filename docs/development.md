@@ -36,6 +36,17 @@ fragment_analyzer:
 * Generic UI for FA specific variables
 *
 
-# Transition engine
+# Adding models
 
-The user can see a UI component (written in react) which allows them to drag samples from what we will call a SampleBatch, to different 1..n containers. This should then be committed to the backend so a relation between the SampleBatch and the TransitionGraph will exist for later steps of the process.
+During the POC we are still keeping the models in sentry.models.
+
+* Add a model definition under ./src/sentry/models/
+* Run `lims django makemigrations --auto`
+* Run `lims upgrade`
+
+# Adding workflows
+
+(TODO: Add more details)
+
+* Modify your workflow in Camunda modeler
+* Run `lims upgrade`
