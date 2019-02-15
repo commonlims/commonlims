@@ -1015,7 +1015,7 @@ function routes() {
 
           <Route path="issues/" component={errorHandler(Stream)} />
 
-          <Route path="searches/:searchId/" component={errorHandler(Stream)} />
+          <Route path="searches/:searchId/" component={errorHandler(SamplesContainer)} />
           <Route
             path="dashboard/"
             componentPromise={() =>

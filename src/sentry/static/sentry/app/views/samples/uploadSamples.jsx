@@ -103,12 +103,12 @@ const UploadSamplesButton = createReactClass({
       let endpoint = `/user-files/`;
       const data = new FormData();
 
-      var reader = new FileReader();
+      let reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
       reader.onload = function() {
         //data.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        var data = {
+        let data = {
           content: btoa(reader.result),
           fileName: 'abc',
         };
@@ -127,7 +127,6 @@ const UploadSamplesButton = createReactClass({
             // TODO: In later versions (post-poc) we'll want to upload the file to a queue rather than
             // processing it directly, as a number of plugins may need to handle it and may time out.
             // In that case, this logic needs to be set on a timer/callback:
-
           },
           error: err => {
             let errors = err.responseJSON || true;

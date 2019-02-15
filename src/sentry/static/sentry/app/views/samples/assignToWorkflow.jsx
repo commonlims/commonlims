@@ -12,6 +12,7 @@ import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
+import PluginsStore from 'app/stores/pluginsStore';
 
 const AssignToWorkflowButton = createReactClass({
   displayName: 'AssignToWorkflowButton',
@@ -48,14 +49,18 @@ const AssignToWorkflowButton = createReactClass({
       workflowVars2: null,
       organization,
       project,
-      setProcessVariables: null,
+      setProcessVariables: {},
     };
   },
 
-  onVariableChange(data) {
+  onVariableChange(key, value) {
+    let updated = Object.assign({}, this.state.setProcessVariables);
+    updated[key] = value;
     this.setState({
-      setProcessVariables: data,
+      setProcessVariables: updated,
     });
+
+    console.log('HERE!!!!', this.state.setProcessVariables);
   },
 
   onToggle() {
@@ -108,10 +113,17 @@ const AssignToWorkflowButton = createReactClass({
         let endpoint = `/processes/${orgId}/sample-processes/`;
 
         let data = {
-          samples: SelectedSampleStore.getSelectedIds(),
+          samples: [],
           variables: this.state.setProcessVariables,
           process: this.state.process,
+          something: 'abc',
         };
+        for (let a of SelectedSampleStore.getSelectedIds()) {
+          // TODO: Don't know why I need to do this vs. just using the set
+          data.samples.push(a);
+        }
+
+        console.log('HERE posting', data);
 
         this.api.request(endpoint, {
           method: 'POST',
@@ -155,33 +167,13 @@ const AssignToWorkflowButton = createReactClass({
 
   render() {
     let isSaving = this.state.state === FormState.SAVING;
+    // TODO: This is all hardcoded to snpseq to test how the plugin model
+    // could work, but this needs to support any system and just send events to plugin handlers.
 
-    // TODO(withrocks): mocked
-    let node = {
-      data: {
-        isTestable: false,
-        views: {},
-        hasConfiguration: true,
-        shortName: 'SnpSeq',
-        config: {},
-        id: 'snpseq',
-        assets: [{url: '_static/1539772060/snpseq/dist/snpseq.js'}],
-        name: 'SnpSeq',
-        author: {
-          url: 'https://github.com/getsentry/sentry-plugins',
-          name: 'Sentry Team',
-        },
-        contexts: {},
-        doc: '',
-        resourceLinks: {},
-        enabled: true,
-        slug: 'snpseq',
-        version: '9.1.0.dev0',
-        canDisable: true,
-        type: 'default',
-        metadata: {},
-      },
-    };
+    // TODO: Get that plugins node from the PluginsStore instead
+    // console.log(PluginsStore.plugins);
+
+    // TODO(withrocks):
     return (
       <React.Fragment>
         <a
@@ -235,7 +227,7 @@ const AssignToWorkflowButton = createReactClass({
                 <ProcessTaskSettings
                   organization={this.state.organization}
                   project={this.state.project}
-                  data={node.data}
+                  pluginId="snpseq"
                   onChanged={this.onVariableChange}
                   processVarsViewKey="start_sequence"
                 />

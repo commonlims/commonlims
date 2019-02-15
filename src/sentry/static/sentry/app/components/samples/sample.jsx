@@ -90,10 +90,6 @@ const SampleComponent = createReactClass({
         >
           <SampleHeader data={data} orgId={orgId} projectId={projectId} query={query} />
         </SampleEntrySummary>
-        <Flex w={[40, 60, 80, 80]} mx={2} justify="flex-end">
-          {hasGuideAnchor && <GuideAnchor target="users" type="text" />}
-          <StyledCount value={data.userCount} />
-        </Flex>
       </Sample>
     );
   },

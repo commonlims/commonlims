@@ -26,7 +26,7 @@ import ProjectState from 'app/mixins/projectState';
 import SentryTypes from 'app/sentryTypes';
 import SamplesActions from 'app/views/samples/actions';
 import SamplesFilters from 'app/views/samples/filters';
-import SamplesGroup from 'app/components/samples/sample';
+import SampleComponent from 'app/components/samples/sample';
 import SamplesSidebar from 'app/views/samples/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
@@ -656,7 +656,7 @@ const Samples = createReactClass({
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
-        <SamplesGroup
+        <SampleComponent
           key={id}
           id={id}
           orgId={orgId}

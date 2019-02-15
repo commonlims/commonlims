@@ -77,7 +77,8 @@ class WorkflowEngine(object):
             return {
                 "id": json["id"],
                 "parentActivityInstanceId": json["parentActivityInstanceId"],
-                "name": json["name"]
+                "name": json["name"],
+                "taskDefinitionKey": json["id"].split(":")[0]
             }
 
         # TODO: Fetch details about the process definition and cache it, as the frontend will most likely
@@ -119,9 +120,19 @@ class WorkflowEngine(object):
         else:
             raise UnexpectedHttpResponse(json["message"], response.status_code)
 
+    def get_outstanding_tasks(self, process_definition=None, task_definition=None):
+        process_instances = self.process_instances(
+            active="true", processDefinitionKey="clims_snpseq.core.workflows.reception_qc")
+        ret = list()
+        for process_instance in process_instances:
+            for activity in process_instance["activities"]:
+                if activity["taskDefinitionKey"] == task_definition:
+                    activity["businessKey"] = process_instance["businessKey"]
+                    ret.append(activity)
+        return ret
+
     def get_tasks(self, process_definition=None, business_key=None, **kwargs):
         """Returns tasks for the search parameters"""
-        # TODO: Paging (as in all the others)
         params = kwargs or dict()
 
         if process_definition:
@@ -181,8 +192,12 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     api = CamundaApi("http://localhost:8080/engine-rest")
-
     engine = WorkflowEngine()
+
+    tasks = engine.get_outstanding_tasks(process_definition="clims_snpseq.core.workflows.reception_qc",
+                                         task_definition="SelectQCMethodDNA")
+
+    exit()
     business_key = "sample-5"
     instances = engine.process_instances(business_key)
     print(instances)  # noqa

@@ -892,6 +892,7 @@ const FragmentAnalyzeView = createReactClass({
     // 1. post an action to the plugin endpoint
     // 2. get a response, for now it's synch (in the backend) but TODO: it's should be queued by the backend
     //    as plugins will be written that take too much time executing
+    console.trace();
     this.api.request('/plugins/snpseq/snpseq/actions/', {
       method: 'POST',
       data: correlation,

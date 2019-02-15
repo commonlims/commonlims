@@ -10,7 +10,7 @@ from sentry.api.base import Endpoint, SessionAuthentication
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
 from sentry.models import ApiApplication, ApiApplicationStatus
-from clims.models.sample import Sample
+from sentry.models.sample import Sample
 from sentry.tasks.deletion import delete_api_application
 
 delete_logger = logging.getLogger('sentry.deletions.api')
@@ -745,6 +745,7 @@ class SampleWorkflowsBatchEndpoint(Endpoint):
     def post(self, request, organization_slug):
         # TODO(withrocks): Go through a serializer object for this, and validate
         data = request.DATA
+        print("POST", request.DATA)
         engine = WorkflowEngine()
 
         for sample in data["samples"]:
@@ -753,6 +754,7 @@ class SampleWorkflowsBatchEndpoint(Endpoint):
             #     "sample_type": "rna",
             #     "sequencer": "HiSeq X"
             # }
+            print("HERE", sample)
             business_key = "sample-{}".format(sample)
             process = data["process"]
             variables = data["variables"]

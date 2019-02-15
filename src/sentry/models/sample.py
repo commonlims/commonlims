@@ -27,9 +27,17 @@ class Sample(Model):
     volume = models.FloatField(null=True)
     custom_fields = models.TextField(null=True)
 
-    depth = models.IntegerField(default=0)
+    depth = models.IntegerField(default=1)
     parents = models.ManyToManyField("self")
     version = models.IntegerField(default=1)
+
+    # TODO: Unique key on this combination, no name with the same version and depth
+    @property
+    def full_name(self):
+        """Since analytes (depth > 1) and different versions can have the same name as the original
+        one can fully qualify the sample knowing the name, depth and version
+        """
+        return "{}:{}:{}".format(self.name, self.depth, self.version)
 
     class Meta:
         app_label = 'sentry'

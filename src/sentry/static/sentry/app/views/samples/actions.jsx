@@ -13,6 +13,7 @@ import SelectedSampleStore from 'app/stores/selectedSampleStore';
 import SentryTypes from 'app/sentryTypes';
 import ToolbarHeader from 'app/components/toolbarHeader';
 import AssignToWorkflowButton from 'app/views/samples/assignToWorkflow';
+import WorkOnButton from 'app/views/samples/workOnButton';
 import UploadSamplesButton from 'app/views/samples/uploadSamples';
 
 const BULK_LIMIT = 1000;
@@ -187,6 +188,13 @@ const SamplesActions = createReactClass({
           </ActionsCheckbox>
 
           <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
+            <WorkOnButton
+              className="btn btn-sm btn-default"
+              disabled={!anySelected}
+              {...this.props}
+            >
+              {t('Start work')}
+            </WorkOnButton>
             <AssignToWorkflowButton
               className="btn btn-sm btn-default"
               disabled={!anySelected}
@@ -194,16 +202,10 @@ const SamplesActions = createReactClass({
             >
               {t('Assign to workflow')}
             </AssignToWorkflowButton>
-            <UploadSamplesButton
-              className="btn btn-sm btn-default"
-              disabled={false}
-            >
+            <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
               {t('Import samples')}
             </UploadSamplesButton>
           </ActionSet>
-          <Box w={[40, 60, 80, 80]} mx={2} className="align-right">
-            <ToolbarHeader>{t('Workflows')}</ToolbarHeader>
-          </Box>
         </StyledFlex>
 
         {!allResultsVisible &&

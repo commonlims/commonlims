@@ -8,8 +8,9 @@ from sentry.models.sample import Sample
 class SampleSerializer(Serializer):
     def serialize(self, obj, attrs, user):
         return {
-            "id": obj.id,
+            "id": str(obj.id),
             "name": obj.name,
+            "processes": obj.processes,
 
             # Test stuff
             "userCount": 12,

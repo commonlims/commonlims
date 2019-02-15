@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
 import SampleTitle from 'app/components/samples/sampleTitle';
+import Tooltip from 'app/components/tooltip';
 
 /**
  * Displays an event or group/issue title (i.e. in Stream)
@@ -19,14 +20,6 @@ class SampleHeader extends React.Component {
     data: PropTypes.shape({
       id: PropTypes.string,
       level: PropTypes.string,
-      type: PropTypes.oneOf([
-        'error',
-        'csp',
-        'hpkp',
-        'expectct',
-        'expectstaple',
-        'default',
-      ]).isRequired,
       title: PropTypes.string,
       metadata: Metadata,
       groupID: PropTypes.string,
@@ -65,17 +58,24 @@ class SampleHeader extends React.Component {
       Wrapper = 'span';
     }
 
+    let stateTitle = null;
+    let sampleState = null;
+
+    if (this.props.data.processes.length > 0) {
+      stateTitle = 'Ready for work';
+      sampleState = 'waiting';
+    }
+
     return (
       <Wrapper
         {...props}
         style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
       >
-        {/*!hideLevel &&
-          level && (
-            <Tooltip title={`Error level: ${capitalize(level)}`}>
-              <SampleType level={data.level} />
-            </Tooltip>
-          )*/}
+        {stateTitle && (
+          <Tooltip title={stateTitle}>
+            <SampleLabel sampleState={sampleState} />
+          </Tooltip>
+        )}
         {!hideIcons && data.status === 'ignored' && <Muted className="icon-soundoff" />}
         {!hideIcons && data.isBookmarked && <Starred className="icon-star-solid" />}
         <SampleTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
@@ -134,6 +134,31 @@ const Muted = styled.span`
 const Starred = styled.span`
   ${iconStyles};
   color: ${p => p.theme.yellowOrange};
+`;
+
+const SampleLabel = styled.div`
+  position: absolute;
+  left: -1px;
+  width: 9px;
+  height: 15px;
+  border-radius: 0 3px 3px 0;
+
+  background-color: ${p => {
+    switch (p.sampleState) {
+      case 'waiting':
+        return p.theme.purple;
+      case 'info':
+        return p.theme.blue;
+      case 'warning':
+        return p.theme.yellowOrange;
+      case 'error':
+        return p.theme.orange;
+      case 'fatal':
+        return p.theme.red;
+      default:
+        return p.theme.gray2;
+    }
+  }};
 `;
 
 export default SampleHeader;

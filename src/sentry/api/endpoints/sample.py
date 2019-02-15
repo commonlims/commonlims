@@ -4,10 +4,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from sentry.api.base import Endpoint, SessionAuthentication
-from sentry.api.paginator import OffsetPaginator
+from sentry.api.paginator import OffsetPaginator, SequencePaginator
 from sentry.api.serializers import serialize
 from sentry.models import Sample
 from sentry.plugins import plugins
+from clims.workflow import WorkflowEngine
 
 
 class SampleEndpoint(Endpoint):
@@ -15,18 +16,63 @@ class SampleEndpoint(Endpoint):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        queryset = Sample.objects.filter(
-            # owner=request.user,
-            # status=ApiApplicationStatus.active,
-        )
+        query = request.GET.get("query")
 
-        return self.paginate(
-            request=request,
-            queryset=queryset,
-            order_by='name',
-            paginator_cls=OffsetPaginator,
-            on_results=lambda x: serialize(x, request.user),
-        )
+        samples = None
+
+        # TODO: I guess there is some parser for this sentry structured query.
+        # Look into that, hack for now:
+        query_dict = dict()
+        if query:
+            query_items = [item.strip() for item in query.split(" ")]
+            for query_item in query_items:
+                key, value = query_item.split(":")
+                query_dict[key] = value
+
+        task = query_dict.get("task", None)
+        process = query_dict.get("process", None)
+
+        engine = WorkflowEngine()
+
+        if task or process:
+            # Start by finding all processes waiting for this particular task
+            tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
+            samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
+
+        # TODO: Bug, if the task is misspelled, we get everything, i.e. no filter occurs
+
+        if samples:
+            queryset = Sample.objects.filter(pk__in=samples)
+        else:
+            queryset = Sample.objects.filter()
+
+        # TODO Yeah, this is just for the poc!
+        # http://localhost:8080/engine-rest/process-instance?active=true
+        processes = engine.process_instances(active="true")
+
+        from collections import defaultdict
+        processes_dict = defaultdict(list)
+
+        for process in processes:
+            processes_dict[process["businessKey"]].append(process["id"])
+
+        from pprint import pprint
+        pprint(processes)
+
+        # TODO: If we decide on using Camunda as our workflow engine, consider pushing the workflow
+        # data into the same postgresql instance and be able to query it (partially at least) through the ORM
+        # Then this kind of query would be lightning fast and in it would be in some ways simpler
+        data = list()
+        for s in queryset:
+            s.processes = processes_dict["sample-{}".format(s.id)]
+            data.append(serialize(s))
+
+            # NOTE: For completeness we add all processes to the sample, even though strictly there should only be
+            # one, that is not necessarily true in the most generic case (it's just a business rule)
+
+        # TODO: Paginate
+
+        return Response(data, status=200)
 
     def post(self, request):
         sample = Sample.objects.create(

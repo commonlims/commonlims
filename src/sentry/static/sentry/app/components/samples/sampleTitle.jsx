@@ -4,14 +4,6 @@ import React from 'react';
 class SampleTitle extends React.Component {
   static propTypes = {
     data: PropTypes.shape({
-      type: PropTypes.oneOf([
-        'error',
-        'csp',
-        'hpkp',
-        'expectct',
-        'expectstaple',
-        'default',
-      ]).isRequired,
       name: PropTypes.string,
     }),
   };

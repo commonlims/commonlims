@@ -7,14 +7,19 @@ import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {FormState} from 'app/components/forms';
+import WorkflowFilter from 'app/views/samples/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
+import SelectedSampleStore from 'app/stores/selectedSampleStore';
+import {withRouter} from 'react-router';
 
-// TODO(withrocks): This view is very similar to assignToWorkflow.jsx, so
-// we might want to join those two
-const SetProcessVariables = createReactClass({
-  displayName: 'AssignToWorkflowButton',
+const WorkOnButton = createReactClass({
+  // A button/view that allows the user to work on several samples that are in a waiting queue
+  // This is in a separate class as we may want either to redirect to a page or show a modal window
+  // based on the UserAction in question
+  // TODO: For now we always redirect
+  displayName: 'WorkOnButton',
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
@@ -24,11 +29,13 @@ const SetProcessVariables = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
-
-    // onAssign: PropTypes.func.isRequired,
   },
 
   mixins: [ApiMixin],
+
+  shouldRedirect() {
+    return true;
+  },
 
   getInitialState() {
     let {orgId, projectId} = this.props;
@@ -38,7 +45,7 @@ const SetProcessVariables = createReactClass({
     let project = ProjectsStore.getBySlug(projectId);
 
     return {
-      isModalOpen: false,
+      isActivated: false,
       formData: {
         query: this.props.query,
       },
@@ -53,8 +60,7 @@ const SetProcessVariables = createReactClass({
   },
 
   onVariableChange(data) {
-    console.log('HERE in parent', data);
-    this.setState({setProcessVariables: data});
+    this.state.setState({setProcessVariables: data});
   },
 
   onToggle() {
@@ -62,7 +68,7 @@ const SetProcessVariables = createReactClass({
       return;
     }
     this.setState({
-      isModalOpen: !this.state.isModalOpen,
+      isActivated: !this.state.isActivated,
       state: FormState.READY,
       formData: {
         query: this.props.query,
@@ -71,7 +77,6 @@ const SetProcessVariables = createReactClass({
   },
 
   onFieldChange(name, value) {
-    console.log('onFieldChange');
     let formData = this.state.formData;
     formData[name] = value;
     this.setState({
@@ -99,6 +104,8 @@ const SetProcessVariables = createReactClass({
       },
       () => {
         // TODO: Start the process
+        console.log('starting process', this.state.formData);
+
         let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         let {orgId} = this.props;
 
@@ -108,10 +115,13 @@ const SetProcessVariables = createReactClass({
         let endpoint = `/processes/${orgId}/sample-processes/`;
 
         let data = {
-          processInstanceId: '143438f',
+          samples: SelectedSampleStore.getSelectedIds(),
           variables: this.state.setProcessVariables,
           process: this.state.process,
         };
+
+        console.log('here: starting a workflow');
+        console.log(' here: ', data.samples, 'dont you be empty!');
 
         this.api.request(endpoint, {
           method: 'POST',
@@ -151,38 +161,44 @@ const SetProcessVariables = createReactClass({
     ];
 
     this.setState(state => ({workflowVars: vars, value, process: value}));
+    console.log(this.state);
+
     // Fetch the variables for this, if they don't exist yet:
   },
 
+  startUserTask() {
+    // 1. POST all these samples to the user-task endpoint.
+    // 2. Redirect to the user task site
+    console.log('BEFORE POSTING');
+    console.log(SelectedSampleStore.getSelectedIds());
+
+    // TODO: just for tomorrows demo, route directly to FA:
+    this.props.router.push(`/sentry/rc-0123/plugins/clims_snpseq/fragment_analyze/123/`);
+
+    /*
+    this.api.request('/user-task/', {
+      method: 'POST',
+      data: {
+        samples: [1, 2, 3]
+      },
+      error: error => {
+        this.setState({
+          loading: false,
+          error: true,
+          isActivated: false,  // yeah, this pattern is weird, I know (POCing here)
+        });
+      },
+      success: data => {
+        // TODO:project
+        this.props.router.push(`/sentry/rc-0123/user-task/${data.id}`);
+      }
+    });*/
+  },
+
   render() {
+    // TODO: Create another component for this
     let isSaving = this.state.state === FormState.SAVING;
 
-    // TODO(withrocks): mocked
-    let node = {
-      data: {
-        isTestable: false,
-        views: {},
-        hasConfiguration: true,
-        shortName: 'SnpSeq',
-        config: {},
-        id: 'snpseq',
-        assets: [{url: '_static/1539772060/snpseq/dist/snpseq.js'}],
-        name: 'SnpSeq',
-        author: {
-          url: 'https://github.com/getsentry/sentry-plugins',
-          name: 'Sentry Team',
-        },
-        contexts: {},
-        doc: '',
-        resourceLinks: {},
-        enabled: true,
-        slug: 'snpseq',
-        version: '9.1.0.dev0',
-        canDisable: true,
-        type: 'default',
-        metadata: {},
-      },
-    };
     return (
       <React.Fragment>
         <a
@@ -194,10 +210,20 @@ const SetProcessVariables = createReactClass({
         >
           {this.props.children}
         </a>
-        <Modal show={this.state.isModalOpen} animation={false} onHide={this.onToggle}>
+
+        {/* Generally, we redirect to another view, but (later) we should implement fixing
+            simpler tasks in a modal window (see sketch below).
+        */}
+        {this.state.isActivated && this.shouldRedirect() && this.startUserTask()}
+
+        <Modal
+          show={this.state.isActivated && !this.shouldRedirect()}
+          animation={false}
+          onHide={this.onToggle}
+        >
           <form onSubmit={this.onSubmit}>
             <div className="modal-header">
-              <h4>{t('Set process level parameters')}</h4>
+              <h4>{t('Assign samples to workflow')}</h4>
             </div>
             <div className="modal-body">
               {this.state.state === FormState.ERROR && (
@@ -207,20 +233,40 @@ const SetProcessVariables = createReactClass({
               )}
               <p>
                 {t(
-                  'Setting process level variables will move the task further in the process.'
+                  'Assigning the samples to a workflow will immediately start the workflow.'
                 )}
               </p>
 
               {/* TODO: fetch all workflows that are on per-sample level from the plugin definitions
                   TODO: the value doesn't stick around (anymore)
               */}
-              <ProcessTaskSettings
-                organization={this.state.organization}
-                project={this.state.project}
-                data={node.data}
-                onChanged={this.onVariableChange}
-                processVarsViewKey="sequence.create_library.reception_qc.select_qc_method"
+              <WorkflowFilter
+                value={this.state.value}
+                key="is"
+                tag={{
+                  key: 'is',
+                  name: 'Status',
+                  values: [
+                    'clims_snpseq.core.workflows.sequence',
+                    'clims_snpseq.core.workflows.alt',
+                  ],
+                  predefined: true,
+                }}
+                onSelect={this.onSelectWorkflow}
+                orgId="sentry"
+                projectId="rc-0123"
               />
+
+              <br />
+              {this.state.workflowVars && (
+                <ProcessTaskSettings
+                  organization={this.state.organization}
+                  project={this.state.project}
+                  data={node.data}
+                  onChanged={this.onVariableChange}
+                  processVarsViewKey="start_sequence"
+                />
+              )}
             </div>
 
             <div className="modal-footer">
@@ -233,7 +279,7 @@ const SetProcessVariables = createReactClass({
                 {t('Cancel')}
               </button>
               <button type="submit" className="btn btn-primary" disabled={isSaving}>
-                {t('Ok')}
+                {t('Assign')}
               </button>
             </div>
           </form>
@@ -243,4 +289,4 @@ const SetProcessVariables = createReactClass({
   },
 });
 
-export default SetProcessVariables;
+export default withRouter(WorkOnButton);

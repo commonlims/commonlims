@@ -45,10 +45,12 @@ class ProcessHeader extends React.Component {
     let Wrapper;
 
     if (includeLink) {
+      let process = this.props.data.process;
+      let taskKey = this.props.data.taskKey;
+      let searchParams = `task:${taskKey} process:${process}`;
       props.to = {
-        pathname: `/${orgId}/${projectId}/waiting/${this.props.data.process}/${this.props
-          .data.taskKey}/`,
-        search: `${this.props.query ? `?query=${this.props.query}` : ''}`,
+        pathname: `/${orgId}/${projectId}/samples/`, //?waitingFor=${this.props.data.process}:${this.props .data.taskKey}`,
+        search: `?query=${searchParams}`,
       };
       Wrapper = ProjectLink;
     } else {

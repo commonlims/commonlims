@@ -12,7 +12,7 @@ import IndicatorStore from 'app/stores/indicatorStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 import SentryTypes from 'app/sentryTypes';
 import ToolbarHeader from 'app/components/toolbarHeader';
-import AssignToWorkflowButton from 'app/views/samples/assignToWorkflow';
+import WorkOnButton from 'app/views/waiting/workOnButton';
 
 const BULK_LIMIT = 1000;
 const BULK_LIMIT_STR = BULK_LIMIT.toLocaleString();
@@ -228,13 +228,13 @@ const SamplesActions = createReactClass({
           </ActionsCheckbox>
 
           <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
-            <AssignToWorkflowButton
+            <WorkOnButton
               className="btn btn-sm btn-default"
               disabled={!anySelected}
               {...this.props}
             >
-              {t('Assign to workflow')}
-            </AssignToWorkflowButton>
+              {t('Start work')}
+            </WorkOnButton>
           </ActionSet>
           <Box w={[40, 60, 80, 80]} mx={2} className="align-right">
             <ToolbarHeader>{t('Workflows')}</ToolbarHeader>

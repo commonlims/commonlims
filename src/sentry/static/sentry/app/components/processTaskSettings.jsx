@@ -10,6 +10,7 @@ import IndicatorStore from 'app/stores/indicatorStore';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import {Panel, PanelBody, PanelHeader} from 'app/components/panels';
 import plugins from 'app/plugins';
+import {GenericField} from 'app/components/forms';
 
 const ProcessTaskSettings = createReactClass({
   displayName: 'ProcessTaskSettings',
@@ -17,70 +18,59 @@ const ProcessTaskSettings = createReactClass({
   propTypes: {
     organization: PropTypes.object.isRequired,
     project: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
     onChanged: PropTypes.func.isRequired,
     processVarsViewKey: PropTypes.string.isRequired,
+    pluginId: PropTypes.string.isRequired,
   },
 
   mixins: [ApiMixin],
 
   getInitialState() {
     return {
-      loading: !plugins.isLoaded(this.props.data),
+      loading: true,
       testResults: '',
       processVariables: null,
+      fields: null,
     };
   },
 
   componentWillMount() {
-    this.loadPlugin(this.props.data);
+    this.loadPluginDetails(this.props.pluginId);
   },
 
   componentWillReceiveProps(nextProps) {
-    this.loadPlugin(nextProps.data);
+    this.loadPluginDetails(this.props.pluginId);
   },
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      !_.isEqual(nextState, this.state) || !_.isEqual(nextProps.data, this.props.data)
+      !_.isEqual(nextState, this.state) ||
+      !_.isEqual(nextProps.pluginId, this.props.pluginId)
     );
   },
 
-  loadPlugin(data) {
-    this.setState(
-      {
-        loading: true,
-      },
-      () => {
-        plugins.load(data, () => {
-          this.setState({loading: false});
+  getPluginEndpoint(pluginId) {
+    // TODO:
+    let projectId = 'rc-0123';
+    let orgId = 'sentry';
+    return `/projects/${orgId}/${projectId}/plugins/${pluginId}/`;
+  },
+
+  loadPluginDetails(pluginId) {
+    // TODO: we should be getting this from the plugin store or similar
+    console.log('about to load');
+    this.api.request(this.getPluginEndpoint(pluginId), {
+      method: 'GET',
+      data: {},
+      success: pluginDetails => {
+        console.log('loaded', pluginDetails);
+        this.setState({
+          loading: false,
+          fields: pluginDetails.views.start_sequence.fields,
         });
-      }
-    );
-  },
-
-  getPluginEndpoint() {
-    let {organization, project, data} = this.props;
-    return `/projects/${organization.slug}/${project.slug}/plugins/${data.id}/`;
-  },
-
-  testPlugin() {
-    let loadingIndicator = IndicatorStore.add(t('Sending test..'));
-    this.api.request(this.getPluginEndpoint(), {
-      method: 'POST',
-      data: {
-        test: true,
       },
-      success: data => {
-        this.setState({testResults: JSON.stringify(data.detail)});
-        IndicatorStore.remove(loadingIndicator);
-        IndicatorStore.add(t('Test Complete!'), 'success');
-      },
-      error: error => {
-        IndicatorStore.add(
-          t('An unexpected error occurred while testing your plugin. Please try again.'),
-          'error'
-        );
+      error: () => {
+        IndicatorStore.addError(t('An error occurred'));
       },
     });
   },
@@ -89,15 +79,23 @@ const ProcessTaskSettings = createReactClass({
     return {__html: this.props.data.doc};
   },
 
-  onChanged(data) {
-    this.setState({processVariables: data});
+  handleChange(value, config) {
+    this.props.onChanged(config.name, value);
+  },
+
+  configToField(config) {
+    return (
+      <GenericField
+        key={config.name}
+        config={config}
+        onChange={value => this.handleChange(value, config)}
+      />
+    );
   },
 
   render() {
-    let {data} = this.props;
-
     return (
-      <Panel className={`plugin-config ref-plugin-config-${data.id}`}>
+      <Panel className={`plugin-config ref-plugin-config-${this.props.pluginId}`}>
         <PanelHeader hasButtons>
           <Flex align="center" flex="1">
             <span>{t('Process parameters')}</span>
@@ -110,16 +108,15 @@ const ProcessTaskSettings = createReactClass({
               <p>{this.state.testResults}</p>
             </div>
           ) : null}
-          <div dangerouslySetInnerHTML={this.createMarkup()} />
+          {/* <div dangerouslySetInnerHTML={this.createMarkup()} /> */}
           {this.state.loading ? (
             <LoadingIndicator />
           ) : (
-            plugins.get(data).renderProcessVars({
-              organization: this.props.organization,
-              project: this.props.project,
-              viewKey: this.props.processVarsViewKey,
-              onChanged: this.props.onChanged,
-            })
+            <div>
+              <div>
+                {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
+              </div>
+            </div>
           )}
         </PanelBody>
       </Panel>

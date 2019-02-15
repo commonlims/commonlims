@@ -17,21 +17,16 @@ const Footer = () => {
           <a href="/docs/">{t('Docs')}</a>
           <a
             className="hidden-xs"
-            href="https://github.com/getsentry/sentry"
+            href="https://github.com/commonlims/commonlims"
             rel="noreferrer"
           >
             {t('Contribute')}
           </a>
-          {config.isOnPremise && (
-            <a className="hidden-xs" href="/out/">
-              {t('Migrate to SaaS')}
-            </a>
-          )}
         </div>
         {config.isOnPremise && (
           <div className="version pull-left">
-            {'Sentry '}
-            <DynamicWrapper fixed="Acceptance Test" value={config.version.current} />
+            {'Common LIMS '}
+            <DynamicWrapper fixed="Acceptance Test" value={'0.1.0'} />
           </div>
         )}
         <a href="/" className="icon-sentry-logo" />

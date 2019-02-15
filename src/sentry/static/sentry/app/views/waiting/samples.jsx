@@ -18,15 +18,13 @@ import {t, tn, tct} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
 import EnvironmentStore from 'app/stores/environmentStore';
-import ErrorRobot from 'app/components/errorRobot';
-//import WaitingStore from 'app/stores/waitingStore';
-import SampleStore from 'app/stores/sampleStore';
+import WaitingStore from 'app/stores/waitingStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
 import ProjectState from 'app/mixins/projectState';
 import SentryTypes from 'app/sentryTypes';
-import SamplesActions from 'app/views/samples/actions';
+import SamplesActions from 'app/views/waiting/actions';
 import SamplesFilters from 'app/views/samples/filters';
 import SamplesGroup from 'app/components/samples/sample';
 import SamplesSidebar from 'app/views/samples/sidebar';
@@ -40,10 +38,10 @@ const DEFAULT_SORT = 'date';
 const DEFAULT_STATS_PERIOD = '24h';
 const STATS_PERIODS = new Set(['14d', '24h']);
 
-const Samples = createReactClass({
+const WaitingSamples = createReactClass({
   // This class was based on the Stream class in Sentry
 
-  displayName: 'Samples',
+  displayName: 'WaitingSamples',
 
   propTypes: {
     environment: SentryTypes.Environment,
@@ -52,7 +50,7 @@ const Samples = createReactClass({
     tagsLoading: PropTypes.bool,
   },
 
-  mixins: [Reflux.listenTo(SampleStore, 'onSampleChange'), ApiMixin, ProjectState],
+  mixins: [Reflux.listenTo(WaitingStore, 'onSampleChange'), ApiMixin, ProjectState],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
@@ -97,7 +95,7 @@ const Samples = createReactClass({
   },
 
   componentWillMount() {
-    this._samplesManager = new utils.SamplesManager(SampleStore);
+    this._samplesManager = new utils.SamplesManager(WaitingStore);
     this._poller = new utils.CursorPoller({
       success: this.onRealtimePoll,
     });
@@ -155,7 +153,7 @@ const Samples = createReactClass({
 
   componentWillUnmount() {
     this._poller.disable();
-    SampleStore.reset();
+    WaitingStore.reset();
   },
 
   fetchSavedSearches() {
@@ -337,7 +335,7 @@ const Samples = createReactClass({
   },
 
   fetchData() {
-    SampleStore.loadInitialData([]);
+    WaitingStore.loadInitialData([]);
 
     this.setState({
       dataLoading: true,
@@ -345,7 +343,7 @@ const Samples = createReactClass({
       error: false,
     });
 
-    let url = this.getGroupListEndpoint();
+    let url = `/samples/`;
     console.log('here: Getting sample sample endpoint (RENAME)', url);
 
     // Remove leading and trailing whitespace
@@ -360,7 +358,9 @@ const Samples = createReactClass({
       sort: this.state.sort,
       statsPeriod: this.state.statsPeriod,
       shortIdLookup: '1',
+      waitingForUserTask: 'clims_snpseq.core.workflows.reception_qc:SelectQCMethodDNA',
     };
+    console.log(requestParams);
 
     // Always keep the global active environment in sync with the queried environment
     // The global environment wins unless there one is specified by the saved search
@@ -410,122 +410,9 @@ const Samples = createReactClass({
           }
         }
 
-        data = [
-          {
-            numComments: 16,
-            userCount: 1,
-            culprit: 'hello_world',
-            title: 'asdfjksafdjkafds',
-            name: 'RC-0123-Hund-1',
-            container: 'RC-0123-Hund',
-            position: 'A:1',
-            id: '5',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'Exception 2',
-              value: 'will this happen?',
-            },
-            status: 'unresolved',
-            subscriptionDetails: null,
-            isPublic: true,
-            hasSeen: true,
-            shortId: 'RC-0123-4',
-            shareId: 'd7da866462cb4894a56b57abd85ca1fd',
-            firstSeen: '2018-10-14T22:05:12Z',
-            count: '6',
-            permalink: 'sentry/rc-0123/issues/5/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-          {
-            lastSeen: '2018-10-14T22:01:47Z',
-            numComments: 0,
-            userCount: 0,
-            culprit: '__main__ in <module>',
-            title: "NameError: name 'Flask' is not defined",
-            name: 'RC-0123-Hund-2',
-            container: 'RC-0123-Hund',
-            position: 'A:1',
-            id: '3',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'NameError',
-              value: "name 'Flask' is not defined",
-            },
-            status: 'unresolved',
-            subscriptionDetails: null,
-            isPublic: false,
-            hasSeen: true,
-            shortId: 'RC-0123-2',
-            shareId: null,
-            firstSeen: '2018-10-14T22:01:39Z',
-            count: '2',
-            permalink: 'sentry/rc-0123/issues/3/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-          {
-            lastSeen: '2018-10-11T11:43:30Z',
-            numComments: 3,
-            userCount: 0,
-            culprit: 'poll(../../sentry/scripts/views.js)',
-            title: "TypeError: Object [object Object] has no method 'updateFrom'",
-            name: 'RC-0123-Hund-3',
-            container: 'RC-0123-Hund',
-            position: 'B:1',
-            id: '2',
-            assignedTo: null,
-            logger: null,
-            type: 'error',
-            annotations: [],
-            metadata: {
-              type: 'TypeError',
-              value: "Object [object Object] has no method 'updateFrom'",
-            },
-            status: 'unresolved',
-            subscriptionDetails: {
-              reason: 'mentioned',
-            },
-            isPublic: false,
-            hasSeen: true,
-            shortId: 'RC-0123-1',
-            shareId: null,
-            firstSeen: '2018-10-11T11:43:30Z',
-            count: '1',
-            permalink: 'sentry/rc-0123/issues/2/',
-            level: 'error',
-            isSubscribed: true,
-            isBookmarked: false,
-            project: {
-              slug: 'rc-0123',
-              id: '2',
-              name: 'RC-0123',
-            },
-            statusDetails: {},
-          },
-        ];
-
+        console.log('PUSHING');
         this._samplesManager.push(data);
+        console.log('dPUSHING');
 
         let queryCount = jqXHR.getResponseHeader('X-Hits');
         let queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
@@ -566,12 +453,6 @@ const Samples = createReactClass({
       this._poller.setEndpoint(links.previous.href);
       this._poller.enable();
     }
-  },
-
-  getGroupListEndpoint() {
-    let params = this.props.params;
-
-    return '/projects/' + params.orgId + '/' + params.projectId + '/issues/';
   },
 
   onRealtimeChange(realtime) {
@@ -750,20 +631,6 @@ const Samples = createReactClass({
     return <PanelBody className="ref-group-list">{groupNodes}</PanelBody>;
   },
 
-  renderAwaitingEvents() {
-    let org = this.getOrganization();
-    let project = this.getProject();
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
-    return (
-      <ErrorRobot
-        org={org}
-        project={project}
-        sampleIssueId={sampleIssueId}
-        gradient={true}
-      />
-    );
-  },
-
   renderEmpty() {
     const {environment} = this.state;
     const message = environment
@@ -792,8 +659,6 @@ const Samples = createReactClass({
       body = this.renderLoading();
     } else if (this.state.error) {
       body = <LoadingError message={this.state.error} onRetry={this.fetchData} />;
-    } else if (!project.firstEvent) {
-      body = this.renderAwaitingEvents();
     } else if (this.state.groupIds.length > 0) {
       body = this.renderGroupNodes(this.state.groupIds, this.state.statsPeriod);
     } else {
@@ -867,4 +732,4 @@ const Samples = createReactClass({
     );
   },
 });
-export default Samples;
+export default WaitingSamples;

@@ -642,9 +642,7 @@ const Processes = createReactClass({
 
   renderNoTasksFound() {
     // TODO: Render a pretty "nothing found" message
-    return (
-      <div></div>
-    );
+    return <div />;
   },
 
   renderEmpty() {
@@ -669,14 +667,13 @@ const Processes = createReactClass({
   },
 
   renderProcessesBody() {
+    console.log("I'm here");
     let body;
     let project = this.getProject();
     if (this.state.dataLoading) {
       body = this.renderLoading();
     } else if (this.state.error) {
       body = <LoadingError message={this.state.error} onRetry={this.fetchData} />;
-    } else if (!project.firstEvent) {
-      body = this.renderNoTasksFound();
     } else if (this.state.groupIds.length > 0) {
       body = this.renderGroupNodes(this.state.groupIds, this.state.statsPeriod);
     } else {

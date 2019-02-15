@@ -8,8 +8,6 @@ import {t, tct} from 'app/locale';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import PluginComponentBase from 'app/components/bases/pluginComponentBase';
 
-// TODO(withrocks): The name doesn't fit too well now that we're gonna be using this both at the start of a process and
-// inside it
 class ProcessSettings extends PluginComponentBase {
   constructor(props, context) {
     super(props, context);
@@ -44,6 +42,7 @@ class ProcessSettings extends PluginComponentBase {
     delete errors[name];
     this.setState({formData, errors});
     this.props.onChanged(formData);
+    console.log('HERE', formData);
   }
 
   onSubmit() {

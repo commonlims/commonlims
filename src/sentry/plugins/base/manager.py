@@ -86,8 +86,6 @@ class PluginManager(InstanceManager):
                 return result
 
     def register(self, cls):
-        print("HERE, registering", cls)
-
         # If the plugin has a `handlers` module. Import that so that it will register everything
         self.add('%s.%s' % (cls.__module__, cls.__name__))
         return cls

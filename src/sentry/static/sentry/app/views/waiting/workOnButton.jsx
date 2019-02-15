@@ -12,9 +12,14 @@ import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
+import {withRouter} from 'react-router';
 
-const AssignToWorkflowButton = createReactClass({
-  displayName: 'AssignToWorkflowButton',
+const WorkOnButton = createReactClass({
+  // A button/view that allows the user to work on several samples that are in a waiting queue
+  // This is in a separate class as we may want either to redirect to a page or show a modal window
+  // based on the UserAction in question
+  // TODO: For now we always redirect
+  displayName: 'WorkOnButton',
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
@@ -28,6 +33,10 @@ const AssignToWorkflowButton = createReactClass({
 
   mixins: [ApiMixin],
 
+  shouldRedirect() {
+    return true;
+  },
+
   getInitialState() {
     let {orgId, projectId} = this.props;
 
@@ -36,7 +45,7 @@ const AssignToWorkflowButton = createReactClass({
     let project = ProjectsStore.getBySlug(projectId);
 
     return {
-      isModalOpen: false,
+      isActivated: false,
       formData: {
         query: this.props.query,
       },
@@ -59,7 +68,7 @@ const AssignToWorkflowButton = createReactClass({
       return;
     }
     this.setState({
-      isModalOpen: !this.state.isModalOpen,
+      isActivated: !this.state.isActivated,
       state: FormState.READY,
       formData: {
         query: this.props.query,
@@ -112,7 +121,7 @@ const AssignToWorkflowButton = createReactClass({
         };
 
         console.log('here: starting a workflow');
-        console.log(' here: ', data.samples);
+        console.log(' here: ', data.samples, 'dont you be empty!');
 
         this.api.request(endpoint, {
           method: 'POST',
@@ -157,35 +166,35 @@ const AssignToWorkflowButton = createReactClass({
     // Fetch the variables for this, if they don't exist yet:
   },
 
+  startUserTask() {
+    // 1. POST all these samples to the user-task endpoint.
+    // 2. Redirect to the user task site
+    console.log('BEFORE POSTING');
+    console.log(SelectedSampleStore.getSelectedIds());
+
+    this.api.request('/user-task/', {
+      method: 'POST',
+      data: {
+        samples: [1, 2, 3],
+      },
+      error: error => {
+        this.setState({
+          loading: false,
+          error: true,
+          isActivated: false, // yeah, this pattern is weird, I know (POCing here)
+        });
+      },
+      success: data => {
+        // TODO:project
+        this.props.router.push(`/sentry/rc-0123/user-task/${data.id}`);
+      },
+    });
+  },
+
   render() {
+    // TODO: Create another component for this
     let isSaving = this.state.state === FormState.SAVING;
 
-    // TODO(withrocks): mocked
-    let node = {
-      data: {
-        isTestable: false,
-        views: {},
-        hasConfiguration: true,
-        shortName: 'SnpSeq',
-        config: {},
-        id: 'snpseq',
-        assets: [{url: '_static/1539772060/snpseq/dist/snpseq.js'}],
-        name: 'SnpSeq',
-        author: {
-          url: 'https://github.com/getsentry/sentry-plugins',
-          name: 'Sentry Team',
-        },
-        contexts: {},
-        doc: '',
-        resourceLinks: {},
-        enabled: true,
-        slug: 'snpseq',
-        version: '9.1.0.dev0',
-        canDisable: true,
-        type: 'default',
-        metadata: {},
-      },
-    };
     return (
       <React.Fragment>
         <a
@@ -197,7 +206,17 @@ const AssignToWorkflowButton = createReactClass({
         >
           {this.props.children}
         </a>
-        <Modal show={this.state.isModalOpen} animation={false} onHide={this.onToggle}>
+
+        {/* Generally, we redirect to another view, but (later) we should implement fixing
+            simpler tasks in a modal window (see sketch below).
+        */}
+        {this.state.isActivated && this.shouldRedirect() && this.startUserTask()}
+
+        <Modal
+          show={this.state.isActivated && !this.shouldRedirect()}
+          animation={false}
+          onHide={this.onToggle}
+        >
           <form onSubmit={this.onSubmit}>
             <div className="modal-header">
               <h4>{t('Assign samples to workflow')}</h4>
@@ -266,4 +285,4 @@ const AssignToWorkflowButton = createReactClass({
   },
 });
 
-export default AssignToWorkflowButton;
+export default withRouter(WorkOnButton);

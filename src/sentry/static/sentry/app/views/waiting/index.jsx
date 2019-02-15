@@ -8,7 +8,7 @@ import SentryTypes from 'app/sentryTypes';
 import ProjectState from 'app/mixins/projectState';
 import TagStore from 'app/stores/tagStore';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString';
-import Samples from 'app/views/waiting/samples';
+import WaitingSamples from 'app/views/waiting/samples';
 import {fetchTags} from 'app/actionCreators/tags';
 
 const WaitingContainer = createReactClass({
@@ -55,7 +55,7 @@ const WaitingContainer = createReactClass({
     const filteredTags = hasEnvironmentsFeature ? this.filterTags(this.state.tags) : tags;
 
     return (
-      <Samples
+      <WaitingSamples
         hasEnvironmentsFeature={hasEnvironmentsFeature}
         tags={filteredTags}
         tagsLoading={tagsLoading}
