@@ -9,7 +9,11 @@ if [ -z $CLIMS_VIRTUALENV3 ]; then
 fi
 
 if [ -z $CLIMS_DEFAULT_VIRTUALENV ]; then
-    CLIMS_DEFAULT_VIRTUALENV=$CLIMS_VIRTUALENV2
+    if $(git branch | grep "*" | grep -q py3); then
+        CLIMS_DEFAULT_VIRTUALENV=$CLIMS_VIRTUALENV3
+    else
+        CLIMS_DEFAULT_VIRTUALENV=$CLIMS_VIRTUALENV2
+    fi
 fi
 
 echo "python2: $CLIMS_VIRTUALENV2"
@@ -26,7 +30,7 @@ if [ ! -d $CLIMS_VIRTUALENV3 ]; then
 fi
 
 echo "Activating default virtualenv $CLIMS_DEFAULT_VIRTUALENV"
-source $CLIMS_VIRTUALENV2/bin/activate
+source $CLIMS_DEFAULT_VIRTUALENV/bin/activate
 
 echo "Activating recommended node version"
 nvm use $(cat .nvmrc)
