@@ -12,11 +12,11 @@ class Container(Model):
     __core__ = True
 
     # Parent is the container in which this Container lies. If null, it lies in no container.
-    parent = FlexibleForeignKey('clims.Container', null=True, related_name="children_set")
+    parent = FlexibleForeignKey('Container', null=True, related_name="children_set")
 
     # TODO: Benefits of FlexibleForeignKey
     # TODO: Decide on naming for related_name
-    container_type = FlexibleForeignKey('clims.ContainerType', null=True, related_name="containers")
+    container_type = FlexibleForeignKey('ContainerType', null=True, related_name="containers")
     name = models.TextField(null=True)
 
     class Meta:
@@ -62,4 +62,4 @@ class ContainerLocationProperties(Model):
 
     # Specifies that this location is not allowed
     allowed = models.BooleanField('allowed')
-    container_type = FlexibleForeignKey('clims.ContainerType')
+    container_type = FlexibleForeignKey('ContainerType')
