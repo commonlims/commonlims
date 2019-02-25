@@ -22,15 +22,31 @@ echo "using:   $CLIMS_DEFAULT_VIRTUALENV"
 
 # TODO: don't use hardcoded python paths
 if [ ! -d $CLIMS_VIRTUALENV2 ]; then
-    virtualenv -p /usr/local/bin/python2.7 $CLIMS_VIRTUALENV2
+    virtualenv -p python $CLIMS_VIRTUALENV2
 fi
 
 if [ ! -d $CLIMS_VIRTUALENV3 ]; then
-    virtualenv -p /usr/bin/python3 $CLIMS_VIRTUALENV3
+    virtualenv -p python3 $CLIMS_VIRTUALENV3
 fi
 
 echo "Activating default virtualenv $CLIMS_DEFAULT_VIRTUALENV"
 source $CLIMS_DEFAULT_VIRTUALENV/bin/activate
 
+echo "Installing nvm"
+if ! type "nvm" > /dev/null; then
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+  source ~/.bashrc
+fi
+
+echo "Installing correct node version"
+nvm install $(cat .nvmrc)
+
 echo "Activating recommended node version"
 nvm use $(cat .nvmrc)
+
+sudo apt install -y libgeoip1 libgeoip-dev geoip-bin libxmlsec1-dev
+sudo apt install -y redis
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt install -y postgresql-9.6
