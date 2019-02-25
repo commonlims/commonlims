@@ -43,9 +43,9 @@ class Migration(SchemaMigration):
         db.create_table('sentry_container', (
             ('id', self.gf('sentry.db.models.fields.bounded.BoundedBigAutoField')(primary_key=True)),
             ('parent', self.gf('sentry.db.models.fields.foreignkey.FlexibleForeignKey')(
-                related_name='children_set', null=True, to=orm['clims.Container'])),
+                related_name='children_set', null=True, to=orm['sentry.Container'])),
             ('container_type', self.gf('sentry.db.models.fields.foreignkey.FlexibleForeignKey')(
-                related_name='containers', null=True, to=orm['clims.ContainerType'])),
+                related_name='containers', null=True, to=orm['sentry.ContainerType'])),
             ('name', self.gf('django.db.models.fields.TextField')(null=True)),
         ))
         db.send_create_signal('sentry', ['Container'])
@@ -64,15 +64,15 @@ class Migration(SchemaMigration):
         db.delete_table('sentry_container')
 
     models = {
-        'clims.container': {
+        'sentry.container': {
             'Meta': {'object_name': 'Container'},
-            'container_type': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'to': "orm['clims.ContainerType']", 'null': 'True'}),
+            'container_type': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'to': "orm['sentry.ContainerType']", 'null': 'True'}),
             'id': ('sentry.db.models.fields.bounded.BoundedBigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'parent': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'to': "orm['clims.Container']", 'null': 'True'})
+            'parent': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'to': "orm['sentry.Container']", 'null': 'True'})
         },
-        'clims.containertype': {
-            'Meta': {'object_name': 'ContainerType', 'db_table': "'clims_container_type'"},
+        'sentry.containertype': {
+            'Meta': {'object_name': 'ContainerType', 'db_table': "'sentry_container_type'"},
             'cols': ('django.db.models.fields.IntegerField', [], {}),
             'id': ('sentry.db.models.fields.bounded.BoundedBigAutoField', [], {'primary_key': 'True'}),
             'levels': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
@@ -252,10 +252,10 @@ class Migration(SchemaMigration):
         },
         'sentry.container': {
             'Meta': {'object_name': 'Container'},
-            'container_type': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'related_name': "'containers'", 'null': 'True', 'to': "orm['clims.ContainerType']"}),
+            'container_type': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'related_name': "'containers'", 'null': 'True', 'to': "orm['sentry.ContainerType']"}),
             'id': ('sentry.db.models.fields.bounded.BoundedBigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'parent': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'related_name': "'children_set'", 'null': 'True', 'to': "orm['clims.Container']"})
+            'parent': ('sentry.db.models.fields.foreignkey.FlexibleForeignKey', [], {'related_name': "'children_set'", 'null': 'True', 'to': "orm['sentry.Container']"})
         },
         'sentry.containertype': {
             'Meta': {'object_name': 'ContainerType', 'db_table': "'sentry_container_type'"},
