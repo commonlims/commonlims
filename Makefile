@@ -56,6 +56,16 @@ node-version-check:
 install-system-pkgs: node-version-check
 	@echo "--> Installing system packages (from Brewfile)"
 	@command -v brew 2>&1 > /dev/null && brew bundle || (echo 'WARNING: homebrew not found or brew bundle failed - skipping system dependencies.')
+
+	# Install dependencies with apt instead.
+	# TODO: see if anything else needs to be ported from Brewfile, then remove it
+	sudo apt install -y libgeoip1 libgeoip-dev geoip-bin libxmlsec1-dev
+	sudo apt install -y redis
+	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+	sudo apt-get update
+	sudo apt install -y postgresql-9.6
+
 	@echo "--> Installing yarn 1.3.2 (via npm)"
 	@npm install -g "yarn@1.3.2"
 

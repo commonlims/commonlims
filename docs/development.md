@@ -6,6 +6,40 @@ Common LIMS is as an independent open source initiative with SNP&SEQ Uppsala Uni
 
 Development happens on gitlab.org/commonlims and will be moved to github.com/commonlims and made open to the public after the first milestone.
 
+## Setup
+
+To set up your environment, do the following:
+- Download and install Anaconda from: https://www.anaconda.com/distribution/
+- Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
+- Download and install Camunda from: https://camunda.com/download/
+
+Start required services:
+- postgres server (specific to your installation)
+- redis server (specific to your installation)
+- `sudo /path/to/camunda/start-camunda.sh`
+
+You may also need to create a postgres user that matches your Unix username:
+- `sudo -i -u postgres`
+- `psql template1 postgres -c 'CREATE USER "[your-unix-username]" SUPERUSER;'`
+
+From the root of the 'commonlims' project, run:
+- `source devboot.sh`
+- `make develop`
+
+Ensure that your 'commonlimsN" conda environment is activated. Then, from the root of the 'commonlims-snpseq' project, run: `pip install .`
+
+From the root of the 'commonlims' project, run: `lims devserver --browser-reload`
+
+Sentry should be available at: http://localhost:8000/
+Camunda should be available at: http://localhost:8080/camunda/app/cockpit
+
+## Subsequent runs
+
+After initial setup, do the following to start your environment:
+- Start postgres, redis and camunda services
+- Run `source devboot.sh`
+- Run `lims devserver --browser-reload`
+
 # Roadmap
 
 ## v0.1.0 - Core framework set up (DONE)
