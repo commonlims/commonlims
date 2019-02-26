@@ -345,11 +345,9 @@ const Samples = createReactClass({
     });
 
     let url = this.getGroupListEndpoint();
-    console.log('here: Getting sample sample endpoint (RENAME)', url);
 
     // Remove leading and trailing whitespace
     let query = queryString.formatQueryString(this.state.query);
-    console.log('query', url);
 
     let {environment} = this.state;
 
@@ -472,14 +470,14 @@ const Samples = createReactClass({
             shareId: null,
             firstSeen: '2018-10-14T22:01:39Z',
             count: '2',
-            permalink: 'sentry/rc-0123/issues/3/',
+            permalink: 'sentry/internal/issues/3/',
             level: 'error',
             isSubscribed: true,
             isBookmarked: false,
             project: {
-              slug: 'rc-0123',
+              slug: 'internal',
               id: '2',
-              name: 'RC-0123',
+              name: 'internal',
             },
             statusDetails: {},
           },

@@ -142,10 +142,10 @@ const SampleDetailsHeader = createReactClass({
           >
             {t('Details')}
           </ListLink>
-          <ListLink to={`/${orgId}/rc-0123/samples/5/processes?active=true`}>
+          <ListLink to={`/${orgId}/internal/samples/5/processes?active=true`}>
             {t('Processes')} <span className="badge animated">{2}</span>
           </ListLink>
-          <ListLink to={`/${orgId}/rc-0123/samples/5/history`}>
+          <ListLink to={`/${orgId}/internal/samples/5/history`}>
             {t('History')} <span className="badge animated">{5}</span>
           </ListLink>
         </ul>

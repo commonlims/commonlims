@@ -230,7 +230,7 @@ const AssignToWorkflowButton = createReactClass({
                 }}
                 onSelect={this.onSelectWorkflow}
                 orgId="sentry"
-                projectId="rc-0123"
+                projectId="internal"
               />
 
               <br />

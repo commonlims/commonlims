@@ -272,7 +272,7 @@ class SampleDetailsEndpoint(Endpoint):
                 "reason": "assigned"
             },
             "isPublic": True,
-            "permalink": "snpseq/rc-0123/issues/5/",
+            "permalink": "snpseq/internal/issues/5/",
             "firstRelease": None,
             "shortId": "RC-0123-4",
             "shareId": "d7da866462cb4894a56b57abd85ca1fd",
@@ -323,8 +323,8 @@ class SampleDetailsEndpoint(Endpoint):
             ],
             "isBookmarked": False,
             "project": {
-                "slug": "rc-0123",
-                "name": "RC-0123",
+                "slug": "internal",
+                "name": "internal",
                 "id": "2"
             },
             "lastRelease": None,
@@ -745,7 +745,6 @@ class SampleWorkflowsBatchEndpoint(Endpoint):
     def post(self, request, organization_slug):
         # TODO(withrocks): Go through a serializer object for this, and validate
         data = request.DATA
-        print("POST", request.DATA)
         engine = WorkflowEngine()
 
         for sample in data["samples"]:
@@ -754,7 +753,6 @@ class SampleWorkflowsBatchEndpoint(Endpoint):
             #     "sample_type": "rna",
             #     "sequencer": "HiSeq X"
             # }
-            print("HERE", sample)
             business_key = "sample-{}".format(sample)
             process = data["process"]
             variables = data["variables"]

@@ -29,13 +29,12 @@ const WorkOnButton = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
+    router: PropTypes.shape({
+      push: PropTypes.function,
+    }),
   },
 
   mixins: [ApiMixin],
-
-  shouldRedirect() {
-    return true;
-  },
 
   getInitialState() {
     let {orgId, projectId} = this.props;
@@ -57,6 +56,10 @@ const WorkOnButton = createReactClass({
       project,
       setProcessVariables: null,
     };
+  },
+
+  shouldRedirect() {
+    return true;
   },
 
   onVariableChange(data) {
@@ -104,8 +107,6 @@ const WorkOnButton = createReactClass({
       },
       () => {
         // TODO: Start the process
-        console.log('starting process', this.state.formData);
-
         let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         let {orgId} = this.props;
 
@@ -119,9 +120,6 @@ const WorkOnButton = createReactClass({
           variables: this.state.setProcessVariables,
           process: this.state.process,
         };
-
-        console.log('here: starting a workflow');
-        console.log(' here: ', data.samples, 'dont you be empty!');
 
         this.api.request(endpoint, {
           method: 'POST',
@@ -161,7 +159,6 @@ const WorkOnButton = createReactClass({
     ];
 
     this.setState(state => ({workflowVars: vars, value, process: value}));
-    console.log(this.state);
 
     // Fetch the variables for this, if they don't exist yet:
   },
@@ -169,9 +166,6 @@ const WorkOnButton = createReactClass({
   startUserTask() {
     // 1. POST all these samples to the user-task endpoint.
     // 2. Redirect to the user task site
-    console.log('BEFORE POSTING');
-    console.log(SelectedSampleStore.getSelectedIds());
-
     this.api.request('/user-task/', {
       method: 'POST',
       data: {
@@ -186,7 +180,7 @@ const WorkOnButton = createReactClass({
       },
       success: data => {
         // TODO:project
-        this.props.router.push(`/sentry/rc-0123/user-task/${data.id}`);
+        this.props.router.push(`/sentry/internal/user-task/${data.id}`);
       },
     });
   },
@@ -250,7 +244,7 @@ const WorkOnButton = createReactClass({
                 }}
                 onSelect={this.onSelectWorkflow}
                 orgId="sentry"
-                projectId="rc-0123"
+                projectId="internal"
               />
 
               <br />
@@ -258,7 +252,7 @@ const WorkOnButton = createReactClass({
                 <ProcessTaskSettings
                   organization={this.state.organization}
                   project={this.state.project}
-                  data={node.data}
+                  data={null}
                   onChanged={this.onVariableChange}
                   processVarsViewKey="start_sequence"
                 />

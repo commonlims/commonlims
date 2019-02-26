@@ -24,6 +24,7 @@ class SampleHeader extends React.Component {
       metadata: Metadata,
       groupID: PropTypes.string,
       culprit: PropTypes.string,
+      processes: PropTypes.array,
     }),
     includeLink: PropTypes.bool,
     hideIcons: PropTypes.bool,
@@ -50,7 +51,7 @@ class SampleHeader extends React.Component {
 
     if (includeLink) {
       props.to = {
-        pathname: `/${orgId}/rc-0123/samples/${sampleId}`,
+        pathname: `/${orgId}/internal/samples/${sampleId}`,
         search: `${this.props.query ? `?query=${this.props.query}` : ''}`,
       };
       Wrapper = ProjectLink;

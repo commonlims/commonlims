@@ -12,7 +12,6 @@ import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
-import PluginsStore from 'app/stores/pluginsStore';
 
 const AssignToWorkflowButton = createReactClass({
   displayName: 'AssignToWorkflowButton',
@@ -59,8 +58,6 @@ const AssignToWorkflowButton = createReactClass({
     this.setState({
       setProcessVariables: updated,
     });
-
-    console.log('HERE!!!!', this.state.setProcessVariables);
   },
 
   onToggle() {
@@ -123,8 +120,6 @@ const AssignToWorkflowButton = createReactClass({
           data.samples.push(a);
         }
 
-        console.log('HERE posting', data);
-
         this.api.request(endpoint, {
           method: 'POST',
           data,
@@ -171,7 +166,6 @@ const AssignToWorkflowButton = createReactClass({
     // could work, but this needs to support any system and just send events to plugin handlers.
 
     // TODO: Get that plugins node from the PluginsStore instead
-    // console.log(PluginsStore.plugins);
 
     // TODO(withrocks):
     return (
@@ -219,7 +213,7 @@ const AssignToWorkflowButton = createReactClass({
                 }}
                 onSelect={this.onSelectWorkflow}
                 orgId="sentry"
-                projectId="rc-0123"
+                projectId="internal"
               />
 
               <br />
