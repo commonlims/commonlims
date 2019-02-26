@@ -9,7 +9,7 @@ Development happens on gitlab.org/commonlims and will be moved to github.com/com
 ## Setup
 
 To set up your environment, do the following:
-- Download and install Anaconda from: https://www.anaconda.com/distribution/
+- Download and install Conda from: https://conda.io/en/latest/miniconda.html
 - Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
 - Download and install Camunda from: https://camunda.com/download/
 
