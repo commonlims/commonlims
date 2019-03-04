@@ -26,7 +26,7 @@ From the root of the 'commonlims' project, run:
 - `source devboot.sh`
 - `make develop`
 
-Ensure that your 'commonlimsN" conda environment is activated. Then, from the root of the 'commonlims-snpseq' project, run: `pip install .`
+Ensure that your 'commonlimsN" conda environment is activated. Then, from the root of the 'commonlims-snpseq' project, run: `pip install -e .`
 
 From the root of the 'commonlims' project, run: `lims devserver --browser-reload`
 
