@@ -13,7 +13,7 @@ source activate $CLIMS_CONDA_ENV
 
 echo "using conda env: $CLIMS_CONDA_ENV"
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`echo $_CONDA_EXE | awk '{gsub("bin/conda", "lib")}1'`
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`echo $CONDA_EXE | awk '{gsub("bin/conda", "lib")}1'`
 echo "set LD_LIBRARY_PATH to $LD_LIBRARY_PATH"
 
 echo "Installing nvm"
