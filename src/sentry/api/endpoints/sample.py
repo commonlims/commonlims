@@ -3,8 +3,7 @@ from __future__ import absolute_import
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from sentry.api.base import Endpoint, SessionAuthentication
-from sentry.api.paginator import OffsetPaginator, SequencePaginator
+from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.serializers import serialize
 from sentry.models import Sample
 from sentry.plugins import plugins
@@ -12,7 +11,7 @@ from clims.workflow import WorkflowEngine
 
 
 class SampleEndpoint(Endpoint):
-    authentication_classes = (SessionAuthentication, )
+    authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
@@ -84,7 +83,7 @@ class SampleEndpoint(Endpoint):
 
 
 class SampleBatchDetailsEndpoint(Endpoint):
-    authentication_classes = (SessionAuthentication, )
+    authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, batch_id):
@@ -112,7 +111,7 @@ class SampleBatchDetailsEndpoint(Endpoint):
 
 
 class SampleBatchEndpoint(Endpoint):
-    authentication_classes = (SessionAuthentication, )
+    authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
     def put(self, request):
