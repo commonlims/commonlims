@@ -4,7 +4,7 @@ import os
 import sys
 import codecs
 import shutil
-from context import ExtensionContext
+from sentry.legacy.context import ExtensionContext
 import sentry.legacy.utils as utils
 from abc import ABCMeta, abstractmethod
 import logging
@@ -21,6 +21,7 @@ import logging.handlers
 import lxml.objectify
 from sentry.legacy.service.validation_service import UsageError
 import re
+import six
 
 
 # Defines all classes that are expected to be extended. These are
@@ -224,7 +225,7 @@ class ExtensionService(object):
             # The run argument can be either an IntegrationTest or just a string (pid)
             if isinstance(in_argument, IntegrationTest):
                 test = in_argument
-            elif isinstance(in_argument, basestring):
+            elif isinstance(in_argument, six.string_types):
                 test = IntegrationTest(pid=in_argument)
             else:
                 raise ValueError("Unexpected run argument type")
@@ -424,11 +425,11 @@ class RunDirectoryInfo(object):
                 yield ("logs", "extensions.log", "".join(diff[0:10]))
 
 
+@six.add_metaclass(ABCMeta)
 class GeneralExtension(object):
     """
     An extension that must implement the `execute` method
     """
-    __metaclass__ = ABCMeta
 
     def __init__(self, context):
         """
@@ -569,8 +570,8 @@ class GeneralExtension(object):
                     self.context.update(target)
 
 
+@six.add_metaclass(ABCMeta)
 class DriverFileExtension(GeneralExtension):
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def shared_file(self):
@@ -589,7 +590,7 @@ class DriverFileExtension(GeneralExtension):
         content = self.content()
         # Support that the content can be a list of strings. This supports an older version of the DriverFileExtension
         # which was not template based. Consider removing this usage of the DriverFileExtension.
-        if isinstance(content, basestring):
+        if isinstance(content, six.string_types):
             return content
         else:
             return self.newline().join(content)
@@ -598,11 +599,11 @@ class DriverFileExtension(GeneralExtension):
         return FileService.FILE_PREFIX_ARTIFACT_ID
 
 
+@six.add_metaclass(ABCMeta)
 class SampleSheetExtension(GeneralExtension):
     """
     Provides helper methods for creating a CSV
     """
-    __metaclass__ = ABCMeta
 
     NONE = "<none>"
 
@@ -628,14 +629,14 @@ class SampleSheetExtension(GeneralExtension):
         """
         # TODO: The example shows commas in each line. Is that actually required?
         arg_list = list(args) + [""] * (self.column_count - len(args))
-        return ",".join(map(str, arg_list))
+        return ",".join(map(six.text_type, arg_list))
 
 
+@six.add_metaclass(ABCMeta)
 class TemplateExtension(DriverFileExtension):
     """
     Creates driver files from templates
     """
-    __metaclass__ = ABCMeta
 
     NONE = "<none>"
 
@@ -675,9 +676,10 @@ class TemplateExtension(DriverFileExtension):
             return rendered
 
     def execute(self):
-        f = self.content()
-        # print(f)
-        # print("TODO: Upload")
+        # f = self.content()
+        # 1. Save the file in a files table
+        # 2. Ensure there is a relation to the user task
+        # print(type(f), "todo insert into user task", self.context.id, dir(self.context))
         pass
 
 
