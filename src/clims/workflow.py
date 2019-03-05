@@ -122,7 +122,8 @@ class WorkflowEngine(object):
 
     def get_outstanding_tasks(self, process_definition=None, task_definition=None):
         process_instances = self.process_instances(
-            active="true", processDefinitionKey="clims_snpseq.core.workflows.reception_qc")
+            active="true", processDefinitionKey=process_definition)
+
         ret = list()
         for process_instance in process_instances:
             for activity in process_instance["activities"]:
