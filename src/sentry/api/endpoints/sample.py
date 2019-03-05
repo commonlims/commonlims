@@ -1,13 +1,22 @@
 from __future__ import absolute_import
 
+import six
+
+from django.http import Http404
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.serializers import serialize
+from django.db.models import Q
+from sentry.db.models.query import in_iexact
 from sentry.models import Sample
+from sentry.models import ProjectPlatform
 from sentry.plugins import plugins
+from sentry.search.utils import tokenize_query
 from clims.workflow import WorkflowEngine
+from sentry.api.serializers.models.sample import SampleSerializer
 
 
 class SampleEndpoint(Endpoint):
@@ -15,63 +24,48 @@ class SampleEndpoint(Endpoint):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        query = request.GET.get("query")
 
-        samples = None
+        queryset = Sample.objects
 
-        # TODO: I guess there is some parser for this sentry structured query.
-        # Look into that, hack for now:
-        query_dict = dict()
+        query = request.GET.get('query')
         if query:
-            query_items = [item.strip() for item in query.split(" ")]
-            for query_item in query_items:
-                key, value = query_item.split(":")
-                query_dict[key] = value
+            tokens = tokenize_query(query)
+            for key, value in six.iteritems(tokens):
+                if key == 'query':
+                    value = ' '.join(value)
+                    queryset = queryset.filter(Q(name__icontains=value) | Q(slug__icontains=value))
+                elif key == 'slug':
+                    queryset = queryset.filter(in_iexact('slug', value))
+                elif key == 'name':
+                    queryset = queryset.filter(in_iexact('name', value))
+                elif key == 'platform':
+                    # TODO I don't know what this means, and perhaps we should just
+                    #      remove it? /JD 2019-03-04
+                    queryset = queryset.filter(
+                        id__in=ProjectPlatform.objects.filter(
+                            platform__in=value,
+                        ).values('project_id')
+                    )
+                elif key == 'id':
+                    queryset = queryset.filter(id__in=value)
+                else:
+                    queryset = queryset.none()
 
-        task = query_dict.get("task", None)
-        process = query_dict.get("process", None)
+        task = request.GET.get("task", None)
+        process = request.GET.get("process", None)
 
         engine = WorkflowEngine()
-
         if task or process:
             # Start by finding all processes waiting for this particular task
             tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
             samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
 
-        # TODO: Bug, if the task is misspelled, we get everything, i.e. no filter occurs
+            if samples:
+                queryset = Sample.objects.filter(pk__in=samples)
+            else:
+                raise Http404("No resources found")
 
-        if samples:
-            queryset = Sample.objects.filter(pk__in=samples)
-        else:
-            queryset = Sample.objects.filter()
-
-        # TODO Yeah, this is just for the poc!
-        # http://localhost:8080/engine-rest/process-instance?active=true
-        processes = engine.process_instances(active="true")
-
-        from collections import defaultdict
-        processes_dict = defaultdict(list)
-
-        for process in processes:
-            processes_dict[process["businessKey"]].append(process["id"])
-
-        from pprint import pprint
-        pprint(processes)
-
-        # TODO: If we decide on using Camunda as our workflow engine, consider pushing the workflow
-        # data into the same postgresql instance and be able to query it (partially at least) through the ORM
-        # Then this kind of query would be lightning fast and in it would be in some ways simpler
-        data = list()
-        for s in queryset:
-            s.processes = processes_dict["sample-{}".format(s.id)]
-            data.append(serialize(s))
-
-            # NOTE: For completeness we add all processes to the sample, even though strictly there should only be
-            # one, that is not necessarily true in the most generic case (it's just a business rule)
-
-        # TODO: Paginate
-
-        return Response(data, status=200)
+        return Response(serialize(queryset, serializer=SampleSerializer()), status=200)
 
     def post(self, request):
         sample = Sample.objects.create(
