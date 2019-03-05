@@ -12,7 +12,7 @@ WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
 develop-only: update-submodules install-system-pkgs install-yarn-pkgs install-sentry-dev
-test: develop lint test-js test-python test-cli
+test: lint test-js test-python test-cli
 
 build: locale
 
