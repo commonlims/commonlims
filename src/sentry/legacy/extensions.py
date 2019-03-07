@@ -676,10 +676,22 @@ class TemplateExtension(DriverFileExtension):
             return rendered
 
     def execute(self):
-        # f = self.content()
-        # 1. Save the file in a files table
-        # 2. Ensure there is a relation to the user task
-        # print(type(f), "todo insert into user task", self.context.id, dir(self.context))
+        # Execute the api endpoint `user_task`
+
+        # NOTE: The reason for doing this (and similar extension tasks) via the endpoint is to ensure
+        # both that the extensions always use the rest interface. This will allow users to relatively
+        # easily create similar extensions in another programming language. It also allows the user
+        # to execute an extension from a developer workstation against the production server, which
+        # can be very convenient. The cost of always going via http is deemed low enough compared to
+        # these benefits.
+        # TODO: Rationale to README
+
+        # import StringIO
+        # content = self.content()
+        # file_like = StringIO.StringIO()
+        # file_like.write(content)
+
+        # TODO: Push the data to the new UserTask files endpoint
         pass
 
 
