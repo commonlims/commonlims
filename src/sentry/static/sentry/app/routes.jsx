@@ -3,6 +3,12 @@ import React from 'react';
 
 import App from 'app/views/app';
 import CreateProject from 'app/views/onboarding/createProject';
+
+import UserTaskDetails from 'app/views/userTaskDetails/project/index';
+import UserTaskDetailsFields from 'app/views/userTaskDetails/shared/userTaskFields';
+import UserTaskDetailsSamples from 'app/views/userTaskDetails/shared/userTaskSamples';
+import UserTaskDetailsFiles from 'app/views/userTaskDetails/shared/userTaskFiles';
+
 import ProjectGroupDetails from 'app/views/groupDetails/project/index';
 import ProjectGroupEvents from 'app/views/groupDetails/project/groupEvents';
 import ProjectGroupEventDetails from 'app/views/groupDetails/project/groupEventDetails';
@@ -1173,6 +1179,26 @@ function routes() {
           </Route>
 
           <Redirect from="group/:groupId/" to="issues/:groupId/" />
+
+          <Route
+            path="user-tasks/:groupId/"
+            component={errorHandler(UserTaskDetails)}
+            ignoreScrollBehavior
+          >
+            <IndexRoute component={errorHandler(UserTaskDetailsFields)} />
+            <Route
+              path="activity/"
+              componentPromise={() =>
+                import(/* webpackChunkName: "UserTaskActivity" */ './views/userTaskDetails/shared/userTaskActivity')}
+              component={errorHandler(LazyLoad)}
+            />
+
+            {/* TODO: Fix path */}
+            <Route path="fields/" component={errorHandler(UserTaskDetailsFields)} />
+            <Route path="samples/" component={errorHandler(UserTaskDetailsSamples)} />
+            <Route path="files/" component={errorHandler(UserTaskDetailsFiles)} />
+          </Route>
+
           <Route
             path="issues/:groupId/"
             component={errorHandler(ProjectGroupDetails)}

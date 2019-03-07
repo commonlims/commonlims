@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import SavedSearchSelector from 'app/views/samples/savedSearchSelector';
 import SearchBar from 'app/views/samples/searchBar';
 import SortOptions from 'app/views/samples/sortOptions';

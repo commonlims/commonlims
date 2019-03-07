@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import CustomPropTypes from 'app/sentryTypes';
 import WorkflowTableRow from 'app/components/workflowTable/workflowTableRow';
 
@@ -16,9 +16,9 @@ class WorkflowTable extends React.Component {
     let fixedDimensions = null;
 
     let cx = classNames('table events-table', className);  // TODO: style name
-    let {orgId, projectId, groupId} = this.props.params;
+    let { orgId, projectId, groupId } = this.props.params;
     let workflows = this.props.workflows;
-    let tagList = [{"key": "1", "name": "mama"}];
+    let tagList = [{ "key": "1", "name": "mama" }];
 
     return (
       <table className={cx}>

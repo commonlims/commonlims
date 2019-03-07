@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Flex } from 'grid-emotion';
+import {Flex} from 'grid-emotion';
 
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
@@ -10,13 +10,13 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import IndicatorStore from 'app/stores/indicatorStore';
 import Pagination from 'app/components/pagination';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import { t } from 'app/locale';
-import { Panel, PanelHeader, PanelBody, PanelItem } from 'app/components/panels';
+import {t} from 'app/locale';
+import {Panel, PanelHeader, PanelBody, PanelItem} from 'app/components/panels';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
 import withOrganization from 'app/utils/withOrganization';
 import withApi from 'app/utils/withApi';
 
-class ReleaseArtifacts extends React.Component {
+class UserTaskDetailsFiles extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization,
     api: PropTypes.object,
@@ -43,15 +43,13 @@ class ReleaseArtifacts extends React.Component {
   }
 
   getFilesEndpoint() {
-    let { orgId, projectId, version } = this.props.params;
-    let encodedVersion = encodeURIComponent(version);
-
-    return projectId
-      ? `/projects/${orgId}/${projectId}/releases/${encodedVersion}/files/`
-      : `/organizations/${orgId}/releases/${encodedVersion}/files/`;
+    // TODO: User task ID
+    let org = 'snpseq';
+    return `/user-tasks/${org}/1/files/`;
   }
 
   fetchData() {
+    console.log('HERE! fetchData');
     this.setState({
       loading: true,
       error: false,
@@ -107,6 +105,7 @@ class ReleaseArtifacts extends React.Component {
   }
 
   render() {
+    console.log('HERE');
     if (this.state.loading) return <LoadingIndicator />;
     else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
     else if (this.state.fileList.length === 0)
@@ -120,7 +119,6 @@ class ReleaseArtifacts extends React.Component {
 
     let access = new Set(this.props.organization.access);
 
-    // TODO(dcramer): files should allow you to download them
     return (
       <div>
         <Panel>
@@ -138,7 +136,7 @@ class ReleaseArtifacts extends React.Component {
                   <Flex
                     flex="7"
                     pr={2}
-                    style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                    style={{wordWrap: 'break-word', wordBreak: 'break-all'}}
                   >
                     <strong>{file.name || '(empty)'}</strong>
                   </Flex>
@@ -160,17 +158,17 @@ class ReleaseArtifacts extends React.Component {
                           <span className="icon icon-open" />
                         </a>
                       ) : (
-                          <Tooltip
-                            title={t(
-                              'You do not have the required permission to download this artifact.'
-                            )}
-                          >
-                            <div className="btn btn-sm btn-default disabled">
-                              <span className="icon icon-open" />
-                            </div>
-                          </Tooltip>
-                        )}
-                      <div style={{ marginLeft: 5 }}>
+                        <Tooltip
+                          title={t(
+                            'You do not have the required permission to download this artifact.'
+                          )}
+                        >
+                          <div className="btn btn-sm btn-default disabled">
+                            <span className="icon icon-open" />
+                          </div>
+                        </Tooltip>
+                      )}
+                      <div style={{marginLeft: 5}}>
                         <LinkWithConfirmation
                           className="btn btn-sm btn-default"
                           title={t('Delete artifact')}
@@ -193,5 +191,5 @@ class ReleaseArtifacts extends React.Component {
   }
 }
 
-export { ReleaseArtifacts };
-export default withOrganization(withApi(ReleaseArtifacts));
+export {UserTaskDetailsFiles};
+export default withOrganization(withApi(UserTaskDetailsFiles));

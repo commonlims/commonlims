@@ -240,7 +240,6 @@ class ContainerCollection extends React.Component {
   render() {
     return (
       <div>
-        <h4>{this.props.title}</h4>
         <Panel>
           <ContainerStackActions
             canAdd={this.props.canAdd}
@@ -263,7 +262,6 @@ class ContainerCollection extends React.Component {
 }
 
 ContainerCollection.propTypes = {
-  title: PropTypes.string,
   handleLeaveContainer: PropTypes.func,
   handleLocationHover: PropTypes.func,
   onWellClicked: PropTypes.func,
@@ -643,35 +641,6 @@ class PositionSamples extends React.Component {
 
   render() {
     // Actions defined by plugins
-    const pluginActionsDef = [
-      {
-        title: 'Print labels',
-        correlation: {
-          plugin: 'snpseq',
-          handler: 'features.fragment_analyze.controller.FragmentAnalyzeController',
-          method: 'handle_print_labels',
-          hash: 'hash-with-signature-TODO',
-        },
-      },
-      {
-        title: 'Do something silly!',
-        correlation: {
-          plugin: 'snpseq',
-          handler: 'features.fragment_analyze.controller.FragmentAnalyzeController',
-          method: 'handle_print_labels',
-          hash: 'hash-with-signature-TODO',
-        },
-      },
-    ];
-    const pluginActions = pluginActionsDef.map(def => {
-      let handler = () => this.props.handlePluginAction(def.correlation);
-      return (
-        <a className="btn btn-sm btn-default" onClick={handler} key={def.correlation}>
-          {def.title}
-        </a>
-      );
-    });
-
     return (
       <div>
         <div className="row">
@@ -699,11 +668,6 @@ class PositionSamples extends React.Component {
               handleLeaveContainer={this.handleLeaveContainer.bind(this)}
             />
           </div>
-
-          {/* User defined actions for this view only */}
-        </div>
-        <div className="row">
-          <div className="col-md-12">{pluginActions}</div>
         </div>
       </div>
     );
@@ -720,7 +684,6 @@ PositionSamples.propTypes = {
       createTransition: PropTypes.func,
     }),
   }),
-  handlePluginAction: PropTypes.func,
 };
 
 class ContainerSet {
@@ -878,12 +841,6 @@ const FragmentAnalyzeView = createReactClass({
     this.fetchData();
   },
 
-  componentDidUpdate(prevProps) {
-    if (this.props.location.search !== prevProps.location.search) {
-      this.fetchData();
-    }
-  },
-
   getSampleBatchEndpoint() {
     return `/sample-batches/${this.props.params.batchId}/`;
   },
@@ -892,7 +849,6 @@ const FragmentAnalyzeView = createReactClass({
     // 1. post an action to the plugin endpoint
     // 2. get a response, for now it's synch (in the backend) but TODO: it's should be queued by the backend
     //    as plugins will be written that take too much time executing
-    console.trace();
     this.api.request('/plugins/snpseq/snpseq/actions/', {
       method: 'POST',
       data: correlation,
@@ -909,27 +865,59 @@ const FragmentAnalyzeView = createReactClass({
   },
 
   fetchData() {
+    let data = {
+      committed: false,
+      batchId: 237,
+      samples: [
+        {
+          location: {
+            containerId: 1,
+            col: 0,
+            row: 0,
+          },
+          name: 'sample1',
+          id: 10,
+        },
+        {
+          location: {
+            containerId: 1,
+            col: 1,
+            row: 1,
+          },
+          name: 'sample2',
+          id: 11,
+        },
+      ],
+      correlation: {
+        handler: 'features.fragment_analyze.controller.FragmentAnalyzeController',
+        hash: 'hash-with-signature-TODO',
+        plugin: 'snpseq',
+      },
+      tempContainers: [],
+      transitions: [],
+      containers: [
+        {
+          dimensions: {
+            rows: 8,
+            cols: 12,
+          },
+          typeName: '96 well plate',
+          name: 'cont-1',
+          isTemporary: false,
+          id: 1,
+        },
+      ],
+    };
+
     this.setState({
-      loading: true,
       error: false,
+      loading: false,
+      containerSet: ContainerSet.createFromSampleBatchJson(data),
     });
 
-    this.api.request(this.getSampleBatchEndpoint(), {
-      method: 'GET',
-      data: this.props.location.query,
-      success: (data, _, jqXHR) => {
-        this.setState({
-          error: false,
-          loading: false,
-          containerSet: ContainerSet.createFromSampleBatchJson(data),
-        });
-      },
-      error: () => {
-        this.setState({
-          error: true,
-          loading: false,
-        });
-      },
+    this.setState({
+      loading: false,
+      error: false,
     });
   },
 
@@ -970,38 +958,11 @@ const FragmentAnalyzeView = createReactClass({
   render() {
     if (this.state.loading) return <LoadingIndicator />;
     return (
-      <div>
-        {/* <div class="row"> */}
-        {/* </div> */}
-        <div className="row">
-          <div className="col-md-8">
-            <ul className="nav nav-tabs">
-              <li>
-                <a onClick={this.switchToTransition}>Transition samples</a>
-              </li>
-              <li>
-                <a onClick={this.switchToDetails}>Details</a>
-              </li>
-            </ul>
-          </div>
-          <div className="col-md-4">
-            <div className="align-right">
-              <a className="btn btn-sm btn-default" onClick={this.save}>
-                Save
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="row" style={this.state.showTab == 0 ? {} : Hidden}>
-          <PositionSamples
-            handlePluginAction={this.handlePluginAction}
-            containerSet={this.state.containerSet}
-          />
-        </div>
-        {/* <div style={this.state.showTab == 1 ? {} : Hidden}> */}
-        {/*   <BatchDetails /> */}
-        {/* </div> */}
+      <div className="row" style={this.state.showTab == 0 ? {} : Hidden}>
+        <PositionSamples
+          handlePluginAction={this.handlePluginAction}
+          containerSet={this.state.containerSet}
+        />
       </div>
     );
   },
