@@ -340,6 +340,7 @@ class File(Model):
     size = BoundedPositiveIntegerField(null=True)
     checksum = models.CharField(max_length=40, null=True, db_index=True)
 
+    # TODO: Remove in clims
     # <Legacy fields>
     # Remove in 8.1
     blob = FlexibleForeignKey('sentry.FileBlob', null=True, related_name='legacy_blob')

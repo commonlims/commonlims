@@ -221,6 +221,9 @@ from .endpoints.task_types import TaskTypesEndpoint
 
 from .endpoints.user_files import UserFilesEndpoint
 
+from .endpoints.user_task_files import UserTaskFilesEndpoint
+from .endpoints.user_task_file_details import UserTaskFileDetailsEndpoint
+
 
 urlpatterns = patterns(
     '',
@@ -667,6 +670,7 @@ urlpatterns = patterns(
         OrganizationReleaseDetailsEndpoint.as_view(),
         name='sentry-api-0-organization-release-details'
     ),
+
     url(
         r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/files/$',
         OrganizationReleaseFilesEndpoint.as_view(),
@@ -857,6 +861,18 @@ urlpatterns = patterns(
         r'^user-files/$',
         UserFilesEndpoint.as_view(),
         name='clims-api-0-user-files'
+    ),
+
+    # User tasks:
+    url(
+        r'^user-tasks/(?P<organization_slug>[^\/]+)/(?P<user_task_id>[^\/]+)/files/$',
+        UserTaskFilesEndpoint.as_view(),
+        name='clims-api-0-user-task-files'
+    ),
+    url(
+        r'^user-tasks/(?P<organization_slug>[^\/]+)/(?P<user_task_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
+        UserTaskFileDetailsEndpoint.as_view(),
+        name='clims-api-0-user-task-file-details'
     ),
 
     # url(

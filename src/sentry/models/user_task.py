@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function
 from django.db import models
-from sentry.db.models import Model
+from sentry.db.models import Model, FlexibleForeignKey
 from django.db.models.fields import TextField
 
 
@@ -21,6 +21,7 @@ class UserTask(Model):
 
     # All user tasks can have one or more sample batch
     name = models.CharField('name', max_length=200, blank=True)
+    organization = FlexibleForeignKey('sentry.Organization')
 
     # TODO: This should be jsonb. That waits for the django/py3 upgrade (before 1.0)
     extra_fields = TextField('extra_fields')
