@@ -8,7 +8,6 @@ import {Client} from 'app/api';
 import OrganizationContext from 'app/views/organizationContext';
 import NarrowLayout from 'app/components/narrowLayout';
 import Footer from 'app/components/footer';
-import InstallPromptBanner from 'app/components/installPromptBanner';
 import {t, tct} from 'app/locale';
 
 class DeletionInProgress extends Component {
@@ -134,10 +133,14 @@ class OrganizationDetailsBody extends Component {
         return <DeletionInProgress organization={organization} />;
       }
     return (
-      <React.Fragment>
-        <ErrorBoundary>{this.props.children}</ErrorBoundary>
-        <Footer />
-      </React.Fragment>
+      <div className="container">
+        <div className="content content-with-margin">
+          <React.Fragment>
+            <ErrorBoundary>{this.props.children}</ErrorBoundary>
+            <Footer />
+          </React.Fragment>
+        </div>
+      </div>
     );
   }
 }

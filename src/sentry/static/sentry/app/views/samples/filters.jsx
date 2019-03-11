@@ -9,7 +9,6 @@ import {t} from 'app/locale';
 class SamplesFilters extends React.Component {
   static propTypes = {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     access: PropTypes.object.isRequired,
 
     searchId: PropTypes.string,
@@ -43,7 +42,6 @@ class SamplesFilters extends React.Component {
     let {
       access,
       orgId,
-      projectId,
       searchId,
       queryCount,
       queryMaxCount,
@@ -65,7 +63,6 @@ class SamplesFilters extends React.Component {
             <SavedSearchSelector
               access={access}
               orgId={orgId}
-              projectId={projectId}
               searchId={searchId}
               queryCount={queryCount}
               queryMaxCount={queryMaxCount}
@@ -82,7 +79,6 @@ class SamplesFilters extends React.Component {
 
               <SearchBar
                 orgId={orgId}
-                projectId={projectId}
                 placeholder={t('Search for events, users, tags, and everything else.')}
                 query={query || ''}
                 onSearch={onSearch}

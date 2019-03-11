@@ -18,7 +18,6 @@ const SaveSearchButton = createReactClass({
   propTypes: {
     orgId: PropTypes.string.isRequired,
     projectId: PropTypes.string.isRequired,
-    access: PropTypes.object.isRequired,
     query: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     style: PropTypes.object,
@@ -160,14 +159,12 @@ const SaveSearchButton = createReactClass({
                 label={t('Make this the default view for myself.')}
                 onChange={this.onFieldChange.bind(this, 'isUserDefault')}
               />
-              {this.props.access.has('project:write') && (
-                <BooleanField
-                  key="isDefault"
-                  name="is-default"
-                  label={t('Make this the default view for my team.')}
-                  onChange={this.onFieldChange.bind(this, 'isDefault')}
-                />
-              )}
+              <BooleanField
+                key="isDefault"
+                name="is-default"
+                label={t('Make this the default view for my team.')}
+                onChange={this.onFieldChange.bind(this, 'isDefault')}
+              />
             </div>
             <div className="modal-footer">
               <button
@@ -196,7 +193,6 @@ const SavedSearchSelector = createReactClass({
     orgId: PropTypes.string.isRequired,
     projectId: PropTypes.string.isRequired,
     searchId: PropTypes.string,
-    access: PropTypes.object.isRequired,
     savedSearchList: PropTypes.array.isRequired,
     queryCount: PropTypes.number,
     queryMaxCount: PropTypes.number,
@@ -215,7 +211,7 @@ const SavedSearchSelector = createReactClass({
   },
 
   render() {
-    let {access, orgId, projectId, queryCount, queryMaxCount} = this.props;
+    let {orgId, projectId, queryCount, queryMaxCount} = this.props;
     let children = this.props.savedSearchList.map(search => {
       // TODO(dcramer): we want these to link directly to the saved
       // search ID, and pass that into the backend (probably)
@@ -243,7 +239,7 @@ const SavedSearchSelector = createReactClass({
               {t("There don't seem to be any saved searches yet.")}
             </li>
           )}
-          {access.has('project:write') && <MenuItem divider={true} />}
+          <MenuItem divider={true} />
           <li>
             <div className="row">
               <div className="col-md-7">

@@ -46,7 +46,7 @@ const ProjectDetailsLayout = createReactClass({
       <React.Fragment>
         <GuideAnchor target="project_details" type="invisible" />
         <div className="container">
-          <div className="content content-with-margin">
+          <div className="content">
             {React.cloneElement(this.props.children, {
               setProjectNavSection: this.setProjectNavSection,
               memberList: this.state.memberList,

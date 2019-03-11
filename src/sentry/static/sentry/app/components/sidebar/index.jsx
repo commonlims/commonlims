@@ -219,8 +219,6 @@ class Sidebar extends React.Component {
 
     let hasSentry10 = hasOrganization && new Set(organization.features).has('sentry10');
 
-    // TODO: Samples should not have to point to the internal project
-
     return (
       <StyledSidebar innerRef={ref => (this.sidebar = ref)} collapsed={collapsed}>
         <SidebarSectionGroup>
@@ -243,7 +241,7 @@ class Sidebar extends React.Component {
                   onClick={this.hidePanel}
                   icon={<InlineSvg src="icon-projects" />}
                   label={t('Tasks')}
-                  to={`/${organization.slug}/internal/tasks/`}
+                  to={`/${organization.slug}/tasks/`}
                 />
                 <SidebarItem
                   {...sidebarItemProps}
@@ -251,7 +249,7 @@ class Sidebar extends React.Component {
                   onClick={this.hidePanel}
                   icon={<InlineSvg src="icon-projects" />}
                   label={t('Samples')}
-                  to={`/${organization.slug}/internal/samples/`}
+                  to={`/${organization.slug}/samples/`}
                 />
               </SidebarSection>
             </React.Fragment>

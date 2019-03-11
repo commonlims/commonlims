@@ -22,7 +22,6 @@ import SampleStore from 'app/stores/sampleStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import ProjectState from 'app/mixins/projectState';
 import SentryTypes from 'app/sentryTypes';
 import SamplesActions from 'app/views/samples/actions';
 import SamplesFilters from 'app/views/samples/filters';
@@ -50,16 +49,11 @@ const Samples = createReactClass({
     tagsLoading: PropTypes.bool,
   },
 
-  mixins: [Reflux.listenTo(SampleStore, 'onSampleChange'), ApiMixin, ProjectState],
+  mixins: [Reflux.listenTo(SampleStore, 'onSampleChange'), ApiMixin],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
-    let project = this.getProject();
-    let realtimeActiveCookie = Cookies.get('realtimeActive');
-    let realtimeActive =
-      typeof realtimeActiveCookie === 'undefined'
-        ? project && !project.firstEvent
-        : realtimeActiveCookie === 'true';
+    let realtimeActive = true;
 
     let currentQuery = this.props.location.query || {};
     let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
@@ -161,11 +155,11 @@ const Samples = createReactClass({
       savedSearchLoading: true,
     });
 
-    const {orgId, projectId} = this.props.params;
+    const {orgId} = this.props.params;
     const {searchId} = this.state;
 
     // TODO: searches should be on organization level
-    this.api.request(`/projects/${orgId}/${projectId}/searches/`, {
+    this.api.request(`/projects/${orgId}/internal/searches/`, {
       success: data => {
         const newState = {
           isDefaultSearch: false,
@@ -204,14 +198,7 @@ const Samples = createReactClass({
             }
 
             newState.searchId = defaultResult.id;
-
-            if (this.getFeatures().has('environments')) {
-              newState.query = queryString.getQueryStringWithoutEnvironment(
-                defaultResult.query
-              );
-            } else {
-              newState.query = defaultResult.query;
-            }
+            newState.query = defaultResult.query;
             newState.isDefaultSearch = true;
           }
         }
@@ -234,8 +221,8 @@ const Samples = createReactClass({
   },
 
   fetchProcessingIssues() {
-    let {orgId, projectId} = this.props.params;
-    this.api.request(`/projects/${orgId}/${projectId}/processingissues/`, {
+    let {orgId} = this.props.params;
+    this.api.request(`/projects/${orgId}/internal/processingissues/`, {
       success: data => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
           this.setState({
@@ -255,14 +242,14 @@ const Samples = createReactClass({
   },
 
   onSavedSearchCreate(data) {
-    let {orgId, projectId} = this.props.params;
+    let {orgId} = this.props.params;
     let savedSearchList = this.state.savedSearchList;
     savedSearchList.push(data);
     // TODO(dcramer): sort
     this.setState({
       savedSearchList,
     });
-    browserHistory.push(`/${orgId}/${projectId}/searches/${data.id}/`);
+    browserHistory.push(`/${orgId}/internal/searches/${data.id}/`);
   },
 
   getQueryState(props) {
@@ -390,9 +377,9 @@ const Samples = createReactClass({
         // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {project, id, matchingEventId, matchingEventEnvironment} = data[0];
+            let {id, matchingEventId, matchingEventEnvironment} = data[0];
             let redirect = `/${this.props.params
-              .orgId}/${project.slug}/issues/${id}/events/${matchingEventId}/`;
+              .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
             // Also direct to the environment of this specific event if this
             // key exists. We need to explicitly check against undefined becasue
             // an environment name may be an empty string, which is perfectly valid.
@@ -450,8 +437,6 @@ const Samples = createReactClass({
   },
 
   getSamplesEndpoint() {
-    let params = this.props.params;
-
     // TODO: Support some searching in this endpoint
     return '/samples/';
   },
@@ -507,18 +492,6 @@ const Samples = createReactClass({
         this.transitionTo
       );
     }
-
-    // Ignore saved searches
-    /*
-    if (this.state.savedSearchList.map(s => s.query == this.state.query).length > 0) {
-      let {orgId, projectId} = this.props.params;
-      analytics('issue.search', {
-        query: this.state.query,
-        organization_id: orgId,
-        project_id: projectId,
-      });
-    }
-    */
   },
 
   onSortChange(sort) {
@@ -568,8 +541,8 @@ const Samples = createReactClass({
     let params = this.props.params;
 
     let path = this.state.searchId
-      ? `/${params.orgId}/${params.projectId}/searches/${this.state.searchId}/`
-      : `/${params.orgId}/${params.projectId}/`;
+      ? `/${params.orgId}/internal/searches/${this.state.searchId}/`
+      : `/${params.orgId}/internal/`;
     browserHistory.push({
       pathname: path,
       query: queryParams,
@@ -582,8 +555,8 @@ const Samples = createReactClass({
       return null;
     }
 
-    let {orgId, projectId} = this.props.params;
-    let link = `/${orgId}/${projectId}/settings/processing-issues/`;
+    let {orgId} = this.props.params;
+    let link = `/${orgId}/internal/settings/processing-issues/`;
     let showButton = false;
     let className = {
       'processing-issues': true,
@@ -652,7 +625,7 @@ const Samples = createReactClass({
 
     let topIssue = ids[0];
 
-    let {orgId, projectId} = this.props.params;
+    let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
@@ -660,7 +633,6 @@ const Samples = createReactClass({
           key={id}
           id={id}
           orgId={orgId}
-          projectId={projectId}
           statsPeriod={statsPeriod}
           query={this.state.query}
           hasGuideAnchor={hasGuideAnchor}
@@ -668,20 +640,6 @@ const Samples = createReactClass({
       );
     });
     return <PanelBody className="ref-group-list">{groupNodes}</PanelBody>;
-  },
-
-  renderAwaitingEvents() {
-    let org = this.getOrganization();
-    let project = this.getProject();
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
-    return (
-      <ErrorRobot
-        org={org}
-        project={project}
-        sampleIssueId={sampleIssueId}
-        gradient={true}
-      />
-    );
   },
 
   renderEmpty() {
@@ -707,7 +665,6 @@ const Samples = createReactClass({
 
   renderSamplesBody() {
     let body;
-    let project = this.getProject();
     if (this.state.dataLoading) {
       body = this.renderLoading();
     } else if (this.state.error) {
@@ -728,17 +685,13 @@ const Samples = createReactClass({
     let params = this.props.params;
     let classes = ['stream-row'];
     if (this.state.isSidebarVisible) classes.push('show-sidebar');
-    let {orgId, projectId} = this.props.params;
+    let {orgId} = this.props.params;
     let searchId = this.state.searchId;
-    let access = this.getAccess();
-    let projectFeatures = this.getProjectFeatures();
     return (
       <div className={classNames(classes)}>
         <div className="stream-content">
           <SamplesFilters
-            access={access}
             orgId={orgId}
-            projectId={projectId}
             query={this.state.query}
             sort={this.state.sort}
             searchId={searchId}
@@ -754,9 +707,6 @@ const Samples = createReactClass({
           <Panel>
             <SamplesActions
               orgId={params.orgId}
-              projectId={params.projectId}
-              hasReleases={projectFeatures.has('releases')}
-              latestRelease={this.context.project.latestRelease}
               environment={this.state.environment}
               query={this.state.query}
               queryCount={this.state.queryCount}
@@ -779,7 +729,6 @@ const Samples = createReactClass({
           query={this.state.query}
           onQueryChange={this.onSearch}
           orgId={params.orgId}
-          projectId={params.projectId}
         />
       </div>
     );

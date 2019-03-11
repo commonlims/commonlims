@@ -17,8 +17,6 @@ const SaveSearchButton = createReactClass({
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
-    access: PropTypes.object.isRequired,
     query: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     style: PropTypes.object,
@@ -81,8 +79,8 @@ const SaveSearchButton = createReactClass({
       },
       () => {
         let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId, projectId} = this.props;
-        this.api.request(`/projects/${orgId}/${projectId}/searches/`, {
+        let {orgId} = this.props;
+        this.api.request(`/projects/${orgId}/internal/searches/`, {
           method: 'POST',
           data: this.state.formData,
           success: data => {
@@ -160,14 +158,13 @@ const SaveSearchButton = createReactClass({
                 label={t('Make this the default view for myself.')}
                 onChange={this.onFieldChange.bind(this, 'isUserDefault')}
               />
-              {this.props.access.has('project:write') && (
-                <BooleanField
-                  key="isDefault"
-                  name="is-default"
-                  label={t('Make this the default view for my team.')}
-                  onChange={this.onFieldChange.bind(this, 'isDefault')}
-                />
-              )}
+              {/* TODO: Add access check for org:write or similar */}
+              <BooleanField
+                key="isDefault"
+                name="is-default"
+                label={t('Make this the default view for my team.')}
+                onChange={this.onFieldChange.bind(this, 'isDefault')}
+              />
             </div>
             <div className="modal-footer">
               <button
@@ -194,9 +191,7 @@ const SavedSearchSelector = createReactClass({
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     searchId: PropTypes.string,
-    access: PropTypes.object.isRequired,
     savedSearchList: PropTypes.array.isRequired,
     queryCount: PropTypes.number,
     queryMaxCount: PropTypes.number,
@@ -215,12 +210,12 @@ const SavedSearchSelector = createReactClass({
   },
 
   render() {
-    let {access, orgId, projectId, queryCount, queryMaxCount} = this.props;
+    let {orgId, queryCount, queryMaxCount} = this.props;
     let children = this.props.savedSearchList.map(search => {
       // TODO(dcramer): we want these to link directly to the saved
       // search ID, and pass that into the backend (probably)
       return (
-        <MenuItem to={`/${orgId}/${projectId}/searches/${search.id}/`} key={search.id}>
+        <MenuItem to={`/${orgId}/internal/searches/${search.id}/`} key={search.id}>
           <strong>{search.name}</strong>
           <code>{search.query}</code>
         </MenuItem>
@@ -243,7 +238,7 @@ const SavedSearchSelector = createReactClass({
               {t("There don't seem to be any saved searches yet.")}
             </li>
           )}
-          {access.has('project:write') && <MenuItem divider={true} />}
+          <MenuItem divider={true} />
           <li>
             <div className="row">
               <div className="col-md-7">
@@ -257,7 +252,7 @@ const SavedSearchSelector = createReactClass({
               </div>
               <div className="col-md-5">
                 <Link
-                  to={`/${orgId}/${projectId}/settings/saved-searches/`}
+                  to={`/${orgId}/internal/settings/saved-searches/`}
                   className="btn btn-sm btn-default"
                 >
                   {t('Manage')}

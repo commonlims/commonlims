@@ -22,7 +22,6 @@ import OnboardingWizard from 'app/views/onboarding/index';
 import OrganizationActivity from 'app/views/organizationActivity';
 import OrganizationContext from 'app/views/organizationContext';
 import OrganizationCreate from 'app/views/organizationCreate';
-import OrganizationDashboard from 'app/views/organizationProjectsDashboard';
 import OrganizationDetails from 'app/views/organizationDetails';
 import OrganizationHomeContainer from 'app/components/organizations/homeContainer';
 import OrganizationMembers from 'app/views/settings/organizationMembers';
@@ -761,7 +760,11 @@ function routes() {
 
       <Route path="/:orgId/" component={errorHandler(OrganizationDetails)}>
         <Route component={errorHandler(OrganizationRoot)}>
-          <IndexRoute component={errorHandler(OrganizationDashboard)} />
+          <IndexRoute component={errorHandler(ProcessesContainer)} />
+
+          <Route path="tasks/" component={errorHandler(ProcessesContainer)} />
+          <Route path="samples/" component={errorHandler(SamplesContainer)} />
+
           <Route
             path="/organizations/:orgId/dashboards/"
             componentPromise={() =>
@@ -997,9 +1000,6 @@ function routes() {
         </Route>
 
         <Route path=":projectId/" component={errorHandler(ProjectDetails)}>
-          <IndexRoute component={errorHandler(ProcessesContainer)} />
-          <Route path="tasks/" component={errorHandler(ProcessesContainer)} />
-
           {/* TODO: This route must be provided by the plugin */}
           <Route
             path="plugins/clims_snpseq/fragment_analyze/:batchId/"

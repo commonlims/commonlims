@@ -104,7 +104,7 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Samples
+                Tasks
               </div>
             </span>
           </div>
@@ -135,7 +135,7 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Tasks
+                Samples
               </div>
             </span>
           </div>
@@ -143,39 +143,7 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      >
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                Projects
-              </div>
-            </span>
-          </div>
-        </a>
-      </div>
+      />
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
@@ -646,7 +614,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Samples
+                Tasks
               </div>
             </span>
           </div>
@@ -677,7 +645,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Tasks
+                Samples
               </div>
             </span>
           </div>
@@ -685,39 +653,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      >
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                Projects
-              </div>
-            </span>
-          </div>
-        </a>
-      </div>
+      />
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
@@ -1215,7 +1151,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Samples
+                Tasks
               </div>
             </span>
           </div>
@@ -1246,7 +1182,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               <div
                 class="css-179hf69-TextOverflow e8qi82q0"
               >
-                Tasks
+                Samples
               </div>
             </span>
           </div>
@@ -1254,39 +1190,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      >
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                Projects
-              </div>
-            </span>
-          </div>
-        </a>
-      </div>
+      />
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >

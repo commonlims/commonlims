@@ -10,15 +10,12 @@ import LoadingError from '../components/loadingError';
 import LoadingIndicator from '../components/loadingIndicator';
 import {t} from '../locale';
 
-// {{TODO_TEMPLATE}}
-
 const SampleGroupRow = createReactClass({
   displayName: 'SampleGroupRow',
 
   propTypes: {
     app: PropTypes.object.isRequired,
     onRemove: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
   },
 
   mixins: [ApiMixin],
@@ -66,13 +63,12 @@ const SampleGroupRow = createReactClass({
 
     let btnClassName = 'btn btn-default';
     if (this.state.loading) btnClassName += ' disabled';
-    let projectId = this.props.projectId;
 
     return (
       <tr>
         <td>
           <h4 style={{marginBottom: 5}}>
-            <Link to={`/sentry/${projectId}/sample-groups/${app.id}/`}>{app.name}</Link>
+            <Link to={`/sentry/sample-groups/${app.id}/`}>{app.name}</Link>
           </h4>
           <small style={{color: '#999'}}>{app.clientID}</small>
         </td>

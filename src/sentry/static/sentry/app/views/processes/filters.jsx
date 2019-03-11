@@ -8,7 +8,6 @@ import {t} from 'app/locale';
 class ProcessesFilters extends React.Component {
   static propTypes = {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     access: PropTypes.object.isRequired,
 
     searchId: PropTypes.string,
@@ -40,7 +39,6 @@ class ProcessesFilters extends React.Component {
     let {
       access,
       orgId,
-      projectId,
       searchId,
       queryCount,
       queryMaxCount,
@@ -60,7 +58,6 @@ class ProcessesFilters extends React.Component {
             <SavedSearchSelector
               access={access}
               orgId={orgId}
-              projectId={projectId}
               searchId={searchId}
               queryCount={queryCount}
               queryMaxCount={queryMaxCount}
@@ -73,7 +70,6 @@ class ProcessesFilters extends React.Component {
             <div className="search-container">
               <SearchBar
                 orgId={orgId}
-                projectId={projectId}
                 placeholder={t('Search for events, users, tags, and everything else.')}
                 query={query || ''}
                 onSearch={onSearch}
