@@ -4,19 +4,13 @@ import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
 
 import {setLastRoute} from 'app/actionCreators/navigation';
-import SentryTypes from 'app/sentryTypes';
 import EnvironmentStore from 'app/stores/environmentStore';
-import ProjectHeader from 'app/components/projectHeader';
 import ProjectState from 'app/mixins/projectState';
 import withEnvironment from 'app/utils/withEnvironment';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
 
 const ProjectDetailsLayout = createReactClass({
   displayName: 'ProjectDetailsLayout',
-
-  propTypes: {
-    environment: SentryTypes.Environment,
-  },
 
   mixins: [ProjectState, Reflux.connect(EnvironmentStore, 'environments')],
 
@@ -51,13 +45,6 @@ const ProjectDetailsLayout = createReactClass({
     return (
       <React.Fragment>
         <GuideAnchor target="project_details" type="invisible" />
-        <ProjectHeader
-          activeSection={this.state.projectNavSection}
-          project={this.context.project}
-          organization={this.getOrganization()}
-          environments={this.state.environments}
-          activeEnvironment={this.props.environment}
-        />
         <div className="container">
           <div className="content content-with-margin">
             {React.cloneElement(this.props.children, {

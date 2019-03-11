@@ -219,16 +219,7 @@ class Sidebar extends React.Component {
 
     let hasSentry10 = hasOrganization && new Set(organization.features).has('sentry10');
 
-    let projectsSidebarItem = () => (
-      <SidebarItem
-        {...sidebarItemProps}
-        index
-        onClick={this.hidePanel}
-        icon={<InlineSvg src="icon-projects" />}
-        label={t('Projects')}
-        to={`/${organization.slug}/`}
-      />
-    );
+    // TODO: Samples should not have to point to the internal project
 
     return (
       <StyledSidebar innerRef={ref => (this.sidebar = ref)} collapsed={collapsed}>
@@ -243,11 +234,33 @@ class Sidebar extends React.Component {
               config={config}
             />
           </SidebarSection>
+          {hasOrganization && (
+            <React.Fragment>
+              <SidebarSection>
+                <SidebarItem
+                  {...sidebarItemProps}
+                  index
+                  onClick={this.hidePanel}
+                  icon={<InlineSvg src="icon-projects" />}
+                  label={t('Tasks')}
+                  to={`/${organization.slug}/internal/tasks/`}
+                />
+                <SidebarItem
+                  {...sidebarItemProps}
+                  index
+                  onClick={this.hidePanel}
+                  icon={<InlineSvg src="icon-projects" />}
+                  label={t('Samples')}
+                  to={`/${organization.slug}/internal/samples/`}
+                />
+              </SidebarSection>
+            </React.Fragment>
+          )}
 
           {hasOrganization && (
             <React.Fragment>
               <SidebarSection>
-                <Feature features={['sentry10']} renderDisabled={projectsSidebarItem}>
+                <Feature features={['sentry10']}>
                   <SidebarItem
                     {...sidebarItemProps}
                     index
