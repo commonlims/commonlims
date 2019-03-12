@@ -10,7 +10,7 @@ fi
 
 conda create --name=$CLIMS_CONDA_ENV python="$CLIMS_PYTHON_VERSION"
 source activate $CLIMS_CONDA_ENV
-export $CLIMS_PYTHON_PATH=$(which python)  # For use in e.g. vscode
+export CLIMS_PYTHON_PATH=$(which python)  # For use in e.g. vscode
 
 echo "using conda env: $CLIMS_CONDA_ENV"
 
