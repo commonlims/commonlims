@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Container as ContainerPropType} from 'app/climsTypes';
+import { Container as ContainerPropType } from 'app/climsTypes';
 import SampleWell from './sampleWell';
 
 const containerStyle = {
@@ -20,7 +20,6 @@ const cellStyleHighlightBackground = {
 };
 
 class SampleContainer extends React.Component {
-  //displayName: 'SampleContainer';
 
   // Receives a prop container, that can e.g. come from the sample-batch endpoint
 
@@ -48,10 +47,10 @@ class SampleContainer extends React.Component {
     let rows = [];
     let colsHeader = [];
 
-    colsHeader.push(<td style={cellStyleHeader} />);
+    colsHeader.push(<td key={-1} style={cellStyleHeader} />);
     for (let c = 0; c < this.props.container.dimensions.cols; c++) {
       colsHeader.push(
-        <td style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
+        <td key={c} style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
       );
     }
     rows.push(<tr>{colsHeader}</tr>);
@@ -59,7 +58,7 @@ class SampleContainer extends React.Component {
     for (let r = 0; r < this.props.container.dimensions.rows; r++) {
       let cols = [];
 
-      cols.push(<td style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
+      cols.push(<td key={r} style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
@@ -103,7 +102,7 @@ class SampleContainer extends React.Component {
   render() {
     return (
       <table style={containerStyle} onMouseLeave={this.onMouseLeave.bind(this)}>
-        <tbody> {this.createRows()} </tbody>
+        <tbody>{this.createRows()}</tbody>
       </table>
     );
   }

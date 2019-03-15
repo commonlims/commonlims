@@ -224,6 +224,7 @@ class GroupAssigneeManager(BaseManager):
                 sync_group_assignee_outbound(group, None, assign=False)
 
 
+# TODO: DEL
 class GroupAssignee(Model):
     """
     Identifies an assignment relationship between a user/team and an
@@ -233,15 +234,15 @@ class GroupAssignee(Model):
 
     objects = GroupAssigneeManager()
 
-    project = FlexibleForeignKey('sentry.Project', related_name="assignee_set")
-    group = FlexibleForeignKey('sentry.Group', related_name="assignee_set", unique=True)
+    project = FlexibleForeignKey('sentry.Project', related_name="assignee_set1")
+    group = FlexibleForeignKey('sentry.Group', related_name="assignee_set1", unique=True)
     user = FlexibleForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="sentry_assignee_set",
+        related_name="sentry_assignee_set1",
         null=True)
     team = FlexibleForeignKey(
         'sentry.Team',
-        related_name="sentry_assignee_set",
+        related_name="sentry_assignee_set1",
         null=True)
     date_added = models.DateTimeField(default=timezone.now)
 

@@ -326,6 +326,7 @@ class FileBlob(Model):
         assert self.path
 
         storage = get_storage()
+        print("HERE!!!!!", self.path)
         return storage.open(self.path)
 
 
@@ -373,9 +374,11 @@ class File(Model):
         returned instead which can help in certain situations where a
         tempfile is necessary.
         """
+        print("HERE!")
         if as_tempfile:
             prefetch = True
         impl = self._get_chunked_blob(mode, prefetch)
+        print(impl)
         if as_tempfile:
             return impl.detach_tempfile()
         return FileObj(impl, self.name)

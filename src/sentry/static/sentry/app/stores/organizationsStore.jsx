@@ -15,6 +15,7 @@ const OrganizationsStore = Reflux.createStore({
   },
 
   onUpdate(org) {
+    console.log("Organization updated:", org);
     this.add(org);
   },
 
@@ -43,10 +44,11 @@ const OrganizationsStore = Reflux.createStore({
   },
 
   add(item) {
+    console.log("Organization added:", item);
     let match = false;
     this.items.forEach((existing, idx) => {
       if (existing.id === item.id) {
-        item = {...existing, ...item};
+        item = { ...existing, ...item };
         this.items[idx] = item;
         match = true;
       }
@@ -58,6 +60,8 @@ const OrganizationsStore = Reflux.createStore({
   },
 
   load(items) {
+    console.log("loading orgs", items);
+    console.trace();
     this.items = items;
     this.trigger(items);
   },

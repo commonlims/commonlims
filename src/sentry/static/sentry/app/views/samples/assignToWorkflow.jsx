@@ -3,13 +3,12 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
-import {FormState} from 'app/components/forms';
+import { FormState } from 'app/components/forms';
 import WorkflowFilter from 'app/views/samples/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
-import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 
@@ -18,7 +17,6 @@ const AssignToWorkflowButton = createReactClass({
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     query: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     style: PropTypes.object,
@@ -31,11 +29,10 @@ const AssignToWorkflowButton = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId, projectId} = this.props;
+    let { orgId } = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
     let organization = OrganizationStore.get(orgId);
-    let project = ProjectsStore.getBySlug(projectId);
 
     return {
       isModalOpen: false,
@@ -47,7 +44,6 @@ const AssignToWorkflowButton = createReactClass({
       workflowVars: null,
       workflowVars2: null,
       organization,
-      project,
       setProcessVariables: {},
     };
   },
@@ -102,7 +98,7 @@ const AssignToWorkflowButton = createReactClass({
       () => {
         // TODO: Start the process
         let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId} = this.props;
+        let { orgId } = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
@@ -157,7 +153,7 @@ const AssignToWorkflowButton = createReactClass({
       },
     ];
 
-    this.setState(state => ({workflowVars: vars, value, process: value}));
+    this.setState(state => ({ workflowVars: vars, value, process: value }));
   },
 
   render() {
@@ -213,14 +209,12 @@ const AssignToWorkflowButton = createReactClass({
                 }}
                 onSelect={this.onSelectWorkflow}
                 orgId="sentry"
-                projectId="internal"
               />
 
               <br />
               {this.state.workflowVars && (
                 <ProcessTaskSettings
                   organization={this.state.organization}
-                  project={this.state.project}
                   pluginId="snpseq"
                   onChanged={this.onVariableChange}
                   processVarsViewKey="start_sequence"

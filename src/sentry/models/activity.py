@@ -70,6 +70,7 @@ class Activity(Model):
     )
 
     project = FlexibleForeignKey('sentry.Project')
+    user_task = FlexibleForeignKey('sentry.UserTask', null=True)
     group = FlexibleForeignKey('sentry.Group', null=True)
     # index on (type, ident)
     type = BoundedPositiveIntegerField(choices=TYPE)
@@ -83,7 +84,7 @@ class Activity(Model):
         app_label = 'sentry'
         db_table = 'sentry_activity'
 
-    __repr__ = sane_repr('project_id', 'group_id', 'event_id', 'user_id', 'type', 'ident')
+    __repr__ = sane_repr('project_id', 'user_task_id', 'event_id', 'user_id', 'type', 'ident')
 
     @staticmethod
     def get_version_ident(version):
@@ -107,16 +108,16 @@ class Activity(Model):
         if not created:
             return
 
-        # HACK: support Group.num_comments
+        # HACK: support UserTask.num_comments
         if self.type == Activity.NOTE:
-            self.group.update(num_comments=F('num_comments') + 1)
+            self.user_task.update(num_comments=F('num_comments') + 1)
 
     def delete(self, *args, **kwargs):
         super(Activity, self).delete(*args, **kwargs)
 
-        # HACK: support Group.num_comments
+        # HACK: support UserTask.num_comments
         if self.type == Activity.NOTE:
-            self.group.update(num_comments=F('num_comments') - 1)
+            self.user_task.update(num_comments=F('num_comments') - 1)
 
     def send_notification(self):
         activity.send_activity_notifications.delay(self.id)

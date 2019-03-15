@@ -35,6 +35,20 @@ class InstanceManager(object):
         self.cache = None
         self.class_list = class_list
 
+    def _fetch(self, class_path, create):
+        module_name, class_name = class_path.rsplit('.', 1)
+        try:
+            module = __import__(module_name, {}, {}, class_name)
+            cls = getattr(module, class_name)
+            if create:
+                return cls()
+            else:
+                return cls
+        except Exception:
+            logger = logging.getLogger('sentry.errors')
+            logger.exception('Unable to import %s', class_path)
+            return None
+
     def all(self):
         """
         Returns a list of cached instances.
@@ -49,18 +63,8 @@ class InstanceManager(object):
 
         results = []
         for cls_path in class_list:
-            module_name, class_name = cls_path.rsplit('.', 1)
-            try:
-                module = __import__(module_name, {}, {}, class_name)
-                cls = getattr(module, class_name)
-                if self.instances:
-                    results.append(cls())
-                else:
-                    results.append(cls)
-            except Exception:
-                logger = logging.getLogger('sentry.errors')
-                logger.exception('Unable to import %s', cls_path)
-                continue
+            instance = self._fetch(cls_path, self.instances)
+            results.append(instance)
         self.cache = results
 
         return results

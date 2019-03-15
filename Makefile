@@ -11,7 +11,7 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: update-submodules install-system-pkgs install-yarn-pkgs install-sentry-dev
+develop-only: update-submodules install-yarn-pkgs install-sentry-dev
 test: lint test-js test-python test-cli
 
 build: locale
@@ -131,7 +131,7 @@ test-styleguide:
 	@npm run snapshot
 	@echo ""
 
-test-python: build-platform-assets
+test-python: 
 	@echo "--> Running Python tests"
 	py.test tests/integration tests/sentry --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
 	@echo ""

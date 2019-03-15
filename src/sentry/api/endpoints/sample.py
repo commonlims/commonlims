@@ -17,55 +17,64 @@ from sentry.plugins import plugins
 from sentry.search.utils import tokenize_query
 from clims.workflow import WorkflowEngine
 from sentry.api.serializers.models.sample import SampleSerializer
+from sentry.api.paginator import OffsetPaginator
 
 
+# TODO: Rename to ItemEndpoint (unless we find a better name, other options
+# discussed were Element and Content). As these will encapsulate anything
+# that can have a location in a container (except other containers), e.g. sample
+# in a well, aliquot, index tag, pool etc, we model it as the same entity in the backend.
+
+# This endpoint gan also gropu any of these items. If there is a gropby keyword in the get query,
+# the returned value is a "ItemGroup" resource instead.
 class SampleEndpoint(Endpoint):
     authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
+    # TODO: The index endpoint must be on sample level!
     def get(self, request):
+        group_by = request.GET.get('groupBy')
+        print("Grouping by", group_by)
 
-        queryset = Sample.objects
+        # # To begin with, we'll just support a container here as it's the most obvious case
+        # if group_by == "container":
+        #     pass
+        #     queryset = Sample.objects.all()
 
+        queryset = Sample.objects.all()
         query = request.GET.get('query')
-        if query:
+        if query:  # TODO: Ignoring the query while bugfixing
             tokens = tokenize_query(query)
+            print(tokens)
             for key, value in six.iteritems(tokens):
-                if key == 'query':
-                    value = ' '.join(value)
-                    queryset = queryset.filter(Q(name__icontains=value) | Q(slug__icontains=value))
-                elif key == 'slug':
-                    queryset = queryset.filter(in_iexact('slug', value))
-                elif key == 'name':
+                if key == 'name':
                     queryset = queryset.filter(in_iexact('name', value))
-                elif key == 'platform':
-                    # TODO I don't know what this means, and perhaps we should just
-                    #      remove it? /JD 2019-03-04
-                    queryset = queryset.filter(
-                        id__in=ProjectPlatform.objects.filter(
-                            platform__in=value,
-                        ).values('project_id')
-                    )
                 elif key == 'id':
                     queryset = queryset.filter(id__in=value)
                 else:
+                    # query set has none of the supported keys, so it makes sense to return nothing
                     queryset = queryset.none()
 
-        task = request.GET.get("task", None)
-        process = request.GET.get("process", None)
+        # task = request.GET.get("task", None)
+        # process = request.GET.get("process", None)
 
-        engine = WorkflowEngine()
-        if task or process:
-            # Start by finding all processes waiting for this particular task
-            tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
-            samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
+        # engine = WorkflowEngine()
+        # if task or process:
+        #     # Start by finding all processes waiting for this particular task
+        #     tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
+        #     samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
+        #     print(samples)
 
-            if samples:
-                queryset = Sample.objects.filter(pk__in=samples)
-            else:
-                raise Http404("No resources found")
+        def _serialize(sample):
+            # TODO: Add info from
+            return serialize(sample)
 
-        return Response(serialize(queryset, serializer=SampleSerializer()), status=200)
+        return self.paginate(
+            request=request,
+            queryset=queryset,
+            paginator_cls=OffsetPaginator,
+            on_results=lambda x: _serialize(x),
+        )
 
     def post(self, request):
         sample = Sample.objects.create(
@@ -74,6 +83,7 @@ class SampleEndpoint(Endpoint):
             # status=.CREATED
         )
         return Response(serialize(sample, request.user), status=201)
+
 
 class SampleBatchEndpoint(Endpoint):
     authentication_classes = DEFAULT_AUTHENTICATION

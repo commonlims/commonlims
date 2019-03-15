@@ -187,24 +187,19 @@ const SamplesActions = createReactClass({
             <Checkbox onChange={this.onSelectAll} checked={pageSelected} />
           </ActionsCheckbox>
 
-          <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
-            <WorkOnButton
-              className="btn btn-sm btn-default"
-              disabled={!anySelected}
-              {...this.props}
-            >
-              {t('Start work')}
-            </WorkOnButton>
-            <AssignToWorkflowButton
-              className="btn btn-sm btn-default"
-              disabled={!anySelected}
-              {...this.props}
-            >
-              {t('Assign to workflow')}
-            </AssignToWorkflowButton>
-            <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
-              {t('Import samples')}
-            </UploadSamplesButton>
+          <ActionSet mx={1} flex="1">
+            <div className="btn-group">
+              <AssignToWorkflowButton
+                className="btn btn-sm btn-default"
+                disabled={!anySelected}
+                {...this.props}
+              >
+                {t('Assign to workflow')}
+              </AssignToWorkflowButton>
+              <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
+                {t('Import samples')}
+              </UploadSamplesButton>
+            </div>
           </ActionSet>
         </StyledFlex>
 
@@ -279,7 +274,7 @@ const ActionSet = styled(Box)`
   display: flex;
 
   .btn-group {
-    margin-right: 6px;
+    margin: 6px;
   }
 `;
 

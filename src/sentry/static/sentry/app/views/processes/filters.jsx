@@ -3,12 +3,11 @@ import React from 'react';
 
 import SavedSearchSelector from 'app/views/processes/savedSearchSelector';
 import SearchBar from 'app/views/processes/searchBar';
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 
 class ProcessesFilters extends React.Component {
   static propTypes = {
     orgId: PropTypes.string.isRequired,
-    access: PropTypes.object.isRequired,
 
     searchId: PropTypes.string,
     savedSearchList: PropTypes.array.isRequired,
@@ -30,9 +29,9 @@ class ProcessesFilters extends React.Component {
   static defaultProps = {
     sort: '',
     query: null,
-    onSortChange: function() {},
-    onSearch: function() {},
-    onSidebarToggle: function() {},
+    onSortChange: function () { },
+    onSearch: function () { },
+    onSidebarToggle: function () { },
   };
 
   render() {

@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import qs from 'query-string';
-import {omit, isEqual} from 'lodash';
+import { omit, isEqual } from 'lodash';
 import SentryTypes from 'app/sentryTypes';
 import ApiMixin from 'app/mixins/apiMixin';
 import GroupStore from 'app/stores/groupStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import CompactIssue from 'app/components/compactIssue';
+import CompactUserTask from 'app/components/compactUserTask';
 import EventUserFeedback from 'app/components/events/userFeedback';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
-import {t, tct} from 'app/locale';
+import { t, tct } from 'app/locale';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString';
 
 import UserFeedbackContainer from './container';
@@ -155,11 +155,11 @@ const ProjectUserFeedback = createReactClass({
   },
 
   renderEmpty() {
-    const {environment} = this.state;
+    const { environment } = this.state;
     const message = environment
       ? tct('No user reports have been collected from your [env] environment.', {
-          env: environment.displayName,
-        })
+        env: environment.displayName,
+      })
       : t('No user reports have been collected.');
     return (
       <EmptyStateWarning>
@@ -174,20 +174,20 @@ const ProjectUserFeedback = createReactClass({
   },
 
   renderResults() {
-    const {orgId, projectId} = this.props.params;
+    const { orgId, projectId } = this.props.params;
 
     const children = this.state.reportList.map(item => {
       const issue = item.issue;
 
       return (
-        <CompactIssue key={item.id} id={issue.id} data={issue}>
+        <CompactUserTask key={item.id} id={issue.id} data={issue}>
           <EventUserFeedback
             report={item}
             orgId={orgId}
             projectId={projectId}
             issueId={issue.id}
           />
-        </CompactIssue>
+        </CompactUserTask>
       );
     });
 
@@ -195,7 +195,7 @@ const ProjectUserFeedback = createReactClass({
   },
 
   render() {
-    const {location} = this.props;
+    const { location } = this.props;
 
     return (
       <UserFeedbackContainer
@@ -209,5 +209,5 @@ const ProjectUserFeedback = createReactClass({
   },
 });
 
-export {ProjectUserFeedback};
+export { ProjectUserFeedback };
 export default withEnvironmentInQueryString(ProjectUserFeedback);

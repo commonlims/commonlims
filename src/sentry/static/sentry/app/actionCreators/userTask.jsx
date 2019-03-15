@@ -1,14 +1,14 @@
 import * as Sentry from '@sentry/browser';
 
-import {Client} from 'app/api';
+import { Client } from 'app/api';
 import UserTaskActions from 'app/actions/userTaskActions';
-import {buildUserId, buildTeamId} from 'app/utils';
-import {uniqueId} from 'app/utils/guid';
+import { buildUserId, buildTeamId } from 'app/utils';
+import { uniqueId } from 'app/utils/guid';
 
 export function assignToUser(params) {
   const api = new Client();
 
-  let endpoint = `/issues/${params.id}/`;
+  let endpoint = `/user-tasks/${params.id}/`;
 
   let id = uniqueId();
 
@@ -67,7 +67,7 @@ export function clearAssignment(groupId) {
   return request;
 }
 
-export function assignToActor({id, actor}) {
+export function assignToActor({ id, actor }) {
   const api = new Client();
 
   let endpoint = `/issues/${id}/`;
@@ -75,7 +75,7 @@ export function assignToActor({id, actor}) {
   let guid = uniqueId();
   let actorId;
 
-  UserTaskActions.assignTo(guid, id, {email: ''});
+  UserTaskActions.assignTo(guid, id, { email: '' });
 
   switch (actor.type) {
     case 'user':
@@ -96,7 +96,7 @@ export function assignToActor({id, actor}) {
   return api
     .requestPromise(endpoint, {
       method: 'PUT',
-      data: {assignedTo: actorId},
+      data: { assignedTo: actorId },
     })
     .then(data => {
       UserTaskActions.assignToSuccess(guid, id, data);

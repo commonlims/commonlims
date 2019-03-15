@@ -2,20 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import {browserHistory} from 'react-router';
+import { browserHistory } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import * as Sentry from '@sentry/browser';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import UserTaskStore from 'app/stores/userTaskStore';
+import UserTaskSettingsStore from 'app/stores/userTaskSettingsStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SentryTypes from 'app/sentryTypes';
-import {t} from 'app/locale';
-import ProjectsStore from 'app/stores/projectsStore';
+import { t } from 'app/locale';
 
 import UserTaskHeader from './header';
-import {ERROR_TYPES} from './constants';
+import { ERROR_TYPES } from './constants';
+
+import UserTaskDetailsFields from 'app/views/userTaskDetails/shared/userTaskFields';
+import UserTaskDetailsFiles from 'app/views/userTaskDetails/shared/userTaskFiles';
+import UserTaskDetailsActivity from 'app/views/userTaskDetails/shared/userTaskActivity';
+import MoveItems from 'app/views/moveItems'
 
 const UserTaskDetails = createReactClass({
   displayName: 'UserTaskDetails',
@@ -34,7 +39,7 @@ const UserTaskDetails = createReactClass({
 
   getInitialState() {
     return {
-      group: null,
+      userTask: null,
       loading: true,
       error: false,
       errorType: null,
@@ -51,12 +56,6 @@ const UserTaskDetails = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.params.groupId !== this.props.params.groupId) {
-      this.remountComponent();
-    }
-  },
-
   componentDidUpdate(prevProps) {
     if (
       prevProps.params.groupId !== this.props.params.groupId ||
@@ -71,6 +70,8 @@ const UserTaskDetails = createReactClass({
   },
 
   fetchData() {
+    // TODO: Consider moving fetchData to a client called by the store rather than
+    // initializing the store in this way
     const query = {};
 
     if (this.props.environment) {
@@ -80,40 +81,13 @@ const UserTaskDetails = createReactClass({
     this.api.request(this.getUserTaskDetailsEndpoint(), {
       query,
       success: data => {
-        // TODO: Ideally, this would rebuild the route before parameter
-        // interpolation, replace the `groupId` field of `this.routeParams`,
-        // and use `formatPattern` from `react-router` to rebuild the URL,
-        // rather than blindly pattern matching like we do here. Unfortunately,
-        // `formatPattern` isn't actually exported until `react-router` 2.0.1:
-        // https://github.com/reactjs/react-router/blob/v2.0.1/modules/index.js#L25
-        if (this.props.params.groupId != data.id) {
-          let location = this.props.location;
-          return void browserHistory.push(
-            location.pathname.replace(
-              `/issues/${this.props.params.groupId}/`,
-              `/issues/${data.id}/`
-            ) +
-              location.search +
-              location.hash
-          );
-        }
-
-        let project = this.props.project || ProjectsStore.getById(data.project.id);
-
-        if (!project) {
-          Sentry.withScope(scope => {
-            Sentry.captureException(new Error('Project not found'));
-          });
-        }
-
+        // TODO: hacking, use promises
         this.setState({
           loading: false,
           error: false,
           errorType: null,
-          project,
         });
-
-        return void UserTaskStore.loadInitialData([data]);
+        return void UserTaskStore.loadInitialData(data);
       },
       error: (_, _textStatus, errorThrown) => {
         let errorType = null;
@@ -132,54 +106,97 @@ const UserTaskDetails = createReactClass({
     });
   },
 
-  onUserTaskChange(itemIds) {
-    let id = this.props.params.groupId;
-    if (itemIds.has(id)) {
-      let group = UserTaskStore.get(id);
-      if (group) {
-        if (group.stale) {
-          this.fetchData();
-          return;
-        }
-        this.setState({
-          group,
-        });
-      }
+  onUserTaskChange() {
+    let id = this.props.params.groupId; // TODO: Rename to userTaskId
+    console.log("onUserTaskChange1", id, UserTaskStore.userTask.id);
+    if (UserTaskStore.userTask.id === id) {
+      console.log("onUserTaskChange2");
+      this.setState({
+        userTask: UserTaskStore.userTask,
+      });
     }
   },
 
   getUserTaskDetailsEndpoint() {
+    console.log('!!!', this.props.params);
     let id = this.props.params.groupId;
-
-    return '/issues/' + id + '/';
+    return '/user-tasks/' + id + '/';
   },
 
   getTitle() {
-    let group = this.state.group;
+    let userTask = this.state.userTask;
 
-    if (!group) return 'Sentry';
+    if (!userTask) return 'Sentry';
 
-    switch (group.type) {
+    switch (userTask.type) {
       case 'error':
-        if (group.metadata.type && group.metadata.value)
-          return `${group.metadata.type}: ${group.metadata.value}`;
-        return group.metadata.type || group.metadata.value;
+        if (userTask.metadata.type && userTask.metadata.value)
+          return `${userTask.metadata.type}: ${userTask.metadata.value}`;
+        return userTask.metadata.type || userTask.metadata.value;
       case 'csp':
-        return group.metadata.message;
+        return userTask.metadata.message;
       case 'expectct':
       case 'expectstaple':
       case 'hpkp':
-        return group.metadata.message;
+        return userTask.metadata.message;
       case 'default':
-        return group.metadata.title;
+        return userTask.metadata.title;
       default:
         return '';
     }
   },
 
+  subtaskManualClick(subtask) {
+    console.log("click", subtask);
+    UserTaskStore.setSubtaskManualOverride(subtask.view, !subtask.manualOverride);
+  },
+
+  subtaskTitleClick(subtask) {
+    console.log("title", subtask);
+    UserTaskStore.activateView(subtask.view);
+  },
+
+  renderTodoItems() {
+    let ret = this.state.userTask.subtasks.map(x => {
+      return <TodoItem
+        handleManualClick={() => this.subtaskManualClick(x)}
+        handleTitleClick={() => this.subtaskTitleClick(x)}
+        description={x.description}
+        key={x.description}
+        status={x.status}
+        manualOverride={x.manualOverride} />
+    });
+    return ret;
+
+  },
+
+  activeTab() {
+    for (let tab of this.state.userTask.tabs) {
+      if (tab.active) {
+        return tab;
+      }
+    }
+  },
+
+  renderTabComponent() {
+    let tab = this.activeTab();
+    if (tab.id == 'samples') {
+      return <MoveItems userTask={this.state.userTask} />
+    }
+    else if (tab.id == "details") {
+      return <UserTaskDetailsFields userTask={this.state.userTask} />
+    }
+    else if (tab.id == "files") {
+      return <UserTaskDetailsFiles userTask={this.state.userTask} />
+    }
+    else if (tab.id == "activity") {
+      return <UserTaskDetailsActivity userTask={this.state.userTask} />
+    }
+  },
+
   render() {
     let params = this.props.params;
-    let {group, project} = this.state;
+    let { userTask } = this.state;
 
     if (this.state.error) {
       switch (this.state.errorType) {
@@ -192,28 +209,20 @@ const UserTaskDetails = createReactClass({
         default:
           return <LoadingError onRetry={this.remountComponent} />;
       }
-    } else if (this.state.loading || !group) return <LoadingIndicator />;
+    } else if (this.state.loading || !userTask) return <LoadingIndicator />;
 
     return (
       <DocumentTitle title={this.getTitle()}>
         <div className={this.props.className}>
-          <UserTaskHeader params={params} project={project} group={group} />
+          <UserTaskHeader params={params} userTask={this.state.userTask} />
           <div className="user-task-details-container">
             <div className="primary">
-              {React.cloneElement(this.props.children, {
-                group,
-                project,
-              })}
+              {this.renderTabComponent()}
             </div>
             <div className="secondary">
               <div className="user-task-todo-container">
                 <h6>Task list</h6>
-                <TodoItem description="Place samples" status="todo" />
-                <TodoItem description="Print labels" status="done" />
-                <TodoItem description="Fill required fields" status="manual" />
-                <TodoItem description="Prepare QA plate" status="todo" />
-                <TodoItem description="Run fragment analyzer" status="todo" />
-                <TodoItem description="All samples passed QA" status="error" />
+                {this.renderTodoItems()}
               </div>
             </div>
           </div>
@@ -228,13 +237,19 @@ const TodoItem = props => {
   if (props.status === 'error') {
     icon = 'icon-ban';
   }
+
+  let status = props.status;
+  if (props.manualOverride) {
+    status = "manual";
+  }
+
   return (
     <div className="todo-item">
-      <a className="btn btn-default btn-sm">
-        <span className={`${icon} ${props.status}`} />
+      <a className="btn btn-default btn-sm" onClick={props.handleManualClick}>
+        <span className={`${icon} ${status}`} />
       </a>
       <span className="description">
-        <a>{props.description}</a>
+        <a onClick={props.handleTitleClick}>{props.description}</a>
       </span>
     </div>
   );

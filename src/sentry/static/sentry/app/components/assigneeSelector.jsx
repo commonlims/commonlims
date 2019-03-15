@@ -4,10 +4,10 @@ import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 
-import {StyledMenu} from 'app/components/dropdownAutoCompleteMenu';
-import {assignToUser, assignToActor, clearAssignment} from 'app/actionCreators/group';
-import {t} from 'app/locale';
-import {valueIsEqual, buildUserId, buildTeamId} from 'app/utils';
+import { StyledMenu } from 'app/components/dropdownAutoCompleteMenu';
+import { assignToUser, assignToActor, clearAssignment } from 'app/actionCreators/group';
+import { t } from 'app/locale';
+import { valueIsEqual, buildUserId, buildTeamId } from 'app/utils';
 import ActorAvatar from 'app/components/actorAvatar';
 import Avatar from 'app/components/avatar';
 import ConfigStore from 'app/stores/configStore';
@@ -22,6 +22,7 @@ import ProjectsStore from 'app/stores/projectsStore';
 import SentryTypes from 'app/sentryTypes';
 import TextOverflow from 'app/components/textOverflow';
 import space from 'app/styles/space';
+import TeamStore from 'app/stores/teamStore';
 
 const AssigneeSelectorComponent = createReactClass({
   displayName: 'AssigneeSelector',
@@ -115,6 +116,7 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   assignableTeams() {
+    console.log("TEAM", TeamStore.getAll());
     let group = GroupStore.get(this.props.id);
 
     return (ProjectsStore.getBySlug(group.project.slug) || {
@@ -141,16 +143,16 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   assignToUser(user) {
-    assignToUser({id: this.props.id, user});
-    this.setState({loading: true});
+    assignToUser({ id: this.props.id, user });
+    this.setState({ loading: true });
   },
 
   assignToTeam(team) {
-    assignToActor({actor: {id: team.id, type: 'team'}, id: this.props.id});
-    this.setState({loading: true});
+    assignToActor({ actor: { id: team.id, type: 'team' }, id: this.props.id });
+    this.setState({ loading: true });
   },
 
-  handleAssign({value: {type, assignee}}, state, e) {
+  handleAssign({ value: { type, assignee } }, state, e) {
     if (type === 'member') {
       this.assignToUser(assignee);
     }
@@ -165,19 +167,19 @@ const AssigneeSelectorComponent = createReactClass({
   clearAssignTo(e) {
     // clears assignment
     clearAssignment(this.props.id);
-    this.setState({loading: true});
+    this.setState({ loading: true });
     e.stopPropagation();
   },
 
   renderNewMemberNodes() {
-    let {size} = this.props;
+    let { size } = this.props;
     let members = AssigneeSelectorComponent.putSessionUserFirst(this.memberList());
 
     return members.map(member => {
       return {
-        value: {type: 'member', assignee: member},
+        value: { type: 'member', assignee: member },
         searchKey: `${member.email} ${member.name} ${member.slug}`,
-        label: ({inputValue}) => (
+        label: ({ inputValue }) => (
           <MenuItemWrapper
             key={buildUserId(member.id)}
             onSelect={this.assignToUser.bind(this, member)}
@@ -195,13 +197,13 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   renderNewTeamNodes() {
-    let {size} = this.props;
+    let { size } = this.props;
 
-    return this.assignableTeams().map(({id, display, team}) => {
+    return this.assignableTeams().map(({ id, display, team }) => {
       return {
-        value: {type: 'team', assignee: team},
+        value: { type: 'team', assignee: team },
         searchKey: team.slug,
-        label: ({inputValue}) => (
+        label: ({ inputValue }) => (
           <MenuItemWrapper key={id} onSelect={this.assignToTeam.bind(this, team)}>
             <IconContainer>
               <Avatar team={team} size={size} />
@@ -220,15 +222,15 @@ const AssigneeSelectorComponent = createReactClass({
     let members = this.renderNewMemberNodes();
 
     return [
-      {id: 'team-header', hideGroupLabel: true, items: teams},
-      {id: 'members-header', items: members},
+      { id: 'team-header', hideGroupLabel: true, items: teams },
+      { id: 'members-header', items: members },
     ];
   },
 
   render() {
-    let {className} = this.props;
-    let {organization} = this.context;
-    let {loading, assignedTo} = this.state;
+    let { className } = this.props;
+    let { organization } = this.context;
+    let { loading, assignedTo } = this.state;
     let canInvite = ConfigStore.get('invitesEnabled');
     let hasOrgWrite = organization.access.includes('org:write');
     let memberList = this.memberList();
@@ -236,7 +238,7 @@ const AssigneeSelectorComponent = createReactClass({
     return (
       <div className={className}>
         {loading && (
-          <LoadingIndicator mini style={{height: '24px', margin: 0, marginRight: 11}} />
+          <LoadingIndicator mini style={{ height: '24px', margin: 0, marginRight: 11 }} />
         )}
         {!loading && (
           <DropdownAutoComplete
@@ -289,14 +291,14 @@ const AssigneeSelectorComponent = createReactClass({
               )
             }
           >
-            {({getActorProps}) => {
+            {({ getActorProps }) => {
               return (
                 <DropdownButton {...getActorProps({})}>
                   {assignedTo ? (
                     <ActorAvatar actor={assignedTo} className="avatar" size={24} />
                   ) : (
-                    <IconUser src="icon-user" />
-                  )}
+                      <IconUser src="icon-user" />
+                    )}
                   <StyledChevron src="icon-chevron-down" />
                 </DropdownButton>
               );
@@ -320,7 +322,7 @@ const AssigneeSelector = styled(AssigneeSelectorComponent)`
 `;
 
 export default AssigneeSelector;
-export {AssigneeSelectorComponent};
+export { AssigneeSelectorComponent };
 
 const getSvgStyle = () => `
   font-size: 16px;
@@ -345,7 +347,7 @@ const IconContainer = styled.div`
   flex-shrink: 0;
 `;
 
-const MenuItemWrapper = styled(({py, ...props}) => <div {...props} />)`
+const MenuItemWrapper = styled(({ py, ...props }) => <div {...props} />)`
   cursor: pointer;
   display: flex;
   align-items: center;

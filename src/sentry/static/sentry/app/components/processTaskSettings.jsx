@@ -1,15 +1,15 @@
-import {Flex} from 'grid-emotion';
+import { Flex } from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 import createReactClass from 'create-react-class';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import {Panel, PanelBody, PanelHeader} from 'app/components/panels';
-import {GenericField} from 'app/components/forms';
+import { Panel, PanelBody, PanelHeader } from 'app/components/panels';
+import { GenericField } from 'app/components/forms';
 
 const ProcessTaskSettings = createReactClass({
   displayName: 'ProcessTaskSettings',
@@ -48,7 +48,7 @@ const ProcessTaskSettings = createReactClass({
   getPluginEndpoint(pluginId) {
     // TODO:
     let projectId = 'internal';
-    let orgId = 'sentry';
+    let orgId = 'snpseq';
     return `/projects/${orgId}/${projectId}/plugins/${pluginId}/`;
   },
 
@@ -74,6 +74,7 @@ const ProcessTaskSettings = createReactClass({
   },
 
   configToField(config) {
+    console.log("field config", config);
     return (
       <GenericField
         key={config.name}
@@ -101,12 +102,12 @@ const ProcessTaskSettings = createReactClass({
           {this.state.loading ? (
             <LoadingIndicator />
           ) : (
-            <div>
               <div>
-                {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
+                <div>
+                  {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </PanelBody>
       </Panel>
     );

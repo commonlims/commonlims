@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import marked from 'marked';
 
 import PullRequestLink from 'app/components/pullRequestLink';
@@ -15,7 +15,7 @@ import TeamStore from 'app/stores/teamStore';
 import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
-import {t, tn, tct} from 'app/locale';
+import { t, tn, tct } from 'app/locale';
 
 class ActivityItem extends React.Component {
   static propTypes = {
@@ -46,7 +46,7 @@ class ActivityItem extends React.Component {
         // okay if this causes re-render; cannot determine until
         // rendered first anyways
         // eslint-disable-next-line react/no-did-mount-set-state
-        this.setState({clipped: true});
+        this.setState({ clipped: true });
       }
     }
   }
@@ -218,8 +218,8 @@ class ActivityItem extends React.Component {
               {data.source.shortId}
             </a>
           ) : (
-            t('a group')
-          ),
+              t('a group')
+            ),
           issueLink
         );
       case 'first_seen':
@@ -305,10 +305,10 @@ class ActivityItem extends React.Component {
     let avatar = item.user ? (
       <Avatar user={item.user} size={36} className="activity-avatar" />
     ) : (
-      <div className="activity-avatar avatar sentry">
-        <span className="icon-sentry-logo" />
-      </div>
-    );
+        <div className="activity-avatar avatar sentry">
+          <span className="icon-sentry-logo" />
+        </div>
+      );
 
     let author = {
       name: item.user ? item.user.name : 'Sentry',
@@ -330,7 +330,7 @@ class ActivityItem extends React.Component {
             <div
               className={bubbleClassName}
               ref={this.activityBubbleRef}
-              dangerouslySetInnerHTML={{__html: noteBody}}
+              dangerouslySetInnerHTML={{ __html: noteBody }}
             />
             <div className="activity-meta">
               <Link className="project" to={`/${orgId}/${item.project.slug}/`}>

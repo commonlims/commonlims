@@ -199,6 +199,7 @@ class GroupManager(BaseManager):
         )
 
 
+# TODO: DEL
 class Group(Model):
     """
     Aggregated message which summarizes a set of Events.

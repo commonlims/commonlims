@@ -3,16 +3,16 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
-import {FormState} from 'app/components/forms';
+import { FormState } from 'app/components/forms';
 import WorkflowFilter from 'app/views/samples/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
-import {withRouter} from 'react-router';
+import { withRouter } from 'react-router';
 
 const WorkOnButton = createReactClass({
   // A button/view that allows the user to work on several samples that are in a waiting queue
@@ -37,7 +37,7 @@ const WorkOnButton = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId, projectId} = this.props;
+    let { orgId, projectId } = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
     let organization = OrganizationStore.get(orgId);
@@ -63,7 +63,7 @@ const WorkOnButton = createReactClass({
   },
 
   onVariableChange(data) {
-    this.state.setState({setProcessVariables: data});
+    this.state.setState({ setProcessVariables: data });
   },
 
   onToggle() {
@@ -108,7 +108,7 @@ const WorkOnButton = createReactClass({
       () => {
         // TODO: Start the process
         let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId} = this.props;
+        let { orgId } = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
@@ -158,7 +158,7 @@ const WorkOnButton = createReactClass({
       },
     ];
 
-    this.setState(state => ({workflowVars: vars, value, process: value}));
+    this.setState(state => ({ workflowVars: vars, value, process: value }));
 
     // Fetch the variables for this, if they don't exist yet:
   },
@@ -179,8 +179,8 @@ const WorkOnButton = createReactClass({
         });
       },
       success: data => {
-        // TODO:project
-        this.props.router.push(`/sentry/internal/user-task/${data.id}`);
+        // TODO: should be on org level
+        this.props.router.push(`/snpseq/internal/user-task/${data.id}`);
       },
     });
   },

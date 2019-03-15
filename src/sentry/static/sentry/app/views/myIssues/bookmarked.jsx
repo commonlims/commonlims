@@ -1,7 +1,7 @@
 import React from 'react';
 
-import OrganizationIssueList from 'app/components/organizationIssueList';
-import {t} from 'app/locale';
+import OrganizationUserTaskList from 'app/components/organizationUserTaskList';
+import { t } from 'app/locale';
 
 class Bookmarked extends React.Component {
   getEndpoint = () => {
@@ -14,7 +14,7 @@ class Bookmarked extends React.Component {
 
   render() {
     return (
-      <OrganizationIssueList
+      <OrganizationUserTaskList
         title={this.getTitle()}
         endpoint={this.getEndpoint()}
         emptyText={t('You have not bookmarked any issues.')}

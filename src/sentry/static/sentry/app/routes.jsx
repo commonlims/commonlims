@@ -1,13 +1,9 @@
-import {Redirect, Route, IndexRoute, IndexRedirect} from 'react-router';
+import { Redirect, Route, IndexRoute, IndexRedirect } from 'react-router';
 import React from 'react';
 
 import App from 'app/views/app';
-import CreateProject from 'app/views/onboarding/createProject';
 
-import UserTaskDetails from 'app/views/userTaskDetails/project/index';
-import UserTaskDetailsFields from 'app/views/userTaskDetails/shared/userTaskFields';
-import UserTaskDetailsSamples from 'app/views/userTaskDetails/shared/userTaskSamples';
-import UserTaskDetailsFiles from 'app/views/userTaskDetails/shared/userTaskFiles';
+import UserTaskDetails from 'app/views/userTaskDetails/organization/index';
 
 import ProjectGroupDetails from 'app/views/groupDetails/project/index';
 import ProjectGroupEvents from 'app/views/groupDetails/project/groupEvents';
@@ -23,8 +19,6 @@ import MyIssuesAssignedToMe from 'app/views/myIssues/assignedToMe';
 import MyIssuesBookmarked from 'app/views/myIssues/bookmarked';
 import MyIssuesViewed from 'app/views/myIssues/viewed';
 import NewProject from 'app/views/projectInstall/newProject';
-import OnboardingConfigure from 'app/views/onboarding/configure/index';
-import OnboardingWizard from 'app/views/onboarding/index';
 import OrganizationActivity from 'app/views/organizationActivity';
 import OrganizationContext from 'app/views/organizationContext';
 import OrganizationCreate from 'app/views/organizationCreate';
@@ -46,7 +40,6 @@ import ProjectInstallOverview from 'app/views/projectInstall/overview';
 import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
-//import Samples from 'app/views/sample';  // TODO: Pluralize filename?
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
 import ProcessesContainer from 'app/views/processes/index';
@@ -60,7 +53,6 @@ import SettingsWrapper from 'app/views/settings/components/settingsWrapper';
 import Stream from 'app/views/stream';
 import errorHandler from 'app/utils/errorHandler';
 
-import FragmentAnalyzeView from 'app/views/fragmentAnalyze';
 
 function appendTrailingSlash(nextState, replace) {
   let lastChar = nextState.location.pathname.slice(-1);
@@ -753,23 +745,25 @@ function routes() {
 
       <Route path="/organizations/new/" component={errorHandler(OrganizationCreate)} />
 
-      <Route path="/onboarding/:orgId/" component={errorHandler(OrganizationContext)}>
-        <Route path="" component={errorHandler(OnboardingWizard)}>
-          <IndexRoute component={errorHandler(CreateProject)} />
-          {hooksSurveyRoute}
-          <Route
-            path=":projectId/configure/(:platform)"
-            component={errorHandler(OnboardingConfigure)}
-          />
-        </Route>
-      </Route>
-
       <Route path="/:orgId/" component={errorHandler(OrganizationDetails)}>
         <Route component={errorHandler(OrganizationRoot)}>
           <IndexRoute component={errorHandler(ProcessesContainer)} />
 
           <Route path="tasks/" component={errorHandler(ProcessesContainer)} />
           <Route path="samples/" component={errorHandler(SamplesContainer)} />
+
+          <Route
+            path="user-tasks/:groupId/"
+            component={errorHandler(UserTaskDetails)}
+            ignoreScrollBehavior
+          >
+            <Route
+              path="activity/"
+              componentPromise={() =>
+                import(/* webpackChunkName: "UserTaskActivity" */ './views/userTaskDetails/shared/userTaskActivity')}
+              component={errorHandler(LazyLoad)}
+            />
+          </Route>
 
           <Route
             path="/organizations/:orgId/dashboards/"
@@ -1007,10 +1001,6 @@ function routes() {
 
         <Route path=":projectId/" component={errorHandler(ProjectDetails)}>
           {/* TODO: This route must be provided by the plugin */}
-          <Route
-            path="plugins/clims_snpseq/fragment_analyze/:batchId/"
-            component={errorHandler(FragmentAnalyzeView)}
-          />
 
           <Route
             path="waiting/:processId/:taskId/"
@@ -1179,25 +1169,6 @@ function routes() {
           </Route>
 
           <Redirect from="group/:groupId/" to="issues/:groupId/" />
-
-          <Route
-            path="user-tasks/:groupId/"
-            component={errorHandler(UserTaskDetails)}
-            ignoreScrollBehavior
-          >
-            <IndexRoute component={errorHandler(UserTaskDetailsFields)} />
-            <Route
-              path="activity/"
-              componentPromise={() =>
-                import(/* webpackChunkName: "UserTaskActivity" */ './views/userTaskDetails/shared/userTaskActivity')}
-              component={errorHandler(LazyLoad)}
-            />
-
-            {/* TODO: Fix path */}
-            <Route path="fields/" component={errorHandler(UserTaskDetailsFields)} />
-            <Route path="samples/" component={errorHandler(UserTaskDetailsSamples)} />
-            <Route path="files/" component={errorHandler(UserTaskDetailsFiles)} />
-          </Route>
 
           <Route
             path="issues/:groupId/"

@@ -141,7 +141,7 @@ const SampleContainerStackActions = createReactClass({
       <div className=" btn-group">
         <button
           type="button"
-          className="btn btn-default"
+          className="btn btn-default btn-sm"
           disabled={this.props.numContainers < 2}
         >
           <span
@@ -152,14 +152,14 @@ const SampleContainerStackActions = createReactClass({
         </button>
         <button
           type="button"
-          className="btn btn-default"
+          className="btn btn-default btn-sm"
           disabled={this.props.numContainers < 2}
         >
           {this.props.containerIndex} of {this.props.numContainers}
         </button>
         <button
           type="button"
-          className="btn btn-default"
+          className="btn btn-default btn-sm"
           disabled={this.props.numContainers < 2}
         >
           <span
@@ -187,6 +187,7 @@ const SampleContainerStackActions = createReactClass({
   },
 
   renderTarget() {
+    // TODO: remove hardcoded px
     return (
       <StyledFlex py={1}>
         <div className="col-md-4">{this.renderPager()}</div>
@@ -196,12 +197,12 @@ const SampleContainerStackActions = createReactClass({
               type="text"
               className="form-control"
               value={this.props.container.name}
-              style={{height: '38px'}}
+              style={{height: '28px'}}
             />
             <div className="input-group-btn">
               <button
                 type="button"
-                className="btn btn-default dropdown-toggle"
+                className="btn btn-default btn-sm dropdown-toggle"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
@@ -222,7 +223,7 @@ const SampleContainerStackActions = createReactClass({
               </ul>
               <button
                 type="button"
-                className="btn btn-default"
+                className="btn btn-default btn-sm"
                 disabled={!this.props.canAdd}
                 onClick={this.addContainer}
               >
@@ -230,7 +231,7 @@ const SampleContainerStackActions = createReactClass({
               </button>
               <button
                 type="button"
-                className="btn btn-default"
+                className="btn btn-default btn-sm"
                 disabled={!this.props.canAdd}
                 onClick={this.removeContainer}
               >

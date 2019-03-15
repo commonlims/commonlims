@@ -4,8 +4,8 @@ import createReactClass from 'create-react-class';
 import _ from 'lodash';
 import ProcessesTagFilter from 'app/views/processes/tagFilter';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import {queryToObj, objToQuery} from 'app/utils/processes';
-import {t} from 'app/locale';
+import { queryToObj, objToQuery } from 'app/utils/processes';
+import { t } from 'app/locale';
 
 let TEXT_FILTER_DEBOUNCE_IN_MS = 300;
 
@@ -14,7 +14,6 @@ const ProcessesSidebar = createReactClass({
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
 
     tags: PropTypes.object.isRequired,
     query: PropTypes.string,
@@ -26,7 +25,7 @@ const ProcessesSidebar = createReactClass({
     return {
       tags: {},
       query: '',
-      onQueryChange: function() {},
+      onQueryChange: function () { },
     };
   },
 
@@ -53,7 +52,7 @@ const ProcessesSidebar = createReactClass({
   },
 
   onSelectTag(tag, value) {
-    let newQuery = {...this.state.queryObj};
+    let newQuery = { ...this.state.queryObj };
     if (value) newQuery[tag.key] = value;
     else delete newQuery[tag.key];
 
@@ -65,14 +64,14 @@ const ProcessesSidebar = createReactClass({
     );
   },
 
-  onTextChange: function(evt) {
-    this.setState({textFilter: evt.target.value});
+  onTextChange: function (evt) {
+    this.setState({ textFilter: evt.target.value });
   },
 
-  debouncedTextChange: _.debounce(function(text) {
+  debouncedTextChange: _.debounce(function (text) {
     this.setState(
       {
-        queryObj: {...this.state.queryObj, __text: text},
+        queryObj: { ...this.state.queryObj, __text: text },
       },
       this.onQueryChange
     );
@@ -109,15 +108,15 @@ const ProcessesSidebar = createReactClass({
   },
 
   render() {
-    let {loading, orgId, projectId, tags} = this.props;
+    let { loading, orgId, projectId, tags } = this.props;
 
     return (
       <div className="stream-sidebar">
         {loading ? (
           <LoadingIndicator />
         ) : (
-          <div>
-            {/* TODO: Temp disable, failure in console.log
+            <div>
+              {/* TODO: Temp disable, failure in console.log
             <div className="stream-tag-filter">
               <h6 className="nav-header">{t('Text')}</h6>
               <form onSubmit={this.onTextFilterSubmit}>
@@ -136,20 +135,20 @@ const ProcessesSidebar = createReactClass({
               <hr />
             </div>*/}
 
-            {_.map(tags, tag => {
-              return (
-                <ProcessesTagFilter
-                  value={this.state.queryObj[tag.key]}
-                  key={tag.key}
-                  tag={tag}
-                  onSelect={this.onSelectTag}
-                  orgId={orgId}
-                  projectId={projectId}
-                />
-              );
-            })}
-          </div>
-        )}
+              {_.map(tags, tag => {
+                return (
+                  <ProcessesTagFilter
+                    value={this.state.queryObj[tag.key]}
+                    key={tag.key}
+                    tag={tag}
+                    onSelect={this.onSelectTag}
+                    orgId={orgId}
+                    projectId={projectId}
+                  />
+                );
+              })}
+            </div>
+          )}
       </div>
     );
   },

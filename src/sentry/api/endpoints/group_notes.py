@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from sentry.api.base import DocSection
-from sentry.api.bases.group import GroupEndpoint
+from sentry.api.bases.user_task import UserTaskBaseEndpoint
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework.group_notes import NoteSerializer, seperate_resolved_actors
 
@@ -19,12 +19,12 @@ from sentry.tasks.integrations import post_comment
 from sentry.utils.functional import extract_lazy_object
 
 
-class GroupNotesEndpoint(GroupEndpoint):
+class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
     doc_section = DocSection.EVENTS
 
-    def get(self, request, group):
+    def get(self, request, user_task_id):
         notes = Activity.objects.filter(
-            group=group,
+            user_task_id=user_task_id,
             type=Activity.NOTE,
         ).select_related('user')
 
@@ -36,21 +36,24 @@ class GroupNotesEndpoint(GroupEndpoint):
             on_results=lambda x: serialize(x, request.user),
         )
 
-    def post(self, request, group):
-        serializer = NoteSerializer(data=request.DATA, context={'group': group})
+    def post(self, request, user_task_id):
+        print("!!! in POST")
+        serializer = NoteSerializer(data=request.DATA, context={'user_task': user_task_id})
 
         if not serializer.is_valid():
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print("HERE")
 
         data = dict(serializer.object)
 
         mentions = data.pop('mentions', [])
 
         if Activity.objects.filter(
-            group=group,
+            user_task_id=user_task_id,
             type=Activity.NOTE,
             user=request.user,
-            data=data,
+            data=data,  # TODO: Hash instead?
             datetime__gte=timezone.now() - timedelta(hours=1)
         ).exists():
             return Response(
@@ -58,18 +61,20 @@ class GroupNotesEndpoint(GroupEndpoint):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        GroupSubscription.objects.subscribe(
-            group=group,
-            user=request.user,
-            reason=GroupSubscriptionReason.comment,
-        )
+        # TODO: UserTaskSubscription!
+        # GroupSubscription.objects.subscribe(
+        #     group=1,
+        #     user=request.user,
+        #     reason=GroupSubscriptionReason.comment,
+        # )
+        print(mentions)
 
         actors = Actor.resolve_many(mentions)
         actor_mentions = seperate_resolved_actors(actors)
 
         for user in actor_mentions.get('users'):
             GroupSubscription.objects.subscribe(
-                group=group,
+                group=1,
                 user=user,
                 reason=GroupSubscriptionReason.mentioned,
             )
@@ -78,7 +83,7 @@ class GroupNotesEndpoint(GroupEndpoint):
 
         mentioned_team_users = list(
             User.objects.filter(
-                sentry_orgmember_set__organization_id=group.project.organization_id,
+                sentry_orgmember_set__organization_id=1,
                 sentry_orgmember_set__organizationmemberteam__team__in=mentioned_teams,
                 sentry_orgmember_set__organizationmemberteam__is_active=True,
                 is_active=True,
@@ -86,35 +91,24 @@ class GroupNotesEndpoint(GroupEndpoint):
             .values_list('id', flat=True)
         )
 
-        GroupSubscription.objects.bulk_subscribe(
-            group=group,
-            user_ids=mentioned_team_users,
-            reason=GroupSubscriptionReason.team_mentioned,
-        )
+        print(mentioned_team_users)
 
+        # TODO!
+        # GroupSubscription.objects.bulk_subscribe(
+        #     group=1,
+        #     user_ids=mentioned_team_users,
+        #     reason=GroupSubscriptionReason.team_mentioned,
+        # )
+
+        # TODO: Org id!
         activity = Activity.objects.create(
-            group=group,
-            project=group.project,
+            user_task_id=user_task_id,
             type=Activity.NOTE,
             user=extract_lazy_object(request.user),
             data=data,
+            project_id=1, # TODO: should not be required
         )
 
         activity.send_notification()
 
-        # sync Sentry comments to external issues
-        external_issue_ids = GroupLink.objects.filter(
-            project_id=group.project_id,
-            group_id=group.id,
-            linked_type=GroupLink.LinkedType.issue,
-        ).values_list('linked_id', flat=True)
-
-        for external_issue_id in external_issue_ids:
-            post_comment.apply_async(
-                kwargs={
-                    'external_issue_id': external_issue_id,
-                    'data': data,
-                    'user_id': request.user.id,
-                }
-            )
         return Response(serialize(activity, request.user), status=201)

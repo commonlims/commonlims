@@ -7,14 +7,14 @@ import {
   addLoadingMessage,
   removeIndicator,
 } from 'app/actionCreators/indicator';
-import {t, tct, tn} from 'app/locale';
+import { t, tct, tn } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import Avatar from 'app/components/avatar';
 import CommitLink from 'app/components/commitLink';
 import ConfigStore from 'app/stores/configStore';
 import Duration from 'app/components/duration';
 import ErrorBoundary from 'app/components/errorBoundary';
-import GroupStore from 'app/stores/groupStore';
+import UserTaskStore from 'app/stores/userTaskStore';
 import MemberListStore from 'app/stores/memberListStore';
 import NoteContainer from 'app/components/activity/noteContainer';
 import NoteInput from 'app/components/activity/noteInput';
@@ -23,7 +23,11 @@ import TeamStore from 'app/stores/teamStore';
 import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
-class GroupActivityItem extends React.Component {
+class UserTaskActivityItem extends React.Component {
+  displayName() {
+    return 'UserTaskActivityItem';
+  }
+
   static propTypes = {
     author: PropTypes.node,
     item: PropTypes.object,
@@ -32,12 +36,15 @@ class GroupActivityItem extends React.Component {
   };
 
   render() {
-    let {author, item, orgId, projectId} = this.props;
-    let {data} = item;
+    let { author, item, orgId, projectId } = this.props;
+    let { data } = item;
+    console.log("what i have", data, author);
 
     switch (item.type) {
       case 'note':
         return t('%s left a comment', author);
+      case 'set_manual_override':
+        return t('%s marked "%s" as %s', author, data.subtask, data.status);
       case 'set_resolved':
         return t('%s marked this issue as resolved', author);
       case 'set_resolved_by_age':
@@ -47,11 +54,11 @@ class GroupActivityItem extends React.Component {
       case 'set_resolved_in_release':
         return data.version
           ? t('%(author)s marked this issue as resolved in %(version)s', {
-              author,
-              version: (
-                <Version version={data.version} orgId={orgId} projectId={projectId} />
-              ),
-            })
+            author,
+            version: (
+              <Version version={data.version} orgId={orgId} projectId={projectId} />
+            ),
+          })
           : t('%s marked this issue as resolved in the upcoming release', author);
       case 'set_resolved_in_commit':
         return t('%(author)s marked this issue as fixed in %(version)s', {
@@ -120,11 +127,11 @@ class GroupActivityItem extends React.Component {
       case 'set_regression':
         return data.version
           ? t('%(author)s marked this issue as a regression in %(version)s', {
-              author,
-              version: (
-                <Version version={data.version} orgId={orgId} projectId={projectId} />
-              ),
-            })
+            author,
+            version: (
+              <Version version={data.version} orgId={orgId} projectId={projectId} />
+            ),
+          })
           : t('%s marked this issue as a regression', author);
       case 'create_issue':
         return t('%(author)s created an issue on %(provider)s titled %(title)s', {
@@ -143,8 +150,8 @@ class GroupActivityItem extends React.Component {
               {data.destination.shortId}
             </a>
           ) : (
-            t('a group')
-          )
+              t('a group')
+            )
         );
       case 'unmerge_destination':
         return tn(
@@ -157,8 +164,8 @@ class GroupActivityItem extends React.Component {
               {data.source.shortId}
             </a>
           ) : (
-            t('a group')
-          )
+              t('a group')
+            )
         );
       case 'first_seen':
         return t('%s first saw this issue', author);
@@ -208,48 +215,24 @@ const UserTaskActivity = createReactClass({
 
   // TODO(dcramer): only re-render on group/activity change
   propTypes: {
-    group: PropTypes.object,
-  },
-
-  mixins: [ApiMixin],
-
-  onNoteDelete(item) {
-    let {group} = this.props;
-
-    // Optimistically remove from UI
-    let index = GroupStore.removeActivity(group.id, item.id);
-    if (index === -1) {
-      // I dunno, the id wasn't found in the GroupStore
-      return;
-    }
-
-    addLoadingMessage(t('Removing comment...'));
-
-    this.api.request('/issues/' + group.id + '/comments/' + item.id + '/', {
-      method: 'DELETE',
-      success: () => {
-        removeIndicator();
-      },
-      error: error => {
-        GroupStore.addActivity(group.id, item, index);
-        removeIndicator();
-        addErrorMessage(t('Failed to delete comment'));
-      },
-    });
+    userTask: PropTypes.object,
   },
 
   render() {
-    let group = this.props.group;
+    let userTask = this.props.userTask;
+    console.log("HERE1", userTask);
     let me = ConfigStore.get('user');
     let memberList = MemberListStore.getAll();
 
-    let children = group.activity.map((item, itemIdx) => {
+    let orgId = "snpseq"; // TODO
+
+    let children = userTask.activity.map((item, itemIdx) => {
       let authorName = item.user ? item.user.name : 'Sentry';
 
       if (item.type === 'note') {
         return (
           <NoteContainer
-            group={group}
+            group={userTask}
             item={item}
             key={'note' + itemIdx}
             author={{
@@ -265,10 +248,10 @@ const UserTaskActivity = createReactClass({
         let avatar = item.user ? (
           <Avatar user={item.user} size={18} className="activity-avatar" />
         ) : (
-          <div className="activity-avatar avatar sentry">
-            <span className="icon-sentry-logo" />
-          </div>
-        );
+            <div className="activity-avatar avatar sentry">
+              <span className="icon-sentry-logo" />
+            </div>
+          );
 
         let author = {
           name: authorName,
@@ -278,10 +261,10 @@ const UserTaskActivity = createReactClass({
         return (
           <li className="activity-item" key={item.id}>
             <a name={'event_' + item.id} />
-            <TimeSince date={item.dateCreated} />
+            {/*<TimeSince date={item.dateCreated} />*/}
             <div className="activity-item-content">
               <ErrorBoundary mini>
-                <GroupActivityItem
+                <UserTaskActivityItem
                   author={
                     <span key="author">
                       {avatar}
@@ -289,8 +272,7 @@ const UserTaskActivity = createReactClass({
                     </span>
                   }
                   item={item}
-                  orgId={this.props.params.orgId}
-                  projectId={group.project.slug}
+                  orgId={orgId}
                 />
               </ErrorBoundary>
             </div>
@@ -301,18 +283,16 @@ const UserTaskActivity = createReactClass({
 
     return (
       <div className="row">
-        <div className="col-md-9">
-          <div className="activity-container">
-            <ul className="activity">
-              <li className="activity-note" key="activity-note">
-                <Avatar user={me} size={38} />
-                <div className="activity-bubble">
-                  <NoteInput group={group} memberList={memberList} sessionUser={me} />
-                </div>
-              </li>
-              {children}
-            </ul>
-          </div>
+        <div className="activity-container">
+          <ul className="activity">
+            <li className="activity-note" key="activity-note">
+              <Avatar user={me} size={38} />
+              <div className="activity-bubble">
+                <NoteInput group={userTask} memberList={memberList} sessionUser={me} />
+              </div>
+            </li>
+            {children}
+          </ul>
         </div>
       </div>
     );

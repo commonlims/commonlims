@@ -1,17 +1,17 @@
-import {Flex} from 'grid-emotion';
+import { Flex } from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import SelectedProcessStore from 'app/stores/selectedProcessStore';
 import SentryTypes from 'app/sentryTypes';
 
-const ExtraDescription = ({all, query, queryCount}) => {
+const ExtraDescription = ({ all, query, queryCount }) => {
   if (!all) return null;
 
   if (query) {
@@ -40,7 +40,6 @@ const ProcessesActions = createReactClass({
 
   propTypes: {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     groupIds: PropTypes.instanceOf(Array).isRequired,
     onRealtimeChange: PropTypes.func.isRequired,
     realtimeActive: PropTypes.bool.isRequired,
@@ -51,7 +50,7 @@ const ProcessesActions = createReactClass({
   mixins: [ApiMixin, Reflux.listenTo(SelectedProcessStore, 'onSelectedProcessChange')],
 
   getDefaultProps() {
-    return {hasReleases: false, latestRelease: null};
+    return { hasReleases: false, latestRelease: null };
   },
 
   getInitialState() {
@@ -89,7 +88,7 @@ const ProcessesActions = createReactClass({
 
   deselectAll() {
     SelectedProcessStore.deselectAll();
-    this.setState({allInQuerySelected: false});
+    this.setState({ allInQuerySelected: false });
   },
 
   onUpdate(data) {

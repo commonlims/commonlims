@@ -28,6 +28,10 @@ class TaskGroupsEndpoint(Endpoint):
         for task in tasks:
             key = task["processDefinitionInfo"]["key"] + ":" + task["taskDefinitionKey"]
             if key not in ret:
+                process = task["processDefinitionInfo"]["key"]
+                if process == "invoice":
+                    # HACK: Camunda has some preset processes in their demo
+                    continue
                 ret[key] = {
                     "taskName": task["name"],
                     "taskKey": task["taskDefinitionKey"],
@@ -39,6 +43,25 @@ class TaskGroupsEndpoint(Endpoint):
                 ret[key]["waitingCount"] += 1
 
         data = list(ret.values())
+
+        # Append an outstanding feature:
+        data += [
+            {
+                "taskName": "Fragment analyze",
+                "taskKey": "FragmentAnalyzerDNA",
+                "process": "clims_snpseq.core.workflows.reception_qc",
+                "waitingCount": 1,
+                "id": "1",
+                "running": True
+            },
+            {
+                "taskName": "Fragment analyze",
+                "taskKey": "FragmentAnalyzerDNA",
+                "process": "clims_snpseq.core.workflows.reception_qc",
+                "waitingCount": 5,
+                "id": "2",
+                "running": False
+            }]
 
         # TODO: implement paging
         return Response(data, status=200)

@@ -7,7 +7,7 @@ import 'bootstrap/js/dropdown';
 import 'app/utils/statics-setup';
 import 'app/utils/emotion-setup';
 
-import {renderToStaticMarkup} from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import * as Emotion from 'emotion';
 import * as EmotionTheming from 'emotion-theming';
 import * as GridEmotion from 'grid-emotion';
@@ -24,7 +24,7 @@ import createReactClass from 'create-react-class';
 import jQuery from 'jquery';
 import moment from 'moment';
 
-import {metric} from 'app/utils/analytics';
+import { metric } from 'app/utils/analytics';
 import * as tracing from 'app/utils/tracing';
 import ConfigStore from 'app/stores/configStore';
 import Main from 'app/main';
@@ -222,7 +222,6 @@ const globals = {
     Tooltip: require('app/components/tooltip').default,
     U2fEnrollment: require('app/components/u2fenrollment').default,
     U2fSign: require('app/components/u2fsign').default,
-    Waiting: require('app/views/onboarding/configure/waiting').default,
     Badge: require('app/components/badge').default,
     Tag: require('app/views/settings/components/tag').default,
     Switch: require('app/components/switch').default,
@@ -238,12 +237,10 @@ const globals = {
       ajaxCsrfSetup: require('app/utils/ajaxCsrfSetup').default,
       logging: require('app/utils/logging'),
       descopeFeatureName: require('app/utils').descopeFeatureName,
-      onboardingSteps: require('app/views/onboarding/utils').onboardingSteps,
-      stepDescriptions: require('app/views/onboarding/utils').stepDescriptions,
       withApi: require('app/utils/withApi').default,
       getDisplayName: require('app/utils/getDisplayName').default,
     },
-    passwordStrength: {load: loadPasswordStrength},
+    passwordStrength: { load: loadPasswordStrength },
   },
 };
 

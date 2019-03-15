@@ -4,7 +4,7 @@ import Reflux from 'reflux';
 import GroupActions from 'app/actions/groupActions';
 import IndicatorStore from 'app/stores/indicatorStore';
 import PendingChangeQueue from 'app/utils/pendingChangeQueue';
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 
 function showAlert(msg, type) {
   IndicatorStore.add(msg, type, {
@@ -12,30 +12,104 @@ function showAlert(msg, type) {
   });
 }
 
-const GroupStore = Reflux.createStore({
+const UserTaskStore = Reflux.createStore({
   listenables: [GroupActions],
 
   init() {
     this.reset();
   },
 
+  setSubtaskManualOverride(subtaskId, value) {
+    // TODO: using view
+    for (let current of this.userTask.subtasks) {
+      if (current.view === subtaskId) {
+        current.manualOverride = value;
+        let status = value ? "done" : "not done";
+
+        // TODO:
+        let activity = {
+          'id': '1',
+          'user': {
+            "id": "1",
+            "name": "steinar.sturlaugsson@medsci.uu.se",
+            "avatarUrl": "https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm",
+            "avatar": {
+              "avatarUuid": null,
+              "avatarType": "letter_avatar"
+            },
+            "hasPasswordAuth": true,
+            "permissions": [],
+            "email": "steinar.sturlaugsson@medsci.uu.se"
+          },
+          'type': 'set_manual_override',
+          'data': {
+            'status': status,
+            'subtask': current.description, 'text': `Manually flagged subtask '${current.description}' as OK`
+          },
+          "dateCreated": "2019-22-06T14:33:16.353Z",
+        };
+        this.addActivity(activity);
+
+        this.trigger();
+        break;
+      }
+    }
+  },
+
+  setField(field, value) {
+    for (let current of this.userTask.fields) {
+      console.log("current", current);
+      if (current.name === field.name) {
+        console.log("found it", current.value, value);
+        current.value = value;
+        break;
+      }
+    }
+
+    // Validate that all required fields have been marked TODO wireframing here
+    let allRequiredFilled = true;
+    for (let current of this.userTask.fields) {
+      console.log("HERE vluae", current.value);
+      if (current.required && (current.value == null || current.value === "")) {
+        allRequiredFilled = false;
+        break;
+      }
+    }
+
+    if (allRequiredFilled) {
+      this.userTask.subtasks[2].status = "done";
+    }
+    else {
+      this.userTask.subtasks[2].status = "todo";
+    }
+
+
+    this.trigger();
+  },
+
+  activateView(viewId) {
+    // TODO: support popups etc.
+    console.log("activating", viewId);
+    this.activateTab(viewId);
+  },
+
+  activateTab(tabId) {
+    for (let current of this.userTask.tabs) {
+      current.active = current.id === tabId;
+    }
+    this.trigger();
+  },
+
   reset() {
-    this.items = [];
+    this.userTask = null;
     this.statuses = {};
     this.pendingChanges = new PendingChangeQueue();
   },
 
-  // TODO(dcramer): this should actually come from an action of some sorts
-  loadInitialData(items) {
+  loadInitialData(userTask) {
     this.reset();
-
-    let itemIds = new Set();
-    items.forEach(item => {
-      itemIds.add(item.id);
-      this.items.push(item);
-    });
-
-    this.trigger(itemIds);
+    this.userTask = userTask
+    this.trigger();
   },
 
   add(items) {
@@ -112,19 +186,17 @@ const GroupStore = Reflux.createStore({
     return -1;
   },
 
-  addActivity(id, data, index = -1) {
-    let group = this.get(id);
-    if (!group) return;
-
+  addActivity(data, index = -1) {
     // insert into beginning by default
+    console.log("better here!");
     if (index === -1) {
-      group.activity.unshift(data);
+      this.userTask.activity.unshift(data);
     } else {
-      group.activity.splice(index, 0, data);
+      this.userTask.activity.splice(index, 0, data);
     }
-    if (data.type === 'note') group.numComments++;
+    if (data.type === 'note') this.userTask.numComments++;
 
-    this.trigger(new Set([id]));
+    this.trigger();
   },
 
   updateActivity(group_id, id, data) {
@@ -142,6 +214,7 @@ const GroupStore = Reflux.createStore({
   },
 
   removeActivity(group_id, id) {
+    console.log("!!! here", group_id, id);
     let group = this.get(group_id);
     if (!group) return -1;
 
@@ -157,29 +230,8 @@ const GroupStore = Reflux.createStore({
   },
 
   get(id) {
-    let pendingForId = [];
-    this.pendingChanges.forEach(change => {
-      if (change.id === id) {
-        pendingForId.push(change);
-      }
-    });
-
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id === id) {
-        let rItem = this.items[i];
-        if (pendingForId.length) {
-          // copy the object so dirty state doesnt mutate original
-          rItem = {...rItem};
-
-          for (let c = 0; c < pendingForId.length; c++) {
-            rItem = {
-              ...rItem,
-              ...pendingForId[c].params,
-            };
-          }
-        }
-        return rItem;
-      }
+    if (this.userTask.id === id) {
+      return this.userTask;
     }
     return undefined;
   },
@@ -202,7 +254,7 @@ const GroupStore = Reflux.createStore({
       let rItem = item;
       if (!_.isUndefined(pendingById[item.id])) {
         // copy the object so dirty state doesnt mutate original
-        rItem = {...rItem};
+        rItem = { ...rItem };
         pendingById[item.id].forEach(change => {
           rItem = {
             ...rItem,
@@ -378,4 +430,4 @@ const GroupStore = Reflux.createStore({
   },
 });
 
-export default GroupStore;
+export default UserTaskStore;

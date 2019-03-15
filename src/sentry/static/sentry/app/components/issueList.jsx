@@ -3,14 +3,14 @@ import React from 'react';
 
 import createReactClass from 'create-react-class';
 
-import {Panel, PanelBody} from 'app/components/panels';
+import { Panel, PanelBody } from 'app/components/panels';
 import ApiMixin from 'app/mixins/apiMixin';
-import CompactIssue from 'app/components/compactIssue';
+import CompactUserTask from 'app/components/compactUserTask';
 import EmptyMessage from 'app/views/settings/components/emptyMessage';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 
 const IssueList = createReactClass({
   displayName: 'IssueList',
@@ -95,19 +95,19 @@ const IssueList = createReactClass({
 
   renderResults() {
     let body;
-    const {noBorder} = this.props;
+    const { noBorder } = this.props;
 
     if (this.state.loading) body = this.renderLoading();
     else if (this.state.error) body = <LoadingError onRetry={this.fetchData} />;
     else if (this.state.issueIds.length > 0) {
-      const panelStyle = noBorder ? {border: 0, borderRadius: 0} : {};
+      const panelStyle = noBorder ? { border: 0, borderRadius: 0 } : {};
 
       body = (
         <Panel style={panelStyle}>
           <PanelBody className="issue-list">
             {this.state.data.map(issue => {
               return (
-                <CompactIssue
+                <CompactUserTask
                   key={issue.id}
                   id={issue.id}
                   data={issue}
@@ -133,7 +133,7 @@ const IssueList = createReactClass({
   },
 
   renderEmpty() {
-    const {emptyText} = this.props;
+    const { emptyText } = this.props;
 
     return (
       <Panel>

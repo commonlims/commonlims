@@ -34,8 +34,6 @@ from .endpoints.group_events_oldest import GroupEventsOldestEndpoint
 from .endpoints.group_hashes import GroupHashesEndpoint
 from .endpoints.group_integration_details import GroupIntegrationDetailsEndpoint
 from .endpoints.group_integrations import GroupIntegrationsEndpoint
-from .endpoints.group_notes import GroupNotesEndpoint
-from .endpoints.group_notes_details import GroupNotesDetailsEndpoint
 from .endpoints.group_participants import GroupParticipantsEndpoint
 from .endpoints.group_similar_issues import GroupSimilarIssuesEndpoint
 from .endpoints.group_stats import GroupStatsEndpoint
@@ -52,7 +50,6 @@ from .endpoints.internal_stats import InternalStatsEndpoint
 from .endpoints.monitor_checkins import MonitorCheckInsEndpoint
 from .endpoints.monitor_checkin_details import MonitorCheckInDetailsEndpoint
 from .endpoints.organization_access_request_details import OrganizationAccessRequestDetailsEndpoint
-from .endpoints.organization_activity import OrganizationActivityEndpoint
 from .endpoints.organization_auditlogs import OrganizationAuditLogsEndpoint
 from .endpoints.organization_api_key_index import OrganizationApiKeyIndexEndpoint
 from .endpoints.organization_api_key_details import OrganizationApiKeyDetailsEndpoint
@@ -209,7 +206,7 @@ from .endpoints.setup_wizard import SetupWizard
 
 # CLIMS
 #
-from .endpoints.user_task import UserTaskEndpoint, UserTaskDetailsEndpoint
+from .endpoints.user_task import UserTaskEndpoint, UserTaskDetailsEndpoint, UserTaskDetailsActivityEndpoint
 
 from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint
 from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint, SampleProcessesEndpoint, SampleWorkflowsBatchEndpoint
@@ -224,6 +221,10 @@ from .endpoints.user_files import UserFilesEndpoint
 from .endpoints.user_task_files import UserTaskFilesEndpoint
 from .endpoints.user_task_file_details import UserTaskFileDetailsEndpoint
 
+from .endpoints.user_task_settings import UserTaskSettingsEndpoint, UserTaskSettingsDetailsEndpoint
+
+from .endpoints.group_notes import UserTaskNotesEndpoint
+from .endpoints.group_notes_details import GroupNotesDetailsEndpoint
 
 urlpatterns = patterns(
     '',
@@ -489,11 +490,6 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-access-request-details'
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/activity/$',
-        OrganizationActivityEndpoint.as_view(),
-        name='sentry-api-0-organization-activity'
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/api-keys/$',
         OrganizationApiKeyIndexEndpoint.as_view(),
         name='sentry-api-0-organization-api-key-index'
@@ -752,6 +748,11 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-environments',
     ),
 
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/user-tasks/$',
+        UserTaskEndpoint.as_view(),
+        name='sentry-api-0-user-task'),
+
+
     # Teams
     url(
         r'^teams/(?P<organization_slug>[^\/]+)/(?P<team_slug>[^\/]+)/$',
@@ -796,11 +797,34 @@ urlpatterns = patterns(
         name='sentry-api-0-sample-details'
         ),
 
-    url(r'^user-tasks/$', UserTaskEndpoint.as_view(), name='sentry-api-0-user-task'),
+    # USER TASKS
+    # TODO: Remove orgs from all but the index one
+    url(r'^user-tasks/(?P<user_task_id>[^\/]+)/activity/$',
+        UserTaskDetailsActivityEndpoint.as_view(),
+        name='sentry-api-0-user-task-details-activity'),
+
     url(r'^user-tasks/(?P<user_task_id>[^\/]+)/$',
         UserTaskDetailsEndpoint.as_view(),
-        name='sentry-api-0-user-task-details'
-        ),
+        name='sentry-api-0-user-task-details'),
+
+    url(
+        r'^user-tasks/(?P<user_task_id>[^\/]+)/comments/$',
+        UserTaskNotesEndpoint.as_view(),
+        name='sentry-api-0-group-notes'
+    ),
+    url(
+        r'^user-tasks/(?P<user_task_id>[^\/]+)/comments/$(?P<note_id>[^\/]+)/',
+        GroupNotesDetailsEndpoint.as_view(),
+        name='sentry-api-0-group-notes-details'
+    ),
+
+    url(r'^user-task-settings/(?P<organization_slug>[^\/]+)/$',
+        UserTaskSettingsEndpoint.as_view(),
+        name='sentry-api-0-user-task-settings'),
+
+    url(r'^user-task-settings/(?P<user_task_type>[^\/]+)/$',
+        UserTaskSettingsDetailsEndpoint.as_view(),
+        name='sentry-api-0-user-task-settings-details'),
 
     url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='sentry-api-0-sample-batches'),
 
@@ -861,12 +885,12 @@ urlpatterns = patterns(
 
     # User tasks:
     url(
-        r'^user-tasks/(?P<organization_slug>[^\/]+)/(?P<user_task_id>[^\/]+)/files/$',
+        r'^user-tasks/(?P<user_task_id>[^\/]+)/files/$',
         UserTaskFilesEndpoint.as_view(),
         name='clims-api-0-user-task-files'
     ),
     url(
-        r'^user-tasks/(?P<organization_slug>[^\/]+)/(?P<user_task_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
+        r'^user-tasks/(?P<user_task_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
         UserTaskFileDetailsEndpoint.as_view(),
         name='clims-api-0-user-task-file-details'
     ),
@@ -1215,16 +1239,6 @@ urlpatterns = patterns(
         r'^(?:issues|groups)/(?P<issue_id>\d+)/events/oldest/$',
         GroupEventsOldestEndpoint.as_view(),
         name='sentry-api-0-group-events-oldest'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/(?:notes|comments)/$',
-        GroupNotesEndpoint.as_view(),
-        name='sentry-api-0-group-notes'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/(?:notes|comments)/(?P<note_id>[^\/]+)/$',
-        GroupNotesDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-notes-details'
     ),
     url(
         r'^(?:issues|groups)/(?P<issue_id>\d+)/hashes/$',

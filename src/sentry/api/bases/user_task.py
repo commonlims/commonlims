@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .organization import OrganizationPermission, OrganizationEndpoint
+from .organization import OrganizationPermission, OrganizationEndpoint, Endpoint
 
 
 # Currently UserTask permissions are only on the organization level,
@@ -9,5 +9,5 @@ class UserTaskPermission(OrganizationPermission):
     pass
 
 
-class UserTaskBaseEndpoint(OrganizationEndpoint):
+class UserTaskBaseEndpoint(Endpoint):
     permission_classes = (UserTaskPermission, )

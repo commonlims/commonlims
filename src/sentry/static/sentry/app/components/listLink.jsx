@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import classNames from 'classnames';
 
 class ListLink extends React.Component {
@@ -31,7 +31,7 @@ class ListLink extends React.Component {
 
   isActive = () => {
     return (this.props.isActive || this.context.router.isActive)(
-      {pathname: this.props.to, query: this.props.query},
+      { pathname: this.props.to, query: this.props.query },
       this.props.index
     );
   };

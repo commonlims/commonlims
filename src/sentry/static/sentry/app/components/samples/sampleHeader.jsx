@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {css} from 'react-emotion';
+import styled, { css } from 'react-emotion';
 import classNames from 'classnames';
 
 // TODO: Don't call it ProjectLink
 import ProjectLink from 'app/components/projectLink';
-import {Metadata} from 'app/sentryTypes';
+import { Metadata } from 'app/sentryTypes';
 import SampleTitle from 'app/components/samples/sampleTitle';
 import Tooltip from 'app/components/tooltip';
 
@@ -37,13 +37,13 @@ class SampleHeader extends React.Component {
   };
 
   getContainer() {
-    let {data} = this.props;
-    let {container, position} = data || {};
+    let { data } = this.props;
+    let { container, position } = data || {};
     return position + '@' + container;
   }
 
   getTitle() {
-    let {hideIcons, includeLink, orgId, data} = this.props;
+    let { hideIcons, includeLink, orgId, data } = this.props;
     let props = {};
     let Wrapper;
 
@@ -62,15 +62,10 @@ class SampleHeader extends React.Component {
     let stateTitle = null;
     let sampleState = null;
 
-    if (this.props.data.processes.length > 0) {
-      stateTitle = 'Ready for work';
-      sampleState = 'waiting';
-    }
-
     return (
       <Wrapper
         {...props}
-        style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
+        style={data.status === 'resolved' ? { textDecoration: 'line-through' } : null}
       >
         {stateTitle && (
           <Tooltip title={stateTitle}>
@@ -79,13 +74,13 @@ class SampleHeader extends React.Component {
         )}
         {!hideIcons && data.status === 'ignored' && <Muted className="icon-soundoff" />}
         {!hideIcons && data.isBookmarked && <Starred className="icon-star-solid" />}
-        <SampleTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
+        <SampleTitle {...this.props} style={{ fontWeight: data.hasSeen ? 400 : 600 }} />
       </Wrapper>
     );
   }
 
   render() {
-    let {className} = this.props;
+    let { className } = this.props;
     let cx = classNames('event-issue-header', className);
     let container = this.getContainer();
 

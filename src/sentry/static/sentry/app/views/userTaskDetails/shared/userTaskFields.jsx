@@ -1,67 +1,43 @@
 import React from 'react';
 
 import SentryTypes from 'app/sentryTypes';
-import withOrganization from 'app/utils/withOrganization';
-
-import {fetchGroupEventAndMarkSeen} from './utils';
+import PropTypes from 'prop-types';
+import { GenericField } from 'app/components/forms';
+import UserTaskStore from 'app/stores/userTaskStore';
 
 class UserTaskFields extends React.Component {
   static propTypes = {
-    group: SentryTypes.Group.isRequired,
-    project: SentryTypes.Project.isRequired,
+    userTask: PropTypes.object.isRequired,
     organization: SentryTypes.Organization.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      error: false,
-      event: null,
-      eventNavLinks: '',
-    };
+  handleChange(field, value) {
+    console.log("Changed", value, field);
+    UserTaskStore.setField(field, value);
   }
 
-  componentDidMount() {
-    this.fetchData();
+  renderFields() {
+    // TODO: Connect formData from the usertask object, so user data is saved between tab flips
+    return this.props.userTask.fields.map(field =>
+      <GenericField
+        key={field.name}
+        config={field}
+        onChange={value => this.handleChange(field, value)}
+      />
+    );
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.params.eventId !== this.props.params.eventId) {
-      this.fetchData();
-    }
-  }
-
-  fetchData = () => {
-    const {group, project, organization, params} = this.props;
-    const eventId = params.eventId || 'latest';
-    const groupId = group.id;
-    const orgSlug = organization.slug;
-    const projSlug = project.slug;
-
-    this.setState({
-      loading: true,
-      error: false,
-    });
-
-    fetchGroupEventAndMarkSeen(orgSlug, projSlug, groupId, eventId)
-      .then(data => {
-        this.setState({
-          event: data,
-          error: false,
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          error: true,
-          loading: false,
-        });
-      });
-  };
   render() {
-    return <div />;
+    console.log("rendering the fields");
+
+    return (
+      <div className="row">
+        <div className="col-md-6">
+          {this.renderFields()}
+        </div>
+      </div>
+    );
   }
 }
 
-export default withOrganization(UserTaskFields);
+export default UserTaskFields;

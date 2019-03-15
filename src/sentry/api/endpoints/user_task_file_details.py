@@ -35,7 +35,7 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
         )
         return response
 
-    def get(self, request, organization, user_task_id, file_id):
+    def get(self, request, user_task_id, file_id):
         """
         Retrieves a UserTask file
         ```````````````````````````````````````
@@ -44,12 +44,10 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
 
         Example:
         curl --header "Authorization: Bearer $LIMS_TOKEN"
-                      "http://localhost:8000/api/0/user-tasks/lims/1/files/11/?download=True"
+                      "http://localhost:8000/api/0/user-tasks/1/files/11/?download=True"
 
         If you skip the download parameter, only the metadata will be returned.
 
-        :pparam string organization_slug: the slug of the organization the
-                                          user task belongs to.
         :pparam string user_task_id: the user task id
         :pparam string file_id: the ID of the file to retrieve.
         :param string download: the ID of the file to retrieve.
@@ -60,7 +58,7 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
         except UserTask.DoesNotExist:
             raise ResourceDoesNotExist
 
-        # TODO: Should we have special rights for downloading the file or just per organization?
+        # TODO: specify the rights for downloading the file
 
         try:
             user_task_file = UserTaskFile.objects.get(user_task=user_task, id=file_id)
@@ -72,7 +70,7 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
             return self.download(user_task_file)
         return Response(serialize(user_task_file, request.user))
 
-    def put(self, request, organization, file_id, user_task_id):
+    def put(self, request, file_id, user_task_id):
         """
         Update UserTask file
         `````````````````````````````````````
@@ -87,8 +85,6 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
                     --header "Authorization: Bearer $LIMS_TOKEN" \
                     "http://localhost:8000/api/0/user-tasks/lims/1/files/1/"
 
-        :pparam string organization_slug: the slug of the organization the
-                                          user task belongs to.
         :pparam string file_id: the ID of the file to update.
         :param string name: the new name of the file.
         :auth: required
@@ -114,7 +110,7 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
 
         return Response(serialize(user_task_file, request.user))
 
-    def delete(self, request, organization, user_task_id, file_id):
+    def delete(self, request, user_task_id, file_id):
         """
         Delete an UserTask file
         ```````````````````````
@@ -123,8 +119,6 @@ class UserTaskFileDetailsEndpoint(UserTaskBaseEndpoint):
 
         This will also remove the physical file from storage.
 
-        :pparam string organization_slug: the slug of the organization the
-                                          user task belongs to.
         :pparam string file_id: the ID of the file to delete.
         :auth: required
         """

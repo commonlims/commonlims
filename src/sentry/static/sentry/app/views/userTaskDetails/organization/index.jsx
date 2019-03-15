@@ -6,23 +6,22 @@ import GlobalSelectionHeader from 'app/components/organizations/globalSelectionH
 import {PageContent} from 'app/styles/organization';
 import Feature from 'app/components/acl/feature';
 
-import GroupDetails from '../shared/userTaskDetails';
+import UserTaskDetails from '../shared/userTaskDetails';
+import UserTaskStore from 'app/stores/userTaskStore';
 
-class OrganizationGroupDetails extends React.Component {
+class OrganizationUserTaskDetails extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization,
   };
 
   render() {
+    const {...props} = this.props;
     return (
-      <Feature features={['sentry10']} renderDisabled>
-        <GlobalSelectionHeader organization={this.props.organization} />
-        <PageContent>
-          <GroupDetails {...this.props} />
-        </PageContent>
-      </Feature>
+      <PageContent>
+        <UserTaskDetails {...props} />
+      </PageContent>
     );
   }
 }
 
-export default withOrganization(OrganizationGroupDetails);
+export default withOrganization(OrganizationUserTaskDetails);

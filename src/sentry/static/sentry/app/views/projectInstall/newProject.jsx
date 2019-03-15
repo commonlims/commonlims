@@ -6,7 +6,6 @@ import space from 'app/styles/space';
 
 import OrganizationState from 'app/mixins/organizationState';
 
-import CreateProject from 'app/views/onboarding/createProject';
 import ProjectSelector from 'app/components/projectHeader/projectSelector';
 
 const NewProject = createReactClass({
@@ -24,12 +23,6 @@ const NewProject = createReactClass({
         <div className="container">
           <Content>
             <DocumentTitle title={'Common LIMS'} />
-            <CreateProject
-              getDocsUrl={({slug, projectSlug, platform}) => {
-                if (platform === 'other') platform = '';
-                return `/${slug}/${projectSlug}/getting-started/${platform}`;
-              }}
-            />
           </Content>
         </div>
       </Container>

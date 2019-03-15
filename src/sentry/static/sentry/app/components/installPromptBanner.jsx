@@ -4,11 +4,10 @@ import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from 'react-emotion';
 
-import {analytics} from 'app/utils/analytics';
+import { analytics } from 'app/utils/analytics';
 import Alert from 'app/components/alert';
 import ConfigStore from 'app/stores/configStore';
-import {getPlatformName} from 'app/views/onboarding/utils';
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 
 const InstallPromptBanner = createReactClass({
   displayName: 'installPromptBanner',
@@ -25,8 +24,8 @@ const InstallPromptBanner = createReactClass({
   },
 
   componentDidMount() {
-    let {href} = window.location;
-    let {organization} = this.props;
+    let { href } = window.location;
+    let { organization } = this.props;
     analytics('install_prompt.banner_viewed', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -35,33 +34,22 @@ const InstallPromptBanner = createReactClass({
 
   onConfigStoreUpdate(config) {
     if (!this.state.sentFirstEvent && config.sentFirstEvent) {
-      this.setState({sentFirstEvent: true});
+      this.setState({ sentFirstEvent: true });
     }
   },
 
   sentFirstEvent() {
-    let {projects} = this.props.organization;
+    let { projects } = this.props.organization;
     return !!projects.find(project => project.firstEvent);
   },
 
   getUrl() {
-    let {organization} = this.props;
-    // if no projects - redirect back to onboarding flow
-    let url = `/onboarding/${organization.slug}`;
-
-    // if project with a valid platform then go straight to instructions
-    let projects = organization.projects;
-    let projectCount = projects.length;
-    if (projectCount > 0 && getPlatformName(projects[projectCount - 1].platform)) {
-      let project = projects[projectCount - 1];
-      url = `/onboarding/${organization.slug}/${project.slug}/configure/${project.platform}`;
-    }
-    return url;
+    throw new Error("Not implemented");
   },
 
   recordAnalytics() {
-    let {href} = window.location;
-    let {organization} = this.props;
+    let { href } = window.location;
+    let { organization } = this.props;
     analytics('install_prompt.banner_clicked', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -79,7 +67,7 @@ const InstallPromptBanner = createReactClass({
   },
 
   render() {
-    let {sentFirstEvent} = this.state;
+    let { sentFirstEvent } = this.state;
     let hideBanner = sentFirstEvent || this.inSetupFlow();
 
     return (

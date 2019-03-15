@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Flex} from 'grid-emotion';
+import { Flex } from 'grid-emotion';
 
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
@@ -10,8 +10,8 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import IndicatorStore from 'app/stores/indicatorStore';
 import Pagination from 'app/components/pagination';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import {t} from 'app/locale';
-import {Panel, PanelHeader, PanelBody, PanelItem} from 'app/components/panels';
+import { t } from 'app/locale';
+import { Panel, PanelHeader, PanelBody, PanelItem } from 'app/components/panels';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
 import withOrganization from 'app/utils/withOrganization';
 import withApi from 'app/utils/withApi';
@@ -20,6 +20,7 @@ class UserTaskDetailsFiles extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization,
     api: PropTypes.object,
+    userTask: PropTypes.object.isRequired,
   };
 
   constructor() {
@@ -27,52 +28,12 @@ class UserTaskDetailsFiles extends React.Component {
     this.state = {
       loading: true,
       error: false,
-      fileList: [],
       pageLinks: null,
     };
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.location.search !== prevProps.location.search) {
-      this.fetchData();
-    }
-  }
-
   getFilesEndpoint() {
-    // TODO: User task ID
-    let org = 'snpseq';
-    return `/user-tasks/${org}/1/files/`;
-  }
-
-  fetchData() {
-    console.log('HERE! fetchData');
-    this.setState({
-      loading: true,
-      error: false,
-    });
-
-    this.props.api.request(this.getFilesEndpoint(), {
-      method: 'GET',
-      data: this.props.location.query,
-      success: (data, _, jqXHR) => {
-        this.setState({
-          error: false,
-          loading: false,
-          fileList: data,
-          pageLinks: jqXHR.getResponseHeader('Link'),
-        });
-      },
-      error: () => {
-        this.setState({
-          error: true,
-          loading: false,
-        });
-      },
-    });
+    return `/user-tasks/1/files/`;
   }
 
   handleRemove(id) {
@@ -105,43 +66,32 @@ class UserTaskDetailsFiles extends React.Component {
   }
 
   render() {
-    console.log('HERE');
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.fileList.length === 0)
-      return (
-        <Panel>
-          <EmptyStateWarning>
-            <p>{t('There are no artifacts uploaded for this release.')}</p>
-          </EmptyStateWarning>
-        </Panel>
-      );
-
     let access = new Set(this.props.organization.access);
+    // TODO: Get rid of the size
 
     return (
       <div>
         <Panel>
           <PanelHeader>
-            <Flex flex="7" pr={2}>
+            <Flex flex="5" pr={2}>
               {t('Name')}
             </Flex>
-            <Flex flex="2">{t('Distribution')}</Flex>
+            <Flex flex="4">{t('Description')}</Flex>
             <Flex flex="3">{t('Size')}</Flex>
           </PanelHeader>
           <PanelBody>
-            {this.state.fileList.map(file => {
+            {this.props.userTask.files.map(file => {
               return (
                 <PanelItem key={file.id}>
                   <Flex
-                    flex="7"
+                    flex="5"
                     pr={2}
-                    style={{wordWrap: 'break-word', wordBreak: 'break-all'}}
+                    style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
                   >
                     <strong>{file.name || '(empty)'}</strong>
                   </Flex>
-                  <Flex flex="2">
-                    {file.dist || <span className="text-light">{t('None')}</span>}
+                  <Flex flex="4">
+                    {file.headers['Description'] || <span className="text-light">{t('None')}</span>}
                   </Flex>
                   <Flex flex="3" justify="space-between">
                     <FileSize bytes={file.size} />
@@ -158,17 +108,17 @@ class UserTaskDetailsFiles extends React.Component {
                           <span className="icon icon-open" />
                         </a>
                       ) : (
-                        <Tooltip
-                          title={t(
-                            'You do not have the required permission to download this artifact.'
-                          )}
-                        >
-                          <div className="btn btn-sm btn-default disabled">
-                            <span className="icon icon-open" />
-                          </div>
-                        </Tooltip>
-                      )}
-                      <div style={{marginLeft: 5}}>
+                          <Tooltip
+                            title={t(
+                              'You do not have the required permission to download this artifact.'
+                            )}
+                          >
+                            <div className="btn btn-sm btn-default disabled">
+                              <span className="icon icon-open" />
+                            </div>
+                          </Tooltip>
+                        )}
+                      <div style={{ marginLeft: 5 }}>
                         <LinkWithConfirmation
                           className="btn btn-sm btn-default"
                           title={t('Delete artifact')}
@@ -191,5 +141,5 @@ class UserTaskDetailsFiles extends React.Component {
   }
 }
 
-export {UserTaskDetailsFiles};
+export { UserTaskDetailsFiles };
 export default withOrganization(withApi(UserTaskDetailsFiles));

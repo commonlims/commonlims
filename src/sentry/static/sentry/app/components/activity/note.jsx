@@ -4,7 +4,7 @@ import React from 'react';
 import TimeSince from 'app/components/timeSince';
 import ConfigStore from 'app/stores/configStore';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import marked from 'app/utils/marked';
 
 class Note extends React.Component {
@@ -21,12 +21,14 @@ class Note extends React.Component {
   };
 
   render() {
-    let {item, author, onEdit, onDelete} = this.props;
+    let { item, author, onEdit, onDelete } = this.props;
 
-    let noteBody = marked(item.data.text);
+    // TODO!
+    // TODO: Add that date back in
+    let noteBody = marked(item.data.text ? item.data.text : "");
     return (
       <div>
-        <TimeSince date={item.dateCreated} />
+        {/*<TimeSince date={item.dateCreated} />*/}
         <div className="activity-author">
           {author.name}
           {this.canEdit() && (
@@ -43,7 +45,7 @@ class Note extends React.Component {
             </span>
           )}
         </div>
-        <div dangerouslySetInnerHTML={{__html: noteBody}} />
+        <div dangerouslySetInnerHTML={{ __html: noteBody }} />
       </div>
     );
   }

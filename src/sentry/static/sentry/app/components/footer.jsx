@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {t} from 'app/locale';
+import { t } from 'app/locale';
 import ConfigStore from 'app/stores/configStore';
 import DynamicWrapper from 'app/components/dynamicWrapper';
 import Hook from 'app/components/hook';
@@ -29,7 +29,6 @@ const Footer = () => {
             <DynamicWrapper fixed="Acceptance Test" value={'0.1.0'} />
           </div>
         )}
-        <a href="/" className="icon-sentry-logo" />
         <Hook name="footer" />
       </div>
     </footer>

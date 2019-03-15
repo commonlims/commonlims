@@ -21,7 +21,7 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
     doc_section = DocSection.USERTASK
     content_negotiation_class = ConditionalContentNegotiation
 
-    def get(self, request, organization, user_task_id):
+    def get(self, request, user_task_id):
         """
         List files in a UserTask
         ````````````````````````
@@ -29,10 +29,8 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
         Example:
 
         curl --header "Authorization: Bearer $LIMS_TOKEN" \
-                      "http://localhost:8000/api/0/user-tasks/lims/1/files/"
+                      "http://localhost:8000/api/0/user-tasks/1/files/"
 
-        :pparam string organization_slug: the slug of the organization the
-                                          release belongs to.
         :pparam string user_task_id: the ID of the user task
         :auth: required
         """
@@ -53,7 +51,7 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
             on_results=lambda x: serialize(x, request.user),
         )
 
-    def post(self, request, organization, user_task_id):
+    def post(self, request, user_task_id):
         """
         Upload a new file related to a UserTask
         ``````````````````````````````````````
@@ -66,13 +64,10 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
         Example:
 
         curl --header "Authorization: Bearer $LIMS_TOKEN" \
-             -F "organization_slug=sentry" \
              -F "name=Makefile" \
              -F "file=@Makefile" \
-             "http://localhost:8000/api/0/user-tasks/lims/1/files/"
+             "http://localhost:8000/api/0/user-tasks/1/files/"
 
-        :pparam string organization_slug: the slug of the organization the
-                                          release belongs to.
         :pparm string user_task_id: the id of the task
         :param string name: the name (full path) of the file.
         :param file file: the multipart encoded file.
@@ -138,6 +133,7 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
 
         try:
             with transaction.atomic():
+                # TODO: Remove the organization id from the user task file
                 user_task_file = UserTaskFile.objects.create(
                     organization_id=user_task.organization_id,
                     file=file,

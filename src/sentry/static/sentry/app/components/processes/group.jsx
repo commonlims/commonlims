@@ -4,7 +4,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from 'react-emotion';
-import {Flex, Box} from 'grid-emotion';
+import { Flex, Box } from 'grid-emotion';
 
 import Count from 'app/components/count';
 import ProjectState from 'app/mixins/projectState';
@@ -13,7 +13,7 @@ import ProcessStore from 'app/stores/processStore';
 import SelectedProcessStore from 'app/stores/selectedProcessStore';
 
 import SampleHeader from 'app/components/processes/sampleHeader';
-import {PanelItem} from 'app/components/panels';
+import { PanelItem } from 'app/components/panels';
 
 // TODO: Should be called Task or similar
 
@@ -23,7 +23,6 @@ const ProcessesGroup = createReactClass({
   propTypes: {
     id: PropTypes.string.isRequired,
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     canSelect: PropTypes.bool,
     query: PropTypes.string,
   },
@@ -73,8 +72,8 @@ const ProcessesGroup = createReactClass({
   },
 
   render() {
-    const {data} = this.state;
-    const {orgId, projectId, query, canSelect} = this.props;
+    const { data } = this.state;
+    const { orgId, projectId, query, canSelect } = this.props;
 
     return (
       <TaskGroup onClick={this.toggleSelect} py={1} px={0} align="center">

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
-import {LocationState} from './location';
+import { LocationState } from './location';
 
 class SampleWell extends React.Component {
   getWellIcon() {
@@ -39,8 +39,8 @@ class SampleWell extends React.Component {
     return (
       <td className={this.getWellClassName()}>
         <InlineSvg
-          width="25px"
-          height="25px"
+          width="27px"
+          height="27px"
           src={this.getWellIcon()}
           onClick={this.props.onSampleWellClick}
           onMouseOver={this.props.onSampleWellHover}

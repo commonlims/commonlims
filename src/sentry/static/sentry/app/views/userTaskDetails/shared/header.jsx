@@ -12,13 +12,13 @@ import SentryTypes from 'app/sentryTypes';
 import UserTaskActions from './actions';
 import UserTaskSeenBy from './seenBy';
 import AssigneeSelector from './assigneeSelector';
+import UserTaskStore from 'app/stores/userTaskStore';
 
 const UserTaskHeader = createReactClass({
   displayName: 'UserTaskHeader',
 
   propTypes: {
-    group: SentryTypes.Group.isRequired,
-    project: SentryTypes.Project,
+    userTask: PropTypes.object.isRequired,
     params: PropTypes.object,
   },
 
@@ -30,17 +30,16 @@ const UserTaskHeader = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   onToggleMute() {
-    let group = this.props.group;
+    let userTask = this.props.group;
     let org = this.context.organization;
     let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
         orgId: org.slug,
-        projectId: group.project.slug,
         itemIds: [group.id],
         data: {
-          status: group.status === 'ignored' ? 'unresolved' : 'ignored',
+          status: userTask.status === 'ignored' ? 'unresolved' : 'ignored',
         },
       },
       {
@@ -52,7 +51,7 @@ const UserTaskHeader = createReactClass({
   },
 
   getMessage() {
-    let data = this.props.group;
+    let data = this.props.userTask;
     let metadata = data.metadata;
     switch (data.type) {
       case 'error':
@@ -60,32 +59,41 @@ const UserTaskHeader = createReactClass({
       case 'csp':
         return metadata.message;
       default:
-        return this.props.group.culprit || '';
+        return this.props.userTask.culprit || '';
     }
   },
 
+  buildLinks() {
+    return this.props.userTask.tabs.map(tab => {
+      return <li className={tab.active ? "active" : ""}>
+        <a onClick={() => UserTaskStore.activateTab(tab.id)}>{tab.title}</a>
+      </li>
+    });
+  },
+
   render() {
-    let { project, group, params } = this.props;
+    let { userTask } = this.props;
+    console.log('HERE!!!!', userTask);
 
     let className = 'group-detail';
 
-    className += ' type-' + group.type;
-    className += ' level-' + group.level;
+    className += ' type-' + userTask.type;
+    className += ' level-' + userTask.level;
 
-    if (group.isBookmarked) {
+    if (userTask.isBookmarked) {
       className += ' isBookmarked';
     }
-    if (group.hasSeen) {
+    if (userTask.hasSeen) {
       className += ' hasSeen';
     }
-    if (group.status === 'resolved') {
+    if (userTask.status === 'resolved') {
       className += ' isResolved';
     }
 
-    let groupId = group.id;
+    let userTaskId = userTask.id;
     let orgId = this.context.organization.slug;
 
-    let baseUrl = `/${orgId}/${params.projectId}/user-tasks/`;
+    let baseUrl = `/${orgId}/user-tasks/`;
     let userActionTitle = 'Fragment analyzer'; // TODO
 
     return (
@@ -101,31 +109,15 @@ const UserTaskHeader = createReactClass({
             <div className="flex flex-justify-right">
               <div className="assigned-to">
                 <h6 className="nav-header">{t('Assignee')}</h6>
-                <AssigneeSelector id={group.id} />
+                <AssigneeSelector id={userTask.id} />
               </div>
             </div>
           </div>
         </div>
-        <UserTaskSeenBy group={group} />
-        <UserTaskActions group={group} project={project} />
+        <UserTaskSeenBy group={userTask} />
+        <UserTaskActions group={userTask} />
         <NavTabs>
-          <ListLink to={`${baseUrl}${groupId}/samples/`}>{t('Samples')}</ListLink>
-          <ListLink
-            to={`${baseUrl}${groupId}/`}
-            isActive={() => {
-              let rootGroupPath = `${baseUrl}${groupId}/`;
-              let pathname = this.context.location.pathname;
-
-              // Because react-router 1.0 removes router.isActive(route)
-              return pathname === rootGroupPath || /events\/\w+\/$/.test(pathname);
-            }}
-          >
-            {t('Details')}
-          </ListLink>
-          <ListLink to={`${baseUrl}${groupId}/files/`}>{t('Files')}</ListLink>
-          <ListLink to={`${baseUrl}${groupId}/activity/`}>
-            {t('Activity')} <span className="badge animated">{group.numComments}</span>
-          </ListLink>
+          {this.buildLinks()}
         </NavTabs>
       </div>
     );
@@ -133,3 +125,8 @@ const UserTaskHeader = createReactClass({
 });
 
 export default UserTaskHeader;
+
+
+          // <ListLink to={`${baseUrl}${userTaskId}/`}>
+          //   {t('Activity')} <span className="badge animated">{userTask.numComments}</span>
+          // </ListLink>

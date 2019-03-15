@@ -1,4 +1,11 @@
 from __future__ import absolute_import
+from sentry.plugins.base import plugins
+from sentry.models.usertasksettings import UserTaskSettings, SubtaskSettings
+
+# TODO: Decide if we want to keep the whole UserTask in the database too or if it should just
+# be fetched from the plugin and saved in redis (which is much simpler). In the latter case, we would
+# just have to ensure to log the version of the plugin and the source code knows what happened.
+# In the POC, let's start with defining the model outside of Django
 
 from sentry.models import UserTask
 

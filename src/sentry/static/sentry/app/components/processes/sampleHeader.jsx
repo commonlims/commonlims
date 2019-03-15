@@ -4,7 +4,8 @@ import styled, {css} from 'react-emotion';
 import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
-import SampleTitle from 'app/components/processes/sampleTitle';
+import TaskGroupTitle from 'app/components/processes/taskGroupTitle';
+// TODO: rename file
 
 /**
  * Displays an event or group/issue title (i.e. in Stream)
@@ -12,7 +13,6 @@ import SampleTitle from 'app/components/processes/sampleTitle';
 class ProcessHeader extends React.Component {
   static propTypes = {
     orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string.isRequired,
     /** Either an issue or event **/
     data: PropTypes.shape({
       id: PropTypes.string,
@@ -22,6 +22,7 @@ class ProcessHeader extends React.Component {
       groupID: PropTypes.string,
       process: PropTypes.string,
       taskKey: PropTypes.string,
+      running: PropTypes.bool,
     }),
     includeLink: PropTypes.bool,
     hideIcons: PropTypes.bool,
@@ -47,11 +48,18 @@ class ProcessHeader extends React.Component {
     if (includeLink) {
       let process = this.props.data.process;
       let taskKey = this.props.data.taskKey;
-      let searchParams = `task:${taskKey} process:${process}`;
-      props.to = {
-        pathname: `/${orgId}/${projectId}/samples/`, //?waitingFor=${this.props.data.process}:${this.props .data.taskKey}`,
-        search: `?query=${searchParams}`,
-      };
+      let running = this.props.data.running;
+
+      if (running) {
+        props.to = {
+          pathname: `/${orgId}/user-tasks/1`,
+        };
+      } else {
+        props.to = {
+          pathname: `/${orgId}/samples/`,
+        };
+      }
+
       Wrapper = ProjectLink;
     } else {
       Wrapper = 'span';
@@ -62,7 +70,7 @@ class ProcessHeader extends React.Component {
         {...props}
         style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
       >
-        <SampleTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
+        <TaskGroupTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
       </Wrapper>
     );
   }

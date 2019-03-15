@@ -1,5 +1,5 @@
-import {Link, browserHistory} from 'react-router';
-import {omit, isEqual} from 'lodash';
+import { Link, browserHistory } from 'react-router';
+import { omit, isEqual } from 'lodash';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,13 +8,13 @@ import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 import qs from 'query-string';
 
-import {Panel, PanelBody} from 'app/components/panels';
-import {logAjaxError} from 'app/utils/logging';
+import { Panel, PanelBody } from 'app/components/panels';
+import { logAjaxError } from 'app/utils/logging';
 import {
   setActiveEnvironment,
   setActiveEnvironmentName,
 } from 'app/actionCreators/environments';
-import {t, tn, tct} from 'app/locale';
+import { t, tn, tct } from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
 import EnvironmentStore from 'app/stores/environmentStore';
@@ -157,8 +157,8 @@ const Processes = createReactClass({
       savedSearchLoading: true,
     });
 
-    const {orgId} = this.props.params;
-    const {searchId} = this.state;
+    const { orgId } = this.props.params;
+    const { searchId } = this.state;
 
     this.api.request(`/projects/${orgId}/internal/searches/`, {
       success: data => {
@@ -222,7 +222,8 @@ const Processes = createReactClass({
   },
 
   fetchProcessingIssues() {
-    let {orgId} = this.props.params;
+    console.log("HERE!");
+    let { orgId } = this.props.params;
     this.api.request(`/projects/${orgId}/internal/processingissues/`, {
       success: data => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
@@ -243,7 +244,7 @@ const Processes = createReactClass({
   },
 
   onSavedSearchCreate(data) {
-    let {orgId} = this.props.params;
+    let { orgId } = this.props.params;
     let savedSearchList = this.state.savedSearchList;
     savedSearchList.push(data);
     // TODO(dcramer): sort
@@ -339,7 +340,7 @@ const Processes = createReactClass({
       query += ' ' + ':createdAfter -7d'; // always limit it unless specified
     }
 
-    let {environment} = this.state;
+    let { environment } = this.state;
 
     let requestParams = {
       query,
@@ -379,7 +380,7 @@ const Processes = createReactClass({
         // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {id, matchingEventId, matchingEventEnvironment} = data[0];
+            let { id, matchingEventId, matchingEventEnvironment } = data[0];
             let redirect = `/${this.props.params
               .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
             // Also direct to the environment of this specific event if this
@@ -394,6 +395,7 @@ const Processes = createReactClass({
             return void browserHistory.push(redirect);
           }
         }
+        console.log(data);
 
         this._processesManager.push(data);
 
@@ -467,7 +469,7 @@ const Processes = createReactClass({
     }
   },
 
-  onSearch(query) {},
+  onSearch(query) { },
 
   onSortChange(sort) {
     this.setState(
@@ -530,7 +532,7 @@ const Processes = createReactClass({
       return null;
     }
 
-    let {orgId} = this.props.params;
+    let { orgId } = this.props.params;
     let link = `/${orgId}/internal/processing-issues/`;
     let showButton = false;
     let className = {
@@ -580,7 +582,7 @@ const Processes = createReactClass({
     return (
       <div
         className={classNames(className)}
-        style={{margin: '-1px -1px 0', padding: '10px 16px'}}
+        style={{ margin: '-1px -1px 0', padding: '10px 16px' }}
       >
         {showButton && (
           <Link to={link} className="btn btn-default btn-sm pull-right">
@@ -600,7 +602,7 @@ const Processes = createReactClass({
 
     let topIssue = ids[0];
 
-    let {orgId} = this.props.params;
+    let { orgId } = this.props.params;
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
@@ -623,16 +625,16 @@ const Processes = createReactClass({
   },
 
   renderEmpty() {
-    const {environment} = this.state;
+    const { environment } = this.state;
     const message = environment
       ? tct('Sorry no events match your filters in the [env] environment.', {
-          env: environment.displayName,
-        })
+        env: environment.displayName,
+      })
       : t('Sorry, no events match your filters.');
 
     // TODO(lyn): Extract empty state to a separate component
     return (
-      <div className="empty-stream" style={{border: 0}}>
+      <div className="empty-stream" style={{ border: 0 }}>
         <span className="icon icon-exclamation" />
         <p>{message}</p>
       </div>
@@ -665,7 +667,7 @@ const Processes = createReactClass({
     let params = this.props.params;
     let classes = ['stream-row'];
     if (this.state.isSidebarVisible) classes.push('show-sidebar');
-    let {orgId} = this.props.params;
+    let { orgId } = this.props.params;
     let searchId = this.state.searchId;
     return (
       <div className={classNames(classes)}>

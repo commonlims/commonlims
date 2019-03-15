@@ -3,12 +3,25 @@ from __future__ import absolute_import
 from sentry.api.serializers import Serializer, register
 from sentry.models.sample import Sample
 from django.forms.models import model_to_dict
+import six
 
 
 @register(Sample)
 class SampleSerializer(Serializer):
     def serialize(self, obj, attrs, user):
-        if isinstance(obj, Sample):
-            return model_to_dict(obj)
-        else:
-            return obj.all().values()
+        return {
+            "id": six.text_type(obj.id),
+            "name": obj.name,
+            # "processes": obj.processes,
+
+            # Test stuff
+            "userCount": 12,
+            "position": "A:1",
+            "hasSeen": True,
+            "project": {
+                "slug": 'internal',
+                "id": obj.project.id if obj.project else None,
+                "name": 'internal',
+            },
+            "container": 'RC-0123-Hund',
+        }

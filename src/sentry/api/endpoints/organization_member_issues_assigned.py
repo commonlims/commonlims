@@ -1,8 +1,13 @@
 from __future__ import absolute_import
 
 from sentry.api.bases import OrganizationIssuesEndpoint
-from sentry.models import Group, OrganizationMemberTeam, Team
+from sentry.models import Group, OrganizationMemberTeam, Team, UserTask
 from django.db.models import Q
+
+# TODO: Relation between UserTask and
+
+# NOTE: We can keep the name "Issue" even though this returns all UserTasks now
+# which aren't necessarily issues.
 
 
 class OrganizationMemberIssuesAssignedEndpoint(OrganizationIssuesEndpoint):
@@ -13,9 +18,10 @@ class OrganizationMemberIssuesAssignedEndpoint(OrganizationIssuesEndpoint):
                 is_active=True,
             ).values('team')
         )
-        return Group.objects.filter(
-            Q(assignee_set__user=member.user, assignee_set__project__in=project_list) |
+
+        return UserTask.objects.filter(
+            Q(assignee_set__user=member.user) |
             Q(assignee_set__team__in=teams)
         ).extra(
-            select={'sort_by': 'sentry_groupasignee.date_added'},
+            select={'sort_by': 'sentry_usertaskasignee.date_added'},
         ).order_by('-sort_by')
