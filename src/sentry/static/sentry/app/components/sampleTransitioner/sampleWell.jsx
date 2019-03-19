@@ -40,7 +40,7 @@ class SampleWell extends React.Component {
     let style = {};
     Object.assign(style, cellStyle);
 
-    if (this.props.data.isSelected) {
+    if (this.props.isSelected) {
       Object.assign(style, cellStyleSelected);
     } else if (this.props.data.highlightTransition) {
       Object.assign(style, cellStyleHighlightTransition);
@@ -101,9 +101,15 @@ SampleWell.propTypes = {
     isSelected: PropTypes.bool,
   }),
   sampleWellState: PropTypes.number.isRequired,
+  isSelected: PropTypes.bool.isRequired,
   // TODO: implement these new prop types
   // onSampleWellClick: PropTypes.func, // TODO: make isRequired
   // onSampleWellHover: PropTypes.func, // TODO: make isRequired
+};
+
+SampleWell.defaultProps = {
+  sampleWellState: LocationState.EMPTY,
+  isSelected: false,
 };
 
 export default SampleWell;

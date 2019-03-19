@@ -71,6 +71,7 @@ class SampleContainer extends React.Component {
             onWellClicked={this.props.onWellClicked}
             handleLocationHover={this.props.handleLocationHover}
             sampleWellState={wellState}
+            isSelected={wellLocation.isSelected}
           />
         );
       }
