@@ -64,6 +64,9 @@ class SampleContainer extends React.Component {
         // let lState = this.props.data.getLocationState();
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
+        const wellBackgroundHighlighted =
+          this.props.container.viewLogic.focusRow === r ||
+          this.props.container.viewLogic.focusCol === c;
 
         cols.push(
           <SampleWell
@@ -72,6 +75,8 @@ class SampleContainer extends React.Component {
             handleLocationHover={this.props.handleLocationHover}
             sampleWellState={wellState}
             isSelected={wellLocation.isSelected}
+            isHighlighted={wellLocation.highlightTransition}
+            isHighlightedBackground={wellBackgroundHighlighted}
           />
         );
       }

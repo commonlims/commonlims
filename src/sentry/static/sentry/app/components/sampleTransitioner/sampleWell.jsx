@@ -14,11 +14,11 @@ const cellStyleSelected = {
   color: '#443950',
 };
 
-const cellStyleHighlightTransition = {
+const cellStyleHighlighted = {
   color: 'rgb(166, 100, 239)',
 };
 
-const cellStyleHighlightBackground = {
+const cellStyleHighlightedBackground = {
   backgroundColor: 'aliceblue',
 };
 
@@ -42,15 +42,12 @@ class SampleWell extends React.Component {
 
     if (this.props.isSelected) {
       Object.assign(style, cellStyleSelected);
-    } else if (this.props.data.highlightTransition) {
-      Object.assign(style, cellStyleHighlightTransition);
+    } else if (this.props.isHighlighted) {
+      Object.assign(style, cellStyleHighlighted);
     }
 
-    if (
-      this.props.data.container.viewLogic.focusRow === this.props.data.row ||
-      this.props.data.container.viewLogic.focusCol === this.props.data.col
-    ) {
-      Object.assign(style, cellStyleHighlightBackground);
+    if (this.props.isHighlightedBackground) {
+      Object.assign(style, cellStyleHighlightedBackground);
     }
 
     return style;
@@ -102,6 +99,8 @@ SampleWell.propTypes = {
   }),
   sampleWellState: PropTypes.number.isRequired,
   isSelected: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+  isHighlightedBackground: PropTypes.bool.isRequired,
   // TODO: implement these new prop types
   // onSampleWellClick: PropTypes.func, // TODO: make isRequired
   // onSampleWellHover: PropTypes.func, // TODO: make isRequired
@@ -110,6 +109,8 @@ SampleWell.propTypes = {
 SampleWell.defaultProps = {
   sampleWellState: LocationState.EMPTY,
   isSelected: false,
+  isHighlighted: false,
+  isHighlightedBackground: false,
 };
 
 export default SampleWell;
