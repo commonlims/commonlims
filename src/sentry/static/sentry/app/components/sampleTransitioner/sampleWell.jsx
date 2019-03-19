@@ -24,16 +24,15 @@ const cellStyleHighlightBackground = {
 
 class SampleWell extends React.Component {
   getWellIcon() {
-    let state = this.props.data.getLocationState();
-
-    if (state == LocationState.EMPTY) {
-      return 'icon-well-empty';
-    } else if (state == LocationState.NOT_EMPTY_TRANSITION_SOURCE) {
-      return 'icon-well-transitioned';
-    } else if (state == LocationState.NOT_EMPTY_TRANSITION_TARGET) {
-      return 'icon-well-added';
-    } else {
-      return 'icon-well-full';
+    switch (this.props.sampleWellState) {
+      case LocationState.EMPTY:
+        return 'icon-well-empty';
+      case LocationState.NOT_EMPTY_TRANSITION_SOURCE:
+        return 'icon-well-transitioned';
+      case LocationState.NOT_EMPTY_TRANSITION_TARGET:
+        return 'icon-well-added';
+      default:
+        return 'icon-well-full';
     }
   }
 
@@ -90,9 +89,9 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
-  handleLocationHover: PropTypes.func,
-  onWellClicked: PropTypes.func,
-  // TODO: Remove out of data
+  handleLocationHover: PropTypes.func, // TODO: remove
+  onWellClicked: PropTypes.func, // TODO: remove
+  // TODO: Remove
   data: PropTypes.shape({
     col: PropTypes.number,
     row: PropTypes.number,
@@ -101,6 +100,10 @@ SampleWell.propTypes = {
     highlightTransition: PropTypes.func,
     isSelected: PropTypes.bool,
   }),
+  sampleWellState: PropTypes.number.isRequired,
+  // TODO: implement these new prop types
+  // onSampleWellClick: PropTypes.func, // TODO: make isRequired
+  // onSampleWellHover: PropTypes.func, // TODO: make isRequired
 };
 
 export default SampleWell;

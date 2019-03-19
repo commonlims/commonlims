@@ -61,11 +61,16 @@ class SampleContainer extends React.Component {
 
       cols.push(<td style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+        // let lState = this.props.data.getLocationState();
+        const wellLocation = this.props.container.get(r, c);
+        const wellState = wellLocation.getLocationState();
+
         cols.push(
           <SampleWell
             data={this.props.container.get(r, c)}
             onWellClicked={this.props.onWellClicked}
             handleLocationHover={this.props.handleLocationHover}
+            sampleWellState={wellState}
           />
         );
       }
@@ -88,10 +93,23 @@ class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
-  handleLeaveContainer: PropTypes.func,
-  handleLocationHover: PropTypes.func,
-  onWellClicked: PropTypes.func,
-  container: ContainerPropType,
+  handleLeaveContainer: PropTypes.func, // TODO: remove
+  handleLocationHover: PropTypes.func, // TODO: remove
+  onWellClicked: PropTypes.func, // TODO: remove
+  container: ContainerPropType, // TODO: remove
+  cols: PropTypes.number, // TODO: make isRequired
+  rows: PropTypes.number, // TODO: make isRequired
+  // TODO: implement these new prop types
+  /*samples: PropTypes.arrayOf(
+    PropTypes.shape({
+      col: PropTypes.number.isRequired,
+      row: PropTypes.number.isRequired,
+    })
+  ),
+  onSampleWellClick: PropTypes.func, // TODO: make isRequired
+  onSampleWellHover: PropTypes.func, // TODO: make isRequired
+  hoverRow: PropTypes.number,
+  hoverCol: PropTypes.number,*/
 };
 
 SampleContainer.displayName = 'SampleContainer';
