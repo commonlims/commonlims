@@ -211,7 +211,7 @@ from .endpoints.setup_wizard import SetupWizard
 #
 from .endpoints.user_task import UserTaskEndpoint, UserTaskDetailsEndpoint
 
-from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint, SampleBatchDetailsEndpoint
+from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint
 from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint, SampleProcessesEndpoint, SampleWorkflowsBatchEndpoint
 
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
@@ -795,10 +795,6 @@ urlpatterns = patterns(
         SampleDetailsEndpoint.as_view(),
         name='sentry-api-0-sample-details'
         ),
-
-    url(r'^sample-batches/(?P<batch_id>[^\/]+)/$',
-        SampleBatchDetailsEndpoint.as_view(),
-        name='sentry-api-0-sample-batch-details'),
 
     url(r'^user-tasks/$', UserTaskEndpoint.as_view(), name='sentry-api-0-user-task'),
     url(r'^user-tasks/(?P<user_task_id>[^\/]+)/$',

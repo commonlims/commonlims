@@ -4,9 +4,8 @@ import createReactClass from 'create-react-class';
 import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import {Panel, PanelBody} from 'app/components/panels';
-import ContainerStackActions from 'app/views/containerStack/actions';
-import InlineSvg from 'app/components/inlineSvg';
+import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
+import {Location, LocationState} from 'app/components/sampleTransitioner/location';
 
 // TODO: Handle more than one by laying them down_first or right_first
 // TODO: Implement shift and ctrl select
@@ -22,307 +21,9 @@ import InlineSvg from 'app/components/inlineSvg';
 // TODO in transition:
 //   [x] Rename container after placing samples
 
-// TODO: Move to type file and rename (getting lint errors)
-const ContainerPropType = PropTypes.shape({
-  get: PropTypes.func,
-  viewLogic: PropTypes.shape({
-    focusRow: PropTypes.number,
-    focusCol: PropTypes.number,
-  }),
-  dimensions: PropTypes.shape({
-    cols: PropTypes.number,
-    rows: PropTypes.number,
-  }),
-});
-
 const Hidden = {
   display: 'none',
 };
-
-const LocationState = {
-  EMPTY: 1,
-  NOT_EMPTY: 2, // The well has a sample before entering the view
-  NOT_EMPTY_TRANSITION_SOURCE: 3, // The well has a sample that has been transitioned (from src to target)
-  NOT_EMPTY_TRANSITION_TARGET: 4, // A target well has a sample that has been transitioned
-};
-
-const containerStyle = {
-  margin: '4px',
-  borderCollapse: 'collapse',
-};
-
-const cellStyleHeader = {
-  padding: '1px',
-  margin: '1px',
-  color: '#BDB4C7',
-  textAlign: 'center',
-};
-
-const cellStyle = {
-  padding: '5px',
-  margin: '1px',
-  color: '#BDB4C7',
-};
-
-const cellStyleSelected = {
-  color: '#443950',
-};
-
-const cellStyleHighlightTransition = {
-  color: 'rgb(166, 100, 239)',
-};
-
-const cellStyleHighlightBackground = {
-  backgroundColor: 'aliceblue',
-};
-
-class Well extends React.Component {
-  getWellIcon() {
-    let state = this.props.data.getLocationState();
-
-    if (state == LocationState.EMPTY) {
-      return 'icon-well-empty';
-    } else if (state == LocationState.NOT_EMPTY_TRANSITION_SOURCE) {
-      return 'icon-well-transitioned';
-    } else if (state == LocationState.NOT_EMPTY_TRANSITION_TARGET) {
-      return 'icon-well-added';
-    } else {
-      return 'icon-well-full';
-    }
-  }
-
-  getWellStyle() {
-    let style = {};
-    Object.assign(style, cellStyle);
-
-    if (this.props.data.isSelected) {
-      Object.assign(style, cellStyleSelected);
-    } else if (this.props.data.highlightTransition) {
-      Object.assign(style, cellStyleHighlightTransition);
-    }
-
-    if (
-      this.props.data.container.viewLogic.focusRow === this.props.data.row ||
-      this.props.data.container.viewLogic.focusCol === this.props.data.col
-    ) {
-      Object.assign(style, cellStyleHighlightBackground);
-    }
-
-    return style;
-  }
-
-  onClick(e) {
-    e.preventDefault();
-    let eventData = {
-      location: this.props.data,
-      ctrlKey: e.ctrlKey,
-      shiftKey: e.shiftKey,
-    };
-    this.props.onWellClicked(eventData);
-  }
-
-  onMouseOver(e) {
-    let eventData = {
-      location: this.props.data,
-    };
-    this.props.handleLocationHover(eventData);
-  }
-
-  render() {
-    return (
-      <td style={this.getWellStyle()}>
-        <InlineSvg
-          width="25px"
-          height="25px"
-          src={this.getWellIcon()}
-          onClick={this.onClick.bind(this)}
-          onMouseOver={this.onMouseOver.bind(this)}
-        />
-      </td>
-    );
-  }
-}
-
-Well.propTypes = {
-  handleLocationHover: PropTypes.func,
-  onWellClicked: PropTypes.func,
-  // TODO: Remove out of data
-  data: PropTypes.shape({
-    col: PropTypes.number,
-    row: PropTypes.number,
-    container: ContainerPropType,
-    getLocationState: PropTypes.func,
-    highlightTransition: PropTypes.func,
-    isSelected: PropTypes.bool,
-  }),
-};
-
-class ContainerComponent extends React.Component {
-  //displayName: 'ContainerComponent';
-
-  // Receives a prop container, that can e.g. come from the sample-batch endpoint
-
-  getRowIndicator(rowIndex) {
-    return String.fromCharCode(65 + rowIndex);
-  }
-
-  getColIndicator(colIndex) {
-    return colIndex + 1;
-  }
-
-  getHeaderStyle(row, col) {
-    let style = {};
-    Object.assign(style, cellStyleHeader);
-    if (
-      this.props.container.viewLogic.focusRow === row ||
-      this.props.container.viewLogic.focusCol === col
-    ) {
-      Object.assign(style, cellStyleHighlightBackground);
-    }
-    return style;
-  }
-
-  createRows() {
-    let rows = [];
-    let colsHeader = [];
-
-    colsHeader.push(<td style={cellStyleHeader} />);
-    for (let c = 0; c < this.props.container.dimensions.cols; c++) {
-      colsHeader.push(
-        <td style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
-      );
-    }
-    rows.push(<tr>{colsHeader}</tr>);
-
-    for (let r = 0; r < this.props.container.dimensions.rows; r++) {
-      let cols = [];
-
-      cols.push(<td style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
-      for (let c = 0; c < this.props.container.dimensions.cols; c++) {
-        cols.push(
-          <Well
-            data={this.props.container.get(r, c)}
-            onWellClicked={this.props.onWellClicked}
-            handleLocationHover={this.props.handleLocationHover}
-          />
-        );
-      }
-      rows.push(<tr>{cols}</tr>);
-    }
-    return rows;
-  }
-
-  onMouseLeave(e) {
-    this.props.handleLeaveContainer(this.props.container);
-  }
-
-  render() {
-    return (
-      <table style={containerStyle} onMouseLeave={this.onMouseLeave.bind(this)}>
-        <tbody> {this.createRows()} </tbody>
-      </table>
-    );
-  }
-}
-
-ContainerComponent.propTypes = {
-  handleLeaveContainer: PropTypes.func,
-  handleLocationHover: PropTypes.func,
-  onWellClicked: PropTypes.func,
-  container: ContainerPropType,
-};
-
-ContainerComponent.displayName = 'ContainerComponent';
-
-class ContainerCollection extends React.Component {
-  // A ContainerCollection allows the user to move between 1..n different containers
-
-  render() {
-    return (
-      <div>
-        <Panel>
-          <ContainerStackActions
-            canAdd={this.props.canAdd}
-            canRemove={this.props.canRemove}
-            container={this.props.containers[0]}
-          />
-          <PanelBody>
-            <ContainerComponent
-              container={this.props.containers[0]}
-              isTemporary={this.props.isTemporary}
-              onWellClicked={this.props.onWellClicked}
-              handleLocationHover={this.props.handleLocationHover}
-              handleLeaveContainer={this.props.handleLeaveContainer}
-            />
-          </PanelBody>
-        </Panel>
-      </div>
-    );
-  }
-}
-
-ContainerCollection.propTypes = {
-  handleLeaveContainer: PropTypes.func,
-  handleLocationHover: PropTypes.func,
-  onWellClicked: PropTypes.func,
-  isTemporary: PropTypes.bool,
-  canAdd: PropTypes.bool,
-  canRemove: PropTypes.bool,
-  containers: PropTypes.array,
-};
-
-ContainerCollection.displayName = 'ContainerCollection';
-
-class Location {
-  // Location is an indexable location within a container, e.g. a well
-  constructor(container, row, col) {
-    this.container = container;
-    this.row = row;
-    this.col = col;
-    this.id = this.container.id + '_' + this.row + '_' + this.col;
-    this.content = null;
-
-    // view specific data
-    this.isSelected = false;
-    this.highlightTransition = false;
-
-    this.transitions = [];
-  }
-
-  getLocationState() {
-    if (this.content === null) {
-      return LocationState.EMPTY;
-    } else {
-      if (this.container.isTemporary) {
-        return LocationState.NOT_EMPTY_TRANSITION_TARGET;
-      } else {
-        if (this.transitions.length > 0) {
-          return LocationState.NOT_EMPTY_TRANSITION_SOURCE;
-        } else {
-          return LocationState.NOT_EMPTY;
-        }
-      }
-    }
-  }
-
-  add(content, state) {
-    this.content = content;
-    this.state = state;
-  }
-
-  remove(content) {
-    this.content = null;
-    this.state = LocationState.EMPTY;
-  }
-
-  toContract() {
-    return {
-      containerId: this.container.id,
-      row: this.row,
-      col: this.col,
-    };
-  }
-}
 
 class Container {
   constructor(id, name, dimensions, typeName, isTemporary) {
@@ -640,12 +341,11 @@ class PositionSamples extends React.Component {
   }
 
   render() {
-    // Actions defined by plugins
     return (
       <div>
         <div className="row">
           <div className="col-md-6">
-            <ContainerCollection
+            <SampleContainerStack
               title="Source containers"
               canAdd={false}
               canRemove={false}
@@ -654,10 +354,11 @@ class PositionSamples extends React.Component {
               onWellClicked={this.onWellClicked.bind(this)}
               handleLocationHover={this.handleLocationHover.bind(this)}
               handleLeaveContainer={this.handleLeaveContainer.bind(this)}
+              source={true}
             />
           </div>
           <div className="col-md-6">
-            <ContainerCollection
+            <SampleContainerStack
               title="Target containers"
               canAdd={true}
               canRemove={true}
@@ -666,6 +367,7 @@ class PositionSamples extends React.Component {
               onWellClicked={this.onWellClicked.bind(this)}
               handleLocationHover={this.handleLocationHover.bind(this)}
               handleLeaveContainer={this.handleLeaveContainer.bind(this)}
+              source={false}
             />
           </div>
         </div>
@@ -746,7 +448,7 @@ class ContainerSet {
     if (ret.targetContainers.length == 0) {
       let firstTarget = new Container(
         ret.batchId + '-1',
-        'target-1',
+        'HiSeqX-Thruplex_PL1_org_190322',
         ret.sourceContainers[0].dimensions,
         ret.sourceContainers[0].typeName,
         true
@@ -841,27 +543,14 @@ const FragmentAnalyzeView = createReactClass({
     this.fetchData();
   },
 
-  getSampleBatchEndpoint() {
-    return `/sample-batches/${this.props.params.batchId}/`;
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.fetchData();
+    }
   },
 
-  handlePluginAction(correlation) {
-    // 1. post an action to the plugin endpoint
-    // 2. get a response, for now it's synch (in the backend) but TODO: it's should be queued by the backend
-    //    as plugins will be written that take too much time executing
-    this.api.request('/plugins/snpseq/snpseq/actions/', {
-      method: 'POST',
-      data: correlation,
-      success: (data, _, jqXHR) => {
-        // TODO: We need load state here, possibly on the button?
-        //
-      },
-      error: () => {
-        this.setState({
-          error: true,
-        });
-      },
-    });
+  getUserTaskEndpoint() {
+    return `/user-tasks/${this.props.params.batchId}/`;
   },
 
   fetchData() {
@@ -902,9 +591,19 @@ const FragmentAnalyzeView = createReactClass({
             cols: 12,
           },
           typeName: '96 well plate',
-          name: 'cont-1',
+          name: 'HiSeqX-Thruplex_PL1_org_181212',
           isTemporary: false,
           id: 1,
+        },
+        {
+          dimensions: {
+            rows: 8,
+            cols: 12,
+          },
+          typeName: '96 well plate',
+          name: 'HiSeqX-Thruplex_PL1_org_181213',
+          isTemporary: false,
+          id: 2,
         },
       ],
     };
@@ -915,9 +614,22 @@ const FragmentAnalyzeView = createReactClass({
       containerSet: ContainerSet.createFromSampleBatchJson(data),
     });
 
-    this.setState({
-      loading: false,
-      error: false,
+    this.api.request(this.getUserTaskEndpoint(), {
+      method: 'GET',
+      data: this.props.location.query,
+      success: (d, _, jqXHR) => {
+        this.setState({
+          error: false,
+          loading: false,
+          containerSet: ContainerSet.createFromSampleBatchJson(d),
+        });
+      },
+      error: () => {
+        this.setState({
+          error: true,
+          loading: false,
+        });
+      },
     });
   },
 
@@ -958,11 +670,35 @@ const FragmentAnalyzeView = createReactClass({
   render() {
     if (this.state.loading) return <LoadingIndicator />;
     return (
-      <div className="row" style={this.state.showTab == 0 ? {} : Hidden}>
-        <PositionSamples
-          handlePluginAction={this.handlePluginAction}
-          containerSet={this.state.containerSet}
-        />
+      <div>
+        {/* <div class="row"> */}
+        {/* </div> */}
+        <div className="row">
+          <div className="col-md-8">
+            <ul className="nav nav-tabs">
+              <li>
+                <a onClick={this.switchToTransition}>Transition samples</a>
+              </li>
+              <li>
+                <a onClick={this.switchToDetails}>Details</a>
+              </li>
+            </ul>
+          </div>
+          <div className="col-md-4">
+            <div className="align-right">
+              <a className="btn btn-sm btn-default" onClick={this.save}>
+                Save
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={this.state.showTab == 0 ? {} : Hidden}>
+          <PositionSamples containerSet={this.state.containerSet} />
+        </div>
+        {/* <div style={this.state.showTab == 1 ? {} : Hidden}> */}
+        {/*   <BatchDetails /> */}
+        {/* </div> */}
       </div>
     );
   },

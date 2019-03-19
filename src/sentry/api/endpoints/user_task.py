@@ -20,7 +20,7 @@ class UserTaskDetailsEndpoint(Endpoint):
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, batch_id):
+    def get(self, request, user_task_id):
         ret = {
             "transitions": [],
             "batchId": 237,
@@ -36,8 +36,20 @@ class UserTaskDetailsEndpoint(Endpoint):
                 {"name": "sample2", "id": 11, "location": {"row": 1, "col": 1, "containerId": 1}}
             ],
             "containers": [
-                {"name": "cont-1", "id": 1, "isTemporary": False,
-                    "dimensions": {"rows": 8, "cols": 12}, "typeName": "96 well plate"}
+                {
+                    "name": "HiSeqX-Thruplex_PL1_org_181212",
+                    "id": 1,
+                    "isTemporary": False,
+                    "dimensions": {"rows": 8, "cols": 12},
+                    "typeName": "96 well plate"
+                },
+                {
+                    "name": "HiSeqX-Thruplex_PL1_org_181213",
+                    "id": 2,
+                    "isTemporary": False,
+                    "dimensions": {"rows": 8, "cols": 12},
+                    "typeName": "96 well plate"
+                }
             ],
             "tempContainers": []
         }

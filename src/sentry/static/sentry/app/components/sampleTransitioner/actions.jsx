@@ -1,17 +1,16 @@
-import {Flex, Box} from 'grid-emotion';
+import {Flex} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
-
 import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 
-const ContainerStackActions = createReactClass({
-  displayName: 'ContainerStackActions',
+const SampleContainerStackActions = createReactClass({
+  displayName: 'SampleContainerStackActions',
 
   propTypes() {
     return {
@@ -20,6 +19,7 @@ const ContainerStackActions = createReactClass({
       container: PropTypes.shape({
         name: PropTypes.string,
       }),
+      source: PropTypes.boolean,
     };
   },
 
@@ -136,64 +136,124 @@ const ContainerStackActions = createReactClass({
     });
   },
 
-  onSelectAll() {
-    SelectedSampleStore.toggleSelectAll();
-  },
-
-  onRealtimeChange(evt) {},
-
-  shouldConfirm(action) {
-    let selectedItems = SelectedSampleStore.getSelectedIds();
-    switch (action) {
-      case 'resolve':
-      case 'unresolve':
-      case 'ignore':
-      case 'unbookmark':
-        return this.state.pageSelected && selectedItems.size > 1;
-      case 'bookmark':
-        return selectedItems.size > 1;
-      case 'merge':
-      case 'delete':
-      default:
-        return true; // By default, should confirm ...
-    }
-  },
-
-  render() {
-    // TODO(withrocks): Base the AssignToWorkflowButton on the Merge button so it gets the same UI
+  renderPager() {
     return (
-      <Sticky>
-        <StyledFlex py={1}>
-          <CurrentContainerName>{this.props.container.name}</CurrentContainerName>
-          <div className="align-right">
-            <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
-              <a
-                title="Add"
-                className="btn btn-sm btn-default"
+      <div className=" btn-group">
+        <button
+          type="button"
+          className="btn btn-default"
+          disabled={this.props.numContainers < 2}
+        >
+          <span
+            className="glyphicon glyphicon-chevron-left"
+            aria-hidden="true"
+            onClick={this.props.previousContainer}
+          />
+        </button>
+        <button
+          type="button"
+          className="btn btn-default"
+          disabled={this.props.numContainers < 2}
+        >
+          {this.props.containerIndex} of {this.props.numContainers}
+        </button>
+        <button
+          type="button"
+          className="btn btn-default"
+          disabled={this.props.numContainers < 2}
+        >
+          <span
+            className="glyphicon glyphicon-chevron-right"
+            aria-hidden="true"
+            onClick={this.props.nextContainer}
+          />
+        </button>
+      </div>
+    );
+  },
+
+  renderSource() {
+    return (
+      <StyledFlex py={1}>
+        <div className="col-md-4">{this.renderPager()}</div>
+        <div className="col-md-8">
+          <p className="pull-right" style={{marginBottom: 0}}>
+            <small>{this.props.container.name}</small>
+            <span className="badge">96 well plate</span>
+          </p>
+        </div>
+      </StyledFlex>
+    );
+  },
+
+  renderTarget() {
+    return (
+      <StyledFlex py={1}>
+        <div className="col-md-4">{this.renderPager()}</div>
+        <div className="col-md-8">
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              value={this.props.container.name}
+              style={{height: '38px'}}
+            />
+            <div className="input-group-btn">
+              <button
+                type="button"
+                className="btn btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                style={{borderRadius: '0px'}}
+              >
+                96 well plate <span className="caret" />
+              </button>
+              <ul className="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a href="#">48 well plate</a>
+                </li>
+                <li>
+                  <a href="#">96 well plate</a>
+                </li>
+                <li>
+                  <a href="#">384 well plate</a>
+                </li>
+              </ul>
+              <button
+                type="button"
+                className="btn btn-default"
                 disabled={!this.props.canAdd}
                 onClick={this.addContainer}
               >
-                {t('Add')}
-              </a>
-              <a
-                title="Remove"
-                className="btn btn-sm btn-default"
+                <span className="glyphicon glyphicon-trash" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="btn btn-default"
                 disabled={!this.props.canAdd}
                 onClick={this.removeContainer}
               >
-                {t('Remove')}
-              </a>
-            </ActionSet>
+                <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        </StyledFlex>
-      </Sticky>
+        </div>
+      </StyledFlex>
     );
   },
-});
 
-const CurrentContainerName = styled.b`
-  margin-left: 6px;
-`;
+  renderActions() {
+    if (this.props.source) {
+      return this.renderSource();
+    }
+    return this.renderTarget();
+  },
+
+  render() {
+    return <Sticky>{this.renderActions()}</Sticky>;
+  },
+});
 
 const Sticky = styled.div`
   position: sticky;
@@ -209,12 +269,4 @@ const StyledFlex = styled(Flex)`
   margin-bottom: -1px;
 `;
 
-const ActionSet = styled(Box)`
-  display: flex;
-
-  .btn-group {
-    margin-right: 6px;
-  }
-`;
-
-export default ContainerStackActions;
+export default SampleContainerStackActions;
