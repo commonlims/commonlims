@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
-import {Container as ContainerPropType} from 'app/climsTypes';
 import {LocationState} from './location';
 
 const cellStyle = {
@@ -53,23 +52,6 @@ class SampleWell extends React.Component {
     return style;
   }
 
-  onClick(e) {
-    e.preventDefault();
-    let eventData = {
-      location: this.props.data,
-      ctrlKey: e.ctrlKey,
-      shiftKey: e.shiftKey,
-    };
-    this.props.onWellClicked(eventData);
-  }
-
-  onMouseOver(e) {
-    let eventData = {
-      location: this.props.data,
-    };
-    this.props.handleLocationHover(eventData);
-  }
-
   render() {
     return (
       <td style={this.getWellStyle()}>
@@ -77,8 +59,8 @@ class SampleWell extends React.Component {
           width="25px"
           height="25px"
           src={this.getWellIcon()}
-          onClick={this.onClick.bind(this)}
-          onMouseOver={this.onMouseOver.bind(this)}
+          onClick={this.props.onSampleWellClick}
+          onMouseOver={this.props.onSampleWellHover}
         />
       </td>
     );
@@ -86,24 +68,12 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
-  handleLocationHover: PropTypes.func, // TODO: remove
-  onWellClicked: PropTypes.func, // TODO: remove
-  // TODO: Remove
-  data: PropTypes.shape({
-    col: PropTypes.number,
-    row: PropTypes.number,
-    container: ContainerPropType,
-    getLocationState: PropTypes.func,
-    highlightTransition: PropTypes.func,
-    isSelected: PropTypes.bool,
-  }),
-  sampleWellState: PropTypes.number.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  isHighlighted: PropTypes.bool.isRequired,
-  isHighlightedBackground: PropTypes.bool.isRequired,
-  // TODO: implement these new prop types
-  // onSampleWellClick: PropTypes.func, // TODO: make isRequired
-  // onSampleWellHover: PropTypes.func, // TODO: make isRequired
+  sampleWellState: PropTypes.number,
+  isSelected: PropTypes.bool,
+  isHighlighted: PropTypes.bool,
+  isHighlightedBackground: PropTypes.bool,
+  onSampleWellClick: PropTypes.func.isRequired,
+  onSampleWellHover: PropTypes.func.isRequired,
 };
 
 SampleWell.defaultProps = {

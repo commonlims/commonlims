@@ -61,22 +61,33 @@ class SampleContainer extends React.Component {
 
       cols.push(<td style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
-        // let lState = this.props.data.getLocationState();
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
         const wellBackgroundHighlighted =
           this.props.container.viewLogic.focusRow === r ||
           this.props.container.viewLogic.focusCol === c;
 
+        const eventData = {
+          location: wellLocation,
+        };
+
+        const onWellClick = e => {
+          e.preventDefault();
+          this.props.onWellClicked(eventData);
+        };
+
+        const onWellHover = e => {
+          this.props.handleLocationHover(eventData);
+        };
+
         cols.push(
           <SampleWell
-            data={this.props.container.get(r, c)}
-            onWellClicked={this.props.onWellClicked}
-            handleLocationHover={this.props.handleLocationHover}
             sampleWellState={wellState}
             isSelected={wellLocation.isSelected}
             isHighlighted={wellLocation.highlightTransition}
             isHighlightedBackground={wellBackgroundHighlighted}
+            onSampleWellClick={onWellClick}
+            onSampleWellHover={onWellHover}
           />
         );
       }
