@@ -8,17 +8,19 @@ class SampleWell extends React.Component {
     switch (this.props.sampleWellState) {
       case LocationState.EMPTY:
         return 'icon-well-empty';
+      case LocationState.NOT_EMPTY:
+        return 'icon-well-full';
       case LocationState.NOT_EMPTY_TRANSITION_SOURCE:
         return 'icon-well-transitioned';
       case LocationState.NOT_EMPTY_TRANSITION_TARGET:
         return 'icon-well-added';
       default:
-        return 'icon-well-full';
+        return 'icon-well-empty';
     }
   }
 
   getWellClassName() {
-    let className = 'sample-well ';
+    let className = 'sample-well';
 
     if (this.props.isSelected) {
       className = `${className} selected`;
@@ -49,16 +51,15 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
-  sampleWellState: PropTypes.number,
+  sampleWellState: PropTypes.number.isRequired,
+  onSampleWellClick: PropTypes.func.isRequired,
+  onSampleWellHover: PropTypes.func.isRequired,
   isSelected: PropTypes.bool,
   isHighlighted: PropTypes.bool,
   isHighlightedBackground: PropTypes.bool,
-  onSampleWellClick: PropTypes.func.isRequired,
-  onSampleWellHover: PropTypes.func.isRequired,
 };
 
 SampleWell.defaultProps = {
-  sampleWellState: LocationState.EMPTY,
   isSelected: false,
   isHighlighted: false,
   isHighlightedBackground: false,
