@@ -3,24 +3,6 @@ import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
 import {LocationState} from './location';
 
-const cellStyle = {
-  padding: '5px',
-  margin: '1px',
-  color: '#BDB4C7',
-};
-
-const cellStyleSelected = {
-  color: '#443950',
-};
-
-const cellStyleHighlighted = {
-  color: 'rgb(166, 100, 239)',
-};
-
-const cellStyleHighlightedBackground = {
-  backgroundColor: 'aliceblue',
-};
-
 class SampleWell extends React.Component {
   getWellIcon() {
     switch (this.props.sampleWellState) {
@@ -35,26 +17,25 @@ class SampleWell extends React.Component {
     }
   }
 
-  getWellStyle() {
-    let style = {};
-    Object.assign(style, cellStyle);
+  getWellClassName() {
+    let className = 'sample-well ';
 
     if (this.props.isSelected) {
-      Object.assign(style, cellStyleSelected);
+      className = `${className} selected`;
     } else if (this.props.isHighlighted) {
-      Object.assign(style, cellStyleHighlighted);
+      className = `${className} highlighted`;
     }
 
     if (this.props.isHighlightedBackground) {
-      Object.assign(style, cellStyleHighlightedBackground);
+      className = `${className} highlighted-background`;
     }
 
-    return style;
+    return className;
   }
 
   render() {
     return (
-      <td style={this.getWellStyle()}>
+      <td className={this.getWellClassName()}>
         <InlineSvg
           width="25px"
           height="25px"

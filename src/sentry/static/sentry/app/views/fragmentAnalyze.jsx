@@ -342,7 +342,7 @@ class PositionSamples extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="sample-transitioner">
         <div className="row">
           <div className="col-md-6">
             <SampleContainerStack
