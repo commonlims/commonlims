@@ -1,0 +1,60 @@
+img {
+  max-width: 100%;
+}
+
+.image {
+  border: 1px solid #e1e4e5;
+  padding: 15px;
+  border-radius: 2px;
+}
+
+.truncate {
+  max-width: 100%;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.break-word {
+  /* These are technically the same, but we have to use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+}
+
+.no-border {
+  border: 0 !important;
+}
+
+/* translation debug */
+span.translation-wrapper {
+  background: #ff953d;
+  border: 3px solid #ff4d3d;
+  border-radius: 3px;
+}
+
+// Animated ellipsis...
+
+.animated-ellipsis:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4, end) 1.5s infinite;
+  animation: ellipsis steps(4, end) 1.5s infinite;
+  content: '\2026'; /* ascii code for the ellipsis character */
+  width: 0px;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1em;
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 1em;
+  }
+}
