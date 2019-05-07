@@ -6,7 +6,6 @@ import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
 import {Location, LocationState} from 'app/components/sampleTransitioner/location';
-import memoize from 'memoize-one';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -345,15 +344,22 @@ class ContainerSetData {
 class MoveItems extends React.Component {
   constructor(props) {
     super(props);
+
+    const sampleBatch = ContainerSetData.createFromSampleBatchJson(
+      this.props.userTask.sampleBatch
+    );
+
     this.state = {
       loading: false,
       error: false,
+      sourceSampleContainers: sampleBatch.sourceContainers,
+      targetSampleContainers: sampleBatch.targetContainers,
+      sampleTransitions: [],
+      samples: this.props.userTask.sampleBatch.samples,
     };
 
     this.currentHover = null;
   }
-
-  make = memoize(sampleBatch => ContainerSetData.createFromSampleBatchJson(sampleBatch));
 
   wellsEqual(well1, well2) {
     return well1.row == well2.row && well1.col == well2.col;
@@ -478,9 +484,6 @@ class MoveItems extends React.Component {
   }
 
   render() {
-    const containerSet = this.make(this.props.userTask.sampleBatch);
-    console.log('stuff', this.props.userTask, containerSet);
-
     return (
       <div className="sample-transitioner">
         <div className="row">
@@ -489,7 +492,7 @@ class MoveItems extends React.Component {
               title="Source containers"
               canAdd={false}
               canRemove={false}
-              containers={containerSet.sourceContainers}
+              containers={this.state.sourceSampleContainers}
               isTemporary={false}
               onWellClicked={this.onWellClicked.bind(this)}
               handleLocationHover={this.handleLocationHover.bind(this)}
@@ -502,7 +505,7 @@ class MoveItems extends React.Component {
               title="Target containers"
               canAdd={true}
               canRemove={true}
-              containers={containerSet.targetContainers}
+              containers={this.state.targetSampleContainers}
               isTemporary={true}
               onWellClicked={this.onWellClicked.bind(this)}
               handleLocationHover={this.handleLocationHover.bind(this)}
