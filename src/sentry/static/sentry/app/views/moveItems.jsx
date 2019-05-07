@@ -5,8 +5,8 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import { Location, LocationState } from 'app/components/sampleTransitioner/location';
-import memoize from "memoize-one";
+import {Location, LocationState} from 'app/components/sampleTransitioner/location';
+import memoize from 'memoize-one';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -208,195 +208,6 @@ class Transitions {
   }
 }
 
-// TODO: Rename to TransitionSamples? Or something else?
-class MoveItems extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      error: false,
-    };
-
-    this.currentHover = null;
-  }
-
-  make = memoize(
-    (sampleBatch) => ContainerSetData.createFromSampleBatchJson(sampleBatch)
-  );
-
-  wellsEqual(well1, well2) {
-    return well1.row == well2.row && well1.col == well2.col;
-  }
-
-  *getSourceLocations(predicate) {
-    // Get all locations in any source container
-    for (let container of this.props.containerSet.sourceContainers) {
-      for (let loc of container.getLocations(predicate)) {
-        yield loc;
-      }
-    }
-  }
-
-  createTransition(source, target) {
-    source.isSelected = false;
-    this.props.containerSet.transitions.createTransition(source, target);
-    this.onTransitionCreated();
-  }
-
-  onTransitionCreated() { }
-
-  onTransitionRemoved() { }
-
-  removeTransitionForTarget(target) {
-    for (let transition of target.transitions) {
-      this.props.containerSet.transitions.removeTransition(transition);
-      this.onTransitionRemoved();
-    }
-    target.isSelected = false;
-  }
-
-  handleLeaveContainer(container) {
-    container.viewLogic.focusCol = null;
-    container.viewLogic.focusRow = null;
-  }
-
-  handleTargetWellClicked(loc, ctrlKey, shiftKey) {
-    let selLocations = [];
-
-    for (let currentLoc of this.getSourceLocations(loc2 => {
-      return loc2.isSelected;
-    })) {
-      selLocations.push(currentLoc);
-    }
-
-    if (loc.getLocationState() == LocationState.NOT_EMPTY_TRANSITION_TARGET) {
-      this.removeTransitionForTarget(loc);
-      return;
-    }
-
-    if (selLocations.length == 1) {
-      this.createTransition(selLocations[0], loc);
-    }
-  }
-
-  handleLocationHover(data) {
-    if (data.location !== this.currentHover) {
-      this.handleLocationHoverChanged(data.location, this.currentHover);
-      this.currentHover = data.location;
-    }
-  }
-
-  handleLocationHoverChanged(currentLocation, previousLocation) {
-    //let from = previousLocation ? previousLocation.id : "(null)";
-    //let to = currentLocation ? currentLocation.id : "(null)";
-
-    currentLocation.container.viewLogic.focusCol = currentLocation.col;
-    currentLocation.container.viewLogic.focusRow = currentLocation.row;
-
-    // If we have an item that's in a transition, we want to highlight all other parts of that transition
-    let previousTransition = previousLocation
-      ? this.props.containerSet.transitions.getByLocation(previousLocation)
-      : null;
-    let currentTransition = currentLocation
-      ? this.props.containerSet.transitions.getByLocation(currentLocation)
-      : null;
-
-    // Start by undoing the last one:
-    if (previousTransition) {
-      for (let item of previousTransition) {
-        item.source.highlightTransition = false;
-        item.target.highlightTransition = false;
-      }
-    }
-
-    if (currentTransition) {
-      for (let item of currentTransition) {
-        item.source.highlightTransition = true;
-        item.target.highlightTransition = true;
-      }
-    }
-
-    this.setState({ containerSet: this.state.containerSet });
-  }
-
-  onWellClicked(data) {
-    let { ctrlKey, shiftKey } = data;
-    let loc = data.location;
-
-    if (loc.container.isTemporary) {
-      this.handleTargetWellClicked(loc, ctrlKey, shiftKey);
-      // TODO: How do we propagate this now?
-      this.setState({ containerSet: this.state.containerSet });
-      return;
-    }
-
-    for (let key of Object.keys(loc.container.locations)) {
-      let otherLoc = loc.container.locations[key];
-      if (otherLoc == loc) continue;
-      if (otherLoc.isSelected) {
-        otherLoc.isSelected = false;
-      }
-    }
-
-    if (loc.getLocationState() == LocationState.EMPTY) {
-      return;
-    }
-
-    loc.isSelected = !loc.isSelected;
-    this.setState({ containerSet: this.state.containerSet });
-  }
-
-  render() {
-    const containerSet = this.make(this.props.userTask.sampleBatch);
-    console.log("stuff", this.props.userTask, containerSet);
-
-    return (
-      <div className="sample-transitioner">
-        <div className="row">
-          <div className="col-md-6">
-            <SampleContainerStack
-              title="Source containers"
-              canAdd={false}
-              canRemove={false}
-              containers={containerSet.sourceContainers}
-              isTemporary={false}
-              onWellClicked={this.onWellClicked.bind(this)}
-              handleLocationHover={this.handleLocationHover.bind(this)}
-              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
-              source={true}
-            />
-          </div>
-          <div className="col-md-6">
-            <SampleContainerStack
-              title="Target containers"
-              canAdd={true}
-              canRemove={true}
-              containers={containerSet.targetContainers}
-              isTemporary={true}
-              onWellClicked={this.onWellClicked.bind(this)}
-              handleLocationHover={this.handleLocationHover.bind(this)}
-              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
-              source={false}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-MoveItems.propTypes = {
-  containerSet: PropTypes.shape({
-    sourceContainers: PropTypes.array.isRequired,
-    targetContainers: PropTypes.array.isRequired,
-    transitions: PropTypes.shape({
-      getByLocation: PropTypes.func,
-      removeTransition: PropTypes.func,
-      createTransition: PropTypes.func,
-    }),
-  }),
-};
-
 class ContainerSetData {
   // An in memory structure for the sample batch. Uses the json from the sample-batch endpoint
   // to construct a heavier object with a simpler api
@@ -529,5 +340,192 @@ class ContainerSetData {
     return ret;
   }
 }
+
+// TODO: Rename to TransitionSamples? Or something else?
+class MoveItems extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      error: false,
+    };
+
+    this.currentHover = null;
+  }
+
+  make = memoize(sampleBatch => ContainerSetData.createFromSampleBatchJson(sampleBatch));
+
+  wellsEqual(well1, well2) {
+    return well1.row == well2.row && well1.col == well2.col;
+  }
+
+  *getSourceLocations(predicate) {
+    // Get all locations in any source container
+    for (let container of this.props.containerSet.sourceContainers) {
+      for (let loc of container.getLocations(predicate)) {
+        yield loc;
+      }
+    }
+  }
+
+  createTransition(source, target) {
+    source.isSelected = false;
+    this.props.containerSet.transitions.createTransition(source, target);
+    this.onTransitionCreated();
+  }
+
+  onTransitionCreated() {}
+
+  onTransitionRemoved() {}
+
+  removeTransitionForTarget(target) {
+    for (let transition of target.transitions) {
+      this.props.containerSet.transitions.removeTransition(transition);
+      this.onTransitionRemoved();
+    }
+    target.isSelected = false;
+  }
+
+  handleLeaveContainer(container) {
+    container.viewLogic.focusCol = null;
+    container.viewLogic.focusRow = null;
+  }
+
+  handleTargetWellClicked(loc, ctrlKey, shiftKey) {
+    let selLocations = [];
+
+    for (let currentLoc of this.getSourceLocations(loc2 => {
+      return loc2.isSelected;
+    })) {
+      selLocations.push(currentLoc);
+    }
+
+    if (loc.getLocationState() == LocationState.NOT_EMPTY_TRANSITION_TARGET) {
+      this.removeTransitionForTarget(loc);
+      return;
+    }
+
+    if (selLocations.length == 1) {
+      this.createTransition(selLocations[0], loc);
+    }
+  }
+
+  handleLocationHover(data) {
+    if (data.location !== this.currentHover) {
+      this.handleLocationHoverChanged(data.location, this.currentHover);
+      this.currentHover = data.location;
+    }
+  }
+
+  handleLocationHoverChanged(currentLocation, previousLocation) {
+    //let from = previousLocation ? previousLocation.id : "(null)";
+    //let to = currentLocation ? currentLocation.id : "(null)";
+
+    currentLocation.container.viewLogic.focusCol = currentLocation.col;
+    currentLocation.container.viewLogic.focusRow = currentLocation.row;
+
+    // If we have an item that's in a transition, we want to highlight all other parts of that transition
+    let previousTransition = previousLocation
+      ? this.props.containerSet.transitions.getByLocation(previousLocation)
+      : null;
+    let currentTransition = currentLocation
+      ? this.props.containerSet.transitions.getByLocation(currentLocation)
+      : null;
+
+    // Start by undoing the last one:
+    if (previousTransition) {
+      for (let item of previousTransition) {
+        item.source.highlightTransition = false;
+        item.target.highlightTransition = false;
+      }
+    }
+
+    if (currentTransition) {
+      for (let item of currentTransition) {
+        item.source.highlightTransition = true;
+        item.target.highlightTransition = true;
+      }
+    }
+
+    this.setState({containerSet: this.state.containerSet});
+  }
+
+  onWellClicked(data) {
+    let {ctrlKey, shiftKey} = data;
+    let loc = data.location;
+
+    if (loc.container.isTemporary) {
+      this.handleTargetWellClicked(loc, ctrlKey, shiftKey);
+      // TODO: How do we propagate this now?
+      this.setState({containerSet: this.state.containerSet});
+      return;
+    }
+
+    for (let key of Object.keys(loc.container.locations)) {
+      let otherLoc = loc.container.locations[key];
+      if (otherLoc == loc) continue;
+      if (otherLoc.isSelected) {
+        otherLoc.isSelected = false;
+      }
+    }
+
+    if (loc.getLocationState() == LocationState.EMPTY) {
+      return;
+    }
+
+    loc.isSelected = !loc.isSelected;
+    this.setState({containerSet: this.state.containerSet});
+  }
+
+  render() {
+    const containerSet = this.make(this.props.userTask.sampleBatch);
+    console.log('stuff', this.props.userTask, containerSet);
+
+    return (
+      <div className="sample-transitioner">
+        <div className="row">
+          <div className="col-md-6">
+            <SampleContainerStack
+              title="Source containers"
+              canAdd={false}
+              canRemove={false}
+              containers={containerSet.sourceContainers}
+              isTemporary={false}
+              onWellClicked={this.onWellClicked.bind(this)}
+              handleLocationHover={this.handleLocationHover.bind(this)}
+              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
+              source={true}
+            />
+          </div>
+          <div className="col-md-6">
+            <SampleContainerStack
+              title="Target containers"
+              canAdd={true}
+              canRemove={true}
+              containers={containerSet.targetContainers}
+              isTemporary={true}
+              onWellClicked={this.onWellClicked.bind(this)}
+              handleLocationHover={this.handleLocationHover.bind(this)}
+              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
+              source={false}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+MoveItems.propTypes = {
+  containerSet: PropTypes.shape({
+    sourceContainers: PropTypes.array.isRequired,
+    targetContainers: PropTypes.array.isRequired,
+    transitions: PropTypes.shape({
+      getByLocation: PropTypes.func,
+      removeTransition: PropTypes.func,
+      createTransition: PropTypes.func,
+    }),
+  }),
+};
 
 export default MoveItems;
