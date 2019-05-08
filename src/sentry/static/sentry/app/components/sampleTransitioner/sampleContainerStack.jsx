@@ -56,8 +56,6 @@ class SampleContainerStack extends React.Component {
               container={this.props.containers[0]}
               isTemporary={this.props.isTemporary}
               onWellClicked={this.props.onWellClicked}
-              handleLocationHover={this.props.handleLocationHover}
-              handleLeaveContainer={this.props.handleLeaveContainer}
             />
           </PanelBody>
         </Panel>
@@ -68,8 +66,6 @@ class SampleContainerStack extends React.Component {
 
 SampleContainerStack.propTypes = {
   title: PropTypes.string,
-  handleLeaveContainer: PropTypes.func,
-  handleLocationHover: PropTypes.func,
   onWellClicked: PropTypes.func,
   isTemporary: PropTypes.bool,
   canAdd: PropTypes.bool,

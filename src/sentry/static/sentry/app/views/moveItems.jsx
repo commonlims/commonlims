@@ -421,8 +421,8 @@ class MoveItems extends React.Component {
     }
   }
 
-  onWellClicked(data) {
-    let {ctrlKey, shiftKey} = data;
+  onWellClicked(containerId, row, col) {
+    /*let {ctrlKey, shiftKey} = data;
     let loc = data.location;
 
     if (loc.container.isTemporary) {
@@ -445,7 +445,8 @@ class MoveItems extends React.Component {
     }
 
     loc.isSelected = !loc.isSelected;
-    this.setState({containerSet: this.state.containerSet});
+    this.setState({containerSet: this.state.containerSet});*/
+    console.log('WELLCLICKED', containerId, row, col);
   }
 
   render() {

@@ -39,6 +39,11 @@ class SampleWell extends React.Component {
     this.props.onSampleWellMouseOver(this.props.row, this.props.col);
   }
 
+  handleClick() {
+    // TODO: set container id
+    this.props.onSampleWellClick(999, this.props.row, this.props.col);
+  }
+
   render() {
     return (
       <td

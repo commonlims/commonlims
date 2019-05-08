@@ -78,10 +78,6 @@ class SampleContainer extends React.Component {
           this.props.onWellClicked(eventData);
         };
 
-        const onWellHover = e => {
-          this.props.handleLocationHover(eventData);
-        };
-
         cols.push(
           <SampleWell
             sampleWellState={wellState}
@@ -98,10 +94,6 @@ class SampleContainer extends React.Component {
       rows.push(<tr>{cols}</tr>);
     }
     return rows;
-  }
-
-  onMouseLeave(e) {
-    //this.props.handleLeaveContainer(this.props.container);
   }
 
   onSampleWellMouseOver(row, col) {
