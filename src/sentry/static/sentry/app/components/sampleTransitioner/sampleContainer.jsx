@@ -20,8 +20,14 @@ const cellStyleHighlightBackground = {
 };
 
 class SampleContainer extends React.Component {
+  constructor(props) {
+    super(props);
 
-  // Receives a prop container, that can e.g. come from the sample-batch endpoint
+    this.state = {
+      hoverRow: null,
+      hoverCol: null,
+    };
+  }
 
   getRowIndicator(rowIndex) {
     return String.fromCharCode(65 + rowIndex);
@@ -35,8 +41,7 @@ class SampleContainer extends React.Component {
     let style = {};
     Object.assign(style, cellStyleHeader);
     if (
-      this.props.container.viewLogic.focusRow === row ||
-      this.props.container.viewLogic.focusCol === col
+      this.state.hoverRow == row || this.state.hoverCol === col
     ) {
       Object.assign(style, cellStyleHighlightBackground);
     }
@@ -62,9 +67,7 @@ class SampleContainer extends React.Component {
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
-        const wellBackgroundHighlighted =
-          this.props.container.viewLogic.focusRow === r ||
-          this.props.container.viewLogic.focusCol === c;
+        const wellBackgroundHighlighted = this.state.hoverRow == r || this.state.hoverCol === c;
 
         const eventData = {
           location: wellLocation,
@@ -86,7 +89,9 @@ class SampleContainer extends React.Component {
             isHighlighted={wellLocation.highlightTransition}
             isHighlightedBackground={wellBackgroundHighlighted}
             onSampleWellClick={onWellClick}
-            onSampleWellHover={onWellHover}
+            onSampleWellMouseOver={this.onSampleWellMouseOver.bind(this)}
+            row={r}
+            col={c}
           />
         );
       }
@@ -96,12 +101,24 @@ class SampleContainer extends React.Component {
   }
 
   onMouseLeave(e) {
-    this.props.handleLeaveContainer(this.props.container);
+    //this.props.handleLeaveContainer(this.props.container);
+  }
+
+  onSampleWellMouseOver(row, col) {
+    if (this.state.hoverRow != row || this.state.hoverCol != col) {
+      this.setState({ hoverRow: row, hoverCol: col });
+    }
+  }
+
+  onMouseOut() {
+    if (this.state.hoverRow || this.state.hoverCol) {
+      this.setState({ hoverRow: null, hoverCol: null });
+    }
   }
 
   render() {
     return (
-      <table style={containerStyle} onMouseLeave={this.onMouseLeave.bind(this)}>
+      <table style={containerStyle} onMouseOut={this.onMouseOut.bind(this)}>
         <tbody>{this.createRows()}</tbody>
       </table>
     );
@@ -109,8 +126,6 @@ class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
-  handleLeaveContainer: PropTypes.func, // TODO: remove
-  handleLocationHover: PropTypes.func, // TODO: remove
   onWellClicked: PropTypes.func, // TODO: remove
   container: ContainerPropType, // TODO: remove
   cols: PropTypes.number, // TODO: make isRequired
@@ -122,10 +137,7 @@ SampleContainer.propTypes = {
       row: PropTypes.number.isRequired,
     })
   ),
-  onSampleWellClick: PropTypes.func, // TODO: make isRequired
-  onSampleWellHover: PropTypes.func, // TODO: make isRequired
-  hoverRow: PropTypes.number,
-  hoverCol: PropTypes.number,*/
+  onSampleWellClick: PropTypes.func, // TODO: make isRequired*/
 };
 
 SampleContainer.displayName = 'SampleContainer';

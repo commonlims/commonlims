@@ -35,15 +35,21 @@ class SampleWell extends React.Component {
     return className;
   }
 
+  handleMouseOver() {
+    this.props.onSampleWellMouseOver(this.props.row, this.props.col);
+  }
+
   render() {
     return (
-      <td className={this.getWellClassName()}>
+      <td
+        className={this.getWellClassName()}
+        onMouseOver={this.handleMouseOver.bind(this)}
+      >
         <InlineSvg
           width="27px"
           height="27px"
           src={this.getWellIcon()}
           onClick={this.props.onSampleWellClick}
-          onMouseOver={this.props.onSampleWellHover}
         />
       </td>
     );
@@ -53,10 +59,12 @@ class SampleWell extends React.Component {
 SampleWell.propTypes = {
   sampleWellState: PropTypes.number.isRequired,
   onSampleWellClick: PropTypes.func.isRequired,
-  onSampleWellHover: PropTypes.func.isRequired,
+  onSampleWellMouseOver: PropTypes.func.isRequired,
   isSelected: PropTypes.bool,
   isHighlighted: PropTypes.bool,
   isHighlightedBackground: PropTypes.bool,
+  row: PropTypes.number.isRequired,
+  col: PropTypes.number.isRequired,
 };
 
 SampleWell.defaultProps = {

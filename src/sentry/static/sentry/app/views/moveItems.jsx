@@ -356,9 +356,14 @@ class MoveItems extends React.Component {
       targetSampleContainers: sampleBatch.targetContainers,
       sampleTransitions: [],
       samples: this.props.userTask.sampleBatch.samples,
+      currentTransition: null,
     };
+  }
 
-    this.currentHover = null;
+  // Propagate this function to all sample wells.
+  // When a sample well is clicked, it can invoke this with its own location.
+  updateCurrentTransition() {
+    //this.currentTransition
   }
 
   wellsEqual(well1, well2) {
@@ -416,46 +421,6 @@ class MoveItems extends React.Component {
     }
   }
 
-  handleLocationHover(data) {
-    if (data.location !== this.currentHover) {
-      this.handleLocationHoverChanged(data.location, this.currentHover);
-      this.currentHover = data.location;
-    }
-  }
-
-  handleLocationHoverChanged(currentLocation, previousLocation) {
-    //let from = previousLocation ? previousLocation.id : "(null)";
-    //let to = currentLocation ? currentLocation.id : "(null)";
-
-    currentLocation.container.viewLogic.focusCol = currentLocation.col;
-    currentLocation.container.viewLogic.focusRow = currentLocation.row;
-
-    // If we have an item that's in a transition, we want to highlight all other parts of that transition
-    let previousTransition = previousLocation
-      ? this.props.containerSet.transitions.getByLocation(previousLocation)
-      : null;
-    let currentTransition = currentLocation
-      ? this.props.containerSet.transitions.getByLocation(currentLocation)
-      : null;
-
-    // Start by undoing the last one:
-    if (previousTransition) {
-      for (let item of previousTransition) {
-        item.source.highlightTransition = false;
-        item.target.highlightTransition = false;
-      }
-    }
-
-    if (currentTransition) {
-      for (let item of currentTransition) {
-        item.source.highlightTransition = true;
-        item.target.highlightTransition = true;
-      }
-    }
-
-    this.setState({containerSet: this.state.containerSet});
-  }
-
   onWellClicked(data) {
     let {ctrlKey, shiftKey} = data;
     let loc = data.location;
@@ -495,8 +460,6 @@ class MoveItems extends React.Component {
               containers={this.state.sourceSampleContainers}
               isTemporary={false}
               onWellClicked={this.onWellClicked.bind(this)}
-              handleLocationHover={this.handleLocationHover.bind(this)}
-              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
               source={true}
             />
           </div>
@@ -508,8 +471,6 @@ class MoveItems extends React.Component {
               containers={this.state.targetSampleContainers}
               isTemporary={true}
               onWellClicked={this.onWellClicked.bind(this)}
-              handleLocationHover={this.handleLocationHover.bind(this)}
-              handleLeaveContainer={this.handleLeaveContainer.bind(this)}
               source={false}
             />
           </div>
