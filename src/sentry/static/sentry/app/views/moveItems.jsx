@@ -81,12 +81,6 @@ class Container {
     }
   }
 
-  insert(row, col, sample) {
-    this.validateIndex(row, col);
-    // Add a sample to this container
-    this.locations[this.getKey(row, col)].add(sample, LocationState.NOT_EMPTY);
-  }
-
   remove(row, col) {
     this.validateIndex(row, col);
     this.locations[this.getKey(row, col)].remove();
@@ -102,14 +96,6 @@ class Container {
     // NOTE: Does not return the sample direcdtly, even though set adds a sample. That might be confusing.
     this.validateIndex(row, col);
     return this.locations[this.getKey(row, col)];
-  }
-}
-
-class Sample {
-  constructor(id, name, project) {
-    this.id = id;
-    this.name = name;
-    this.project = project;
   }
 }
 
@@ -253,15 +239,6 @@ class ContainerSetData {
       ret.targetContainers.push(container);
     }
 
-    for (let sample of json.samples) {
-      let sampleObj = new Sample(sample.id, sample.name, 'project'); // TODO: Project
-      containers[sample.location.containerId].insert(
-        sample.location.row,
-        sample.location.col,
-        sampleObj
-      );
-    }
-
     // TODO: Insert transitions in target containers
 
     if (ret.targetContainers.length == 0) {
@@ -355,7 +332,6 @@ class MoveItems extends React.Component {
       sourceSampleContainers: sampleBatch.sourceContainers, // this should be a prop
       targetSampleContainers: sampleBatch.targetContainers,
       sampleTransitions: [],
-      samples: this.props.userTask.sampleBatch.samples,
       currentSampleTransition: null,
     };
   }
@@ -425,6 +401,9 @@ class MoveItems extends React.Component {
     console.log('TARGET WELL CLICKED', containerId, row, col);
   }
 
+  // For now we assume all samples fetched are mapped to source containers.
+  // TODO: These could potentially be mapped to source OR target containers.
+  // (Perhaps transitions have already been created and the result samples are in the target containers)
   render() {
     return (
       <div className="sample-transitioner">
@@ -438,6 +417,7 @@ class MoveItems extends React.Component {
               isTemporary={false}
               onWellClicked={this.onSourceWellClicked.bind(this)}
               source={true}
+              samples={this.props.userTask.sampleBatch.samples}
             />
           </div>
           <div className="col-md-6">

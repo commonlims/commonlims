@@ -61,7 +61,6 @@ class SampleContainerStack extends React.Component {
           />
           <PanelBody>
             <SampleContainer
-              locations={this.state.container.locations}
               id={this.state.container.id}
               cols={this.state.container.dimensions.cols}
               rows={this.state.container.dimensions.rows}
@@ -69,6 +68,7 @@ class SampleContainerStack extends React.Component {
               containerTypeName={this.state.container.typeName}
               containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
+              samples={this.props.samples} // TODO/WIPconsole.log('ROWSAMPLES', rowSamples);: should only filter samples with this container id
             />
           </PanelBody>
         </Panel>
@@ -85,6 +85,12 @@ SampleContainerStack.propTypes = {
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
   source: PropTypes.bool,
+  // TODO: samples will be mapped directly to containers later
+  samples: PropTypes.arrayOf(PropTypes.shape()),
+};
+
+SampleContainerStack.defaultProps = {
+  samples: [],
 };
 
 SampleContainerStack.displayName = 'SampleContainerStack';

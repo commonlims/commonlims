@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Container as ContainerPropType} from 'app/climsTypes';
 import SampleWell from './sampleWell';
+import {LocationState} from './location';
 
 export const SampleContainerType = {
   SOURCE: 1,
@@ -70,6 +71,8 @@ export class SampleContainer extends React.Component {
 
     for (let r = 0; r < this.props.rows; r++) {
       let cols = [];
+      // Get all samples with this row
+      const rowSamples = this.props.samples.filter(s => s.location.row === r);
 
       key = `-1_${r}`;
       cols.push(
@@ -79,14 +82,13 @@ export class SampleContainer extends React.Component {
       );
       for (let c = 0; c < this.props.cols; c++) {
         key = `${c}_${r}`;
-        const wellLocation = this.props.locations[r + '_' + c];
-        const wellState = wellLocation.getLocationState();
+        let sample = rowSamples.find(s => s.location.col === c);
+
+        // Determine state. Currently only works for samples.
+        // TODO: implement for transitions.
+        const wellState = sample ? LocationState.NOT_EMPTY : LocationState.EMPTY;
         const wellBackgroundHighlighted =
           this.state.hoverRow == r || this.state.hoverCol === c;
-
-        const eventData = {
-          location: wellLocation,
-        };
 
         const onWellClick = e => {
           e.preventDefault();
@@ -96,8 +98,8 @@ export class SampleContainer extends React.Component {
         cols.push(
           <SampleWell
             sampleWellState={wellState}
-            isSelected={wellLocation.isSelected}
-            isHighlighted={wellLocation.highlightTransition}
+            //isSelected={wellLocation.isSelected}
+            //isHighlighted={wellLocation.highlightTransition}
             isHighlightedBackground={wellBackgroundHighlighted}
             onSampleWellClick={onWellClick}
             onSampleWellMouseOver={this.onSampleWellMouseOver.bind(this)}
@@ -136,7 +138,6 @@ export class SampleContainer extends React.Component {
 SampleContainer.propTypes = {
   onWellClicked: PropTypes.func, // TODO: make isRequired
   containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
-  locations: PropTypes.arrayOf(PropTypes.shape({})), // TODO: Remove
   id: PropTypes.string.isRequired, // TODO: change to number
   cols: PropTypes.number.isRequired,
   rows: PropTypes.number.isRequired,
@@ -149,8 +150,7 @@ SampleContainer.propTypes = {
       col: PropTypes.number.isRequired,
       row: PropTypes.number.isRequired,
     })
-  ),
-  onSampleWellClick: PropTypes.func, // TODO: make isRequired*/
+  ),*/
 };
 
 SampleContainer.displayName = 'SampleContainer';
