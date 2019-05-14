@@ -46,6 +46,10 @@ class SampleContainerStack extends React.Component {
       ? SampleContainerType.TARGET
       : SampleContainerType.SOURCE;
 
+    const samples = this.props.samples.filter(
+      s => s.location.containerId === this.state.container.id
+    );
+
     return (
       <div style={{display: 'inline-block', minWidth: '540px'}}>
         <Panel>
@@ -68,7 +72,7 @@ class SampleContainerStack extends React.Component {
               containerTypeName={this.state.container.typeName}
               containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
-              samples={this.props.samples} // TODO/WIPconsole.log('ROWSAMPLES', rowSamples);: should only filter samples with this container id
+              samples={samples}
             />
           </PanelBody>
         </Panel>
