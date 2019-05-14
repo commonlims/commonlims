@@ -51,11 +51,14 @@ class SampleContainer extends React.Component {
   createRows() {
     let rows = [];
     let colsHeader = [];
+    let key;
 
-    colsHeader.push(<td key={-1} style={cellStyleHeader} />);
+    key = '-1_-1';
+    colsHeader.push(<td key={key} style={cellStyleHeader} />);
     for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+      key = `${c}_-1`;
       colsHeader.push(
-        <td key={c} style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
+        <td key={key} style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
       );
     }
     rows.push(<tr>{colsHeader}</tr>);
@@ -63,8 +66,10 @@ class SampleContainer extends React.Component {
     for (let r = 0; r < this.props.container.dimensions.rows; r++) {
       let cols = [];
 
-      cols.push(<td key={r} style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
+      key = `-1_${r}`;
+      cols.push(<td key={key} style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+        key = `${c}_${r}`;
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
         const wellBackgroundHighlighted = this.state.hoverRow == r || this.state.hoverCol === c;
@@ -88,6 +93,7 @@ class SampleContainer extends React.Component {
             onSampleWellMouseOver={this.onSampleWellMouseOver.bind(this)}
             row={r}
             col={c}
+            key={key}
           />
         );
       }
