@@ -57,7 +57,12 @@ class SampleContainerStack extends React.Component {
           />
           <PanelBody>
             <SampleContainer
-              container={this.props.containers[0]}
+              locations={this.state.container.locations}
+              id={this.state.container.id}
+              cols={this.state.container.dimensions.cols}
+              rows={this.state.container.dimensions.rows}
+              name={this.state.container.name}
+              containerTypeName={this.state.container.typeName}
               containerType={containerType}
               onWellClicked={this.props.onWellClicked}
             />

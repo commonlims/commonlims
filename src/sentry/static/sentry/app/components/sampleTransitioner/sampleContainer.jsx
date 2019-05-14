@@ -58,7 +58,7 @@ export class SampleContainer extends React.Component {
 
     key = '-1_-1';
     colsHeader.push(<td key={key} style={cellStyleHeader} />);
-    for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+    for (let c = 0; c < this.props.cols; c++) {
       key = `${c}_-1`;
       colsHeader.push(
         <td key={key} style={this.getHeaderStyle(-1, c)}>
@@ -68,7 +68,7 @@ export class SampleContainer extends React.Component {
     }
     rows.push(<tr>{colsHeader}</tr>);
 
-    for (let r = 0; r < this.props.container.dimensions.rows; r++) {
+    for (let r = 0; r < this.props.rows; r++) {
       let cols = [];
 
       key = `-1_${r}`;
@@ -77,9 +77,9 @@ export class SampleContainer extends React.Component {
           {this.getRowIndicator(r)}
         </td>
       );
-      for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+      for (let c = 0; c < this.props.cols; c++) {
         key = `${c}_${r}`;
-        const wellLocation = this.props.container.get(r, c);
+        const wellLocation = this.props.locations[r + '_' + c];
         const wellState = wellLocation.getLocationState();
         const wellBackgroundHighlighted =
           this.state.hoverRow == r || this.state.hoverCol === c;
@@ -90,7 +90,7 @@ export class SampleContainer extends React.Component {
 
         const onWellClick = e => {
           e.preventDefault();
-          this.props.onWellClicked(eventData);
+          this.props.onWellClicked();
         };
 
         cols.push(
@@ -134,11 +134,15 @@ export class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
-  containerType: PropTypes.number.isRequired,
-  onWellClicked: PropTypes.func, // TODO: remove
-  container: ContainerPropType, // TODO: remove
-  cols: PropTypes.number, // TODO: make isRequired
-  rows: PropTypes.number, // TODO: make isRequired
+  onWellClicked: PropTypes.func, // TODO: make isRequired
+  containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
+  locations: PropTypes.arrayOf(PropTypes.shape({})), // TODO: Remove
+  id: PropTypes.string.isRequired, // TODO: change to number
+  cols: PropTypes.number.isRequired,
+  rows: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  containerTypeName: PropTypes.string.isRequired,
+
   // TODO: implement these new prop types
   /*samples: PropTypes.arrayOf(
     PropTypes.shape({
