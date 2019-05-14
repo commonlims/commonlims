@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Container as ContainerPropType } from 'app/climsTypes';
+import {Container as ContainerPropType} from 'app/climsTypes';
 import SampleWell from './sampleWell';
+
+export const SampleContainerType = {
+  SOURCE: 1,
+  TARGET: 2,
+};
 
 const containerStyle = {
   margin: '20px auto',
@@ -19,7 +24,7 @@ const cellStyleHighlightBackground = {
   backgroundColor: 'aliceblue',
 };
 
-class SampleContainer extends React.Component {
+export class SampleContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -40,9 +45,7 @@ class SampleContainer extends React.Component {
   getHeaderStyle(row, col) {
     let style = {};
     Object.assign(style, cellStyleHeader);
-    if (
-      this.state.hoverRow == row || this.state.hoverCol === col
-    ) {
+    if (this.state.hoverRow == row || this.state.hoverCol === col) {
       Object.assign(style, cellStyleHighlightBackground);
     }
     return style;
@@ -58,7 +61,9 @@ class SampleContainer extends React.Component {
     for (let c = 0; c < this.props.container.dimensions.cols; c++) {
       key = `${c}_-1`;
       colsHeader.push(
-        <td key={key} style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
+        <td key={key} style={this.getHeaderStyle(-1, c)}>
+          {this.getColIndicator(c)}
+        </td>
       );
     }
     rows.push(<tr>{colsHeader}</tr>);
@@ -67,12 +72,17 @@ class SampleContainer extends React.Component {
       let cols = [];
 
       key = `-1_${r}`;
-      cols.push(<td key={key} style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
+      cols.push(
+        <td key={key} style={this.getHeaderStyle(r, -1)}>
+          {this.getRowIndicator(r)}
+        </td>
+      );
       for (let c = 0; c < this.props.container.dimensions.cols; c++) {
         key = `${c}_${r}`;
         const wellLocation = this.props.container.get(r, c);
         const wellState = wellLocation.getLocationState();
-        const wellBackgroundHighlighted = this.state.hoverRow == r || this.state.hoverCol === c;
+        const wellBackgroundHighlighted =
+          this.state.hoverRow == r || this.state.hoverCol === c;
 
         const eventData = {
           location: wellLocation,
@@ -104,13 +114,13 @@ class SampleContainer extends React.Component {
 
   onSampleWellMouseOver(row, col) {
     if (this.state.hoverRow != row || this.state.hoverCol != col) {
-      this.setState({ hoverRow: row, hoverCol: col });
+      this.setState({hoverRow: row, hoverCol: col});
     }
   }
 
   onMouseOut() {
     if (this.state.hoverRow || this.state.hoverCol) {
-      this.setState({ hoverRow: null, hoverCol: null });
+      this.setState({hoverRow: null, hoverCol: null});
     }
   }
 
@@ -124,6 +134,7 @@ class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
+  containerType: PropTypes.number.isRequired,
   onWellClicked: PropTypes.func, // TODO: remove
   container: ContainerPropType, // TODO: remove
   cols: PropTypes.number, // TODO: make isRequired
@@ -139,5 +150,3 @@ SampleContainer.propTypes = {
 };
 
 SampleContainer.displayName = 'SampleContainer';
-
-export default SampleContainer;

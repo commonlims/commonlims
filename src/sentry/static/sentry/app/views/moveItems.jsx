@@ -352,7 +352,7 @@ class MoveItems extends React.Component {
     this.state = {
       loading: false,
       error: false,
-      sourceSampleContainers: sampleBatch.sourceContainers,
+      sourceSampleContainers: sampleBatch.sourceContainers, // this should be a prop
       targetSampleContainers: sampleBatch.targetContainers,
       sampleTransitions: [],
       samples: this.props.userTask.sampleBatch.samples,

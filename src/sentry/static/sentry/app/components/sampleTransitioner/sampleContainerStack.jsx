@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Panel, PanelBody } from 'app/components/panels';
+import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
-import SampleContainer from './sampleContainer';
+import {SampleContainer, SampleContainerType} from './sampleContainer';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -23,7 +23,7 @@ class SampleContainerStack extends React.Component {
     }
     const container = this.props.containers[containerIndex];
 
-    this.setState({ containerIndex, container });
+    this.setState({containerIndex, container});
   }
 
   previousContainer(e) {
@@ -34,12 +34,16 @@ class SampleContainerStack extends React.Component {
     }
     const container = this.props.containers[containerIndex];
 
-    this.setState({ containerIndex, container });
+    this.setState({containerIndex, container});
   }
 
   render() {
+    const containerType = this.props.isTemporary
+      ? SampleContainerType.TARGET
+      : SampleContainerType.SOURCE;
+
     return (
-      <div style={{ display: 'inline-block', minWidth: '540px' }}>
+      <div style={{display: 'inline-block', minWidth: '540px'}}>
         <Panel>
           <SampleContainerStackActions
             canAdd={this.props.canAdd}
@@ -54,7 +58,7 @@ class SampleContainerStack extends React.Component {
           <PanelBody>
             <SampleContainer
               container={this.props.containers[0]}
-              isTemporary={this.props.isTemporary}
+              containerType={containerType}
               onWellClicked={this.props.onWellClicked}
             />
           </PanelBody>
