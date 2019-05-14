@@ -15,11 +15,8 @@ const SampleContainerStackActions = createReactClass({
   propTypes() {
     return {
       canAdd: PropTypes.boolean,
-      // TODO: The container should be reused between all components
-      container: PropTypes.shape({
-        name: PropTypes.string,
-      }),
       source: PropTypes.boolean,
+      name: PropTypes.string,
     };
   },
 
@@ -178,7 +175,7 @@ const SampleContainerStackActions = createReactClass({
         <div className="col-md-4">{this.renderPager()}</div>
         <div className="col-md-8">
           <p className="pull-right" style={{marginBottom: 0}}>
-            <small>{this.props.container.name}</small>
+            <small>{this.props.name}</small>
             <span className="badge">96 well plate</span>
           </p>
         </div>
@@ -196,7 +193,7 @@ const SampleContainerStackActions = createReactClass({
             <input
               type="text"
               className="form-control"
-              value={this.props.container.name}
+              value={this.props.name}
               style={{height: '28px'}}
             />
             <div className="input-group-btn">

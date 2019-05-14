@@ -56,7 +56,7 @@ class SampleContainerStack extends React.Component {
           <SampleContainerStackActions
             canAdd={this.props.canAdd}
             canRemove={this.props.canRemove}
-            container={this.state.container}
+            name={this.state.container.name}
             numContainers={this.props.containers.length}
             containerIndex={this.state.containerIndex + 1}
             source={this.props.source}
