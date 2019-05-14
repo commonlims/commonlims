@@ -37,6 +37,10 @@ class SampleContainerStack extends React.Component {
     this.setState({containerIndex, container});
   }
 
+  onSampleWellClicked(row, column) {
+    this.props.onWellClicked(this.state.container.id, row, column);
+  }
+
   render() {
     const containerType = this.props.isTemporary
       ? SampleContainerType.TARGET
@@ -64,7 +68,7 @@ class SampleContainerStack extends React.Component {
               name={this.state.container.name}
               containerTypeName={this.state.container.typeName}
               containerType={containerType}
-              onWellClicked={this.props.onWellClicked}
+              onWellClicked={this.onSampleWellClicked.bind(this)}
             />
           </PanelBody>
         </Panel>

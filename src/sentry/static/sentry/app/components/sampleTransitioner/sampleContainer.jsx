@@ -90,7 +90,7 @@ export class SampleContainer extends React.Component {
 
         const onWellClick = e => {
           e.preventDefault();
-          this.props.onWellClicked();
+          this.props.onWellClicked(r, c);
         };
 
         cols.push(

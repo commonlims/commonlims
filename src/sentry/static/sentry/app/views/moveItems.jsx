@@ -356,14 +356,8 @@ class MoveItems extends React.Component {
       targetSampleContainers: sampleBatch.targetContainers,
       sampleTransitions: [],
       samples: this.props.userTask.sampleBatch.samples,
-      currentTransition: null,
+      currentSampleTransition: null,
     };
-  }
-
-  // Propagate this function to all sample wells.
-  // When a sample well is clicked, it can invoke this with its own location.
-  updateCurrentTransition() {
-    //this.currentTransition
   }
 
   wellsEqual(well1, well2) {
@@ -421,32 +415,14 @@ class MoveItems extends React.Component {
     }
   }
 
-  onWellClicked(containerId, row, col) {
-    /*let {ctrlKey, shiftKey} = data;
-    let loc = data.location;
+  // Change the source location of the current transition, if the well contains a sample
+  onSourceWellClicked(containerId, row, col) {
+    console.log('SOURCE WELL CLICKED', containerId, row, col);
+  }
 
-    if (loc.container.isTemporary) {
-      this.handleTargetWellClicked(loc, ctrlKey, shiftKey);
-      // TODO: How do we propagate this now?
-      this.setState({containerSet: this.state.containerSet});
-      return;
-    }
-
-    for (let key of Object.keys(loc.container.locations)) {
-      let otherLoc = loc.container.locations[key];
-      if (otherLoc == loc) continue;
-      if (otherLoc.isSelected) {
-        otherLoc.isSelected = false;
-      }
-    }
-
-    if (loc.getLocationState() == LocationState.EMPTY) {
-      return;
-    }
-
-    loc.isSelected = !loc.isSelected;
-    this.setState({containerSet: this.state.containerSet});*/
-    console.log('WELLCLICKED', containerId, row, col);
+  // Complete the current transition if appropriate
+  onTargetWellClicked(containerId, row, col) {
+    console.log('TARGET WELL CLICKED', containerId, row, col);
   }
 
   render() {
@@ -460,7 +436,7 @@ class MoveItems extends React.Component {
               canRemove={false}
               containers={this.state.sourceSampleContainers}
               isTemporary={false}
-              onWellClicked={this.onWellClicked.bind(this)}
+              onWellClicked={this.onSourceWellClicked.bind(this)}
               source={true}
             />
           </div>
@@ -471,7 +447,7 @@ class MoveItems extends React.Component {
               canRemove={true}
               containers={this.state.targetSampleContainers}
               isTemporary={true}
-              onWellClicked={this.onWellClicked.bind(this)}
+              onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
             />
           </div>
