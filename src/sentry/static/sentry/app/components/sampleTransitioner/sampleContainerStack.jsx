@@ -37,8 +37,8 @@ class SampleContainerStack extends React.Component {
     this.setState({containerIndex, container});
   }
 
-  onSampleWellClicked(row, column) {
-    this.props.onWellClicked(this.state.container.id, row, column);
+  onSampleWellClicked(row, column, sampleId) {
+    this.props.onWellClicked(this.state.container.id, row, column, sampleId);
   }
 
   render() {

@@ -82,7 +82,8 @@ export class SampleContainer extends React.Component {
       );
       for (let c = 0; c < this.props.cols; c++) {
         key = `${c}_${r}`;
-        let sample = rowSamples.find(s => s.location.col === c);
+        const sample = rowSamples.find(s => s.location.col === c);
+        const sampleId = sample ? sample.id : null;
 
         // Determine state. Currently only works for samples.
         // TODO: implement for transitions.
@@ -91,8 +92,7 @@ export class SampleContainer extends React.Component {
           this.state.hoverRow == r || this.state.hoverCol === c;
 
         const onWellClick = e => {
-          e.preventDefault();
-          this.props.onWellClicked(r, c);
+          this.props.onWellClicked(r, c, sampleId);
         };
 
         cols.push(
