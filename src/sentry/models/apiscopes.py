@@ -73,7 +73,7 @@ class HasApiScopes(models.Model):
     scopes = BitField(flags=ApiScopes().to_bitfield())
 
     # Human readable list of scopes
-    scope_list = ArrayField(of=models.TextField)
+    scope_list = ArrayField()
 
     def get_scopes(self):
         if self.scope_list:

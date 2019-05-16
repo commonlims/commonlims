@@ -42,7 +42,7 @@ class ServiceHook(Model):
     project_id = BoundedPositiveIntegerField(db_index=True)
     url = models.URLField(max_length=512)
     secret = EncryptedTextField(default=generate_secret)
-    events = ArrayField(of=models.TextField)
+    events = ArrayField()
     status = BoundedPositiveIntegerField(
         default=0,
         choices=ObjectStatus.as_choices(),
