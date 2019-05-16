@@ -22,104 +22,6 @@ import UserTaskStore from 'app/stores/userTaskStore';
 // TODO in transition:
 //   [x] Rename container after placing samples
 
-class Container {
-  constructor(id, name, dimensions, typeName) {
-    // TODO: This object should only contain data, not viewData (like focus row), so it can be easily updated
-    this.id = id;
-    this.name = name;
-    this.dimensions = dimensions;
-    this.typeName = typeName;
-
-    // TODO: get the view logic out and just keep it on a react component
-    this.viewLogic = {
-      focusRow: null,
-      focusCol: null,
-    };
-  }
-
-  getKey(row, col) {
-    return row + '_' + col;
-  }
-
-  validateIndex(row, col) {
-    if (row < 0 || row >= this.dimensions.rows)
-      throw new Error('Row must be between 0 and ' + this.dimensions.rows);
-    if (col < 0 || col >= this.dimensions.cols)
-      throw new Error('Column must be between 0 and ' + this.dimensions.cols);
-  }
-
-  transition(toRow, toCol, fromContainer, fromRow, fromCol) {
-    // Create a transitition to this row/col from the other container
-    this.validateIndex(toRow, toCol);
-  }
-}
-
-class ContainerSetData {
-  // An in memory structure for the sample batch. Uses the json from the sample-batch endpoint
-  // to construct a heavier object with a simpler api
-  // This object must not contain any view state info, so it can easily be updated from the endpoint
-  //
-  constructor() {
-    this.sourceContainers = [];
-    this.targetContainers = [];
-  }
-
-  static createFromSampleBatchJson(json) {
-    let ret = new ContainerSetData();
-    let containers = {};
-
-    // TODO: These properties should be mapped without specifying each (copying), so
-    // we can extend the object
-    ret.batchId = json.batchId;
-    ret.correlation = json.correlation;
-
-    for (let contract of json.containers) {
-      let container = new Container(
-        contract.id,
-        contract.name,
-        contract.dimensions,
-        contract.typeName,
-        false
-      );
-
-      containers[container.id] = container;
-      ret.sourceContainers.push(container);
-    }
-
-    for (let contract of json.tempContainers) {
-      let container = new Container(
-        contract.id,
-        contract.name,
-        contract.dimensions,
-        contract.typeName,
-        true
-      );
-
-      containers[container.id] = container;
-      ret.targetContainers.push(container);
-    }
-
-    // TODO: Insert transitions in target containers
-
-    if (ret.targetContainers.length == 0) {
-      let firstTarget = new Container(
-        ret.batchId + '-1',
-        'HiSeqX-Thruplex_PL1_org_190322',
-        ret.sourceContainers[0].dimensions,
-        ret.sourceContainers[0].typeName,
-        true
-      );
-      ret.targetContainers.push(firstTarget);
-    }
-
-    // TODO: set transitions into state
-    /*for (let transition of json.transitions) {
-    }*/
-
-    return ret;
-  }
-}
-
 // TODO: Rename to TransitionSamples? Or something else?
 class MoveItems extends React.Component {
   constructor(props) {
@@ -130,13 +32,20 @@ class MoveItems extends React.Component {
     // TODO: read transitions and target containers from userTask sampleBatch
     const sourceContainers = sampleBatch.containers;
     const samples = sampleBatch.samples;
-    const formatted = ContainerSetData.createFromSampleBatchJson(sampleBatch);
+
+    // Temporary hack: create a new target container
+    const targetContainer = {
+      id: -1,
+      name: 'HiSeqX-Thruplex_PL1_org_190322',
+      dimensions: sourceContainers[0].dimensions,
+      typeName: sourceContainers[0].typeName,
+    };
 
     this.state = {
       loading: false,
       error: false,
-      sourceSampleContainers: formatted.sourceContainers, // this should be a prop
-      targetSampleContainers: formatted.targetContainers,
+      sourceSampleContainers: sampleBatch.containers, // this should be a prop
+      targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       currentSampleTransition: null,
     };
@@ -193,7 +102,7 @@ class MoveItems extends React.Component {
 
 MoveItems.propTypes = {
   // TODO: specify individual props instead of entire sampleBatch
-  sampleBatch: PropTypes.shape,
+  // sampleBatch: PropTypes.shape,
 };
 
 export default MoveItems;
