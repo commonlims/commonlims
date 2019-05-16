@@ -181,7 +181,7 @@ const UserTaskDetails = createReactClass({
   renderTabComponent() {
     let tab = this.activeTab();
     if (tab.id == 'samples') {
-      return <MoveItems userTask={this.state.userTask} />
+      return <MoveItems sampleBatch={this.state.userTask.sampleBatch} />
     }
     else if (tab.id == "details") {
       return <UserTaskDetailsFields userTask={this.state.userTask} />

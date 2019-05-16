@@ -155,15 +155,18 @@ class MoveItems extends React.Component {
   constructor(props) {
     super(props);
 
-    const sampleBatch = ContainerSetData.createFromSampleBatchJson(
-      this.props.userTask.sampleBatch
-    );
+    const { sampleBatch } = props;
+
+    // TODO: read transitions and target containers from userTask sampleBatch
+    const sourceContainers = sampleBatch.containers;
+    const samples = sampleBatch.samples;
+    const formatted = ContainerSetData.createFromSampleBatchJson(sampleBatch);
 
     this.state = {
       loading: false,
       error: false,
-      sourceSampleContainers: sampleBatch.sourceContainers, // this should be a prop
-      targetSampleContainers: sampleBatch.targetContainers,
+      sourceSampleContainers: formatted.sourceContainers, // this should be a prop
+      targetSampleContainers: formatted.targetContainers,
       sampleTransitions: [],
       currentSampleTransition: null,
     };
@@ -200,7 +203,7 @@ class MoveItems extends React.Component {
               isTemporary={false}
               onWellClicked={this.onSourceWellClicked.bind(this)}
               source={true}
-              samples={this.props.userTask.sampleBatch.samples}
+              samples={this.props.sampleBatch.samples}
             />
           </div>
           <div className="col-md-6">
@@ -221,7 +224,8 @@ class MoveItems extends React.Component {
 }
 
 MoveItems.propTypes = {
-  userTask: PropTypes.shape, // TODO: specify format
+  // TODO: specify individual props instead of entire sampleBatch
+  sampleBatch: PropTypes.shape,
 };
 
 export default MoveItems;
