@@ -86,7 +86,7 @@ export class SampleContainer extends React.Component {
         const sampleId = sample ? sample.id : null;
 
         // Determine state. Currently only works for samples.
-        // TODO: implement for transitions.
+        // TODO: implement for transitions. See location.js
         const wellState = sample ? LocationState.NOT_EMPTY : LocationState.EMPTY;
         const wellBackgroundHighlighted =
           this.state.hoverRow == r || this.state.hoverCol === c;

@@ -23,29 +23,18 @@ import UserTaskStore from 'app/stores/userTaskStore';
 //   [x] Rename container after placing samples
 
 class Container {
-  constructor(id, name, dimensions, typeName, isTemporary) {
+  constructor(id, name, dimensions, typeName) {
     // TODO: This object should only contain data, not viewData (like focus row), so it can be easily updated
     this.id = id;
     this.name = name;
     this.dimensions = dimensions;
     this.typeName = typeName;
-    this.isTemporary = isTemporary;
-    this.locations = {};
 
     // TODO: get the view logic out and just keep it on a react component
     this.viewLogic = {
       focusRow: null,
       focusCol: null,
     };
-
-    // This might be optimized if required, but if we have just a few containers
-    // it doesn't matter.
-    for (let r = 0; r < this.dimensions.rows; r++) {
-      for (let c = 0; c < this.dimensions.cols; c++) {
-        let key = r + '_' + c;
-        this.locations[key] = new Location(this, r, c);
-      }
-    }
   }
 
   getKey(row, col) {
@@ -59,28 +48,9 @@ class Container {
       throw new Error('Column must be between 0 and ' + this.dimensions.cols);
   }
 
-  *getLocations(predicate) {
-    for (let key of Object.keys(this.locations)) {
-      let loc = this.locations[key];
-      if (predicate(loc)) yield loc;
-    }
-  }
-
-  remove(row, col) {
-    this.validateIndex(row, col);
-    this.locations[this.getKey(row, col)].remove();
-  }
-
   transition(toRow, toCol, fromContainer, fromRow, fromCol) {
     // Create a transitition to this row/col from the other container
     this.validateIndex(toRow, toCol);
-  }
-
-  get(row, col) {
-    // Returns the Location object at the row or column.
-    // NOTE: Does not return the sample direcdtly, even though set adds a sample. That might be confusing.
-    this.validateIndex(row, col);
-    return this.locations[this.getKey(row, col)];
   }
 }
 
@@ -200,7 +170,6 @@ class MoveItems extends React.Component {
               canAdd={false}
               canRemove={false}
               containers={this.state.sourceSampleContainers}
-              isTemporary={false}
               onWellClicked={this.onSourceWellClicked.bind(this)}
               source={true}
               samples={this.props.sampleBatch.samples}
@@ -212,7 +181,6 @@ class MoveItems extends React.Component {
               canAdd={true}
               canRemove={true}
               containers={this.state.targetSampleContainers}
-              isTemporary={true}
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
             />

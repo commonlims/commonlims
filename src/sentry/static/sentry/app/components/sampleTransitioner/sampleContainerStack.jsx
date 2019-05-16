@@ -42,9 +42,9 @@ class SampleContainerStack extends React.Component {
   }
 
   render() {
-    const containerType = this.props.isTemporary
-      ? SampleContainerType.TARGET
-      : SampleContainerType.SOURCE;
+    const containerType = this.props.source
+      ? SampleContainerType.SOURCE
+      : SampleContainerType.TARGET;
 
     const samples = this.props.samples.filter(
       s => s.location.containerId === this.state.container.id
@@ -84,7 +84,6 @@ class SampleContainerStack extends React.Component {
 SampleContainerStack.propTypes = {
   title: PropTypes.string,
   onWellClicked: PropTypes.func,
-  isTemporary: PropTypes.bool,
   canAdd: PropTypes.bool,
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
