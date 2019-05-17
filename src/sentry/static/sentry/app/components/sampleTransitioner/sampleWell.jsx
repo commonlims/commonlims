@@ -4,19 +4,46 @@ import InlineSvg from 'app/components/inlineSvg';
 import { LocationState } from './location';
 
 class SampleWell extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // TODO: explore if we should rather store
+      // the sample ids of the contents
+      hasContents: false,
+      isTransitionSource: false,
+      isTransitionTarget: false,
+    };
+
+    this.setAsTransitionSource.bind(this);
+    this.setAsTransitionTarget.bind(this);
+    this.removeAsTransitionSource.bind(this);
+    this.removeAsTransitionTarget.bind(this);
+  }
+
+  // TODO: investigate using reflux-connect to
+  // use the redux mapstatetoprops pattern
+  // in order to handle this automatically.
+  componentWillReceiveProps(props) {
+    const { hasContents } = props;
+    this.setState({ hasContents });
+  }
+
   getWellIcon() {
-    switch (this.props.sampleWellState) {
-      case LocationState.EMPTY:
-        return 'icon-well-empty';
-      case LocationState.NOT_EMPTY:
-        return 'icon-well-full';
-      case LocationState.NOT_EMPTY_TRANSITION_SOURCE:
-        return 'icon-well-transitioned';
-      case LocationState.NOT_EMPTY_TRANSITION_TARGET:
-        return 'icon-well-added';
-      default:
-        return 'icon-well-empty';
+    const { hasContents, isTransitionSource, isTransitionTarget } = this.state;
+    if (isTransitionSource) {
+      return 'icon-well-transitioned';
     }
+
+    if (isTransitionTarget) {
+      return 'icon-well-added';
+    }
+
+    if (hasContents) {
+      return 'icon-well-full';
+    }
+
+    return 'icon-well-empty';
   }
 
   getWellClassName() {
@@ -40,7 +67,23 @@ class SampleWell extends React.Component {
   }
 
   handleClick() {
-    this.props.onSampleWellClick();
+    this.props.onSampleWellClick(this);
+  }
+
+  setAsTransitionSource() {
+    this.setState({ isTransitionSource: true });
+  }
+
+  setAsTransitionTarget() {
+    this.setState({ isTransitionTarget: true });
+  }
+
+  removeAsTransitionSource() {
+    this.setState({ isTransitionSource: false });
+  }
+
+  removeAsTransitionTarget() {
+    this.setState({ isTransitionTarget: false });
   }
 
   render() {
@@ -53,7 +96,7 @@ class SampleWell extends React.Component {
           width="27px"
           height="27px"
           src={this.getWellIcon()}
-          onClick={this.props.onSampleWellClick}
+          onClick={this.handleClick.bind(this)}
         />
       </td>
     );
@@ -61,6 +104,7 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
+  // TODO: many of these should be handled internally only.
   sampleWellState: PropTypes.number.isRequired,
   onSampleWellClick: PropTypes.func.isRequired,
   onSampleWellMouseOver: PropTypes.func.isRequired,

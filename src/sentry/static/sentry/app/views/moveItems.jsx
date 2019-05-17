@@ -46,7 +46,12 @@ class SampleTransition {
 
   setTarget(targetLocation, targetSampleId=null) {
     // Target should only be set if the source is valid.
-    if (this.hasValidSource() && targetLocation && targetLocation.valid()) {
+    const ok = this.sourceLocation &&
+      this.hasValidSource() &&
+      targetLocation &&
+      targetLocation.valid();
+
+    if (ok) {
       this.targetLocation = targetLocation;
       this.targetSampleId = targetSampleId;
       return true;
@@ -86,6 +91,8 @@ class MoveItems extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       currentSampleTransition: null,
+      // TODO: is this the best way of doing things?
+      currentSampleTransitionSourceWell: null,
     };
   }
 
@@ -110,18 +117,28 @@ class MoveItems extends React.Component {
     }
   }
 
-  onSourceWellClicked(sampleLocation, containsSampleId) {
+  onSourceWellClicked(well, sampleLocation, containsSampleId) {
+    const { currentSampleTransitionSourceWell } = this.state;
+
     // If an empty well was clicked, clear current transition
     if (!containsSampleId) {
       return this.setCurrentSampleTransition(null);
     }
 
     // Otherwise reset the current sample transition
-    this.setCurrentSampleTransition(new SampleTransition(sampleLocation, containsSampleId));
+    if (sampleLocation.valid()) {
+      if (currentSampleTransitionSourceWell) {
+        currentSampleTransitionSourceWell.removeAsTransitionSource();
+      }
+
+      this.setCurrentSampleTransition(new SampleTransition(sampleLocation, containsSampleId));
+      well.setAsTransitionSource();
+      this.setState({ currentSampleTransitionSourceWell: well });
+    }
   }
 
 
-  onTargetWellClicked(sampleLocation) {
+  onTargetWellClicked(well, sampleLocation) {
     const currentSampleTransition = this.getCurrentSampleTransition();
 
     if (!currentSampleTransition || !currentSampleTransition.hasValidSource()) {
@@ -136,6 +153,8 @@ class MoveItems extends React.Component {
     if (targetSet) {
       this.completeCurrentSampleTransition();
     }
+
+    // TODO: call setAsTransitionTarget(); // See onSourceWellClicked
   }
 
   // For now we assume all samples fetched are mapped to source containers.

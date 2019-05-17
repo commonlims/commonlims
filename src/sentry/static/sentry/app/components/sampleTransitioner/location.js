@@ -1,3 +1,4 @@
+// TODO: Remove these, this is handled within SampleWell component now.
 export const LocationState = {
   EMPTY: 1,
   NOT_EMPTY: 2, // The well has a sample before entering the view
@@ -14,6 +15,6 @@ export class SampleLocation {
 
   // TODO: explore if we should validate this against the actual container
   valid() {
-    return this.containerId && this.x && this.y;
+    return !!(this.containerId && this.x && this.y);
   }
 }

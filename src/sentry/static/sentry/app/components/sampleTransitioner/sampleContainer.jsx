@@ -88,16 +88,18 @@ export class SampleContainer extends React.Component {
         // Determine state. Currently only works for samples.
         // TODO: implement for transitions. See location.js
         const wellState = sample ? LocationState.NOT_EMPTY : LocationState.EMPTY;
+        const hasContents = !!sample;
         const wellBackgroundHighlighted =
           this.state.hoverRow == r || this.state.hoverCol === c;
 
-        const onWellClick = e => {
-          this.props.onWellClicked(r, c, sampleId);
+        const onWellClick = well => {
+          this.props.onWellClicked(well, sampleId);
         };
 
         cols.push(
           <SampleWell
             sampleWellState={wellState}
+            hasContents={hasContents}
             //isSelected={wellLocation.isSelected}
             //isHighlighted={wellLocation.highlightTransition}
             isHighlightedBackground={wellBackgroundHighlighted}
