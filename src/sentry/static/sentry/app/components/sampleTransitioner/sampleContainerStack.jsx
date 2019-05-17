@@ -3,6 +3,7 @@ import React from 'react';
 import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
 import {SampleContainer, SampleContainerType} from './sampleContainer';
+import { SampleLocation } from 'app/components/sampleTransitioner/location';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -38,7 +39,7 @@ class SampleContainerStack extends React.Component {
   }
 
   onSampleWellClicked(row, column, sampleId) {
-    this.props.onWellClicked(this.state.container.id, row, column, sampleId);
+    this.props.onWellClicked(new SampleLocation(this.state.container.id, column, row), sampleId);
   }
 
   render() {

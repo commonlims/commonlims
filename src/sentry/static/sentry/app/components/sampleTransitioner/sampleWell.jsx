@@ -40,7 +40,6 @@ class SampleWell extends React.Component {
   }
 
   handleClick() {
-    // TODO: set container id
     this.props.onSampleWellClick();
   }
 

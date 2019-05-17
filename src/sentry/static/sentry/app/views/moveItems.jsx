@@ -5,7 +5,7 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import {Location, LocationState} from 'app/components/sampleTransitioner/location';
+import { SampleLocation, LocationState } from 'app/components/sampleTransitioner/location';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -21,6 +21,44 @@ import UserTaskStore from 'app/stores/userTaskStore';
 //
 // TODO in transition:
 //   [x] Rename container after placing samples
+
+// TODO: move to another file?
+class SampleTransition {
+  // Supports a targetSampleId in cases where transitions are read
+  // from the API, which may have already created a new sample in the
+  // target location.
+  constructor(sourceLocation, sourceSampleId, targetLocation = null, targetSampleId = null) {
+    if (sourceLocation.valid()) {
+      this.sourceLocation = sourceLocation;
+      this.sourceSampleId = sourceSampleId;
+    }
+
+    this.setTarget(targetLocation, targetSampleId);
+  }
+
+  hasValidSource() {
+    return this.sourceLocation.valid() && this.sourceSampleId;
+  }
+
+  hasValidTarget() {
+    return this.targetLocation.valid();
+  }
+
+  setTarget(targetLocation, targetSampleId=null) {
+    // Target should only be set if the source is valid.
+    if (this.hasValidSource() && targetLocation && targetLocation.valid()) {
+      this.targetLocation = targetLocation;
+      this.targetSampleId = targetSampleId;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isComplete() {
+    return this.hasValidSource() && this.hasValidTarget();
+  }
+}
 
 // TODO: Rename to TransitionSamples? Or something else?
 class MoveItems extends React.Component {
@@ -51,19 +89,53 @@ class MoveItems extends React.Component {
     };
   }
 
-  onSourceWellClicked(containerId, row, col, sampleId) {
+  setCurrentSampleTransition(sampleTransition) {
+    this.setState({currentSampleTransition: sampleTransition});
+  }
+
+  getCurrentSampleTransition() {
+    return this.state.currentSampleTransition;
+  }
+
+  completeCurrentSampleTransition() {
+    // TODO: should we de-dupe sample transitions here,
+    // or leave that to the API?
+    const { sampleTransitions } = this.state;
+    const currentSampleTransition = this.getCurrentSampleTransition();
+
+    if (currentSampleTransition.isComplete()) {
+      // This is a hack! TODO: We should invoke an action to update the state.
+      const updatedSampleTransitions = sampleTransitions.concat(currentSampleTransition);
+      this.setState({ sampleTransitions: updatedSampleTransitions });
+    }
+  }
+
+  onSourceWellClicked(sampleLocation, containsSampleId) {
     // If an empty well was clicked, clear current transition
-    if (!sampleId) {
-      this.setState({currentSampleTransition: null});
+    if (!containsSampleId) {
+      return this.setCurrentSampleTransition(null);
+    }
+
+    // Otherwise reset the current sample transition
+    this.setCurrentSampleTransition(new SampleTransition(sampleLocation, containsSampleId));
+  }
+
+
+  onTargetWellClicked(sampleLocation) {
+    const currentSampleTransition = this.getCurrentSampleTransition();
+
+    if (!currentSampleTransition || !currentSampleTransition.hasValidSource()) {
       return;
     }
 
-    // TODO: setCurrentSampleTransition()
-  }
-
-  // Complete the current transition if appropriate
-  onTargetWellClicked(containerId, row, col, sampleId) {
-    console.log('TARGET WELL CLICKED', containerId, row, col, sampleId);
+    // If there is a valid source, create the target,
+    // save the transition and clear current transition object.
+    // TODO: should the sample well also "know" about this transition
+    // so the highlighting behavior works correctly?
+    const targetSet = currentSampleTransition.setTarget(sampleLocation);
+    if (targetSet) {
+      this.completeCurrentSampleTransition();
+    }
   }
 
   // For now we assume all samples fetched are mapped to source containers.
