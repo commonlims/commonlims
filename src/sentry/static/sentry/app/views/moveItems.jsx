@@ -114,6 +114,9 @@ class MoveItems extends React.Component {
       // This is a hack! TODO: We should invoke an action to update the state.
       const updatedSampleTransitions = sampleTransitions.concat(currentSampleTransition);
       this.setState({ sampleTransitions: updatedSampleTransitions });
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -147,11 +150,13 @@ class MoveItems extends React.Component {
 
     // If there is a valid source, create the target,
     // save the transition and clear current transition object.
-    // TODO: should the sample well also "know" about this transition
-    // so the highlighting behavior works correctly?
     const targetSet = currentSampleTransition.setTarget(sampleLocation);
     if (targetSet) {
-      this.completeCurrentSampleTransition();
+      const ok = this.completeCurrentSampleTransition();
+      if (ok) {
+        well.setAsTransitionTarget();
+        this.setCurrentSampleTransition(null);
+      }
     }
 
     // TODO: call setAsTransitionTarget(); // See onSourceWellClicked
