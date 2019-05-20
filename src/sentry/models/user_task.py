@@ -6,14 +6,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-class SampleBatch(Model):
-    __core__ = True
-
-    class Meta:
-        app_label = 'clims'
-        db_table = 'clims_samplebatch'
-
-
 class UserTaskStatus(object):
     UNRESOLVED = 0
     RESOLVED = 1

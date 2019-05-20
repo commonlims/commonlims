@@ -10,7 +10,6 @@ from __future__ import absolute_import
 import six
 from django.conf import settings
 from django.db import models
-from django.db.models import F
 from django.utils import timezone
 
 from sentry.db.models import (
@@ -109,15 +108,17 @@ class Activity(Model):
             return
 
         # HACK: support UserTask.num_comments
-        if self.type == Activity.NOTE:
-            self.user_task.update(num_comments=F('num_comments') + 1)
+        # TODO: turn back on
+        # if self.type == Activity.NOTE:
+        #     self.user_task.update(num_comments=F('num_comments') + 1)
 
     def delete(self, *args, **kwargs):
         super(Activity, self).delete(*args, **kwargs)
 
         # HACK: support UserTask.num_comments
-        if self.type == Activity.NOTE:
-            self.user_task.update(num_comments=F('num_comments') - 1)
+        # TODO: turn back on
+        # if self.type == Activity.NOTE:
+        #     self.user_task.update(num_comments=F('num_comments') - 1)
 
     def send_notification(self):
         activity.send_activity_notifications.delay(self.id)
