@@ -5,7 +5,7 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import { SampleLocation, LocationState } from 'app/components/sampleTransitioner/location';
+import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first

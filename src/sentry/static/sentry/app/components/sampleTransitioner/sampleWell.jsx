@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
-import { LocationState } from './location';
 
 class SampleWell extends React.Component {
   constructor(props) {
@@ -105,7 +104,6 @@ class SampleWell extends React.Component {
 
 SampleWell.propTypes = {
   // TODO: many of these should be handled internally only.
-  sampleWellState: PropTypes.number.isRequired,
   onSampleWellClick: PropTypes.func.isRequired,
   onSampleWellMouseOver: PropTypes.func.isRequired,
   isSelected: PropTypes.bool,

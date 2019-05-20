@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Container as ContainerPropType} from 'app/climsTypes';
 import SampleWell from './sampleWell';
-import {LocationState} from './location';
 
 export const SampleContainerType = {
   SOURCE: 1,
@@ -87,7 +86,6 @@ export class SampleContainer extends React.Component {
 
         // Determine state. Currently only works for samples.
         // TODO: implement for transitions. See location.js
-        const wellState = sample ? LocationState.NOT_EMPTY : LocationState.EMPTY;
         const hasContents = !!sample;
         const wellBackgroundHighlighted =
           this.state.hoverRow == r || this.state.hoverCol === c;
@@ -98,7 +96,6 @@ export class SampleContainer extends React.Component {
 
         cols.push(
           <SampleWell
-            sampleWellState={wellState}
             hasContents={hasContents}
             //isSelected={wellLocation.isSelected}
             //isHighlighted={wellLocation.highlightTransition}

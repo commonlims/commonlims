@@ -3,7 +3,7 @@ import React from 'react';
 import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
 import {SampleContainer, SampleContainerType} from './sampleContainer';
-import { SampleLocation } from 'app/components/sampleTransitioner/location';
+import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
