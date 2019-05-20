@@ -2,15 +2,15 @@
 
 # Foundations
 
-* [High level design](high-level-design.md)
-* [Samples](samples.md)
-* [Containers](containers.md)
-* [Plugins](plugins.md)
-* [Workflows](workflows.md)
+- [High level design](high-level-design.md)
+- [Samples](samples.md)
+- [Containers](containers.md)
+- [Plugins](plugins.md)
+- [Workflows](workflows.md)
 
 # Web UI
 
-* [Listing Tasks](ui-tasks.md)
-* [User tasks](ui-user-task.md)
-* [Searching](ui-search.md)
-* [Projects](ui-projects.md)
+- [Listing Tasks](ui-tasks.md) TODO
+- [User tasks](ui-user-task.md) TODO
+- [Searching](ui-search.md) TODO
+- [Projects](ui-projects.md) TODO

@@ -14,6 +14,20 @@ Containers can have 2 or 3 dimensions, supporting e.g. tubes (2D), plates (2D) a
 
 When a sample is first created via the high-level API, it is not in a container. One can add it to one like this:
 
+TODO
+
+I think it could be helpful here to have an API that looks more like this:
+
+```
+a = Sample("A")
+plate = Container("c", rows=8, cols=12)
+plate[ContainerPosition(row="A", column="1")] = a
+```
+
+Since I think it would drastically reduce the confusion about what is what with regards to column/row.
+
+/JD 2019-05-20
+
 ```
 a = Sample("A")
 plate = Container("c", rows=8, cols=12)
@@ -44,7 +58,7 @@ plate.move("A1", "B2")
 
 ## Add a container to another container
 
-Containers can be added to other containers, e.g. plates in  a freezer. Here we split a freezer into  two columns and add the plate to it:
+Containers can be added to other containers, e.g. plates in a freezer. Here we split a freezer into two columns and add the plate to it:
 
 ```
 plate = Container("c", rows=8, cols=12)
@@ -87,12 +101,12 @@ Each container will have an entry in the database table `clims_container`.
 
 The relation between containers and samples (and other `Item`s) is in the table `clims_location`. These are the most important fields in that table:
 
-* item_id: Points to the item that is saved at this location
-* item_orig_version: The version the item was at when it was added
-* container_id
-* container_orig_version: The version the container was at when the item was added to it
-* row
-* column
-* depth
+- item_id: Points to the item that is saved at this location
+- item_orig_version: The version the item was at when it was added
+- container_id
+- container_orig_version: The version the container was at when the item was added to it
+- row
+- column
+- depth
 
 Note that location always points to the latest version of the container and the item in question. But for audit reasons, we keep the original versions around too. This is a theme in the architecture Common LIMS: Every question about the origin and placement of a sample or container must be easily answerable.

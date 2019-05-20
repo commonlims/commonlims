@@ -2,16 +2,17 @@ The core of any LIMS is managing samples and ensuring integrity of their data an
 
 # Auditing
 
+TODO: I think this section needs more work, in particular with regards to the discusions we have been having about versioning. /JD 2019-05-20
+
 The general rule in Common LIMS is never to delete any data. Individual labs can of course decide to archive old samples if required, but (given that you backup your data) you should always be able to track the status of a sample in any state it has ever been in. The history of samples is maintained by doing a full copy of them in the database before editing them. This is common practice in many information systems that require strict audit logs. An alternative would be to maintain diffs of entered data or use an append-only database. We don't take that route here because it's in a sense more complex and much more difficult to handle GDPR requirements.
 
-* Note that this decision comes at the cost of increased database size, but full audit logs that are simple to query were more deemed more important by us.
+- Note that this decision comes at the cost of increased database size, but full audit logs that are simple to query were more deemed more important by us.
 
 # Ancestry
 
 In Common LIMS, every sample is either an original sample or an ancestor of such a sample. Samples can keep their name when properties change, but then they'll always get a new version number (see the chapter on Auditing).
 
 It's easiest to understand the sample lifetime by looking at an example.
-
 
 ## The sample enters the lab
 
@@ -68,7 +69,7 @@ In any case, the ancestry now looks like this:
 
 ![Create an aliquot](./img/samples-03.png)
 
-## Transfering without a name change
+## Motivation for changing names on aliquote creating
 
 The previous API calls (copy and transfer) require you to update the name of the sample before saving it. This avoids confusion about where a sample is coming from.
 
@@ -83,3 +84,5 @@ a.volume -= 10.0
 It would be difficult to know what version to apply to each:
 
 ![Version inconsistency](./img/samples-04.png)
+
+Therefore we have decided that any time a sample is split a new sample entity must be created for the new aliqute. While, when a property is simply changed the sample identity remains the same.
