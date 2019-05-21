@@ -7,6 +7,6 @@ export class SampleLocation {
 
   // TODO: explore if we should validate this against the actual container
   valid() {
-    return !!(this.containerId && this.x && this.y);
+    return !!(this.containerId && Number.isInteger(this.x) && Number.isInteger(this.y));
   }
 }
