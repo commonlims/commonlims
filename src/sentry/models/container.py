@@ -52,14 +52,3 @@ class ContainerType(Model):
         db_table = 'sentry_container_type'
 
     __repr__ = sane_repr('name')
-
-
-class ContainerLocationProperties(Model):
-    """
-    Properties for a container location (e.g. a well). Used to e.g.
-    """
-    __core__ = True
-
-    # Specifies that this location is not allowed
-    allowed = models.BooleanField('allowed')
-    container_type = FlexibleForeignKey('ContainerType')
