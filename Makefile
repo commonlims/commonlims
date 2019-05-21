@@ -22,7 +22,7 @@ reset-db:
 	@echo "--> Creating 'sentry' database"
 	createdb -E utf-8 sentry
 	@echo "--> Applying migrations"
-	sentry upgrade
+	lims upgrade
 
 clean:
 	@echo "--> Cleaning static cache"
@@ -131,7 +131,7 @@ test-styleguide:
 	@npm run snapshot
 	@echo ""
 
-test-python: 
+test-python:
 	@echo "--> Running Python tests"
 	py.test tests/integration tests/sentry --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
 	@echo ""
