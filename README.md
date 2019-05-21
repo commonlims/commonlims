@@ -4,4 +4,5 @@ Common LIMS is a framework for building custom LIMS systems for labs. It's built
 
 The system is designed to be highly extensible, allowing different sites to share their domain knowledge through plugins. These plugins include both UI components and executable code as well as domain specific objects and workflows.
 
-More details are available in the document docs/development.md.
+Please take a look at the [documentation](docs/README.md)
+
