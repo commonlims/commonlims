@@ -98,7 +98,7 @@ export class SampleContainer extends React.Component {
           <SampleWell
             hasContents={hasContents}
             //isHighlighted={wellLocation.highlightTransition}
-            isHighlightedBackground={wellBackgroundHighlighted}
+            inHoveredRowOrColumn={wellBackgroundHighlighted}
             onSampleWellClick={onWellClick}
             onSampleWellMouseOver={this.onSampleWellMouseOver.bind(this)}
             row={r}

@@ -47,6 +47,8 @@ class SampleWell extends React.Component {
 
   getWellClassName() {
     const { isTransitionSource } = this.state;
+    const { inHoveredRowOrColumn } = this.props;
+
     let className = 'sample-well';
 
     if (isTransitionSource) {
@@ -55,7 +57,7 @@ class SampleWell extends React.Component {
       className = `${className} highlighted`;
     }
 
-    if (this.props.isHighlightedBackground) {
+    if (inHoveredRowOrColumn) {
       className = `${className} highlighted-background`;
     }
 
@@ -104,11 +106,10 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
-  // TODO: many of these should be handled internally only.
   onSampleWellClick: PropTypes.func.isRequired,
   onSampleWellMouseOver: PropTypes.func.isRequired,
-  isHighlighted: PropTypes.bool,
-  isHighlightedBackground: PropTypes.bool,
+  isHighlighted: PropTypes.bool, // TODO: this should be handled internally only.
+  inHoveredRowOrColumn: PropTypes.bool,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
 };
@@ -116,7 +117,7 @@ SampleWell.propTypes = {
 SampleWell.defaultProps = {
   isSelected: false,
   isHighlighted: false,
-  isHighlightedBackground: false,
+  inHoveredRowOrColumn: false,
 };
 
 export default SampleWell;
