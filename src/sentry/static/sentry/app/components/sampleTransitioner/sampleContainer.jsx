@@ -97,7 +97,6 @@ export class SampleContainer extends React.Component {
         cols.push(
           <SampleWell
             hasContents={hasContents}
-            //isSelected={wellLocation.isSelected}
             //isHighlighted={wellLocation.highlightTransition}
             isHighlightedBackground={wellBackgroundHighlighted}
             onSampleWellClick={onWellClick}

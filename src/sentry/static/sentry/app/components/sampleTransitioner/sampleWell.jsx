@@ -46,9 +46,10 @@ class SampleWell extends React.Component {
   }
 
   getWellClassName() {
+    const { isTransitionSource } = this.state;
     let className = 'sample-well';
 
-    if (this.props.isSelected) {
+    if (isTransitionSource) {
       className = `${className} selected`;
     } else if (this.props.isHighlighted) {
       className = `${className} highlighted`;
@@ -106,7 +107,6 @@ SampleWell.propTypes = {
   // TODO: many of these should be handled internally only.
   onSampleWellClick: PropTypes.func.isRequired,
   onSampleWellMouseOver: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool,
   isHighlighted: PropTypes.bool,
   isHighlightedBackground: PropTypes.bool,
   row: PropTypes.number.isRequired,
