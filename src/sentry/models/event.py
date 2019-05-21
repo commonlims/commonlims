@@ -30,6 +30,10 @@ from sentry.utils.safe import get_path
 from sentry.utils.strings import truncatechars
 
 
+def ref_func(x):
+    return x.project_id or x.project.id
+
+
 class Event(Model):
     """
     An individual event.
@@ -46,7 +50,7 @@ class Event(Model):
     data = NodeField(
         blank=True,
         null=True,
-        ref_func=lambda x: x.project_id or x.project.id,
+        ref_func=ref_func,
         ref_version=2,
         wrapper=CanonicalKeyDict,
     )
