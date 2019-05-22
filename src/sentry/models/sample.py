@@ -45,8 +45,3 @@ class Sample(Model):
         unique_together = (('project', 'name'), )
 
     __repr__ = sane_repr('project_id', 'name')
-
-
-class SampleBatch(Model):
-    __core__ = True  # TODO: how is this used?
-    pass
