@@ -43,6 +43,14 @@ class SampleContainerStack extends React.Component {
     this.props.onWellClicked(well, sampleLocation, sampleId);
   }
 
+  onSampleWellMouseOver(well, sampleId) {
+    if(!this.props.onWellMouseOver) {
+      return;
+    }
+    const sampleLocation = new SampleLocation(this.state.container.id, well.props.col, well.props.row);
+    this.props.onWellMouseOver(well, sampleLocation, sampleId);
+  }
+
   render() {
     const containerType = this.props.source
       ? SampleContainerType.SOURCE
@@ -74,6 +82,7 @@ class SampleContainerStack extends React.Component {
               containerTypeName={this.state.container.typeName}
               containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
+	      onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               samples={samples}
             />
           </PanelBody>
@@ -86,6 +95,7 @@ class SampleContainerStack extends React.Component {
 SampleContainerStack.propTypes = {
   title: PropTypes.string,
   onWellClicked: PropTypes.func,
+  onWellMouseOver: PropTypes.func,  
   canAdd: PropTypes.bool,
   canRemove: PropTypes.bool,
   containers: PropTypes.array,

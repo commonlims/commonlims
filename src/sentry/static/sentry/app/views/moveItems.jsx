@@ -107,13 +107,14 @@ class MoveItems extends React.Component {
   completeCurrentSampleTransition() {
     // TODO: should we de-dupe sample transitions here,
     // or leave that to the API?
-    const { sampleTransitions } = this.state;
+    const { sampleTransitions, currentSampleTransitionSourceWell } = this.state;
     const currentSampleTransition = this.getCurrentSampleTransition();
 
     if (currentSampleTransition.isComplete()) {
       // This is a hack! TODO: We should invoke an action to update the state.
       const updatedSampleTransitions = sampleTransitions.concat(currentSampleTransition);
       this.setState({ sampleTransitions: updatedSampleTransitions });
+      currentSampleTransitionSourceWell.removeAsTransitionSource();
       return true;
     } else {
       return false;
@@ -158,8 +159,18 @@ class MoveItems extends React.Component {
         this.setCurrentSampleTransition(null);
       }
     }
+  }
 
-    // TODO: call setAsTransitionTarget(); // See onSourceWellClicked
+  onSourceWellMouseOver(well, sampleLocation, containsSampleId) {
+    const { sampleTransitions } = this.state;
+
+    // If an empty well was hovered, ignore
+    if (!containsSampleId || !sampleLocation.valid()) {
+      return;
+    }
+
+    // TODO: store references to the sample wells when creating them so we can find them later.
+    // Then, Find all transitions for this well and highlight them.
   }
 
   // For now we assume all samples fetched are mapped to source containers.
@@ -176,6 +187,7 @@ class MoveItems extends React.Component {
               canRemove={false}
               containers={this.state.sourceSampleContainers}
               onWellClicked={this.onSourceWellClicked.bind(this)}
+	      onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
               samples={this.props.sampleBatch.samples}
             />
@@ -191,6 +203,7 @@ class MoveItems extends React.Component {
             />
           </div>
         </div>
+        {JSON.stringify(this.state.sampleTransitions)}
       </div>
     );
   }

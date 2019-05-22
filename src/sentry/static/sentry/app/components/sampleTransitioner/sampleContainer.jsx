@@ -94,13 +94,19 @@ export class SampleContainer extends React.Component {
           this.props.onWellClicked(well, sampleId);
         };
 
+        const onWellMouseOver = well => {
+	  if(this.props.onWellMouseOver) {
+	    this.props.onWellMouseOver(well, sampleId);
+	  }
+        };
+
         cols.push(
           <SampleWell
             hasContents={hasContents}
             //isHighlighted={wellLocation.highlightTransition}
             inHoveredRowOrColumn={wellBackgroundHighlighted}
             onSampleWellClick={onWellClick}
-            onSampleWellMouseOver={this.onSampleWellMouseOver.bind(this)}
+            onSampleWellMouseOver={onWellMouseOver}
             row={r}
             col={c}
             key={key}
@@ -135,6 +141,7 @@ export class SampleContainer extends React.Component {
 
 SampleContainer.propTypes = {
   onWellClicked: PropTypes.func, // TODO: make isRequired
+  onWellMouseOver: PropTypes.func, // TODO: make isRequired
   containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
   id: PropTypes.string.isRequired, // TODO: change to number
   cols: PropTypes.number.isRequired,

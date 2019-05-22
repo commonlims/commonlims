@@ -65,7 +65,7 @@ class SampleWell extends React.Component {
   }
 
   handleMouseOver() {
-    this.props.onSampleWellMouseOver(this.props.row, this.props.col);
+    this.props.onSampleWellMouseOver(this);
   }
 
   handleClick() {
