@@ -10,7 +10,8 @@ from sentry.api.content_negotiation import ConditionalContentNegotiation
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.serializers import serialize
-from sentry.models import File, UserTask, UserTaskFile
+from sentry.models import File
+from clims.models import UserTask, UserTaskFile
 from sentry.api.bases.user_task import UserTaskBaseEndpoint
 
 ERR_FILE_EXISTS = 'A file matching this name already exists for the given UserTask'

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from rest_framework.response import Response
 from sentry.api.bases.user_task import UserTaskBaseEndpoint
 from sentry.api.bases.organization import OrganizationEndpoint
-from sentry.models import UserTask
+from clims.models import UserTask
 from sentry.models.activity import Activity
 from sentry.api.serializers import serialize
 from sentry.api.paginator import OffsetPaginator
@@ -705,9 +705,7 @@ class UserTaskDetailsEndpoint(UserTaskBaseEndpoint):
 
 class UserTaskDetailsActivityEndpoint(UserTaskBaseEndpoint):
     def get(self, request, user_task_id):
-        return Response("", 200);
-
-
+        return Response("", 200)
 
         user_task = UserTask.objects.get(pk=user_task_id)
 

@@ -24,7 +24,7 @@ class UserTaskFile(Model):
     __core__ = False
 
     organization = FlexibleForeignKey('sentry.Organization')
-    user_task = FlexibleForeignKey('sentry.UserTask')
+    user_task = FlexibleForeignKey('clims.UserTask')
     file = FlexibleForeignKey('sentry.File')
     ident = models.CharField(max_length=40)
     name = models.TextField()
@@ -34,8 +34,8 @@ class UserTaskFile(Model):
     class Meta:
         unique_together = (('user_task', 'ident'), )
         index_together = (('user_task', 'name'), )
-        app_label = 'sentry'
-        db_table = 'sentry_usertaskfile'
+        app_label = 'clims'
+        db_table = 'clims_usertaskfile'
 
     def save(self, *args, **kwargs):
         if not self.ident and self.name:

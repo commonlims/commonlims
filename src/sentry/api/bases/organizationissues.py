@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from sentry.api.base import EnvironmentMixin
 from sentry.api.serializers import serialize
 from sentry.api.paginator import OffsetPaginator
-from sentry.models import (UserTask, UserTaskStatus, OrganizationMemberTeam, Project, ProjectStatus)
+from clims.models import UserTask, UserTaskStatus
 
 from .organizationmember import OrganizationMemberEndpoint
 
@@ -21,10 +21,6 @@ class OrganizationIssuesEndpoint(OrganizationMemberEndpoint, EnvironmentMixin):
         """
         Return a list of issues assigned to the given member.
         """
-        stats_period = request.GET.get('statsPeriod')
-        if stats_period:
-            print("stats period is not used anymore")
-
         queryset = self.get_queryset(request, organization, member, [])
         status = request.GET.get('status', 'unresolved')
         if status == 'unresolved':

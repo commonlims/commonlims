@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from django.conf import settings
 from django.db import IntegrityError, models, transaction
-from django.db.models import Q
 from django.utils import timezone
 
 from sentry.db.models import (
@@ -10,7 +9,7 @@ from sentry.db.models import (
 )
 
 
-class GroupSubscriptionReason(object):
+class UserTaskSubscriptionReason(object):
     implicit = -1  # not for use as a persisted field value
     committed = -2  # not for use as a persisted field value
     processing_issue = -3  # not for use as a persisted field value
@@ -49,35 +48,12 @@ class GroupSubscriptionReason(object):
     }
 
 
-def get_user_options(key, user_ids, project, default):
-    from sentry.models import UserOption
-
-    options = {
-        (option.user_id, option.project_id): option.value
-        for option in
-        UserOption.objects.filter(
-            Q(project__isnull=True) | Q(project=project),
-            user_id__in=user_ids,
-            key='workflow:notifications',
-        )
-    }
-
-    results = {}
-
-    for user_id in user_ids:
-        results[user_id] = options.get(
-            (user_id, project.id),
-            options.get(
-                (user_id, None),
-                default,
-            ),
-        )
-
-    return results
+def get_user_options(key, user_ids, default):
+    raise NotImplementedError("Remove project relation")
 
 
-class GroupSubscriptionManager(BaseManager):
-    def subscribe(self, group, user, reason=GroupSubscriptionReason.unknown):
+class UserTaskSubscriptionManager(BaseManager):
+    def subscribe(self, user_task, user, reason=UserTaskSubscriptionReason.unknown):
         """
         Subscribe a user to an issue, but only if the user has not explicitly
         unsubscribed.
@@ -86,27 +62,26 @@ class GroupSubscriptionManager(BaseManager):
             with transaction.atomic():
                 self.create(
                     user=user,
-                    group=group,
-                    project=group.project,
+                    user_task=user_task,
                     is_active=True,
                     reason=reason,
                 )
         except IntegrityError:
             pass
 
-    def subscribe_actor(self, group, actor, reason=GroupSubscriptionReason.unknown):
+    def subscribe_actor(self, user_task, actor, reason=UserTaskSubscriptionReason.unknown):
         from sentry.models import User, Team
 
         if isinstance(actor, User):
-            return self.subscribe(group, actor, reason)
+            return self.subscribe(user_task, actor, reason)
         if isinstance(actor, Team):
             # subscribe the members of the team
             team_users_ids = list(actor.member_set.values_list('user_id', flat=True))
-            return self.bulk_subscribe(group, team_users_ids, reason)
+            return self.bulk_subscribe(user_task, team_users_ids, reason)
 
         raise NotImplementedError('Unknown actor type: %r' % type(actor))
 
-    def bulk_subscribe(self, group, user_ids, reason=GroupSubscriptionReason.unknown):
+    def bulk_subscribe(self, user_task, user_ids, reason=UserTaskSubscriptionReason.unknown):
         """
         Subscribe a list of user ids to an issue, but only if the users are not explicitly
         unsubscribed.
@@ -117,17 +92,15 @@ class GroupSubscriptionManager(BaseManager):
         # concurrent subscription attempts cause integrity errors
         for i in range(4, -1, -1):  # 4 3 2 1 0
 
-            existing_subscriptions = set(GroupSubscription.objects.filter(
+            existing_subscriptions = set(UserTaskSubscription.objects.filter(
                 user_id__in=user_ids,
-                group=group,
-                project=group.project,
+                user_task=user_task,
             ).values_list('user_id', flat=True))
 
             subscriptions = [
-                GroupSubscription(
+                UserTaskSubscription(
                     user_id=user_id,
-                    group=group,
-                    project=group.project,
+                    user_task=user_task,
                     is_active=True,
                     reason=reason,
                 )
@@ -143,17 +116,18 @@ class GroupSubscriptionManager(BaseManager):
                 if i == 0:
                     raise e
 
-    def get_participants(self, group):
+    def get_participants(self, user_task):
         """
         Identify all users who are participating with a given issue.
         """
+        raise NotImplementedError("Require teams per org")
         from sentry.models import User, UserOptionValue
 
         users = {
             user.id: user
             for user in
             User.objects.filter(
-                sentry_orgmember_set__teams=group.project.teams.all(),
+                sentry_orgmember_set__teams=user_task.project.teams.all(),
                 is_active=True,
             )
         }
@@ -163,8 +137,8 @@ class GroupSubscriptionManager(BaseManager):
         subscriptions = {
             subscription.user_id: subscription
             for subscription in
-            GroupSubscription.objects.filter(
-                group=group,
+            UserTaskSubscription.objects.filter(
+                user_task=user_task,
                 user_id__in=users.keys(),
             )
         }
@@ -176,7 +150,6 @@ class GroupSubscriptionManager(BaseManager):
         options = get_user_options(
             'workflow:notifications',
             users.keys(),
-            group.project,
             UserOptionValue.all_conversations,
         )
 
@@ -197,32 +170,31 @@ class GroupSubscriptionManager(BaseManager):
             if subscription is not None:
                 results[user] = subscription.reason
             else:
-                results[user] = GroupSubscriptionReason.implicit
+                results[user] = UserTaskSubscriptionReason.implicit
 
         return results
 
 
-class GroupSubscription(Model):
+class UserTaskSubscription(Model):
     """
     Identifies a subscription relationship between a user and an issue.
     """
     __core__ = False
 
-    project = FlexibleForeignKey('sentry.Project', related_name="subscription_set")
-    group = FlexibleForeignKey('sentry.Group', related_name="subscription_set")
+    user_task = FlexibleForeignKey('clims.UserTask', related_name="subscription_set")
     # namespace related_name on User since we don't own the model
     user = FlexibleForeignKey(settings.AUTH_USER_MODEL)
     is_active = models.BooleanField(default=True)
     reason = BoundedPositiveIntegerField(
-        default=GroupSubscriptionReason.unknown,
+        default=UserTaskSubscriptionReason.unknown,
     )
     date_added = models.DateTimeField(default=timezone.now, null=True)
 
-    objects = GroupSubscriptionManager()
+    objects = UserTaskSubscriptionManager()
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_groupsubscription'
-        unique_together = (('group', 'user'), )
+        app_label = 'clims'
+        db_table = 'clims_usertasksubscription'
+        unique_together = (('user_task', 'user'), )
 
-    __repr__ = sane_repr('project_id', 'group_id', 'user_id')
+    __repr__ = sane_repr('user_task_id', 'user_id')

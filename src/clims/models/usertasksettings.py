@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 # NOTE: UserTaskSettings and related objects are not Django models. They are created when the plugin
 # is registered and possibly cached in redis.
 
@@ -109,7 +111,8 @@ class UserTaskAction(object):
 
 
 class UserTaskField(object):
-    def __init__(self, field_name, title, description=None, required=False, details=False, order=None):
+    def __init__(self, field_name, title, description=None,
+                 required=False, details=False, order=None):
         self.field_name = field_name
         self.title = title
         self.description = description

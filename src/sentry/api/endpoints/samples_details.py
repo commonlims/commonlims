@@ -12,7 +12,7 @@ from sentry.api.serializers import serialize
 from sentry.api.serializers.models.sample import SampleSerializer
 
 from sentry.models import ApiApplication, ApiApplicationStatus
-from sentry.models.sample import Sample
+from clims.models.sample import Sample
 from sentry.tasks.deletion import delete_api_application
 
 delete_logger = logging.getLogger('sentry.deletions.api')

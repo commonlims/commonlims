@@ -20,8 +20,8 @@ class Container(Model):
     name = models.TextField(null=True)
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_container'
+        app_label = 'clims'
+        db_table = 'clims_container'
 
     __repr__ = sane_repr('container_type_id', 'name')
 
@@ -48,7 +48,7 @@ class ContainerType(Model):
     levels = models.IntegerField('levels', default=1)
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_container_type'
+        app_label = 'clims'
+        db_table = 'clims_container_type'
 
     __repr__ = sane_repr('name')

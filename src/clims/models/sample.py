@@ -40,8 +40,8 @@ class Sample(Model):
         return "{}:{}:{}".format(self.name, self.depth, self.version)
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_sample'
+        app_label = 'clims'
+        db_table = 'clims_sample'
         unique_together = (('project', 'name'), )
 
     __repr__ = sane_repr('project_id', 'name')

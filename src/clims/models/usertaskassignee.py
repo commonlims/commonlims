@@ -1,5 +1,5 @@
 """
-sentry.models.usertaskassignee
+clims.models.usertaskassignee
 
 sentry.models.groupassignee
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7,10 +7,7 @@ sentry.models.groupassignee
 :license: BSD, see LICENSE for more details.
 """
 from __future__ import absolute_import
-import logging
 import six
-
-from collections import defaultdict
 
 from django.conf import settings
 from django.db import models
@@ -25,8 +22,8 @@ from sentry.utils import metrics
 
 class UserTaskAssigneeManager(BaseManager):
     def assign(self, user_task, assigned_to, acting_user=None):
-        from sentry import features
-        from sentry.models import User, Team, UserTaskSubscription, UserTaskSubscriptionReason
+        from sentry.models import User, Team
+        from clims.models import UserTaskSubscription, UserTaskSubscriptionReason
 
         UserTaskSubscription.objects.subscribe_actor(
             user_task=user_task,
@@ -85,7 +82,6 @@ class UserTaskAssigneeManager(BaseManager):
             metrics.incr('user_task.assignee.change', instance='assigned', skip_internal=True)
 
     def deassign(self, user_task, acting_user=None):
-        from sentry import features
         affected = UserTaskAssignee.objects.filter(
             user_task=user_task,
         )[:1].count()
@@ -113,7 +109,7 @@ class UserTaskAssignee(Model):
     objects = UserTaskAssigneeManager()
 
     organization = FlexibleForeignKey('sentry.Organization', related_name="assignee_set")
-    user_task = FlexibleForeignKey('sentry.UserTask', related_name="assignee_set", unique=True)
+    user_task = FlexibleForeignKey('clims.UserTask', related_name="assignee_set", unique=True)
     user = FlexibleForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="sentry_assignee_set",
@@ -125,8 +121,8 @@ class UserTaskAssignee(Model):
     date_added = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_usertaskasignee'
+        app_label = 'clims'
+        db_table = 'clims_usertaskasignee'
 
     __repr__ = sane_repr('user_task_id', 'user_id', 'team_id')
 

@@ -18,6 +18,8 @@ from sentry.db.models import (
 from sentry.tasks import activity
 
 
+# TODO: Since this uses the UserTask, consider moving it to clims (or move UserTask to sentry) so
+# sentry doesn't require clims (clims can require sentry)
 class Activity(Model):
     __core__ = False
 
@@ -69,7 +71,7 @@ class Activity(Model):
     )
 
     project = FlexibleForeignKey('sentry.Project')
-    user_task = FlexibleForeignKey('sentry.UserTask', null=True)
+    user_task = FlexibleForeignKey('clims.UserTask', null=True)
     group = FlexibleForeignKey('sentry.Group', null=True)
     # index on (type, ident)
     type = BoundedPositiveIntegerField(choices=TYPE)

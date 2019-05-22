@@ -43,5 +43,5 @@ class UserTask(Model):
     )
 
     class Meta:
-        app_label = 'sentry'
-        db_table = 'sentry_usertask'
+        app_label = 'clims'
+        db_table = 'clims_usertask'
