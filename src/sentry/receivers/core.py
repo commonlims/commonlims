@@ -40,23 +40,12 @@ def create_default_projects(created_models, app=None, verbosity=2, **kwargs):
     if app and app.__name__ != 'sentry.models':
         return
 
-    if Project not in created_models:
-        return
-
     create_default_project(
         id=settings.SENTRY_PROJECT,
         name='Internal',
         slug='internal',
         verbosity=verbosity,
     )
-
-    if settings.SENTRY_FRONTEND_PROJECT:
-        create_default_project(
-            id=settings.SENTRY_FRONTEND_PROJECT,
-            name='Frontend',
-            slug='frontend',
-            verbosity=verbosity,
-        )
 
 
 def create_default_project(id, name, slug, verbosity=2, **kwargs):
