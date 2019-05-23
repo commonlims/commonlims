@@ -47,6 +47,7 @@ class SampleContainerStack extends React.Component {
     if(!this.props.onWellMouseOver) {
       return;
     }
+
     const sampleLocation = new SampleLocation(this.state.container.id, well.props.col, well.props.row);
     this.props.onWellMouseOver(well, sampleLocation, sampleId);
   }
@@ -59,6 +60,8 @@ class SampleContainerStack extends React.Component {
     const samples = this.props.samples.filter(
       s => s.location.containerId === this.state.container.id
     );
+
+    const { highlightLocations } = this.props;
 
     return (
       <div style={{display: 'inline-block', minWidth: '540px'}}>
@@ -82,8 +85,9 @@ class SampleContainerStack extends React.Component {
               containerTypeName={this.state.container.typeName}
               containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
-	      onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
+              onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               samples={samples}
+              highlightLocations={highlightLocations}
             />
           </PanelBody>
         </Panel>
@@ -95,13 +99,15 @@ class SampleContainerStack extends React.Component {
 SampleContainerStack.propTypes = {
   title: PropTypes.string,
   onWellClicked: PropTypes.func,
-  onWellMouseOver: PropTypes.func,  
+  onWellMouseOver: PropTypes.func,
   canAdd: PropTypes.bool,
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
   source: PropTypes.bool,
-  // TODO: samples will be mapped directly to containers later
+  // TODO: format these properly
+  // or, samples will be mapped directly to containers later
   samples: PropTypes.arrayOf(PropTypes.shape()),
+  highlightLocations: PropTypes.arrayOf(PropTypes.shape()),
 };
 
 SampleContainerStack.defaultProps = {

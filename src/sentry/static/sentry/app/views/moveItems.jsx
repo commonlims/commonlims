@@ -91,8 +91,10 @@ class MoveItems extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       currentSampleTransition: null,
-      // TODO: is this the best way of doing things?
+      // TODO: we should not be storing components in state
+      // Store a ref if we must.
       currentSampleTransitionSourceWell: null,
+      highlightLocations: [],
     };
   }
 
@@ -169,14 +171,27 @@ class MoveItems extends React.Component {
       return;
     }
 
-    // TODO: store references to the sample wells when creating them so we can find them later.
     // Then, Find all transitions for this well and highlight them.
+    const filtered = sampleTransitions.filter(t => {
+      const sl = t.sourceLocation;
+      const { containerId, x, y } = sampleLocation;
+      return sl.containerId == containerId &&  sl.x == x && sl.y == y;
+    });
+
+    const highlightLocations = filtered.map(f => f.targetLocation);
+    this.setState({ highlightLocations });
   }
 
   // For now we assume all samples fetched are mapped to source containers.
   // TODO: These could potentially be mapped to source OR target containers.
   // (Perhaps transitions have already been created and the result samples are in the target containers)
   render() {
+    // TODO: only pass the transitions that are relevant to each container.
+    const { highlightLocations } = this.state;
+
+    // TODO: we should pass samples to the target container stack as well,
+    // since we may be rendering this after fetching previously created transitions
+    // from the api.
     return (
       <div className="sample-transitioner">
         <div className="row">
@@ -187,9 +202,10 @@ class MoveItems extends React.Component {
               canRemove={false}
               containers={this.state.sourceSampleContainers}
               onWellClicked={this.onSourceWellClicked.bind(this)}
-	      onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
+              onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
               samples={this.props.sampleBatch.samples}
+              highlightLocations={highlightLocations}
             />
           </div>
           <div className="col-md-6">
@@ -200,6 +216,7 @@ class MoveItems extends React.Component {
               containers={this.state.targetSampleContainers}
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
+              highlightLocations={highlightLocations}
             />
           </div>
         </div>

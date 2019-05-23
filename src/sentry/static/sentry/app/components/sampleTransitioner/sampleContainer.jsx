@@ -84,27 +84,40 @@ export class SampleContainer extends React.Component {
         const sample = rowSamples.find(s => s.location.col === c);
         const sampleId = sample ? sample.id : null;
 
-        // Determine state. Currently only works for samples.
-        // TODO: implement for transitions. See location.js
         const hasContents = !!sample;
-        const wellBackgroundHighlighted =
+
+        // The background should be highlighted if this row is in
+        // the hovered row or coumn.
+        const isHoveredRowOrColumn =
           this.state.hoverRow == r || this.state.hoverCol === c;
+
+        // The sample well should be highlighted if it is the target of
+        // a transition of the currently hovered sample.
+        const { highlightLocations } = this.props;
+
+        const isTransitionTargetOfHoveredSample = highlightLocations.find(tl => {
+          return tl.containerId == this.props.id && tl.x == c && tl.y == r;
+        });
 
         const onWellClick = well => {
           this.props.onWellClicked(well, sampleId);
         };
 
         const onWellMouseOver = well => {
-	  if(this.props.onWellMouseOver) {
-	    this.props.onWellMouseOver(well, sampleId);
-	  }
+          if (this.state.hoverRow != r || this.state.hoverCol != c) {
+            this.setState({hoverRow: r, hoverCol: c});
+          }
+
+          if (this.props.onWellMouseOver) {
+            this.props.onWellMouseOver(well, sampleId);
+          }
         };
 
         cols.push(
           <SampleWell
             hasContents={hasContents}
-            //isHighlighted={wellLocation.highlightTransition}
-            inHoveredRowOrColumn={wellBackgroundHighlighted}
+            isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
+            inHoveredRowOrColumn={isHoveredRowOrColumn}
             onSampleWellClick={onWellClick}
             onSampleWellMouseOver={onWellMouseOver}
             row={r}
@@ -116,12 +129,6 @@ export class SampleContainer extends React.Component {
       rows.push(<tr>{cols}</tr>);
     }
     return rows;
-  }
-
-  onSampleWellMouseOver(row, col) {
-    if (this.state.hoverRow != row || this.state.hoverCol != col) {
-      this.setState({hoverRow: row, hoverCol: col});
-    }
   }
 
   onMouseOut() {
@@ -150,6 +157,7 @@ SampleContainer.propTypes = {
   containerTypeName: PropTypes.string.isRequired,
 
   // TODO: implement these new prop types
+  // highlightLocations: PropTypes.arrayOf(),
   /*samples: PropTypes.arrayOf(
     PropTypes.shape({
       col: PropTypes.number.isRequired,
