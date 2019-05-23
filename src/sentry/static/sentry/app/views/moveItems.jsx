@@ -182,6 +182,10 @@ class MoveItems extends React.Component {
     this.setState({ highlightLocations });
   }
 
+  onMouseOut() {
+    this.setState({ highlightLocations: [] });
+  }
+
   // For now we assume all samples fetched are mapped to source containers.
   // TODO: These could potentially be mapped to source OR target containers.
   // (Perhaps transitions have already been created and the result samples are in the target containers)
@@ -206,6 +210,7 @@ class MoveItems extends React.Component {
               source={true}
               samples={this.props.sampleBatch.samples}
               highlightLocations={highlightLocations}
+              onMouseOut={this.onMouseOut.bind(this)}
             />
           </div>
           <div className="col-md-6">
@@ -217,6 +222,7 @@ class MoveItems extends React.Component {
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               highlightLocations={highlightLocations}
+              onMouseOut={this.onMouseOut.bind(this)}
             />
           </div>
         </div>

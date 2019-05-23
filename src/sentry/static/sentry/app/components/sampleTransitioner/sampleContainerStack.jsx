@@ -86,6 +86,7 @@ class SampleContainerStack extends React.Component {
               containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
+              onMouseOut={this.props.onMouseOut}
               samples={samples}
               highlightLocations={highlightLocations}
             />
@@ -100,6 +101,7 @@ SampleContainerStack.propTypes = {
   title: PropTypes.string,
   onWellClicked: PropTypes.func,
   onWellMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func.isRequired,
   canAdd: PropTypes.bool,
   canRemove: PropTypes.bool,
   containers: PropTypes.array,

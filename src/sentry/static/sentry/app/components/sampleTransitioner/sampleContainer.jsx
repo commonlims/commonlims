@@ -135,6 +135,10 @@ export class SampleContainer extends React.Component {
     if (this.state.hoverRow || this.state.hoverCol) {
       this.setState({hoverRow: null, hoverCol: null});
     }
+
+    if (this.props.onMouseOut) {
+      this.props.onMouseOut();
+    }
   }
 
   render() {
@@ -149,6 +153,7 @@ export class SampleContainer extends React.Component {
 SampleContainer.propTypes = {
   onWellClicked: PropTypes.func, // TODO: make isRequired
   onWellMouseOver: PropTypes.func, // TODO: make isRequired
+  onMouseOut: PropTypes.func,
   containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
   id: PropTypes.string.isRequired, // TODO: change to number
   cols: PropTypes.number.isRequired,
