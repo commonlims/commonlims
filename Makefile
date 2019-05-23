@@ -23,6 +23,8 @@ reset-db:
 	createdb -E utf-8 sentry
 	@echo "--> Applying migrations"
 	lims upgrade
+	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"
+	lims createuser --email admin@localhost --password changeit --superuser --no-input
 
 clean:
 	@echo "--> Cleaning static cache"
