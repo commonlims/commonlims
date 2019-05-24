@@ -1,4 +1,4 @@
-include setup.py src/sentry/assets.json README.rst MANIFEST.in LICENSE AUTHORS
+include setup.py src/sentry/assets.json README.md MANIFEST.in LICENSE AUTHORS
 include src/sentry/loader/_registry.json
 recursive-include ./ requirements*.txt
 recursive-include src/sentry/templates *

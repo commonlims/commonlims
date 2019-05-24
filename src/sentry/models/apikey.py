@@ -47,7 +47,7 @@ class ApiKey(Model):
                                              'member:write'), ('member:admin', 'member:admin'),
         )
     )
-    scope_list = ArrayField(of=models.TextField)
+    scope_list = ArrayField()
     status = BoundedPositiveIntegerField(
         default=0,
         choices=((ApiKeyStatus.ACTIVE, _('Active')), (ApiKeyStatus.INACTIVE, _('Inactive')), ),

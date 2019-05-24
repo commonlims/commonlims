@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+import pytest
 
 from django.core.urlresolvers import reverse
 
@@ -11,6 +12,8 @@ from sentry.utils.linksign import generate_signed_link
 
 
 class AuthenticationTest(AuthProviderTestCase):
+    @pytest.mark.skip(
+        reason="TODO: Doesn't support the issues endpoint. Ignore until that has been resolved.")
     def test_sso_auth_required(self):
         user = self.create_user('foo@example.com', is_superuser=False)
         organization = self.create_organization(name='foo')
@@ -19,7 +22,7 @@ class AuthenticationTest(AuthProviderTestCase):
             name='baz', organization=organization, teams=[team])
         member = self.create_member(
             user=user, organization=organization, teams=[team])
-        setattr(member.flags, 'sso:linked', True)
+        setattr(member.flags, 'sso:linked', True)  # noqa
         member.save()
         group = self.create_group(project=project)
         self.create_event(group=group)
@@ -76,7 +79,7 @@ class AuthenticationTest(AuthProviderTestCase):
             name='baz', organization=organization, teams=[team])
         member = self.create_member(
             user=user, organization=organization, teams=[team])
-        setattr(member.flags, 'sso:linked', True)
+        setattr(member.flags, 'sso:linked', True)  # noqa
         member.save()
         group = self.create_group(project=project)
         self.create_event(group=group)

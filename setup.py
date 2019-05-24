@@ -130,7 +130,7 @@ setup(
     author_email='hello@sentry.io',
     url='https://sentry.io',
     description='A realtime logging and aggregation server.',
-    long_description=open(os.path.join(ROOT, 'README.rst')).read(),
+    long_description=open(os.path.join(ROOT, 'README.md')).read(),
     package_dir={'': 'src'},
     packages=find_packages('src'),
     zip_safe=False,

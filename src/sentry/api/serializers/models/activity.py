@@ -1,11 +1,9 @@
 from __future__ import absolute_import
 
-import functools
 import six
 
 from sentry.api.serializers import Serializer, register, serialize
-from sentry.models import Activity, Commit, UserTask, PullRequest
-from sentry.utils.functional import apply_values
+from sentry.models import Activity, Commit, PullRequest
 
 
 @register(Activity)
@@ -46,27 +44,10 @@ class ActivitySerializer(Serializer):
         else:
             pull_requests = {}
 
-        groups = apply_values(
-            functools.partial(serialize, user=user),
-            Group.objects.in_bulk(
-                set(
-                    i.data['source_id'] for i in item_list if i.type == Activity.UNMERGE_DESTINATION
-                ) | set(
-                    i.data['destination_id'] for i in item_list if i.type == Activity.UNMERGE_SOURCE
-                )
-            )
-        )
-
         return {
             item: {
                 'user':
                 users[six.text_type(item.user_id)] if item.user_id else None,
-                'source':
-                groups.get(item.data['source_id'])
-                if item.type == Activity.UNMERGE_DESTINATION else None,
-                'destination':
-                groups.get(item.data['destination_id'])
-                if item.type == Activity.UNMERGE_SOURCE else None,
                 'commit': commits.get(item),
                 'pull_request': pull_requests.get(item),
             } for item in item_list

@@ -13,25 +13,8 @@ SOUTH = 'south' in settings.INSTALLED_APPS
 # Adapted from django-pgfields
 # https://github.com/lukesneeringer/django-pgfields/blob/master/django_pg/models/fields/array.py
 class ArrayField(models.Field):
-    def __init__(self, of=models.TextField, **kwargs):
-        # The `of` argument is a bit tricky once we need compatibility
-        # with South.
-        #
-        # South can't store a field, and the eval it performs doesn't
-        # put enough things in the context to use South's internal
-        # "get field" function (`BaseMigration.gf`).
-        #
-        # Therefore, we need to be able to accept a South triple of our
-        # sub-field and hook into South to get the correct thing back.
-        if isinstance(of, tuple) and SOUTH:
-            from south.utils import ask_for_it_by_name as gf
-            of = gf(of[0])(*of[1], **of[2])
-
-        # Arrays in PostgreSQL are arrays of a particular type.
-        # Save the subtype in our field class.
-        if isinstance(of, type):
-            of = of()
-        self.of = of
+    def __init__(self, **kwargs):
+        self.of = models.TextField()
 
         # Set "null" to True. Arrays don't have nulls, but null=True
         # in the ORM amounts to nothing in SQL (whereas null=False

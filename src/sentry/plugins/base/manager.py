@@ -16,7 +16,7 @@ import inspect
 
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
-from sentry.models.usertasksettings import UserTaskSettingsBuilder
+from clims.models.usertasksettings import UserTaskSettingsBuilder
 
 
 class PluginManager(InstanceManager):
@@ -49,7 +49,8 @@ class PluginManager(InstanceManager):
         # TODO: Not caching this load for now for simplicity, fix that in the child class
         # TODO: Don't do this with string parsing! rather similar to o.__module__.__module__
         # TODO: This is a sketch. We need to (for example) ensure that user tasks are reloaded
-        #       when the owning plugin is reloaded. For now we'll just load the object once per process.
+        # when the owning plugin is reloaded. For now we'll just load the object
+        # once per process.
 
         def builders():
             root_module = ".".join(class_path.split(".")[0:-2]) + ".user_tasks"
@@ -58,10 +59,12 @@ class PluginManager(InstanceManager):
             except ImportError:
                 return
 
-            for _, child_mod_name, _ in pkgutil.iter_modules(parent_mod.__path__, root_module + "."):
+            for _, child_mod_name, _ in pkgutil.iter_modules(
+                    parent_mod.__path__, root_module + "."):
                 child_mod = importlib.import_module(child_mod_name)
-                for name, cls in inspect.getmembers(child_mod, inspect.isclass):
-                    if (issubclass(cls, UserTaskSettingsBuilder) and cls != UserTaskSettingsBuilder):
+                for _name, cls in inspect.getmembers(child_mod, inspect.isclass):
+                    if (issubclass(cls, UserTaskSettingsBuilder)
+                            and cls != UserTaskSettingsBuilder):
                         yield cls()
 
         for builder in builders():
@@ -70,7 +73,8 @@ class PluginManager(InstanceManager):
             self.user_tasks.append(settings)
             for handles in settings.handles:
                 if handles in self.handlers_mapped_by_user_task_type:
-                    raise UserTaskRegistrationException("UserTask '{}' already has a handler".format(handles))
+                    raise UserTaskRegistrationException(
+                        "UserTask '{}' already has a handler".format(handles))
                 self.handlers_mapped_by_user_task_type[handles] = settings
 
     def all_user_tasks(self):
@@ -81,7 +85,7 @@ class PluginManager(InstanceManager):
 
         self._register_user_tasks(class_path)
 
-        #import pkgutil
+        # import pkgutil
         # for mod in pkgutil.walk_packages():
         #    print(mod)
 

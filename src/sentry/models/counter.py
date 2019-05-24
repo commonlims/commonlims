@@ -102,9 +102,6 @@ def create_counter_function(db, created_models, app=None, **kwargs):
     if not is_postgres(db):
         return
 
-    if Counter not in created_models:
-        return
-
     cursor = connections[db].cursor()
     cursor.execute(
         '''

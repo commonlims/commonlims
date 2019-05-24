@@ -21,6 +21,8 @@ class UUIDField(models.Field):
     def __init__(self, auto_add=False, coerce_to=UUID, **kwargs):
         """Instantiate the field."""
 
+        self._auto_add_argument = auto_add  # This is hacky quick fix for deconstruct
+
         # If the `auto_add` argument is specified as True, substitute an
         # appropriate callable which requires no arguments and will return
         # a UUID.
@@ -55,6 +57,14 @@ class UUIDField(models.Field):
 
         # Now pass the rest of the work to CharField.
         super(UUIDField, self).__init__(**kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super(UUIDField, self).deconstruct()
+        if self._auto_add_argument:
+            kwargs['auto_add'] = True
+        if self._coerce_to != UUID:
+            kwargs['coerce_to'] = self._coerce_to
+        return name, path, args, kwargs
 
     def db_type(self, connection):
         engine = connection.settings_dict['ENGINE']

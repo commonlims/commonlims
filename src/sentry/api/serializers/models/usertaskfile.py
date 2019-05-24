@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import six
 
 from sentry.api.serializers import Serializer, register
-from sentry.models import UserTaskFile, UserTask
+from clims.models import UserTaskFile, UserTask
 
 
 @register(UserTaskFile)
@@ -76,12 +76,21 @@ class UserTaskSerializer(Serializer):
             'processTitle': 'Reception QC',
             'processId': 'clims_snpseq.core.workflows.reception_qc',
             'subtasks': [
-                {'description': 'Place samples', 'status': 'todo', 'manualOverride': False, 'view': 'samples', 'viewType': 'tab'},
-                {'description': 'Print labels', 'status': 'todo', 'manualOverride': False, 'view': 'print_labels', 'viewType': 'popup'},
-                {'description': 'Fill required fields', 'status': 'todo', 'manualOverride': False, 'view': 'details', 'viewType': 'tab'},
-                {'description': 'Prepare QA plate', 'status': 'todo', 'manualOverride': False, 'view': 'prep', 'viewType': 'popup'},
-                {'description': 'Run fragment analyzer', 'status': 'todo', 'manualOverride': False, 'view': 'run', 'viewType': 'popup'},
-                {'description': 'All samples passed QA', 'status': 'todo', 'manualOverride': False, 'view': 'qa', 'viewType': 'tab'},
+                {'description': 'Place samples', 'status': 'todo',
+                    'manualOverride': False, 'view': 'samples', 'viewType': 'tab'},
+                {'description': 'Print labels',
+                 'status': 'todo',
+                 'manualOverride': False,
+                 'view': 'print_labels',
+                 'viewType': 'popup'},
+                {'description': 'Fill required fields', 'status': 'todo',
+                    'manualOverride': False, 'view': 'details', 'viewType': 'tab'},
+                {'description': 'Prepare QA plate', 'status': 'todo',
+                    'manualOverride': False, 'view': 'prep', 'viewType': 'popup'},
+                {'description': 'Run fragment analyzer', 'status': 'todo',
+                    'manualOverride': False, 'view': 'run', 'viewType': 'popup'},
+                {'description': 'All samples passed QA', 'status': 'todo',
+                    'manualOverride': False, 'view': 'qa', 'viewType': 'tab'},
             ],
             'files':
                 [
@@ -163,7 +172,8 @@ class UserTaskSerializer(Serializer):
             }
             ],
             # TODO: This endpoint should probably not return these settings, as some optimization
-            # will be gained from caching them longer, so break down into usertask settings and usertasks
+            # will be gained from caching them longer, so break down into usertask
+            # settings and usertasks
             'fields': [
                 {
                     "readonly": False,

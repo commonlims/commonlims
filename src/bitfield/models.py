@@ -98,6 +98,8 @@ class BitField(BigIntegerField):
             raise ValueError('Too many flags')
 
         self._arg_flags = flags
+        self._arg_default = default
+
         flags = list(flags)
         labels = []
         for num, flag in enumerate(flags):
@@ -116,6 +118,14 @@ class BitField(BigIntegerField):
         BigIntegerField.__init__(self, default=default, *args, **kwargs)
         self.flags = flags
         self.labels = labels
+
+    def deconstruct(self):
+        name, path, args, kwargs = super(BitField, self).deconstruct()
+        if self._arg_flags:
+            kwargs['flags'] = self._arg_flags
+        if self._arg_default:
+            kwargs['default'] = self._arg_default
+        return name, path, args, kwargs
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
@@ -170,11 +180,6 @@ class BitField(BigIntegerField):
             # Ensure flags are consistent for unpickling
             value._keys = self.flags
         return value
-
-    def deconstruct(self):
-        name, path, args, kwargs = super(BitField, self).deconstruct()
-        args.insert(0, self._arg_flags)
-        return name, path, args, kwargs
 
 
 try:

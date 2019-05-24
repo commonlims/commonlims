@@ -8,7 +8,7 @@ from sentry.api.base import DocSection
 from sentry.api.bases.user_task import UserTaskBaseEndpoint
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
-from sentry.models import UserTask, UserTaskFile
+from clims.models import UserTask, UserTaskFile
 try:
     from django.http import (CompatibleStreamingHttpResponse as StreamingHttpResponse)
 except ImportError:

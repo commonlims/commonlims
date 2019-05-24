@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from sentry.api.serializers import Serializer, register, serialize
-from sentry.models.usertasksettings import SubtaskSettings, UserTaskSettings, UserTaskAction, UserTaskField
+from clims.models.usertasksettings import SubtaskSettings, UserTaskSettings, UserTaskAction, UserTaskField
 
 
 @register(UserTaskSettings)
