@@ -16,7 +16,7 @@ from sentry.models import ProjectPlatform
 from sentry.plugins import plugins
 from sentry.search.utils import tokenize_query
 from clims.workflow import WorkflowEngine
-from sentry.api.serializers.models.sample import SampleSerializer
+from clims.api.serializers.models.sample import SampleSerializer
 from sentry.api.paginator import OffsetPaginator
 
 

@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from sentry.api.base import DocSection
-from sentry.api.bases.user_task import UserTaskBaseEndpoint
+from clims.api.bases.user_task import UserTaskBaseEndpoint
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework.group_notes import NoteSerializer, seperate_resolved_actors
 
@@ -106,7 +106,7 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
             type=Activity.NOTE,
             user=extract_lazy_object(request.user),
             data=data,
-            project_id=1, # TODO: should not be required
+            project_id=1,  # TODO: should not be required
         )
 
         activity.send_notification()

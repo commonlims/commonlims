@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 from sentry.api.base import DocSection
-from sentry.api.bases.user_task import UserTaskBaseEndpoint
+from clims.api.bases.user_task import UserTaskBaseEndpoint
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
 from clims.models import UserTask, UserTaskFile

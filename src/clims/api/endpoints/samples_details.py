@@ -9,7 +9,7 @@ from uuid import uuid4
 from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
-from sentry.api.serializers.models.sample import SampleSerializer
+from clims.api.serializers.models.sample import SampleSerializer
 
 from sentry.models import ApiApplication, ApiApplicationStatus
 from clims.models.sample import Sample

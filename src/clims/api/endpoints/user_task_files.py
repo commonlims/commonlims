@@ -12,7 +12,7 @@ from sentry.api.paginator import OffsetPaginator
 from sentry.api.serializers import serialize
 from sentry.models import File
 from clims.models import UserTask, UserTaskFile
-from sentry.api.bases.user_task import UserTaskBaseEndpoint
+from clims.api.bases.user_task import UserTaskBaseEndpoint
 
 ERR_FILE_EXISTS = 'A file matching this name already exists for the given UserTask'
 _filename_re = re.compile(r"[\n\t\r\f\v\\]")
