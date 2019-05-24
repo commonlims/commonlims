@@ -1,8 +1,7 @@
 from __future__ import absolute_import
 
 from sentry.api.serializers import Serializer, register
-from sentry.models.sample import Sample
-from django.forms.models import model_to_dict
+from clims.models.sample import Sample
 import six
 
 

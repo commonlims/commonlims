@@ -72,11 +72,13 @@ fragment_analyzer:
 
 # Adding models
 
-During the POC we are still keeping the models in sentry.models.
-
-* Add a model definition under ./src/sentry/models/
-* Run `lims django makemigrations --auto`
+* Add or edit a model definition under ./src/clims/models/
+* Run `lims django makemigrations`
 * Run `lims upgrade`
+
+# Resetting the database
+
+You can get a fresh install of your database by running: `make reset-db`
 
 ## Create a rest layer
 

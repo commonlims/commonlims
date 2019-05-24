@@ -268,10 +268,6 @@ INSTALLED_APPS = (
     'sentry.eventstream', 'clims'
 )
 
-import django
-if django.VERSION < (1, 9):
-    INSTALLED_APPS += ('south', )
-
 STATIC_ROOT = os.path.realpath(os.path.join(PROJECT_ROOT, 'static'))
 STATIC_URL = '/_static/{version}/'
 

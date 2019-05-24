@@ -12,7 +12,7 @@ django-jsonfield>=0.9.13,<0.9.14
 django-picklefield>=0.3.0,<0.4.0
 django-sudo>=2.1.0,<3.0.0
 django-templatetag-sugar>=0.1.0
-Django>=1.6.11,<1.7
+Django>=1.7,<1.8
 djangorestframework>=2.4.8,<2.5.0
 email-reply-parser>=0.2.0,<0.3.0
 enum34>=1.1.6,<1.2.0
@@ -39,7 +39,7 @@ Pillow>=3.2.0,<=4.2.1
 progressbar2>=3.10,<3.11
 psycopg2>=2.6.0,<2.8.0
 PyJWT>=1.5.0,<1.6.0
-pytest-django>=2.9.1,<2.10.0
+pytest-django==3.1.2
 pytest-html>=1.9.0,<1.10.0
 pytest>=3.5.0,<3.6.0
 python-dateutil>=2.0.0,<3.0.0

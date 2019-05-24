@@ -11,7 +11,7 @@ from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.serializers import serialize
 from django.db.models import Q
 from sentry.db.models.query import in_iexact
-from sentry.models import Sample
+from clims.models import Sample
 from sentry.models import ProjectPlatform
 from sentry.plugins import plugins
 from sentry.search.utils import tokenize_query

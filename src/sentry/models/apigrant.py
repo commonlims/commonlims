@@ -51,7 +51,7 @@ class ApiGrant(Model):
                                              'member:write'), ('member:admin', 'member:admin'),
         )
     )
-    scope_list = ArrayField(of=models.TextField)
+    scope_list = ArrayField()
 
     class Meta:
         app_label = 'sentry'

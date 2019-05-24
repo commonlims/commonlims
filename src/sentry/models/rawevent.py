@@ -14,6 +14,10 @@ from sentry.db.models import (Model, NodeField, FlexibleForeignKey, sane_repr)
 from sentry.utils.canonical import CanonicalKeyView
 
 
+def ref_func(x):
+    return x.project_id or x.project.id
+
+
 class RawEvent(Model):
     __core__ = False
 
@@ -23,7 +27,7 @@ class RawEvent(Model):
     data = NodeField(
         blank=True,
         null=True,
-        ref_func=lambda x: x.project_id or x.project.id,
+        ref_func=ref_func,
         ref_version=1,
         wrapper=CanonicalKeyView,
     )

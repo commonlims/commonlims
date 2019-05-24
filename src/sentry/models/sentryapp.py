@@ -95,7 +95,7 @@ class SentryApp(ParanoidModel, HasApiScopes):
     # meaning can it be used in alert rules as a {service} ?
     is_alertable = models.BooleanField(default=False)
 
-    events = ArrayField(of=models.TextField, null=True)
+    events = ArrayField(null=True)
 
     overview = models.TextField(null=True)
 
