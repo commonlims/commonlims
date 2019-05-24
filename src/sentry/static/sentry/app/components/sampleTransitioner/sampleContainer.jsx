@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import SampleWell from './sampleWell';
+import { SampleLocation } from './sampleLocation';
 
 export const SampleContainerType = {
   SOURCE: 1,
@@ -51,6 +52,10 @@ export class SampleContainer extends React.Component {
   }
 
   createRows() {
+    // The sample well should be highlighted if it is the target of
+    // a transition of the currently hovered sample.
+    const { highlightLocations, currentSampleTransition } = this.props;
+
     let rows = [];
     let colsHeader = [];
     let key;
@@ -79,6 +84,8 @@ export class SampleContainer extends React.Component {
         </td>
       );
       for (let c = 0; c < this.props.cols; c++) {
+        const thisLocation = new SampleLocation(this.props.id, c, r);
+
         key = `${c}_${r}`;
         const sample = rowSamples.find(s => s.location.col === c);
         const sampleId = sample ? sample.id : null;
@@ -90,13 +97,26 @@ export class SampleContainer extends React.Component {
         const isHoveredRowOrColumn =
           this.state.hoverRow == r || this.state.hoverCol === c;
 
-        // The sample well should be highlighted if it is the target of
-        // a transition of the currently hovered sample.
-        const { highlightLocations } = this.props;
-
         const isTransitionTargetOfHoveredSample = highlightLocations.find(tl => {
           return tl.containerId == this.props.id && tl.x == c && tl.y == r;
         });
+
+        let isTransitionSource = false;
+        let isTransitionTarget = false;
+
+        if (currentSampleTransition) {
+          const currentSampleTransitionSource = currentSampleTransition.getSource();
+          if (currentSampleTransitionSource) {
+            isTransitionSource = currentSampleTransitionSource.equals(thisLocation);
+
+          }
+
+          const currentSampleTransitionTarget = currentSampleTransition.getTarget();
+          if (currentSampleTransitionTarget) {
+            isTransitionTarget = currentSampleTransitionTarget.equals(thisLocation);
+
+          }
+        }
 
         const onWellClick = well => {
           this.props.onWellClicked(well, sampleId);
@@ -115,6 +135,8 @@ export class SampleContainer extends React.Component {
         cols.push(
           <SampleWell
             hasContents={hasContents}
+            isTransitionSource={isTransitionSource}
+            isTransitionTarget={isTransitionTarget}
             isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
             inHoveredRowOrColumn={isHoveredRowOrColumn}
             onSampleWellClick={onWellClick}
@@ -162,6 +184,7 @@ SampleContainer.propTypes = {
 
   // TODO: implement these new prop types
   // highlightLocations: PropTypes.arrayOf(),
+  // currentSampleTransition: PropTypes.shape(),
   /*samples: PropTypes.arrayOf(
     PropTypes.shape({
       col: PropTypes.number.isRequired,

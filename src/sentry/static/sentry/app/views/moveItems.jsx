@@ -5,8 +5,8 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
-import { SampleTransition } from 'app/components/sampleTransitioner/sampleTransition';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
+import {SampleTransition} from 'app/components/sampleTransitioner/sampleTransition';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -28,7 +28,7 @@ class MoveItems extends React.Component {
   constructor(props) {
     super(props);
 
-    const { sampleBatch } = props;
+    const {sampleBatch} = props;
 
     // TODO: read transitions and target containers from userTask sampleBatch
     const sourceContainers = sampleBatch.containers;
@@ -49,9 +49,6 @@ class MoveItems extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       currentSampleTransition: null,
-      // TODO: we should not be storing components in state
-      // Store a ref if we must.
-      currentSampleTransitionSourceWell: null,
       highlightLocations: [],
     };
   }
@@ -67,23 +64,21 @@ class MoveItems extends React.Component {
   completeCurrentSampleTransition() {
     // TODO: should we de-dupe sample transitions here,
     // or leave that to the API?
-    const { sampleTransitions, currentSampleTransitionSourceWell } = this.state;
+    const { sampleTransitions } = this.state;
     const currentSampleTransition = this.getCurrentSampleTransition();
 
     if (currentSampleTransition.isComplete()) {
       // This is a hack! TODO: We should invoke an action to update the state.
       const updatedSampleTransitions = sampleTransitions.concat(currentSampleTransition);
-      this.setState({ sampleTransitions: updatedSampleTransitions });
-      currentSampleTransitionSourceWell.removeAsTransitionSource();
+      this.setState({sampleTransitions: updatedSampleTransitions});
       return true;
     } else {
       return false;
     }
   }
 
+  // TODO: REMOVE WELL PARAMETER
   onSourceWellClicked(well, sampleLocation, containsSampleId) {
-    const { currentSampleTransitionSourceWell } = this.state;
-
     // If an empty well was clicked, clear current transition
     if (!containsSampleId) {
       return this.setCurrentSampleTransition(null);
@@ -91,17 +86,13 @@ class MoveItems extends React.Component {
 
     // Otherwise reset the current sample transition
     if (sampleLocation.valid()) {
-      if (currentSampleTransitionSourceWell) {
-        currentSampleTransitionSourceWell.removeAsTransitionSource();
-      }
-
-      this.setCurrentSampleTransition(new SampleTransition(sampleLocation, containsSampleId));
-      well.setAsTransitionSource();
-      this.setState({ currentSampleTransitionSourceWell: well });
+      this.setCurrentSampleTransition(
+        new SampleTransition(sampleLocation, containsSampleId)
+      );
     }
   }
 
-
+  // TODO: REMOVE WELL PARAMETER
   onTargetWellClicked(well, sampleLocation) {
     const currentSampleTransition = this.getCurrentSampleTransition();
 
@@ -115,12 +106,12 @@ class MoveItems extends React.Component {
     if (targetSet) {
       const ok = this.completeCurrentSampleTransition();
       if (ok) {
-        well.setAsTransitionTarget();
         this.setCurrentSampleTransition(null);
       }
     }
   }
 
+  // TODO: REMOVE WELL PARAMETER
   onSourceWellMouseOver(well, sampleLocation, containsSampleId) {
     const { sampleTransitions } = this.state;
 
@@ -132,16 +123,16 @@ class MoveItems extends React.Component {
     // Then, Find all transitions for this well and highlight them.
     const filtered = sampleTransitions.filter(t => {
       const sl = t.sourceLocation;
-      const { containerId, x, y } = sampleLocation;
-      return sl.containerId == containerId &&  sl.x == x && sl.y == y;
+      const {containerId, x, y} = sampleLocation;
+      return sl.containerId == containerId && sl.x == x && sl.y == y;
     });
 
     const highlightLocations = filtered.map(f => f.targetLocation);
-    this.setState({ highlightLocations });
+    this.setState({highlightLocations});
   }
 
   onMouseOut() {
-    this.setState({ highlightLocations: [] });
+    this.setState({highlightLocations: []});
   }
 
   // For now we assume all samples fetched are mapped to source containers.
@@ -149,7 +140,7 @@ class MoveItems extends React.Component {
   // (Perhaps transitions have already been created and the result samples are in the target containers)
   render() {
     // TODO: only pass the transitions that are relevant to each container.
-    const { highlightLocations } = this.state;
+    const { highlightLocations, currentSampleTransition } = this.state;
 
     // TODO: we should pass samples to the target container stack as well,
     // since we may be rendering this after fetching previously created transitions
@@ -169,6 +160,7 @@ class MoveItems extends React.Component {
               samples={this.props.sampleBatch.samples}
               highlightLocations={highlightLocations}
               onMouseOut={this.onMouseOut.bind(this)}
+              currentSampleTransition={currentSampleTransition}
             />
           </div>
           <div className="col-md-6">
@@ -181,6 +173,7 @@ class MoveItems extends React.Component {
               source={false}
               highlightLocations={highlightLocations}
               onMouseOut={this.onMouseOut.bind(this)}
+              currentSampleTransition={currentSampleTransition}
             />
           </div>
         </div>

@@ -3,33 +3,13 @@ import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
 
 class SampleWell extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // TODO: explore if we should rather store
-      // the sample ids of the contents
-      hasContents: false,
-      isTransitionSource: false,
-      isTransitionTarget: false,
-    };
-
-    this.setAsTransitionSource.bind(this);
-    this.setAsTransitionTarget.bind(this);
-    this.removeAsTransitionSource.bind(this);
-    this.removeAsTransitionTarget.bind(this);
-  }
-
-  // TODO: investigate using reflux-connect to
-  // use the redux mapstatetoprops pattern
-  // in order to handle this automatically.
-  componentWillReceiveProps(props) {
-    const { hasContents } = props;
-    this.setState({ hasContents });
-  }
-
   getWellIcon() {
-    const { hasContents, isTransitionSource, isTransitionTarget } = this.state;
+    const {
+      hasContents,
+      isTransitionSource,
+      isTransitionTarget
+    } = this.props;
+
     if (isTransitionSource) {
       return 'icon-well-transitioned';
     }
@@ -46,8 +26,11 @@ class SampleWell extends React.Component {
   }
 
   getWellClassName() {
-    const { isTransitionSource } = this.state;
-    const { inHoveredRowOrColumn, isTransitionTargetOfHoveredSample } = this.props;
+    const {
+      isTransitionSource,
+      inHoveredRowOrColumn,
+      isTransitionTargetOfHoveredSample
+    } = this.props;
 
     let className = 'sample-well';
 
@@ -72,22 +55,6 @@ class SampleWell extends React.Component {
     this.props.onSampleWellClick(this);
   }
 
-  setAsTransitionSource() {
-    this.setState({ isTransitionSource: true });
-  }
-
-  setAsTransitionTarget() {
-    this.setState({ isTransitionTarget: true });
-  }
-
-  removeAsTransitionSource() {
-    this.setState({ isTransitionSource: false });
-  }
-
-  removeAsTransitionTarget() {
-    this.setState({ isTransitionTarget: false });
-  }
-
   render() {
     return (
       <td
@@ -109,6 +76,8 @@ SampleWell.propTypes = {
   onSampleWellClick: PropTypes.func.isRequired,
   onSampleWellMouseOver: PropTypes.func.isRequired,
   isTransitionTargetOfHoveredSample: PropTypes.bool,
+  isTransitionSource: PropTypes.bool,
+  isTransitionTarget: PropTypes.bool,
   inHoveredRowOrColumn: PropTypes.bool,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
@@ -118,6 +87,8 @@ SampleWell.defaultProps = {
   isSelected: false,
   isTransitionTargetOfHoveredSample: false,
   inHoveredRowOrColumn: false,
+  isTransitionSource: false,
+  isTransitionTarget: false,
 };
 
 export default SampleWell;

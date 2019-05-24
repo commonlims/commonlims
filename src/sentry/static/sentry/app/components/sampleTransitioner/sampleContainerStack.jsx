@@ -61,7 +61,7 @@ class SampleContainerStack extends React.Component {
       s => s.location.containerId === this.state.container.id
     );
 
-    const { highlightLocations } = this.props;
+    const { highlightLocations, currentSampleTransition } = this.props;
 
     return (
       <div style={{display: 'inline-block', minWidth: '540px'}}>
@@ -89,6 +89,7 @@ class SampleContainerStack extends React.Component {
               onMouseOut={this.props.onMouseOut}
               samples={samples}
               highlightLocations={highlightLocations}
+              currentSampleTransition={currentSampleTransition}
             />
           </PanelBody>
         </Panel>
@@ -110,6 +111,7 @@ SampleContainerStack.propTypes = {
   // or, samples will be mapped directly to containers later
   samples: PropTypes.arrayOf(PropTypes.shape()),
   highlightLocations: PropTypes.arrayOf(PropTypes.shape()),
+  currentSampleTransition: PropTypes.shape(),
 };
 
 SampleContainerStack.defaultProps = {
