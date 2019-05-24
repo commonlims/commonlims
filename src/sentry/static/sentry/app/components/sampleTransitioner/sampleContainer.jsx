@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Container as ContainerPropType} from 'app/climsTypes';
 import SampleWell from './sampleWell';
 
 export const SampleContainerType = {

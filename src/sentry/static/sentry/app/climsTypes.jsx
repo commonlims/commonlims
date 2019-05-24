@@ -319,18 +319,6 @@ export const Workflow = PropTypes.shape({
   definitionKey: PropTypes.string,
 });
 
-export const Container = PropTypes.shape({
-  get: PropTypes.func,
-  viewLogic: PropTypes.shape({
-    focusRow: PropTypes.number,
-    focusCol: PropTypes.number,
-  }),
-  dimensions: PropTypes.shape({
-    cols: PropTypes.number,
-    rows: PropTypes.number,
-  }),
-});
-
 let ClimsTypes = {
   AnyModel: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -362,7 +350,6 @@ let ClimsTypes = {
   User,
   Workflow,
   Process,
-  Container,
 };
 
 export default ClimsTypes;
