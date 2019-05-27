@@ -61,7 +61,7 @@ class SampleContainerStack extends React.Component {
       s => s.location.containerId === this.state.container.id
     );
 
-    const { highlightLocations, currentSampleTransition } = this.props;
+    const { transitionTargetsOfHoveredSample, currentSampleTransition } = this.props;
 
     return (
       <div style={{display: 'inline-block', minWidth: '540px'}}>
@@ -88,7 +88,7 @@ class SampleContainerStack extends React.Component {
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               onMouseOut={this.props.onMouseOut}
               samples={samples}
-              highlightLocations={highlightLocations}
+              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
               currentSampleTransition={currentSampleTransition}
             />
           </PanelBody>
@@ -110,12 +110,13 @@ SampleContainerStack.propTypes = {
   // TODO: format these properly
   // or, samples will be mapped directly to containers later
   samples: PropTypes.arrayOf(PropTypes.shape()),
-  highlightLocations: PropTypes.arrayOf(PropTypes.shape()),
+  transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
   currentSampleTransition: PropTypes.shape(),
 };
 
 SampleContainerStack.defaultProps = {
   samples: [],
+  transitionTargetsOfHoveredSample: [],
 };
 
 SampleContainerStack.displayName = 'SampleContainerStack';

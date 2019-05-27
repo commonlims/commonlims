@@ -49,7 +49,7 @@ class MoveItems extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       currentSampleTransition: null,
-      highlightLocations: [],
+      transitionTargetsOfHoveredSample: [],
     };
   }
 
@@ -127,12 +127,12 @@ class MoveItems extends React.Component {
       return sl.containerId == containerId && sl.x == x && sl.y == y;
     });
 
-    const highlightLocations = filtered.map(f => f.targetLocation);
-    this.setState({highlightLocations});
+    const transitionTargetsOfHoveredSample = filtered.map(f => f.targetLocation);
+    this.setState({transitionTargetsOfHoveredSample});
   }
 
   onMouseOut() {
-    this.setState({highlightLocations: []});
+    this.setState({transitionTargetsOfHoveredSample: []});
   }
 
   // For now we assume all samples fetched are mapped to source containers.
@@ -140,7 +140,11 @@ class MoveItems extends React.Component {
   // (Perhaps transitions have already been created and the result samples are in the target containers)
   render() {
     // TODO: only pass the transitions that are relevant to each container.
-    const { highlightLocations, currentSampleTransition } = this.state;
+    const {
+      transitionTargetsOfHoveredSample,
+      currentSampleTransition,
+      sampleTransitions
+    } = this.state;
 
     // TODO: we should pass samples to the target container stack as well,
     // since we may be rendering this after fetching previously created transitions
@@ -158,9 +162,9 @@ class MoveItems extends React.Component {
               onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
               samples={this.props.sampleBatch.samples}
-              highlightLocations={highlightLocations}
               onMouseOut={this.onMouseOut.bind(this)}
               currentSampleTransition={currentSampleTransition}
+              transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
           <div className="col-md-6">
@@ -171,13 +175,14 @@ class MoveItems extends React.Component {
               containers={this.state.targetSampleContainers}
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
-              highlightLocations={highlightLocations}
+              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
               onMouseOut={this.onMouseOut.bind(this)}
               currentSampleTransition={currentSampleTransition}
+              transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>
         </div>
-        {JSON.stringify(this.state.sampleTransitions)}
+        {JSON.stringify(sampleTransitions)}
       </div>
     );
   }

@@ -78,6 +78,7 @@ SampleWell.propTypes = {
   isTransitionTargetOfHoveredSample: PropTypes.bool,
   isTransitionSource: PropTypes.bool,
   isTransitionTarget: PropTypes.bool,
+  isCurrentTransitionSource: PropTypes.bool,
   inHoveredRowOrColumn: PropTypes.bool,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
@@ -89,6 +90,7 @@ SampleWell.defaultProps = {
   inHoveredRowOrColumn: false,
   isTransitionSource: false,
   isTransitionTarget: false,
+  isCurrentTransitionSource: false,
 };
 
 export default SampleWell;
