@@ -27,14 +27,14 @@ class SampleWell extends React.Component {
 
   getWellClassName() {
     const {
-      isTransitionSource,
+      isCurrentTransitionSource,
       inHoveredRowOrColumn,
       isTransitionTargetOfHoveredSample
     } = this.props;
 
     let className = 'sample-well';
 
-    if (isTransitionSource) {
+    if (isCurrentTransitionSource) {
       className = `${className} selected`;
     } else if (isTransitionTargetOfHoveredSample) {
       className = `${className} highlighted`;
