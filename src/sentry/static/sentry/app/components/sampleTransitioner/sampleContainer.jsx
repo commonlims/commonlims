@@ -68,7 +68,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return transitionSources.find(tl => tl.equals(location));
+    return !!transitionSources.find(tl => tl.equals(location));
   }
 
   isCurrentTransitionSource(location) {
@@ -96,7 +96,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return transitionTargets.find(tl => tl.equals(location));
+    return !!transitionTargets.find(tl => tl.equals(location));
   }
 
   isTransitionTargetOfHoveredSample(location) {
@@ -106,7 +106,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return transitionTargetsOfHoveredSample.find(tl => tl.equals(location));
+    return !!transitionTargetsOfHoveredSample.find(tl => tl.equals(location));
   }
 
   createRows() {
@@ -156,19 +156,21 @@ export class SampleContainer extends React.Component {
         const isTransitionTarget = this.isTransitionTarget(thisLocation);
         const isCurrentTransitionSource = this.isCurrentTransitionSource(thisLocation);
 
-        const onWellClick = well => {
-          this.props.onWellClicked(well, sampleId);
+        const onWellClick = location => {
+          this.props.onWellClicked(location, sampleId);
         };
 
-        const onWellMouseOver = well => {
+        const onWellMouseOver = location => {
           if (this.state.hoverRow != r || this.state.hoverCol != c) {
             this.setState({hoverRow: r, hoverCol: c});
           }
 
           if (this.props.onWellMouseOver) {
-            this.props.onWellMouseOver(well, sampleId);
+            this.props.onWellMouseOver(location, sampleId);
           }
         };
+
+        const location = new SampleLocation(this.props.id, c, r);
 
         cols.push(
           <SampleWell
@@ -180,8 +182,7 @@ export class SampleContainer extends React.Component {
             inHoveredRowOrColumn={isHoveredRowOrColumn}
             onSampleWellClick={onWellClick}
             onSampleWellMouseOver={onWellMouseOver}
-            row={r}
-            col={c}
+            location={location}
             key={key}
           />
         );

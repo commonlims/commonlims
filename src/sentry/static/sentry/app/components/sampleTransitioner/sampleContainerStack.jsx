@@ -38,18 +38,16 @@ class SampleContainerStack extends React.Component {
     this.setState({containerIndex, container});
   }
 
-  onSampleWellClicked(well, sampleId) {
-    const sampleLocation = new SampleLocation(this.state.container.id, well.props.col, well.props.row);
-    this.props.onWellClicked(well, sampleLocation, sampleId);
+  onSampleWellClicked(location, sampleId) {
+    this.props.onWellClicked(location, sampleId);
   }
 
-  onSampleWellMouseOver(well, sampleId) {
+  onSampleWellMouseOver(location, sampleId) {
     if(!this.props.onWellMouseOver) {
       return;
     }
 
-    const sampleLocation = new SampleLocation(this.state.container.id, well.props.col, well.props.row);
-    this.props.onWellMouseOver(well, sampleLocation, sampleId);
+    this.props.onWellMouseOver(location, sampleId);
   }
 
   render() {

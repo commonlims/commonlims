@@ -77,8 +77,7 @@ class MoveItems extends React.Component {
     }
   }
 
-  // TODO: REMOVE WELL PARAMETER
-  onSourceWellClicked(well, sampleLocation, containsSampleId) {
+  onSourceWellClicked(sampleLocation, containsSampleId) {
     // If an empty well was clicked, clear current transition
     if (!containsSampleId) {
       return this.setCurrentSampleTransition(null);
@@ -92,8 +91,7 @@ class MoveItems extends React.Component {
     }
   }
 
-  // TODO: REMOVE WELL PARAMETER
-  onTargetWellClicked(well, sampleLocation) {
+  onTargetWellClicked(sampleLocation) {
     const currentSampleTransition = this.getCurrentSampleTransition();
 
     if (!currentSampleTransition || !currentSampleTransition.hasValidSource()) {
@@ -111,8 +109,7 @@ class MoveItems extends React.Component {
     }
   }
 
-  // TODO: REMOVE WELL PARAMETER
-  onSourceWellMouseOver(well, sampleLocation, containsSampleId) {
+  onSourceWellMouseOver(sampleLocation, containsSampleId) {
     const { sampleTransitions } = this.state;
 
     // If an empty well was hovered, ignore

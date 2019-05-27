@@ -48,11 +48,13 @@ class SampleWell extends React.Component {
   }
 
   handleMouseOver() {
-    this.props.onSampleWellMouseOver(this);
+    const { location } = this.props;
+    this.props.onSampleWellMouseOver(location);
   }
 
   handleClick() {
-    this.props.onSampleWellClick(this);
+    const { location } = this.props;
+    this.props.onSampleWellClick(location);
   }
 
   render() {
@@ -80,8 +82,8 @@ SampleWell.propTypes = {
   isTransitionTarget: PropTypes.bool,
   isCurrentTransitionSource: PropTypes.bool,
   inHoveredRowOrColumn: PropTypes.bool,
-  row: PropTypes.number.isRequired,
-  col: PropTypes.number.isRequired,
+  // TODO: implement this properly
+  location: PropTypes.shape(),
 };
 
 SampleWell.defaultProps = {
