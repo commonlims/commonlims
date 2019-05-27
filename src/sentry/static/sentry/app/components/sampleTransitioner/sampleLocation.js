@@ -1,18 +1,18 @@
 export class SampleLocation {
-  constructor(containerId, x, y) {
+  constructor(containerId, column, row) {
     this.containerId = containerId;
-    this.x = x;
-    this.y = y;
+    this.column = column;
+    this.row = row;
   }
 
   // TODO: explore if we should validate this against the actual container
   valid() {
-    return !!(this.containerId && Number.isInteger(this.x) && Number.isInteger(this.y));
+    return !!(this.containerId && Number.isInteger(this.column) && Number.isInteger(this.row));
   }
 
   equals(compareLocation) {
   	return this.containerId === compareLocation.containerId
-  	  && this.x === compareLocation.x
-  	  && this.y === compareLocation.y;
+  	  && this.column === compareLocation.column
+  	  && this.row === compareLocation.row;
   }
 }

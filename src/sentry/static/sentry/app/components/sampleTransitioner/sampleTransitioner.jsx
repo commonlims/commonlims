@@ -116,14 +116,10 @@ class SampleTransitioner extends React.Component {
       return;
     }
 
-    // Then, Find all transitions for this well and highlight them.
-    const filtered = sampleTransitions.filter(t => {
-      const sl = t.sourceLocation;
-      const {containerId, x, y} = sampleLocation;
-      return sl.containerId == containerId && sl.x == x && sl.y == y;
-    });
-
-    const transitionTargetsOfHoveredSample = filtered.map(f => f.targetLocation);
+    // Find all transitions for this well and highlight them.
+    const transitionTargetsOfHoveredSample = sampleTransitions
+      .filter(t => t.sourceLocation.equals(sampleLocation))
+      .map(f => f.targetLocation);
     this.setState({transitionTargetsOfHoveredSample});
   }
 
