@@ -23,8 +23,7 @@ import UserTaskStore from 'app/stores/userTaskStore';
 // TODO in transition:
 //   [x] Rename container after placing samples
 
-// TODO: Rename to TransitionSamples? Or something else?
-class MoveItems extends React.Component {
+class SampleTransitioner extends React.Component {
   constructor(props) {
     super(props);
 
@@ -185,9 +184,9 @@ class MoveItems extends React.Component {
   }
 }
 
-MoveItems.propTypes = {
+SampleTransitioner.propTypes = {
   // TODO: specify individual props instead of entire sampleBatch
   // sampleBatch: PropTypes.shape,
 };
 
-export default MoveItems;
+export default SampleTransitioner;
