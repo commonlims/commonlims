@@ -63,7 +63,7 @@ class SampleContainerStack extends React.Component {
       transitionSources,
       transitionTargets,
       transitionTargetsOfHoveredSample,
-      currentSampleTransition
+      activeSampleTransition
     } = this.props;
 
     return (
@@ -92,7 +92,7 @@ class SampleContainerStack extends React.Component {
               onMouseOut={this.props.onMouseOut}
               samples={samples}
               transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
-              currentSampleTransition={currentSampleTransition}
+              activeSampleTransition={activeSampleTransition}
               transitionSources={transitionSources}
               transitionTargets={transitionTargets}
             />
@@ -119,7 +119,7 @@ SampleContainerStack.propTypes = {
   transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
   transitionTargets: PropTypes.arrayOf(PropTypes.shape()),
   transitionSources: PropTypes.arrayOf(PropTypes.shape()),
-  currentSampleTransition: PropTypes.shape(),
+  activeSampleTransition: PropTypes.shape(),
 };
 
 SampleContainerStack.defaultProps = {

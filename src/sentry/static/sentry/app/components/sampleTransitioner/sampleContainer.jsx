@@ -71,22 +71,22 @@ export class SampleContainer extends React.Component {
     return !!transitionSources.find(tl => tl.equals(location));
   }
 
-  isCurrentTransitionSource(location) {
-    const { currentSampleTransition } = this.props;
-    let isCurrentTransitionSrc = false;
+  isActiveTransitionSource(location) {
+    const { activeSampleTransition } = this.props;
+    let isActiveTransitionSrc = false;
 
     if (!this.isSourceContainer()) {
-      return isCurrentTransitionSrc;
+      return isActiveTransitionSrc;
     }
 
-    if (currentSampleTransition) {
-      const currentSampleTransitionSource = currentSampleTransition.getSource();
-      if (currentSampleTransitionSource) {
-        isCurrentTransitionSrc = currentSampleTransitionSource.equals(location);
+    if (activeSampleTransition) {
+      const activeSampleTransitionSource = activeSampleTransition.getSource();
+      if (activeSampleTransitionSource) {
+        isActiveTransitionSrc = activeSampleTransitionSource.equals(location);
       }
     }
 
-    return isCurrentTransitionSrc;
+    return isActiveTransitionSrc;
   }
 
   isTransitionTarget(location) {
@@ -144,8 +144,6 @@ export class SampleContainer extends React.Component {
         const sample = rowSamples.find(s => s.location.col === c);
         const sampleId = sample ? sample.id : null;
 
-        const hasContents = !!sample;
-
         // The background should be highlighted if this row is in
         // the hovered row or coumn.
         const isHoveredRowOrColumn =
@@ -154,7 +152,7 @@ export class SampleContainer extends React.Component {
         const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(thisLocation);
         const isTransitionSource = this.isTransitionSource(thisLocation);
         const isTransitionTarget = this.isTransitionTarget(thisLocation);
-        const isCurrentTransitionSource = this.isCurrentTransitionSource(thisLocation);
+        const isActiveTransitionSource = this.isActiveTransitionSource(thisLocation);
 
         const onWellClick = location => {
           this.props.onWellClicked(location, sampleId);
@@ -174,16 +172,16 @@ export class SampleContainer extends React.Component {
 
         cols.push(
           <SampleWell
-            hasContents={hasContents}
+            key={key}
+            location={location}
+            onClick={onWellClick}
+            onMouseOver={onWellMouseOver}
+            containsSampleId={sampleId}
             isTransitionSource={isTransitionSource}
             isTransitionTarget={isTransitionTarget}
-            isCurrentTransitionSource={isCurrentTransitionSource}
+            isActiveTransitionSource={isActiveTransitionSource}
             isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
             inHoveredRowOrColumn={isHoveredRowOrColumn}
-            onSampleWellClick={onWellClick}
-            onSampleWellMouseOver={onWellMouseOver}
-            location={location}
-            key={key}
           />
         );
       }
@@ -226,7 +224,7 @@ SampleContainer.propTypes = {
   // transitionSources: PropTypes.arrayOf(),
   // transitionTargets: PropTypes.arrayOf(),
   // transitionTargetsOfHoveredSample: PropTypes.arrayOf(),
-  // currentSampleTransition: PropTypes.shape(),
+  // activeSampleTransition: PropTypes.shape(),
   /*samples: PropTypes.arrayOf(
     PropTypes.shape({
       col: PropTypes.number.isRequired,

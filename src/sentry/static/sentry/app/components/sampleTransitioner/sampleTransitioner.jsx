@@ -47,28 +47,28 @@ class SampleTransitioner extends React.Component {
       sourceSampleContainers: sampleBatch.containers, // this should be a prop
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
-      currentSampleTransition: null,
+      activeSampleTransition: null,
       transitionTargetsOfHoveredSample: [],
     };
   }
 
-  setCurrentSampleTransition(sampleTransition) {
-    this.setState({currentSampleTransition: sampleTransition});
+  setActiveSampleTransition(sampleTransition) {
+    this.setState({activeSampleTransition: sampleTransition});
   }
 
-  getCurrentSampleTransition() {
-    return this.state.currentSampleTransition;
+  getActiveSampleTransition() {
+    return this.state.activeSampleTransition;
   }
 
-  completeCurrentSampleTransition() {
+  completeActiveSampleTransition() {
     // TODO: should we de-dupe sample transitions here,
     // or leave that to the API?
     const { sampleTransitions } = this.state;
-    const currentSampleTransition = this.getCurrentSampleTransition();
+    const activeSampleTransition = this.getActiveSampleTransition();
 
-    if (currentSampleTransition.isComplete()) {
+    if (activeSampleTransition.isComplete()) {
       // This is a hack! TODO: We should invoke an action to update the state.
-      const updatedSampleTransitions = sampleTransitions.concat(currentSampleTransition);
+      const updatedSampleTransitions = sampleTransitions.concat(activeSampleTransition);
       this.setState({sampleTransitions: updatedSampleTransitions});
       return true;
     } else {
@@ -79,31 +79,31 @@ class SampleTransitioner extends React.Component {
   onSourceWellClicked(sampleLocation, containsSampleId) {
     // If an empty well was clicked, clear current transition
     if (!containsSampleId) {
-      return this.setCurrentSampleTransition(null);
+      return this.setActiveSampleTransition(null);
     }
 
     // Otherwise reset the current sample transition
     if (sampleLocation.valid()) {
-      this.setCurrentSampleTransition(
+      this.setActiveSampleTransition(
         new SampleTransition(sampleLocation, containsSampleId)
       );
     }
   }
 
   onTargetWellClicked(sampleLocation) {
-    const currentSampleTransition = this.getCurrentSampleTransition();
+    const activeSampleTransition = this.getActiveSampleTransition();
 
-    if (!currentSampleTransition || !currentSampleTransition.hasValidSource()) {
+    if (!activeSampleTransition || !activeSampleTransition.hasValidSource()) {
       return;
     }
 
     // If there is a valid source, create the target,
     // save the transition and clear current transition object.
-    const targetSet = currentSampleTransition.setTarget(sampleLocation);
+    const targetSet = activeSampleTransition.setTarget(sampleLocation);
     if (targetSet) {
-      const ok = this.completeCurrentSampleTransition();
+      const ok = this.completeActiveSampleTransition();
       if (ok) {
-        this.setCurrentSampleTransition(null);
+        this.setActiveSampleTransition(null);
       }
     }
   }
@@ -134,7 +134,7 @@ class SampleTransitioner extends React.Component {
     // TODO: only pass the transitions that are relevant to each container.
     const {
       transitionTargetsOfHoveredSample,
-      currentSampleTransition,
+      activeSampleTransition,
       sampleTransitions
     } = this.state;
 
@@ -155,7 +155,7 @@ class SampleTransitioner extends React.Component {
               source={true}
               samples={this.props.sampleBatch.samples}
               onMouseOut={this.onMouseOut.bind(this)}
-              currentSampleTransition={currentSampleTransition}
+              activeSampleTransition={activeSampleTransition}
               transitionSources={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
@@ -168,7 +168,7 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
-              currentSampleTransition={currentSampleTransition}
+              activeSampleTransition={activeSampleTransition}
               transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
               transitionTargets={sampleTransitions.map(st => st.targetLocation)}
             />
