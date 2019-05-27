@@ -164,7 +164,7 @@ class MoveItems extends React.Component {
               samples={this.props.sampleBatch.samples}
               onMouseOut={this.onMouseOut.bind(this)}
               currentSampleTransition={currentSampleTransition}
-              transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
+              transitionSources={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
           <div className="col-md-6">
@@ -175,10 +175,10 @@ class MoveItems extends React.Component {
               containers={this.state.targetSampleContainers}
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
-              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
               onMouseOut={this.onMouseOut.bind(this)}
               currentSampleTransition={currentSampleTransition}
-              transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
+              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
+              transitionTargets={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>
         </div>
