@@ -8,13 +8,6 @@ export const SampleContainerType = {
   TARGET: 2,
 };
 
-const cellStyleHeader = {
-  padding: '1px',
-  margin: '1px',
-  color: '#BDB4C7',
-  textAlign: 'center',
-};
-
 const cellStyleHighlightBackground = {
   backgroundColor: 'aliceblue',
 };
@@ -29,6 +22,7 @@ export class SampleContainer extends React.Component {
     };
   }
 
+  // TODO: make these static or local functions
   getRowIndicator(rowIndex) {
     return String.fromCharCode(65 + rowIndex);
   }
@@ -39,7 +33,6 @@ export class SampleContainer extends React.Component {
 
   getHeaderStyle(row, col) {
     let style = {};
-    Object.assign(style, cellStyleHeader);
     if (this.state.hoverRow == row || this.state.hoverCol === col) {
       Object.assign(style, cellStyleHighlightBackground);
     }
@@ -104,22 +97,39 @@ export class SampleContainer extends React.Component {
     return !!transitionTargetsOfHoveredSample.find(tl => tl.equals(location));
   }
 
-  createRows() {
-    let rows = [];
-    let colsHeader = [];
+  onMouseOut() {
+    if (this.state.hoverRow || this.state.hoverCol) {
+      this.setState({hoverRow: null, hoverCol: null});
+    }
+
+    if (this.props.onMouseOut) {
+      this.props.onMouseOut();
+    }
+  }
+
+  renderColumnsHeader() {
+    const { cols } = this.props;
+    const keyPrefix = 'thead';
+    let ths = [];
     let key;
 
-    key = '-1_-1';
-    colsHeader.push(<td key={key} style={cellStyleHeader} />);
-    for (let c = 0; c < this.props.cols; c++) {
-      key = `${c}_-1`;
-      colsHeader.push(
-        <td key={key} style={this.getHeaderStyle(-1, c)}>
+    ths.push(<th key={`${keyPrefix}-corner`} />);
+
+    for (let c = 0; c < cols; c++) {
+      key = `${keyPrefix}-${c}`;
+      ths.push(
+        <th key={key} style={this.getHeaderStyle(-1, c)}>
           {this.getColIndicator(c)}
-        </td>
+        </th>
       );
     }
-    rows.push(<tr>{colsHeader}</tr>);
+
+    return (<tr>{ths}</tr>);
+  }
+
+  createRows() {
+    let rows = [];
+    let key;
 
     for (let r = 0; r < this.props.rows; r++) {
       let cols = [];
@@ -128,9 +138,9 @@ export class SampleContainer extends React.Component {
 
       key = `-1_${r}`;
       cols.push(
-        <td key={key} style={this.getHeaderStyle(r, -1)}>
+        <th key={key} style={this.getHeaderStyle(r, -1)}>
           {this.getRowIndicator(r)}
-        </td>
+        </th>
       );
       for (let c = 0; c < this.props.cols; c++) {
         const thisLocation = new SampleLocation(this.props.id, c, r);
@@ -185,19 +195,12 @@ export class SampleContainer extends React.Component {
     return rows;
   }
 
-  onMouseOut() {
-    if (this.state.hoverRow || this.state.hoverCol) {
-      this.setState({hoverRow: null, hoverCol: null});
-    }
-
-    if (this.props.onMouseOut) {
-      this.props.onMouseOut();
-    }
-  }
-
   render() {
     return (
       <table className="sample-container" onMouseOut={this.onMouseOut.bind(this)}>
+        <thead>
+          {this.renderColumnsHeader()}
+        </thead>
         <tbody>{this.createRows()}</tbody>
       </table>
     );
