@@ -36,6 +36,8 @@ from sentry.runner.decorators import configuration, log_options
     help='Start local styleguide web server on port 9001'
 )
 @click.option('--environment', default='development', help='The environment name.')
+@click.option('--vscode-debug/--no-vscodedebug', default=False,
+              help='Enables debugging with VS code. Note that this turns of automatic reloading of Python files.')
 @click.argument(
     'bind',
     default='127.0.0.1:8000',
@@ -44,8 +46,10 @@ from sentry.runner.decorators import configuration, log_options
 )
 @log_options()
 @configuration
-def devserver(reload, watchers, workers, browser_reload, styleguide, prefix, environment, bind):
+def devserver(reload, watchers, workers, browser_reload,
+              styleguide, prefix, environment, bind, vscode_debug):
     "Starts a lightweight web server for development."
+
     if ':' in bind:
         host, port = bind.split(':', 1)
         port = int(port)
@@ -159,8 +163,14 @@ def devserver(reload, watchers, workers, browser_reload, styleguide, prefix, env
 
     server = SentryHTTPServer(host=host, port=port, workers=1, extra_options=uwsgi_overrides)
 
+    # If using vscode_debug, currently we're only starting the builtin django server:
+    if vscode_debug:
+        from django.core.management import execute_from_command_line
+        execute_from_command_line(['', 'runserver', '--noreload', '--nothreading'])
+        return
     # If we don't need any other daemons, just launch a normal uwsgi webserver
     # and avoid dealing with subprocesses
+
     if not daemons:
         return server.run()
 
