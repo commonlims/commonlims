@@ -23,10 +23,6 @@ export class SampleContainer extends React.Component {
     return String.fromCharCode(65 + rowIndex);
   }
 
-  getColIndicator(colIndex) {
-    return colIndex + 1;
-  }
-
   isHoveredRowOrColumn(row, col) {
     const { hoverRow, hoverCol } = this.state;
     return hoverRow === row || hoverCol === col;
@@ -107,17 +103,11 @@ export class SampleContainer extends React.Component {
   renderColumnsHeader() {
     const { cols } = this.props;
     const keyPrefix = 'thead';
-    let ths = [];
-    let key;
-
-    ths.push(<th key={`${keyPrefix}-corner`} />);
+    const ths = [(<th key={`${keyPrefix}-corner`} />)];
 
     for (let c = 0; c < cols; c++) {
-      key = `${keyPrefix}-${c}`;
       ths.push(
-        <th key={key} className={this.getHeaderClassName(-1, c)}>
-          {this.getColIndicator(c)}
-        </th>
+        <th key={`${keyPrefix}-${c}`} className={this.getHeaderClassName(-1, c)}>{c+1}</th>
       );
     }
 
