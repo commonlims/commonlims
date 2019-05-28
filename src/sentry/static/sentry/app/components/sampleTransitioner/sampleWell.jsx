@@ -1,22 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
-import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 
 class SampleWell extends React.Component {
   getWellIcon() {
-    const {
-      containsSampleId,
-      isTransitionSource,
-      isTransitionTarget
-    } = this.props;
-
-    if (isTransitionSource) {
-      return 'icon-well-transitioned';
-    }
+    const {containsSampleId, isTransitionSource, isTransitionTarget} = this.props;
 
     if (isTransitionTarget) {
       return 'icon-well-added';
+    }
+
+    if (isTransitionSource) {
+      return 'icon-well-transitioned';
     }
 
     if (containsSampleId) {
@@ -30,7 +26,7 @@ class SampleWell extends React.Component {
     const {
       isActiveTransitionSource,
       inHoveredRowOrColumn,
-      isTransitionTargetOfHoveredSample
+      isTransitionTargetOfHoveredSample,
     } = this.props;
 
     let className = 'sample-well';
@@ -49,12 +45,12 @@ class SampleWell extends React.Component {
   }
 
   handleMouseOver() {
-    const { location } = this.props;
+    const {location} = this.props;
     this.props.onMouseOver(location);
   }
 
   handleClick() {
-    const { location } = this.props;
+    const {location} = this.props;
     this.props.onClick(location);
   }
 
@@ -89,12 +85,11 @@ SampleWell.propTypes = {
 
 SampleWell.defaultProps = {
   containsSampleId: null,
-  isSelected: false,
-  isTransitionTargetOfHoveredSample: false,
-  inHoveredRowOrColumn: false,
   isTransitionSource: false,
   isTransitionTarget: false,
   isActiveTransitionSource: false,
+  isTransitionTargetOfHoveredSample: false,
+  inHoveredRowOrColumn: false,
 };
 
 export default SampleWell;

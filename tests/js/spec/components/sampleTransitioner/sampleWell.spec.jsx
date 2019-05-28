@@ -2,102 +2,106 @@ import React from 'react';
 import {mount} from 'enzyme';
 
 import SampleWell from 'app/components/sampleTransitioner/sampleWell';
-import {LocationState} from 'app/components/sampleTransitioner/location';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 import InlineSvg from 'app/components/inlineSvg';
 
 describe('SampleWell', function() {
   let mockProps;
-  let onSampleWellClick;
-  let onSampleWellHover;
+  let location;
+  let onClick;
+  let onMouseOver;
 
   beforeEach(() => {
-    onSampleWellClick = jest.fn();
-    onSampleWellHover = jest.fn();
+    location = new SampleLocation(0, 0, 0);
+    onClick = jest.fn();
+    onMouseOver = jest.fn();
     mockProps = {
-      onSampleWellClick,
-      onSampleWellHover,
-      sampleWellState: LocationState.EMPTY,
+      location,
+      onClick,
+      onMouseOver,
     };
   });
 
-  const mountSampleWell = props => {
+  const mountSampleWell = (props = {}) => {
+    const mergedProps = {...mockProps, ...props};
     return mount(
       <table>
         <tbody>
           <tr>
-            <SampleWell {...props} />
+            <SampleWell {...mergedProps} />
           </tr>
         </tbody>
       </table>
     );
   };
 
-  it('renders the correct icon based on well state', function() {
-    let props = {...mockProps, sampleWellState: LocationState.EMPTY};
-    let wrapper = mountSampleWell(props);
+  it('renders the empty well icon by default', () => {
+    let wrapper = mountSampleWell();
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-empty');
+  });
 
-    props = {...mockProps, sampleWellState: LocationState.NOT_EMPTY};
-    wrapper = mountSampleWell(props);
+  it('renders the full well icon if the well contains a sample', () => {
+    let wrapper = mountSampleWell({containsSampleId: 5});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-full');
+  });
 
-    props = {...mockProps, sampleWellState: LocationState.NOT_EMPTY_TRANSITION_SOURCE};
-    wrapper = mountSampleWell(props);
+  it('renders the correct icon if the well is a transition source', () => {
+    let wrapper = mountSampleWell({isTransitionSource: true});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-transitioned');
+  });
 
-    props = {...mockProps, sampleWellState: LocationState.NOT_EMPTY_TRANSITION_TARGET};
-    wrapper = mountSampleWell(props);
+  it('renders the correct icon if the well is a transition target', () => {
+    let wrapper = mountSampleWell({isTransitionTarget: true});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-added');
   });
 
-  it('correctly selects or highlights the well', function() {
-    let props = {...mockProps};
-    let wrapper = mountSampleWell(props);
+  it('has the sample-well css class by default', () => {
+    let wrapper = mountSampleWell();
     let td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(false);
     expect(td.hasClass('highlighted-background')).toBe(false);
+  });
 
-    // isSelected takes precedence over isHighlighted
-    props = {...mockProps, isSelected: true, isHighlighted: true};
-    wrapper = mountSampleWell(props);
-    td = wrapper.find('td');
+  it('has the sample-well and selected css classes if it is the active transition source', () => {
+    let wrapper = mountSampleWell({isActiveTransitionSource: true});
+    let td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(true);
     expect(td.hasClass('highlighted')).toBe(false);
     expect(td.hasClass('highlighted-background')).toBe(false);
+  });
 
-    props = {...mockProps, isHighlighted: true};
-    wrapper = mountSampleWell(props);
-    td = wrapper.find('td');
+  it('has the sample-well and highlighted css classes if it is a transition target of a hovered sample well', () => {
+    let wrapper = mountSampleWell({isTransitionTargetOfHoveredSample: true});
+    let td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(true);
     expect(td.hasClass('highlighted-background')).toBe(false);
+  });
 
-    props = {...mockProps, isHighlightedBackground: true};
-    wrapper = mountSampleWell(props);
-    td = wrapper.find('td');
+  it('has the sample-well and highlighted-background css classes if it is in a hovered row or column', () => {
+    let wrapper = mountSampleWell({inHoveredRowOrColumn: true});
+    let td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(false);
     expect(td.hasClass('highlighted-background')).toBe(true);
   });
 
-  it('invokes click function on click', function() {
-    let props = {...mockProps};
-    let wrapper = mountSampleWell(props);
+  it('invokes click handler on click', () => {
+    let wrapper = mountSampleWell();
     let icon = wrapper.find(InlineSvg);
     icon.simulate('click');
-    expect(onSampleWellClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalled();
   });
 
-  it('invokes hover function on hover', function() {
-    let props = {...mockProps};
-    let wrapper = mountSampleWell(props);
+  it('invokes mouseover handler on hover', () => {
+    let wrapper = mountSampleWell();
     let icon = wrapper.find(InlineSvg);
     icon.simulate('mouseover');
-    expect(onSampleWellHover).toHaveBeenCalled();
+    expect(onMouseOver).toHaveBeenCalled();
   });
 });
