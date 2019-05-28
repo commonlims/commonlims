@@ -205,16 +205,17 @@ SampleContainer.propTypes = {
   onWellMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
   samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
-
-  // TODO: implement these new prop types
-  // transitionSources: PropTypes.arrayOf(),
-  // transitionTargets: PropTypes.arrayOf(),
-  // transitionTargetsOfHoveredSample: PropTypes.arrayOf(),
-  // activeSampleTransition: PropTypes.shape(),
+  transitionSources: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionTargets: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  // activeSampleTransition: PropTypes.shape(), // TODO: just get the location of this
 };
 
 SampleContainer.defaultProps = {
   samples: [],
+  transitionSources: [],
+  transitionTargets: [],
+  transitionTargetsOfHoveredSample: [],
 };
 
 SampleContainer.displayName = 'SampleContainer';
