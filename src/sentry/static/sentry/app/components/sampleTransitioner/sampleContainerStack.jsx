@@ -64,13 +64,8 @@ class SampleContainerStack extends React.Component {
       transitionSourceLocations,
       transitionTargetLocations,
       transitionTargetLocationsOfHoveredSample,
-      activeSampleTransition
+      activeSampleTransitionSourceLocation
     } = this.props;
-
-    let activeSampleTransitionSource;
-    if (activeSampleTransition) {
-      activeSampleTransitionSource = activeSampleTransition.getSource();
-    }
 
     return (
       <div style={{display: 'inline-block', minWidth: '540px'}}>
@@ -96,7 +91,7 @@ class SampleContainerStack extends React.Component {
               onMouseOut={this.props.onMouseOut}
               samples={samples}
               transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
-              activeSampleTransitionSource={activeSampleTransitionSource}
+              activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
               transitionSourceLocations={transitionSourceLocations}
               transitionTargetLocations={transitionTargetLocations}
             />

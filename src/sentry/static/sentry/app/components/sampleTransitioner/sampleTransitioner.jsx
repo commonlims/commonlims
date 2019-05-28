@@ -140,6 +140,11 @@ class SampleTransitioner extends React.Component {
       sampleTransitions
     } = this.state;
 
+    let activeSampleTransitionSourceLocation;
+    if (activeSampleTransition) {
+      activeSampleTransitionSourceLocation = activeSampleTransition.getSource();
+    }
+
     // TODO: we should pass samples to the target container stack as well,
     // since we may be rendering this after fetching previously created transitions
     // from the api.
@@ -157,7 +162,7 @@ class SampleTransitioner extends React.Component {
               source={true}
               samples={this.state.samples}
               onMouseOut={this.onMouseOut.bind(this)}
-              activeSampleTransition={activeSampleTransition}
+              activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
               transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
@@ -170,7 +175,6 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
-              activeSampleTransition={activeSampleTransition}
               transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
               transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
