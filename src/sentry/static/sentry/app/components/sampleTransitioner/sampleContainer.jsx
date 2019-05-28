@@ -49,21 +49,13 @@ export class SampleContainer extends React.Component {
   }
 
   isActiveTransitionSource(location) {
-    const { activeSampleTransition } = this.props;
-    let isActiveTransitionSrc = false;
+    const { activeSampleTransitionSource } = this.props;
 
-    if (!this.isSourceContainer()) {
-      return isActiveTransitionSrc;
+    if (!this.isSourceContainer() || !activeSampleTransitionSource) {
+      return false;
     }
 
-    if (activeSampleTransition) {
-      const activeSampleTransitionSource = activeSampleTransition.getSource();
-      if (activeSampleTransitionSource) {
-        isActiveTransitionSrc = activeSampleTransitionSource.equals(location);
-      }
-    }
-
-    return isActiveTransitionSrc;
+    return  activeSampleTransitionSource.equals(location);
   }
 
   isTransitionTarget(location) {
@@ -208,7 +200,7 @@ SampleContainer.propTypes = {
   transitionSources: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   transitionTargets: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
-  // activeSampleTransition: PropTypes.shape(), // TODO: just get the location of this
+  activeSampleTransitionSource: PropTypes.instanceOf(SampleLocation),
 };
 
 SampleContainer.defaultProps = {
@@ -216,6 +208,7 @@ SampleContainer.defaultProps = {
   transitionSources: [],
   transitionTargets: [],
   transitionTargetsOfHoveredSample: [],
+  activeSampleTransitionSource: null,
 };
 
 SampleContainer.displayName = 'SampleContainer';
