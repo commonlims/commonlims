@@ -4,6 +4,7 @@ import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
 import {SampleContainer, SampleContainerDirectionality} from './sampleContainer';
 import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
+import { Sample } from 'app/components/sampleTransitioner/sample';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -110,9 +111,8 @@ SampleContainerStack.propTypes = {
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
   source: PropTypes.bool,
+  samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
   // TODO: format these properly
-  // or, samples will be mapped directly to containers later
-  samples: PropTypes.arrayOf(PropTypes.shape()),
   // TODO: consider separate classes for source and target container stacks
   transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
   transitionTargets: PropTypes.arrayOf(PropTypes.shape()),

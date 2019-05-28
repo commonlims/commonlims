@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import SampleWell from './sampleWell';
 import { SampleLocation } from './sampleLocation';
+import { Sample } from './sample';
 
 export const SampleContainerDirectionality = {
   SOURCE: 1,
@@ -170,10 +171,10 @@ export class SampleContainer extends React.Component {
       const row = [this.renderRowHeader(r)];
 
       // Get all samples with this row
-      const rowSamples = samples.filter(s => s.location.row === r);
+      const rowSamples = samples.filter(s => s.getLocation().row === r);
 
       for (let c = 0; c < numColumns; c++) {
-        const sample = rowSamples.find(s => s.location.col === c);
+        const sample = rowSamples.find(s => s.getLocation().col === c);
         const sampleId = sample ? sample.id : null;
         row.push(this.renderSampleWell(r, c, sampleId));
       }
@@ -203,18 +204,17 @@ SampleContainer.propTypes = {
   onWellClicked: PropTypes.func.isRequired,
   onWellMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
+  samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
 
   // TODO: implement these new prop types
   // transitionSources: PropTypes.arrayOf(),
   // transitionTargets: PropTypes.arrayOf(),
   // transitionTargetsOfHoveredSample: PropTypes.arrayOf(),
   // activeSampleTransition: PropTypes.shape(),
-  /*samples: PropTypes.arrayOf(
-    PropTypes.shape({
-      col: PropTypes.number.isRequired,
-      row: PropTypes.number.isRequired,
-    })
-  ),*/
+};
+
+SampleContainer.defaultProps = {
+  samples: [],
 };
 
 SampleContainer.displayName = 'SampleContainer';

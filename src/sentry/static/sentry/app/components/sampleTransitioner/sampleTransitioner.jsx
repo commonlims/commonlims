@@ -5,8 +5,9 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
-import {SampleTransition} from 'app/components/sampleTransitioner/sampleTransition';
+import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
+import { SampleTransition } from 'app/components/sampleTransitioner/sampleTransition';
+import { Sample } from 'app/components/sampleTransitioner/sample';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -31,7 +32,7 @@ class SampleTransitioner extends React.Component {
 
     // TODO: read transitions and target containers from userTask sampleBatch
     const sourceContainers = sampleBatch.containers;
-    const samples = sampleBatch.samples;
+    const samples = sampleBatch.samples.map(s => new Sample(s.id, s.name, s.location));
 
     // Temporary hack: create a new target container
     const targetContainer = {
@@ -49,6 +50,7 @@ class SampleTransitioner extends React.Component {
       sampleTransitions: [],
       activeSampleTransition: null,
       transitionTargetsOfHoveredSample: [],
+      samples,
     };
   }
 
@@ -153,7 +155,7 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onSourceWellClicked.bind(this)}
               onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
-              samples={this.props.sampleBatch.samples}
+              samples={this.state.samples}
               onMouseOut={this.onMouseOut.bind(this)}
               activeSampleTransition={activeSampleTransition}
               transitionSources={sampleTransitions.map(st => st.sourceLocation)}
