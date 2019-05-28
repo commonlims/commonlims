@@ -86,18 +86,18 @@ export class SampleContainer extends React.Component {
   }
 
   onMouseOut() {
+    const { onMouseOut } = this.props;
+
     if (this.state.hoverRow || this.state.hoverCol) {
       this.setState({hoverRow: null, hoverCol: null});
     }
 
-    if (this.props.onMouseOut) {
-      this.props.onMouseOut();
-    }
+    onMouseOut();
   }
 
   renderColumnsHeader() {
     const { numColumns } = this.props;
-    const keyPrefix = 'thead-th-';
+    const keyPrefix = 'thead-th';
     const ths = [(<th key={`${keyPrefix}-corner`} />)];
 
     for (let c = 0; c < numColumns; c++) {
@@ -111,7 +111,7 @@ export class SampleContainer extends React.Component {
   }
 
   renderRowHeader(row) {
-    const keyPrefix = 'th-';
+    const keyPrefix = 'th';
     const label = String.fromCharCode(65 + row);
     return(<th key={`${keyPrefix}-${row}`} className={this.getHeaderClassName(row, -1)}>{label}</th>);
   }
@@ -163,7 +163,7 @@ export class SampleContainer extends React.Component {
       numRows,
       samples,
     } = this.props;
-    const keyPrefix = 'tr-';
+    const keyPrefix = 'tr';
     const rows = [];
 
     for (let r = 0; r < numRows; r++) {
