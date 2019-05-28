@@ -39,13 +39,13 @@ export class SampleContainer extends React.Component {
   }
 
   isTransitionSource(location) {
-    const { transitionSources } = this.props;
+    const { transitionSourceLocations } = this.props;
 
     if (!this.isSourceContainer()) {
       return false;
     }
 
-    return !!transitionSources.find(tl => tl.equals(location));
+    return !!transitionSourceLocations.find(tl => tl.equals(location));
   }
 
   isActiveTransitionSource(location) {
@@ -59,13 +59,13 @@ export class SampleContainer extends React.Component {
   }
 
   isTransitionTarget(location) {
-    const { transitionTargets } = this.props;
+    const { transitionTargetLocations } = this.props;
 
     if (!this.isTargetContainer()) {
       return false;
     }
 
-    return !!transitionTargets.find(tl => tl.equals(location));
+    return !!transitionTargetLocations.find(tl => tl.equals(location));
   }
 
   isTransitionTargetOfHoveredSample(location) {
@@ -197,16 +197,16 @@ SampleContainer.propTypes = {
   onWellMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
   samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
-  transitionSources: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
-  transitionTargets: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionSourceLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionTargetLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   activeSampleTransitionSource: PropTypes.instanceOf(SampleLocation),
 };
 
 SampleContainer.defaultProps = {
   samples: [],
-  transitionSources: [],
-  transitionTargets: [],
+  transitionSourceLocations: [],
+  transitionTargetLocations: [],
   transitionTargetsOfHoveredSample: [],
   activeSampleTransitionSource: null,
 };

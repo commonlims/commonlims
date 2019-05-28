@@ -61,8 +61,8 @@ class SampleContainerStack extends React.Component {
     );
 
     const {
-      transitionSources,
-      transitionTargets,
+      transitionSourceLocations,
+      transitionTargetLocations,
       transitionTargetsOfHoveredSample,
       activeSampleTransition
     } = this.props;
@@ -97,8 +97,8 @@ class SampleContainerStack extends React.Component {
               samples={samples}
               transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
               activeSampleTransitionSource={activeSampleTransitionSource}
-              transitionSources={transitionSources}
-              transitionTargets={transitionTargets}
+              transitionSourceLocations={transitionSourceLocations}
+              transitionTargetLocations={transitionTargetLocations}
             />
           </PanelBody>
         </Panel>
@@ -120,16 +120,16 @@ SampleContainerStack.propTypes = {
   // TODO: format these properly
   // TODO: consider separate classes for source and target container stacks
   transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
-  transitionTargets: PropTypes.arrayOf(PropTypes.shape()),
-  transitionSources: PropTypes.arrayOf(PropTypes.shape()),
+  transitionTargetLocations: PropTypes.arrayOf(PropTypes.shape()),
+  transitionSourceLocations: PropTypes.arrayOf(PropTypes.shape()),
   activeSampleTransition: PropTypes.shape(),
 };
 
 SampleContainerStack.defaultProps = {
   samples: [],
   transitionTargetsOfHoveredSample: [],
-  transitionTargets: [],
-  transitionSources: [],
+  transitionTargetLocations: [],
+  transitionSourceLocations: [],
 };
 
 SampleContainerStack.displayName = 'SampleContainerStack';

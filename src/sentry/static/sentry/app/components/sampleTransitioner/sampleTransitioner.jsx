@@ -158,7 +158,7 @@ class SampleTransitioner extends React.Component {
               samples={this.state.samples}
               onMouseOut={this.onMouseOut.bind(this)}
               activeSampleTransition={activeSampleTransition}
-              transitionSources={sampleTransitions.map(st => st.sourceLocation)}
+              transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
           <div className="col-md-6">
@@ -172,7 +172,7 @@ class SampleTransitioner extends React.Component {
               onMouseOut={this.onMouseOut.bind(this)}
               activeSampleTransition={activeSampleTransition}
               transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
-              transitionTargets={sampleTransitions.map(st => st.targetLocation)}
+              transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>
         </div>
