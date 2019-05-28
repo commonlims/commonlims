@@ -20,7 +20,7 @@ import { ERROR_TYPES } from './constants';
 import UserTaskDetailsFields from 'app/views/userTaskDetails/shared/userTaskFields';
 import UserTaskDetailsFiles from 'app/views/userTaskDetails/shared/userTaskFiles';
 import UserTaskDetailsActivity from 'app/views/userTaskDetails/shared/userTaskActivity';
-import MoveItems from 'app/views/moveItems'
+import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner'
 
 const UserTaskDetails = createReactClass({
   displayName: 'UserTaskDetails',
@@ -181,7 +181,7 @@ const UserTaskDetails = createReactClass({
   renderTabComponent() {
     let tab = this.activeTab();
     if (tab.id == 'samples') {
-      return <MoveItems userTask={this.state.userTask} />
+      return <SampleTransitioner sampleBatch={this.state.userTask.sampleBatch} />
     }
     else if (tab.id == "details") {
       return <UserTaskDetailsFields userTask={this.state.userTask} />

@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Container as ContainerPropType } from 'app/climsTypes';
 import SampleWell from './sampleWell';
+import { SampleLocation } from './sampleLocation';
+
+export const SampleContainerType = {
+  SOURCE: 1,
+  TARGET: 2,
+};
 
 const containerStyle = {
   margin: '20px auto',
@@ -19,9 +24,15 @@ const cellStyleHighlightBackground = {
   backgroundColor: 'aliceblue',
 };
 
-class SampleContainer extends React.Component {
+export class SampleContainer extends React.Component {
+  constructor(props) {
+    super(props);
 
-  // Receives a prop container, that can e.g. come from the sample-batch endpoint
+    this.state = {
+      hoverRow: null,
+      hoverCol: null,
+    };
+  }
 
   getRowIndicator(rowIndex) {
     return String.fromCharCode(65 + rowIndex);
@@ -34,59 +45,143 @@ class SampleContainer extends React.Component {
   getHeaderStyle(row, col) {
     let style = {};
     Object.assign(style, cellStyleHeader);
-    if (
-      this.props.container.viewLogic.focusRow === row ||
-      this.props.container.viewLogic.focusCol === col
-    ) {
+    if (this.state.hoverRow == row || this.state.hoverCol === col) {
       Object.assign(style, cellStyleHighlightBackground);
     }
     return style;
   }
 
+  isSourceContainer() {
+    const { containerType } = this.props;
+    return containerType === SampleContainerType.SOURCE;
+  }
+
+  isTargetContainer() {
+    const { containerType } = this.props;
+    return containerType === SampleContainerType.TARGET;
+  }
+
+  isTransitionSource(location) {
+    const { transitionSources } = this.props;
+
+    if (!this.isSourceContainer()) {
+      return false;
+    }
+
+    return !!transitionSources.find(tl => tl.equals(location));
+  }
+
+  isActiveTransitionSource(location) {
+    const { activeSampleTransition } = this.props;
+    let isActiveTransitionSrc = false;
+
+    if (!this.isSourceContainer()) {
+      return isActiveTransitionSrc;
+    }
+
+    if (activeSampleTransition) {
+      const activeSampleTransitionSource = activeSampleTransition.getSource();
+      if (activeSampleTransitionSource) {
+        isActiveTransitionSrc = activeSampleTransitionSource.equals(location);
+      }
+    }
+
+    return isActiveTransitionSrc;
+  }
+
+  isTransitionTarget(location) {
+    const { transitionTargets } = this.props;
+
+    if (!this.isTargetContainer()) {
+      return false;
+    }
+
+    return !!transitionTargets.find(tl => tl.equals(location));
+  }
+
+  isTransitionTargetOfHoveredSample(location) {
+    const { transitionTargetsOfHoveredSample } = this.props;
+
+    if (!this.isTargetContainer()) {
+      return false;
+    }
+
+    return !!transitionTargetsOfHoveredSample.find(tl => tl.equals(location));
+  }
+
   createRows() {
     let rows = [];
     let colsHeader = [];
+    let key;
 
-    colsHeader.push(<td key={-1} style={cellStyleHeader} />);
-    for (let c = 0; c < this.props.container.dimensions.cols; c++) {
+    key = '-1_-1';
+    colsHeader.push(<td key={key} style={cellStyleHeader} />);
+    for (let c = 0; c < this.props.cols; c++) {
+      key = `${c}_-1`;
       colsHeader.push(
-        <td key={c} style={this.getHeaderStyle(-1, c)}>{this.getColIndicator(c)}</td>
+        <td key={key} style={this.getHeaderStyle(-1, c)}>
+          {this.getColIndicator(c)}
+        </td>
       );
     }
     rows.push(<tr>{colsHeader}</tr>);
 
-    for (let r = 0; r < this.props.container.dimensions.rows; r++) {
+    for (let r = 0; r < this.props.rows; r++) {
       let cols = [];
+      // Get all samples with this row
+      const rowSamples = this.props.samples.filter(s => s.location.row === r);
 
-      cols.push(<td key={r} style={this.getHeaderStyle(r, -1)}>{this.getRowIndicator(r)}</td>);
-      for (let c = 0; c < this.props.container.dimensions.cols; c++) {
-        const wellLocation = this.props.container.get(r, c);
-        const wellState = wellLocation.getLocationState();
-        const wellBackgroundHighlighted =
-          this.props.container.viewLogic.focusRow === r ||
-          this.props.container.viewLogic.focusCol === c;
+      key = `-1_${r}`;
+      cols.push(
+        <td key={key} style={this.getHeaderStyle(r, -1)}>
+          {this.getRowIndicator(r)}
+        </td>
+      );
+      for (let c = 0; c < this.props.cols; c++) {
+        const thisLocation = new SampleLocation(this.props.id, c, r);
 
-        const eventData = {
-          location: wellLocation,
+        key = `${c}_${r}`;
+        const sample = rowSamples.find(s => s.location.col === c);
+        const sampleId = sample ? sample.id : null;
+
+        // The background should be highlighted if this row is in
+        // the hovered row or coumn.
+        const isHoveredRowOrColumn =
+          this.state.hoverRow == r || this.state.hoverCol === c;
+
+        const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(thisLocation);
+        const isTransitionSource = this.isTransitionSource(thisLocation);
+        const isTransitionTarget = this.isTransitionTarget(thisLocation);
+        const isActiveTransitionSource = this.isActiveTransitionSource(thisLocation);
+
+        const onWellClick = location => {
+          this.props.onWellClicked(location, sampleId);
         };
 
-        const onWellClick = e => {
-          e.preventDefault();
-          this.props.onWellClicked(eventData);
+        const onWellMouseOver = location => {
+          if (this.state.hoverRow != r || this.state.hoverCol != c) {
+            this.setState({hoverRow: r, hoverCol: c});
+          }
+
+          if (this.props.onWellMouseOver) {
+            this.props.onWellMouseOver(location, sampleId);
+          }
         };
 
-        const onWellHover = e => {
-          this.props.handleLocationHover(eventData);
-        };
+        const location = new SampleLocation(this.props.id, c, r);
 
         cols.push(
           <SampleWell
-            sampleWellState={wellState}
-            isSelected={wellLocation.isSelected}
-            isHighlighted={wellLocation.highlightTransition}
-            isHighlightedBackground={wellBackgroundHighlighted}
-            onSampleWellClick={onWellClick}
-            onSampleWellHover={onWellHover}
+            key={key}
+            location={location}
+            onClick={onWellClick}
+            onMouseOver={onWellMouseOver}
+            containsSampleId={sampleId}
+            isTransitionSource={isTransitionSource}
+            isTransitionTarget={isTransitionTarget}
+            isActiveTransitionSource={isActiveTransitionSource}
+            isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
+            inHoveredRowOrColumn={isHoveredRowOrColumn}
           />
         );
       }
@@ -95,13 +190,19 @@ class SampleContainer extends React.Component {
     return rows;
   }
 
-  onMouseLeave(e) {
-    this.props.handleLeaveContainer(this.props.container);
+  onMouseOut() {
+    if (this.state.hoverRow || this.state.hoverCol) {
+      this.setState({hoverRow: null, hoverCol: null});
+    }
+
+    if (this.props.onMouseOut) {
+      this.props.onMouseOut();
+    }
   }
 
   render() {
     return (
-      <table style={containerStyle} onMouseLeave={this.onMouseLeave.bind(this)}>
+      <table style={containerStyle} onMouseOut={this.onMouseOut.bind(this)}>
         <tbody>{this.createRows()}</tbody>
       </table>
     );
@@ -109,25 +210,27 @@ class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
-  handleLeaveContainer: PropTypes.func, // TODO: remove
-  handleLocationHover: PropTypes.func, // TODO: remove
-  onWellClicked: PropTypes.func, // TODO: remove
-  container: ContainerPropType, // TODO: remove
-  cols: PropTypes.number, // TODO: make isRequired
-  rows: PropTypes.number, // TODO: make isRequired
+  onWellClicked: PropTypes.func, // TODO: make isRequired
+  onWellMouseOver: PropTypes.func, // TODO: make isRequired
+  onMouseOut: PropTypes.func,
+  containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
+  id: PropTypes.string.isRequired, // TODO: change to number
+  cols: PropTypes.number.isRequired,
+  rows: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  containerTypeName: PropTypes.string.isRequired,
+
   // TODO: implement these new prop types
+  // transitionSources: PropTypes.arrayOf(),
+  // transitionTargets: PropTypes.arrayOf(),
+  // transitionTargetsOfHoveredSample: PropTypes.arrayOf(),
+  // activeSampleTransition: PropTypes.shape(),
   /*samples: PropTypes.arrayOf(
     PropTypes.shape({
       col: PropTypes.number.isRequired,
       row: PropTypes.number.isRequired,
     })
-  ),
-  onSampleWellClick: PropTypes.func, // TODO: make isRequired
-  onSampleWellHover: PropTypes.func, // TODO: make isRequired
-  hoverRow: PropTypes.number,
-  hoverCol: PropTypes.number,*/
+  ),*/
 };
 
 SampleContainer.displayName = 'SampleContainer';
-
-export default SampleContainer;

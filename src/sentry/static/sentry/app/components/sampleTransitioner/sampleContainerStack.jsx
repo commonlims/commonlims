@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Panel, PanelBody } from 'app/components/panels';
+import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
-import SampleContainer from './sampleContainer';
+import {SampleContainer, SampleContainerType} from './sampleContainer';
+import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -23,7 +24,7 @@ class SampleContainerStack extends React.Component {
     }
     const container = this.props.containers[containerIndex];
 
-    this.setState({ containerIndex, container });
+    this.setState({containerIndex, container});
   }
 
   previousContainer(e) {
@@ -34,17 +35,44 @@ class SampleContainerStack extends React.Component {
     }
     const container = this.props.containers[containerIndex];
 
-    this.setState({ containerIndex, container });
+    this.setState({containerIndex, container});
+  }
+
+  onSampleWellClicked(location, sampleId) {
+    this.props.onWellClicked(location, sampleId);
+  }
+
+  onSampleWellMouseOver(location, sampleId) {
+    if(!this.props.onWellMouseOver) {
+      return;
+    }
+
+    this.props.onWellMouseOver(location, sampleId);
   }
 
   render() {
+    const containerType = this.props.source
+      ? SampleContainerType.SOURCE
+      : SampleContainerType.TARGET;
+
+    const samples = this.props.samples.filter(
+      s => s.location.containerId === this.state.container.id
+    );
+
+    const {
+      transitionSources,
+      transitionTargets,
+      transitionTargetsOfHoveredSample,
+      activeSampleTransition
+    } = this.props;
+
     return (
-      <div style={{ display: 'inline-block', minWidth: '540px' }}>
+      <div style={{display: 'inline-block', minWidth: '540px'}}>
         <Panel>
           <SampleContainerStackActions
             canAdd={this.props.canAdd}
             canRemove={this.props.canRemove}
-            container={this.state.container}
+            name={this.state.container.name}
             numContainers={this.props.containers.length}
             containerIndex={this.state.containerIndex + 1}
             source={this.props.source}
@@ -53,11 +81,20 @@ class SampleContainerStack extends React.Component {
           />
           <PanelBody>
             <SampleContainer
-              container={this.props.containers[0]}
-              isTemporary={this.props.isTemporary}
-              onWellClicked={this.props.onWellClicked}
-              handleLocationHover={this.props.handleLocationHover}
-              handleLeaveContainer={this.props.handleLeaveContainer}
+              id={this.state.container.id}
+              cols={this.state.container.dimensions.cols}
+              rows={this.state.container.dimensions.rows}
+              name={this.state.container.name}
+              containerTypeName={this.state.container.typeName}
+              containerType={containerType}
+              onWellClicked={this.onSampleWellClicked.bind(this)}
+              onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
+              onMouseOut={this.props.onMouseOut}
+              samples={samples}
+              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
+              activeSampleTransition={activeSampleTransition}
+              transitionSources={transitionSources}
+              transitionTargets={transitionTargets}
             />
           </PanelBody>
         </Panel>
@@ -68,14 +105,28 @@ class SampleContainerStack extends React.Component {
 
 SampleContainerStack.propTypes = {
   title: PropTypes.string,
-  handleLeaveContainer: PropTypes.func,
-  handleLocationHover: PropTypes.func,
   onWellClicked: PropTypes.func,
-  isTemporary: PropTypes.bool,
+  onWellMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func.isRequired,
   canAdd: PropTypes.bool,
   canRemove: PropTypes.bool,
   containers: PropTypes.array,
   source: PropTypes.bool,
+  // TODO: format these properly
+  // or, samples will be mapped directly to containers later
+  samples: PropTypes.arrayOf(PropTypes.shape()),
+  // TODO: consider separate classes for source and target container stacks
+  transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
+  transitionTargets: PropTypes.arrayOf(PropTypes.shape()),
+  transitionSources: PropTypes.arrayOf(PropTypes.shape()),
+  activeSampleTransition: PropTypes.shape(),
+};
+
+SampleContainerStack.defaultProps = {
+  samples: [],
+  transitionTargetsOfHoveredSample: [],
+  transitionTargets: [],
+  transitionSources: [],
 };
 
 SampleContainerStack.displayName = 'SampleContainerStack';

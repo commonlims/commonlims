@@ -1,49 +1,70 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import InlineSvg from 'app/components/inlineSvg';
-import { LocationState } from './location';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 
 class SampleWell extends React.Component {
   getWellIcon() {
-    switch (this.props.sampleWellState) {
-      case LocationState.EMPTY:
-        return 'icon-well-empty';
-      case LocationState.NOT_EMPTY:
-        return 'icon-well-full';
-      case LocationState.NOT_EMPTY_TRANSITION_SOURCE:
-        return 'icon-well-transitioned';
-      case LocationState.NOT_EMPTY_TRANSITION_TARGET:
-        return 'icon-well-added';
-      default:
-        return 'icon-well-empty';
+    const {containsSampleId, isTransitionSource, isTransitionTarget} = this.props;
+
+    if (isTransitionTarget) {
+      return 'icon-well-added';
     }
+
+    if (isTransitionSource) {
+      return 'icon-well-transitioned';
+    }
+
+    if (containsSampleId) {
+      return 'icon-well-full';
+    }
+
+    return 'icon-well-empty';
   }
 
   getWellClassName() {
+    const {
+      isActiveTransitionSource,
+      inHoveredRowOrColumn,
+      isTransitionTargetOfHoveredSample,
+    } = this.props;
+
     let className = 'sample-well';
 
-    if (this.props.isSelected) {
+    if (isActiveTransitionSource) {
       className = `${className} selected`;
-    } else if (this.props.isHighlighted) {
+    } else if (isTransitionTargetOfHoveredSample) {
       className = `${className} highlighted`;
     }
 
-    if (this.props.isHighlightedBackground) {
+    if (inHoveredRowOrColumn) {
       className = `${className} highlighted-background`;
     }
 
     return className;
   }
 
+  handleMouseOver() {
+    const {location} = this.props;
+    this.props.onMouseOver(location);
+  }
+
+  handleClick() {
+    const {location} = this.props;
+    this.props.onClick(location);
+  }
+
   render() {
     return (
-      <td className={this.getWellClassName()}>
+      <td
+        className={this.getWellClassName()}
+        onMouseOver={this.handleMouseOver.bind(this)}
+      >
         <InlineSvg
           width="27px"
           height="27px"
           src={this.getWellIcon()}
-          onClick={this.props.onSampleWellClick}
-          onMouseOver={this.props.onSampleWellHover}
+          onClick={this.handleClick.bind(this)}
         />
       </td>
     );
@@ -51,18 +72,24 @@ class SampleWell extends React.Component {
 }
 
 SampleWell.propTypes = {
-  sampleWellState: PropTypes.number.isRequired,
-  onSampleWellClick: PropTypes.func.isRequired,
-  onSampleWellHover: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool,
-  isHighlighted: PropTypes.bool,
-  isHighlightedBackground: PropTypes.bool,
+  location: PropTypes.instanceOf(SampleLocation).isRequired,
+  onClick: PropTypes.func.isRequired,
+  onMouseOver: PropTypes.func.isRequired,
+  containsSampleId: PropTypes.number,
+  isTransitionSource: PropTypes.bool,
+  isTransitionTarget: PropTypes.bool,
+  isActiveTransitionSource: PropTypes.bool,
+  isTransitionTargetOfHoveredSample: PropTypes.bool,
+  inHoveredRowOrColumn: PropTypes.bool,
 };
 
 SampleWell.defaultProps = {
-  isSelected: false,
-  isHighlighted: false,
-  isHighlightedBackground: false,
+  containsSampleId: null,
+  isTransitionSource: false,
+  isTransitionTarget: false,
+  isActiveTransitionSource: false,
+  isTransitionTargetOfHoveredSample: false,
+  inHoveredRowOrColumn: false,
 };
 
 export default SampleWell;
