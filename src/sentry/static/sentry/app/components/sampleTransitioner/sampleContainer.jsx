@@ -8,10 +8,6 @@ export const SampleContainerType = {
   TARGET: 2,
 };
 
-const cellStyleHighlightBackground = {
-  backgroundColor: 'aliceblue',
-};
-
 export class SampleContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -31,12 +27,13 @@ export class SampleContainer extends React.Component {
     return colIndex + 1;
   }
 
-  getHeaderStyle(row, col) {
-    let style = {};
-    if (this.state.hoverRow == row || this.state.hoverCol === col) {
-      Object.assign(style, cellStyleHighlightBackground);
-    }
-    return style;
+  isHoveredRowOrColumn(row, col) {
+    const { hoverRow, hoverCol } = this.state;
+    return hoverRow === row || hoverCol === col;
+  }
+
+  getHeaderClassName(row, col) {
+    return this.isHoveredRowOrColumn(row, col) ? 'highlighted-background' : '';
   }
 
   isSourceContainer() {
@@ -118,7 +115,7 @@ export class SampleContainer extends React.Component {
     for (let c = 0; c < cols; c++) {
       key = `${keyPrefix}-${c}`;
       ths.push(
-        <th key={key} style={this.getHeaderStyle(-1, c)}>
+        <th key={key} className={this.getHeaderClassName(-1, c)}>
           {this.getColIndicator(c)}
         </th>
       );
@@ -138,7 +135,7 @@ export class SampleContainer extends React.Component {
 
       key = `-1_${r}`;
       cols.push(
-        <th key={key} style={this.getHeaderStyle(r, -1)}>
+        <th key={key} className={this.getHeaderClassName(r, -1)}>
           {this.getRowIndicator(r)}
         </th>
       );
@@ -148,12 +145,6 @@ export class SampleContainer extends React.Component {
         key = `${c}_${r}`;
         const sample = rowSamples.find(s => s.location.col === c);
         const sampleId = sample ? sample.id : null;
-
-        // The background should be highlighted if this row is in
-        // the hovered row or coumn.
-        const isHoveredRowOrColumn =
-          this.state.hoverRow == r || this.state.hoverCol === c;
-
         const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(thisLocation);
         const isTransitionSource = this.isTransitionSource(thisLocation);
         const isTransitionTarget = this.isTransitionTarget(thisLocation);
@@ -186,7 +177,7 @@ export class SampleContainer extends React.Component {
             isTransitionTarget={isTransitionTarget}
             isActiveTransitionSource={isActiveTransitionSource}
             isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
-            inHoveredRowOrColumn={isHoveredRowOrColumn}
+            inHoveredRowOrColumn={this.isHoveredRowOrColumn(r, c)}
           />
         );
       }

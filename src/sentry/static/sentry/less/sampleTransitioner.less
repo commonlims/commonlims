@@ -1,3 +1,5 @@
+@sample-transitioner-hover-bg-color: aliceblue;
+
 .sample-transitioner {
   table.sample-container {
     margin: 20px auto;
@@ -12,6 +14,10 @@
       margin: 1px;
       color: #BDB4C7;
       text-align: center;
+
+      &.highlighted-background {
+        background-color: @sample-transitioner-hover-bg-color;
+      }
     }
   }
 
@@ -29,7 +35,7 @@
     }
 
     &.highlighted-background {
-      background-color: aliceblue;
+      background-color: @sample-transitioner-hover-bg-color;
     }
   }
 }
