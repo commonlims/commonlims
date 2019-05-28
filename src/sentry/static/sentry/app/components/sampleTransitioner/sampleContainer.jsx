@@ -8,11 +8,6 @@ export const SampleContainerType = {
   TARGET: 2,
 };
 
-const containerStyle = {
-  margin: '20px auto',
-  borderCollapse: 'collapse',
-};
-
 const cellStyleHeader = {
   padding: '1px',
   margin: '1px',
@@ -202,7 +197,7 @@ export class SampleContainer extends React.Component {
 
   render() {
     return (
-      <table style={containerStyle} onMouseOut={this.onMouseOut.bind(this)}>
+      <table className="sample-container" onMouseOut={this.onMouseOut.bind(this)}>
         <tbody>{this.createRows()}</tbody>
       </table>
     );
