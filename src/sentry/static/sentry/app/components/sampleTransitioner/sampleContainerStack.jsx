@@ -81,9 +81,9 @@ class SampleContainerStack extends React.Component {
           />
           <PanelBody>
             <SampleContainer
-              id={this.state.container.id}
-              cols={this.state.container.dimensions.cols}
-              rows={this.state.container.dimensions.rows}
+              containerId={this.state.container.id}
+              numColumns={this.state.container.dimensions.cols}
+              numRows={this.state.container.dimensions.rows}
               name={this.state.container.name}
               containerTypeName={this.state.container.typeName}
               containerType={containerType}

@@ -18,11 +18,6 @@ export class SampleContainer extends React.Component {
     };
   }
 
-  // TODO: make these static or local functions
-  getRowIndicator(rowIndex) {
-    return String.fromCharCode(65 + rowIndex);
-  }
-
   isHoveredRowOrColumn(row, col) {
     const { hoverRow, hoverCol } = this.state;
     return hoverRow === row || hoverCol === col;
@@ -101,77 +96,88 @@ export class SampleContainer extends React.Component {
   }
 
   renderColumnsHeader() {
-    const { cols } = this.props;
-    const keyPrefix = 'thead';
+    const { numColumns } = this.props;
+    const keyPrefix = 'thead-th-';
     const ths = [(<th key={`${keyPrefix}-corner`} />)];
 
-    for (let c = 0; c < cols; c++) {
+    for (let c = 0; c < numColumns; c++) {
+      const label = c + 1;
       ths.push(
-        <th key={`${keyPrefix}-${c}`} className={this.getHeaderClassName(-1, c)}>{c+1}</th>
+        <th key={`${keyPrefix}-${c}`} className={this.getHeaderClassName(-1, c)}>{label}</th>
       );
     }
 
     return (<tr>{ths}</tr>);
   }
 
+  renderRowHeader(row) {
+    const keyPrefix = 'th-';
+    const label = String.fromCharCode(65 + row);
+    return(<th key={`${keyPrefix}-${row}`} className={this.getHeaderClassName(row, -1)}>{label}</th>);
+  }
+
+  renderSampleWell(row, col, sampleId) {
+    const {
+      containerId,
+      onWellClicked,
+      onWellMouseOver,
+    } = this.props;
+
+    const key = `${row}_${col}`;
+    const location = new SampleLocation(containerId, col, row);
+    const isTransitionSource = this.isTransitionSource(location);
+    const isTransitionTarget = this.isTransitionTarget(location);
+    const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(location);
+    const isActiveTransitionSource = this.isActiveTransitionSource(location);
+    const isHoveredRowOrColumn = this.isHoveredRowOrColumn(row, col);
+
+    const handleClick = location => {
+      onWellClicked(location, sampleId);
+    };
+
+    const handleMouseOver = location => {
+      if(!this.isHoveredRowOrColumn(row, col)) {
+        this.setState({ hoverRow: row, hoverCol: col });
+      }
+
+      onWellMouseOver(location, sampleId);
+    };
+
+    return (<SampleWell
+      key={key}
+      location={location}
+      onClick={handleClick}
+      onMouseOver={handleMouseOver}
+      containsSampleId={sampleId}
+      isTransitionSource={isTransitionSource}
+      isTransitionTarget={isTransitionTarget}
+      isActiveTransitionSource={isActiveTransitionSource}
+      isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
+      inHoveredRowOrColumn={isHoveredRowOrColumn}
+    />);
+  }
+
   createRows() {
-    let rows = [];
-    let key;
+    const {
+      numColumns,
+      numRows,
+      samples,
+    } = this.props;
+    const rows = [];
 
-    for (let r = 0; r < this.props.rows; r++) {
-      let cols = [];
+    for (let r = 0; r < numRows; r++) {
+      const row = [this.renderRowHeader(r)];
+
       // Get all samples with this row
-      const rowSamples = this.props.samples.filter(s => s.location.row === r);
+      const rowSamples = samples.filter(s => s.location.row === r);
 
-      key = `-1_${r}`;
-      cols.push(
-        <th key={key} className={this.getHeaderClassName(r, -1)}>
-          {this.getRowIndicator(r)}
-        </th>
-      );
-      for (let c = 0; c < this.props.cols; c++) {
-        const thisLocation = new SampleLocation(this.props.id, c, r);
-
-        key = `${c}_${r}`;
+      for (let c = 0; c < numColumns; c++) {
         const sample = rowSamples.find(s => s.location.col === c);
         const sampleId = sample ? sample.id : null;
-        const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(thisLocation);
-        const isTransitionSource = this.isTransitionSource(thisLocation);
-        const isTransitionTarget = this.isTransitionTarget(thisLocation);
-        const isActiveTransitionSource = this.isActiveTransitionSource(thisLocation);
-
-        const onWellClick = location => {
-          this.props.onWellClicked(location, sampleId);
-        };
-
-        const onWellMouseOver = location => {
-          if (this.state.hoverRow != r || this.state.hoverCol != c) {
-            this.setState({hoverRow: r, hoverCol: c});
-          }
-
-          if (this.props.onWellMouseOver) {
-            this.props.onWellMouseOver(location, sampleId);
-          }
-        };
-
-        const location = new SampleLocation(this.props.id, c, r);
-
-        cols.push(
-          <SampleWell
-            key={key}
-            location={location}
-            onClick={onWellClick}
-            onMouseOver={onWellMouseOver}
-            containsSampleId={sampleId}
-            isTransitionSource={isTransitionSource}
-            isTransitionTarget={isTransitionTarget}
-            isActiveTransitionSource={isActiveTransitionSource}
-            isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
-            inHoveredRowOrColumn={this.isHoveredRowOrColumn(r, c)}
-          />
-        );
+        row.push(this.renderSampleWell(r, c, sampleId));
       }
-      rows.push(<tr>{cols}</tr>);
+
+      rows.push(<tr>{row}</tr>);
     }
     return rows;
   }
@@ -189,13 +195,13 @@ export class SampleContainer extends React.Component {
 }
 
 SampleContainer.propTypes = {
-  onWellClicked: PropTypes.func, // TODO: make isRequired
-  onWellMouseOver: PropTypes.func, // TODO: make isRequired
-  onMouseOut: PropTypes.func,
-  containerType: PropTypes.number.isRequired, // TODO: rename to containerSourceOrTarget
-  id: PropTypes.string.isRequired, // TODO: change to number
-  cols: PropTypes.number.isRequired,
-  rows: PropTypes.number.isRequired,
+  containerId: PropTypes.number.isRequired,
+  onWellClicked: PropTypes.func.isRequired,
+  onWellMouseOver: PropTypes.func.isRequired,
+  onMouseOut: PropTypes.func.isRequired,
+  containerType: PropTypes.number.isRequired,
+  numColums: PropTypes.number.isRequired,
+  numRows: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   containerTypeName: PropTypes.string.isRequired,
 
