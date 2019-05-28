@@ -69,13 +69,13 @@ export class SampleContainer extends React.Component {
   }
 
   isTransitionTargetOfHoveredSample(location) {
-    const { transitionTargetsOfHoveredSample } = this.props;
+    const { transitionTargetLocationsOfHoveredSample } = this.props;
 
     if (!this.isTargetContainer()) {
       return false;
     }
 
-    return !!transitionTargetsOfHoveredSample.find(tl => tl.equals(location));
+    return !!transitionTargetLocationsOfHoveredSample.find(tl => tl.equals(location));
   }
 
   onMouseOut() {
@@ -199,7 +199,7 @@ SampleContainer.propTypes = {
   samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
   transitionSourceLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   transitionTargetLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
-  transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionTargetLocationsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   activeSampleTransitionSource: PropTypes.instanceOf(SampleLocation),
 };
 
@@ -207,7 +207,7 @@ SampleContainer.defaultProps = {
   samples: [],
   transitionSourceLocations: [],
   transitionTargetLocations: [],
-  transitionTargetsOfHoveredSample: [],
+  transitionTargetLocationsOfHoveredSample: [],
   activeSampleTransitionSource: null,
 };
 

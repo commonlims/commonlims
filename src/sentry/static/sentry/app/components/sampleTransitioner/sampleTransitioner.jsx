@@ -49,7 +49,7 @@ class SampleTransitioner extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       activeSampleTransition: null,
-      transitionTargetsOfHoveredSample: [],
+      transitionTargetLocationsOfHoveredSample: [],
       samples,
     };
   }
@@ -119,14 +119,14 @@ class SampleTransitioner extends React.Component {
     }
 
     // Find all transitions for this well and highlight them.
-    const transitionTargetsOfHoveredSample = sampleTransitions
+    const transitionTargetLocationsOfHoveredSample = sampleTransitions
       .filter(t => t.sourceLocation.equals(sampleLocation))
       .map(f => f.targetLocation);
-    this.setState({transitionTargetsOfHoveredSample});
+    this.setState({transitionTargetLocationsOfHoveredSample});
   }
 
   onMouseOut() {
-    this.setState({transitionTargetsOfHoveredSample: []});
+    this.setState({transitionTargetLocationsOfHoveredSample: []});
   }
 
   // For now we assume all samples fetched are mapped to source containers.
@@ -135,7 +135,7 @@ class SampleTransitioner extends React.Component {
   render() {
     // TODO: only pass the transitions that are relevant to each container.
     const {
-      transitionTargetsOfHoveredSample,
+      transitionTargetLocationsOfHoveredSample,
       activeSampleTransition,
       sampleTransitions
     } = this.state;
@@ -171,7 +171,7 @@ class SampleTransitioner extends React.Component {
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
               activeSampleTransition={activeSampleTransition}
-              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
+              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
               transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>

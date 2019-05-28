@@ -63,7 +63,7 @@ class SampleContainerStack extends React.Component {
     const {
       transitionSourceLocations,
       transitionTargetLocations,
-      transitionTargetsOfHoveredSample,
+      transitionTargetLocationsOfHoveredSample,
       activeSampleTransition
     } = this.props;
 
@@ -95,7 +95,7 @@ class SampleContainerStack extends React.Component {
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               onMouseOut={this.props.onMouseOut}
               samples={samples}
-              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
+              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
               activeSampleTransitionSource={activeSampleTransitionSource}
               transitionSourceLocations={transitionSourceLocations}
               transitionTargetLocations={transitionTargetLocations}
@@ -119,7 +119,7 @@ SampleContainerStack.propTypes = {
   samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
   // TODO: format these properly
   // TODO: consider separate classes for source and target container stacks
-  transitionTargetsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
+  transitionTargetLocationsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
   transitionTargetLocations: PropTypes.arrayOf(PropTypes.shape()),
   transitionSourceLocations: PropTypes.arrayOf(PropTypes.shape()),
   activeSampleTransition: PropTypes.shape(),
@@ -127,7 +127,7 @@ SampleContainerStack.propTypes = {
 
 SampleContainerStack.defaultProps = {
   samples: [],
-  transitionTargetsOfHoveredSample: [],
+  transitionTargetLocationsOfHoveredSample: [],
   transitionTargetLocations: [],
   transitionSourceLocations: [],
 };
