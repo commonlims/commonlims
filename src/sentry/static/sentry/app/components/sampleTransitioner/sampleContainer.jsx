@@ -3,7 +3,7 @@ import React from 'react';
 import SampleWell from './sampleWell';
 import { SampleLocation } from './sampleLocation';
 
-export const SampleContainerType = {
+export const SampleContainerDirectionality = {
   SOURCE: 1,
   TARGET: 2,
 };
@@ -28,13 +28,13 @@ export class SampleContainer extends React.Component {
   }
 
   isSourceContainer() {
-    const { containerType } = this.props;
-    return containerType === SampleContainerType.SOURCE;
+    const { containerDirectionality } = this.props;
+    return containerDirectionality === SampleContainerDirectionality.SOURCE;
   }
 
   isTargetContainer() {
-    const { containerType } = this.props;
-    return containerType === SampleContainerType.TARGET;
+    const { containerDirectionality } = this.props;
+    return containerDirectionality === SampleContainerDirectionality.TARGET;
   }
 
   isTransitionSource(location) {
@@ -197,14 +197,12 @@ export class SampleContainer extends React.Component {
 
 SampleContainer.propTypes = {
   containerId: PropTypes.number.isRequired,
+  containerDirectionality: PropTypes.number.isRequired,
+  numColums: PropTypes.number.isRequired,
+  numRows: PropTypes.number.isRequired,
   onWellClicked: PropTypes.func.isRequired,
   onWellMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
-  containerType: PropTypes.number.isRequired,
-  numColums: PropTypes.number.isRequired,
-  numRows: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  containerTypeName: PropTypes.string.isRequired,
 
   // TODO: implement these new prop types
   // transitionSources: PropTypes.arrayOf(),

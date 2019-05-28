@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
-import {SampleContainer, SampleContainerType} from './sampleContainer';
+import {SampleContainer, SampleContainerDirectionality} from './sampleContainer';
 import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
 
 class SampleContainerStack extends React.Component {
@@ -51,9 +51,9 @@ class SampleContainerStack extends React.Component {
   }
 
   render() {
-    const containerType = this.props.source
-      ? SampleContainerType.SOURCE
-      : SampleContainerType.TARGET;
+    const containerDirectionality = this.props.source
+      ? SampleContainerDirectionality.SOURCE
+      : SampleContainerDirectionality.TARGET;
 
     const samples = this.props.samples.filter(
       s => s.location.containerId === this.state.container.id
@@ -82,11 +82,9 @@ class SampleContainerStack extends React.Component {
           <PanelBody>
             <SampleContainer
               containerId={this.state.container.id}
+              containerDirectionality={containerDirectionality}
               numColumns={this.state.container.dimensions.cols}
               numRows={this.state.container.dimensions.rows}
-              name={this.state.container.name}
-              containerTypeName={this.state.container.typeName}
-              containerType={containerType}
               onWellClicked={this.onSampleWellClicked.bind(this)}
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               onMouseOut={this.props.onMouseOut}
