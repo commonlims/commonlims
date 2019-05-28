@@ -123,7 +123,7 @@ export class SampleContainer extends React.Component {
       onWellMouseOver,
     } = this.props;
 
-    const key = `${row}_${col}`;
+    const key = `samplewell-${row}-${col}`;
     const location = new SampleLocation(containerId, col, row);
     const isTransitionSource = this.isTransitionSource(location);
     const isTransitionTarget = this.isTransitionTarget(location);
@@ -163,6 +163,7 @@ export class SampleContainer extends React.Component {
       numRows,
       samples,
     } = this.props;
+    const keyPrefix = 'tr-';
     const rows = [];
 
     for (let r = 0; r < numRows; r++) {
@@ -177,7 +178,7 @@ export class SampleContainer extends React.Component {
         row.push(this.renderSampleWell(r, c, sampleId));
       }
 
-      rows.push(<tr>{row}</tr>);
+      rows.push(<tr key={`${keyPrefix}-${r}`}>{row}</tr>);
     }
     return rows;
   }
