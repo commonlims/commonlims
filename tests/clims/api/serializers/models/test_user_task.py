@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 from sentry.testutils import TestCase
 
-from clims.api.serializers.models import UserTaskSerializer
+from clims.api.serializers.models.usertask import UserTaskSerializer
 from clims.models.user_task import UserTask
 
 
