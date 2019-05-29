@@ -16,10 +16,10 @@
           "type": "python",
           "request": "launch",
           "stopOnEntry": true,
-          "program": "/Users/billy/.virtualenvs/sentry/bin/sentry",
-          "args": ["devserver"],
+          // Replace with the full path to your lims (TODO: There must a variable we can use for this)
+          "program": "lims",
+          "args": ["devserver", "--vscode-debug"],
           "cwd": "${workspaceRoot}",
-          "debugOptions": ["WaitOnAbnormalExit", "WaitOnNormalExit", "RedirectOutput"]
         },
         {
             "name": "jest",
