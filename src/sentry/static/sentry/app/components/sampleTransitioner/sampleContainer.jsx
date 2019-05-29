@@ -150,7 +150,7 @@ export class SampleContainer extends React.Component {
     />);
   }
 
-  createRows() {
+  renderRows() {
     const {
       numColumns,
       numRows,
@@ -182,7 +182,7 @@ export class SampleContainer extends React.Component {
         <thead>
           {this.renderColumnsHeader()}
         </thead>
-        <tbody>{this.createRows()}</tbody>
+        <tbody>{this.renderRows()}</tbody>
       </table>
     );
   }
@@ -191,7 +191,7 @@ export class SampleContainer extends React.Component {
 SampleContainer.propTypes = {
   containerId: PropTypes.number.isRequired,
   containerDirectionality: PropTypes.number.isRequired,
-  numColums: PropTypes.number.isRequired,
+  numColumns: PropTypes.number.isRequired,
   numRows: PropTypes.number.isRequired,
   onWellClicked: PropTypes.func.isRequired,
   onWellMouseOver: PropTypes.func.isRequired,
@@ -212,3 +212,5 @@ SampleContainer.defaultProps = {
 };
 
 SampleContainer.displayName = 'SampleContainer';
+
+export default SampleContainer;
