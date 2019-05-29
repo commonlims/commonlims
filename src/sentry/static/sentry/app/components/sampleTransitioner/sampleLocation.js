@@ -1,5 +1,5 @@
 export class SampleLocation {
-  constructor(containerId, column, row) {
+  constructor(containerId, row, column) {
     this.containerId = containerId;
     this.column = column;
     this.row = row;

@@ -117,7 +117,7 @@ export class SampleContainer extends React.Component {
     } = this.props;
 
     const key = `samplewell-${row}-${col}`;
-    const location = new SampleLocation(containerId, col, row);
+    const location = new SampleLocation(containerId, row, col);
     const isTransitionSource = this.isTransitionSource(location);
     const isTransitionTarget = this.isTransitionTarget(location);
     const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(location);
