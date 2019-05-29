@@ -8,6 +8,7 @@ from clims.models import UserTaskFile
 
 @register(UserTaskFile)
 class UserTaskFileSerializer(Serializer):
+    # TODO Change this to use django seralizer. See UserTaskSerializer. /JD 2019-05-29
     def serialize(self, obj, attrs, user):
         return {
             'id': six.text_type(obj.id),
