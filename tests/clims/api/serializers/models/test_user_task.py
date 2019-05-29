@@ -12,8 +12,7 @@ class UserTaskSerializerTest(TestCase):
 
         model = UserTask(id=1, name="Test1", organization_id=1, handler="somehandler")
 
-        serializer = UserTaskSerializer()
-        result = serializer.serialize(model, None, None)
+        result = UserTaskSerializer(model).data
         assert result.get('created')
         assert result.get('handler') == 'somehandler'
         assert result.get('id') == 1
