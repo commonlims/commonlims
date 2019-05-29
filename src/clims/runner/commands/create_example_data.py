@@ -15,4 +15,6 @@ def createexampledata():
     # Import models here because they need to be wrapped with a Django context to work.
     # /JD 2019-05-27
     from clims.models.user_task import UserTask
-    UserTask.objects.create(name="Test", organization_id=1, handler="somehandler")
+    UserTask.objects.create(name="Test1", organization_id=1, handler="somehandler")
+    UserTask.objects.create(name="Test2", organization_id=1, handler="somehandler2")
+    UserTask.objects.create(name="Test3", organization_id=1, handler="somehandler2")
