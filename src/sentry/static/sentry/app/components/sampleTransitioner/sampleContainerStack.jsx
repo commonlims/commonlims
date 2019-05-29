@@ -57,7 +57,7 @@ class SampleContainerStack extends React.Component {
       : SampleContainerDirectionality.TARGET;
 
     const samples = this.props.samples.filter(
-      s => s.location.containerId === this.state.container.id
+      s => s.getLocation().getContainerId() === this.state.container.id
     );
 
     const {

@@ -32,7 +32,11 @@ class SampleTransitioner extends React.Component {
 
     // TODO: read transitions and target containers from userTask sampleBatch
     const sourceContainers = sampleBatch.containers;
-    const samples = sampleBatch.samples.map(s => new Sample(s.id, s.name, s.location));
+    const samples = sampleBatch.samples.map(s => {
+      const { containerId, row, col } = s.location;
+      const location = new SampleLocation(containerId, row, col);
+      return new Sample(s.id, s.name, location);
+    });
 
     // Temporary hack: create a new target container
     const targetContainer = {

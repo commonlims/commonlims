@@ -9,3 +9,5 @@ export class Sample {
     return this.location;
   }
 }
+
+export default Sample;

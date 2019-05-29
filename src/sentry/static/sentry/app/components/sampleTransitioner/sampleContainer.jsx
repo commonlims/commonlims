@@ -100,7 +100,7 @@ export class SampleContainer extends React.Component {
       );
     }
 
-    return (<tr>{ths}</tr>);
+    return (<tr key='thead-tr'>{ths}</tr>);
   }
 
   renderRowHeader(row) {
@@ -160,13 +160,12 @@ export class SampleContainer extends React.Component {
     const rows = [];
 
     for (let r = 0; r < numRows; r++) {
-      const row = [this.renderRowHeader(r)];
 
-      // Get all samples with this row
-      const rowSamples = samples.filter(s => s.getLocation().row === r);
+      const row = [this.renderRowHeader(r)];
+      const rowSamples = samples.filter(s => s.getLocation().getRow() === r);
 
       for (let c = 0; c < numColumns; c++) {
-        const sample = rowSamples.find(s => s.getLocation().col === c);
+        const sample = rowSamples.find(s => s.getLocation().getColumn() === c);
         const sampleId = sample ? sample.id : null;
         row.push(this.renderSampleWell(r, c, sampleId));
       }

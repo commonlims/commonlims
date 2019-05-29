@@ -15,4 +15,18 @@ export class SampleLocation {
   	  && this.column === compareLocation.column
   	  && this.row === compareLocation.row;
   }
+
+  getContainerId() {
+    return this.containerId;
+  }
+
+  getRow() {
+    return this.row;
+  }
+
+  getColumn() {
+    return this.column;
+  }
 }
+
+export default SampleLocation;
