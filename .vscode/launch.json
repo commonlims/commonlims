@@ -17,7 +17,7 @@
       "request": "launch",
       "stopOnEntry": true,
       // Replace with the full path to your lims (TODO: There must a variable we can use for this)
-      "program": "/home/johda411-local/anaconda3/envs/commonlims2/bin/lims",
+      "program": "lims",
       "args": ["devserver", "--vscode-debug"],
       "cwd": "${workspaceRoot}"
     },
