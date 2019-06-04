@@ -226,23 +226,16 @@ exports[`OrganizationUserFeedback renders 1`] = `
                         },
                       ],
                       Array [
-                        "/org-slug/project-slug/issues/1/",
+                        "/org-slug/user-tasks/1/",
                       ],
                       Array [
-                        "/org-slug/project-slug/issues/",
-                      ],
-                      Array [
-                        "/org-slug/project-slug/issues/1/activity/",
+                        "/org-slug/user-tasks/1/activity/",
                       ],
                       Array [
                         "/organizations/org-slug/issues/1/events/1/",
                       ],
                     ],
                     "results": Array [
-                      Object {
-                        "isThrow": false,
-                        "value": undefined,
-                      },
                       Object {
                         "isThrow": false,
                         "value": undefined,
@@ -363,23 +356,16 @@ exports[`OrganizationUserFeedback renders 1`] = `
                           },
                         ],
                         Array [
-                          "/org-slug/project-slug/issues/1/",
+                          "/org-slug/user-tasks/1/",
                         ],
                         Array [
-                          "/org-slug/project-slug/issues/",
-                        ],
-                        Array [
-                          "/org-slug/project-slug/issues/1/activity/",
+                          "/org-slug/user-tasks/1/activity/",
                         ],
                         Array [
                           "/organizations/org-slug/issues/1/events/1/",
                         ],
                       ],
                       "results": Array [
-                        Object {
-                          "isThrow": false,
-                          "value": undefined,
-                        },
                         Object {
                           "isThrow": false,
                           "value": undefined,
@@ -1753,12 +1739,13 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                     ],
                                   },
                                   "tags": Array [],
+                                  "type": "error",
                                 }
                               }
                               id="1"
                               key="123"
                             >
-                              <CompactIssue
+                              <CompactUserTask
                                 data={
                                   Object {
                                     "assignedTo": null,
@@ -1790,6 +1777,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                       ],
                                     },
                                     "tags": Array [],
+                                    "type": "error",
                                   }
                                 }
                                 id="1"
@@ -1853,7 +1841,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                         }
                                       }
                                     >
-                                      <CompactIssueHeader
+                                      <CompactUserTaskHeader
                                         data={
                                           Object {
                                             "assignedTo": null,
@@ -1885,6 +1873,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                               ],
                                             },
                                             "tags": Array [],
+                                            "type": "error",
                                           }
                                         }
                                         organization={
@@ -1914,7 +1903,6 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                             "teams": Array [],
                                           }
                                         }
-                                        projectId="project-slug"
                                       >
                                         <Flex
                                           align="center"
@@ -1940,6 +1928,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                   >
                                                     <span
                                                       className="error-level truncate"
+                                                      title="warn"
                                                     />
                                                   </div>
                                                 </Base>
@@ -1948,12 +1937,12 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                 className="truncate"
                                               >
                                                 <ProjectLink
-                                                  to="/org-slug/project-slug/issues/1/"
+                                                  to="/org-slug/user-tasks/1/"
                                                 >
                                                   <Link
                                                     onlyActiveOnIndex={false}
                                                     style={Object {}}
-                                                    to="/org-slug/project-slug/issues/1/"
+                                                    to="/org-slug/user-tasks/1/"
                                                   >
                                                     <a
                                                       onClick={[Function]}
@@ -1965,7 +1954,15 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                       <span
                                                         className="icon icon-star-solid"
                                                       />
-                                                      <span />
+                                                      <span>
+                                                        <span
+                                                          style={
+                                                            Object {
+                                                              "marginRight": 10,
+                                                            }
+                                                          }
+                                                        />
+                                                      </span>
                                                     </a>
                                                   </Link>
                                                 </ProjectLink>
@@ -1976,36 +1973,16 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                         <div
                                           className="event-extra"
                                         >
-                                          <span
-                                            className="project-name"
-                                          >
-                                            <ProjectLink
-                                              to="/org-slug/project-slug/issues/"
-                                            >
-                                              <Link
-                                                onlyActiveOnIndex={false}
-                                                style={Object {}}
-                                                to="/org-slug/project-slug/issues/"
-                                              >
-                                                <a
-                                                  onClick={[Function]}
-                                                  style={Object {}}
-                                                >
-                                                  project-slug
-                                                </a>
-                                              </Link>
-                                            </ProjectLink>
-                                          </span>
                                           <span>
                                             <Link
                                               className="comments"
-                                              to="/org-slug/project-slug/issues/1/activity/"
+                                              to="/org-slug/user-tasks/1/activity/"
                                             >
                                               <Link
                                                 className="comments"
                                                 onlyActiveOnIndex={false}
                                                 style={Object {}}
-                                                to="/org-slug/project-slug/issues/1/activity/"
+                                                to="/org-slug/user-tasks/1/activity/"
                                               >
                                                 <a
                                                   className="comments"
@@ -2027,7 +2004,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                             className="culprit"
                                           />
                                         </div>
-                                      </CompactIssueHeader>
+                                      </CompactUserTaskHeader>
                                       <EventUserFeedback
                                         issueId="1"
                                         orgId="org-slug"
@@ -2073,6 +2050,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                 ],
                                               },
                                               "tags": Array [],
+                                              "type": "error",
                                             },
                                             "name": "Lyn",
                                           }
@@ -2136,6 +2114,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                           ],
                                                         },
                                                         "tags": Array [],
+                                                        "type": "error",
                                                       },
                                                       "name": "Lyn",
                                                     }
@@ -2188,6 +2167,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                                             ],
                                                           },
                                                           "tags": Array [],
+                                                          "type": "error",
                                                         },
                                                         "name": "Lyn",
                                                       }
@@ -2333,7 +2313,7 @@ exports[`OrganizationUserFeedback renders 1`] = `
                                     </div>
                                   </Base>
                                 </PanelItem>
-                              </CompactIssue>
+                              </CompactUserTask>
                             </WithOrganizationMockWrappeer>
                           </div>
                         </PanelBody>
