@@ -16,15 +16,24 @@ test: lint test-js test-python test-cli
 
 build: locale
 
-reset-db:
+drop-db:
 	@echo "--> Dropping existing 'sentry' database"
 	dropdb sentry || true
+
+create-db:
 	@echo "--> Creating 'sentry' database"
 	createdb -E utf-8 sentry
+	@echo "--> Make sure we have user called 'postgres'"
+	-psql -d postgres -c "CREATE ROLE postgres WITH LOGIN"
+	-psql -d postgres -c "ALTER ROLE postgres WITH SUPERUSER;"
+
+reset-db: clean drop-db create-db
 	@echo "--> Applying migrations"
 	lims upgrade
 	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"
 	lims createuser --email admin@localhost --password changeit --superuser --no-input
+	@echo "--> Add example data"
+	lims createexampledata
 
 clean:
 	@echo "--> Cleaning static cache"
