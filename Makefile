@@ -129,11 +129,19 @@ test-cli:
 	rm -r test_cli
 	@echo ""
 
-test-js: node-version-check
+build-static-assets:
 	@echo "--> Building static assets"
 	@$(WEBPACK) --profile --json > .artifacts/webpack-stats.json
+	@echo ""
+
+test-js: node-version-check build-static-assets
 	@echo "--> Running JavaScript tests"
 	@npm run test-ci
+	@echo ""
+
+test-js-clean: node-version-check build-static-assets
+	@echo "--> Running tests and updating snapshots"
+	@npm run test-ci-clean
 	@echo ""
 
 # builds and creates percy snapshots
