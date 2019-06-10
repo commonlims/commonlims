@@ -222,7 +222,6 @@ const Processes = createReactClass({
   },
 
   fetchProcessingIssues() {
-    console.log("HERE!");
     let { orgId } = this.props.params;
     this.api.request(`/projects/${orgId}/internal/processingissues/`, {
       success: data => {
@@ -395,7 +394,6 @@ const Processes = createReactClass({
             return void browserHistory.push(redirect);
           }
         }
-        console.log(data);
 
         this._processesManager.push(data);
 

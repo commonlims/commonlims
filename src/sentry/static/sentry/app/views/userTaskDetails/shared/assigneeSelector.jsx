@@ -126,7 +126,6 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   assignToUser(user) {
-    console.log("ASSIGNING TO USER", user);
     assignToUser({ id: this.props.id, user });
     this.setState({ loading: true });
   },

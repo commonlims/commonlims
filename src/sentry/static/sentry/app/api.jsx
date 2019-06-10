@@ -137,8 +137,6 @@ export class Client {
   }
 
   request(path, options = {}) {
-    console.log("REQUEST", path);
-    console.trace();
     let query;
     try {
       query = $.param(options.query || '', true);

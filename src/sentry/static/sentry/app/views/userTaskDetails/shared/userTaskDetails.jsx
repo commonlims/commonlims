@@ -108,9 +108,7 @@ const UserTaskDetails = createReactClass({
 
   onUserTaskChange() {
     let id = this.props.params.groupId; // TODO: Rename to userTaskId
-    console.log("onUserTaskChange1", id, UserTaskStore.userTask.id);
     if (UserTaskStore.userTask.id === id) {
-      console.log("onUserTaskChange2");
       this.setState({
         userTask: UserTaskStore.userTask,
       });
@@ -118,7 +116,6 @@ const UserTaskDetails = createReactClass({
   },
 
   getUserTaskDetailsEndpoint() {
-    console.log('!!!', this.props.params);
     let id = this.props.params.groupId;
     return '/user-tasks/' + id + '/';
   },
@@ -147,12 +144,10 @@ const UserTaskDetails = createReactClass({
   },
 
   subtaskManualClick(subtask) {
-    console.log("click", subtask);
     UserTaskStore.setSubtaskManualOverride(subtask.view, !subtask.manualOverride);
   },
 
   subtaskTitleClick(subtask) {
-    console.log("title", subtask);
     UserTaskStore.activateView(subtask.view);
   },
 

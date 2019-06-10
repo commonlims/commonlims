@@ -53,7 +53,6 @@ const SetProcessVariables = createReactClass({
   },
 
   onVariableChange(data) {
-    console.log('HERE in parent', data);
     this.setState({setProcessVariables: data});
   },
 
@@ -71,7 +70,6 @@ const SetProcessVariables = createReactClass({
   },
 
   onFieldChange(name, value) {
-    console.log('onFieldChange');
     let formData = this.state.formData;
     formData[name] = value;
     this.setState({

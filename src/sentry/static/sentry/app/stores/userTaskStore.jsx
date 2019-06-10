@@ -58,9 +58,7 @@ const UserTaskStore = Reflux.createStore({
 
   setField(field, value) {
     for (let current of this.userTask.fields) {
-      console.log("current", current);
       if (current.name === field.name) {
-        console.log("found it", current.value, value);
         current.value = value;
         break;
       }
@@ -69,7 +67,6 @@ const UserTaskStore = Reflux.createStore({
     // Validate that all required fields have been marked TODO wireframing here
     let allRequiredFilled = true;
     for (let current of this.userTask.fields) {
-      console.log("HERE vluae", current.value);
       if (current.required && (current.value == null || current.value === "")) {
         allRequiredFilled = false;
         break;
@@ -89,7 +86,6 @@ const UserTaskStore = Reflux.createStore({
 
   activateView(viewId) {
     // TODO: support popups etc.
-    console.log("activating", viewId);
     this.activateTab(viewId);
   },
 
@@ -188,7 +184,6 @@ const UserTaskStore = Reflux.createStore({
 
   addActivity(data, index = -1) {
     // insert into beginning by default
-    console.log("better here!");
     if (index === -1) {
       this.userTask.activity.unshift(data);
     } else {
@@ -214,7 +209,6 @@ const UserTaskStore = Reflux.createStore({
   },
 
   removeActivity(group_id, id) {
-    console.log("!!! here", group_id, id);
     let group = this.get(group_id);
     if (!group) return -1;
 

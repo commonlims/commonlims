@@ -87,7 +87,6 @@ const UploadFile = createReactClass({
 
   handleSaveSettings(ev) {
     let {endpoint} = this.props;
-    console.log("HERE", endpoint);
 
     let {model, dataUrl} = this.state;
     ev.preventDefault();
@@ -112,14 +111,12 @@ const UploadFile = createReactClass({
   },
 
   handleChange(id) {
-    console.log("HERE2");
     let model = {...this.state.model};
     model.avatar.avatarType = id;
     this.updateState(model);
   },
 
   uploadClick(ev) {
-    console.log("HERE3");
     ev.preventDefault();
     if (!this.file) return;
     this.file.click();

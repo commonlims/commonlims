@@ -74,7 +74,6 @@ const ProcessTaskSettings = createReactClass({
   },
 
   configToField(config) {
-    console.log("field config", config);
     return (
       <GenericField
         key={config.name}

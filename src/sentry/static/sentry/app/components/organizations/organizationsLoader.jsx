@@ -10,15 +10,12 @@ const OrganizationsLoader = createReactClass({
   mixins: [ApiMixin],
 
   componentWillMount() {
-    console.log("Mounting organizations loader");
     this.api.request('/organizations/', {
       query: {
         member: '1',
       },
       success: data => {
-        console.log("Mounting organizations loader, before", data);
         OrganizationsStore.load(data);
-        console.log("Mounting organizations loader, after");
         this.setState({
           loading: false,
         });

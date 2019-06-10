@@ -12,7 +12,6 @@ class UserTaskFields extends React.Component {
   };
 
   handleChange(field, value) {
-    console.log("Changed", value, field);
     UserTaskStore.setField(field, value);
   }
 
@@ -28,8 +27,6 @@ class UserTaskFields extends React.Component {
   }
 
   render() {
-    console.log("rendering the fields");
-
     return (
       <div className="row">
         <div className="col-md-6">

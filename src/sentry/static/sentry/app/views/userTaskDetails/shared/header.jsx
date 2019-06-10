@@ -73,7 +73,6 @@ const UserTaskHeader = createReactClass({
 
   render() {
     let { userTask } = this.props;
-    console.log('HERE!!!!', userTask);
 
     let className = 'group-detail';
 

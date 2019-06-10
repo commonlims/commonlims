@@ -25,7 +25,6 @@ class CompactUserTaskHeader extends React.Component {
   getTitle = () => {
     let data = this.props.data;
     data['type'] = 'error';
-    console.log(data, "HERE!!!");
 
     return <span>
             <span style={{marginRight: 10}}>{data.taskTitle}</span>

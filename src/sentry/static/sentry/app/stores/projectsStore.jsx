@@ -22,7 +22,6 @@ const ProjectsStore = Reflux.createStore({
   },
 
   loadInitialData(items) {
-    console.log("Initial data to projectstore", items);
     this.itemsById = items.reduce((map, project) => {
       map[project.id] = project;
       return map;

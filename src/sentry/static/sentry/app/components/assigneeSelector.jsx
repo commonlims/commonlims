@@ -116,7 +116,6 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   assignableTeams() {
-    console.log("TEAM", TeamStore.getAll());
     let group = GroupStore.get(this.props.id);
 
     return (ProjectsStore.getBySlug(group.project.slug) || {

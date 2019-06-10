@@ -38,7 +38,6 @@ class UserTaskActivityItem extends React.Component {
   render() {
     let { author, item, orgId, projectId } = this.props;
     let { data } = item;
-    console.log("what i have", data, author);
 
     switch (item.type) {
       case 'note':
@@ -220,7 +219,6 @@ const UserTaskActivity = createReactClass({
 
   render() {
     let userTask = this.props.userTask;
-    console.log("HERE1", userTask);
     let me = ConfigStore.get('user');
     let memberList = MemberListStore.getAll();
 
