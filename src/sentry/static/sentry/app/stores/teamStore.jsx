@@ -35,7 +35,7 @@ const TeamStore = Reflux.createStore({
       // components use stores correctly. To be safe reload browser :((
       if (response.slug !== itemId) {
         // Remove old team
-        this.items = this.items.filter(({ slug }) => slug !== itemId);
+        this.items = this.items.filter(({slug}) => slug !== itemId);
         // Add team w/ updated slug
         this.items.push(response);
         this.trigger(new Set([response.slug]));

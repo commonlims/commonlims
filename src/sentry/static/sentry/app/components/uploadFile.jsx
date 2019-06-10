@@ -55,7 +55,7 @@ const UploadFile = createReactClass({
       dataUrl: null,
       hasError: false,
       selectedfile: null,
-      loaded: 0
+      loaded: 0,
     };
   },
 
@@ -124,8 +124,8 @@ const UploadFile = createReactClass({
 
   handleSelectedFile(event) {
     this.setState({
-        selectedFile: event.target.files[0],
-        loaded: 0,
+      selectedFile: event.target.files[0],
+      loaded: 0,
     });
   },
 

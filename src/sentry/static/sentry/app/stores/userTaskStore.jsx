@@ -4,7 +4,7 @@ import Reflux from 'reflux';
 import GroupActions from 'app/actions/groupActions';
 import IndicatorStore from 'app/stores/indicatorStore';
 import PendingChangeQueue from 'app/utils/pendingChangeQueue';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 function showAlert(msg, type) {
   IndicatorStore.add(msg, type, {
@@ -24,29 +24,31 @@ const UserTaskStore = Reflux.createStore({
     for (let current of this.userTask.subtasks) {
       if (current.view === subtaskId) {
         current.manualOverride = value;
-        let status = value ? "done" : "not done";
+        let status = value ? 'done' : 'not done';
 
         // TODO:
         let activity = {
-          'id': '1',
-          'user': {
-            "id": "1",
-            "name": "steinar.sturlaugsson@medsci.uu.se",
-            "avatarUrl": "https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm",
-            "avatar": {
-              "avatarUuid": null,
-              "avatarType": "letter_avatar"
+          id: '1',
+          user: {
+            id: '1',
+            name: 'steinar.sturlaugsson@medsci.uu.se',
+            avatarUrl:
+              'https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm',
+            avatar: {
+              avatarUuid: null,
+              avatarType: 'letter_avatar',
             },
-            "hasPasswordAuth": true,
-            "permissions": [],
-            "email": "steinar.sturlaugsson@medsci.uu.se"
+            hasPasswordAuth: true,
+            permissions: [],
+            email: 'steinar.sturlaugsson@medsci.uu.se',
           },
-          'type': 'set_manual_override',
-          'data': {
-            'status': status,
-            'subtask': current.description, 'text': `Manually flagged subtask '${current.description}' as OK`
+          type: 'set_manual_override',
+          data: {
+            status: status,
+            subtask: current.description,
+            text: `Manually flagged subtask '${current.description}' as OK`,
           },
-          "dateCreated": "2019-22-06T14:33:16.353Z",
+          dateCreated: '2019-22-06T14:33:16.353Z',
         };
         this.addActivity(activity);
 
@@ -67,19 +69,17 @@ const UserTaskStore = Reflux.createStore({
     // Validate that all required fields have been marked TODO wireframing here
     let allRequiredFilled = true;
     for (let current of this.userTask.fields) {
-      if (current.required && (current.value == null || current.value === "")) {
+      if (current.required && (current.value == null || current.value === '')) {
         allRequiredFilled = false;
         break;
       }
     }
 
     if (allRequiredFilled) {
-      this.userTask.subtasks[2].status = "done";
+      this.userTask.subtasks[2].status = 'done';
+    } else {
+      this.userTask.subtasks[2].status = 'todo';
     }
-    else {
-      this.userTask.subtasks[2].status = "todo";
-    }
-
 
     this.trigger();
   },
@@ -104,7 +104,7 @@ const UserTaskStore = Reflux.createStore({
 
   loadInitialData(userTask) {
     this.reset();
-    this.userTask = userTask
+    this.userTask = userTask;
     this.trigger();
   },
 
@@ -248,7 +248,7 @@ const UserTaskStore = Reflux.createStore({
       let rItem = item;
       if (!_.isUndefined(pendingById[item.id])) {
         // copy the object so dirty state doesnt mutate original
-        rItem = { ...rItem };
+        rItem = {...rItem};
         pendingById[item.id].forEach(change => {
           rItem = {
             ...rItem,

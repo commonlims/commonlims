@@ -7,7 +7,7 @@ import {
   addLoadingMessage,
   removeIndicator,
 } from 'app/actionCreators/indicator';
-import { t, tct, tn } from 'app/locale';
+import {t, tct, tn} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import Avatar from 'app/components/avatar';
 import CommitLink from 'app/components/commitLink';
@@ -36,8 +36,8 @@ class UserTaskActivityItem extends React.Component {
   };
 
   render() {
-    let { author, item, orgId, projectId } = this.props;
-    let { data } = item;
+    let {author, item, orgId, projectId} = this.props;
+    let {data} = item;
 
     switch (item.type) {
       case 'note':
@@ -53,11 +53,11 @@ class UserTaskActivityItem extends React.Component {
       case 'set_resolved_in_release':
         return data.version
           ? t('%(author)s marked this issue as resolved in %(version)s', {
-            author,
-            version: (
-              <Version version={data.version} orgId={orgId} projectId={projectId} />
-            ),
-          })
+              author,
+              version: (
+                <Version version={data.version} orgId={orgId} projectId={projectId} />
+              ),
+            })
           : t('%s marked this issue as resolved in the upcoming release', author);
       case 'set_resolved_in_commit':
         return t('%(author)s marked this issue as fixed in %(version)s', {
@@ -126,11 +126,11 @@ class UserTaskActivityItem extends React.Component {
       case 'set_regression':
         return data.version
           ? t('%(author)s marked this issue as a regression in %(version)s', {
-            author,
-            version: (
-              <Version version={data.version} orgId={orgId} projectId={projectId} />
-            ),
-          })
+              author,
+              version: (
+                <Version version={data.version} orgId={orgId} projectId={projectId} />
+              ),
+            })
           : t('%s marked this issue as a regression', author);
       case 'create_issue':
         return t('%(author)s created an issue on %(provider)s titled %(title)s', {
@@ -149,8 +149,8 @@ class UserTaskActivityItem extends React.Component {
               {data.destination.shortId}
             </a>
           ) : (
-              t('a group')
-            )
+            t('a group')
+          )
         );
       case 'unmerge_destination':
         return tn(
@@ -163,8 +163,8 @@ class UserTaskActivityItem extends React.Component {
               {data.source.shortId}
             </a>
           ) : (
-              t('a group')
-            )
+            t('a group')
+          )
         );
       case 'first_seen':
         return t('%s first saw this issue', author);
@@ -222,7 +222,7 @@ const UserTaskActivity = createReactClass({
     let me = ConfigStore.get('user');
     let memberList = MemberListStore.getAll();
 
-    let orgId = "snpseq"; // TODO
+    let orgId = 'snpseq'; // TODO
 
     let children = userTask.activity.map((item, itemIdx) => {
       let authorName = item.user ? item.user.name : 'Sentry';
@@ -246,10 +246,10 @@ const UserTaskActivity = createReactClass({
         let avatar = item.user ? (
           <Avatar user={item.user} size={18} className="activity-avatar" />
         ) : (
-            <div className="activity-avatar avatar sentry">
-              <span className="icon-sentry-logo" />
-            </div>
-          );
+          <div className="activity-avatar avatar sentry">
+            <span className="icon-sentry-logo" />
+          </div>
+        );
 
         let author = {
           name: authorName,

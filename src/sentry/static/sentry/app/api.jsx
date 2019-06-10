@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { isUndefined, isNil } from 'lodash';
+import {isUndefined, isNil} from 'lodash';
 import * as Sentry from '@sentry/browser';
 
 import {
@@ -7,10 +7,10 @@ import {
   SUDO_REQUIRED,
   SUPERUSER_REQUIRED,
 } from 'app/constants/apiErrorCodes';
-import { metric } from 'app/utils/analytics';
-import { openSudo, redirectToProject } from 'app/actionCreators/modal';
+import {metric} from 'app/utils/analytics';
+import {openSudo, redirectToProject} from 'app/actionCreators/modal';
 import GroupActions from 'app/actions/groupActions';
-import { uniqueId } from 'app/utils/guid';
+import {uniqueId} from 'app/utils/guid';
 import * as tracing from 'app/utils/tracing';
 
 export class Request {
@@ -32,9 +32,9 @@ export class Request {
  */
 export function paramsToQueryArgs(params) {
   let p = params.itemIds
-    ? { id: params.itemIds } // items matching array of itemids
+    ? {id: params.itemIds} // items matching array of itemids
     : params.query
-      ? { query: params.query } // items matching search query
+      ? {query: params.query} // items matching search query
       : undefined; // all items
 
   // only include environment if it is not null/undefined
@@ -58,13 +58,13 @@ export class Client {
    * If so, redirect user to new project slug
    */
   hasProjectBeenRenamed(response) {
-    let code = response ?.responseJSON ?.detail ?.code;
+    let code = response?.responseJSON?.detail?.code;
 
     // XXX(billy): This actually will never happen because we can't intercept the 302
     // jQuery ajax will follow the redirect by default...
     if (code !== PROJECT_MOVED) return false;
 
-    let slug = response ?.responseJSON ?.detail ?.extra ?.slug;
+    let slug = response?.responseJSON?.detail?.extra?.slug;
 
     redirectToProject(slug);
     return true;
@@ -101,8 +101,8 @@ export class Client {
     }
   }
 
-  handleRequestError({ id, path, requestOptions }, response, ...responseArgs) {
-    let code = response ?.responseJSON ?.detail ?.code;
+  handleRequestError({id, path, requestOptions}, response, ...responseArgs) {
+    let code = response?.responseJSON?.detail?.code;
     let isSudoRequired = code === SUDO_REQUIRED || code === SUPERUSER_REQUIRED;
 
     if (isSudoRequired) {
@@ -220,7 +220,7 @@ export class Client {
     return this.activeRequests[id];
   }
 
-  requestPromise(path, { includeAllArgs, ...options } = {}) {
+  requestPromise(path, {includeAllArgs, ...options} = {}) {
     return new Promise((resolve, reject) => {
       this.request(path, {
         ...options,
@@ -320,7 +320,7 @@ export class Client {
       {
         query,
         method: 'PUT',
-        data: { merge: 1 },
+        data: {merge: 1},
         success: response => {
           GroupActions.mergeSuccess(id, params.itemIds, response);
         },

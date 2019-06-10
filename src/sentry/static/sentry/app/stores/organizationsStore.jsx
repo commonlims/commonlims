@@ -46,7 +46,7 @@ const OrganizationsStore = Reflux.createStore({
     let match = false;
     this.items.forEach((existing, idx) => {
       if (existing.id === item.id) {
-        item = { ...existing, ...item };
+        item = {...existing, ...item};
         this.items[idx] = item;
         match = true;
       }

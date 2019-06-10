@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import { browserHistory } from 'react-router';
+import {browserHistory} from 'react-router';
 import DocumentTitle from 'react-document-title';
 import * as Sentry from '@sentry/browser';
 
@@ -12,15 +12,15 @@ import UserTaskSettingsStore from 'app/stores/userTaskSettingsStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SentryTypes from 'app/sentryTypes';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 import UserTaskHeader from './header';
-import { ERROR_TYPES } from './constants';
+import {ERROR_TYPES} from './constants';
 
 import UserTaskDetailsFields from 'app/views/userTaskDetails/shared/userTaskFields';
 import UserTaskDetailsFiles from 'app/views/userTaskDetails/shared/userTaskFiles';
 import UserTaskDetailsActivity from 'app/views/userTaskDetails/shared/userTaskActivity';
-import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner'
+import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner';
 
 const UserTaskDetails = createReactClass({
   displayName: 'UserTaskDetails',
@@ -153,16 +153,18 @@ const UserTaskDetails = createReactClass({
 
   renderTodoItems() {
     let ret = this.state.userTask.subtasks.map(x => {
-      return <TodoItem
-        handleManualClick={() => this.subtaskManualClick(x)}
-        handleTitleClick={() => this.subtaskTitleClick(x)}
-        description={x.description}
-        key={x.description}
-        status={x.status}
-        manualOverride={x.manualOverride} />
+      return (
+        <TodoItem
+          handleManualClick={() => this.subtaskManualClick(x)}
+          handleTitleClick={() => this.subtaskTitleClick(x)}
+          description={x.description}
+          key={x.description}
+          status={x.status}
+          manualOverride={x.manualOverride}
+        />
+      );
     });
     return ret;
-
   },
 
   activeTab() {
@@ -176,22 +178,19 @@ const UserTaskDetails = createReactClass({
   renderTabComponent() {
     let tab = this.activeTab();
     if (tab.id == 'samples') {
-      return <SampleTransitioner sampleBatch={this.state.userTask.sampleBatch} />
-    }
-    else if (tab.id == "details") {
-      return <UserTaskDetailsFields userTask={this.state.userTask} />
-    }
-    else if (tab.id == "files") {
-      return <UserTaskDetailsFiles userTask={this.state.userTask} />
-    }
-    else if (tab.id == "activity") {
-      return <UserTaskDetailsActivity userTask={this.state.userTask} />
+      return <SampleTransitioner sampleBatch={this.state.userTask.sampleBatch} />;
+    } else if (tab.id == 'details') {
+      return <UserTaskDetailsFields userTask={this.state.userTask} />;
+    } else if (tab.id == 'files') {
+      return <UserTaskDetailsFiles userTask={this.state.userTask} />;
+    } else if (tab.id == 'activity') {
+      return <UserTaskDetailsActivity userTask={this.state.userTask} />;
     }
   },
 
   render() {
     let params = this.props.params;
-    let { userTask } = this.state;
+    let {userTask} = this.state;
 
     if (this.state.error) {
       switch (this.state.errorType) {
@@ -211,9 +210,7 @@ const UserTaskDetails = createReactClass({
         <div className={this.props.className}>
           <UserTaskHeader params={params} userTask={this.state.userTask} />
           <div className="user-task-details-container">
-            <div className="primary">
-              {this.renderTabComponent()}
-            </div>
+            <div className="primary">{this.renderTabComponent()}</div>
             <div className="secondary">
               <div className="user-task-todo-container">
                 <h6>Task list</h6>
@@ -235,7 +232,7 @@ const TodoItem = props => {
 
   let status = props.status;
   if (props.manualOverride) {
-    status = "manual";
+    status = 'manual';
   }
 
   return (

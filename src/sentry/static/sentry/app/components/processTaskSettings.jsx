@@ -1,15 +1,15 @@
-import { Flex } from 'grid-emotion';
+import {Flex} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 import createReactClass from 'create-react-class';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import { Panel, PanelBody, PanelHeader } from 'app/components/panels';
-import { GenericField } from 'app/components/forms';
+import {Panel, PanelBody, PanelHeader} from 'app/components/panels';
+import {GenericField} from 'app/components/forms';
 
 const ProcessTaskSettings = createReactClass({
   displayName: 'ProcessTaskSettings',
@@ -101,12 +101,12 @@ const ProcessTaskSettings = createReactClass({
           {this.state.loading ? (
             <LoadingIndicator />
           ) : (
+            <div>
               <div>
-                <div>
-                  {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
-                </div>
+                {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
               </div>
-            )}
+            </div>
+          )}
         </PanelBody>
       </Panel>
     );

@@ -26,9 +26,11 @@ class CompactUserTaskHeader extends React.Component {
     let data = this.props.data;
     data['type'] = 'error';
 
-    return <span>
-            <span style={{marginRight: 10}}>{data.taskTitle}</span>
-          </span>;
+    return (
+      <span>
+        <span style={{marginRight: 10}}>{data.taskTitle}</span>
+      </span>
+    );
   };
 
   getMessage = () => {
@@ -37,7 +39,7 @@ class CompactUserTaskHeader extends React.Component {
   };
 
   render() {
-    let {data, organization } = this.props;
+    let {data, organization} = this.props;
 
     let hasNewRoutes = new Set(organization.features).has('sentry10');
 
