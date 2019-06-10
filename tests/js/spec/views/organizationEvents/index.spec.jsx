@@ -202,7 +202,8 @@ describe('OrganizationEvents', function() {
       });
     });
 
-    it('changes to absolute time (utc is default)', async function() {
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('changes to absolute time (utc is default)', async function() {
       const start = new Date('2017-10-01T00:00:00.000Z');
       const end = new Date('2017-10-01T23:59:59.000Z');
       wrapper.find('TimeRangeSelector HeaderItem').simulate('click');
