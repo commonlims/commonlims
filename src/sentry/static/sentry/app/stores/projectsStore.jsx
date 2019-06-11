@@ -22,7 +22,6 @@ const ProjectsStore = Reflux.createStore({
   },
 
   loadInitialData(items) {
-    console.log("Initial data to projectstore", items);
     this.itemsById = items.reduce((map, project) => {
       map[project.id] = project;
       return map;
@@ -129,7 +128,7 @@ const ProjectsStore = Reflux.createStore({
 
   // Internal method, does not trigger
   removeTeamFromProject(teamSlug, project) {
-    let newTeams = project.teams.filter(({ slug }) => slug !== teamSlug);
+    let newTeams = project.teams.filter(({slug}) => slug !== teamSlug);
 
     this.itemsById = {
       ...this.itemsById,
@@ -146,7 +145,7 @@ const ProjectsStore = Reflux.createStore({
    * @param {String} teamSlug Slug of team to find in projects
    */
   getWithTeam(teamSlug) {
-    return this.getAll().filter(({ teams }) => teams.find(({ slug }) => slug === teamSlug));
+    return this.getAll().filter(({teams}) => teams.find(({slug}) => slug === teamSlug));
   },
 
   getAll() {

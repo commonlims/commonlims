@@ -344,11 +344,9 @@ const WaitingSamples = createReactClass({
     });
 
     let url = `/samples/`;
-    console.log('here: Getting sample sample endpoint (RENAME)', url);
 
     // Remove leading and trailing whitespace
     let query = queryString.formatQueryString(this.state.query);
-    console.log('query', url);
 
     let {environment} = this.state;
 
@@ -360,7 +358,6 @@ const WaitingSamples = createReactClass({
       shortIdLookup: '1',
       waitingForUserTask: 'clims_snpseq.core.workflows.reception_qc:SelectQCMethodDNA',
     };
-    console.log(requestParams);
 
     // Always keep the global active environment in sync with the queried environment
     // The global environment wins unless there one is specified by the saved search
@@ -410,9 +407,7 @@ const WaitingSamples = createReactClass({
           }
         }
 
-        console.log('PUSHING');
         this._samplesManager.push(data);
-        console.log('dPUSHING');
 
         let queryCount = jqXHR.getResponseHeader('X-Hits');
         let queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');

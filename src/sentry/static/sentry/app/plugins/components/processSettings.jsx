@@ -42,7 +42,6 @@ class ProcessSettings extends PluginComponentBase {
     delete errors[name];
     this.setState({formData, errors});
     this.props.onChanged(formData);
-    console.log('HERE', formData);
   }
 
   onSubmit() {

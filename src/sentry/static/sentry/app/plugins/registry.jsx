@@ -29,7 +29,6 @@ export default class Registry {
 
   load(data, callback) {
     // TODO(dcramer): we should probably register all valid plugins
-    console.log('Loading assets!!!!');
     let remainingAssets = data.assets.length;
     let finishLoad = function() {
       if (!defined(this.plugins[data.id])) {
@@ -39,10 +38,6 @@ export default class Registry {
           this.plugins[data.id] = DefaultPlugin;
         }
       }
-      console.info(
-        '[plugins] Loaded ' + data.id + ' as {' + this.plugins[data.id].name + '}'
-      );
-      console.trace();
       callback(this.get(data));
     }.bind(this);
 
@@ -60,7 +55,6 @@ export default class Registry {
 
     let onAssetFailed = function(asset) {
       remainingAssets--;
-      console.error('[plugins] Failed to load asset ' + asset.url);
       if (remainingAssets === 0) {
         finishLoad();
       }
@@ -70,9 +64,7 @@ export default class Registry {
     data.assets.forEach(asset => {
       // TODO: Look into this, but we're adding an incorrect prefix here, hardcoding to localhost:8000 until solved
       let url = window.location.origin + `/${asset.url}`;
-      console.log('asset url:', url);
       if (!defined(this.assetCache[url])) {
-        console.info('[plugins] Loading asset for ' + data.id + ': ' + url);
         let s = document.createElement('script');
         s.src = url;
         s.onload = onAssetLoaded.bind(this, asset);

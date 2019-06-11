@@ -193,33 +193,36 @@ class FormPanel extends React.Component {
         <PanelBody>
           {shouldRenderHeader && renderHeader({title, fields})}
 
-          {fields.map(field => {
-            if (typeof field === 'function') {
-              return field();
-            }
+          {fields
+            // TODO: Temporary fix. This is sometimes called with a list having an undefined value
+            .filter(field => typeof field !== 'undefined')
+            .map(field => {
+              if (typeof field === 'function') {
+                return field();
+              }
 
-            // eslint-disable-next-line no-unused-vars
-            let {defaultValue, ...fieldWithoutDefaultValue} = field;
+              // eslint-disable-next-line no-unused-vars
+              let {defaultValue, ...fieldWithoutDefaultValue} = field;
 
-            // Allow the form panel disabled prop to override the fields
-            // disabled prop, with fallback to the fields disabled state.
-            if (disabled === true) {
-              fieldWithoutDefaultValue.disabled = true;
-              fieldWithoutDefaultValue.disabledReason = undefined;
-            }
+              // Allow the form panel disabled prop to override the fields
+              // disabled prop, with fallback to the fields disabled state.
+              if (disabled === true) {
+                fieldWithoutDefaultValue.disabled = true;
+                fieldWithoutDefaultValue.disabledReason = undefined;
+              }
 
-            return (
-              <FieldFromConfig
-                access={access}
-                disabled={disabled}
-                key={field.name}
-                {...otherProps}
-                {...additionalFieldProps}
-                field={fieldWithoutDefaultValue}
-                highlighted={this.props.highlighted === `#${field.name}`}
-              />
-            );
-          })}
+              return (
+                <FieldFromConfig
+                  access={access}
+                  disabled={disabled}
+                  key={field.name}
+                  {...otherProps}
+                  {...additionalFieldProps}
+                  field={fieldWithoutDefaultValue}
+                  highlighted={this.props.highlighted === `#${field.name}`}
+                />
+              );
+            })}
           {shouldRenderFooter && renderFooter({title, fields})}
         </PanelBody>
       </Panel>

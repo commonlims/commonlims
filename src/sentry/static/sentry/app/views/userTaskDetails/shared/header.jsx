@@ -6,7 +6,7 @@ import IndicatorStore from 'app/stores/indicatorStore';
 import ListLink from 'app/components/listLink';
 import NavTabs from 'app/components/navTabs';
 import OrganizationState from 'app/mixins/organizationState';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import SentryTypes from 'app/sentryTypes';
 
 import UserTaskActions from './actions';
@@ -65,15 +65,16 @@ const UserTaskHeader = createReactClass({
 
   buildLinks() {
     return this.props.userTask.tabs.map(tab => {
-      return <li className={tab.active ? "active" : ""}>
-        <a onClick={() => UserTaskStore.activateTab(tab.id)}>{tab.title}</a>
-      </li>
+      return (
+        <li className={tab.active ? 'active' : ''}>
+          <a onClick={() => UserTaskStore.activateTab(tab.id)}>{tab.title}</a>
+        </li>
+      );
     });
   },
 
   render() {
-    let { userTask } = this.props;
-    console.log('HERE!!!!', userTask);
+    let {userTask} = this.props;
 
     let className = 'group-detail';
 
@@ -116,9 +117,7 @@ const UserTaskHeader = createReactClass({
         </div>
         <UserTaskSeenBy group={userTask} />
         <UserTaskActions group={userTask} />
-        <NavTabs>
-          {this.buildLinks()}
-        </NavTabs>
+        <NavTabs>{this.buildLinks()}</NavTabs>
       </div>
     );
   },
@@ -126,7 +125,6 @@ const UserTaskHeader = createReactClass({
 
 export default UserTaskHeader;
 
-
-          // <ListLink to={`${baseUrl}${userTaskId}/`}>
-          //   {t('Activity')} <span className="badge animated">{userTask.numComments}</span>
-          // </ListLink>
+// <ListLink to={`${baseUrl}${userTaskId}/`}>
+//   {t('Activity')} <span className="badge animated">{userTask.numComments}</span>
+// </ListLink>

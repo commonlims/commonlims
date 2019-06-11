@@ -112,7 +112,6 @@ const UploadSamplesButton = createReactClass({
           content: btoa(reader.result),
           fileName: 'abc',
         };
-        console.log(data);
 
         this.api.request(endpoint, {
           method: 'POST',
@@ -143,7 +142,6 @@ const UploadSamplesButton = createReactClass({
       }.bind(this);
 
       reader.onError = function() {
-        console.log('onError');
         this.setState({
           state: FormState.ERROR,
         });

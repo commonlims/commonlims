@@ -4,10 +4,10 @@ import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from 'react-emotion';
 
-import { analytics } from 'app/utils/analytics';
+import {analytics} from 'app/utils/analytics';
 import Alert from 'app/components/alert';
 import ConfigStore from 'app/stores/configStore';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 const InstallPromptBanner = createReactClass({
   displayName: 'installPromptBanner',
@@ -24,8 +24,8 @@ const InstallPromptBanner = createReactClass({
   },
 
   componentDidMount() {
-    let { href } = window.location;
-    let { organization } = this.props;
+    let {href} = window.location;
+    let {organization} = this.props;
     analytics('install_prompt.banner_viewed', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -34,22 +34,18 @@ const InstallPromptBanner = createReactClass({
 
   onConfigStoreUpdate(config) {
     if (!this.state.sentFirstEvent && config.sentFirstEvent) {
-      this.setState({ sentFirstEvent: true });
+      this.setState({sentFirstEvent: true});
     }
   },
 
   sentFirstEvent() {
-    let { projects } = this.props.organization;
+    let {projects} = this.props.organization;
     return !!projects.find(project => project.firstEvent);
   },
 
-  getUrl() {
-    throw new Error("Not implemented");
-  },
-
   recordAnalytics() {
-    let { href } = window.location;
-    let { organization } = this.props;
+    let {href} = window.location;
+    let {organization} = this.props;
     analytics('install_prompt.banner_clicked', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -67,18 +63,14 @@ const InstallPromptBanner = createReactClass({
   },
 
   render() {
-    let { sentFirstEvent } = this.state;
+    let {sentFirstEvent} = this.state;
     let hideBanner = sentFirstEvent || this.inSetupFlow();
 
     return (
       <React.Fragment>
         {!hideBanner && (
           <StyledAlert type="warning" icon="icon-circle-exclamation" system={'system'}>
-            <a onClick={() => this.recordAnalytics()} href={this.getUrl()}>
-              {t(
-                "You're almost there! Start capturing errors with just a few lines of code."
-              )}
-            </a>
+            <div>{t('Welcome to Common LIMS.')}</div>
           </StyledAlert>
         )}
       </React.Fragment>

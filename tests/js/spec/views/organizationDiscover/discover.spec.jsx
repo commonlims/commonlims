@@ -638,7 +638,9 @@ describe('Discover', function() {
       );
     });
 
-    it('switches between UTC and local dates', async function() {
+    // TODO: This fails during particular times of the day. CLIMS-186
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('switches between UTC and local dates', async function() {
       ConfigStore.loadInitialData({
         user: {options: {timezone: 'America/New_York'}},
       });

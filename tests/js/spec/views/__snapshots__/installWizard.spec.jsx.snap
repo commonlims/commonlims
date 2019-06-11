@@ -21,7 +21,7 @@ exports[`InstallWizard renders 1`] = `
         >
           <h1>
             <span>
-              Welcome to Sentry
+              Setup your server
             </span>
             <small>
               1.33.7

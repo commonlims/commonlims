@@ -12,7 +12,7 @@ describe('InstallPromptBanner', function() {
       TestStubs.routerContext()
     );
     expect(wrapper.find('StyledAlert').exists()).toBe(true);
-    expect(wrapper.find('a').text()).toContain('Start capturing errors');
+    expect(wrapper.find('div').text()).toContain('Welcome to Common LIMS');
   });
 
   it('does not render if first event sent', function() {
