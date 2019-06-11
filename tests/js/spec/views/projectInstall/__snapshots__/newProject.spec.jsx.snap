@@ -30,9 +30,6 @@ exports[`NewProjectPlatform render() should render 1`] = `
       <SideEffect(DocumentTitle)
         title="Common LIMS"
       />
-      <CreateProject
-        getDocsUrl={[Function]}
-      />
     </Content>
   </div>
 </Container>

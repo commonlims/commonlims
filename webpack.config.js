@@ -178,7 +178,7 @@ const cacheGroups = {
 /**
  * Main Webpack config for Sentry React SPA.
  */
-const appConfig = {
+let appConfig = {
   mode: WEBPACK_MODE,
   entry: {app: 'app'},
   context: staticPrefix,
@@ -385,5 +385,11 @@ if (IS_PRODUCTION) {
     legacyCssConfig.plugins.push(plugin);
   });
 }
+
+// Wrap the app config with the speed check plugin:
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+
+const smp = new SpeedMeasurePlugin();
+appConfig = smp.wrap(appConfig);
 
 module.exports = [appConfig, legacyCssConfig];
