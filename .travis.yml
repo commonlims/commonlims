@@ -38,22 +38,12 @@ script:
   # installing dependencies for after_* steps here ensures they get cached
   # since those steps execute after travis runs `store build cache`
   - pip install codecov
-  - npm install -g @zeus-ci/cli
 
 after_success:
   - codecov -e TEST_SUITE
 
 after_failure:
   - dmesg | tail -n 100
-
-after_script:
-  - zeus upload -t "text/xml+xunit" .artifacts/*junit.xml
-  - zeus upload -t "text/xml+coverage" .artifacts/*coverage.xml
-  - zeus upload -t "text/xml+coverage" .artifacts/coverage/cobertura-coverage.xml
-  - zeus upload -t "text/html+pytest" .artifacts/*pytest.html
-  - zeus upload -t "text/plain+pycodestyle" .artifacts/*pycodestyle.log
-  - zeus upload -t "text/xml+checkstyle" .artifacts/*checkstyle.xml
-  - zeus upload -t "application/webpack-stats+json" .artifacts/*webpack-stats.json
 
 # each job in the matrix inherits `env/global` and uses everything above,
 # but custom `services`, `before_install`, `install`, and `before_script` directives
@@ -252,13 +242,3 @@ matrix:
       env:
         - TEST_SUITE=postgres DB=postgres
         - SENTRY_USE_RUST_NORMALIZER=true
-
-notifications:
-  webhooks:
-    urls:
-      - https://zeus.ci/hooks/fa079cf6-8e6b-11e7-9155-0a580a28081c/public/provider/travis/webhook
-    on_success: always
-    on_failure: always
-    on_start: always
-    on_cancel: always
-    on_error: always
