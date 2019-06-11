@@ -4,10 +4,6 @@ group: deprecated-2017Q4
 language: python
 python: 2.7
 
-branches:
-  only:
-  - master
-
 cache:
   yarn: true
   directories:
@@ -246,8 +242,8 @@ matrix:
       after_success: skip
       after_failure: skip
 
-# jobs are defined in matrix/include
-# to specify which jobs are allowed to fail, match the env exactly in matrix/allow_failures
+  # jobs are defined in matrix/include
+  # to specify which jobs are allowed to fail, match the env exactly in matrix/allow_failures
   allow_failures:
     - language: node_js
       env: STORYBOOK_BUILD=1
