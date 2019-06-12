@@ -1,4 +1,26 @@
+@sample-transitioner-hover-bg-color: aliceblue;
+
 .sample-transitioner {
+  table.sample-container {
+    margin: 20px auto;
+    border-collapse: collapse;
+
+    &:last-child {
+      margin-bottom: 20px;
+    }
+
+    th {
+      padding: 1px;
+      margin: 1px;
+      color: #BDB4C7;
+      text-align: center;
+
+      &.highlighted-background {
+        background-color: @sample-transitioner-hover-bg-color;
+      }
+    }
+  }
+
   .sample-well {
     padding: 5px;
     margin: 1px;
@@ -13,7 +35,7 @@
     }
 
     &.highlighted-background {
-      background-color: aliceblue;
+      background-color: @sample-transitioner-hover-bg-color;
     }
   }
 }

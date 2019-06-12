@@ -5,8 +5,9 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
-import {SampleTransition} from 'app/components/sampleTransitioner/sampleTransition';
+import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
+import { SampleTransition } from 'app/components/sampleTransitioner/sampleTransition';
+import { Sample } from 'app/components/sampleTransitioner/sample';
 import UserTaskStore from 'app/stores/userTaskStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -31,7 +32,11 @@ class SampleTransitioner extends React.Component {
 
     // TODO: read transitions and target containers from userTask sampleBatch
     const sourceContainers = sampleBatch.containers;
-    const samples = sampleBatch.samples;
+    const samples = sampleBatch.samples.map(s => {
+      const { containerId, row, col } = s.location;
+      const location = new SampleLocation(containerId, row, col);
+      return new Sample(s.id, s.name, location);
+    });
 
     // Temporary hack: create a new target container
     const targetContainer = {
@@ -48,7 +53,8 @@ class SampleTransitioner extends React.Component {
       targetSampleContainers: [targetContainer],
       sampleTransitions: [],
       activeSampleTransition: null,
-      transitionTargetsOfHoveredSample: [],
+      transitionTargetLocationsOfHoveredSample: [],
+      samples,
     };
   }
 
@@ -117,14 +123,14 @@ class SampleTransitioner extends React.Component {
     }
 
     // Find all transitions for this well and highlight them.
-    const transitionTargetsOfHoveredSample = sampleTransitions
+    const transitionTargetLocationsOfHoveredSample = sampleTransitions
       .filter(t => t.sourceLocation.equals(sampleLocation))
       .map(f => f.targetLocation);
-    this.setState({transitionTargetsOfHoveredSample});
+    this.setState({transitionTargetLocationsOfHoveredSample});
   }
 
   onMouseOut() {
-    this.setState({transitionTargetsOfHoveredSample: []});
+    this.setState({transitionTargetLocationsOfHoveredSample: []});
   }
 
   // For now we assume all samples fetched are mapped to source containers.
@@ -133,10 +139,15 @@ class SampleTransitioner extends React.Component {
   render() {
     // TODO: only pass the transitions that are relevant to each container.
     const {
-      transitionTargetsOfHoveredSample,
+      transitionTargetLocationsOfHoveredSample,
       activeSampleTransition,
       sampleTransitions
     } = this.state;
+
+    let activeSampleTransitionSourceLocation;
+    if (activeSampleTransition) {
+      activeSampleTransitionSourceLocation = activeSampleTransition.getSource();
+    }
 
     // TODO: we should pass samples to the target container stack as well,
     // since we may be rendering this after fetching previously created transitions
@@ -153,10 +164,10 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onSourceWellClicked.bind(this)}
               onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
-              samples={this.props.sampleBatch.samples}
+              samples={this.state.samples}
               onMouseOut={this.onMouseOut.bind(this)}
-              activeSampleTransition={activeSampleTransition}
-              transitionSources={sampleTransitions.map(st => st.sourceLocation)}
+              activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
+              transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
             />
           </div>
           <div className="col-md-6">
@@ -168,9 +179,8 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
-              activeSampleTransition={activeSampleTransition}
-              transitionTargetsOfHoveredSample={transitionTargetsOfHoveredSample}
-              transitionTargets={sampleTransitions.map(st => st.targetLocation)}
+              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
+              transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>
         </div>

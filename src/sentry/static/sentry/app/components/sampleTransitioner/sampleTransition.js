@@ -53,3 +53,5 @@ export class SampleTransition {
     return this.hasValidSource() && this.hasValidTarget();
   }
 }
+
+export default SampleTransition;

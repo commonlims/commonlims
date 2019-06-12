@@ -1,5 +1,5 @@
 export class SampleLocation {
-  constructor(containerId, column, row) {
+  constructor(containerId, row, column) {
     this.containerId = containerId;
     this.column = column;
     this.row = row;
@@ -15,4 +15,18 @@ export class SampleLocation {
   	  && this.column === compareLocation.column
   	  && this.row === compareLocation.row;
   }
+
+  getContainerId() {
+    return this.containerId;
+  }
+
+  getRow() {
+    return this.row;
+  }
+
+  getColumn() {
+    return this.column;
+  }
 }
+
+export default SampleLocation;
