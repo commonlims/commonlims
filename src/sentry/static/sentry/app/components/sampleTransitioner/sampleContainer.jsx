@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import SampleWell from './sampleWell';
-import { SampleLocation } from './sampleLocation';
-import { Sample } from './sample';
+import {SampleLocation} from './sampleLocation';
+import {Sample} from './sample';
 
 export const SampleContainerDirectionality = {
   SOURCE: 1,
@@ -20,7 +20,7 @@ export class SampleContainer extends React.Component {
   }
 
   isHoveredRowOrColumn(row, col) {
-    const { hoverRow, hoverCol } = this.state;
+    const {hoverRow, hoverCol} = this.state;
     return hoverRow === row || hoverCol === col;
   }
 
@@ -29,17 +29,17 @@ export class SampleContainer extends React.Component {
   }
 
   isSourceContainer() {
-    const { containerDirectionality } = this.props;
+    const {containerDirectionality} = this.props;
     return containerDirectionality === SampleContainerDirectionality.SOURCE;
   }
 
   isTargetContainer() {
-    const { containerDirectionality } = this.props;
+    const {containerDirectionality} = this.props;
     return containerDirectionality === SampleContainerDirectionality.TARGET;
   }
 
   isTransitionSource(location) {
-    const { transitionSourceLocations } = this.props;
+    const {transitionSourceLocations} = this.props;
 
     if (!this.isSourceContainer()) {
       return false;
@@ -49,17 +49,17 @@ export class SampleContainer extends React.Component {
   }
 
   isActiveTransitionSource(location) {
-    const { activeSampleTransitionSourceLocation } = this.props;
+    const {activeSampleTransitionSourceLocation} = this.props;
 
     if (!this.isSourceContainer() || !activeSampleTransitionSourceLocation) {
       return false;
     }
 
-    return  activeSampleTransitionSourceLocation.equals(location);
+    return activeSampleTransitionSourceLocation.equals(location);
   }
 
   isTransitionTarget(location) {
-    const { transitionTargetLocations } = this.props;
+    const {transitionTargetLocations} = this.props;
 
     if (!this.isTargetContainer()) {
       return false;
@@ -69,7 +69,7 @@ export class SampleContainer extends React.Component {
   }
 
   isTransitionTargetOfHoveredSample(location) {
-    const { transitionTargetLocationsOfHoveredSample } = this.props;
+    const {transitionTargetLocationsOfHoveredSample} = this.props;
 
     if (!this.isTargetContainer()) {
       return false;
@@ -79,7 +79,7 @@ export class SampleContainer extends React.Component {
   }
 
   onMouseOut() {
-    const { onMouseOut } = this.props;
+    const {onMouseOut} = this.props;
 
     if (this.state.hoverRow || this.state.hoverCol) {
       this.setState({hoverRow: null, hoverCol: null});
@@ -89,78 +89,73 @@ export class SampleContainer extends React.Component {
   }
 
   renderColumnsHeader() {
-    const { numColumns } = this.props;
+    const {numColumns} = this.props;
     const keyPrefix = 'thead-th';
-    const ths = [(<th key={`${keyPrefix}-corner`} />)];
+    const ths = [<th key={`${keyPrefix}-corner`} />];
 
     for (let c = 0; c < numColumns; c++) {
       const label = c + 1;
       ths.push(
-        <th key={`${keyPrefix}-${c}`} className={this.getHeaderClassName(-1, c)}>{label}</th>
+        <th key={`${keyPrefix}-${c}`} className={this.getHeaderClassName(-1, c)}>
+          {label}
+        </th>
       );
     }
 
-    return (<tr key='thead-tr'>{ths}</tr>);
+    return <tr key="thead-tr">{ths}</tr>;
   }
 
   renderRowHeader(row) {
     const keyPrefix = 'th';
     const label = String.fromCharCode(65 + row);
-    return(<th key={`${keyPrefix}-${row}`} className={this.getHeaderClassName(row, -1)}>{label}</th>);
+    return (
+      <th key={`${keyPrefix}-${row}`} className={this.getHeaderClassName(row, -1)}>
+        {label}
+      </th>
+    );
   }
 
   renderSampleWell(row, col, sampleId) {
-    const {
-      containerId,
-      onWellClicked,
-      onWellMouseOver,
-    } = this.props;
-
-    const key = `samplewell-${row}-${col}`;
-    const location = new SampleLocation(containerId, row, col);
-    const isTransitionSource = this.isTransitionSource(location);
-    const isTransitionTarget = this.isTransitionTarget(location);
-    const isTransitionTargetOfHoveredSample = this.isTransitionTargetOfHoveredSample(location);
-    const isActiveTransitionSource = this.isActiveTransitionSource(location);
-    const isHoveredRowOrColumn = this.isHoveredRowOrColumn(row, col);
+    const {containerId, onWellClicked, onWellMouseOver} = this.props;
 
     const handleClick = location => {
       onWellClicked(location, sampleId);
     };
 
     const handleMouseOver = location => {
-      if(!this.isHoveredRowOrColumn(row, col)) {
-        this.setState({ hoverRow: row, hoverCol: col });
+      if (!this.isHoveredRowOrColumn(row, col)) {
+        this.setState({hoverRow: row, hoverCol: col});
       }
 
       onWellMouseOver(location, sampleId);
     };
 
-    return (<SampleWell
-      key={key}
-      location={location}
-      onClick={handleClick}
-      onMouseOver={handleMouseOver}
-      containsSampleId={sampleId}
-      isTransitionSource={isTransitionSource}
-      isTransitionTarget={isTransitionTarget}
-      isActiveTransitionSource={isActiveTransitionSource}
-      isTransitionTargetOfHoveredSample={isTransitionTargetOfHoveredSample}
-      inHoveredRowOrColumn={isHoveredRowOrColumn}
-    />);
+    const location = new SampleLocation(containerId, row, col);
+
+    return (
+      <SampleWell
+        key={`samplewell-${row}-${col}`}
+        location={location}
+        onClick={handleClick}
+        onMouseOver={handleMouseOver}
+        containsSampleId={sampleId}
+        isTransitionSource={this.isTransitionSource(location)}
+        isTransitionTarget={this.isTransitionTarget(location)}
+        isActiveTransitionSource={this.isActiveTransitionSource(location)}
+        isTransitionTargetOfHoveredSample={this.isTransitionTargetOfHoveredSample(
+          location
+        )}
+        inHoveredRowOrColumn={this.isHoveredRowOrColumn(row, col)}
+      />
+    );
   }
 
   renderRows() {
-    const {
-      numColumns,
-      numRows,
-      samples,
-    } = this.props;
+    const {numColumns, numRows, samples} = this.props;
     const keyPrefix = 'tr';
     const rows = [];
 
     for (let r = 0; r < numRows; r++) {
-
       const row = [this.renderRowHeader(r)];
       const rowSamples = samples.filter(s => s.getLocation().getRow() === r);
 
@@ -178,9 +173,7 @@ export class SampleContainer extends React.Component {
   render() {
     return (
       <table className="sample-container" onMouseOut={this.onMouseOut.bind(this)}>
-        <thead>
-          {this.renderColumnsHeader()}
-        </thead>
+        <thead>{this.renderColumnsHeader()}</thead>
         <tbody>{this.renderRows()}</tbody>
       </table>
     );
@@ -198,7 +191,9 @@ SampleContainer.propTypes = {
   samples: PropTypes.arrayOf(PropTypes.instanceOf(Sample)),
   transitionSourceLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
   transitionTargetLocations: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
-  transitionTargetLocationsOfHoveredSample: PropTypes.arrayOf(PropTypes.instanceOf(SampleLocation)),
+  transitionTargetLocationsOfHoveredSample: PropTypes.arrayOf(
+    PropTypes.instanceOf(SampleLocation)
+  ),
   activeSampleTransitionSourceLocation: PropTypes.instanceOf(SampleLocation),
 };
 
