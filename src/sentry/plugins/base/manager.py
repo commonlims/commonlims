@@ -53,7 +53,11 @@ class PluginManager(InstanceManager):
         # once per process.
 
         def builders():
-            root_module = ".".join(class_path.split(".")[0:-2]) + ".user_tasks"
+            prefix = ".".join(class_path.split(".")[0:-2])
+            if not prefix:
+                return
+            root_module = prefix + ".user_tasks"
+
             try:
                 parent_mod = importlib.import_module(root_module)
             except ImportError:
