@@ -1,5 +1,6 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import moxios from 'moxios';
 
 import {
   USER_TASKS_GET_REQUEST,
@@ -15,6 +16,14 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 describe('userTask redux actions', function() {
+  beforeEach(function() {
+    moxios.install();
+  });
+
+  afterEach(function() {
+    moxios.uninstall();
+  });
+
   const mockUserTask = {
     id: 4,
     name: 'Test3',
@@ -51,10 +60,14 @@ describe('userTask redux actions', function() {
       expect(userTasksGetFailure('my error')).toEqual(expectedAction);
     });
 
-    it('should create an action to GET userTasks from the userTasks API', () => {
+    it('should create an action to GET userTasks from the userTasks API', async () => {
       const userTasks = [mockUserTask];
-      fetch.mockResponseOnce(JSON.stringify({userTasks}));
       const store = mockStore({userTasks: []});
+
+      moxios.stubRequest('/api/0/organizations/sentry/user-tasks/', {
+        status: 200,
+        responseText: userTasks,
+      });
 
       const expectedActions = [
         {type: USER_TASKS_GET_REQUEST},
@@ -63,10 +76,8 @@ describe('userTask redux actions', function() {
 
       return store.dispatch(userTasksGet()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
-
-        expect(fetch.mock.calls.length).toEqual(1);
-        const url = fetch.mock.calls[0][0];
-        expect(url).toEqual('/api/0/organizations/sentry/user-tasks/');
+        const request = moxios.requests.mostRecent();
+        expect(request.url).toBe('/api/0/organizations/sentry/user-tasks/');
       });
     });
   });
