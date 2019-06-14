@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Reflux from 'reflux';
+import {Provider as ReduxProvider} from 'react-redux';
 import createReactClass from 'create-react-class';
 import keydown from 'react-keydown';
 import {withRouter} from 'react-router';
@@ -25,6 +26,9 @@ import OrganizationsStore from 'app/stores/organizationsStore';
 import theme from 'app/utils/theme';
 import getRouteStringFromRoutes from 'app/utils/getRouteStringFromRoutes';
 import * as tracing from 'app/utils/tracing';
+import configureStore from 'app/redux/store';
+
+const reduxStore = configureStore(window.REDUX_INITIAL_DATA);
 
 function getAlertTypeForProblem(problem) {
   switch (problem.severity) {
@@ -211,19 +215,21 @@ const App = createReactClass({
     }
 
     return (
-      <ThemeProvider theme={theme}>
-        <div
-          className="main-container"
-          tabIndex="-1"
-          ref={ref => (this.mainContainerRef = ref)}
-        >
-          <GlobalModal onClose={this.handleGlobalModalClose} />
-          <Alerts className="messages-container" />
-          <Indicators className="indicators-container" />
-          <ErrorBoundary>{this.renderBody()}</ErrorBoundary>
-          <AssistantHelper />
-        </div>
-      </ThemeProvider>
+      <ReduxProvider store={reduxStore}>
+        <ThemeProvider theme={theme}>
+          <div
+            className="main-container"
+            tabIndex="-1"
+            ref={ref => (this.mainContainerRef = ref)}
+          >
+            <GlobalModal onClose={this.handleGlobalModalClose} />
+            <Alerts className="messages-container" />
+            <Indicators className="indicators-container" />
+            <ErrorBoundary>{this.renderBody()}</ErrorBoundary>
+            <AssistantHelper />
+          </div>
+        </ThemeProvider>
+      </ReduxProvider>
     );
   },
 });
