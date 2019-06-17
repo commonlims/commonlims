@@ -303,7 +303,7 @@ class Require2fa(TestCase):
     @mock.patch('sentry.utils.email.logger')
     def test_handle_2fa_required__compliant_members(self, email_log):
         compliant = []
-        for num in range(0, 4):
+        for _num in range(0, 4):
             user, member = self._create_user_and_member(has_2fa=True)
             compliant.append((user, member))
 
@@ -323,7 +323,7 @@ class Require2fa(TestCase):
     @mock.patch('sentry.utils.email.logger')
     def test_handle_2fa_required__non_compliant_members(self, email_log):
         non_compliant = []
-        for num in range(0, 4):
+        for _num in range(0, 4):
             user, member = self._create_user_and_member()
             non_compliant.append((user, member))
 

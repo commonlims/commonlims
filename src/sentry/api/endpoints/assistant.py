@@ -44,7 +44,7 @@ class AssistantEndpoint(Endpoint):
         seen_ids = set(AssistantActivity.objects.filter(
             user=request.user,
         ).values_list('guide_id', flat=True))
-        for k, v in guides.items():
+        for _key, v in guides.items():
             v['seen'] = v['id'] in seen_ids
         return Response(guides)
 

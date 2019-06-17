@@ -40,7 +40,7 @@ class BitFieldListFilter(FieldListFilter):
             'query_string': cl.get_query_string({}, [self.lookup_kwarg]),
             'display': _('All'),
         }
-        for number, flag in enumerate(self.flags):
+        for number, _flag in enumerate(self.flags):
             bit_mask = Bit(number).mask
             yield {
                 'selected': self.lookup_val == bit_mask,

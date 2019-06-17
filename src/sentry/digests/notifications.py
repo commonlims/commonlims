@@ -80,11 +80,11 @@ def fetch_state(project, records):
 
 
 def attach_state(project, groups, rules, event_counts, user_counts):
-    for id, group in six.iteritems(groups):
+    for _id, group in six.iteritems(groups):
         assert group.project_id == project.id, 'Group must belong to Project'
         group.project = project
 
-    for id, rule in six.iteritems(rules):
+    for _id, rule in six.iteritems(rules):
         assert rule.project_id == project.id, 'Rule must belong to Project'
         rule.project = project
 

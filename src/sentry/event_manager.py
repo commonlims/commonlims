@@ -959,7 +959,7 @@ class EventManager(object):
                     if get_tag(data, key) is None:
                         set_tag(data, key, value)
 
-        for path, iface in six.iteritems(event.interfaces):
+        for _path, iface in six.iteritems(event.interfaces):
             for k, v in iface.iter_tags():
                 set_tag(data, k, v)
             # Get rid of ephemeral interface data

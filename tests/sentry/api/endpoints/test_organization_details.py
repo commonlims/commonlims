@@ -45,7 +45,7 @@ class OrganizationDetailsTest(APITestCase):
         assert response.data['id'] == six.text_type(org.id)
         assert len(response.data['teams']) == 1
 
-        for i in range(5):
+        for _ in range(5):
             self.create_project(organization=org)
 
         url = reverse(

@@ -13,10 +13,10 @@ def get_digest_metadata(digest):
     end = None
 
     counts = Counter()
-    for rule, groups in six.iteritems(digest):
+    for _rule, groups in six.iteritems(digest):
         counts.update(groups.keys())
 
-        for group, records in six.iteritems(groups):
+        for _group, records in six.iteritems(groups):
             for record in records:
                 if start is None or record.datetime < start:
                     start = record.datetime

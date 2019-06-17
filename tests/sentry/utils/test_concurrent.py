@@ -24,7 +24,7 @@ def test_future_set_callback_success():
     callback = mock.Mock()
     future_set.add_done_callback(callback)
 
-    for i, future in enumerate(list(future_set)):
+    for _, future in enumerate(list(future_set)):
         assert callback.call_count == 0
         future.set_result(True)
 
@@ -44,7 +44,7 @@ def test_future_set_callback_error():
     callback = mock.Mock()
     future_set.add_done_callback(callback)
 
-    for i, future in enumerate(list(future_set)):
+    for _, future in enumerate(list(future_set)):
         assert callback.call_count == 0
         future.set_exception(Exception)
 

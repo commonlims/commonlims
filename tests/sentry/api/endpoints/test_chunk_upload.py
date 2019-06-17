@@ -104,7 +104,7 @@ class ChunkUploadTest(APITestCase):
         files = []
 
         # Exactly the limit
-        for x in range(0, MAX_CHUNKS_PER_REQUEST + 1):
+        for _ in range(0, MAX_CHUNKS_PER_REQUEST + 1):
             content = "x"
             files.append(SimpleUploadedFile(sha1(content).hexdigest(), content))
 
@@ -123,7 +123,7 @@ class ChunkUploadTest(APITestCase):
         files = []
 
         # Exactly the limit
-        for x in range(0, MAX_CHUNKS_PER_REQUEST):
+        for _ in range(0, MAX_CHUNKS_PER_REQUEST):
             content = "x" * (MAX_REQUEST_SIZE / MAX_CHUNKS_PER_REQUEST)
             files.append(SimpleUploadedFile(sha1(content).hexdigest(), content))
 

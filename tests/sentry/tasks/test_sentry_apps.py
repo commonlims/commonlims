@@ -42,7 +42,7 @@ class DictContaining(object):
         return True
 
     def _kwargs_match(self, other):
-        for key, value in six.iteritems(self.kwargs):
+        for key, _value in six.iteritems(self.kwargs):
             if self.kwargs[key] != other[key]:
                 return False
         return True

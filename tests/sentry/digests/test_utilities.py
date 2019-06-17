@@ -288,7 +288,7 @@ class GetPersonalizedDigestsTestCase(TestCase):
         digest = build_digest(project, sort_records(records))
         user_ids = [member.user_id for member in team.member_set]
         assert not user_ids
-        for user_id, user_digest in get_personalized_digests(project.id, digest, user_ids):
+        for _user_id, _user_digest in get_personalized_digests(project.id, digest, user_ids):
             assert False  # no users in this team no digests should be processed
 
     def test_only_everyone(self):

@@ -247,7 +247,7 @@ class BaseTSDB(Service):
 
     def get_active_series(self, start=None, end=None, timestamp=None):
         rollups = {}
-        for rollup, samples in self.rollups.items():
+        for rollup, _samples in self.rollups.items():
             _, series = self.get_optimal_rollup_series(
                 start if start is not None else to_datetime(
                     self.get_earliest_timestamp(
