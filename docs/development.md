@@ -93,3 +93,7 @@ You can get a fresh install of your database by running: `make reset-db`
 
 * Modify your workflow in Camunda modeler
 * Run `lims upgrade`
+
+# Frontend development
+
+See [frontend.md]()
