@@ -1,5 +1,4 @@
-#from sentry.models import Commit, Release, ReleaseProject
-#from sentry.plugins import ReleaseHook
+from __future__ import absolute_import
 from sentry.testutils import TestCase
 
 

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # TODO: Refactor
 # This module should actually be merged with the plugin
 # module. However, it imports a ton of django stuff which leads to

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from sentry.plugins2 import file_handlers_registry
 
 
