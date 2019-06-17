@@ -65,7 +65,7 @@ More info: https://jestjs.io/docs/en/getting-started
 
 ## React/redux architecture
 
-See [frontend.md]()
+See [frontend.md](frontend.md)
 
 # Backend
 

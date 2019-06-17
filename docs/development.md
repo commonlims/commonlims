@@ -96,4 +96,4 @@ You can get a fresh install of your database by running: `make reset-db`
 
 # Frontend development
 
-See [frontend.md]()
+See [frontend.md](frontend.md)
