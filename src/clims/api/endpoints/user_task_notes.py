@@ -13,9 +13,8 @@ from sentry.api.serializers.rest_framework.group_notes import NoteSerializer, se
 from sentry.api.fields.actor import Actor
 
 from sentry.models import (
-    Activity, GroupLink, GroupSubscription, GroupSubscriptionReason, User
+    Activity, GroupSubscription, GroupSubscriptionReason, User
 )
-from sentry.tasks.integrations import post_comment
 from sentry.utils.functional import extract_lazy_object
 
 

@@ -2,21 +2,15 @@ from __future__ import absolute_import
 
 import six
 
-from django.http import Http404
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.serializers import serialize
-from django.db.models import Q
 from sentry.db.models.query import in_iexact
 from clims.models import Sample
-from sentry.models import ProjectPlatform
 from sentry.plugins import plugins
 from sentry.search.utils import tokenize_query
-from clims.workflow import WorkflowEngine
-from clims.api.serializers.models.sample import SampleSerializer
 from sentry.api.paginator import OffsetPaginator
 
 

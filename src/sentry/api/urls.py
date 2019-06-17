@@ -2,8 +2,6 @@ from __future__ import absolute_import, print_function
 
 from django.conf.urls import include, patterns, url
 
-from clims.api.urls import urlpatterns as clims_urlpatterns
-
 from .endpoints.accept_project_transfer import AcceptProjectTransferEndpoint
 from .endpoints.organization_dashboards import OrganizationDashboardsEndpoint
 from .endpoints.relay_heartbeat import RelayHeartbeatEndpoint

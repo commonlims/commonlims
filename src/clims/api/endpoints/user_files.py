@@ -4,18 +4,11 @@ import logging
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from uuid import uuid4
 
 from sentry.api.base import Endpoint, SessionAuthentication
-from sentry.api.exceptions import ResourceDoesNotExist
-from sentry.api.serializers import serialize
-from sentry.models import ApiApplication, ApiApplicationStatus
-from clims.models.sample import Sample
-from sentry.tasks.deletion import delete_api_application
 
 delete_logger = logging.getLogger('sentry.deletions.api')
 logger = logging.getLogger(__name__)
-from clims.workflow import WorkflowEngine
 
 
 class UserFilesEndpoint(Endpoint):
