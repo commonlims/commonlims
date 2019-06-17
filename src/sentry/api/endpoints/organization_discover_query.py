@@ -104,7 +104,7 @@ class DiscoverQuerySerializer(serializers.Serializer):
                 'statsPeriodEnd': data.get('statsPeriodEnd'),
             }, optional=True, validate_window=False)
         except InvalidParams as exc:
-            raise serializers.ValidationError(exc.message)
+            raise serializers.ValidationError(six.text_type(exc))
 
         if start is None or end is None:
             raise serializers.ValidationError('Either start and end dates or range is required')

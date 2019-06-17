@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from rest_framework.response import Response
 
 from sentry.api.bases.integration import IntegrationEndpoint
@@ -48,7 +49,7 @@ class JiraSearchEndpoint(IntegrationEndpoint):
             try:
                 resp = installation.search_issues(query)
             except IntegrationError as exc:
-                return Response({'detail': exc.message}, status=400)
+                return Response({'detail': six.text_type(exc)}, status=400)
             return Response([{
                 'label': '(%s) %s' % (i['key'], i['fields']['summary']),
                 'value': i['key']

@@ -296,7 +296,7 @@ class APIView(BaseView):
                 value=json.dumps([meta, base64.b64encode(data)])
             )
         except Exception as e:
-            logger.debug("Cannot publish event to Kafka: {}".format(e.message))
+            logger.debug("Cannot publish event to Kafka: {}".format(six.text_type(e)))
 
     @csrf_exempt
     @never_cache
@@ -579,7 +579,7 @@ class StoreView(APIView):
                     })
                 )
             except Exception as e:
-                logger.exception("Cannot publish event to Kafka: {}".format(e.message))
+                logger.exception("Cannot publish event to Kafka: {}".format(six.text_type(e)))
             else:
                 if process_in_kafka:
                     # This event will be processed by the Kafka consumer, so we

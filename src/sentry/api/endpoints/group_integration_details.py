@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from django.db import IntegrityError, transaction
 
 from rest_framework.response import Response
@@ -79,7 +80,7 @@ class GroupIntegrationDetailsEndpoint(GroupEndpoint):
                 )
             )
         except IntegrationError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
 
     # was thinking put for link an existing issue, post for create new issue?
     def put(self, request, group, integration_id):
@@ -111,7 +112,7 @@ class GroupIntegrationDetailsEndpoint(GroupEndpoint):
         except IntegrationFormError as exc:
             return Response(exc.field_errors, status=400)
         except IntegrationError as exc:
-            return Response({'non_field_errors': [exc.message]}, status=400)
+            return Response({'non_field_errors': [six.text_type(exc)]}, status=400)
 
         defaults = {
             'title': data.get('title'),
@@ -143,7 +144,7 @@ class GroupIntegrationDetailsEndpoint(GroupEndpoint):
         except IntegrationFormError as exc:
             return Response(exc.field_errors, status=400)
         except IntegrationError as exc:
-            return Response({'non_field_errors': [exc.message]}, status=400)
+            return Response({'non_field_errors': [six.text_type(exc)]}, status=400)
 
         try:
             with transaction.atomic():
@@ -196,7 +197,7 @@ class GroupIntegrationDetailsEndpoint(GroupEndpoint):
         except IntegrationFormError as exc:
             return Response(exc.field_errors, status=400)
         except IntegrationError as exc:
-            return Response({'non_field_errors': [exc.message]}, status=400)
+            return Response({'non_field_errors': [six.text_type(exc)]}, status=400)
 
         external_issue_key = installation.make_external_key(data)
         external_issue, created = ExternalIssue.objects.get_or_create(

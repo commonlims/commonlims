@@ -51,7 +51,7 @@ class ConfigValidator(object):
                     value=value,
                 )
             except (forms.ValidationError, serializers.ValidationError, PluginError) as e:
-                errors[key] = e.message
+                errors[key] = six.text_type(e)
 
             if not errors.get(key):
                 cleaned[key] = value
