@@ -6,7 +6,7 @@ The Common LIMS frontend app code can be found in `src/static/sentry`. Javascrip
 
 Common LIMS uses React for its frontend components.
 
-## Asynchronous calls
+## API calls
 
 Common LIMS API calls should be performed with the [Axios library](https://github.com/axios/axios) (and mocked with [moxios](https://github.com/axios/moxios)). Legacy Sentry components use a custom HTTP client defined in `app/api.jsx` that uses jQuery under the hood.
 
