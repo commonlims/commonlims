@@ -20,7 +20,7 @@ class UserFilesEndpoint(Endpoint):
 
     def post(self, request):
         content = request.DATA["content"]
-        file_name = request.DATA["fileName"]
+        # file_name = request.DATA["fileName"]
 
         # TODO: Here we should implement the following:
         # 1. save the data to the database

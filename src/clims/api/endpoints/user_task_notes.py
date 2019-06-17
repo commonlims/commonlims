@@ -13,7 +13,7 @@ from sentry.api.serializers.rest_framework.group_notes import NoteSerializer, se
 from sentry.api.fields.actor import Actor
 
 from sentry.models import (
-    Activity, GroupSubscription, GroupSubscriptionReason, User
+    Activity, GroupSubscription, GroupSubscriptionReason
 )
 from sentry.utils.functional import extract_lazy_object
 
@@ -67,17 +67,17 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
                 reason=GroupSubscriptionReason.mentioned,
             )
 
-        mentioned_teams = actor_mentions.get('teams')
+        # mentioned_teams = actor_mentions.get('teams')
 
-        mentioned_team_users = list(
-            User.objects.filter(
-                sentry_orgmember_set__organization_id=1,
-                sentry_orgmember_set__organizationmemberteam__team__in=mentioned_teams,
-                sentry_orgmember_set__organizationmemberteam__is_active=True,
-                is_active=True,
-            ).exclude(id__in={u.id for u in actor_mentions.get('users')})
-            .values_list('id', flat=True)
-        )
+        # mentioned_team_users = list(
+        #     User.objects.filter(
+        #         sentry_orgmember_set__organization_id=1,
+        #         sentry_orgmember_set__organizationmemberteam__team__in=mentioned_teams,
+        #         sentry_orgmember_set__organizationmemberteam__is_active=True,
+        #         is_active=True,
+        #     ).exclude(id__in={u.id for u in actor_mentions.get('users')})
+        #     .values_list('id', flat=True)
+        # )
 
         # TODO!
         # GroupSubscription.objects.bulk_subscribe(

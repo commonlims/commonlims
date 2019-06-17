@@ -27,8 +27,6 @@ class SampleEndpoint(Endpoint):
 
     # TODO: The index endpoint must be on sample level!
     def get(self, request):
-        group_by = request.GET.get('groupBy')
-
         # # To begin with, we'll just support a container here as it's the most obvious case
         # if group_by == "container":
         #     pass
