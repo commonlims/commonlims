@@ -13,7 +13,7 @@ import ProjectState from 'app/mixins/projectState';
 import ProcessStore from 'app/stores/processStore';
 import SelectedProcessStore from 'app/stores/selectedProcessStore';
 
-import SampleHeader from 'app/components/processes/sampleHeader';
+import SampleHeader from 'app/components/userTask/sampleHeader';
 import {PanelItem} from 'app/components/panels';
 
 import {userTasksGet} from 'app/redux/actions/userTask';

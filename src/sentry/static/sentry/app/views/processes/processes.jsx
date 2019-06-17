@@ -25,7 +25,7 @@ import Pagination from 'app/components/pagination';
 import SentryTypes from 'app/sentryTypes';
 import ProcessesActions from 'app/views/processes/actions';
 import ProcessesFilters from 'app/views/processes/filters';
-import ProcessesGroup from 'app/components/processes/group';
+import ProcessesGroup from 'app/components/userTask/group';
 import ProcessesSidebar from 'app/views/processes/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
