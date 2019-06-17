@@ -35,9 +35,7 @@ from sentry.coreapi import (
     safely_load_json_string,
 )
 from sentry.interfaces.base import get_interface, prune_empty_keys
-from sentry.interfaces.exception import normalize_mechanism_meta
 from sentry.interfaces.schemas import validate_and_default_interface
-from sentry.lang.native.utils import get_sdk_from_event
 from sentry.models import (
     Activity, Environment, Event, EventError, EventMapping, EventUser, Group,
     GroupEnvironment, GroupHash, GroupLink, GroupRelease, GroupResolution, GroupStatus,
@@ -663,17 +661,6 @@ class EventManager(object):
             meta.enter('exception', 'values', 0, 'stacktrace').merge(stacktrace_meta)
             del data['stacktrace']
             # TODO(ja): Remove meta data of data['stacktrace'] here, too
-
-        # Exception mechanism needs SDK information to resolve proper names in
-        # exception meta (such as signal names). "SDK Information" really means
-        # the operating system version the event was generated on. Some
-        # normalization still works without sdk_info, such as mach_exception
-        # names (they can only occur on macOS).
-        if exceptions:
-            sdk_info = get_sdk_from_event(data)
-            for ex in exceptions:
-                if 'mechanism' in ex:
-                    normalize_mechanism_meta(ex['mechanism'], sdk_info)
 
         # This function parses the User Agent from the request if present and fills
         # contexts with it.

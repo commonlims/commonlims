@@ -26,7 +26,6 @@ from .endpoints.event_attachment_details import EventAttachmentDetailsEndpoint
 from .endpoints.event_attachments import EventAttachmentsEndpoint
 from .endpoints.event_details import EventDetailsEndpoint
 from .endpoints.event_owners import EventOwnersEndpoint
-from .endpoints.event_apple_crash_report import EventAppleCrashReportEndpoint
 from .endpoints.group_details import GroupDetailsEndpoint
 from .endpoints.group_events import GroupEventsEndpoint
 from .endpoints.group_events_latest import GroupEventsLatestEndpoint
@@ -1174,11 +1173,6 @@ urlpatterns = patterns(
         r'^events/(?P<event_id>\d+)/$',
         EventDetailsEndpoint.as_view(),
         name='sentry-api-0-event-details'
-    ),
-    url(
-        r'^events/(?P<event_id>\d+)/apple-crash-report$',
-        EventAppleCrashReportEndpoint.as_view(),
-        name='sentry-api-0-event-apple-crash-report'
     ),
 
     # Sentry Apps
