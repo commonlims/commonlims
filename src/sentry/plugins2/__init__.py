@@ -36,8 +36,7 @@ class SampleService():
         parameters in kwargs. The domain specific arguments will be registered per the calling plugin,
         which will automatically add a namespace to the keys
         """
-        custom_fields = {self.namespace: kwargs}
-        sample_obj = Sample(sample_name, sample_type, concentration, volume, custom_fields)
+        raise NotImplementedError()
 
 
 class App(object):
