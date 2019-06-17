@@ -7,7 +7,7 @@ import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {FormState} from 'app/components/forms';
-import WorkflowFilter from 'app/views/processes/workflowFilter';
+import WorkflowFilter from 'app/views/userTask/workflowFilter';
 // TODO: import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';

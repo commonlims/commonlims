@@ -1,4 +1,4 @@
-import { Redirect, Route, IndexRoute, IndexRedirect } from 'react-router';
+import {Redirect, Route, IndexRoute, IndexRedirect} from 'react-router';
 import React from 'react';
 
 import App from 'app/views/app';
@@ -42,7 +42,7 @@ import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
-import ProcessesContainer from 'app/views/processes/index';
+import ProcessesContainer from 'app/views/userTask/index';
 import SampleDetails from 'app/views/sampleDetails';
 import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';
@@ -52,7 +52,6 @@ import SettingsProjectProvider from 'app/views/settings/components/settingsProje
 import SettingsWrapper from 'app/views/settings/components/settingsWrapper';
 import Stream from 'app/views/stream';
 import errorHandler from 'app/utils/errorHandler';
-
 
 function appendTrailingSlash(nextState, replace) {
   let lastChar = nextState.location.pathname.slice(-1);

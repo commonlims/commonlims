@@ -12,7 +12,7 @@ import MemberListStore from 'app/stores/memberListStore';
 import ApiMixin from 'app/mixins/apiMixin';
 import {t} from 'app/locale';
 
-import SearchDropdown from 'app/views/processes/searchDropdown';
+import SearchDropdown from 'app/views/userTask/searchDropdown';
 import OrganizationState from 'app/mixins/organizationState';
 
 const SearchBar = createReactClass({

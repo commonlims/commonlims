@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import SavedSearchSelector from 'app/views/processes/savedSearchSelector';
-import SearchBar from 'app/views/processes/searchBar';
-import { t } from 'app/locale';
+import SavedSearchSelector from 'app/views/userTask/savedSearchSelector';
+import SearchBar from 'app/views/userTask/searchBar';
+import {t} from 'app/locale';
 
 class ProcessesFilters extends React.Component {
   static propTypes = {
@@ -20,6 +20,7 @@ class ProcessesFilters extends React.Component {
     onSearch: PropTypes.func,
     onSidebarToggle: PropTypes.func,
     onSavedSearchCreate: PropTypes.func.isRequired,
+    access: PropTypes.string,
   };
 
   static contextTypes = {
@@ -29,9 +30,9 @@ class ProcessesFilters extends React.Component {
   static defaultProps = {
     sort: '',
     query: null,
-    onSortChange: function () { },
-    onSearch: function () { },
-    onSidebarToggle: function () { },
+    onSortChange: function() {},
+    onSearch: function() {},
+    onSidebarToggle: function() {},
   };
 
   render() {
