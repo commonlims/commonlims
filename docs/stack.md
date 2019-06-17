@@ -63,6 +63,10 @@ Jest is used for testing javascript code.
 Config file: ./jest.config.js
 More info: https://jestjs.io/docs/en/getting-started
 
+## React/redux architecture
+
+See [frontend.md](frontend.md)
+
 # Backend
 
 # Middleware
