@@ -36,13 +36,10 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
         )
 
     def post(self, request, user_task_id):
-        print("!!! in POST")
         serializer = NoteSerializer(data=request.DATA, context={'user_task': user_task_id})
 
         if not serializer.is_valid():
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        print("HERE")
 
         data = dict(serializer.object)
 
@@ -59,14 +56,6 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
                 '{"detail": "You have already posted that comment."}',
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        # TODO: UserTaskSubscription!
-        # GroupSubscription.objects.subscribe(
-        #     group=1,
-        #     user=request.user,
-        #     reason=GroupSubscriptionReason.comment,
-        # )
-        print(mentions)
 
         actors = Actor.resolve_many(mentions)
         actor_mentions = seperate_resolved_actors(actors)
@@ -89,8 +78,6 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
             ).exclude(id__in={u.id for u in actor_mentions.get('users')})
             .values_list('id', flat=True)
         )
-
-        print(mentioned_team_users)
 
         # TODO!
         # GroupSubscription.objects.bulk_subscribe(

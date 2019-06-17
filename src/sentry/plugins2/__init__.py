@@ -29,7 +29,7 @@ class SampleService():
         self.namespace = namespace
 
     def add(self, sample):
-        print("Adding sample", sample)
+        raise NotImplementedError()
 
     def new_sample(self, sample_name, sample_type, concentration, volume, **kwargs):
         """Creates a Sample object with the specified default parameters and any domain specific
@@ -38,7 +38,6 @@ class SampleService():
         """
         custom_fields = {self.namespace: kwargs}
         sample_obj = Sample(sample_name, sample_type, concentration, volume, custom_fields)
-        print(sample_obj)
 
 
 class App(object):
@@ -56,7 +55,7 @@ class FileHandlersRegistry(object):
         self.handlers.add(fn)
 
     def handle_file_uploaded(self, file_like):
-        print("in that upload handler!", self.handlers)
+        raise NotImplementedError()
 
         for handler in self.handlers:
             if type(handler) == type:

@@ -58,6 +58,5 @@ class UserTaskDetailsEndpoint(UserTaskBaseEndpoint):
         user_task = UserTask.objects.get(pk=user_task_id)
 
         activity = self._get_activity(request, user_task, num=100)
-        print(activity)
 
         return Response(serialize(user_task), status=200)

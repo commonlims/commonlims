@@ -29,7 +29,6 @@ class UserFilesEndpoint(Endpoint):
 
         import io
         from sentry.plugins2 import file_handlers_registry
-        print("about to do some damage")
 
         content_bytes = content.decode('base64')
         f = io.BytesIO(content_bytes)

@@ -28,7 +28,6 @@ class SampleEndpoint(Endpoint):
     # TODO: The index endpoint must be on sample level!
     def get(self, request):
         group_by = request.GET.get('groupBy')
-        print("Grouping by", group_by)
 
         # # To begin with, we'll just support a container here as it's the most obvious case
         # if group_by == "container":
@@ -39,7 +38,6 @@ class SampleEndpoint(Endpoint):
         query = request.GET.get('query')
         if query:  # TODO: Ignoring the query while bugfixing
             tokens = tokenize_query(query)
-            print(tokens)
             for key, value in six.iteritems(tokens):
                 if key == 'name':
                     queryset = queryset.filter(in_iexact('name', value))
@@ -57,7 +55,6 @@ class SampleEndpoint(Endpoint):
         #     # Start by finding all processes waiting for this particular task
         #     tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
         #     samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
-        #     print(samples)
 
         def _serialize(sample):
             # TODO: Add info from
