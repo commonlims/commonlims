@@ -31,8 +31,8 @@ class OrganizationMemberSerializer(Serializer):
             'pending': obj.is_pending,
             'expired': obj.token_expired,
             'flags': {
-                'sso:linked': bool(getattr(obj.flags, 'sso:linked')),
-                'sso:invalid': bool(getattr(obj.flags, 'sso:invalid')),
+                'sso:linked': bool(getattr(obj.flags, 'sso:linked')),  # noqa: B009
+                'sso:invalid': bool(getattr(obj.flags, 'sso:invalid')),  # noqa: B009
             },
             'dateCreated': obj.date_added,
         }

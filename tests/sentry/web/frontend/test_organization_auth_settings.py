@@ -46,7 +46,7 @@ class OrganizationAuthSettingsPermissionTest(PermissionTestCase):
             user=user,
             organization=self.organization,
         )
-        setattr(om.flags, 'sso:linked', True)
+        setattr(om.flags, 'sso:linked', True)  # noqa: B010
         om.save()
         return user
 
@@ -143,8 +143,8 @@ class OrganizationAuthSettingsTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def create_org_and_auth_provider(self):
         self.user.update(is_managed=True)
@@ -167,7 +167,7 @@ class OrganizationAuthSettingsTest(AuthProviderTestCase):
             user=self.user,
             organization=organization,
         )
-        setattr(om.flags, 'sso:linked', True)
+        setattr(om.flags, 'sso:linked', True)  # noqa: B010
         om.save()
         return om
 
@@ -229,7 +229,7 @@ class OrganizationAuthSettingsTest(AuthProviderTestCase):
 
         om = OrganizationMember.objects.get(id=om.id)
 
-        assert not getattr(om.flags, 'sso:linked')
+        assert not getattr(om.flags, 'sso:linked')  # noqa: B009
         assert not om.user.is_managed
 
         assert email_unlink_notifications.delay.called
@@ -254,7 +254,7 @@ class OrganizationAuthSettingsTest(AuthProviderTestCase):
 
         om = OrganizationMember.objects.get(id=om.id)
 
-        assert not getattr(om.flags, 'sso:linked')
+        assert not getattr(om.flags, 'sso:linked')  # noqa: B009
         assert not om.user.is_managed
 
         assert email_unlink_notifications.delay.called

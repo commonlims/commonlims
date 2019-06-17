@@ -73,7 +73,7 @@ def check_auth_identity(auth_identity_id, **kwargs):
         auth_identity.delete()
         return
 
-    prev_is_valid = not getattr(om.flags, 'sso:invalid')
+    prev_is_valid = not getattr(om.flags, 'sso:invalid')  # noqa: B009
 
     provider = auth_provider.get_provider()
     try:
@@ -104,9 +104,9 @@ def check_auth_identity(auth_identity_id, **kwargs):
         is_linked = True
         is_valid = True
 
-    if getattr(om.flags, 'sso:linked') != is_linked:
-        setattr(om.flags, 'sso:linked', is_linked)
-        setattr(om.flags, 'sso:invalid', not is_valid)
+    if getattr(om.flags, 'sso:linked') != is_linked:  # noqa: B009
+        setattr(om.flags, 'sso:linked', is_linked)  # noqa: B010
+        setattr(om.flags, 'sso:invalid', not is_valid)  # noqa: B010
         om.update(flags=om.flags)
 
     now = timezone.now()

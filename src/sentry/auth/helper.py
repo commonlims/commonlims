@@ -130,9 +130,9 @@ def handle_existing_identity(auth_provider, provider, organization,
         # but still has access to rejoin
         member = handle_new_membership(auth_provider, organization, request, auth_identity)
     else:
-        if getattr(member.flags, 'sso:invalid') or not getattr(member.flags, 'sso:linked'):
-            setattr(member.flags, 'sso:invalid', False)
-            setattr(member.flags, 'sso:linked', True)
+        if getattr(member.flags, 'sso:invalid') or not getattr(member.flags, 'sso:linked'):  # noqa: B009
+            setattr(member.flags, 'sso:invalid', False)  # noqa: B010
+            setattr(member.flags, 'sso:linked', True)  # noqa: B010
             member.save()
 
     user = auth_identity.user
@@ -286,9 +286,9 @@ def handle_attach_identity(auth_provider, request, organization, provider, ident
                 event=AuditLogEntryEvent.MEMBER_ADD,
                 data=member.get_audit_log_data(),
             )
-    if getattr(member.flags, 'sso:invalid') or not getattr(member.flags, 'sso:linked'):
-        setattr(member.flags, 'sso:invalid', False)
-        setattr(member.flags, 'sso:linked', True)
+    if getattr(member.flags, 'sso:invalid') or not getattr(member.flags, 'sso:linked'):  # noqa: B009
+        setattr(member.flags, 'sso:invalid', False)  # noqa: B010
+        setattr(member.flags, 'sso:linked', True)  # noqa: B010
         member.save()
 
     if auth_is_new:
