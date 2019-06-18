@@ -23,14 +23,15 @@ import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
 import SentryTypes from 'app/sentryTypes';
-import ProcessesActions from 'app/views/userTaskList/actions';
-import ProcessesFilters from 'app/views/userTaskList/filters';
-import ProcessesGroup from 'app/components/userTask/group';
-import ProcessesSidebar from 'app/views/userTaskList/sidebar';
+import StreamActions from 'app/views/stream/actions';
+import StreamFilters from 'app/views/stream/filters';
+import StreamGroup from 'app/components/userTask/group';
+import StreamSidebar from 'app/views/stream/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
 import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
+import ProjectState from 'app/mixins/projectState';
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
@@ -49,7 +50,7 @@ const Processes = createReactClass({
     tagsLoading: PropTypes.bool,
   },
 
-  mixins: [Reflux.listenTo(ProcessStore, 'onTaskChange'), ApiMixin],
+  mixins: [Reflux.listenTo(ProcessStore, 'onTaskChange'), ApiMixin, ProjectState],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
@@ -442,6 +443,20 @@ const Processes = createReactClass({
     return '/task-groups/';
   },
 
+  onSelectStatsPeriod(period) {
+    if (period != this.state.statsPeriod) {
+      // TODO(dcramer): all charts should now suggest "loading"
+      this.setState(
+        {
+          statsPeriod: period,
+        },
+        function() {
+          this.transitionTo();
+        }
+      );
+    }
+  },
+
   onRealtimeChange(realtime) {
     Cookies.set('realtimeActive', realtime.toString());
     this.setState({
@@ -604,7 +619,7 @@ const Processes = createReactClass({
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
-        <ProcessesGroup
+        <StreamGroup
           key={id}
           id={id}
           orgId={orgId}
@@ -667,10 +682,12 @@ const Processes = createReactClass({
     if (this.state.isSidebarVisible) classes.push('show-sidebar');
     let {orgId} = this.props.params;
     let searchId = this.state.searchId;
+    let access = this.getAccess();
     return (
       <div className={classNames(classes)}>
         <div className="stream-content">
-          <ProcessesFilters
+          <StreamFilters
+            access={access}
             orgId={orgId}
             query={this.state.query}
             sort={this.state.sort}
@@ -685,12 +702,13 @@ const Processes = createReactClass({
             savedSearchList={this.state.savedSearchList}
           />
           <Panel>
-            <ProcessesActions
+            <StreamActions
               orgId={params.orgId}
               hasReleases={true}
               environment={this.state.environment}
               query={this.state.query}
               queryCount={this.state.queryCount}
+              onSelectStatsPeriod={this.onSelectStatsPeriod}
               onRealtimeChange={this.onRealtimeChange}
               realtimeActive={this.state.realtimeActive}
               statsPeriod={this.state.statsPeriod}
@@ -704,12 +722,13 @@ const Processes = createReactClass({
           </Panel>
           <Pagination pageLinks={this.state.pageLinks} />
         </div>
-        <ProcessesSidebar
+        <StreamSidebar
           loading={this.props.tagsLoading}
           tags={this.props.tags}
           query={this.state.query}
           onQueryChange={this.onSearch}
           orgId={params.orgId}
+          projectId="internal"
         />
       </div>
     );
