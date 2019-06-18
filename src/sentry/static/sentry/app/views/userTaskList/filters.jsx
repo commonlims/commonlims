@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import SavedSearchSelector from 'app/views/userTask/savedSearchSelector';
-import SearchBar from 'app/views/userTask/searchBar';
+import SavedSearchSelector from 'app/views/userTaskList/savedSearchSelector';
+import SearchBar from 'app/views/userTaskList/searchBar';
 import {t} from 'app/locale';
 
 class ProcessesFilters extends React.Component {

@@ -42,7 +42,7 @@ import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
-import ProcessesContainer from 'app/views/userTask/index';
+import ProcessesContainer from 'app/views/userTaskList/index';
 import SampleDetails from 'app/views/sampleDetails';
 import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';

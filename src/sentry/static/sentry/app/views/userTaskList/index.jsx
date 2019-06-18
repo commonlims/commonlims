@@ -5,7 +5,7 @@ import {omit} from 'lodash';
 import SentryTypes from 'app/sentryTypes';
 import ProcessTagStore from 'app/stores/processTagStore';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString';
-import Processes from 'app/views/userTask/processes';
+import Processes from 'app/views/userTaskList/processes';
 
 const ProcessesContainer = createReactClass({
   displayName: 'ProcessesContainer',

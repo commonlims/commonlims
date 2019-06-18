@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import _ from 'lodash';
-import ProcessesTagFilter from 'app/views/userTask/tagFilter';
+import ProcessesTagFilter from 'app/views/userTaskList/tagFilter';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import {queryToObj, objToQuery} from 'app/utils/processes';
 
