@@ -10,19 +10,13 @@ import qs from 'query-string';
 
 import {Panel, PanelBody} from 'app/components/panels';
 import {logAjaxError} from 'app/utils/logging';
-import {
-  setActiveEnvironment,
-  setActiveEnvironmentName,
-} from 'app/actionCreators/environments';
 import {t, tn, tct} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
-import EnvironmentStore from 'app/stores/environmentStore';
 import ProcessStore from 'app/stores/processStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import SentryTypes from 'app/sentryTypes';
 import StreamActions from 'app/views/stream/actions';
 import StreamFilters from 'app/views/stream/filters';
 import StreamGroup from 'app/components/userTask/group';
@@ -44,8 +38,6 @@ const Processes = createReactClass({
   displayName: 'Processes',
 
   propTypes: {
-    environment: SentryTypes.Environment,
-    hasEnvironmentsFeature: PropTypes.bool,
     tags: PropTypes.object,
     tagsLoading: PropTypes.bool,
   },
@@ -85,7 +77,6 @@ const Processes = createReactClass({
       sort,
       isSidebarVisible: false,
       processingIssues: null,
-      environment: this.props.environment,
     };
   },
 
@@ -105,15 +96,6 @@ const Processes = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.environment !== this.props.environment) {
-      this.setState(
-        {
-          environment: nextProps.environment,
-        },
-        this.fetchData
-      );
-    }
-
     // you cannot apply both a query and a saved search (our routes do not
     // support it), so the searchId takes priority
     let nextSearchId = nextProps.params.searchId || null;
@@ -192,13 +174,6 @@ const Processes = createReactClass({
             data.find(search => search.isDefault);
 
           if (defaultResult) {
-            // Check if there is an environment specified in the default search
-            const envName = queryString.getQueryEnvironment(defaultResult.query);
-            const env = EnvironmentStore.getByName(envName);
-            if (env) {
-              setActiveEnvironment(env);
-            }
-
             newState.searchId = defaultResult.id;
             newState.query = defaultResult.query;
             newState.isDefaultSearch = true;
@@ -280,22 +255,7 @@ const Processes = createReactClass({
         search => search.id === searchId
       );
       if (searchResult) {
-        // New behavior is that we'll no longer want to support environment in saved search
-        // We check if the query contains a valid environment and update the global setting if so
-        // We'll always strip environment from the querystring whether valid or not
-        if (this.props.hasEnvironmentsFeature) {
-          const queryEnv = queryString.getQueryEnvironment(searchResult.query);
-          if (queryEnv) {
-            const env = EnvironmentStore.getByName(queryEnv);
-            setActiveEnvironment(env);
-          }
-          newState.query = queryString.getQueryStringWithoutEnvironment(
-            searchResult.query
-          );
-        } else {
-          // Old behavior, keep the environment in the querystring
-          newState.query = searchResult.query;
-        }
+        newState.query = searchResult.query;
 
         if (this.state.searchId && !props.params.searchId) {
           newState.isDefaultSearch = true;
@@ -340,23 +300,11 @@ const Processes = createReactClass({
       query += ' ' + ':createdAfter -7d'; // always limit it unless specified
     }
 
-    let {environment} = this.state;
-
     let requestParams = {
       query,
       limit: MAX_ITEMS,
       createdAfter: '-7d',
     };
-
-    // Always keep the global active environment in sync with the queried environment
-    // The global environment wins unless there one is specified by the saved search
-    const queryEnvironment = queryString.getQueryEnvironment(query);
-
-    if (queryEnvironment !== null) {
-      requestParams.environment = queryEnvironment;
-    } else if (environment) {
-      requestParams.environment = environment.name;
-    }
 
     let currentQuery = this.props.location.query || {};
     if ('cursor' in currentQuery) {
@@ -380,18 +328,9 @@ const Processes = createReactClass({
         // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {id, matchingEventId, matchingEventEnvironment} = data[0];
+            let {id, matchingEventId} = data[0];
             let redirect = `/${this.props.params
               .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
-            // Also direct to the environment of this specific event if this
-            // key exists. We need to explicitly check against undefined becasue
-            // an environment name may be an empty string, which is perfectly valid.
-            if (typeof matchingEventEnvironment !== 'undefined') {
-              setActiveEnvironmentName(matchingEventEnvironment);
-              redirect = `${redirect}?${qs.stringify({
-                environment: matchingEventEnvironment,
-              })}`;
-            }
             return void browserHistory.push(redirect);
           }
         }
@@ -511,10 +450,6 @@ const Processes = createReactClass({
 
   transitionTo() {
     let queryParams = {};
-
-    if (this.props.location.query.environment) {
-      queryParams.environment = this.props.location.query.environment;
-    }
 
     if (!this.state.searchId) {
       queryParams.query = this.state.query;
@@ -638,12 +573,7 @@ const Processes = createReactClass({
   },
 
   renderEmpty() {
-    const {environment} = this.state;
-    const message = environment
-      ? tct('Sorry no events match your filters in the [env] environment.', {
-          env: environment.displayName,
-        })
-      : t('Sorry, no events match your filters.');
+    const message = t('Sorry, no events match your filters.');
 
     // TODO(lyn): Extract empty state to a separate component
     return (
@@ -705,7 +635,6 @@ const Processes = createReactClass({
             <StreamActions
               orgId={params.orgId}
               hasReleases={true}
-              environment={this.state.environment}
               query={this.state.query}
               queryCount={this.state.queryCount}
               onSelectStatsPeriod={this.onSelectStatsPeriod}
