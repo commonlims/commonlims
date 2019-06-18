@@ -26,6 +26,16 @@ import parseLinkHeader from 'app/utils/parseLinkHeader';
 import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
 import ProjectState from 'app/mixins/projectState';
+import {connect} from 'react-redux';
+import {userTasksGet} from 'app/redux/actions/userTask';
+
+const mapStateToProps = state => ({
+  userTasks: state.userTasks,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getUserTasks: () => dispatch(userTasksGet()),
+});
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
@@ -40,6 +50,7 @@ const Processes = createReactClass({
   propTypes: {
     tags: PropTypes.object,
     tagsLoading: PropTypes.bool,
+    getUserTasks: PropTypes.func.isRequired,
   },
 
   mixins: [Reflux.listenTo(ProcessStore, 'onTaskChange'), ApiMixin, ProjectState],
@@ -93,6 +104,7 @@ const Processes = createReactClass({
     if (!this.state.loading) {
       this.fetchData();
     }
+    this.props.getUserTasks();
   },
 
   componentWillReceiveProps(nextProps) {
@@ -664,4 +676,4 @@ const Processes = createReactClass({
   },
 });
 
-export default Processes;
+export default connect(mapStateToProps, mapDispatchToProps)(Processes);

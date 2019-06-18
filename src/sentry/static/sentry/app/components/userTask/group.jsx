@@ -5,7 +5,6 @@ import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from 'react-emotion';
 import {Flex, Box} from 'grid-emotion';
-import {connect} from 'react-redux';
 
 import Count from 'app/components/count';
 import ProjectState from 'app/mixins/projectState';
@@ -15,16 +14,6 @@ import SelectedProcessStore from 'app/stores/selectedProcessStore';
 
 import SampleHeader from 'app/components/userTask/sampleHeader';
 import {PanelItem} from 'app/components/panels';
-
-import {userTasksGet} from 'app/redux/actions/userTask';
-
-const mapStateToProps = state => ({
-  userTasks: state.userTasks,
-});
-
-const mapDispatchToProps = dispatch => ({
-  getUserTasks: () => dispatch(userTasksGet()),
-});
 
 // TODO: Should be called Task or similar
 
@@ -36,7 +25,6 @@ const ProcessesGroup = createReactClass({
     orgId: PropTypes.string.isRequired,
     canSelect: PropTypes.bool,
     query: PropTypes.string,
-    getUserTasks: PropTypes.func.isRequired,
     projectId: PropTypes.string,
   },
 
@@ -55,10 +43,6 @@ const ProcessesGroup = createReactClass({
     return {
       data,
     };
-  },
-
-  componentWillMount() {
-    this.props.getUserTasks();
   },
 
   componentWillReceiveProps(nextProps) {
@@ -123,4 +107,4 @@ const StyledCount = styled(Count)`
   color: ${p => p.theme.gray3};
 `;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProcessesGroup);
+export default ProcessesGroup;
