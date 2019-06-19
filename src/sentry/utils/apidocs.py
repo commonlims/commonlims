@@ -289,7 +289,7 @@ def attach_scenarios(scenarios):
 
 def iter_scenarios():
     # Make sure everything is imported.
-    for endpoint in iter_endpoints():
+    for _endpoint in iter_endpoints():
         pass
     return iter(sorted(scenarios.items()))
 

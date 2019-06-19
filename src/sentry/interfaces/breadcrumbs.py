@@ -39,7 +39,7 @@ class Breadcrumbs(Interface):
     @classmethod
     def to_python(cls, data):
         values = []
-        for index, crumb in enumerate(get_path(data, 'values', filter=True, default=())):
+        for _index, crumb in enumerate(get_path(data, 'values', filter=True, default=())):
             # TODO(ja): Handle already invalid and None breadcrumbs
 
             try:

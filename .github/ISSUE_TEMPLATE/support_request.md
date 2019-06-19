@@ -1,5 +1,5 @@
 ---
 name: ⛔️ Support Question
-about: See https://sentry.io/support for support requests.
+about: For support questions check out https://gitter.im/commonlims
 
 ---

@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from sentry.api.bases import OrganizationEndpoint, OrganizationEventsError
 from sentry.api.event_search import get_snuba_query_args, InvalidSearchQuery
 
@@ -11,4 +12,4 @@ class OrganizationEventsEndpointBase(OrganizationEndpoint):
         try:
             return get_snuba_query_args(query=request.GET.get('query'), params=params)
         except InvalidSearchQuery as exc:
-            raise OrganizationEventsError(exc.message)
+            raise OrganizationEventsError(six.text_type(exc))

@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from rest_framework.response import Response
 from sentry.api.bases.organization import (
     OrganizationEndpoint,
@@ -49,7 +50,7 @@ class OrganizationUserReportsEndpoint(OrganizationEndpoint):
         except NoProjects:
             return Response([])
         except OrganizationEventsError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
 
         queryset = UserReport.objects.filter(
             project_id__in=filter_params['project_id'],

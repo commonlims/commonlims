@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from sentry.api.bases.organization import OrganizationPermission, OrganizationEndpoint, Endpoint
+from sentry.api.bases.organization import OrganizationPermission, Endpoint
 
 
 # Currently UserTask permissions are only on the organization level,

@@ -162,7 +162,7 @@ class OrganizationMemberDetailsEndpoint(OrganizationEndpoint):
                 if om.token_expired:
                     return Response({'detail': ERR_EXPIRED}, status=400)
                 om.send_invite_email()
-            elif auth_provider and not getattr(om.flags, 'sso:linked'):
+            elif auth_provider and not getattr(om.flags, 'sso:linked'):  # noqa: B009
                 om.send_sso_link_email(request.user, auth_provider)
             else:
                 # TODO(dcramer): proper error message

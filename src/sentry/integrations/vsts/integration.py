@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+
+import six
 from time import time
 import logging
 import re
@@ -402,7 +404,7 @@ class VstsIntegrationProvider(IntegrationProvider):
             subscription, shared_secret = webhook.create_subscription(
                 instance, oauth_data, self.oauth_redirect_url)
         except ApiError as e:
-            if e.code != 400 or 'permission' not in e.message:
+            if e.code != 400 or 'permission' not in six.text_type(e):
                 raise e
             raise IntegrationError(
                 'You do not have sufficent account access to create an integration.\nPlease check with the owner of this account.'

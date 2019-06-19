@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from rest_framework.response import Response
 
 from sentry.api.bases import OrganizationEventsEndpointBase, OrganizationEventsError, NoProjects
@@ -13,7 +14,7 @@ class OrganizationTagsEndpoint(OrganizationEventsEndpointBase):
         try:
             filter_params = self.get_filter_params(request, organization)
         except OrganizationEventsError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
         except NoProjects:
             return Response([])
 

@@ -76,7 +76,7 @@ def get_hashes_from_fingerprint_with_reason(event, fingerprint):
         hash_count = 1
 
     hashes = OrderedDict((bit, []) for bit in fingerprint)
-    for idx in range(hash_count):
+    for _idx in range(hash_count):
         for bit in fingerprint:
             if bit in DEFAULT_FINGERPRINT_VALUES:
                 hashes[bit].append(default_hashes)

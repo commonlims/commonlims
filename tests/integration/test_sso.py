@@ -12,7 +12,7 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
         user = self.create_user('foo@example.com', is_superuser=False)
         organization = self.create_organization(name='foo')
         member = self.create_member(user=user, organization=organization)
-        setattr(member.flags, 'sso:linked', True)
+        setattr(member.flags, 'sso:linked', True)  # noqa: B010
         member.save()
 
         auth_provider = AuthProvider.objects.create(

@@ -1,22 +1,8 @@
 ---
 name: 🐞 Bug Report
-about: Report a bug to help improve Sentry
+about: Report a bug to help improve Common LIMS
 
 ---
-
-<!--
-
-Do you want to ask a question? Are you looking for support? The Sentry message
-board is the best place for getting support: https://forum.sentry.io
--->
-
-## Important Details
-
-How are you running Sentry?
-
-* [ ] On-Premise docker [Version xyz]
-* [ ] Saas (sentry.io)
-* [ ] Other [briefly describe your environment]
 
 ## Description
 

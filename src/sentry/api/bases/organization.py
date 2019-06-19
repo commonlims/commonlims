@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from rest_framework.exceptions import PermissionDenied
 
 from sentry.api.base import Endpoint
@@ -203,7 +204,7 @@ class OrganizationEndpoint(Endpoint):
                 optional=date_filter_optional,
             )
         except InvalidParams as exc:
-            raise OrganizationEventsError(exc.message)
+            raise OrganizationEventsError(six.text_type(exc))
 
         try:
             projects = self.get_projects(request, organization)

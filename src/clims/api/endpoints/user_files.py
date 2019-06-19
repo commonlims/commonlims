@@ -4,18 +4,11 @@ import logging
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from uuid import uuid4
 
 from sentry.api.base import Endpoint, SessionAuthentication
-from sentry.api.exceptions import ResourceDoesNotExist
-from sentry.api.serializers import serialize
-from sentry.models import ApiApplication, ApiApplicationStatus
-from clims.models.sample import Sample
-from sentry.tasks.deletion import delete_api_application
 
 delete_logger = logging.getLogger('sentry.deletions.api')
 logger = logging.getLogger(__name__)
-from clims.workflow import WorkflowEngine
 
 
 class UserFilesEndpoint(Endpoint):
@@ -27,7 +20,7 @@ class UserFilesEndpoint(Endpoint):
 
     def post(self, request):
         content = request.DATA["content"]
-        file_name = request.DATA["fileName"]
+        # file_name = request.DATA["fileName"]
 
         # TODO: Here we should implement the following:
         # 1. save the data to the database
@@ -36,7 +29,6 @@ class UserFilesEndpoint(Endpoint):
 
         import io
         from sentry.plugins2 import file_handlers_registry
-        print("about to do some damage")
 
         content_bytes = content.decode('base64')
         f = io.BytesIO(content_bytes)

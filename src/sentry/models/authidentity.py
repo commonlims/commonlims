@@ -38,9 +38,9 @@ class AuthIdentity(Model):
     # TODO(dcramer): we'd like to abstract this so there's a central Role object
     # and it doesnt require two composite db objects to talk to each other
     def is_valid(self, member):
-        if getattr(member.flags, 'sso:invalid'):
+        if getattr(member.flags, 'sso:invalid'):  # noqa: B009
             return False
-        if not getattr(member.flags, 'sso:linked'):
+        if not getattr(member.flags, 'sso:linked'):  # noqa: B009
             return False
 
         if not self.last_verified:

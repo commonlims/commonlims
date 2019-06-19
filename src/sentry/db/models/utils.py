@@ -109,7 +109,7 @@ def slugify_instance(inst, label, reserved=(), max_length=30, field_name='slug',
         (1, 12),  # (36^12) possibilities, 1 final attempt
     )
     for attempts, size in sizes:
-        for i in range(attempts):
+        for _ in range(attempts):
             end = get_random_string(size, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456790')
             value = base_value[:max_length - size - 1] + '-' + end
             setattr(inst, field_name, value)

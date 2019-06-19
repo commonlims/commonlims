@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from datetime import timedelta
 
 from django.utils import timezone
@@ -72,7 +73,7 @@ def get_date_range_from_params(params, optional=False, validate_window=True):
             start = parse_datetime_string(params['start'])
             end = parse_datetime_string(params['end'])
         except InvalidQuery as exc:
-            raise InvalidParams(exc.message)
+            raise InvalidParams(six.text_type(exc))
     elif optional:
         return None, None
 

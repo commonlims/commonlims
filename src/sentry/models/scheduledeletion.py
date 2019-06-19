@@ -38,7 +38,9 @@ class ScheduledDeletion(Model):
         db_table = 'sentry_scheduleddeletion'
 
     @classmethod
-    def schedule(cls, instance, days=30, data={}, actor=None):
+    def schedule(cls, instance, days=30, data=None, actor=None):
+        if not data:
+            data = {}
         return cls.objects.create(
             app_label=instance._meta.app_label,
             model_name=type(instance).__name__,

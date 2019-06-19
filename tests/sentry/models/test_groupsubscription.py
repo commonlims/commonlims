@@ -28,7 +28,7 @@ class SubscribeTest(TestCase):
         group = self.create_group()
 
         user_ids = []
-        for i in range(20):
+        for _ in range(20):
             user = self.create_user()
             user_ids.append(user.id)
 

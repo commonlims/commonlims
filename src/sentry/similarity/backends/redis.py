@@ -225,7 +225,7 @@ class RedisScriptMinHashIndexBackend(AbstractIndexBackend):
                 yield idx, chunk
 
     def flush(self, scope, indices, batch=1000, timestamp=None):
-        for index, chunk in self.scan(scope, indices, batch, timestamp):
+        for _index, chunk in self.scan(scope, indices, batch, timestamp):
             if chunk:
                 self.cluster.delete(*chunk)
 

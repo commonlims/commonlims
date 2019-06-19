@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 
 __all__ = ['IntegrationPipeline']
 
+import six
 from django.db import IntegrityError
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -40,7 +41,7 @@ class IntegrationPipeline(Pipeline):
         try:
             data = self.provider.build_integration(self.state.data)
         except IntegrationError as e:
-            return self.error(e.message)
+            return self.error(six.text_type(e))
 
         response = self._finish_pipeline(data)
         self.provider.post_install(self.integration, self.organization)

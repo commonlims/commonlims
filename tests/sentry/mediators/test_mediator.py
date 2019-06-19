@@ -126,7 +126,7 @@ class TestMediator(TestCase):
             with self.log():
                 raise TypeError
 
-        setattr(self.mediator, 'call', types.MethodType(call, self.mediator))
+        setattr(self.mediator, 'call', types.MethodType(call, self.mediator))  # noqa: B010
 
         with patch.object(self.logger, 'info') as mock:
             try:

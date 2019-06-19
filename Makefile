@@ -11,7 +11,7 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: update-submodules install-yarn-pkgs install-sentry-dev
+develop-only: node-version-check update-submodules install-yarn-pkgs install-sentry-dev
 test: lint test-js test-python test-cli
 
 build: locale
@@ -77,12 +77,10 @@ install-system-pkgs: node-version-check
 	sudo apt-get update
 	sudo apt install -y postgresql-9.6
 
-	@echo "--> Installing yarn 1.3.2 (via npm)"
-	@npm install -g "yarn@1.3.2"
-
 install-yarn-pkgs:
-	@echo "--> Installing Yarn packages (for development)"
-	@command -v yarn 2>&1 > /dev/null || (echo 'yarn not found. Please install it before proceeding.'; exit 1)
+	@echo "--> Installing yarn"
+	@npm install -g "yarn@1.16.0"
+	@echo "--> Installing yarn packages (for development)"
 	# Use NODE_ENV=development so that yarn installs both dependencies + devDependencies
 	NODE_ENV=development yarn install --pure-lockfile
 

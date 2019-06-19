@@ -30,7 +30,7 @@ from sentry.mediators import sentry_apps, sentry_app_installations, service_hook
 from sentry.models import (
     Activity, Environment, Event, EventError, EventMapping, Group, Organization, OrganizationMember,
     OrganizationMemberTeam, Project, ProjectBookmark, Team, User, UserEmail, Release, Commit, ReleaseCommit,
-    CommitAuthor, Repository, CommitFileChange, ProjectDebugFile, File, UserPermission, EventAttachment,
+    CommitAuthor, Repository, CommitFileChange, File, UserPermission, EventAttachment,
     UserReport
 )
 from sentry.utils.canonical import CanonicalKeyDict
@@ -664,50 +664,6 @@ class Fixtures(object):
             file=file,
             **kwargs
         )
-
-    def create_dif_file(self, debug_id=None, project=None, object_name=None,
-                        features=None, data=None, file=None, cpu_name=None, **kwargs):
-        if project is None:
-            project = self.project
-
-        if debug_id is None:
-            debug_id = six.text_type(uuid4())
-
-        if object_name is None:
-            object_name = '%s.dSYM' % debug_id
-
-        if features is not None:
-            if data is None:
-                data = {}
-            data['features'] = features
-
-        if file is None:
-            file = self.create_file(
-                name=object_name,
-                size=42,
-                headers={'Content-Type': 'application/x-mach-binary'},
-                checksum='dc1e3f3e411979d336c3057cce64294f3420f93a',
-            )
-
-        return ProjectDebugFile.objects.create(
-            debug_id=debug_id,
-            project=project,
-            object_name=object_name,
-            cpu_name=cpu_name or 'x86_64',
-            file=file,
-            data=data,
-            **kwargs
-        )
-
-        return ProjectDebugFile.objects.create(project=project, **kwargs)
-
-    def create_dif_from_path(self, path, object_name=None, **kwargs):
-        if object_name is None:
-            object_name = os.path.basename(path)
-
-        headers = {'Content-Type': 'application/x-mach-binary'}
-        file = self.create_file_from_path(path, name=object_name, headers=headers)
-        return self.create_dif_file(file=file, object_name=object_name, **kwargs)
 
     def add_user_permission(self, user, permission):
         try:

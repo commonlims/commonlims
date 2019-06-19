@@ -71,8 +71,6 @@ class AssembleTest(TestCase):
         ).get()
 
         assert dif.file.headers == {'Content-Type': 'text/x-breakpad'}
-        assert dif.projectsymcachefile.exists()
-        assert dif.projectcficachefile.exists()
 
     def test_assemble_from_files(self):
         files = []

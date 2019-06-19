@@ -348,12 +348,12 @@ def digest(request):
     event_sequence = itertools.count(1)
     group_generator = make_group_generator(random, project)
 
-    for i in range(random.randint(1, 30)):
+    for _ in range(random.randint(1, 30)):
         group = next(group_generator)
         state['groups'][group.id] = group
 
         offset = timedelta(seconds=0)
-        for i in range(random.randint(1, 10)):
+        for _ in range(random.randint(1, 10)):
             offset += timedelta(seconds=random.random() * 120)
             event = Event(
                 id=next(event_sequence),
@@ -463,7 +463,7 @@ def report(request):
 
     def build_issue_summaries():
         summaries = []
-        for i in range(3):
+        for _ in range(3):
             summaries.append(int(random.weibullvariate(10, 1) * random.paretovariate(0.5)))
         return summaries
 

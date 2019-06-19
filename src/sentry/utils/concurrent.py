@@ -189,7 +189,7 @@ class ThreadedExecutor(Executor):
             if self.__started:
                 return
 
-            for i in xrange(self.__worker_count):
+            for _ in xrange(self.__worker_count):
                 t = threading.Thread(target=self.__worker)
                 t.daemon = True
                 t.start()

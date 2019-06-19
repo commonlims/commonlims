@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from uuid import uuid4
 
 from django.http import Http404
@@ -68,6 +69,6 @@ class OrganizationIntegrationDetailsEndpoint(OrganizationEndpoint):
         try:
             installation.update_organization_config(request.DATA)
         except IntegrationError as e:
-            return self.respond({'detail': e.message}, status=400)
+            return self.respond({'detail': six.text_type(e)}, status=400)
 
         return self.respond(status=200)
