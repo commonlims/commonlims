@@ -19,7 +19,7 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
 import StreamActions from 'app/views/stream/actions';
 import StreamFilters from 'app/views/stream/filters';
-import StreamGroup from 'app/components/userTask/group';
+import ProcessesGroup from 'app/components/userTask/group';
 import StreamSidebar from 'app/views/stream/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
@@ -30,7 +30,7 @@ import {connect} from 'react-redux';
 import {userTasksGet} from 'app/redux/actions/userTask';
 
 const mapStateToProps = state => ({
-  userTasks: state.userTasks,
+  userTasks: state.userTask,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -565,8 +565,14 @@ const Processes = createReactClass({
     let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
+      let metadata = {};
+      let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
+      let count = 1;
+      let userCount = 1;
+      let data = {id, metadata, type, count, userCount};
       return (
-        <StreamGroup
+        <ProcessesGroup
+          data={data}
           key={id}
           id={id}
           orgId={orgId}

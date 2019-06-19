@@ -1,34 +1,38 @@
-import jQuery from 'jquery';
+import {Flex, Box} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
-import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
+import createReactClass from 'create-react-class';
+import $ from 'jquery';
 import styled from 'react-emotion';
-import {Flex, Box} from 'grid-emotion';
 
-import Count from 'app/components/count';
-import ProjectState from 'app/mixins/projectState';
-
-import ProcessStore from 'app/stores/processStore';
-import SelectedProcessStore from 'app/stores/selectedProcessStore';
-
-import SampleHeader from 'app/components/userTask/sampleHeader';
 import {PanelItem} from 'app/components/panels';
-
-// TODO: Should be called Task or similar
+import {valueIsEqual} from 'app/utils';
+import AssigneeSelector from 'app/components/assigneeSelector';
+import Count from 'app/components/count';
+import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
+import EventOrGroupHeader from 'app/components/eventOrGroupHeader';
+// import GroupChart from 'app/components/stream/groupChart';
+import GroupCheckBox from 'app/components/stream/groupCheckBox';
+import GroupStore from 'app/stores/groupStore';
+import GuideAnchor from 'app/components/assistant/guideAnchor';
+import ProjectState from 'app/mixins/projectState';
+import SelectedGroupStore from 'app/stores/selectedGroupStore';
 
 const ProcessesGroup = createReactClass({
   displayName: 'ProcessesGroup',
 
   propTypes: {
     id: PropTypes.string.isRequired,
-    orgId: PropTypes.string.isRequired,
+    statsPeriod: PropTypes.string.isRequired,
     canSelect: PropTypes.bool,
     query: PropTypes.string,
-    projectId: PropTypes.string,
+    hasGuideAnchor: PropTypes.bool,
+    memberList: PropTypes.array,
+    data: PropTypes.shape,
   },
 
-  mixins: [Reflux.listenTo(ProcessStore, 'onProcessChange'), ProjectState],
+  mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ProjectState],
 
   getDefaultProps() {
     return {
@@ -39,26 +43,35 @@ const ProcessesGroup = createReactClass({
   },
 
   getInitialState() {
-    let data = ProcessStore.get(this.props.id);
     return {
-      data,
+      data: this.props.data, //GroupStore.get(this.props.id),
     };
   },
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
-        data: ProcessStore.get(this.props.id),
+        data: this.props.data, //GroupStore.get(this.props.id),
       });
     }
   },
 
-  onProcessChange(itemIds) {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.statsPeriod !== this.props.statsPeriod) {
+      return true;
+    }
+    if (!valueIsEqual(this.state.data, nextState.data)) {
+      return true;
+    }
+    return false;
+  },
+
+  onGroupChange(itemIds) {
     if (!itemIds.has(this.props.id)) {
       return;
     }
     let id = this.props.id;
-    let data = ProcessStore.get(id);
+    let data = GroupStore.get(id);
     this.setState({
       data,
     });
@@ -67,39 +80,63 @@ const ProcessesGroup = createReactClass({
   toggleSelect(evt) {
     if (evt.target.tagName === 'A') return;
     if (evt.target.tagName === 'INPUT') return;
-    if (jQuery(evt.target).parents('a').length !== 0) return;
+    if ($(evt.target).parents('a').length !== 0) return;
 
-    SelectedProcessStore.toggleSelect(this.state.data.id);
+    SelectedGroupStore.toggleSelect(this.state.data.id);
   },
 
   render() {
     const {data} = this.state;
-    const {orgId, projectId, query, canSelect} = this.props;
+    const {query, hasGuideAnchor, canSelect, memberList} = this.props;
+
+    // TODO: replace GroupChart placeholder with this
+    // <GroupChart id={data.id} statsPeriod={this.props.statsPeriod} data={data} />
 
     return (
-      <TaskGroup onClick={this.toggleSelect} py={1} px={0} align="center">
-        <TaskGroupSummary
-          w={[8 / 12, 8 / 12, 6 / 12]}
-          ml={canSelect ? 1 : 2}
-          mr={1}
-          flex="1"
-        >
-          <SampleHeader data={data} orgId={orgId} projectId={projectId} query={query} />
-        </TaskGroupSummary>
+      <Group onClick={this.toggleSelect} py={1} px={0} align="center">
+        {canSelect && (
+          <GroupCheckbox ml={2}>
+            {hasGuideAnchor && <GuideAnchor target="issues" type="text" />}
+            <GroupCheckBox id={data.id} />
+          </GroupCheckbox>
+        )}
+        <GroupSummary w={[8 / 12, 8 / 12, 6 / 12]} ml={canSelect ? 1 : 2} mr={1} flex="1">
+          <EventOrGroupHeader data={data} query={query} />
+          <EventOrGroupExtraDetails {...data} />
+        </GroupSummary>
+        <Box w={160} mx={2} className="hidden-xs hidden-sm">
+          GroupChart
+        </Box>
         <Flex w={[40, 60, 80, 80]} mx={2} justify="flex-end">
-          <StyledCount value={data.waitingCount} />
+          {hasGuideAnchor && <GuideAnchor target="events" type="text" />}
+          <StyledCount value={data.count} />
         </Flex>
-      </TaskGroup>
+        <Flex w={[40, 60, 80, 80]} mx={2} justify="flex-end">
+          {hasGuideAnchor && <GuideAnchor target="users" type="text" />}
+          <StyledCount value={data.userCount} />
+        </Flex>
+        <Box w={80} mx={2} className="hidden-xs hidden-sm">
+          <AssigneeSelector id={data.id} memberList={memberList} />
+        </Box>
+      </Group>
     );
   },
 });
 
-const TaskGroup = styled(PanelItem)`
+const Group = styled(PanelItem)`
   line-height: 1.1;
 `;
 
-const TaskGroupSummary = styled(Box)`
+const GroupSummary = styled(Box)`
   overflow: hidden;
+`;
+
+const GroupCheckbox = styled(Box)`
+  align-self: flex-start;
+  & input[type='checkbox'] {
+    margin: 0;
+    display: block;
+  }
 `;
 
 const StyledCount = styled(Count)`
