@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from collections import namedtuple, defaultdict
 from datetime import timedelta
 
@@ -265,7 +266,7 @@ class OrganizationHealthGraphEndpoint(OrganizationHealthEndpointBase):
         try:
             start, end = get_date_range_from_params(request.GET)
         except InvalidParams as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
 
         interval = parse_stats_period(request.GET.get('interval', '1h'))
         if interval is None:

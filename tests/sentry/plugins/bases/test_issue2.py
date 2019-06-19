@@ -12,13 +12,13 @@ from sentry.plugins import IssueTrackingPlugin2, plugins
 from sentry.testutils import TestCase
 
 
-class TestPluginWithFields(IssueTrackingPlugin2):
+class PluginWithFields(IssueTrackingPlugin2):
     slug = 'test-plugin-with-fields'
     conf_key = slug
     issue_fields = frozenset(['id', 'title', 'url'])
 
 
-class TestPluginWithoutFields(IssueTrackingPlugin2):
+class PluginWithoutFields(IssueTrackingPlugin2):
     slug = 'test-plugin-without-fields'
     conf_key = slug
     issue_fields = None
@@ -26,17 +26,17 @@ class TestPluginWithoutFields(IssueTrackingPlugin2):
 
 class IssueTrackingPlugin2Test(TestCase):
     def test_issue_label_as_dict(self):
-        plugin = TestPluginWithFields()
+        plugin = PluginWithFields()
         result = plugin.get_issue_label(mock.Mock(), {'id': '1'})
         assert result == '#1'
 
     def test_issue_label_legacy(self):
-        plugin = TestPluginWithoutFields()
+        plugin = PluginWithoutFields()
         result = plugin.get_issue_label(mock.Mock(), '1')
         assert result == '#1'
 
     def test_issue_field_map_with_fields(self):
-        plugin = TestPluginWithFields()
+        plugin = PluginWithFields()
         result = plugin.get_issue_field_map()
         assert result == {
             'id': 'test-plugin-with-fields:issue_id',
@@ -45,7 +45,7 @@ class IssueTrackingPlugin2Test(TestCase):
         }
 
     def test_issue_field_map_without_fields(self):
-        plugin = TestPluginWithoutFields()
+        plugin = PluginWithoutFields()
         result = plugin.get_issue_field_map()
         assert result == {'id': 'test-plugin-without-fields:tid'}
 

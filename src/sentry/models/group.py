@@ -7,6 +7,7 @@ sentry.models.group
 """
 from __future__ import absolute_import, print_function
 
+import six
 import logging
 import math
 import re
@@ -113,7 +114,7 @@ class GroupManager(BaseManager):
             logger.info(
                 'discarded.hash', extra={
                     'project_id': project,
-                    'description': exc.message,
+                    'description': six.text_type(exc),
                 }
             )
 

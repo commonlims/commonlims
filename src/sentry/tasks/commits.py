@@ -143,7 +143,7 @@ def fetch_commits(release_id, user_id, refs, prev_release_id=None, **kwargs):
             if isinstance(exc, InvalidIdentity) and getattr(exc, 'identity', None):
                 handle_invalid_identity(identity=exc.identity, commit_failure=True)
             elif isinstance(exc, (PluginError, InvalidIdentity, IntegrationError)):
-                msg = generate_fetch_commits_error_email(release, exc.message)
+                msg = generate_fetch_commits_error_email(release, six.text_type(exc))
                 msg.send_async(to=[user.email])
             else:
                 msg = generate_fetch_commits_error_email(

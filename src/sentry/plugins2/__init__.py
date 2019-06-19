@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # TODO: Refactor
 # This module should actually be merged with the plugin
 # module. However, it imports a ton of django stuff which leads to
@@ -28,16 +29,14 @@ class SampleService():
         self.namespace = namespace
 
     def add(self, sample):
-        print("Adding sample", sample)
+        raise NotImplementedError()
 
     def new_sample(self, sample_name, sample_type, concentration, volume, **kwargs):
         """Creates a Sample object with the specified default parameters and any domain specific
         parameters in kwargs. The domain specific arguments will be registered per the calling plugin,
         which will automatically add a namespace to the keys
         """
-        custom_fields = {self.namespace: kwargs}
-        sample_obj = Sample(sample_name, sample_type, concentration, volume, custom_fields)
-        print(sample_obj)
+        raise NotImplementedError()
 
 
 class App(object):
@@ -55,7 +54,7 @@ class FileHandlersRegistry(object):
         self.handlers.add(fn)
 
     def handle_file_uploaded(self, file_like):
-        print("in that upload handler!", self.handlers)
+        raise NotImplementedError()
 
         for handler in self.handlers:
             if type(handler) == type:

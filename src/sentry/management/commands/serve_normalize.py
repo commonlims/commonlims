@@ -7,6 +7,7 @@ sentry.management.commands.serve_normalize
 """
 from __future__ import absolute_import, print_function
 
+import six
 import SocketServer
 import base64
 import os
@@ -33,7 +34,7 @@ def catch_errors(f):
         try:
             return f(*args, **kwargs)
         except Exception as e:
-            error = force_str(e.message) + ' ' + force_str(traceback.format_exc())
+            error = force_str(six.text_type(e)) + ' ' + force_str(traceback.format_exc())
 
         try:
             return encode({
@@ -46,7 +47,7 @@ def catch_errors(f):
                 # Encoding error, try to send the exception instead
                 return encode({
                     'result': None,
-                    'error': force_str(e.message) + ' ' + force_str(traceback.format_exc()),
+                    'error': force_str(six.text_type(e)) + ' ' + force_str(traceback.format_exc()),
                     'metrics': None,
                     'encoding_error': True,
                 })

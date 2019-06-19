@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import six
+
 from collections import namedtuple
 from datetime import timedelta
 from functools32 import partial
@@ -24,7 +26,7 @@ class OrganizationEventsEndpoint(OrganizationEventsEndpointBase):
         try:
             snuba_args = self.get_snuba_query_args(request, organization)
         except OrganizationEventsError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
         except NoProjects:
             # return empty result if org doesn't have projects
             # or user doesn't have access to projects in org
@@ -53,7 +55,7 @@ class OrganizationEventsStatsEndpoint(OrganizationEventsEndpointBase):
         try:
             snuba_args = self.get_snuba_query_args(request, organization)
         except OrganizationEventsError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
         except NoProjects:
             return Response({'data': []})
 
@@ -90,7 +92,7 @@ class OrganizationEventsMetaEndpoint(OrganizationEventsEndpointBase):
         try:
             snuba_args = self.get_snuba_query_args(request, organization)
         except OrganizationEventsError as exc:
-            return Response({'detail': exc.message}, status=400)
+            return Response({'detail': six.text_type(exc)}, status=400)
         except NoProjects:
             return Response({'count': 0})
 

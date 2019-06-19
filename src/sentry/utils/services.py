@@ -242,11 +242,11 @@ class ServiceDelegator(Service):
             self.__callback_func = None
 
     def validate(self):
-        for backend, executor in self.__backends.values():
+        for backend, _executor in self.__backends.values():
             backend.validate()
 
     def setup(self):
-        for backend, executor in self.__backends.values():
+        for backend, _executor in self.__backends.values():
             backend.setup()
 
     def __getattr__(self, attribute_name):

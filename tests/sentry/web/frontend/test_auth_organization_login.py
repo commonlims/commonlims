@@ -81,8 +81,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_existing_user_with_new_account(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -124,8 +124,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_existing_identity(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -200,8 +200,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=new_user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_matched_user_with_merge(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -259,8 +259,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_matched_user_via_secondary_email(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -315,8 +315,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_unmatched_user_with_merge(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -370,8 +370,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_matched_user_with_merge_and_existing_identity(self):
         organization = self.create_organization(name='foo', owner=self.user)
@@ -431,8 +431,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_inactive_user_with_merge_and_existing_identity(self):
         """
@@ -488,8 +488,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=new_user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_duplicate_users_with_membership_and_verified(self):
         """
@@ -557,8 +557,8 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=new_user,
         )
 
-        assert getattr(member.flags, 'sso:linked')
-        assert not getattr(member.flags, 'sso:invalid')
+        assert getattr(member.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_duplicate_users_without_verified(self):
         """
@@ -748,12 +748,12 @@ class OrganizationAuthLoginTest(AuthProviderTestCase):
             user=user,
             organization=organization,
         )
-        assert getattr(member1.flags, 'sso:linked')
-        assert not getattr(member1.flags, 'sso:invalid')
+        assert getattr(member1.flags, 'sso:linked')  # noqa: B009
+        assert not getattr(member1.flags, 'sso:invalid')  # noqa: B009
 
         member2 = OrganizationMember.objects.get(id=member2.id)
-        assert not getattr(member2.flags, 'sso:linked')
-        assert getattr(member2.flags, 'sso:invalid')
+        assert not getattr(member2.flags, 'sso:linked')  # noqa: B009
+        assert getattr(member2.flags, 'sso:invalid')  # noqa: B009
 
     def test_flow_as_unauthenticated_existing_user_legacy_identity_migration(self):
         organization = self.create_organization(name='foo', owner=self.user)

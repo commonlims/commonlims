@@ -43,7 +43,7 @@ def has_charts(db):
     return True
 
 
-def attach_foreignkey(objects, field, related=[], database=None):
+def attach_foreignkey(objects, field):
     """
     Shortcut method which handles a pythonic LEFT OUTER JOIN.
 
@@ -51,12 +51,12 @@ def attach_foreignkey(objects, field, related=[], database=None):
 
     Works with both ForeignKey and OneToOne (reverse) lookups.
     """
+    related = []
 
     if not objects:
         return
 
-    if database is None:
-        database = list(objects)[0]._state.db
+    database = list(objects)[0]._state.db
 
     is_foreignkey = isinstance(field, SingleRelatedObjectDescriptor)
 

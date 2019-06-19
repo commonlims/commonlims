@@ -5,11 +5,9 @@ import math
 
 import jsonschema
 import logging
-import os
 import random
 import six
 import traceback
-import uuid
 
 from time import time
 
@@ -17,28 +15,21 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.core.files import uploadhandler
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed
-from django.http.multipartparser import MultiPartParser
 from django.utils.encoding import force_bytes
 from django.views.decorators.cache import never_cache, cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View as BaseView
 from functools import wraps
-from querystring_parser import parser
-from symbolic import ProcessMinidumpError, Unreal4Error
 
-from sentry import features, quotas, tsdb, options
-from sentry.attachments import CachedAttachment
+from sentry import quotas, tsdb, options
 from sentry.coreapi import (
-    Auth, APIError, APIForbidden, APIRateLimited, ClientApiHelper, ClientAuthHelper,
-    SecurityAuthHelper, MinidumpAuthHelper, safely_load_json_string, logger as api_logger
+    APIError, APIForbidden, APIRateLimited, ClientApiHelper, ClientAuthHelper,
+    SecurityAuthHelper, safely_load_json_string, logger as api_logger
 )
 from sentry.event_manager import EventManager
 from sentry.interfaces import schemas
 from sentry.interfaces.base import get_interface
-from sentry.lang.native.unreal import process_unreal_crash, merge_apple_crash_report, unreal_attachment_type, merge_unreal_context_event, merge_unreal_logs_event
-from sentry.lang.native.minidump import merge_process_state_event, process_minidump, MINIDUMP_ATTACHMENT_TYPE
 from sentry.models import Project, OrganizationOption, Organization
 from sentry.signals import (
     event_accepted, event_dropped, event_filtered, event_received)
@@ -305,7 +296,7 @@ class APIView(BaseView):
                 value=json.dumps([meta, base64.b64encode(data)])
             )
         except Exception as e:
-            logger.debug("Cannot publish event to Kafka: {}".format(e.message))
+            logger.debug("Cannot publish event to Kafka: {}".format(six.text_type(e)))
 
     @csrf_exempt
     @never_cache
@@ -588,7 +579,7 @@ class StoreView(APIView):
                     })
                 )
             except Exception as e:
-                logger.exception("Cannot publish event to Kafka: {}".format(e.message))
+                logger.exception("Cannot publish event to Kafka: {}".format(six.text_type(e)))
             else:
                 if process_in_kafka:
                     # This event will be processed by the Kafka consumer, so we
@@ -598,268 +589,6 @@ class StoreView(APIView):
         # Everything after this will eventually be done in a Kafka consumer.
         return process_event(event_manager, project,
                              key, remote_addr, helper, attachments)
-
-
-class MinidumpView(StoreView):
-    auth_helper_cls = MinidumpAuthHelper
-    content_types = ('multipart/form-data', )
-
-    def _dispatch(self, request, helper, project_id=None, origin=None, *args, **kwargs):
-        # TODO(ja): Refactor shared code with CspReportView. Especially, look at
-        # the sentry_key override and test it.
-
-        # A minidump submission as implemented by Breakpad and Crashpad or any
-        # other library following the Mozilla Soccorro protocol is a POST request
-        # without Origin or Referer headers. Therefore, we cannot validate the
-        # origin of the request, but we *can* validate the "prod" key in future.
-        if request.method != 'POST':
-            return HttpResponseNotAllowed(['POST'])
-
-        content_type = request.META.get('CONTENT_TYPE')
-        # In case of multipart/form-data, the Content-Type header also includes
-        # a boundary. Therefore, we cannot check for an exact match.
-        if content_type is None or not content_type.startswith(self.content_types):
-            raise APIError('Invalid Content-Type')
-
-        request.user = AnonymousUser()
-
-        project = self._get_project_from_id(project_id)
-        helper.context.bind_project(project)
-
-        # This is yanking the auth from the querystring since it's not
-        # in the POST body. This means we expect a `sentry_key` and
-        # `sentry_version` to be set in querystring
-        auth = self.auth_helper_cls.auth_from_request(request)
-
-        key = helper.project_key_from_auth(auth)
-        if key.project_id != project.id:
-            raise APIError('Two different projects were specified')
-
-        helper.context.bind_auth(auth)
-
-        return super(APIView, self).dispatch(
-            request=request, project=project, auth=auth, helper=helper, key=key, **kwargs
-        )
-
-    def post(self, request, project, **kwargs):
-        # Minidump request payloads do not have the same structure as
-        # usual events from other SDKs. Most notably, the event needs
-        # to be transfered in the `sentry` form field. All other form
-        # fields are assumed "extra" information. The only exception
-        # to this is `upload_file_minidump`, which contains the minidump.
-
-        if any(key.startswith('sentry[') for key in request.POST):
-            # First, try to parse the nested form syntax `sentry[key][key]`
-            # This is required for the Breakpad client library, which only
-            # supports string values of up to 64 characters.
-            extra = parser.parse(request.POST.urlencode())
-            data = extra.pop('sentry', {})
-        else:
-            # Custom clients can submit longer payloads and should JSON
-            # encode event data into the optional `sentry` field.
-            extra = request.POST
-            json_data = extra.pop('sentry', None)
-            data = json.loads(json_data[0]) if json_data else {}
-
-        # Merge additional form fields from the request with `extra`
-        # data from the event payload and set defaults for processing.
-        extra.update(data.get('extra', {}))
-        data['extra'] = extra
-
-        # Assign our own UUID so we can track this minidump. We cannot trust the
-        # uploaded filename, and if reading the minidump fails there is no way
-        # we can ever retrieve the original UUID from the minidump.
-        event_id = data.get('event_id') or uuid.uuid4().hex
-        data['event_id'] = event_id
-
-        # At this point, we only extract the bare minimum information
-        # needed to continue processing. This requires to process the
-        # minidump without symbols and CFI to obtain an initial stack
-        # trace (most likely via stack scanning). If all validations
-        # pass, the event will be inserted into the database.
-        try:
-            minidump = request.FILES['upload_file_minidump']
-        except KeyError:
-            raise APIError('Missing minidump upload')
-
-        # Breakpad on linux sometimes stores the entire HTTP request body as
-        # dump file instead of just the minidump. The Electron SDK then for
-        # example uploads a multipart formdata body inside the minidump file.
-        # It needs to be re-parsed, to extract the actual minidump before
-        # continuing.
-        minidump.seek(0)
-        if minidump.read(2) == b'--':
-            # The remaining bytes of the first line are the form boundary. We
-            # have already read two bytes, the remainder is the form boundary
-            # (excluding the initial '--').
-            boundary = minidump.readline().rstrip()
-            minidump.seek(0)
-
-            # Next, we have to fake a HTTP request by specifying the form
-            # boundary and the content length, or otherwise Django will not try
-            # to parse our form body. Also, we need to supply new upload
-            # handlers since they cannot be reused from the current request.
-            meta = {
-                'CONTENT_TYPE': b'multipart/form-data; boundary=%s' % boundary,
-                'CONTENT_LENGTH': minidump.size,
-            }
-            handlers = [
-                uploadhandler.load_handler(handler, request)
-                for handler in settings.FILE_UPLOAD_HANDLERS
-            ]
-
-            _, files = MultiPartParser(meta, minidump, handlers).parse()
-            try:
-                minidump = files['upload_file_minidump']
-            except KeyError:
-                raise APIError('Missing minidump upload')
-
-        if minidump.size == 0:
-            raise APIError('Empty minidump upload received')
-
-        if settings.SENTRY_MINIDUMP_CACHE:
-            if not os.path.exists(settings.SENTRY_MINIDUMP_PATH):
-                os.mkdir(settings.SENTRY_MINIDUMP_PATH, 0o744)
-
-            with open('%s/%s.dmp' % (settings.SENTRY_MINIDUMP_PATH, event_id), 'wb') as out:
-                for chunk in minidump.chunks():
-                    out.write(chunk)
-
-        # Always store the minidump in attachments so we can access it during
-        # processing, regardless of the event-attachments feature. This will
-        # allow us to stack walk again with CFI once symbols are loaded.
-        attachments = []
-        minidump.seek(0)
-        attachments.append(CachedAttachment.from_upload(minidump, type=MINIDUMP_ATTACHMENT_TYPE))
-
-        # Append all other files as generic attachments. We can skip this if the
-        # feature is disabled since they won't be saved.
-        if features.has('organizations:event-attachments',
-                        project.organization, actor=request.user):
-            for name, file in six.iteritems(request.FILES):
-                if name != 'upload_file_minidump':
-                    attachments.append(CachedAttachment.from_upload(file))
-
-        try:
-            state = process_minidump(minidump)
-            merge_process_state_event(data, state)
-        except ProcessMinidumpError as e:
-            minidumps_logger.exception(e)
-            raise APIError(e.message.split('\n', 1)[0])
-
-        response_or_event_id = self.process(
-            request,
-            attachments=attachments,
-            data=data,
-            project=project,
-            **kwargs)
-
-        if isinstance(response_or_event_id, HttpResponse):
-            return response_or_event_id
-
-        # Return the formatted UUID of the generated event. This is
-        # expected by the Electron http uploader on Linux and doesn't
-        # break the default Breakpad client library.
-        return HttpResponse(
-            six.text_type(uuid.UUID(response_or_event_id)),
-            content_type='text/plain'
-        )
-
-
-# Endpoint used by the Unreal Engine 4 (UE4) Crash Reporter.
-class UnrealView(StoreView):
-    content_types = ('application/octet-stream', )
-
-    def _dispatch(self, request, helper, sentry_key, project_id=None, origin=None, *args, **kwargs):
-        if request.method != 'POST':
-            return HttpResponseNotAllowed(['POST'])
-
-        content_type = request.META.get('CONTENT_TYPE')
-        if content_type is None or not content_type.startswith(self.content_types):
-            raise APIError('Invalid Content-Type')
-
-        request.user = AnonymousUser()
-
-        project = self._get_project_from_id(project_id)
-        helper.context.bind_project(project)
-
-        auth = Auth({'sentry_key': sentry_key}, is_public=False)
-        auth.client = 'sentry.unreal_engine'
-
-        key = helper.project_key_from_auth(auth)
-        if key.project_id != project.id:
-            raise APIError('Two different projects were specified')
-
-        helper.context.bind_auth(auth)
-        return super(APIView, self).dispatch(
-            request=request, project=project, auth=auth, helper=helper, key=key, **kwargs
-        )
-
-    def post(self, request, project, **kwargs):
-        attachments_enabled = features.has('organizations:event-attachments',
-                                           project.organization, actor=request.user)
-
-        attachments = []
-        try:
-            event = {}
-            unreal = process_unreal_crash(request.body, request.GET.get(
-                'UserID'), request.GET.get('AppEnvironment'), event)
-            process_state = unreal.process_minidump()
-            if process_state:
-                merge_process_state_event(event, process_state)
-            else:
-                apple_crash_report = unreal.get_apple_crash_report()
-                if apple_crash_report:
-                    merge_apple_crash_report(apple_crash_report, event)
-                else:
-                    raise APIError("missing minidump in unreal crash report")
-        except (ProcessMinidumpError, Unreal4Error) as e:
-            minidumps_logger.exception(e)
-            raise APIError(e.message.split('\n', 1)[0])
-
-        try:
-            unreal_context = unreal.get_context()
-            if unreal_context is not None:
-                merge_unreal_context_event(unreal_context, event, project)
-        except Unreal4Error as e:
-            # we'll continue without the context data
-            minidumps_logger.exception(e)
-
-        try:
-            unreal_logs = unreal.get_logs()
-            if unreal_logs is not None:
-                merge_unreal_logs_event(unreal_logs, event)
-        except Unreal4Error as e:
-            # we'll continue without the breadcrumbs
-            minidumps_logger.exception(e)
-
-        for file in unreal.files():
-            # Always store the minidump in attachments so we can access it during
-            # processing, regardless of the event-attachments feature. This will
-            # allow us to stack walk again with CFI once symbols are loaded.
-            if file.type == "minidump" or attachments_enabled:
-                attachments.append(CachedAttachment(
-                    name=file.name,
-                    data=file.open_stream().read(),
-                    type=unreal_attachment_type(file),
-                ))
-
-        response_or_event_id = self.process(
-            request,
-            attachments=attachments,
-            data=event,
-            project=project,
-            **kwargs)
-
-        # The return here is only useful for consistency
-        # because the UE4 crash reporter doesn't care about it.
-        if isinstance(response_or_event_id, HttpResponse):
-            return response_or_event_id
-
-        return HttpResponse(
-            six.text_type(uuid.UUID(response_or_event_id)),
-            content_type='text/plain'
-        )
 
 
 class StoreSchemaView(BaseView):

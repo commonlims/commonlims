@@ -115,7 +115,7 @@ def _get_committers(annotated_frames, commits):
     for annotated_frame in annotated_frames:
         if limit == 0:
             break
-        for commit, score in annotated_frame['commits']:
+        for commit, _score in annotated_frame['commits']:
             committers[commit.author.id] += limit
             limit -= 1
             if limit == 0:

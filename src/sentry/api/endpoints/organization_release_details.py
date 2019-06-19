@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -175,7 +176,7 @@ class OrganizationReleaseDetailsEndpoint(OrganizationReleasesBaseEndpoint):
             try:
                 release.set_refs(refs, request.user, fetch=fetch_commits)
             except InvalidRepository as exc:
-                return Response({'refs': [exc.message]}, status=400)
+                return Response({'refs': [six.text_type(exc)]}, status=400)
 
         if (not was_released and release.date_released):
             for project in release.projects.all():

@@ -32,7 +32,7 @@ class RelayProjectConfigsEndpoint(Endpoint):
         # the org at all.
         if orgs:
             orgs = {o.id: o for o in Organization.objects.filter(pk__in=orgs)}
-            for (project, cfg) in list(projects.values()):
+            for project, _cfg in list(projects.values()):
                 org = orgs.get(project.organization_id)
                 if org is None or not request.relay.has_org_access(org):
                     projects.pop(six.text_type(project.id))

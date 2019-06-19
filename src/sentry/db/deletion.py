@@ -190,7 +190,7 @@ class BulkDeleteQuery(object):
                     cursor.execute(query, parameters)
 
                     i = 0
-                    for i, row in enumerate(cursor, 1):
+                    for i, row in enumerate(cursor, 1):  # noqa: B007
                         key, position = row
                         chunk.append(key)
                         if len(chunk) == chunk_size:

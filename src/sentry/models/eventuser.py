@@ -81,7 +81,7 @@ class EventUser(Model):
         self.hash = self.build_hash()
 
     def build_hash(self):
-        for key, value in self.iter_attributes():
+        for _key, value in self.iter_attributes():
             if value:
                 return md5_text(value).hexdigest()
 

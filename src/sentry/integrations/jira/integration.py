@@ -410,7 +410,7 @@ class JiraIntegration(IntegrationInstallation, IssueSyncMixin):
                 extra={
                     'integration_id': self.model.id,
                     'organization': group.organization.id,
-                    'error': exc.message,
+                    'error': six.text_type(exc),
                 }
             )
             raise IntegrationError(

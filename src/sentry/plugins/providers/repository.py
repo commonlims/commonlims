@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import six
 from logging import getLogger
 
 from django.core.urlresolvers import reverse
@@ -74,7 +75,7 @@ class RepositoryProvider(ProviderMixin):
             return Response(
                 {
                     'errors': {
-                        '__all__': e.message
+                        '__all__': six.text_type(e)
                     },
                 }, status=400
             )

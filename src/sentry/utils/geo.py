@@ -53,7 +53,3 @@ def _init_geoip_rust():
         rust_geoip = GeoIpLookup.from_path(geoip_path_mmdb)
     except Exception:
         logger.warning("Error opening GeoIP database in Rust: %s" % geoip_path_mmdb)
-
-
-_init_geoip()
-_init_geoip_rust()

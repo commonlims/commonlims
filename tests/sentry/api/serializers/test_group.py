@@ -309,7 +309,7 @@ class StreamGroupSerializerTestCase(TestCase):
                 ),
             )
             assert get_range.call_count == 1
-            for args, kwargs in get_range.call_args_list:
+            for _args, kwargs in get_range.call_args_list:
                 assert kwargs['environment_ids'] == [environment.id]
 
         def get_invalid_environment():

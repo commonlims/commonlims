@@ -6,9 +6,9 @@ from hashlib import sha1
 from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 
-from sentry.models import ApiToken, FileBlob, File, FileBlobIndex, FileBlobOwner
+from sentry.models import ApiToken, FileBlob, FileBlobIndex, FileBlobOwner
 from sentry.models.file import ChunkFileState
-from sentry.models.debugfile import get_assemble_status, ProjectDebugFile
+from sentry.models.debugfile import get_assemble_status
 from sentry.testutils import APITestCase
 from sentry.tasks.assemble import assemble_dif, assemble_file
 
@@ -74,105 +74,6 @@ class DifAssembleEndpoint(APITestCase):
         )
         assert response.status_code == 200, response.content
         assert response.data[checksum]['state'] == ChunkFileState.NOT_FOUND
-
-    def test_assemble_check(self):
-        content = 'foo bar'.encode('utf-8')
-        fileobj = ContentFile(content)
-        file1 = File.objects.create(
-            name='baz.dSYM',
-            type='default',
-            size=7,
-        )
-        file1.putfile(fileobj, 3)
-        checksum = sha1(content).hexdigest()
-
-        blobs = FileBlob.objects.all()
-        checksums = []
-        for blob in blobs:
-            checksums.append(blob.checksum)
-
-        # Request to see of file is there
-        # file exists but we have no overship for the chunks
-        response = self.client.post(
-            self.url,
-            data={
-                checksum: {
-                    'name': 'dif',
-                    'chunks': checksums,
-                }
-            },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token)
-        )
-
-        assert response.status_code == 200, response.content
-        assert response.data[checksum]['state'] == ChunkFileState.NOT_FOUND
-        assert set(response.data[checksum]['missingChunks']) == set(checksums)
-
-        # Now we add ownership to the blob
-        blobs = FileBlob.objects.all()
-        for blob in blobs:
-            FileBlobOwner.objects.create(
-                blob=blob,
-                organization=self.organization
-            )
-
-        # The request will start the job to assemble the file
-        response = self.client.post(
-            self.url,
-            data={
-                checksum: {
-                    'name': 'dif',
-                    'chunks': checksums,
-                }
-            },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token)
-        )
-
-        assert response.status_code == 200, response.content
-        assert response.data[checksum]['state'] == ChunkFileState.CREATED
-        assert response.data[checksum]['missingChunks'] == []
-
-        # Finally, we simulate a successful job
-        ProjectDebugFile.objects.create(
-            file=file1,
-            object_name='baz.dSYM',
-            cpu_name='x86_64',
-            project=self.project,
-            debug_id='df449af8-0dcd-4320-9943-ec192134d593',
-        )
-
-        # Request now tells us that everything is alright
-        response = self.client.post(
-            self.url,
-            data={
-                checksum: {
-                    'name': 'dif',
-                    'chunks': checksums,
-                }
-            },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token)
-        )
-
-        assert response.status_code == 200, response.content
-        assert response.data[checksum]['state'] == ChunkFileState.OK
-        assert response.data[checksum]['missingChunks'] == []
-
-        not_found_checksum = sha1('1').hexdigest()
-
-        response = self.client.post(
-            self.url,
-            data={
-                not_found_checksum: {
-                    'name': 'dif',
-                    'chunks': [not_found_checksum],
-                }
-            },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token)
-        )
-
-        assert response.status_code == 200, response.content
-        assert response.data[not_found_checksum]['state'] == ChunkFileState.NOT_FOUND
-        assert set(response.data[not_found_checksum]['missingChunks']) == set([not_found_checksum])
 
     @patch('sentry.tasks.assemble.assemble_dif')
     def test_assemble(self, mock_assemble_dif):

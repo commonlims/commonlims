@@ -842,7 +842,7 @@ class RedisTSDB(BaseTSDB):
             self.get_frequency_series(model, items, start, end, rollup, environment_id)
         ):
             response = responses[key] = {}
-            for timestamp, results in series:
+            for _timestamp, results in series:
                 for member, value in results.items():
                     response[member] = response.get(member, 0.0) + value
 
@@ -859,7 +859,7 @@ class RedisTSDB(BaseTSDB):
             return
 
         rollups = []
-        for rollup, samples in self.rollups.items():
+        for rollup, _samples in self.rollups.items():
             _, series = self.get_optimal_rollup_series(
                 to_datetime(self.get_earliest_timestamp(rollup, timestamp=timestamp)),
                 end=None,
@@ -902,7 +902,7 @@ class RedisTSDB(BaseTSDB):
 
             imports = []
 
-            for source, results in responses.items():
+            for _source, results in responses.items():
                 results = iter(results)
                 for rollup, series in rollups:
                     for timestamp in series:

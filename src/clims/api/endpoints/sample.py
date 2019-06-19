@@ -2,21 +2,15 @@ from __future__ import absolute_import
 
 import six
 
-from django.http import Http404
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from sentry.api.base import Endpoint, DEFAULT_AUTHENTICATION
 from sentry.api.serializers import serialize
-from django.db.models import Q
 from sentry.db.models.query import in_iexact
 from clims.models import Sample
-from sentry.models import ProjectPlatform
 from sentry.plugins import plugins
 from sentry.search.utils import tokenize_query
-from clims.workflow import WorkflowEngine
-from clims.api.serializers.models.sample import SampleSerializer
 from sentry.api.paginator import OffsetPaginator
 
 
@@ -33,9 +27,6 @@ class SampleEndpoint(Endpoint):
 
     # TODO: The index endpoint must be on sample level!
     def get(self, request):
-        group_by = request.GET.get('groupBy')
-        print("Grouping by", group_by)
-
         # # To begin with, we'll just support a container here as it's the most obvious case
         # if group_by == "container":
         #     pass
@@ -45,7 +36,6 @@ class SampleEndpoint(Endpoint):
         query = request.GET.get('query')
         if query:  # TODO: Ignoring the query while bugfixing
             tokens = tokenize_query(query)
-            print(tokens)
             for key, value in six.iteritems(tokens):
                 if key == 'name':
                     queryset = queryset.filter(in_iexact('name', value))
@@ -63,7 +53,6 @@ class SampleEndpoint(Endpoint):
         #     # Start by finding all processes waiting for this particular task
         #     tasks = engine.get_outstanding_tasks(process_definition=process, task_definition=task)
         #     samples = [int(t["businessKey"].split("-")[1]) for t in tasks]
-        #     print(samples)
 
         def _serialize(sample):
             # TODO: Add info from

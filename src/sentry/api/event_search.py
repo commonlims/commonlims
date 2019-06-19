@@ -154,7 +154,7 @@ class SearchVisitor(NodeVisitor):
         try:
             search_value = parse_datetime_string(search_value)
         except InvalidQuery as exc:
-            raise InvalidSearchQuery(exc.message)
+            raise InvalidSearchQuery(six.text_type(exc))
 
         try:
             return SearchFilter(

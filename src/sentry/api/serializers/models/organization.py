@@ -133,11 +133,11 @@ class DetailedOrganizationSerializer(OrganizationSerializer):
         if OrganizationOption.objects.filter(
                 organization=obj, key__in=LEGACY_RATE_LIMIT_OPTIONS).exists():
             feature_list.add('legacy-rate-limits')
-        if getattr(obj.flags, 'allow_joinleave'):
+        if getattr(obj.flags, 'allow_joinleave'):  # noqa: B009
             feature_list.add('open-membership')
-        if not getattr(obj.flags, 'disable_shared_issues'):
+        if not getattr(obj.flags, 'disable_shared_issues'):  # noqa: B009
             feature_list.add('shared-issues')
-        if getattr(obj.flags, 'require_2fa'):
+        if getattr(obj.flags, 'require_2fa'):  # noqa: B009
             feature_list.add('require-2fa')
 
         experiment_assignments = experiments.all(org=obj, actor=user)
