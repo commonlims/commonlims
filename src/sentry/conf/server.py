@@ -101,7 +101,7 @@ sys.path.insert(0, os.path.normpath(os.path.join(PROJECT_ROOT, os.pardir)))
 DATABASES = {
     'default': {
         'ENGINE': 'sentry.db.postgres',
-        'NAME': 'sentry',
+        'NAME': 'clims',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',
