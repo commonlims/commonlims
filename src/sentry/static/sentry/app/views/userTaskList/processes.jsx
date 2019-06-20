@@ -565,12 +565,44 @@ const Processes = createReactClass({
     let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
-      let metadata = {};
+      let title = 'A User Task Title';
+      let culprit = title;
+      let filename = 'Use filename for process/workflow name';
+      let metadata = {value: title, filename};
       let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
       let count = 1;
       let userCount = 1;
       let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
-      let data = {id, metadata, type, count, userCount, stats};
+      let level = Math.floor(Math.random() * Math.floor(2)).toString();
+      let eventID = null;
+      let numComments = 5;
+      let lastSeen = '2019-06-02';
+      let firstSeen = '2019-04-02';
+      let subscriptionDetails = {reason: 'Just cause'};
+      let annotations = ['an annotation'];
+      let assignedTo = {name: 'admin@localhost'};
+      let showAssignee = true;
+      let shortId = 'shortid';
+      let data = {
+        id,
+        metadata,
+        type,
+        count,
+        userCount,
+        stats,
+        title,
+        level,
+        culprit,
+        eventID,
+        numComments,
+        lastSeen,
+        firstSeen,
+        subscriptionDetails,
+        annotations,
+        assignedTo,
+        showAssignee,
+        shortId,
+      };
       return (
         <ProcessesGroup
           data={data}
