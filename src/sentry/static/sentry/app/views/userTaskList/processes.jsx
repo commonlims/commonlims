@@ -3,7 +3,6 @@ import {omit, isEqual} from 'lodash';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Reflux from 'reflux';
 import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 import qs from 'query-string';
@@ -29,9 +28,7 @@ import ProjectState from 'app/mixins/projectState';
 import {connect} from 'react-redux';
 import {userTasksGet} from 'app/redux/actions/userTask';
 
-const mapStateToProps = state => ({
-  userTasks: state.userTask,
-});
+const mapStateToProps = state => state.userTask;
 
 const mapDispatchToProps = dispatch => ({
   getUserTasks: () => dispatch(userTasksGet()),
@@ -51,9 +48,10 @@ const Processes = createReactClass({
     tags: PropTypes.object,
     tagsLoading: PropTypes.bool,
     getUserTasks: PropTypes.func.isRequired,
+    userTasks: PropTypes.arrayOf(PropTypes.shape({})),
   },
 
-  mixins: [Reflux.listenTo(ProcessStore, 'onTaskChange'), ApiMixin, ProjectState],
+  mixins: [ApiMixin, ProjectState],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
@@ -128,6 +126,14 @@ const Processes = createReactClass({
 
     if (searchIdChanged || searchTermChanged) {
       this.setState(this.getQueryState(nextProps), this.fetchData);
+    }
+
+    const userTasks = nextProps.userTasks;
+    let groupIds = userTasks.map(item => item.id.toString());
+    if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
+      this.setState({
+        groupIds,
+      });
     }
   },
 
@@ -424,15 +430,6 @@ const Processes = createReactClass({
     }
   },
 
-  onTaskChange() {
-    let groupIds = this._processesManager.getAllItems().map(item => item.id);
-    if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
-      this.setState({
-        groupIds,
-      });
-    }
-  },
-
   onSearch(query) {},
 
   onSortChange(sort) {
@@ -555,6 +552,8 @@ const Processes = createReactClass({
   },
 
   renderGroupNodes(ids, statsPeriod) {
+    const {userTasks} = this.props;
+
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
     let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
     let dateCutoff = new Date();
@@ -564,10 +563,11 @@ const Processes = createReactClass({
 
     let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
+      const userTask = userTasks.find(ut => ut.id == id);
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
-      let title = 'A User Task Title';
+      let title = userTask.name;
       let culprit = title;
-      let filename = 'Use filename for process/workflow name';
+      let filename = userTask.handler;
       let metadata = {value: title, filename};
       let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
       let count = 1;
@@ -575,9 +575,9 @@ const Processes = createReactClass({
       let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
       let level = Math.floor(Math.random() * Math.floor(2)).toString();
       let eventID = null;
-      let numComments = 5;
-      let lastSeen = '2019-06-02';
-      let firstSeen = '2019-04-02';
+      let numComments = userTask.num_comments;
+      let lastSeen = null; //'2019-06-02';
+      let firstSeen = userTask.created;
       let subscriptionDetails = {reason: 'Just cause'};
       let annotations = ['an annotation'];
       let assignedTo = {name: 'admin@localhost'};
