@@ -569,7 +569,8 @@ const Processes = createReactClass({
       let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
       let count = 1;
       let userCount = 1;
-      let data = {id, metadata, type, count, userCount};
+      let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
+      let data = {id, metadata, type, count, userCount, stats};
       return (
         <ProcessesGroup
           data={data}

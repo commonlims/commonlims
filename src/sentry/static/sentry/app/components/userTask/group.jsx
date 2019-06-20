@@ -12,7 +12,7 @@ import AssigneeSelector from 'app/components/assigneeSelector';
 import Count from 'app/components/count';
 import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
 import EventOrGroupHeader from 'app/components/eventOrGroupHeader';
-// import GroupChart from 'app/components/stream/groupChart';
+import GroupChart from 'app/components/stream/groupChart';
 import GroupCheckBox from 'app/components/stream/groupCheckBox';
 import GroupStore from 'app/stores/groupStore';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
@@ -29,7 +29,7 @@ const ProcessesGroup = createReactClass({
     query: PropTypes.string,
     hasGuideAnchor: PropTypes.bool,
     memberList: PropTypes.array,
-    data: PropTypes.shape,
+    data: PropTypes.shape({}),
   },
 
   mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ProjectState],
@@ -89,9 +89,6 @@ const ProcessesGroup = createReactClass({
     const {data} = this.state;
     const {query, hasGuideAnchor, canSelect, memberList} = this.props;
 
-    // TODO: replace GroupChart placeholder with this
-    // <GroupChart id={data.id} statsPeriod={this.props.statsPeriod} data={data} />
-
     return (
       <Group onClick={this.toggleSelect} py={1} px={0} align="center">
         {canSelect && (
@@ -105,7 +102,7 @@ const ProcessesGroup = createReactClass({
           <EventOrGroupExtraDetails {...data} />
         </GroupSummary>
         <Box w={160} mx={2} className="hidden-xs hidden-sm">
-          GroupChart
+          <GroupChart id={data.id} statsPeriod={this.props.statsPeriod} data={data} />
         </Box>
         <Flex w={[40, 60, 80, 80]} mx={2} justify="flex-end">
           {hasGuideAnchor && <GuideAnchor target="events" type="text" />}
