@@ -4,7 +4,7 @@ import styled, {css} from 'react-emotion';
 import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
-import TaskGroupTitle from 'app/components/processes/taskGroupTitle';
+import TaskGroupTitle from 'app/components/userTask/taskGroupTitle';
 // TODO: rename file
 
 /**
@@ -41,13 +41,11 @@ class ProcessHeader extends React.Component {
   }
 
   getTitle() {
-    let {includeLink, orgId, projectId, data} = this.props;
+    let {includeLink, orgId, data} = this.props;
     let props = {};
     let Wrapper;
 
     if (includeLink) {
-      let process = this.props.data.process;
-      let taskKey = this.props.data.taskKey;
       let running = this.props.data.running;
 
       if (running) {

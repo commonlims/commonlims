@@ -3,34 +3,36 @@ import {omit, isEqual} from 'lodash';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Reflux from 'reflux';
 import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 import qs from 'query-string';
 
 import {Panel, PanelBody} from 'app/components/panels';
 import {logAjaxError} from 'app/utils/logging';
-import {
-  setActiveEnvironment,
-  setActiveEnvironmentName,
-} from 'app/actionCreators/environments';
 import {t, tn, tct} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import ConfigStore from 'app/stores/configStore';
-import EnvironmentStore from 'app/stores/environmentStore';
 import ProcessStore from 'app/stores/processStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import SentryTypes from 'app/sentryTypes';
-import ProcessesActions from 'app/views/processes/actions';
-import ProcessesFilters from 'app/views/processes/filters';
-import ProcessesGroup from 'app/components/processes/group';
-import ProcessesSidebar from 'app/views/processes/sidebar';
+import StreamActions from 'app/views/stream/actions';
+import StreamFilters from 'app/views/stream/filters';
+import ProcessesGroup from 'app/components/userTask/group';
+import StreamSidebar from 'app/views/stream/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
 import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
+import ProjectState from 'app/mixins/projectState';
+import {connect} from 'react-redux';
+import {userTasksGet} from 'app/redux/actions/userTask';
+
+const mapStateToProps = state => state.userTask;
+
+const mapDispatchToProps = dispatch => ({
+  getUserTasks: () => dispatch(userTasksGet()),
+});
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
@@ -43,13 +45,13 @@ const Processes = createReactClass({
   displayName: 'Processes',
 
   propTypes: {
-    environment: SentryTypes.Environment,
-    hasEnvironmentsFeature: PropTypes.bool,
     tags: PropTypes.object,
     tagsLoading: PropTypes.bool,
+    getUserTasks: PropTypes.func.isRequired,
+    userTasks: PropTypes.arrayOf(PropTypes.shape({})),
   },
 
-  mixins: [Reflux.listenTo(ProcessStore, 'onTaskChange'), ApiMixin],
+  mixins: [ApiMixin, ProjectState],
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
@@ -84,7 +86,6 @@ const Processes = createReactClass({
       sort,
       isSidebarVisible: false,
       processingIssues: null,
-      environment: this.props.environment,
     };
   },
 
@@ -101,18 +102,10 @@ const Processes = createReactClass({
     if (!this.state.loading) {
       this.fetchData();
     }
+    this.props.getUserTasks();
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.environment !== this.props.environment) {
-      this.setState(
-        {
-          environment: nextProps.environment,
-        },
-        this.fetchData
-      );
-    }
-
     // you cannot apply both a query and a saved search (our routes do not
     // support it), so the searchId takes priority
     let nextSearchId = nextProps.params.searchId || null;
@@ -133,6 +126,14 @@ const Processes = createReactClass({
 
     if (searchIdChanged || searchTermChanged) {
       this.setState(this.getQueryState(nextProps), this.fetchData);
+    }
+
+    const userTasks = nextProps.userTasks;
+    let groupIds = userTasks.map(item => item.id.toString());
+    if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
+      this.setState({
+        groupIds,
+      });
     }
   },
 
@@ -191,13 +192,6 @@ const Processes = createReactClass({
             data.find(search => search.isDefault);
 
           if (defaultResult) {
-            // Check if there is an environment specified in the default search
-            const envName = queryString.getQueryEnvironment(defaultResult.query);
-            const env = EnvironmentStore.getByName(envName);
-            if (env) {
-              setActiveEnvironment(env);
-            }
-
             newState.searchId = defaultResult.id;
             newState.query = defaultResult.query;
             newState.isDefaultSearch = true;
@@ -279,22 +273,7 @@ const Processes = createReactClass({
         search => search.id === searchId
       );
       if (searchResult) {
-        // New behavior is that we'll no longer want to support environment in saved search
-        // We check if the query contains a valid environment and update the global setting if so
-        // We'll always strip environment from the querystring whether valid or not
-        if (this.props.hasEnvironmentsFeature) {
-          const queryEnv = queryString.getQueryEnvironment(searchResult.query);
-          if (queryEnv) {
-            const env = EnvironmentStore.getByName(queryEnv);
-            setActiveEnvironment(env);
-          }
-          newState.query = queryString.getQueryStringWithoutEnvironment(
-            searchResult.query
-          );
-        } else {
-          // Old behavior, keep the environment in the querystring
-          newState.query = searchResult.query;
-        }
+        newState.query = searchResult.query;
 
         if (this.state.searchId && !props.params.searchId) {
           newState.isDefaultSearch = true;
@@ -339,23 +318,11 @@ const Processes = createReactClass({
       query += ' ' + ':createdAfter -7d'; // always limit it unless specified
     }
 
-    let {environment} = this.state;
-
     let requestParams = {
       query,
       limit: MAX_ITEMS,
       createdAfter: '-7d',
     };
-
-    // Always keep the global active environment in sync with the queried environment
-    // The global environment wins unless there one is specified by the saved search
-    const queryEnvironment = queryString.getQueryEnvironment(query);
-
-    if (queryEnvironment !== null) {
-      requestParams.environment = queryEnvironment;
-    } else if (environment) {
-      requestParams.environment = environment.name;
-    }
 
     let currentQuery = this.props.location.query || {};
     if ('cursor' in currentQuery) {
@@ -379,18 +346,9 @@ const Processes = createReactClass({
         // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {id, matchingEventId, matchingEventEnvironment} = data[0];
+            let {id, matchingEventId} = data[0];
             let redirect = `/${this.props.params
               .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
-            // Also direct to the environment of this specific event if this
-            // key exists. We need to explicitly check against undefined becasue
-            // an environment name may be an empty string, which is perfectly valid.
-            if (typeof matchingEventEnvironment !== 'undefined') {
-              setActiveEnvironmentName(matchingEventEnvironment);
-              redirect = `${redirect}?${qs.stringify({
-                environment: matchingEventEnvironment,
-              })}`;
-            }
             return void browserHistory.push(redirect);
           }
         }
@@ -442,6 +400,20 @@ const Processes = createReactClass({
     return '/task-groups/';
   },
 
+  onSelectStatsPeriod(period) {
+    if (period != this.state.statsPeriod) {
+      // TODO(dcramer): all charts should now suggest "loading"
+      this.setState(
+        {
+          statsPeriod: period,
+        },
+        function() {
+          this.transitionTo();
+        }
+      );
+    }
+  },
+
   onRealtimeChange(realtime) {
     Cookies.set('realtimeActive', realtime.toString());
     this.setState({
@@ -454,15 +426,6 @@ const Processes = createReactClass({
     if (!utils.valueIsEqual(this.state.pageLinks, links, true)) {
       this.setState({
         pageLinks: links,
-      });
-    }
-  },
-
-  onTaskChange() {
-    let groupIds = this._processesManager.getAllItems().map(item => item.id);
-    if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
-      this.setState({
-        groupIds,
       });
     }
   },
@@ -496,10 +459,6 @@ const Processes = createReactClass({
 
   transitionTo() {
     let queryParams = {};
-
-    if (this.props.location.query.environment) {
-      queryParams.environment = this.props.location.query.environment;
-    }
 
     if (!this.state.searchId) {
       queryParams.query = this.state.query;
@@ -593,6 +552,8 @@ const Processes = createReactClass({
   },
 
   renderGroupNodes(ids, statsPeriod) {
+    const {userTasks} = this.props;
+
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
     let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
     let dateCutoff = new Date();
@@ -602,9 +563,49 @@ const Processes = createReactClass({
 
     let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
+      const userTask = userTasks.find(ut => ut.id == id);
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
+      let title = userTask.name;
+      let culprit = title;
+      let filename = userTask.handler;
+      let metadata = {value: title, filename};
+      let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
+      let count = 1;
+      let userCount = 1;
+      let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
+      let level = Math.floor(Math.random() * Math.floor(2)).toString();
+      let eventID = null;
+      let numComments = userTask.num_comments;
+      let lastSeen = null; //'2019-06-02';
+      let firstSeen = userTask.created;
+      let subscriptionDetails = {reason: 'Just cause'};
+      let annotations = ['an annotation'];
+      let assignedTo = {name: 'admin@localhost'};
+      let showAssignee = true;
+      let shortId = 'shortid';
+      let data = {
+        id,
+        metadata,
+        type,
+        count,
+        userCount,
+        stats,
+        title,
+        level,
+        culprit,
+        eventID,
+        numComments,
+        lastSeen,
+        firstSeen,
+        subscriptionDetails,
+        annotations,
+        assignedTo,
+        showAssignee,
+        shortId,
+      };
       return (
         <ProcessesGroup
+          data={data}
           key={id}
           id={id}
           orgId={orgId}
@@ -623,12 +624,7 @@ const Processes = createReactClass({
   },
 
   renderEmpty() {
-    const {environment} = this.state;
-    const message = environment
-      ? tct('Sorry no events match your filters in the [env] environment.', {
-          env: environment.displayName,
-        })
-      : t('Sorry, no events match your filters.');
+    const message = t('Sorry, no events match your filters.');
 
     // TODO(lyn): Extract empty state to a separate component
     return (
@@ -667,10 +663,12 @@ const Processes = createReactClass({
     if (this.state.isSidebarVisible) classes.push('show-sidebar');
     let {orgId} = this.props.params;
     let searchId = this.state.searchId;
+    let access = this.getAccess();
     return (
       <div className={classNames(classes)}>
         <div className="stream-content">
-          <ProcessesFilters
+          <StreamFilters
+            access={access}
             orgId={orgId}
             query={this.state.query}
             sort={this.state.sort}
@@ -685,12 +683,12 @@ const Processes = createReactClass({
             savedSearchList={this.state.savedSearchList}
           />
           <Panel>
-            <ProcessesActions
+            <StreamActions
               orgId={params.orgId}
               hasReleases={true}
-              environment={this.state.environment}
               query={this.state.query}
               queryCount={this.state.queryCount}
+              onSelectStatsPeriod={this.onSelectStatsPeriod}
               onRealtimeChange={this.onRealtimeChange}
               realtimeActive={this.state.realtimeActive}
               statsPeriod={this.state.statsPeriod}
@@ -704,16 +702,17 @@ const Processes = createReactClass({
           </Panel>
           <Pagination pageLinks={this.state.pageLinks} />
         </div>
-        <ProcessesSidebar
+        <StreamSidebar
           loading={this.props.tagsLoading}
           tags={this.props.tags}
           query={this.state.query}
           onQueryChange={this.onSearch}
           orgId={params.orgId}
+          projectId="internal"
         />
       </div>
     );
   },
 });
 
-export default Processes;
+export default connect(mapStateToProps, mapDispatchToProps)(Processes);
