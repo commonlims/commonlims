@@ -24,6 +24,26 @@ export const tagsGetFailure = err => ({
   message: err,
 });
 
+// Note: these are utility methods ported from old Sentry code
+// Their use is pending CLIMS-203
+/*
+const uuidPattern = /[0-9a-f]{32}$/;
+
+const getUsername = ({isManaged, username, email}) => {
+  // Users created via SAML receive unique UUID usernames. Use
+  // their email in these cases, instead.
+  if (username && uuidPattern.test(username)) {
+    return email;
+  } else {
+    return !isManaged && username ? username : email;
+  }
+};
+
+const getMemberListStoreUsernames = () => {
+  return MemberListStore.getAll().map(getUsername);
+};
+*/
+
 // TODO: this list should be managed by the backend/API. See: CLIMS-202
 const tags = {
   userTask: {
