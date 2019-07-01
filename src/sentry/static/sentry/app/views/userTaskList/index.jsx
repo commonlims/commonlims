@@ -1,65 +1,56 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Reflux from 'reflux';
-import createReactClass from 'create-react-class';
-import {omit} from 'lodash';
-
-import SentryTypes from 'app/sentryTypes';
-import ProcessTagStore from 'app/stores/processTagStore';
-import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString';
+import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString'; // REMOVE ME
 import Processes from 'app/views/userTaskList/processes';
-import ProjectState from 'app/mixins/projectState';
-import TagStore from 'app/stores/tagStore';
-import {fetchTags} from 'app/actionCreators/tags';
+import {connect} from 'react-redux';
+import {tagsGet} from 'app/redux/actions/tag';
+// TODO: uncomment these when fixing CLIMS-203
+// import {Client} from 'app/api';
+// import {fetchOrgMembers} from 'app/actionCreators/members';
 
-const ProcessesContainer = createReactClass({
-  displayName: 'ProcessesContainer',
-  propTypes: {
-    environment: SentryTypes.Environment,
-    setProjectNavSection: PropTypes.func,
-  },
+class ProcessesContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-  mixins: [ProjectState, Reflux.listenTo(TagStore, 'onTagsChange')],
+  componentDidMount() {
+    const {getTags} = this.props;
+    getTags();
 
-  getInitialState() {
-    return {
-      tags: ProcessTagStore.getAllTags(),
-      tagsLoading: true,
-    };
-  },
-
-  componentWillMount() {
-    const {orgId, projectId} = this.props.params;
-    // this.props.setProjectNavSection('stream');
-    fetchTags(orgId, projectId);
-  },
-
-  // We don't want the environment tag to be visible to the user
-  filterTags(tags) {
-    return omit(tags, 'environment');
-  },
-
-  onTagsChange(tags) {
-    this.setState({
-      tags,
-      tagsLoading: false,
-    });
-  },
+    // TODO: uncomment this when fixing CLIMS-203
+    // this.api = new Client();
+    // const {orgId} = this.props.params;
+    // fetchOrgMembers(this.api, orgId);
+  }
 
   render() {
-    const {hasEnvironmentsFeature, tags} = this.state;
-    const filteredTags = hasEnvironmentsFeature ? this.filterTags(this.state.tags) : tags;
+    const {tags, loading} = this.state;
 
-    // TODO: read tagsLoading from state instead
+    // TODO: display error message if there is a problem fetching tags.
     return (
       <Processes
-        hasEnvironmentsFeature={hasEnvironmentsFeature}
-        tags={filteredTags}
-        tagsLoading={false}
+        hasEnvironmentsFeature={false}
+        tags={tags}
+        tagsLoading={loading}
         {...this.props}
       />
     );
-  },
+  }
+}
+
+const mapStateToProps = state => state.tag;
+
+const mapDispatchToProps = dispatch => ({
+  getTags: () => dispatch(tagsGet('userTask')),
 });
 
-export default withEnvironmentInQueryString(ProcessesContainer);
+ProcessesContainer.propTypes = {
+  setProjectNavSection: PropTypes.func,
+  getTags: PropTypes.func,
+};
+ProcessesContainer.displayName = 'ProcessesContainer';
+
+export default withEnvironmentInQueryString(
+  connect(mapStateToProps, mapDispatchToProps)(ProcessesContainer)
+);
