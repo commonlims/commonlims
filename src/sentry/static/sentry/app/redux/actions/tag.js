@@ -1,6 +1,5 @@
-// TODO: uncomment these when fixing CLIMS-202 and CLIMS-203
+// TODO: uncomment this when fixing CLIMS-202
 // import axios from 'axios';
-// import MemberListStore from 'app/stores/memberListStore';
 
 export const TAGS_GET_REQUEST = 'TAGS_GET_REQUEST';
 export const TAGS_GET_SUCCESS = 'TAGS_GET_SUCCESS';
@@ -24,27 +23,9 @@ export const tagsGetFailure = err => ({
   message: err,
 });
 
-// Note: these are utility methods ported from old Sentry code
-// Their use is pending CLIMS-203
-/*
-const uuidPattern = /[0-9a-f]{32}$/;
-
-const getUsername = ({isManaged, username, email}) => {
-  // Users created via SAML receive unique UUID usernames. Use
-  // their email in these cases, instead.
-  if (username && uuidPattern.test(username)) {
-    return email;
-  } else {
-    return !isManaged && username ? username : email;
-  }
-};
-
-const getMemberListStoreUsernames = () => {
-  return MemberListStore.getAll().map(getUsername);
-};
-*/
-
-// TODO: this list should be managed by the backend/API. See: CLIMS-202
+// TODO: this list should preferably be managed by the backend/API. See: CLIMS-202
+// If the frontend will continue to manage this list for some reason, you will need
+// some utility methods for getMemberListStoreUsernames() to work. See tagStore.jsx.
 const tags = {
   userTask: {
     is: {
