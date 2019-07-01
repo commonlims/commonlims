@@ -57,7 +57,9 @@ describe('tag redux actions', function() {
       expect(tagsGetFailure('my error')).toEqual(expectedAction);
     });
 
-    it('should create an action to GET tags from the tags API', async () => {
+    // TODO: Re-enable pending CLIMS-202
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('should create an action to GET tags from the tags API', async () => {
       const store = mockStore({tags: {}});
 
       moxios.stubRequest('/api/0/organizations/sentry/tags/someResource', {
