@@ -8,7 +8,7 @@ import {tagsGet} from 'app/redux/actions/tag';
 // import {Client} from 'app/api';
 // import {fetchOrgMembers} from 'app/actionCreators/members';
 
-class ProcessesContainer extends React.Component {
+class UserTaskList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -38,11 +38,11 @@ const mapDispatchToProps = dispatch => ({
   getTags: () => dispatch(tagsGet('userTask')),
 });
 
-ProcessesContainer.propTypes = {
+UserTaskList.propTypes = {
   getTags: PropTypes.func,
 };
-ProcessesContainer.displayName = 'ProcessesContainer';
+UserTaskList.displayName = 'UserTaskList';
 
 export default withEnvironmentInQueryString(
-  connect(mapStateToProps, mapDispatchToProps)(ProcessesContainer)
+  connect(mapStateToProps, mapDispatchToProps)(UserTaskList)
 );
