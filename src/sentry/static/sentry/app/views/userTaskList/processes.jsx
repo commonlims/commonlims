@@ -1,6 +1,5 @@
 import {Link, browserHistory} from 'react-router';
 import {omit, isEqual} from 'lodash';
-import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
@@ -55,7 +54,6 @@ const Processes = createReactClass({
 
   getInitialState() {
     let searchId = this.props.params.searchId || null;
-    let realtimeActive = true; // TODO
 
     let currentQuery = this.props.location.query || {};
     let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
@@ -77,7 +75,6 @@ const Processes = createReactClass({
       multiSelected: false,
       anySelected: false,
       statsPeriod,
-      realtimeActive,
       pageLinks: '',
       queryCount: null,
       dataLoading: true,
@@ -93,9 +90,6 @@ const Processes = createReactClass({
     // TODO(withrocks): Change to task manager
     // TODO: Why is there both a manager and a store?
     this._processesManager = new utils.ProcessesManager(ProcessStore);
-    this._poller = new utils.CursorPoller({
-      success: this.onRealtimePoll,
-    });
 
     this.fetchSavedSearches();
     this.fetchProcessingIssues();
@@ -137,19 +131,7 @@ const Processes = createReactClass({
     }
   },
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.realtimeActive !== this.state.realtimeActive) {
-      // User toggled realtime button
-      if (this.state.realtimeActive) {
-        this.resumePolling();
-      } else {
-        this._poller.disable();
-      }
-    }
-  },
-
   componentWillUnmount() {
-    this._poller.disable();
     ProcessStore.reset();
   },
 
@@ -333,8 +315,6 @@ const Processes = createReactClass({
       this.lastRequest.cancel();
     }
 
-    this._poller.disable();
-
     this.lastRequest = this.api.request(url, {
       method: 'GET',
       data: requestParams,
@@ -379,21 +359,8 @@ const Processes = createReactClass({
       },
       complete: jqXHR => {
         this.lastRequest = null;
-
-        this.resumePolling();
       },
     });
-  },
-
-  resumePolling() {
-    if (!this.state.pageLinks) return;
-
-    // Only resume polling if we're on the first page of results
-    let links = parseLinkHeader(this.state.pageLinks);
-    if (links && !links.previous.results && this.state.realtimeActive) {
-      this._poller.setEndpoint(links.previous.href);
-      this._poller.enable();
-    }
   },
 
   getTaskGroupEndpoint() {
@@ -411,22 +378,6 @@ const Processes = createReactClass({
           this.transitionTo();
         }
       );
-    }
-  },
-
-  onRealtimeChange(realtime) {
-    Cookies.set('realtimeActive', realtime.toString());
-    this.setState({
-      realtimeActive: realtime,
-    });
-  },
-
-  onRealtimePoll(data, links) {
-    this._processesManager.unshift(data);
-    if (!utils.valueIsEqual(this.state.pageLinks, links, true)) {
-      this.setState({
-        pageLinks: links,
-      });
     }
   },
 
@@ -689,8 +640,6 @@ const Processes = createReactClass({
               query={this.state.query}
               queryCount={this.state.queryCount}
               onSelectStatsPeriod={this.onSelectStatsPeriod}
-              onRealtimeChange={this.onRealtimeChange}
-              realtimeActive={this.state.realtimeActive}
               statsPeriod={this.state.statsPeriod}
               groupIds={this.state.groupIds}
               allResultsVisible={this.allResultsVisible()}
