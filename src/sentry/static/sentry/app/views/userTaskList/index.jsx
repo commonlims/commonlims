@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString'; // REMOVE ME
-import Processes from 'app/views/userTaskList/processes';
+import UserTasks from 'app/views/userTaskList/userTasks';
 import {connect} from 'react-redux';
 import {tagsGet} from 'app/redux/actions/tag';
 // TODO: uncomment these when fixing CLIMS-203
@@ -28,7 +28,7 @@ class UserTaskList extends React.Component {
     const {tags, loading} = this.state;
 
     // TODO: display error message if there is a problem fetching tags.
-    return <Processes tags={tags} tagsLoading={loading} {...this.props} />;
+    return <UserTasks tags={tags} tagsLoading={loading} {...this.props} />;
   }
 }
 

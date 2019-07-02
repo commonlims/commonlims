@@ -38,10 +38,10 @@ const DEFAULT_SORT = 'date';
 const DEFAULT_STATS_PERIOD = '24h';
 const STATS_PERIODS = new Set(['14d', '24h']);
 
-const Processes = createReactClass({
+const UserTasks = createReactClass({
   // This class was based on the Stream class in Sentry
 
-  displayName: 'Processes',
+  displayName: 'UserTasks',
 
   propTypes: {
     tags: PropTypes.object,
@@ -664,4 +664,4 @@ const Processes = createReactClass({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Processes);
+export default connect(mapStateToProps, mapDispatchToProps)(UserTasks);
