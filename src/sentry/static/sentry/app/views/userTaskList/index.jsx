@@ -28,14 +28,7 @@ class ProcessesContainer extends React.Component {
     const {tags, loading} = this.state;
 
     // TODO: display error message if there is a problem fetching tags.
-    return (
-      <Processes
-        hasEnvironmentsFeature={false}
-        tags={tags}
-        tagsLoading={loading}
-        {...this.props}
-      />
-    );
+    return <Processes tags={tags} tagsLoading={loading} {...this.props} />;
   }
 }
 
@@ -46,7 +39,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ProcessesContainer.propTypes = {
-  setProjectNavSection: PropTypes.func,
   getTags: PropTypes.func,
 };
 ProcessesContainer.displayName = 'ProcessesContainer';
