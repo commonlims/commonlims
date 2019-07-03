@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString'; // REMOVE ME
-import Processes from 'app/views/userTaskList/processes';
+import UserTasks from 'app/views/userTaskList/userTasks';
 import {connect} from 'react-redux';
 import {tagsGet} from 'app/redux/actions/tag';
 // TODO: uncomment these when fixing CLIMS-203
 // import {Client} from 'app/api';
 // import {fetchOrgMembers} from 'app/actionCreators/members';
 
-class ProcessesContainer extends React.Component {
+class UserTaskList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -28,14 +28,7 @@ class ProcessesContainer extends React.Component {
     const {tags, loading} = this.state;
 
     // TODO: display error message if there is a problem fetching tags.
-    return (
-      <Processes
-        hasEnvironmentsFeature={false}
-        tags={tags}
-        tagsLoading={loading}
-        {...this.props}
-      />
-    );
+    return <UserTasks tags={tags} tagsLoading={loading} {...this.props} />;
   }
 }
 
@@ -45,12 +38,11 @@ const mapDispatchToProps = dispatch => ({
   getTags: () => dispatch(tagsGet('userTask')),
 });
 
-ProcessesContainer.propTypes = {
-  setProjectNavSection: PropTypes.func,
+UserTaskList.propTypes = {
   getTags: PropTypes.func,
 };
-ProcessesContainer.displayName = 'ProcessesContainer';
+UserTaskList.displayName = 'UserTaskList';
 
 export default withEnvironmentInQueryString(
-  connect(mapStateToProps, mapDispatchToProps)(ProcessesContainer)
+  connect(mapStateToProps, mapDispatchToProps)(UserTaskList)
 );

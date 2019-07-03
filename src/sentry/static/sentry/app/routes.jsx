@@ -42,7 +42,7 @@ import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
-import ProcessesContainer from 'app/views/userTaskList/index';
+import UserTaskList from 'app/views/userTaskList/index';
 import SampleDetails from 'app/views/sampleDetails';
 import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';
@@ -746,9 +746,9 @@ function routes() {
 
       <Route path="/:orgId/" component={errorHandler(OrganizationDetails)}>
         <Route component={errorHandler(OrganizationRoot)}>
-          <IndexRoute component={errorHandler(ProcessesContainer)} />
+          <IndexRoute component={errorHandler(UserTaskList)} />
 
-          <Route path="tasks/" component={errorHandler(ProcessesContainer)} />
+          <Route path="tasks/" component={errorHandler(UserTaskList)} />
           <Route path="samples/" component={errorHandler(SamplesContainer)} />
 
           <Route
