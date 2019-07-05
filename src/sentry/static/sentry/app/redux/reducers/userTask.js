@@ -13,7 +13,7 @@ const initialState = {
 
 const userTaskToggleSelect = (userTasks, id) =>
   userTasks.map(ut => {
-    if (ut.id === id) {
+    if (ut.id == id) {
       ut.selected = !!!ut.selected;
     }
     return ut;
