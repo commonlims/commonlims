@@ -15,7 +15,7 @@ import ProcessStore from 'app/stores/processStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import StreamActions from 'app/views/stream/actions';
+import UserTaskListActions from 'app/views/userTaskList/actions';
 import StreamFilters from 'app/views/stream/filters';
 import UserTaskListItem from 'app/components/userTask/userTaskListItem';
 import StreamSidebar from 'app/views/stream/sidebar';
@@ -637,7 +637,7 @@ const UserTasks = createReactClass({
             savedSearchList={this.state.savedSearchList}
           />
           <Panel>
-            <StreamActions
+            <UserTaskListActions
               orgId={params.orgId}
               hasReleases={true}
               query={this.state.query}
