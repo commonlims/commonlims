@@ -3,6 +3,7 @@ import {
   USER_TASKS_GET_SUCCESS,
   USER_TASKS_GET_FAILURE,
   USER_TASK_TOGGLE_SELECT,
+  USER_TASKS_TOGGLE_SELECT_ALL,
 } from '../actions/userTask';
 
 const initialState = {
@@ -16,6 +17,12 @@ const userTaskToggleSelect = (userTasks, id) =>
     if (ut.id == id) {
       ut.selected = !!!ut.selected;
     }
+    return ut;
+  });
+
+const userTasksToggleSelectAll = (userTasks, doSelect) =>
+  userTasks.map(ut => {
+    ut.selected = doSelect;
     return ut;
   });
 
@@ -45,6 +52,11 @@ const userTask = (state = initialState, action) => {
       return {
         ...state,
         userTasks: userTaskToggleSelect(state.userTasks, action.id),
+      };
+    case USER_TASKS_TOGGLE_SELECT_ALL:
+      return {
+        ...state,
+        userTasks: userTasksToggleSelectAll(state.userTasks, action.doSelect),
       };
     default:
       return state;

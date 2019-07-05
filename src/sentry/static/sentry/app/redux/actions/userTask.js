@@ -3,6 +3,7 @@ import axios from 'axios';
 export const USER_TASKS_GET_REQUEST = 'USER_TASKS_GET_REQUEST';
 export const USER_TASKS_GET_SUCCESS = 'USER_TASKS_GET_SUCCESS';
 export const USER_TASKS_GET_FAILURE = 'USER_TASKS_GET_FAILURE';
+export const USER_TASKS_TOGGLE_SELECT_ALL = 'USER_TASKS_TOGGLE_SELECT_ALL';
 export const USER_TASK_TOGGLE_SELECT = 'USER_TASK_TOGGLE_SELECT';
 
 export const userTasksGetRequest = () => {
@@ -37,5 +38,12 @@ export const userTaskToggleSelect = id => {
   return {
     type: USER_TASK_TOGGLE_SELECT,
     id,
+  };
+};
+
+export const userTasksToggleSelectAll = doSelect => {
+  return {
+    type: USER_TASKS_TOGGLE_SELECT_ALL,
+    doSelect,
   };
 };

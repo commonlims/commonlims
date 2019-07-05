@@ -6,12 +6,14 @@ import {
   USER_TASKS_GET_REQUEST,
   USER_TASKS_GET_SUCCESS,
   USER_TASKS_GET_FAILURE,
+  USER_TASKS_TOGGLE_SELECT_ALL,
   USER_TASK_TOGGLE_SELECT,
   userTasksGetRequest,
   userTasksGetSuccess,
   userTasksGetFailure,
   userTasksGet,
   userTaskToggleSelect,
+  userTasksToggleSelectAll,
 } from 'app/redux/actions/userTask';
 
 const middlewares = [thunk];
@@ -82,13 +84,23 @@ describe('userTask redux actions', function() {
         expect(request.url).toBe('/api/0/organizations/sentry/user-tasks/');
       });
     });
+  });
 
+  describe('select', () => {
     it('should create an action to toggle the user selection of a userTask', () => {
       const expectedAction = {
         type: USER_TASK_TOGGLE_SELECT,
         id: 100,
       };
       expect(userTaskToggleSelect(100)).toEqual(expectedAction);
+    });
+
+    it('should create an action to toggle the user selection of all userTasks', () => {
+      const expectedAction = {
+        type: USER_TASKS_TOGGLE_SELECT_ALL,
+        doSelect: true,
+      };
+      expect(userTasksToggleSelectAll(true)).toEqual(expectedAction);
     });
   });
 });

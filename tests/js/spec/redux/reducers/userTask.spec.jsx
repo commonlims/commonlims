@@ -108,4 +108,53 @@ describe('userTask reducer', () => {
       userTasks: [utDeselected],
     });
   });
+
+  it('should handle USER_TASKS_TOGGLE_SELECT_ALL to select or de-select all userTasks', () => {
+    const initialState = {
+      userTasks: [
+        {
+          id: 1,
+        },
+        {
+          id: 2,
+        },
+      ],
+    };
+
+    let state = userTask(initialState, {
+      type: 'USER_TASKS_TOGGLE_SELECT_ALL',
+      doSelect: true,
+    });
+
+    expect(state).toEqual({
+      userTasks: [
+        {
+          id: 1,
+          selected: true,
+        },
+        {
+          id: 2,
+          selected: true,
+        },
+      ],
+    });
+
+    state = userTask(initialState, {
+      type: 'USER_TASKS_TOGGLE_SELECT_ALL',
+      doSelect: false,
+    });
+
+    expect(state).toEqual({
+      userTasks: [
+        {
+          id: 1,
+          selected: false,
+        },
+        {
+          id: 2,
+          selected: false,
+        },
+      ],
+    });
+  });
 });
