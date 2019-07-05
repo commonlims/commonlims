@@ -25,13 +25,7 @@ import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
 import ProjectState from 'app/mixins/projectState';
 import {connect} from 'react-redux';
-import {userTasksGet} from 'app/redux/actions/userTask';
-
-const mapStateToProps = state => state.userTask;
-
-const mapDispatchToProps = dispatch => ({
-  getUserTasks: () => dispatch(userTasksGet()),
-});
+import {userTasksGet, userTaskToggleSelect} from 'app/redux/actions/userTask';
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
@@ -48,6 +42,7 @@ const UserTasks = createReactClass({
     tagsLoading: PropTypes.bool,
     getUserTasks: PropTypes.func.isRequired,
     userTasks: PropTypes.arrayOf(PropTypes.shape({})),
+    toggleUserTaskSelect: PropTypes.func,
   },
 
   mixins: [ApiMixin, ProjectState],
@@ -503,7 +498,7 @@ const UserTasks = createReactClass({
   },
 
   renderGroupNodes(ids, statsPeriod) {
-    const {userTasks} = this.props;
+    const {userTasks, toggleUserTaskSelect} = this.props;
 
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
     let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
@@ -554,9 +549,16 @@ const UserTasks = createReactClass({
         showAssignee,
         shortId,
       };
+
+      const toggleSelect = () => {
+        toggleUserTaskSelect(id);
+      };
+
       return (
         <UserTaskListItem
           userTask={userTask}
+          toggleUserTaskSelect={toggleSelect.bind(this)}
+          isSelected={userTask.selected}
           data={data}
           key={id}
           id={id}
@@ -663,6 +665,13 @@ const UserTasks = createReactClass({
       </div>
     );
   },
+});
+
+const mapStateToProps = state => state.userTask;
+
+const mapDispatchToProps = dispatch => ({
+  getUserTasks: () => dispatch(userTasksGet()),
+  toggleUserTaskSelect: id => dispatch(userTaskToggleSelect(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTasks);

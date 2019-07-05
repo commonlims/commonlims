@@ -13,11 +13,11 @@ import Count from 'app/components/count';
 import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
 import EventOrGroupHeader from 'app/components/eventOrGroupHeader';
 import GroupChart from 'app/components/stream/groupChart';
-import GroupCheckBox from 'app/components/stream/groupCheckBox';
 import GroupStore from 'app/stores/groupStore';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
 import ProjectState from 'app/mixins/projectState';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
+import Checkbox from 'app/components/checkbox';
 
 const UserTaskListItem = createReactClass({
   displayName: 'UserTaskListItem',
@@ -31,6 +31,8 @@ const UserTaskListItem = createReactClass({
     memberList: PropTypes.array,
     data: PropTypes.shape({}),
     userTask: PropTypes.shape({}),
+    isSelected: PropTypes.bool,
+    toggleUserTaskSelect: PropTypes.func,
   },
 
   mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ProjectState],
@@ -58,7 +60,10 @@ const UserTaskListItem = createReactClass({
   },
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.statsPeriod !== this.props.statsPeriod) {
+    if (
+      nextProps.statsPeriod !== this.props.statsPeriod ||
+      nextProps.isSelected !== this.props.isSelected
+    ) {
       return true;
     }
     if (!valueIsEqual(this.state.data, nextState.data)) {
@@ -88,14 +93,26 @@ const UserTaskListItem = createReactClass({
 
   render() {
     const {data} = this.state;
-    const {query, hasGuideAnchor, canSelect, memberList} = this.props;
+    const {
+      query,
+      hasGuideAnchor,
+      canSelect,
+      memberList,
+      toggleUserTaskSelect,
+      userTask,
+      isSelected,
+    } = this.props;
 
     return (
       <Group onClick={this.toggleSelect} py={1} px={0} align="center">
         {canSelect && (
           <GroupCheckbox ml={2}>
             {hasGuideAnchor && <GuideAnchor target="issues" type="text" />}
-            <GroupCheckBox id={data.id} />
+            <Checkbox
+              value={userTask.id}
+              checked={isSelected}
+              onChange={toggleUserTaskSelect}
+            />
           </GroupCheckbox>
         )}
         <GroupSummary w={[8 / 12, 8 / 12, 6 / 12]} ml={canSelect ? 1 : 2} mr={1} flex="1">
