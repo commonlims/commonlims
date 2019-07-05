@@ -19,8 +19,8 @@ import GuideAnchor from 'app/components/assistant/guideAnchor';
 import ProjectState from 'app/mixins/projectState';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
 
-const ProcessesGroup = createReactClass({
-  displayName: 'ProcessesGroup',
+const UserTaskListItem = createReactClass({
+  displayName: 'UserTaskListItem',
 
   propTypes: {
     id: PropTypes.string.isRequired,
@@ -30,6 +30,7 @@ const ProcessesGroup = createReactClass({
     hasGuideAnchor: PropTypes.bool,
     memberList: PropTypes.array,
     data: PropTypes.shape({}),
+    userTask: PropTypes.shape({}),
   },
 
   mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ProjectState],
@@ -141,4 +142,4 @@ const StyledCount = styled(Count)`
   color: ${p => p.theme.gray3};
 `;
 
-export default ProcessesGroup;
+export default UserTaskListItem;

@@ -17,7 +17,7 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
 import StreamActions from 'app/views/stream/actions';
 import StreamFilters from 'app/views/stream/filters';
-import ProcessesGroup from 'app/components/userTask/group';
+import UserTaskListItem from 'app/components/userTask/userTaskListItem';
 import StreamSidebar from 'app/views/stream/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
@@ -555,7 +555,8 @@ const UserTasks = createReactClass({
         shortId,
       };
       return (
-        <ProcessesGroup
+        <UserTaskListItem
+          userTask={userTask}
           data={data}
           key={id}
           id={id}
