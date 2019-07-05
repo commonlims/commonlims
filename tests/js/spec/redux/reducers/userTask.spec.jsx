@@ -69,4 +69,43 @@ describe('userTask reducer', () => {
       errorMessage: 'oopsiedoodle',
     });
   });
+
+  it('should handle USER_TASK_TOGGLE_SELECT to select a userTask', () => {
+    const initialState = {
+      userTasks: [mockUserTask],
+    };
+
+    const state = userTask(initialState, {
+      type: 'USER_TASK_TOGGLE_SELECT',
+      id: 4,
+    });
+
+    const updatedUserTask = Object.assign({}, mockUserTask);
+    updatedUserTask.selected = true;
+
+    expect(state).toEqual({
+      userTasks: [updatedUserTask],
+    });
+  });
+
+  it('should handle USER_TASK_TOGGLE_SELECT to de-select a userTask', () => {
+    const utSelected = Object.assign({}, mockUserTask);
+    utSelected.selected = true;
+
+    const initialState = {
+      userTasks: [utSelected],
+    };
+
+    const state = userTask(initialState, {
+      type: 'USER_TASK_TOGGLE_SELECT',
+      id: 4,
+    });
+
+    const utDeselected = Object.assign({}, mockUserTask);
+    utDeselected.selected = false;
+
+    expect(state).toEqual({
+      userTasks: [utDeselected],
+    });
+  });
 });

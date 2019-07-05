@@ -6,10 +6,12 @@ import {
   USER_TASKS_GET_REQUEST,
   USER_TASKS_GET_SUCCESS,
   USER_TASKS_GET_FAILURE,
+  USER_TASK_TOGGLE_SELECT,
   userTasksGetRequest,
   userTasksGetSuccess,
   userTasksGetFailure,
   userTasksGet,
+  userTaskToggleSelect,
 } from 'app/redux/actions/userTask';
 
 const middlewares = [thunk];
@@ -79,6 +81,14 @@ describe('userTask redux actions', function() {
         const request = moxios.requests.mostRecent();
         expect(request.url).toBe('/api/0/organizations/sentry/user-tasks/');
       });
+    });
+
+    it('should create an action to toggle the user selection of a userTask', () => {
+      const expectedAction = {
+        type: USER_TASK_TOGGLE_SELECT,
+        id: 100,
+      };
+      expect(userTaskToggleSelect(100)).toEqual(expectedAction);
     });
   });
 });
