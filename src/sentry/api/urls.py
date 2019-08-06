@@ -164,8 +164,6 @@ from .endpoints.project_users import ProjectUsersEndpoint
 from .endpoints.prompts_activity import PromptsActivityEndpoint
 from .endpoints.filechange import CommitFileChangeEndpoint
 from .endpoints.release_deploys import ReleaseDeploysEndpoint
-from .endpoints.debug_files import DebugFilesEndpoint, DifAssembleEndpoint, \
-    UnknownDebugFilesEndpoint, AssociateDSymFilesEndpoint
 from .endpoints.sentry_apps import SentryAppsEndpoint
 from .endpoints.sentry_app_details import SentryAppDetailsEndpoint
 from .endpoints.sentry_app_authorizations import SentryAppAuthorizationsEndpoint
@@ -838,26 +836,6 @@ urlpatterns = patterns(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>[\w-]+)/owners/$',
         EventOwnersEndpoint.as_view(),
         name='sentry-api-0-event-owners'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/files/dsyms/$',
-        DebugFilesEndpoint.as_view(),
-        name='sentry-api-0-dsym-files'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/files/difs/assemble/$',
-        DifAssembleEndpoint.as_view(),
-        name='sentry-api-0-assemble-dif-files'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/files/dsyms/unknown/$',
-        UnknownDebugFilesEndpoint.as_view(),
-        name='sentry-api-0-unknown-dsym-files'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/files/dsyms/associate/$',
-        AssociateDSymFilesEndpoint.as_view(),
-        name='sentry-api-0-associate-dsym-files'
     ),
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/filters/$',
