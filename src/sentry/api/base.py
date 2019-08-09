@@ -56,7 +56,7 @@ class DocSection(Enum):
     PROJECTS = 'Projects'
     RELEASES = 'Releases'
     TEAMS = 'Teams'
-    USERTASK = 'UserTask'
+    WORKBATCH = 'WorkBatch'
 
 
 class Endpoint(APIView):

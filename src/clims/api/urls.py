@@ -2,7 +2,7 @@ from __future__ import absolute_import, print_function
 
 from django.conf.urls import patterns, url
 
-from .endpoints.user_task import UserTaskEndpoint, UserTaskDetailsEndpoint, UserTaskDetailsActivityEndpoint
+from .endpoints.work_batch import WorkBatchEndpoint, WorkBatchDetailsEndpoint, WorkBatchDetailsActivityEndpoint
 
 from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint
 from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint, SampleProcessesEndpoint, SampleWorkflowsBatchEndpoint
@@ -14,13 +14,13 @@ from .endpoints.task_types import TaskTypesEndpoint
 
 from .endpoints.user_files import UserFilesEndpoint
 
-from .endpoints.user_task_files import UserTaskFilesEndpoint
-from .endpoints.user_task_file_details import UserTaskFileDetailsEndpoint
+from .endpoints.work_batch_files import WorkBatchFilesEndpoint
+from .endpoints.work_batch_file_details import WorkBatchFileDetailsEndpoint
 
-from .endpoints.user_task_settings import UserTaskSettingsEndpoint, UserTaskSettingsDetailsEndpoint
+from .endpoints.work_batch_settings import WorkBatchSettingsEndpoint, WorkBatchSettingsDetailsEndpoint
 
-from .endpoints.user_task_notes import UserTaskNotesEndpoint
-from .endpoints.user_task_notes_details import UserTaskNotesDetailsEndpoint
+from .endpoints.work_batch_notes import WorkBatchNotesEndpoint
+from .endpoints.work_batch_notes_details import WorkBatchNotesDetailsEndpoint
 
 from .endpoints.plugin_actions import PluginActionsEndpoint
 from .endpoints.plugin_views import PluginViewsEndpoint
@@ -36,32 +36,32 @@ urlpatterns = patterns(
 
     # USER TASKS
     # TODO: Remove orgs from all but the index one
-    url(r'^user-tasks/(?P<user_task_id>[^\/]+)/activity/$',
-        UserTaskDetailsActivityEndpoint.as_view(),
-        name='sentry-api-0-user-task-details-activity'),
+    url(r'^work-batches/(?P<user_task_id>[^\/]+)/activity/$',
+        WorkBatchDetailsActivityEndpoint.as_view(),
+        name='clims-api-0-work-batches-details-activity'),
 
-    url(r'^user-tasks/(?P<user_task_id>[^\/]+)/$',
-        UserTaskDetailsEndpoint.as_view(),
-        name='sentry-api-0-user-task-details'),
+    url(r'^work-batches/(?P<work_batch_id>[^\/]+)/$',
+        WorkBatchDetailsEndpoint.as_view(),
+        name='clims-api-0-work-batch-details'),
 
     url(
-        r'^user-tasks/(?P<user_task_id>[^\/]+)/comments/$',
-        UserTaskNotesEndpoint.as_view(),
-        name='sentry-api-0-group-notes'
+        r'^work-batches/(?P<work_batch_id>[^\/]+)/comments/$',
+        WorkBatchNotesEndpoint.as_view(),
+        name='clims-api-0-group-notes'
     ),
     url(
-        r'^user-tasks/(?P<user_task_id>[^\/]+)/comments/$(?P<note_id>[^\/]+)/',
-        UserTaskNotesDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-notes-details'
+        r'^work-batches/(?P<work_batch_id>[^\/]+)/comments/$(?P<note_id>[^\/]+)/',
+        WorkBatchNotesDetailsEndpoint.as_view(),
+        name='clims-api-0-group-notes-details'
     ),
 
-    url(r'^user-task-settings/(?P<organization_slug>[^\/]+)/$',
-        UserTaskSettingsEndpoint.as_view(),
-        name='sentry-api-0-user-task-settings'),
+    url(r'^work-batch-settings/(?P<organization_slug>[^\/]+)/$',
+        WorkBatchSettingsEndpoint.as_view(),
+        name='clims-api-0-work-batch-settings'),
 
-    url(r'^user-task-settings/(?P<user_task_type>[^\/]+)/$',
-        UserTaskSettingsDetailsEndpoint.as_view(),
-        name='sentry-api-0-user-task-settings-details'),
+    url(r'^work-batch-settings/(?P<work_batch_type>[^\/]+)/$',
+        WorkBatchSettingsDetailsEndpoint.as_view(),
+        name='clims-api-0-work-batch-settings-details'),
 
     url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='sentry-api-0-sample-batches'),
 
@@ -120,19 +120,19 @@ urlpatterns = patterns(
         name='clims-api-0-user-files'
     ),
 
-    # User tasks:
-    url(r'^organizations/(?P<organization_slug>[^\/]+)/user-tasks/$',
-        UserTaskEndpoint.as_view(),
-        name='sentry-api-0-user-task'),
+    # Work batches:
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
+        WorkBatchEndpoint.as_view(),
+        name='sentry-api-0-work-batches'),
     url(
         r'^user-tasks/(?P<user_task_id>[^\/]+)/files/$',
-        UserTaskFilesEndpoint.as_view(),
-        name='clims-api-0-user-task-files'
+        WorkBatchFilesEndpoint.as_view(),
+        name='clims-api-0-work-batch-files'
     ),
     url(
-        r'^user-tasks/(?P<user_task_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
-        UserTaskFileDetailsEndpoint.as_view(),
-        name='clims-api-0-user-task-file-details'
+        r'^work-batches/(?P<work_batch_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
+        WorkBatchFileDetailsEndpoint.as_view(),
+        name='clims-api-0-work-batches-file-details'
     ),
 
     # Plugins

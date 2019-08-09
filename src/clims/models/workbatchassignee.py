@@ -20,15 +20,15 @@ from sentry.signals import issue_assigned
 from sentry.utils import metrics
 
 
-class UserTaskAssigneeManager(BaseManager):
-    def assign(self, user_task, assigned_to, acting_user=None):
+class WorkBatchAssigneeManager(BaseManager):
+    def assign(self, work_batch, assigned_to, acting_user=None):
         from sentry.models import User, Team
-        from clims.models import UserTaskSubscription, UserTaskSubscriptionReason
+        from clims.models import WorkBatchSubscription, WorkBatchSubscriptionReason
 
-        UserTaskSubscription.objects.subscribe_actor(
-            user_task=user_task,
+        WorkBatchSubscription.objects.subscribe_actor(
+            work_batch=work_batch,
             actor=assigned_to,
-            reason=UserTaskSubscriptionReason.assigned,
+            reason=WorkBatchSubscriptionReason.assigned,
         )
 
         if isinstance(assigned_to, User):
@@ -41,8 +41,8 @@ class UserTaskAssigneeManager(BaseManager):
             raise AssertionError('Invalid type to assign to: %r' % type(assigned_to))
 
         now = timezone.now()
-        assignee, created = UserTaskAssignee.objects.get_or_create(
-            user_task=user_task,
+        assignee, created = WorkBatchAssignee.objects.get_or_create(
+            work_batch=work_batch,
             defaults={
                 assignee_type: assigned_to,
                 'date_added': now,
@@ -50,8 +50,8 @@ class UserTaskAssigneeManager(BaseManager):
         )
 
         if not created:
-            affected = UserTaskAssignee.objects.filter(
-                user_task=user_task,
+            affected = WorkBatchAssignee.objects.filter(
+                work_batch=work_batch,
             ).exclude(**{
                 assignee_type: assigned_to,
             }).update(**{
@@ -62,13 +62,13 @@ class UserTaskAssigneeManager(BaseManager):
         else:
             affected = True
             issue_assigned.send_robust(
-                user_task=user_task,
+                work_batch=work_batch,
                 user=acting_user,
                 sender=self.__class__)
 
         if affected:
             activity = Activity.objects.create(
-                user_task=user_task,
+                work_batch=work_batch,
                 type=Activity.ASSIGNED,
                 user=acting_user,
                 data={
@@ -79,37 +79,37 @@ class UserTaskAssigneeManager(BaseManager):
             )
             activity.send_notification()
             # TODO: Look into this
-            metrics.incr('user_task.assignee.change', instance='assigned', skip_internal=True)
+            metrics.incr('work_batch.assignee.change', instance='assigned', skip_internal=True)
 
-    def deassign(self, user_task, acting_user=None):
-        affected = UserTaskAssignee.objects.filter(
-            user_task=user_task,
+    def deassign(self, work_batch, acting_user=None):
+        affected = WorkBatchAssignee.objects.filter(
+            work_batch=work_batch,
         )[:1].count()
-        UserTaskAssignee.objects.filter(
-            user_task=user_task,
+        WorkBatchAssignee.objects.filter(
+            work_batch=work_batch,
         ).delete()
 
         if affected > 0:
             activity = Activity.objects.create(
-                user_task=user_task,
+                work_batch=work_batch,
                 type=Activity.UNASSIGNED,
                 user=acting_user,
             )
             activity.send_notification()
-            metrics.incr('user_task.assignee.change', instance='deassigned', skip_internal=True)
+            metrics.incr('work_batch.assignee.change', instance='deassigned', skip_internal=True)
 
 
-class UserTaskAssignee(Model):
+class WorkBatchAssignee(Model):
     """
     Identifies an assignment relationship between a user/team and an
     aggregated event (Group).
     """
     __core__ = False
 
-    objects = UserTaskAssigneeManager()
+    objects = WorkBatchAssigneeManager()
 
     organization = FlexibleForeignKey('sentry.Organization', related_name="assignee_set")
-    user_task = FlexibleForeignKey('clims.UserTask', related_name="assignee_set", unique=True)
+    work_batch = FlexibleForeignKey('clims.WorkBatch', related_name="assignee_set", unique=True)
     user = FlexibleForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="sentry_assignee_set",
@@ -122,16 +122,16 @@ class UserTaskAssignee(Model):
 
     class Meta:
         app_label = 'clims'
-        db_table = 'clims_usertaskasignee'
+        db_table = 'clims_workbatchassignee'
 
-    __repr__ = sane_repr('user_task_id', 'user_id', 'team_id')
+    __repr__ = sane_repr('work_batch_id', 'user_id', 'team_id')
 
     def save(self, *args, **kwargs):
         assert (
-            not (self.user_id is not None and self.team_id is not None) and
-            not (self.user_id is None and self.team_id is None)
+            not (self.user_id is not None and self.team_id is not None)
+            and not (self.user_id is None and self.team_id is None)
         ), 'Must have Team or User, not both'
-        super(UserTaskAssignee, self).save(*args, **kwargs)
+        super(WorkBatchAssignee, self).save(*args, **kwargs)
 
     def assigned_actor_id(self):
         if self.user:

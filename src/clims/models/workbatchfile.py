@@ -15,38 +15,38 @@ from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from sentry.utils.hashlib import sha1_text
 
 
-class UserTaskFile(Model):
+class WorkBatchFile(Model):
     r"""
-    A UserTaskFile is an association between a UserTask and a File.
+    A WorkBatchFile is an association between a WorkBatch and a File.
 
     The ident of the file should be sha1(name) and must be unique per user task.
     """
     __core__ = False
 
     organization = FlexibleForeignKey('sentry.Organization')
-    user_task = FlexibleForeignKey('clims.UserTask')
+    work_batch = FlexibleForeignKey('clims.WorkBatch')
     file = FlexibleForeignKey('sentry.File')
     ident = models.CharField(max_length=40)
     name = models.TextField()
 
-    __repr__ = sane_repr('user_task', 'ident')
+    __repr__ = sane_repr('work_batch', 'ident')
 
     class Meta:
-        unique_together = (('user_task', 'ident'), )
-        index_together = (('user_task', 'name'), )
+        unique_together = (('work_batch', 'ident'), )
+        index_together = (('work_batch', 'name'), )
         app_label = 'clims'
-        db_table = 'clims_usertaskfile'
+        db_table = 'clims_workbatchfile'
 
     def save(self, *args, **kwargs):
         if not self.ident and self.name:
             self.ident = type(self).get_ident(self.name)
-        return super(UserTaskFile, self).save(*args, **kwargs)
+        return super(WorkBatchFile, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
         # If our name is changing, we must also change the ident
         if 'name' in kwargs and 'ident' not in kwargs:
             kwargs['ident'] = self.ident = type(self).get_ident(kwargs['name'])
-        return super(UserTaskFile, self).update(*args, **kwargs)
+        return super(WorkBatchFile, self).update(*args, **kwargs)
 
     @classmethod
     def get_ident(cls, name):

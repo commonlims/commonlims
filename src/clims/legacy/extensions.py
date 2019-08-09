@@ -251,7 +251,7 @@ class ExtensionService(object):
 
     def _get_extension(self, module):
         module_obj = importlib.import_module(module)
-        return getattr(module_obj, "Extension")
+        return getattr(module_obj, "Extension")  # noqa: B009
 
     def _run(self, path, pid, module, artifacts_to_stdout,
              disable_context_commit=False, test_mode=False):
@@ -538,14 +538,20 @@ class GeneralExtension(object):
         setattr(target, key, value)
         self.context.update(target)
 
-    def copy_from_output_to_input(self, exceptions=[]):
+    def copy_from_output_to_input(self, exceptions=None):
+        if not exceptions:
+            exceptions = list()
         self.copy_all_udfs(lambda pair: (pair.output_artifact, [pair.input_artifact]), exceptions)
 
-    def copy_from_input_to_output(self, exceptions=[]):
+    def copy_from_input_to_output(self, exceptions=None):
+        if not exceptions:
+            exceptions = list()
         self.copy_all_udfs(lambda pair: (pair.input_artifact, [pair.output_artifact]), exceptions)
 
-    def copy_from_output_to_submitted_sample(self, exceptions=[]):
+    def copy_from_output_to_submitted_sample(self, exceptions=None):
         """Copies all UDFs from the output analyte to each submitted sample."""
+        if not exceptions:
+            exceptions = list()
         self.copy_all_udfs(
             lambda pair: (
                 pair.output_artifact,
@@ -676,7 +682,7 @@ class TemplateExtension(DriverFileExtension):
             return rendered
 
     def execute(self):
-        # Execute the api endpoint `user_task`
+        # Execute the api endpoint `work_batch`
 
         # NOTE: The reason for doing this (and similar extension tasks) via the endpoint is to ensure
         # both that the extensions always use the rest interface. This will allow users to relatively
@@ -691,7 +697,7 @@ class TemplateExtension(DriverFileExtension):
         # file_like = StringIO.StringIO()
         # file_like.write(content)
 
-        # TODO: Push the data to the new UserTask files endpoint
+        # TODO: Push the data to the new WorkBatch files endpoint
         pass
 
 

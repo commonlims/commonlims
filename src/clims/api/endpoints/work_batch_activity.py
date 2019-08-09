@@ -1,21 +1,21 @@
 from __future__ import absolute_import
 
 from rest_framework.response import Response
-from sentry.api.bases.user_task import UserTaskBaseEndpoint
+from sentry.api.bases.work_batch import WorkBatchBaseEndpoint
 from sentry.api.bases import OrganizationEndpoint
-from clims.models import UserTask
+from clims.models import WorkBatch
 from sentry.models.activity import Activity
 from sentry.api.serializers import serialize
 from sentry.api.paginator import OffsetPaginator
 
 
-class UserTaskEndpoint(OrganizationEndpoint):
+class WorkBatchEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
-        user_tasks = UserTask.objects.filter(organization=organization)
+        work_batches = WorkBatch.objects.filter(organization=organization)
         return self.paginate(
             request=request,
-            queryset=user_tasks,
+            queryset=work_batches,
             paginator_cls=OffsetPaginator,
             on_results=lambda x: serialize(x),
         )
@@ -24,13 +24,13 @@ class UserTaskEndpoint(OrganizationEndpoint):
         return Response([], status=201)
 
 
-class UserTaskDetailsEndpoint(UserTaskBaseEndpoint):
+class WorkBatchDetailsEndpoint(WorkBatchBaseEndpoint):
 
-    def _get_activity(self, request, user_task, num):
+    def _get_activity(self, request, work_batch, num):
         activity_items = set()
         activity = []
         activity_qs = Activity.objects.filter(
-            user_task=user_task,
+            work_batch=work_batch,
         ).order_by('-datetime').select_related('user')
         # we select excess so we can filter dupes
         for item in activity_qs[:num * 2]:
@@ -46,17 +46,17 @@ class UserTaskDetailsEndpoint(UserTaskBaseEndpoint):
         activity.append(
             Activity(
                 id=0,
-                user_task=user_task,
+                work_batch=work_batch,
                 type=Activity.FIRST_SEEN,
-                datetime=user_task.created,
+                datetime=work_batch.created,
             )
         )
 
         return activity[:num]
 
-    def get(self, request, user_task_id):
-        user_task = UserTask.objects.get(pk=user_task_id)
+    def get(self, request, work_batch_id):
+        work_batch = WorkBatch.objects.get(pk=work_batch_id)
 
-        # activity = self._get_activity(request, user_task, num=100)
+        # activity = self._get_activity(request, work_batch, num=100)
 
-        return Response(serialize(user_task), status=200)
+        return Response(serialize(work_batch), status=200)
