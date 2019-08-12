@@ -1,18 +1,18 @@
 import * as Sentry from '@sentry/browser';
 
 import { Client } from 'app/api';
-import UserTaskActions from 'app/actions/userTaskActions';
+import WorkBatchActions from 'app/actions/workBatchActions';
 import { buildUserId, buildTeamId } from 'app/utils';
 import { uniqueId } from 'app/utils/guid';
 
 export function assignToUser(params) {
   const api = new Client();
 
-  let endpoint = `/user-tasks/${params.id}/`;
+  let endpoint = `/work-batches/${params.id}/`;
 
   let id = uniqueId();
 
-  UserTaskActions.assignTo(id, params.id, {
+  WorkBatchActions.assignTo(id, params.id, {
     email: (params.member && params.member.email) || '',
   });
 
@@ -28,10 +28,10 @@ export function assignToUser(params) {
 
   request
     .then(data => {
-      UserTaskActions.assignToSuccess(id, params.id, data);
+      WorkBatchActions.assignToSuccess(id, params.id, data);
     })
     .catch(data => {
-      UserTaskActions.assignToError(id, params.id, data);
+      WorkBatchActions.assignToError(id, params.id, data);
     });
 
   return request;
@@ -44,7 +44,7 @@ export function clearAssignment(groupId) {
 
   let id = uniqueId();
 
-  UserTaskActions.assignTo(id, groupId, {
+  WorkBatchActions.assignTo(id, groupId, {
     email: '',
   });
 
@@ -58,10 +58,10 @@ export function clearAssignment(groupId) {
 
   request
     .then(data => {
-      UserTaskActions.assignToSuccess(id, groupId, data);
+      WorkBatchActions.assignToSuccess(id, groupId, data);
     })
     .catch(data => {
-      UserTaskActions.assignToError(id, groupId, data);
+      WorkBatchActions.assignToError(id, groupId, data);
     });
 
   return request;
@@ -75,7 +75,7 @@ export function assignToActor({ id, actor }) {
   let guid = uniqueId();
   let actorId;
 
-  UserTaskActions.assignTo(guid, id, { email: '' });
+  WorkBatchActions.assignTo(guid, id, { email: '' });
 
   switch (actor.type) {
     case 'user':
@@ -99,9 +99,9 @@ export function assignToActor({ id, actor }) {
       data: { assignedTo: actorId },
     })
     .then(data => {
-      UserTaskActions.assignToSuccess(guid, id, data);
+      WorkBatchActions.assignToSuccess(guid, id, data);
     })
     .catch(data => {
-      UserTaskActions.assignToError(guid, id, data);
+      WorkBatchActions.assignToError(guid, id, data);
     });
 }

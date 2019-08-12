@@ -2,7 +2,7 @@ import Reflux from 'reflux';
 
 // TODO(dcramer): we should probably just make every parameter update
 // work on bulk groups
-let UserTaskActions = Reflux.createActions([
+let WorkBatchActions = Reflux.createActions([
   'assignTo',
   'assignToError',
   'assignToSuccess',
@@ -20,4 +20,4 @@ let UserTaskActions = Reflux.createActions([
   'mergeSuccess',
 ]);
 
-export default UserTaskActions;
+export default WorkBatchActions;

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class TaskGroupTitle extends React.Component {
+class WorkBatchGroupTitle extends React.Component {
   static propTypes = {
     data: PropTypes.shape({
       taskName: PropTypes.string,
@@ -28,4 +28,4 @@ class TaskGroupTitle extends React.Component {
   }
 }
 
-export default TaskGroupTitle;
+export default WorkBatchGroupTitle;

@@ -3,21 +3,21 @@ import React from 'react';
 import SentryTypes from 'app/sentryTypes';
 import PropTypes from 'prop-types';
 import {GenericField} from 'app/components/forms';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 
-class UserTaskFields extends React.Component {
+class WorkBatchFields extends React.Component {
   static propTypes = {
-    userTask: PropTypes.object.isRequired,
+    workBatch: PropTypes.object.isRequired,
     organization: SentryTypes.Organization.isRequired,
   };
 
   handleChange(field, value) {
-    UserTaskStore.setField(field, value);
+    WorkBatchStore.setField(field, value);
   }
 
   renderFields() {
-    // TODO: Connect formData from the usertask object, so user data is saved between tab flips
-    return this.props.userTask.fields.map(field => (
+    // TODO: Connect formData from the workbatch object, so user data is saved between tab flips
+    return this.props.workBatch.fields.map(field => (
       <GenericField
         key={field.name}
         config={field}
@@ -35,4 +35,4 @@ class UserTaskFields extends React.Component {
   }
 }
 
-export default UserTaskFields;
+export default WorkBatchFields;

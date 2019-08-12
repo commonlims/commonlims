@@ -14,7 +14,7 @@ import CommitLink from 'app/components/commitLink';
 import ConfigStore from 'app/stores/configStore';
 import Duration from 'app/components/duration';
 import ErrorBoundary from 'app/components/errorBoundary';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 import MemberListStore from 'app/stores/memberListStore';
 import NoteContainer from 'app/components/activity/noteContainer';
 import NoteInput from 'app/components/activity/noteInput';
@@ -23,9 +23,9 @@ import TeamStore from 'app/stores/teamStore';
 import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
-class UserTaskActivityItem extends React.Component {
+class WorkBatchActivityItem extends React.Component {
   displayName() {
-    return 'UserTaskActivityItem';
+    return 'WorkBatchActivityItem';
   }
 
   static propTypes = {
@@ -209,28 +209,28 @@ class UserTaskActivityItem extends React.Component {
   }
 }
 
-const UserTaskActivity = createReactClass({
-  displayName: 'UserTaskActivity',
+const WorkBatchActivity = createReactClass({
+  displayName: 'WorkBatchActivity',
 
   // TODO(dcramer): only re-render on group/activity change
   propTypes: {
-    userTask: PropTypes.object,
+    workBatch: PropTypes.object,
   },
 
   render() {
-    let userTask = this.props.userTask;
+    let workBatch = this.props.workBatch;
     let me = ConfigStore.get('user');
     let memberList = MemberListStore.getAll();
 
     let orgId = 'snpseq'; // TODO
 
-    let children = userTask.activity.map((item, itemIdx) => {
+    let children = workBatch.activity.map((item, itemIdx) => {
       let authorName = item.user ? item.user.name : 'Sentry';
 
       if (item.type === 'note') {
         return (
           <NoteContainer
-            group={userTask}
+            group={workBatch}
             item={item}
             key={'note' + itemIdx}
             author={{
@@ -262,7 +262,7 @@ const UserTaskActivity = createReactClass({
             {/*<TimeSince date={item.dateCreated} />*/}
             <div className="activity-item-content">
               <ErrorBoundary mini>
-                <UserTaskActivityItem
+                <WorkBatchActivityItem
                   author={
                     <span key="author">
                       {avatar}
@@ -286,7 +286,7 @@ const UserTaskActivity = createReactClass({
             <li className="activity-note" key="activity-note">
               <Avatar user={me} size={38} />
               <div className="activity-bubble">
-                <NoteInput group={userTask} memberList={memberList} sessionUser={me} />
+                <NoteInput group={workBatch} memberList={memberList} sessionUser={me} />
               </div>
             </li>
             {children}
@@ -297,4 +297,4 @@ const UserTaskActivity = createReactClass({
   },
 });
 
-export default UserTaskActivity;
+export default WorkBatchActivity;

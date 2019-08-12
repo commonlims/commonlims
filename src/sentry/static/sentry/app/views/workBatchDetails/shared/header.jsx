@@ -9,16 +9,16 @@ import OrganizationState from 'app/mixins/organizationState';
 import {t} from 'app/locale';
 import SentryTypes from 'app/sentryTypes';
 
-import UserTaskActions from './actions';
-import UserTaskSeenBy from './seenBy';
+import WorkBatchActions from './actions';
+import WorkBatchSeenBy from './seenBy';
 import AssigneeSelector from './assigneeSelector';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 
-const UserTaskHeader = createReactClass({
-  displayName: 'UserTaskHeader',
+const WorkBatchHeader = createReactClass({
+  displayName: 'WorkBatchHeader',
 
   propTypes: {
-    userTask: PropTypes.object.isRequired,
+    workBatch: PropTypes.object.isRequired,
     params: PropTypes.object,
   },
 
@@ -30,7 +30,7 @@ const UserTaskHeader = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   onToggleMute() {
-    let userTask = this.props.group;
+    let workBatch = this.props.group;
     let org = this.context.organization;
     let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
@@ -39,7 +39,7 @@ const UserTaskHeader = createReactClass({
         orgId: org.slug,
         itemIds: [group.id],
         data: {
-          status: userTask.status === 'ignored' ? 'unresolved' : 'ignored',
+          status: workBatch.status === 'ignored' ? 'unresolved' : 'ignored',
         },
       },
       {
@@ -51,7 +51,7 @@ const UserTaskHeader = createReactClass({
   },
 
   getMessage() {
-    let data = this.props.userTask;
+    let data = this.props.workBatch;
     let metadata = data.metadata;
     switch (data.type) {
       case 'error':
@@ -59,42 +59,42 @@ const UserTaskHeader = createReactClass({
       case 'csp':
         return metadata.message;
       default:
-        return this.props.userTask.culprit || '';
+        return this.props.workBatch.culprit || '';
     }
   },
 
   buildLinks() {
-    return this.props.userTask.tabs.map(tab => {
+    return this.props.workBatch.tabs.map(tab => {
       return (
         <li className={tab.active ? 'active' : ''}>
-          <a onClick={() => UserTaskStore.activateTab(tab.id)}>{tab.title}</a>
+          <a onClick={() => WorkBatchStore.activateTab(tab.id)}>{tab.title}</a>
         </li>
       );
     });
   },
 
   render() {
-    let {userTask} = this.props;
+    let {workBatch} = this.props;
 
     let className = 'group-detail';
 
-    className += ' type-' + userTask.type;
-    className += ' level-' + userTask.level;
+    className += ' type-' + workBatch.type;
+    className += ' level-' + workBatch.level;
 
-    if (userTask.isBookmarked) {
+    if (workBatch.isBookmarked) {
       className += ' isBookmarked';
     }
-    if (userTask.hasSeen) {
+    if (workBatch.hasSeen) {
       className += ' hasSeen';
     }
-    if (userTask.status === 'resolved') {
+    if (workBatch.status === 'resolved') {
       className += ' isResolved';
     }
 
-    let userTaskId = userTask.id;
+    let workBatchId = workBatch.id;
     let orgId = this.context.organization.slug;
 
-    let baseUrl = `/${orgId}/user-tasks/`;
+    let baseUrl = `/${orgId}/work-batches/`;
     let userActionTitle = 'Fragment analyzer'; // TODO
 
     return (
@@ -110,21 +110,21 @@ const UserTaskHeader = createReactClass({
             <div className="flex flex-justify-right">
               <div className="assigned-to">
                 <h6 className="nav-header">{t('Assignee')}</h6>
-                <AssigneeSelector id={userTask.id} />
+                <AssigneeSelector id={workBatch.id} />
               </div>
             </div>
           </div>
         </div>
-        <UserTaskSeenBy group={userTask} />
-        <UserTaskActions group={userTask} />
+        <WorkBatchSeenBy group={workBatch} />
+        <WorkBatchActions group={workBatch} />
         <NavTabs>{this.buildLinks()}</NavTabs>
       </div>
     );
   },
 });
 
-export default UserTaskHeader;
+export default WorkBatchHeader;
 
-// <ListLink to={`${baseUrl}${userTaskId}/`}>
-//   {t('Activity')} <span className="badge animated">{userTask.numComments}</span>
+// <ListLink to={`${baseUrl}${workBatchId}/`}>
+//   {t('Activity')} <span className="badge animated">{workBatch.numComments}</span>
 // </ListLink>

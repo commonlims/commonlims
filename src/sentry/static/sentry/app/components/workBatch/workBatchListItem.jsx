@@ -19,8 +19,8 @@ import ProjectState from 'app/mixins/projectState';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
 import Checkbox from 'app/components/checkbox';
 
-const UserTaskListItem = createReactClass({
-  displayName: 'UserTaskListItem',
+const WorkBatchListItem = createReactClass({
+  displayName: 'WorkBatchListItem',
 
   propTypes: {
     id: PropTypes.string.isRequired,
@@ -30,9 +30,9 @@ const UserTaskListItem = createReactClass({
     hasGuideAnchor: PropTypes.bool,
     memberList: PropTypes.array,
     data: PropTypes.shape({}),
-    userTask: PropTypes.shape({}),
+    workBatch: PropTypes.shape({}),
     isSelected: PropTypes.bool,
-    toggleUserTaskSelect: PropTypes.func,
+    toggleWorkBatchSelect: PropTypes.func,
   },
 
   mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ProjectState],
@@ -98,8 +98,8 @@ const UserTaskListItem = createReactClass({
       hasGuideAnchor,
       canSelect,
       memberList,
-      toggleUserTaskSelect,
-      userTask,
+      toggleWorkBatchSelect,
+      workBatch,
       isSelected,
     } = this.props;
 
@@ -109,9 +109,9 @@ const UserTaskListItem = createReactClass({
           <GroupCheckbox ml={2}>
             {hasGuideAnchor && <GuideAnchor target="issues" type="text" />}
             <Checkbox
-              value={userTask.id}
+              value={workBatch.id}
               checked={isSelected}
-              onChange={toggleUserTaskSelect}
+              onChange={toggleWorkBatchSelect}
             />
           </GroupCheckbox>
         )}
@@ -159,4 +159,4 @@ const StyledCount = styled(Count)`
   color: ${p => p.theme.gray3};
 `;
 
-export default UserTaskListItem;
+export default WorkBatchListItem;

@@ -11,7 +11,7 @@ import Button from 'app/components/button';
 import DropdownLink from 'app/components/dropdownLink';
 import Feature from 'app/components/acl/feature';
 import FeatureDisabled from 'app/components/acl/featureDisabled';
-import UserTaskActions from 'app/actions/userTaskActions';
+import WorkBatchActions from 'app/actions/workBatchActions';
 import OrganizationState from 'app/mixins/organizationState';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
 import IgnoreActions from 'app/components/actions/ignore';
@@ -96,8 +96,8 @@ class DeleteActions extends React.Component {
   }
 }
 
-const UserTaskActionsComponent = createReactClass({
-  displayName: 'UserTaskActions',
+const WorkBatchActionsComponent = createReactClass({
+  displayName: 'WorkBatchActions',
 
   propTypes: {
     group: SentryTypes.Group.isRequired,
@@ -256,4 +256,4 @@ const UserTaskActionsComponent = createReactClass({
   },
 });
 
-export default UserTaskActionsComponent;
+export default WorkBatchActionsComponent;

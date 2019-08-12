@@ -5,7 +5,7 @@ import createReactClass from 'create-react-class';
 
 import { Panel, PanelBody } from 'app/components/panels';
 import ApiMixin from 'app/mixins/apiMixin';
-import CompactUserTask from 'app/components/compactUserTask';
+import CompactWorkBatch from 'app/components/compactWorkBatch';
 import EmptyMessage from 'app/views/settings/components/emptyMessage';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
@@ -107,7 +107,7 @@ const IssueList = createReactClass({
           <PanelBody className="issue-list">
             {this.state.data.map(issue => {
               return (
-                <CompactUserTask
+                <CompactWorkBatch
                   key={issue.id}
                   id={issue.id}
                   data={issue}

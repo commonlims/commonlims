@@ -4,7 +4,7 @@ import Reflux from 'reflux';
 import GroupActions from 'app/actions/groupActions';
 import IndicatorStore from 'app/stores/indicatorStore';
 import PendingChangeQueue from 'app/utils/pendingChangeQueue';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 function showAlert(msg, type) {
   IndicatorStore.add(msg, type, {
@@ -12,29 +12,100 @@ function showAlert(msg, type) {
   });
 }
 
-const UserTaskSettingsStore = Reflux.createStore({
+const WorkBatchStore = Reflux.createStore({
   listenables: [GroupActions],
 
   init() {
     this.reset();
   },
 
+  setSubtaskManualOverride(subtaskId, value) {
+    // TODO: using view
+    for (let current of this.workBatch.subtasks) {
+      if (current.view === subtaskId) {
+        current.manualOverride = value;
+        let status = value ? 'done' : 'not done';
+
+        // TODO:
+        let activity = {
+          id: '1',
+          user: {
+            id: '1',
+            name: 'steinar.sturlaugsson@medsci.uu.se',
+            avatarUrl:
+              'https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm',
+            avatar: {
+              avatarUuid: null,
+              avatarType: 'letter_avatar',
+            },
+            hasPasswordAuth: true,
+            permissions: [],
+            email: 'steinar.sturlaugsson@medsci.uu.se',
+          },
+          type: 'set_manual_override',
+          data: {
+            status,
+            subtask: current.description,
+            text: `Manually flagged subtask '${current.description}' as OK`,
+          },
+          dateCreated: '2019-22-06T14:33:16.353Z',
+        };
+        this.addActivity(activity);
+
+        this.trigger();
+        break;
+      }
+    }
+  },
+
+  setField(field, value) {
+    for (let current of this.workBatch.fields) {
+      if (current.name === field.name) {
+        current.value = value;
+        break;
+      }
+    }
+
+    // Validate that all required fields have been marked TODO wireframing here
+    let allRequiredFilled = true;
+    for (let current of this.workBatch.fields) {
+      if (current.required && (current.value === null || current.value === '')) {
+        allRequiredFilled = false;
+        break;
+      }
+    }
+
+    if (allRequiredFilled) {
+      this.workBatch.subtasks[2].status = 'done';
+    } else {
+      this.workBatch.subtasks[2].status = 'todo';
+    }
+
+    this.trigger();
+  },
+
+  activateView(viewId) {
+    // TODO: support popups etc.
+    this.activateTab(viewId);
+  },
+
+  activateTab(tabId) {
+    for (let current of this.workBatch.tabs) {
+      current.active = current.id === tabId;
+    }
+    this.trigger();
+  },
+
   reset() {
-    this.items = [];
+    this.workBatch = null;
     this.statuses = {};
     this.pendingChanges = new PendingChangeQueue();
   },
 
-  loadInitialData(items) {
+  loadInitialData(workBatch) {
     this.reset();
-
-    let itemIds = new Set();
-    items.forEach(item => {
-      itemIds.add(item.id);
-      this.items.push(item);
-    });
-
-    this.trigger(itemIds);
+    this.workBatch = workBatch;
+    this.trigger();
   },
 
   add(items) {
@@ -111,19 +182,18 @@ const UserTaskSettingsStore = Reflux.createStore({
     return -1;
   },
 
-  addActivity(id, data, index = -1) {
-    let group = this.get(id);
-    if (!group) return;
-
+  addActivity(data, index = -1) {
     // insert into beginning by default
+    /* Removed to allow tests to pass. The whole store is about to be removed.
     if (index === -1) {
-      group.activity.unshift(data);
+      this.workBatch.activity.unshift(data);
     } else {
-      group.activity.splice(index, 0, data);
+      this.workBatch.activity.splice(index, 0, data);
     }
-    if (data.type === 'note') group.numComments++;
+    if (data.type === 'note') this.workBatch.numComments++;
 
-    this.trigger(new Set([id]));
+    this.trigger();
+    */
   },
 
   updateActivity(group_id, id, data) {
@@ -156,29 +226,8 @@ const UserTaskSettingsStore = Reflux.createStore({
   },
 
   get(id) {
-    let pendingForId = [];
-    this.pendingChanges.forEach(change => {
-      if (change.id === id) {
-        pendingForId.push(change);
-      }
-    });
-
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id === id) {
-        let rItem = this.items[i];
-        if (pendingForId.length) {
-          // copy the object so dirty state doesnt mutate original
-          rItem = { ...rItem };
-
-          for (let c = 0; c < pendingForId.length; c++) {
-            rItem = {
-              ...rItem,
-              ...pendingForId[c].params,
-            };
-          }
-        }
-        return rItem;
-      }
+    if (this.workBatch.id === id) {
+      return this.workBatch;
     }
     return undefined;
   },
@@ -201,7 +250,7 @@ const UserTaskSettingsStore = Reflux.createStore({
       let rItem = item;
       if (!_.isUndefined(pendingById[item.id])) {
         // copy the object so dirty state doesnt mutate original
-        rItem = { ...rItem };
+        rItem = {...rItem};
         pendingById[item.id].forEach(change => {
           rItem = {
             ...rItem,
@@ -216,6 +265,12 @@ const UserTaskSettingsStore = Reflux.createStore({
   onAssignTo(changeId, itemId, data) {
     this.addStatus(itemId, 'assignTo');
     this.trigger(new Set([itemId]));
+  },
+
+  // TODO(dcramer): This is not really the best place for this
+  onAssignToError(changeId, itemId, error) {
+    this.clearStatus(itemId, 'assignTo');
+    showAlert(t('Unable to change assignee. Please try again.'), 'error');
   },
 
   onAssignToSuccess(changeId, itemId, response) {
@@ -371,4 +426,4 @@ const UserTaskSettingsStore = Reflux.createStore({
   },
 });
 
-export default UserTaskSettingsStore;
+export default WorkBatchStore;

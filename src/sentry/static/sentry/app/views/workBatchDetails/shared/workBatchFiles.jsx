@@ -16,11 +16,11 @@ import EmptyStateWarning from 'app/components/emptyStateWarning';
 import withOrganization from 'app/utils/withOrganization';
 import withApi from 'app/utils/withApi';
 
-class UserTaskDetailsFiles extends React.Component {
+class WorkBatchDetailsFiles extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization,
     api: PropTypes.object,
-    userTask: PropTypes.object.isRequired,
+    workBatch: PropTypes.object.isRequired,
   };
 
   constructor() {
@@ -33,7 +33,7 @@ class UserTaskDetailsFiles extends React.Component {
   }
 
   getFilesEndpoint() {
-    return `/user-tasks/1/files/`;
+    return `/work-batches/1/files/`;
   }
 
   handleRemove(id) {
@@ -80,7 +80,7 @@ class UserTaskDetailsFiles extends React.Component {
             <Flex flex="3">{t('Size')}</Flex>
           </PanelHeader>
           <PanelBody>
-            {this.props.userTask.files.map(file => {
+            {this.props.workBatch.files.map(file => {
               return (
                 <PanelItem key={file.id}>
                   <Flex
@@ -141,5 +141,5 @@ class UserTaskDetailsFiles extends React.Component {
   }
 }
 
-export { UserTaskDetailsFiles };
-export default withOrganization(withApi(UserTaskDetailsFiles));
+export { WorkBatchDetailsFiles };
+export default withOrganization(withApi(WorkBatchDetailsFiles));

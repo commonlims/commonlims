@@ -27,7 +27,7 @@ export const tagsGetFailure = err => ({
 // If the frontend will continue to manage this list for some reason, you will need
 // some utility methods for getMemberListStoreUsernames() to work. See tagStore.jsx.
 const tags = {
-  userTask: {
+  workBatch: {
     is: {
       key: 'is',
       name: 'Status',

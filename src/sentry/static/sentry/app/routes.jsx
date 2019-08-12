@@ -3,7 +3,7 @@ import React from 'react';
 
 import App from 'app/views/app';
 
-import UserTaskDetails from 'app/views/userTaskDetails/organization/index';
+import WorkBatchDetails from 'app/views/workBatchDetails/organization/index';
 
 import ProjectGroupDetails from 'app/views/groupDetails/project/index';
 import ProjectGroupEvents from 'app/views/groupDetails/project/groupEvents';
@@ -42,7 +42,7 @@ import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
-import UserTaskList from 'app/views/userTaskList/index';
+import WorkBatchList from 'app/views/workBatchList/index';
 import SampleDetails from 'app/views/sampleDetails';
 import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';
@@ -746,20 +746,20 @@ function routes() {
 
       <Route path="/:orgId/" component={errorHandler(OrganizationDetails)}>
         <Route component={errorHandler(OrganizationRoot)}>
-          <IndexRoute component={errorHandler(UserTaskList)} />
+          <IndexRoute component={errorHandler(WorkBatchList)} />
 
-          <Route path="tasks/" component={errorHandler(UserTaskList)} />
+          <Route path="tasks/" component={errorHandler(WorkBatchList)} />
           <Route path="samples/" component={errorHandler(SamplesContainer)} />
 
           <Route
-            path="user-tasks/:groupId/"
-            component={errorHandler(UserTaskDetails)}
+            path="work-batches/:groupId/"
+            component={errorHandler(WorkBatchDetails)}
             ignoreScrollBehavior
           >
             <Route
               path="activity/"
               componentPromise={() =>
-                import(/* webpackChunkName: "UserTaskActivity" */ './views/userTaskDetails/shared/userTaskActivity')}
+                import(/* webpackChunkName: "WorkBatchActivity" */ './views/workBatchDetails/shared/workBatchActivity')}
               component={errorHandler(LazyLoad)}
             />
           </Route>
