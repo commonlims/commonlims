@@ -132,11 +132,10 @@ class BuildAssetsCommand(BaseBuildCommand):
     def _build_static(self):
         env = dict(os.environ)
         node_env = env.get('NODE_ENV')
-        if node_env == 'development':
+        if env.get('NODE_ENV') == 'development':
             # If in development mode, we rely on the Makefile building the assets so we don't
             # do it twice.
             return
-
         env['SENTRY_STATIC_DIST_PATH'] = self.sentry_static_dist_path
 
         if node_env is None:

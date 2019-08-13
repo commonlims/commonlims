@@ -43,7 +43,7 @@ ROOT = os.path.realpath(os.path.join(os.path.dirname(
 # Add Sentry to path so we can import distutils
 sys.path.insert(0, os.path.join(ROOT, 'src'))
 
-from sentry.utils.distutils import (
+from clims_base.utils.distutils import (
     BuildAssetsCommand, BuildJsSdkRegistryCommand
 )
 
