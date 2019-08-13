@@ -44,7 +44,7 @@ ROOT = os.path.realpath(os.path.join(os.path.dirname(
 sys.path.insert(0, os.path.join(ROOT, 'src'))
 
 from sentry.utils.distutils import (
-    BuildAssetsCommand, BuildIntegrationDocsCommand, BuildJsSdkRegistryCommand
+    BuildAssetsCommand, BuildJsSdkRegistryCommand
 )
 
 # The version of sentry
@@ -90,8 +90,7 @@ class SentrySDistCommand(SDistCommand):
     # part of our source build pipeline.
     if not IS_LIGHT_BUILD:
         sub_commands = SDistCommand.sub_commands + \
-            [('build_integration_docs', None),
-             ('build_assets', None),
+            [('build_assets', None),
              ('build_js_sdk_registry', None)]
 
 
@@ -99,7 +98,6 @@ class SentryBuildCommand(BuildCommand):
     def run(self):
         BuildCommand.run(self)
         if not IS_LIGHT_BUILD:
-            self.run_command('build_integration_docs')
             self.run_command('build_assets')
             self.run_command('build_js_sdk_registry')
 
@@ -108,7 +106,6 @@ class SentryDevelopCommand(DevelopCommand):
     def run(self):
         DevelopCommand.run(self)
         if not IS_LIGHT_BUILD:
-            self.run_command('build_integration_docs')
             self.run_command('build_assets')
             self.run_command('build_js_sdk_registry')
 
@@ -118,7 +115,6 @@ cmdclass = {
     'develop': SentryDevelopCommand,
     'build': SentryBuildCommand,
     'build_assets': BuildAssetsCommand,
-    'build_integration_docs': BuildIntegrationDocsCommand,
     'build_js_sdk_registry': BuildJsSdkRegistryCommand,
 }
 
@@ -126,10 +122,10 @@ cmdclass = {
 setup(
     name='sentry',
     version=VERSION,
-    author='Sentry',
-    author_email='hello@sentry.io',
-    url='https://sentry.io',
-    description='A realtime logging and aggregation server.',
+    author='https://github.com/commonlims/commonlims/AUTHORS',
+    author_email='https://gitter.im/commonlims/community',
+    url='https://github.com/commonlims/commonlims',
+    description='An extensible free and open source LIMS.',
     long_description=open(os.path.join(ROOT, 'README.md')).read(),
     package_dir={'': 'src'},
     packages=find_packages('src'),
