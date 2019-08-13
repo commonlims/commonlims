@@ -25,6 +25,7 @@ from .endpoints.work_batch_notes_details import WorkBatchNotesDetailsEndpoint
 from .endpoints.plugin_actions import PluginActionsEndpoint
 from .endpoints.plugin_views import PluginViewsEndpoint
 
+from .endpoints.workflow import WorkflowEndpoint
 urlpatterns = patterns(
     # Samples: TODO: have them per organization (that is in projects that are per organization)
     # TODO: Should be items
@@ -34,7 +35,12 @@ urlpatterns = patterns(
         name='clims-api-0-sample-details'
         ),
 
-    # USER TASKS
+    # Workflow
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/(?P<workflow_endpoint>[^\/]+)/$',
+        WorkflowEndpoint.as_view(),
+        name='clims-api-0-workflow-root'),
+
+    # work-batches: user task activities that have been grouped together in 1..n sized batches
     url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-user-task'),
@@ -159,4 +165,5 @@ urlpatterns = patterns(
         PluginViewsEndpoint.as_view(),
         name='clims-api-0-plugin-views'
     ),
+
 )
