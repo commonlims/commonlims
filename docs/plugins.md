@@ -20,6 +20,21 @@ Note that this does not mean that you have to write all your plugins yourself. T
 
 As a starting point, you might be interested in checking out https://github.com/molmed/commonlims-snpseq or find people with similar requirements at at https://gitter.im/commonlims.
 
+# Custom types
+
+The core defines various types which you can use directly, but you can also extend these types. One example of this is the Sample type. Let's say you need to maintain a specific measurement on each sample that most labs don't require, let's say `massiveness`. You can then subclass the core `Sample` object and use that in your plugin scripts instead.
+
+Add a model in your models.py file, have it inherit from the core Sample type and define any properties on it you require:
+
+```
+import clims_base.models
+
+class Sample(clims_base.models.Sample):
+    massiveness = clims.models.IntProperty()
+```
+
+After running `lims upgrade` your property will be registered and ready to be used.
+
 # A simple end-to-end example
 
 Imagine you have a single workflow which we'll call `SimpleWorkflow`.

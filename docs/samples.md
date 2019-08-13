@@ -84,3 +84,68 @@ It would be difficult to know what version to apply to each:
 ![Version inconsistency](./img/samples-04.png)
 
 So a new sample entity is created for the aliquot. Contrast this to when a property is changed, the sample identity remains the same.
+
+# Defining custom properties
+
+Your LIMS implementation will very likely require custom properties that you require but are not required in all labs.
+
+For details on how to create a custom plugin, refer to [the plugin documentation](./plugins.md).
+
+## Example
+
+You're a DNA sequencing lab and your scientists have implemented their own custom sample QC instrument which measures something they call the samples `awesomeness factor`. After this instrument has run, you need to save the resulting `awesomeness factor` with the sample so it can be be properly altered with another custom instrument which increases the sample's `awesomeness factor` if it's too low.
+
+Since this is a sequencing lab, you might want to use the `Sample` from the core plugin `clims_plugin_genetics` which defines a sample with various sequencing related values. The developers of the core plugin didn't predict this requirement, so you need to inherit from it:
+
+- Execute: `pip install clims_plugin_genetics`
+- Create the file `your-plugin/models/sample.py`
+
+Then open your plugin in your editor and create a `Sample` model:
+
+```
+from clims_plugin_genetics import models
+
+
+class Sample(models.Sample):
+    awesomeness_factor = models.FloatProperty(default=0)
+```
+
+Now create a UserTask class that uses this:
+
+```
+from clims_plugin import *
+
+
+class MeasureAwesomenessUserTask(UserTask):
+    @action("Create sample file")
+    def create_sample_file(self):
+        # Your instrument needs all the samples in a particular format
+        instrument_file = self.create_file("instrument-file.dat")
+        for container in self.input_container:
+            for sample in container:
+                instrument_file.write("{}: {} {}\n".format(sample.id, sample.volume, sample.concentration))
+
+    @required_file_upload("Upload output file from the instrument")
+    def upload_instrument_file(self):
+        pass
+
+    @action("Measure awesomeness")
+    def measure_awesomeness(self):
+        # This informs the user if the file hasn't been uploaded yet and stops execution in that case
+        instrument_file = self.get_input_file(self.upload_instrument_file).as_csv()
+
+        # The research engineer has uploaded the instrument file.
+        for row in instrument_file:
+            self.input[row.sample_id].awesomeness_factor = row.awesomeness_factor
+```
+
+Finally, create a workflow that does nothing but measure the awesomeness factor:
+
+Refer to [the workflow documentation](workflow.md) more information on how to define workflow.
+
+* Open `camunda-modeler` and create the file `your-plugin/workflows/awesome.bpmn`
+* Create a diagram similar to this:
+
+![Awesomeness workflow](./img/awesomeness-01.png)
+
+Make sure that the task is a `UserTask` and that the form key has the name `MeasureAwesomenessUserTask`.
