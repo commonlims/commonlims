@@ -66,10 +66,6 @@ STATUS_CHOICES = {
     'resolved': GroupStatus.RESOLVED,
     'unresolved': GroupStatus.UNRESOLVED,
     'ignored': GroupStatus.IGNORED,
-    'resolvedInNextRelease': GroupStatus.UNRESOLVED,
-
-    # TODO(dcramer): remove in 9.0
-    'muted': GroupStatus.IGNORED,
 }
 
 
@@ -149,8 +145,9 @@ class GroupDetailsEndpoint(GroupEndpoint, EnvironmentMixin):
         return serialize(
             [
                 plugin for plugin in plugins.for_project(project, version=None)
-                if plugin.has_project_conf() and hasattr(plugin, 'get_custom_contexts') and
-                plugin.get_custom_contexts()
+                if plugin.has_project_conf()
+                and hasattr(plugin, 'get_custom_contexts')
+                and plugin.get_custom_contexts()
             ], request.user, PluginSerializer(project)
         )
 
