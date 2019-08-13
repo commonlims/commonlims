@@ -102,11 +102,6 @@ def load_settings(mod_or_filename, settings, silent=False):
 
 
 def install_plugin_apps(entry_point, settings):
-    # entry_points={
-    #    'sentry.apps': [
-    #         'phabricator = sentry_phabricator'
-    #     ],
-    # },
     from pkg_resources import iter_entry_points
     installed_apps = list(settings.INSTALLED_APPS)
     for ep in iter_entry_points(entry_point):
