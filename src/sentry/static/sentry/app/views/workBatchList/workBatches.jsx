@@ -15,9 +15,9 @@ import ProcessStore from 'app/stores/processStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import UserTaskListActions from 'app/views/userTaskList/actions';
+import WorkBatchListActions from 'app/views/workBatchList/actions';
 import StreamFilters from 'app/views/stream/filters';
-import UserTaskListItem from 'app/components/userTask/userTaskListItem';
+import WorkBatchListItem from 'app/components/workBatch/workBatchListItem';
 import StreamSidebar from 'app/views/stream/sidebar';
 import TimeSince from 'app/components/timeSince';
 import parseLinkHeader from 'app/utils/parseLinkHeader';
@@ -25,24 +25,24 @@ import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
 import ProjectState from 'app/mixins/projectState';
 import {connect} from 'react-redux';
-import {userTasksGet, userTaskToggleSelect} from 'app/redux/actions/userTask';
+import {workBatchesGet, workBatchToggleSelect} from 'app/redux/actions/workBatch';
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';
 const DEFAULT_STATS_PERIOD = '24h';
 const STATS_PERIODS = new Set(['14d', '24h']);
 
-const UserTasks = createReactClass({
+const WorkBatches = createReactClass({
   // This class was based on the Stream class in Sentry
 
-  displayName: 'UserTasks',
+  displayName: 'WorkBatches',
 
   propTypes: {
     tags: PropTypes.object,
     tagsLoading: PropTypes.bool,
-    getUserTasks: PropTypes.func.isRequired,
-    userTasks: PropTypes.arrayOf(PropTypes.shape({})),
-    toggleUserTaskSelect: PropTypes.func,
+    getWorkBatches: PropTypes.func.isRequired,
+    workBatches: PropTypes.arrayOf(PropTypes.shape({})),
+    toggleWorkBatchSelect: PropTypes.func,
   },
 
   mixins: [ApiMixin, ProjectState],
@@ -91,7 +91,7 @@ const UserTasks = createReactClass({
     if (!this.state.loading) {
       this.fetchData();
     }
-    this.props.getUserTasks();
+    this.props.getWorkBatches();
   },
 
   componentWillReceiveProps(nextProps) {
@@ -117,8 +117,8 @@ const UserTasks = createReactClass({
       this.setState(this.getQueryState(nextProps), this.fetchData);
     }
 
-    const userTasks = nextProps.userTasks;
-    let groupIds = userTasks.map(item => item.id.toString());
+    const workBatches = nextProps.workBatches;
+    let groupIds = workBatches.map(item => item.id.toString());
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
         groupIds,
@@ -498,7 +498,7 @@ const UserTasks = createReactClass({
   },
 
   renderGroupNodes(ids, statsPeriod) {
-    const {userTasks, toggleUserTaskSelect} = this.props;
+    const {workBatches, toggleWorkBatchSelect} = this.props;
 
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
     let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
@@ -509,11 +509,11 @@ const UserTasks = createReactClass({
 
     let {orgId} = this.props.params;
     let groupNodes = ids.map(id => {
-      const userTask = userTasks.find(ut => ut.id == id);
+      const workBatch = workBatches.find(ut => ut.id == id);
       let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
-      let title = userTask.name;
+      let title = workBatch.name;
       let culprit = title;
-      let filename = userTask.handler;
+      let filename = workBatch.handler;
       let metadata = {value: title, filename};
       let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
       let count = 1;
@@ -521,9 +521,9 @@ const UserTasks = createReactClass({
       let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
       let level = Math.floor(Math.random() * Math.floor(2)).toString();
       let eventID = null;
-      let numComments = userTask.num_comments;
+      let numComments = workBatch.num_comments;
       let lastSeen = null; //'2019-06-02';
-      let firstSeen = userTask.created;
+      let firstSeen = workBatch.created;
       let subscriptionDetails = {reason: 'Just cause'};
       let annotations = ['an annotation'];
       let assignedTo = {name: 'admin@localhost'};
@@ -551,14 +551,14 @@ const UserTasks = createReactClass({
       };
 
       const toggleSelect = () => {
-        toggleUserTaskSelect(id);
+        toggleWorkBatchSelect(id);
       };
 
       return (
-        <UserTaskListItem
-          userTask={userTask}
-          toggleUserTaskSelect={toggleSelect.bind(this)}
-          isSelected={userTask.selected}
+        <WorkBatchListItem
+          workBatch={workBatch}
+          toggleWorkBatchSelect={toggleSelect.bind(this)}
+          isSelected={workBatch.selected}
           data={data}
           key={id}
           id={id}
@@ -637,7 +637,7 @@ const UserTasks = createReactClass({
             savedSearchList={this.state.savedSearchList}
           />
           <Panel>
-            <UserTaskListActions
+            <WorkBatchListActions
               orgId={params.orgId}
               hasReleases={true}
               query={this.state.query}
@@ -667,11 +667,11 @@ const UserTasks = createReactClass({
   },
 });
 
-const mapStateToProps = state => state.userTask;
+const mapStateToProps = state => state.workBatch;
 
 const mapDispatchToProps = dispatch => ({
-  getUserTasks: () => dispatch(userTasksGet()),
-  toggleUserTaskSelect: id => dispatch(userTaskToggleSelect(id)),
+  getWorkBatches: () => dispatch(workBatchesGet()),
+  toggleWorkBatchSelect: id => dispatch(workBatchToggleSelect(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserTasks);
+export default connect(mapStateToProps, mapDispatchToProps)(WorkBatches);

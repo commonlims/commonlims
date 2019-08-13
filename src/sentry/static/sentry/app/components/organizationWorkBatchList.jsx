@@ -10,7 +10,7 @@ import OrganizationHomeContainer from 'app/components/organizations/homeContaine
 import { t } from 'app/locale';
 import space from 'app/styles/space';
 
-class OrganizationUserTaskList extends React.Component {
+class OrganizationWorkBatchList extends React.Component {
   static propTypes = {
     title: PropTypes.string,
     endpoint: PropTypes.string.isRequired,
@@ -86,4 +86,4 @@ const StyledPageHeading = styled(PageHeading)`
   margin-bottom: 24px;
 `;
 
-export default OrganizationUserTaskList;
+export default OrganizationWorkBatchList;

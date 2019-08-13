@@ -6,7 +6,7 @@ import styled from 'react-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class UserTaskListActions extends React.Component {
+class WorkBatchListActions extends React.Component {
   render() {
     let {toggleSelectAll, allSelected} = this.props;
 
@@ -43,11 +43,11 @@ const ActionsCheckbox = styled(Box)`
   }
 `;
 
-UserTaskListActions.propTypes = {
+WorkBatchListActions.propTypes = {
   toggleSelectAll: PropTypes.func,
   allSelected: PropTypes.bool,
 };
 
-UserTaskListActions.displayName = 'UserTaskListActions';
+WorkBatchListActions.displayName = 'WorkBatchListActions';
 
-export default UserTaskListActions;
+export default WorkBatchListActions;

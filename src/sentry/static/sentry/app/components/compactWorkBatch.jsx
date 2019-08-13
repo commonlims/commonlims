@@ -16,7 +16,7 @@ import {PanelItem} from 'app/components/panels';
 import SentryTypes from 'app/sentryTypes';
 import withOrganization from 'app/utils/withOrganization';
 
-class CompactUserTaskHeader extends React.Component {
+class CompactWorkBatchHeader extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization.isRequired,
     data: PropTypes.object.isRequired,
@@ -47,7 +47,7 @@ class CompactUserTaskHeader extends React.Component {
 
     let basePath = hasNewRoutes
       ? `/organizations/${organization.slug}/issues/`
-      : `/${organization.slug}/user-tasks/`;
+      : `/${organization.slug}/work-batches/`;
     if (data.subscriptionDetails && data.subscriptionDetails.reason === 'mentioned') {
       styles = {color: '#57be8c'};
     }
@@ -81,8 +81,8 @@ class CompactUserTaskHeader extends React.Component {
   }
 }
 
-const CompactUserTask = createReactClass({
-  displayName: 'CompactUserTask',
+const CompactWorkBatch = createReactClass({
+  displayName: 'CompactWorkBatch',
 
   propTypes: {
     data: PropTypes.object,
@@ -180,7 +180,7 @@ const CompactUserTask = createReactClass({
         direction="column"
         style={{paddingTop: '12px', paddingBottom: '6px'}}
       >
-        <CompactUserTaskHeader data={issue} organization={organization} />
+        <CompactWorkBatchHeader data={issue} organization={organization} />
         {this.props.showActions && (
           <div className="more-menu-container align-right">
             <DropdownLink
@@ -221,5 +221,5 @@ const CompactUserTask = createReactClass({
   },
 });
 
-export {CompactUserTask};
-export default withOrganization(CompactUserTask);
+export {CompactWorkBatch};
+export default withOrganization(CompactWorkBatch);

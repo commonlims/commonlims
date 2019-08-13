@@ -356,7 +356,7 @@ const WaitingSamples = createReactClass({
       sort: this.state.sort,
       statsPeriod: this.state.statsPeriod,
       shortIdLookup: '1',
-      waitingForUserTask: 'clims_snpseq.core.workflows.reception_qc:SelectQCMethodDNA',
+      waitingForWorkBatch: 'clims_snpseq.core.workflows.reception_qc:SelectQCMethodDNA',
     };
 
     // Always keep the global active environment in sync with the queried environment

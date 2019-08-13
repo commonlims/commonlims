@@ -9,7 +9,7 @@ import ApiMixin from 'app/mixins/apiMixin';
 import GroupStore from 'app/stores/groupStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import CompactUserTask from 'app/components/compactUserTask';
+import CompactWorkBatch from 'app/components/compactWorkBatch';
 import EventUserFeedback from 'app/components/events/userFeedback';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
 import { t, tct } from 'app/locale';
@@ -180,14 +180,14 @@ const ProjectUserFeedback = createReactClass({
       const issue = item.issue;
 
       return (
-        <CompactUserTask key={item.id} id={issue.id} data={issue}>
+        <CompactWorkBatch key={item.id} id={issue.id} data={issue}>
           <EventUserFeedback
             report={item}
             orgId={orgId}
             projectId={projectId}
             issueId={issue.id}
           />
-        </CompactUserTask>
+        </CompactWorkBatch>
       );
     });
 

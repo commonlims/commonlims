@@ -8,7 +8,7 @@ import SampleContainerStack from 'app/components/sampleTransitioner/sampleContai
 import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
 import { SampleTransition } from 'app/components/sampleTransitioner/sampleTransition';
 import { Sample } from 'app/components/sampleTransitioner/sample';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
 // TODO: Implement shift and ctrl select
@@ -30,7 +30,7 @@ class SampleTransitioner extends React.Component {
 
     const {sampleBatch} = props;
 
-    // TODO: read transitions and target containers from userTask sampleBatch
+    // TODO: read transitions and target containers from workBatch sampleBatch
     const sourceContainers = sampleBatch.containers;
     const samples = sampleBatch.samples.map(s => {
       const { containerId, row, col } = s.location;

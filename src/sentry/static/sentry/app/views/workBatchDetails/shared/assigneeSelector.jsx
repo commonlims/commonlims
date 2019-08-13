@@ -5,14 +5,14 @@ import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 
 import {StyledMenu} from 'app/components/dropdownAutoCompleteMenu';
-import {assignToUser, assignToActor, clearAssignment} from 'app/actionCreators/userTask';
+import {assignToUser, assignToActor, clearAssignment} from 'app/actionCreators/workBatch';
 import {t} from 'app/locale';
 import {valueIsEqual, buildUserId, buildTeamId} from 'app/utils';
 import ActorAvatar from 'app/components/actorAvatar';
 import Avatar from 'app/components/avatar';
 import ConfigStore from 'app/stores/configStore';
 import DropdownAutoComplete from 'app/components/dropdownAutoComplete';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 import Highlight from 'app/components/highlight';
 import InlineSvg from 'app/components/inlineSvg';
 import Link from 'app/components/link';
@@ -67,9 +67,9 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   getInitialState() {
-    let group = UserTaskStore.get(this.props.id);
+    let group = WorkBatchStore.get(this.props.id);
     let memberList = MemberListStore.loaded ? MemberListStore.getAll() : null;
-    let loading = UserTaskStore.hasStatus(this.props.id, 'assignTo');
+    let loading = WorkBatchStore.hasStatus(this.props.id, 'assignTo');
 
     return {
       assignedTo: group && group.assignedTo,
@@ -79,9 +79,9 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    let loading = UserTaskStore.hasStatus(nextProps.id, 'assignTo');
+    let loading = WorkBatchStore.hasStatus(nextProps.id, 'assignTo');
     if (nextProps.id !== this.props.id || loading !== this.state.loading) {
-      let group = UserTaskStore.get(this.props.id);
+      let group = WorkBatchStore.get(this.props.id);
       this.setState({
         loading,
         assignedTo: group && group.assignedTo,

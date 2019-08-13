@@ -161,13 +161,13 @@ const WorkOnButton = createReactClass({
     // Fetch the variables for this, if they don't exist yet:
   },
 
-  startUserTask() {
-    // 1. POST all these samples to the user-task endpoint.
-    // 2. Redirect to the user task site
+  startWorkBatch() {
+    // 1. POST all these samples to the work-batch endpoint.
+    // 2. Redirect to the work batch site
     this.props.router.push(`/sentry/internal/plugins/clims_snpseq/fragment_analyze/123/`);
 
     /*
-    this.api.request('/user-task/', {
+    this.api.request('/work-batch/', {
       method: 'POST',
       data: {
         samples: [1, 2, 3]
@@ -181,7 +181,7 @@ const WorkOnButton = createReactClass({
       },
       success: data => {
         // TODO:project
-        this.props.router.push(`/sentry/internal/user-task/${data.id}`);
+        this.props.router.push(`/sentry/internal/work-batch/${data.id}`);
       }
     });*/
   },
@@ -205,7 +205,7 @@ const WorkOnButton = createReactClass({
         {/* Generally, we redirect to another view, but (later) we should implement fixing
             simpler tasks in a modal window (see sketch below).
         */}
-        {this.state.isActivated && this.shouldRedirect() && this.startUserTask()}
+        {this.state.isActivated && this.shouldRedirect() && this.startWorkBatch()}
 
         <Modal
           show={this.state.isActivated && !this.shouldRedirect()}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import OrganizationUserTaskList from 'app/components/organizationUserTaskList';
+import OrganizationWorkBatchList from 'app/components/organizationWorkBatchList';
 import { t } from 'app/locale';
 
 class Bookmarked extends React.Component {
@@ -14,7 +14,7 @@ class Bookmarked extends React.Component {
 
   render() {
     return (
-      <OrganizationUserTaskList
+      <OrganizationWorkBatchList
         title={this.getTitle()}
         endpoint={this.getEndpoint()}
         emptyText={t('You have not bookmarked any issues.')}

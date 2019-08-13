@@ -6,7 +6,7 @@ import SentryTypes from 'app/sentryTypes';
 import Feature from 'app/components/acl/feature';
 import Alert from 'app/components/alert';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
-import CompactUserTask from 'app/components/compactUserTask';
+import CompactWorkBatch from 'app/components/compactWorkBatch';
 import EventUserFeedback from 'app/components/events/userFeedback';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import GlobalSelectionHeader from 'app/components/organizations/globalSelectionHeader';
@@ -45,9 +45,9 @@ class OrganizationUserFeedback extends AsyncView {
     const children = this.state.reportList.map(item => {
       const issue = item.issue;
       return (
-        <CompactUserTask key={item.id} id={issue.id} data={issue}>
+        <CompactWorkBatch key={item.id} id={issue.id} data={issue}>
           <EventUserFeedback report={item} orgId={orgId} issueId={issue.id} />
-        </CompactUserTask>
+        </CompactWorkBatch>
       );
     });
 

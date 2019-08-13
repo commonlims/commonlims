@@ -4,7 +4,7 @@ import styled, {css} from 'react-emotion';
 import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
-import TaskGroupTitle from 'app/components/userTask/taskGroupTitle';
+import WorkBatchGroupTitle from 'app/components/workBatch/workBatchGroupTitle';
 // TODO: rename file
 
 /**
@@ -50,7 +50,7 @@ class ProcessHeader extends React.Component {
 
       if (running) {
         props.to = {
-          pathname: `/${orgId}/user-tasks/1`,
+          pathname: `/${orgId}/work-batches/1`,
         };
       } else {
         props.to = {

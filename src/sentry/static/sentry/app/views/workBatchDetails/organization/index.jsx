@@ -6,10 +6,10 @@ import GlobalSelectionHeader from 'app/components/organizations/globalSelectionH
 import {PageContent} from 'app/styles/organization';
 import Feature from 'app/components/acl/feature';
 
-import UserTaskDetails from '../shared/userTaskDetails';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchDetails from '../shared/workBatchDetails';
+import WorkBatchStore from 'app/stores/workBatchStore';
 
-class OrganizationUserTaskDetails extends React.Component {
+class OrganizationWorkBatchDetails extends React.Component {
   static propTypes = {
     organization: SentryTypes.Organization,
   };
@@ -18,10 +18,10 @@ class OrganizationUserTaskDetails extends React.Component {
     const {...props} = this.props;
     return (
       <PageContent>
-        <UserTaskDetails {...props} />
+        <WorkBatchDetails {...props} />
       </PageContent>
     );
   }
 }
 
-export default withOrganization(OrganizationUserTaskDetails);
+export default withOrganization(OrganizationWorkBatchDetails);

@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString'; // REMOVE ME
-import UserTasks from 'app/views/userTaskList/userTasks';
+import WorkBatches from 'app/views/workBatchList/workBatches';
 import {connect} from 'react-redux';
 import {tagsGet} from 'app/redux/actions/tag';
 // TODO: uncomment these when fixing CLIMS-203
 // import {Client} from 'app/api';
 // import {fetchOrgMembers} from 'app/actionCreators/members';
 
-class UserTaskList extends React.Component {
+class WorkBatchList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -28,21 +28,21 @@ class UserTaskList extends React.Component {
     const {tags, loading} = this.state;
 
     // TODO: display error message if there is a problem fetching tags.
-    return <UserTasks tags={tags} tagsLoading={loading} {...this.props} />;
+    return <WorkBatches tags={tags} tagsLoading={loading} {...this.props} />;
   }
 }
 
 const mapStateToProps = state => state.tag;
 
 const mapDispatchToProps = dispatch => ({
-  getTags: () => dispatch(tagsGet('userTask')),
+  getTags: () => dispatch(tagsGet('workBatch')),
 });
 
-UserTaskList.propTypes = {
+WorkBatchList.propTypes = {
   getTags: PropTypes.func,
 };
-UserTaskList.displayName = 'UserTaskList';
+WorkBatchList.displayName = 'WorkBatchList';
 
 export default withEnvironmentInQueryString(
-  connect(mapStateToProps, mapDispatchToProps)(UserTaskList)
+  connect(mapStateToProps, mapDispatchToProps)(WorkBatchList)
 );

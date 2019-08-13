@@ -18,7 +18,7 @@ import localStorage from 'app/utils/localStorage';
 import NavTabs from 'app/components/navTabs';
 import { t } from 'app/locale';
 import mentionsStyle from 'app/../styles/mentions-styles';
-import UserTaskStore from 'app/stores/userTaskStore';
+import WorkBatchStore from 'app/stores/workBatchStore';
 
 const localStorageKey = 'noteinput:latest';
 
@@ -170,13 +170,13 @@ const NoteInput = createReactClass({
       loading: false,
       mentions: [],
     });
-    UserTaskStore.addActivity(data);
+    WorkBatchStore.addActivity(data);
     this.finish();
     IndicatorStore.remove(loadingIndicator);
 
     return;
 
-    this.api.request('/user-tasks/' + group.id + '/comments/', {
+    this.api.request('/work-batches/' + group.id + '/comments/', {
       method: 'POST',
       data: {
         text: this.cleanMarkdown(this.state.value),
