@@ -2,11 +2,13 @@ CLIMS uses the Camunda Workflow Engine under the hood, which in turn implements 
 
 Here we describe how core Camunda concepts have been adapted for use in CLIMS.
 
-__Process__ The entire workflow a sample might go through, for example, "DNA Sequencing" or "Reception QC". It is a directed acyclic graph comprised of activities and sub-processes.
+__Process__ The entire workflow a sample might go through, for example, "DNA Sequencing" or "Reception QC". It is a directed acyclic graph comprised of activities.
 
-__Activity__ Also called a _step_, the smallest unit of work that a sample undergoes, for example, "Assess Sample Quality". An Activity can be automated or require human intervention.
+__Activity__ A Task or a sub-process.
 
-__User Task__ An Activity that requires human intervention.
+__Task__ Also called a _step_, the smallest unit of work that a sample undergoes, for example, "Assess Sample Quality". A Task can be automated or require human intervention. More information about task types can be found [here](https://docs.camunda.org/manual/7.4/reference/bpmn20/tasks/).
+
+__User Task__ A Task that requires human intervention.
 
 __Process Instance__ A specific instance of a Process, as applied to a sample. When a sample is assigned to a process, an instance is created for that process and the sub-processes/ activities ready for execution. The relationship between a sample and Process Instance is one-to-many.
 
