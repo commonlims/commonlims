@@ -749,6 +749,7 @@ function routes() {
           <IndexRoute component={errorHandler(WorkBatchList)} />
 
           <Route path="tasks/" component={errorHandler(WorkBatchList)} />
+          <Route path="work-batches/" component={errorHandler(WorkBatchList)} />
           <Route path="samples/" component={errorHandler(SamplesContainer)} />
 
           <Route

@@ -1,18 +1,18 @@
 import $ from 'jquery';
-import { ThemeProvider } from 'emotion-theming';
-import { isEqual } from 'lodash';
-import { withRouter, browserHistory } from 'react-router';
+import {ThemeProvider} from 'emotion-theming';
+import {isEqual} from 'lodash';
+import {withRouter, browserHistory} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
-import styled, { css, cx } from 'react-emotion';
+import styled, {css, cx} from 'react-emotion';
 import queryString from 'query-string';
 
-import { extractSelectionParameters } from 'app/components/organizations/globalSelectionHeader/utils';
-import { hideSidebar, showSidebar } from 'app/actionCreators/preferences';
-import { load as loadIncidents } from 'app/actionCreators/incidents';
-import { t } from 'app/locale';
+import {extractSelectionParameters} from 'app/components/organizations/globalSelectionHeader/utils';
+import {hideSidebar, showSidebar} from 'app/actionCreators/preferences';
+import {load as loadIncidents} from 'app/actionCreators/incidents';
+import {t} from 'app/locale';
 import ConfigStore from 'app/stores/configStore';
 import Feature from 'app/components/acl/feature';
 import InlineSvg from 'app/components/inlineSvg';
@@ -53,7 +53,7 @@ class Sidebar extends React.Component {
   }
 
   componentDidMount() {
-    let { router } = this.props;
+    let {router} = this.props;
     document.body.classList.add('body-sidebar');
     document.addEventListener('click', this.documentClickHandler);
 
@@ -72,7 +72,7 @@ class Sidebar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { collapsed, location } = this.props;
+    let {collapsed, location} = this.props;
     let nextLocation = nextProps.location;
 
     // Close active panel if we navigated anywhere
@@ -87,7 +87,7 @@ class Sidebar extends React.Component {
 
   // Sidebar doesn't use children, so don't use it to compare
   // Also ignore location, will re-render when routes change (instead of query params)
-  shouldComponentUpdate({ children, location, ...nextPropsToCompare }, nextState) {
+  shouldComponentUpdate({children, location, ...nextPropsToCompare}, nextState) {
     const {
       children: _children, // eslint-disable-line no-unused-vars
       location: _location, // eslint-disable-line no-unused-vars
@@ -124,7 +124,7 @@ class Sidebar extends React.Component {
   }
 
   toggleSidebar = () => {
-    let { collapsed } = this.props;
+    let {collapsed} = this.props;
 
     if (!collapsed) {
       hideSidebar();
@@ -135,7 +135,7 @@ class Sidebar extends React.Component {
 
   hashChangeHandler = () => {
     if (window.location.hash == '#welcome') {
-      this.setState({ showTodos: true });
+      this.setState({showTodos: true});
     }
   };
 
@@ -177,7 +177,7 @@ class Sidebar extends React.Component {
       }
 
       evt.preventDefault();
-      browserHistory.push({ pathname, query });
+      browserHistory.push({pathname, query});
     }
 
     this.hidePanel();
@@ -204,8 +204,8 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    let { organization, collapsed } = this.props;
-    let { currentPanel, showPanel, horizontal } = this.state;
+    let {organization, collapsed} = this.props;
+    let {currentPanel, showPanel, horizontal} = this.state;
     let config = ConfigStore.getConfig();
     let user = ConfigStore.get('user');
     let hasPanel = !!currentPanel;
@@ -240,8 +240,16 @@ class Sidebar extends React.Component {
                   index
                   onClick={this.hidePanel}
                   icon={<InlineSvg src="icon-projects" />}
-                  label={t('Tasks')}
+                  label={t('Available Work')}
                   to={`/${organization.slug}/tasks/`}
+                />
+                <SidebarItem
+                  {...sidebarItemProps}
+                  index
+                  onClick={this.hidePanel}
+                  icon={<InlineSvg src="icon-projects" />}
+                  label={t('Work in Progress')}
+                  to={`/${organization.slug}/work-batches/`}
                 />
                 <SidebarItem
                   {...sidebarItemProps}
@@ -482,7 +490,7 @@ const SidebarContainer = withRouter(
   })
 );
 
-export { Sidebar };
+export {Sidebar};
 export default withLatestContext(SidebarContainer);
 
 const responsiveFlex = css`
@@ -541,7 +549,7 @@ const ExpandedIcon = css`
 const CollapsedIcon = css`
   transform: rotate(180deg);
 `;
-const StyledInlineSvg = styled(({ className, collapsed, ...props }) => (
+const StyledInlineSvg = styled(({className, collapsed, ...props}) => (
   <InlineSvg
     className={cx(className, ExpandedIcon, collapsed && CollapsedIcon)}
     {...props}
