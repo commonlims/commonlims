@@ -1,18 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Flex } from 'grid-emotion';
+import {Flex} from 'grid-emotion';
 
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
 import FileSize from 'app/components/fileSize';
-import LoadingError from 'app/components/loadingError';
-import LoadingIndicator from 'app/components/loadingIndicator';
 import IndicatorStore from 'app/stores/indicatorStore';
 import Pagination from 'app/components/pagination';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import { t } from 'app/locale';
-import { Panel, PanelHeader, PanelBody, PanelItem } from 'app/components/panels';
-import EmptyStateWarning from 'app/components/emptyStateWarning';
+import {t} from 'app/locale';
+import {Panel, PanelHeader, PanelBody, PanelItem} from 'app/components/panels';
 import withOrganization from 'app/utils/withOrganization';
 import withApi from 'app/utils/withApi';
 
@@ -86,12 +83,14 @@ class WorkBatchDetailsFiles extends React.Component {
                   <Flex
                     flex="5"
                     pr={2}
-                    style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                    style={{wordWrap: 'break-word', wordBreak: 'break-all'}}
                   >
                     <strong>{file.name || '(empty)'}</strong>
                   </Flex>
                   <Flex flex="4">
-                    {file.headers['Description'] || <span className="text-light">{t('None')}</span>}
+                    {file.headers.Description || (
+                      <span className="text-light">{t('None')}</span>
+                    )}
                   </Flex>
                   <Flex flex="3" justify="space-between">
                     <FileSize bytes={file.size} />
@@ -108,17 +107,17 @@ class WorkBatchDetailsFiles extends React.Component {
                           <span className="icon icon-open" />
                         </a>
                       ) : (
-                          <Tooltip
-                            title={t(
-                              'You do not have the required permission to download this artifact.'
-                            )}
-                          >
-                            <div className="btn btn-sm btn-default disabled">
-                              <span className="icon icon-open" />
-                            </div>
-                          </Tooltip>
-                        )}
-                      <div style={{ marginLeft: 5 }}>
+                        <Tooltip
+                          title={t(
+                            'You do not have the required permission to download this artifact.'
+                          )}
+                        >
+                          <div className="btn btn-sm btn-default disabled">
+                            <span className="icon icon-open" />
+                          </div>
+                        </Tooltip>
+                      )}
+                      <div style={{marginLeft: 5}}>
                         <LinkWithConfirmation
                           className="btn btn-sm btn-default"
                           title={t('Delete artifact')}

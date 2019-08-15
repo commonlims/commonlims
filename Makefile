@@ -17,12 +17,12 @@ test: lint test-js test-python test-cli
 build: locale
 
 drop-db:
-	@echo "--> Dropping existing 'sentry' database"
-	dropdb sentry || true
+	@echo "--> Dropping existing 'clims' database"
+	dropdb clims || true
 
 create-db:
-	@echo "--> Creating 'sentry' database"
-	createdb -E utf-8 sentry
+	@echo "--> Creating 'clims' database"
+	createdb -E utf-8 clims
 	@echo "--> Make sure we have user called 'postgres'"
 	-psql -d postgres -c "CREATE ROLE postgres WITH LOGIN"
 	-psql -d postgres -c "ALTER ROLE postgres WITH SUPERUSER;"
@@ -86,7 +86,7 @@ install-yarn-pkgs:
 
 install-sentry-dev:
 	@echo "--> Installing Sentry (for development)"
-	$(PIP) install -e ".[dev,tests,optional]"
+	NODE_ENV=development $(PIP) install -e ".[dev,tests,optional]"
 
 build-js-po: node-version-check
 	mkdir -p build
