@@ -40,3 +40,26 @@ class OrganizationTagKeyValuesEndpoint(OrganizationEventsEndpointBase):
             paginator=paginator,
             on_results=lambda results: serialize(results, request.user),
         )
+
+# TODO: Remove WorkBatch from name!
+
+
+class OrganizationWorkBatchPropertiesKeyValuesEndpoint(OrganizationEventsEndpointBase):
+
+    def get(self, request, organization, type_name, prop):
+        # TODO: We could implement limiting the property value further to when it was set
+        # TODO: Use the version too
+        # TODO: Distinct
+        from clims.models import PropertyInstance, PropertyType, ExtensibleType
+
+        work_batch_type = ExtensibleType.objects.get(name="WorkBatch")
+        counter = PropertyType.objects.get(name="counter", extensible_type=work_batch_type)
+        objs = PropertyInstance.objects.filter(property_type=counter, float_value=100.0)
+        data = []
+
+        # TODO: paginate
+        for obj in objs:
+            data.append({
+                "value": "{}".format(obj.value)
+            })
+        return Response(data)

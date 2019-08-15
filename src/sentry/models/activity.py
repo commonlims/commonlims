@@ -18,7 +18,7 @@ from sentry.db.models import (
 from sentry.tasks import activity
 
 
-# TODO: Since this uses the UserTask, consider moving it to clims (or move UserTask to sentry) so
+# TODO: Since this uses the WorkBatch, consider moving it to clims (or move WorkBatch to sentry) so
 # sentry doesn't require clims (clims can require sentry)
 class Activity(Model):
     __core__ = False
@@ -71,7 +71,7 @@ class Activity(Model):
     )
 
     project = FlexibleForeignKey('sentry.Project')
-    user_task = FlexibleForeignKey('clims.UserTask', null=True)
+    work_batch = FlexibleForeignKey('clims.WorkBatch', null=True)
     group = FlexibleForeignKey('sentry.Group', null=True)
     # index on (type, ident)
     type = BoundedPositiveIntegerField(choices=TYPE)
@@ -85,7 +85,7 @@ class Activity(Model):
         app_label = 'sentry'
         db_table = 'sentry_activity'
 
-    __repr__ = sane_repr('project_id', 'user_task_id', 'event_id', 'user_id', 'type', 'ident')
+    __repr__ = sane_repr('project_id', 'work_batch_id', 'event_id', 'user_id', 'type', 'ident')
 
     @staticmethod
     def get_version_ident(version):
@@ -109,18 +109,18 @@ class Activity(Model):
         if not created:
             return
 
-        # HACK: support UserTask.num_comments
+        # HACK: support WorkBatch.num_comments
         # TODO: turn back on
         # if self.type == Activity.NOTE:
-        #     self.user_task.update(num_comments=F('num_comments') + 1)
+        #     self.work_batch.update(num_comments=F('num_comments') + 1)
 
     def delete(self, *args, **kwargs):
         super(Activity, self).delete(*args, **kwargs)
 
-        # HACK: support UserTask.num_comments
+        # HACK: support WorkBatch.num_comments
         # TODO: turn back on
         # if self.type == Activity.NOTE:
-        #     self.user_task.update(num_comments=F('num_comments') - 1)
+        #     self.work_batch.update(num_comments=F('num_comments') - 1)
 
     def send_notification(self):
         activity.send_activity_notifications.delay(self.id)

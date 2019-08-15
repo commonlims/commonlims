@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
 from sentry.api.serializers import Serializer, register, serialize
-from clims.models.usertasksettings import SubtaskSettings, UserTaskSettings, UserTaskAction, UserTaskField
+from clims.models.workbatchsettings import SubtaskSettings, WorkBatchSettings, WorkBatchAction, WorkBatchField
 
 
-@register(UserTaskSettings)
-class UserTaskSettingsSerializer(Serializer):
+@register(WorkBatchSettings)
+class WorkBatchSettingsSerializer(Serializer):
     def serialize(self, obj, attrs, user):
         return {
             "handles": obj.handles,
@@ -25,8 +25,8 @@ class SubtaskSettingsSerializer(Serializer):
         }
 
 
-@register(UserTaskAction)
-class UserTaskActionSerializer(Serializer):
+@register(WorkBatchAction)
+class WorkBatchActionSerializer(Serializer):
     def serialize(self, obj, attrs, user):
         return {
             "title": obj.title,
@@ -34,8 +34,8 @@ class UserTaskActionSerializer(Serializer):
         }
 
 
-@register(UserTaskField)
-class UserTaskFieldSerializer(Serializer):
+@register(WorkBatchField)
+class WorkBatchFieldSerializer(Serializer):
     def serialize(self, obj, attrs, user):
         return {
             "title": obj.title,

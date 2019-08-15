@@ -9,7 +9,7 @@ from sentry.db.models import (
 )
 
 
-class UserTaskSubscriptionReason(object):
+class WorkBatchSubscriptionReason(object):
     implicit = -1  # not for use as a persisted field value
     committed = -2  # not for use as a persisted field value
     processing_issue = -3  # not for use as a persisted field value
@@ -52,8 +52,8 @@ def get_user_options(key, user_ids, default):
     raise NotImplementedError("Remove project relation")
 
 
-class UserTaskSubscriptionManager(BaseManager):
-    def subscribe(self, user_task, user, reason=UserTaskSubscriptionReason.unknown):
+class WorkBatchSubscriptionManager(BaseManager):
+    def subscribe(self, work_batch, user, reason=WorkBatchSubscriptionReason.unknown):
         """
         Subscribe a user to an issue, but only if the user has not explicitly
         unsubscribed.
@@ -62,26 +62,26 @@ class UserTaskSubscriptionManager(BaseManager):
             with transaction.atomic():
                 self.create(
                     user=user,
-                    user_task=user_task,
+                    work_batch=work_batch,
                     is_active=True,
                     reason=reason,
                 )
         except IntegrityError:
             pass
 
-    def subscribe_actor(self, user_task, actor, reason=UserTaskSubscriptionReason.unknown):
+    def subscribe_actor(self, work_batch, actor, reason=WorkBatchSubscriptionReason.unknown):
         from sentry.models import User, Team
 
         if isinstance(actor, User):
-            return self.subscribe(user_task, actor, reason)
+            return self.subscribe(work_batch, actor, reason)
         if isinstance(actor, Team):
             # subscribe the members of the team
             team_users_ids = list(actor.member_set.values_list('user_id', flat=True))
-            return self.bulk_subscribe(user_task, team_users_ids, reason)
+            return self.bulk_subscribe(work_batch, team_users_ids, reason)
 
         raise NotImplementedError('Unknown actor type: %r' % type(actor))
 
-    def bulk_subscribe(self, user_task, user_ids, reason=UserTaskSubscriptionReason.unknown):
+    def bulk_subscribe(self, work_batch, user_ids, reason=WorkBatchSubscriptionReason.unknown):
         """
         Subscribe a list of user ids to an issue, but only if the users are not explicitly
         unsubscribed.
@@ -92,15 +92,15 @@ class UserTaskSubscriptionManager(BaseManager):
         # concurrent subscription attempts cause integrity errors
         for i in range(4, -1, -1):  # 4 3 2 1 0
 
-            existing_subscriptions = set(UserTaskSubscription.objects.filter(
+            existing_subscriptions = set(WorkBatchSubscription.objects.filter(
                 user_id__in=user_ids,
-                user_task=user_task,
+                work_batch=work_batch,
             ).values_list('user_id', flat=True))
 
             subscriptions = [
-                UserTaskSubscription(
+                WorkBatchSubscription(
                     user_id=user_id,
-                    user_task=user_task,
+                    work_batch=work_batch,
                     is_active=True,
                     reason=reason,
                 )
@@ -116,7 +116,7 @@ class UserTaskSubscriptionManager(BaseManager):
                 if i == 0:
                     raise e
 
-    def get_participants(self, user_task):
+    def get_participants(self, work_batch):
         """
         Identify all users who are participating with a given issue.
         """
@@ -127,7 +127,7 @@ class UserTaskSubscriptionManager(BaseManager):
             user.id: user
             for user in
             User.objects.filter(
-                sentry_orgmember_set__teams=user_task.project.teams.all(),
+                sentry_orgmember_set__teams=work_batch.project.teams.all(),
                 is_active=True,
             )
         }
@@ -137,8 +137,8 @@ class UserTaskSubscriptionManager(BaseManager):
         subscriptions = {
             subscription.user_id: subscription
             for subscription in
-            UserTaskSubscription.objects.filter(
-                user_task=user_task,
+            WorkBatchSubscription.objects.filter(
+                work_batch=work_batch,
                 user_id__in=users.keys(),
             )
         }
@@ -170,31 +170,31 @@ class UserTaskSubscriptionManager(BaseManager):
             if subscription is not None:
                 results[user] = subscription.reason
             else:
-                results[user] = UserTaskSubscriptionReason.implicit
+                results[user] = WorkBatchSubscriptionReason.implicit
 
         return results
 
 
-class UserTaskSubscription(Model):
+class WorkBatchSubscription(Model):
     """
     Identifies a subscription relationship between a user and an issue.
     """
     __core__ = False
 
-    user_task = FlexibleForeignKey('clims.UserTask', related_name="subscription_set")
+    work_batch = FlexibleForeignKey('clims.WorkBatch', related_name="subscription_set")
     # namespace related_name on User since we don't own the model
     user = FlexibleForeignKey(settings.AUTH_USER_MODEL)
     is_active = models.BooleanField(default=True)
     reason = BoundedPositiveIntegerField(
-        default=UserTaskSubscriptionReason.unknown,
+        default=WorkBatchSubscriptionReason.unknown,
     )
     date_added = models.DateTimeField(default=timezone.now, null=True)
 
-    objects = UserTaskSubscriptionManager()
+    objects = WorkBatchSubscriptionManager()
 
     class Meta:
         app_label = 'clims'
-        db_table = 'clims_usertasksubscription'
-        unique_together = (('user_task', 'user'), )
+        db_table = 'clims_workbatchsubscription'
+        unique_together = (('work_batch', 'user'), )
 
-    __repr__ = sane_repr('user_task_id', 'user_id')
+    __repr__ = sane_repr('work_batch_id', 'user_id')

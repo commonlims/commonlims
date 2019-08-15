@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from sentry.api.base import DocSection
-from clims.api.bases.user_task import UserTaskBaseEndpoint
+from clims.api.bases.work_batch import WorkBatchBaseEndpoint
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework.group_notes import NoteSerializer, seperate_resolved_actors
 
@@ -18,12 +18,12 @@ from sentry.models import (
 from sentry.utils.functional import extract_lazy_object
 
 
-class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
+class WorkBatchNotesEndpoint(WorkBatchBaseEndpoint):
     doc_section = DocSection.EVENTS
 
-    def get(self, request, user_task_id):
+    def get(self, request, work_batch_id):
         notes = Activity.objects.filter(
-            user_task_id=user_task_id,
+            work_batch_id=work_batch_id,
             type=Activity.NOTE,
         ).select_related('user')
 
@@ -35,8 +35,8 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
             on_results=lambda x: serialize(x, request.user),
         )
 
-    def post(self, request, user_task_id):
-        serializer = NoteSerializer(data=request.DATA, context={'user_task': user_task_id})
+    def post(self, request, work_batch_id):
+        serializer = NoteSerializer(data=request.DATA, context={'work_batch': work_batch_id})
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -46,7 +46,7 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
         mentions = data.pop('mentions', [])
 
         if Activity.objects.filter(
-            user_task_id=user_task_id,
+            work_batch_id=work_batch_id,
             type=Activity.NOTE,
             user=request.user,
             data=data,  # TODO: Hash instead?
@@ -88,7 +88,7 @@ class UserTaskNotesEndpoint(UserTaskBaseEndpoint):
 
         # TODO: Org id!
         activity = Activity.objects.create(
-            user_task_id=user_task_id,
+            work_batch_id=work_batch_id,
             type=Activity.NOTE,
             user=extract_lazy_object(request.user),
             data=data,

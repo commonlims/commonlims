@@ -10,7 +10,7 @@ class ActivityInstance(Model):
     __core__ = True
 
     sample = FlexibleForeignKey('clims.Sample')
-    user_task = FlexibleForeignKey('clims.UserTask')
+    work_batch = FlexibleForeignKey('clims.WorkBatch', null=True)  # TODO!
 
     # Maps back to a workflow engine (e.g. Camunda)
     external_id = TextField()

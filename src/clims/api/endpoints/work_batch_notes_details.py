@@ -11,7 +11,7 @@ from sentry.api.serializers.rest_framework.group_notes import NoteSerializer
 from sentry.models import Activity
 
 
-class UserTaskNotesDetailsEndpoint(GroupEndpoint):
+class WorkBatchNotesDetailsEndpoint(GroupEndpoint):
     # We explicitly don't allow a request with an ApiKey
     # since an ApiKey is bound to the Organization, not
     # an individual. Not sure if we'd want to allow an ApiKey
