@@ -28,14 +28,27 @@ from .endpoints.plugin_views import PluginViewsEndpoint
 urlpatterns = patterns(
     # Samples: TODO: have them per organization (that is in projects that are per organization)
     # TODO: Should be items
-    url(r'^samples/$', SampleEndpoint.as_view(), name='sentry-api-0-samples'),
+    url(r'^samples/$', SampleEndpoint.as_view(), name='clims-api-0-samples'),
     url(r'^samples/(?P<sample_id>[^\/]+)/$',
         SampleDetailsEndpoint.as_view(),
-        name='sentry-api-0-sample-details'
+        name='clims-api-0-sample-details'
         ),
 
     # USER TASKS
-    # TODO: Remove orgs from all but the index one
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
+        WorkBatchEndpoint.as_view(),
+        name='clims-api-0-user-task'),
+    url(
+        r'^work-batches/(?P<work_batch_id>[^\/]+)/files/$',
+        WorkBatchFilesEndpoint.as_view(),
+        name='clims-api-0-user-task-files'
+    ),
+    url(
+        r'^work-batches/(?P<work_batch_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
+        WorkBatchFileDetailsEndpoint.as_view(),
+        name='clims-api-0-user-task-file-details'
+    ),
+
     url(r'^work-batches/(?P<user_task_id>[^\/]+)/activity/$',
         WorkBatchDetailsActivityEndpoint.as_view(),
         name='clims-api-0-work-batches-details-activity'),
@@ -63,30 +76,30 @@ urlpatterns = patterns(
         WorkBatchSettingsDetailsEndpoint.as_view(),
         name='clims-api-0-work-batch-settings-details'),
 
-    url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='sentry-api-0-sample-batches'),
+    url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='clims-api-0-sample-batches'),
 
     # Sample level workflows for this sample
     url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
         SampleWorkflowsEndpoint.as_view(),
-        name='sentry-api-0-sample-details-workflows'
+        name='clims-api-0-sample-details-workflows'
         ),
 
     # Sample level workflows for this sample
     url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
         SampleWorkflowsEndpoint.as_view(),
-        name='sentry-api-0-sample-details-workflows'
+        name='clims-api-0-sample-details-workflows'
         ),
 
     # TODO: Only use the name process, not workflows
     url(r'^samples/(?P<sample_id>[^\/]+)/processes/$',
         SampleProcessesEndpoint.as_view(),
-        name='sentry-api-0-sample-details-processes'
+        name='clims-api-0-sample-details-processes'
         ),
 
     url(
         r'^processes/(?P<organization_slug>[^\/]+)/sample-processes/$',
         SampleWorkflowsBatchEndpoint.as_view(),
-        name='sentry-api-0-sample-workflows-batch'
+        name='clims-api-0-sample-workflows-batch'
     ),
 
     # Processes and Tasks
@@ -144,6 +157,6 @@ urlpatterns = patterns(
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/(?P<plugin_id>[^\/]+)/views/$',
         PluginViewsEndpoint.as_view(),
-        name='sentry-api-0-plugin-views'
+        name='clims-api-0-plugin-views'
     ),
 )
