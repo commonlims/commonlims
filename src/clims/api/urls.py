@@ -26,6 +26,8 @@ from .endpoints.plugin_actions import PluginActionsEndpoint
 from .endpoints.plugin_views import PluginViewsEndpoint
 
 from .endpoints.workflow import WorkflowEndpoint
+from .endpoints.task import UserTaskAggregateEndpoint
+
 urlpatterns = patterns(
     # Samples: TODO: have them per organization (that is in projects that are per organization)
     # TODO: Should be items
@@ -36,6 +38,9 @@ urlpatterns = patterns(
         ),
 
     # Workflow
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/aggregate/task/$',
+        UserTaskAggregateEndpoint.as_view(),
+        name='clims-api-0-workflow-aggregate-task'),
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
