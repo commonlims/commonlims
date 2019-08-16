@@ -11,7 +11,7 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: node-version-check update-submodules install-yarn-pkgs install-sentry-dev
+develop-only: setup-camunda node-version-check update-submodules install-yarn-pkgs install-sentry-dev
 test: lint test-js test-python test-cli
 
 build: locale
@@ -54,6 +54,10 @@ setup-git:
 	pip install "pre-commit>=1.10.1,<1.11.0"
 	pre-commit install
 	@echo ""
+
+setup-camunda:
+	@echo "--> Setting up Camunda"
+	./middleware/camunda/setup.sh
 
 update-submodules:
 	@echo "--> Updating git submodules"
