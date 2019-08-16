@@ -11,37 +11,37 @@ from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.serializers import serialize
 from sentry.models import File
-from clims.models import UserTask, UserTaskFile
-from clims.api.bases.user_task import UserTaskBaseEndpoint
+from clims.models import WorkBatch, WorkBatchFile
+from clims.api.bases.work_batch import WorkBatchBaseEndpoint
 
-ERR_FILE_EXISTS = 'A file matching this name already exists for the given UserTask'
+ERR_FILE_EXISTS = 'A file matching this name already exists for the given WorkBatch'
 _filename_re = re.compile(r"[\n\t\r\f\v\\]")
 
 
-class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
-    doc_section = DocSection.USERTASK
+class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
+    doc_section = DocSection.WORKBATCH
     content_negotiation_class = ConditionalContentNegotiation
 
-    def get(self, request, user_task_id):
+    def get(self, request, work_batch_id):
         """
-        List files in a UserTask
+        List files in a WorkBatch
         ````````````````````````
 
         Example:
 
         curl --header "Authorization: Bearer $LIMS_TOKEN" \
-                      "http://localhost:8000/api/0/user-tasks/1/files/"
+                      "http://localhost:8000/api/0/work-batches/1/files/"
 
-        :pparam string user_task_id: the ID of the user task
+        :pparam string work_batch_id: the ID of the user task
         :auth: required
         """
         try:
-            user_task = UserTask.objects.get(pk=user_task_id)
-        except UserTask.DoesNotExist:
+            work_batch = WorkBatch.objects.get(pk=work_batch_id)
+        except WorkBatch.DoesNotExist:
             raise ResourceDoesNotExist
 
-        file_list = UserTaskFile.objects.filter(
-            user_task=user_task,
+        file_list = WorkBatchFile.objects.filter(
+            work_batch=work_batch,
         ).select_related('file', 'dist').order_by('name')
 
         return self.paginate(
@@ -52,12 +52,12 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
             on_results=lambda x: serialize(x, request.user),
         )
 
-    def post(self, request, user_task_id):
+    def post(self, request, work_batch_id):
         """
-        Upload a new file related to a UserTask
+        Upload a new file related to a WorkBatch
         ``````````````````````````````````````
 
-        Upload a new file for the UserTask.
+        Upload a new file for the WorkBatch.
 
         Unlike other API requests, files must be uploaded using the
         traditional multipart/form-data content-type.
@@ -67,9 +67,9 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
         curl --header "Authorization: Bearer $LIMS_TOKEN" \
              -F "name=Makefile" \
              -F "file=@Makefile" \
-             "http://localhost:8000/api/0/user-tasks/1/files/"
+             "http://localhost:8000/api/0/work-batches/1/files/"
 
-        :pparm string user_task_id: the id of the task
+        :pparm string work_batch_id: the id of the task
         :param string name: the name (full path) of the file.
         :param file file: the multipart encoded file.
         :param string header: this parameter can be supplied multiple times
@@ -79,15 +79,15 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
         :auth: required
         """
 
-        from sentry.models.user_task import UserTask
+        from sentry.models.work_batch import WorkBatch
 
         try:
-            user_task = UserTask.objects.get(pk=int(user_task_id))
-        except UserTask.DoesNotExist:
+            work_batch = WorkBatch.objects.get(pk=int(work_batch_id))
+        except WorkBatch.DoesNotExist:
             raise ResourceDoesNotExist
 
         logger = logging.getLogger('clims.files')
-        logger.info('usertaskfile.start')
+        logger.info('workbatchfile.start')
 
         if 'file' not in request.FILES:
             return Response({'detail': 'Missing uploaded file'}, status=400)
@@ -127,7 +127,7 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
 
         file = File.objects.create(
             name=name,
-            type='user_task.file',
+            type='work_batch.file',
             headers=headers,
         )
         file.putfile(fileobj, logger=logger)
@@ -135,14 +135,14 @@ class UserTaskFilesEndpoint(UserTaskBaseEndpoint):
         try:
             with transaction.atomic():
                 # TODO: Remove the organization id from the user task file
-                user_task_file = UserTaskFile.objects.create(
-                    organization_id=user_task.organization_id,
+                work_batch_file = WorkBatchFile.objects.create(
+                    organization_id=work_batch.organization_id,
                     file=file,
                     name=full_name,
-                    user_task_id=user_task.id
+                    work_batch_id=work_batch.id
                 )
         except IOError:
             file.delete()
             return Response({'detail': ERR_FILE_EXISTS}, status=409)
 
-        return Response(serialize(user_task_file, request.user), status=201)
+        return Response(serialize(work_batch_file, request.user), status=201)

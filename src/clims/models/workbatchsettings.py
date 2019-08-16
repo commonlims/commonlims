@@ -1,14 +1,14 @@
 from __future__ import absolute_import
 
-# NOTE: UserTaskSettings and related objects are not Django models. They are created when the plugin
+# NOTE: WorkBatchSettings and related objects are not Django models. They are created when the plugin
 # is registered and possibly cached in redis.
 
 
-class UserTaskSettings(object):
+class WorkBatchSettings(object):
     """Defines the settings for a user task in concrete terms that can be used by
-    a UserTask view
+    a WorkBatch view
 
-    A UserTask contains 0..n sub user tasks, which can dependencies on each other (DAG).
+    A WorkBatch contains 0..n sub user tasks, which can dependencies on each other (DAG).
 
     Each sub user task can have 0..n fields which might need to be filled. They can also have
     actions.
@@ -16,7 +16,7 @@ class UserTaskSettings(object):
     All fields and actions have an identifier for where they should be positioned in the UI
     (e.g. in a tab with the title `tab1`)
 
-    The UserTaskSettingsBuilder can be used to create UserTaskSettings simply and readably.
+    The WorkBatchSettingsBuilder can be used to create WorkBatchSettings simply and readably.
     """
 
     def __init__(self):
@@ -24,7 +24,7 @@ class UserTaskSettings(object):
         self.handles = list()
 
 
-class UserTaskSettingsBuilder(object):
+class WorkBatchSettingsBuilder(object):
     """
     Defines a user task using the basic UI and validation provided by the Common LIMS framework.
     """
@@ -62,15 +62,15 @@ class UserTaskSettingsBuilder(object):
     def handles(self):
         """Override this method with a list of workflow user tasks keys that this should handle.
 
-        One UserTaskSetting can be set up to handle several different kinds of UserTasks, but every
+        One WorkBatchSetting can be set up to handle several different kinds of WorkBatchs, but every
         user task in a workflow must have only one such class.
 
         Example:
             return ["clims_snpseq.core.workflows.reception_qc:FragmentAnalyzerDNA",
                     "clims_snpseq.core.workflows.reception_qc:FragmentAnalyzerRNA"]
 
-            This would handle the UserTask FragmentAnalyzerDNA and ...RNA in that process, so
-            fetching /api/0/user-task-settings/snpseq/clims_snpseq.core.workflows.reception_qc:FragmentAnalyzer[DNA|RNA]
+            This would handle the WorkBatch FragmentAnalyzerDNA and ...RNA in that process, so
+            fetching /api/0/workbatch-settings/snpseq/clims_snpseq.core.workflows.reception_qc:FragmentAnalyzer[DNA|RNA]
             would both return this class. However, if there would be another class also specifying that it handles
             clims_snpseq...:FragmentAnalyzerDNA, that would raise an error on startup.
         """
@@ -78,7 +78,7 @@ class UserTaskSettingsBuilder(object):
 
     def _build_settings(self):
         """Builds a single settings object"""
-        ret = UserTaskSettings()
+        ret = WorkBatchSettings()
         import inspect
         custom = inspect.getmembers(self, predicate=inspect.ismethod)
         custom = [method for name, method in custom if name.startswith("custom_")]
@@ -103,14 +103,14 @@ class UserTaskSettingsBuilder(object):
         return self._settings
 
 
-class UserTaskAction(object):
+class WorkBatchAction(object):
     def __init__(self, title, description, order=None):
         self.title = title
         self.description = description
         self.order = order
 
 
-class UserTaskField(object):
+class WorkBatchField(object):
     def __init__(self, field_name, title, description=None,
                  required=False, details=False, order=None):
         self.field_name = field_name
@@ -156,9 +156,9 @@ class SubtaskSettingsBuilder(object):
         if not action_or_field.order:
             action_or_field.order = self._append_order
         # self.settings.actions_and_fields.append(action_or_field)
-        if isinstance(action_or_field, UserTaskAction):
+        if isinstance(action_or_field, WorkBatchAction):
             self.settings.actions.append(action_or_field)
-        elif isinstance(action_or_field, UserTaskField):
+        elif isinstance(action_or_field, WorkBatchField):
             self.settings.fields.append(action_or_field)
         else:
             raise TypeError("Expecting either a field or an action")
@@ -167,12 +167,12 @@ class SubtaskSettingsBuilder(object):
 
     def action(self, *params, **kwargs):
         # Convenience function for a more readable configuration.
-        # TODO: add params and kwargs like in UserTaskAction so that the user will see
+        # TODO: add params and kwargs like in WorkBatchAction so that the user will see
         # hints in an IDE (the same for field())
-        action = UserTaskAction(*params, **kwargs)
+        action = WorkBatchAction(*params, **kwargs)
         self.append(action)
 
     def field(self, *params, **kwargs):
         # Convenience function for a more readable configuration
-        field = UserTaskField(*params, **kwargs)
+        field = WorkBatchField(*params, **kwargs)
         self.append(field)

@@ -57,9 +57,10 @@ def create_default_project(id, name, slug, verbosity=2, **kwargs):
     except IndexError:
         user = None
 
+    # The default organization created at startup is called 'lab'.
     org, _ = Organization.objects.get_or_create(
-        slug='sentry', defaults={
-            'name': 'Sentry',
+        slug='lab', defaults={
+            'name': 'lab',
         }
     )
 

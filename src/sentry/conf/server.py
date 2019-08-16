@@ -101,7 +101,7 @@ sys.path.insert(0, os.path.normpath(os.path.join(PROJECT_ROOT, os.pardir)))
 DATABASES = {
     'default': {
         'ENGINE': 'sentry.db.postgres',
-        'NAME': 'sentry',
+        'NAME': 'clims',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',
@@ -1463,3 +1463,5 @@ INVALID_EMAIL_ADDRESS_PATTERN = re.compile(r'\@qq\.com$', re.I)
 SENTRY_USER_PERMISSIONS = (
     'broadcasts.admin',
 )
+
+CAMUNDA_API_URL = "http://localhost:8080/engine-rest"

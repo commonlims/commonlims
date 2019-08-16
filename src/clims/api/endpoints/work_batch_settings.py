@@ -8,17 +8,17 @@ from sentry.api.serializers import serialize
 from sentry.api.exceptions import ResourceDoesNotExist
 
 
-class UserTaskSettingsEndpoint(OrganizationEndpoint):
+class WorkBatchSettingsEndpoint(OrganizationEndpoint):
     doc_section = DocSection.ORGANIZATIONS
 
     def get(self, request, organization):
-        ret = plugins.all_user_tasks()
+        ret = plugins.all_work_batches()
         return Response(serialize(ret))
 
 
-class UserTaskSettingsDetailsEndpoint(OrganizationEndpoint):
-    def get(self, request, organization, user_task_type):
-        if user_task_type not in plugins.handlers_mapped_by_user_task_type:
+class WorkBatchSettingsDetailsEndpoint(OrganizationEndpoint):
+    def get(self, request, organization, work_batch_type):
+        if work_batch_type not in plugins.handlers_mapped_by_work_batch_type:
             raise ResourceDoesNotExist()
-        ret = plugins.handlers_mapped_by_user_task_type[user_task_type]
+        ret = plugins.handlers_mapped_by_work_batch_type[work_batch_type]
         return Response(serialize(ret))

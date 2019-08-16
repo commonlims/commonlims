@@ -16,14 +16,14 @@ import inspect
 
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
-from clims.models.usertasksettings import UserTaskSettingsBuilder
+from clims.models.workbatchsettings import WorkBatchSettingsBuilder
 
 
 class PluginManager(InstanceManager):
     def __init__(self, class_list=None, instances=True):
         super(PluginManager, self).__init__(class_list, instances)
-        self.user_tasks = list()
-        self.handlers_mapped_by_user_task_type = dict()  # TODO: clean up names!
+        self.work_batches = list()
+        self.handlers_mapped_by_work_batch_type = dict()  # TODO: clean up names!
 
     def __iter__(self):
         return iter(self.all())
@@ -45,7 +45,7 @@ class PluginManager(InstanceManager):
                 continue
             yield plugin
 
-    def _register_user_tasks(self, class_path):
+    def _register_work_batches(self, class_path):
         # TODO: Not caching this load for now for simplicity, fix that in the child class
         # TODO: Don't do this with string parsing! rather similar to o.__module__.__module__
         # TODO: This is a sketch. We need to (for example) ensure that user tasks are reloaded
@@ -56,7 +56,7 @@ class PluginManager(InstanceManager):
             prefix = ".".join(class_path.split(".")[0:-2])
             if not prefix:
                 return
-            root_module = prefix + ".user_tasks"
+            root_module = prefix + ".work_batches"
 
             try:
                 parent_mod = importlib.import_module(root_module)
@@ -67,33 +67,33 @@ class PluginManager(InstanceManager):
                     parent_mod.__path__, root_module + "."):
                 child_mod = importlib.import_module(child_mod_name)
                 for _name, cls in inspect.getmembers(child_mod, inspect.isclass):
-                    if (issubclass(cls, UserTaskSettingsBuilder)
-                            and cls != UserTaskSettingsBuilder):
+                    if (issubclass(cls, WorkBatchSettingsBuilder)
+                            and cls != WorkBatchSettingsBuilder):
                         yield cls()
 
         for builder in builders():
             # TODO: Handler might be a better name than settings!
             settings = builder.get_settings()
-            self.user_tasks.append(settings)
+            self.work_batches.append(settings)
             for handles in settings.handles:
-                if handles in self.handlers_mapped_by_user_task_type:
-                    raise UserTaskRegistrationException(
-                        "UserTask '{}' already has a handler".format(handles))
-                self.handlers_mapped_by_user_task_type[handles] = settings
+                if handles in self.handlers_mapped_by_work_batch_type:
+                    raise WorkBatchRegistrationException(
+                        "WorkBatch '{}' already has a handler".format(handles))
+                self.handlers_mapped_by_work_batch_type[handles] = settings
 
-    def all_user_tasks(self):
-        return self.user_tasks
+    def all_work_batches(self):
+        return self.work_batches
 
     def add(self, class_path):
         super(PluginManager, self).add(class_path)
 
-        self._register_user_tasks(class_path)
+        self._register_work_batches(class_path)
 
         # import pkgutil
         # for mod in pkgutil.walk_packages():
         #    print(mod)
 
-        # Walk the plugin and check if it implements UserTaskSettings
+        # Walk the plugin and check if it implements WorkBatchSettings
 
         # def import_submodules(context, root_module, path):
         # for loader, module_name, is_pkg in pkgutil.walk_packages(path, root_module + '.'):
@@ -165,5 +165,5 @@ class PluginManager(InstanceManager):
         return cls
 
 
-class UserTaskRegistrationException(Exception):
+class WorkBatchRegistrationException(Exception):
     pass

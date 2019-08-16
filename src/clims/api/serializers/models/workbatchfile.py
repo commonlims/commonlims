@@ -3,12 +3,12 @@ from __future__ import absolute_import
 import six
 
 from sentry.api.serializers import Serializer, register
-from clims.models import UserTaskFile
+from clims.models import WorkBatchFile
 
 
-@register(UserTaskFile)
-class UserTaskFileSerializer(Serializer):
-    # TODO Change this to use django seralizer. See UserTaskSerializer. /JD 2019-05-29
+@register(WorkBatchFile)
+class WorkBatchFileSerializer(Serializer):
+    # TODO Change this to use django seralizer. See WorkBatchSerializer. /JD 2019-05-29
     def serialize(self, obj, attrs, user):
         return {
             'id': six.text_type(obj.id),

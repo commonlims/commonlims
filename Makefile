@@ -11,18 +11,18 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: node-version-check update-submodules install-yarn-pkgs install-sentry-dev
+develop-only: setup-camunda node-version-check update-submodules install-yarn-pkgs install-sentry-dev
 test: lint test-js test-python test-cli
 
 build: locale
 
 drop-db:
-	@echo "--> Dropping existing 'sentry' database"
-	dropdb sentry || true
+	@echo "--> Dropping existing 'clims' database"
+	dropdb clims || true
 
 create-db:
-	@echo "--> Creating 'sentry' database"
-	createdb -E utf-8 sentry
+	@echo "--> Creating 'clims' database"
+	createdb -E utf-8 clims
 	@echo "--> Make sure we have user called 'postgres'"
 	-psql -d postgres -c "CREATE ROLE postgres WITH LOGIN"
 	-psql -d postgres -c "ALTER ROLE postgres WITH SUPERUSER;"
@@ -55,6 +55,10 @@ setup-git:
 	pre-commit install
 	@echo ""
 
+setup-camunda:
+	@echo "--> Setting up Camunda"
+	./middleware/camunda/setup.sh
+
 update-submodules:
 	@echo "--> Updating git submodules"
 	git submodule init
@@ -86,7 +90,7 @@ install-yarn-pkgs:
 
 install-sentry-dev:
 	@echo "--> Installing Sentry (for development)"
-	$(PIP) install -e ".[dev,tests,optional]"
+	NODE_ENV=development $(PIP) install -e ".[dev,tests,optional]"
 
 build-js-po: node-version-check
 	mkdir -p build

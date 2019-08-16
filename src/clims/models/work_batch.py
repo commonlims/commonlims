@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-class UserTaskStatus(object):
+class WorkBatchStatus(object):
     UNRESOLVED = 0
     RESOLVED = 1
     IGNORED = 2
@@ -14,7 +14,7 @@ class UserTaskStatus(object):
     DELETION_IN_PROGRESS = 4
 
 
-class UserTask(Model):
+class WorkBatch(Model):
     """
     Represents a task that needs to be fulfilled by a user. May involve several steps
     and views to be fully processed.
@@ -35,13 +35,13 @@ class UserTask(Model):
     status = BoundedPositiveIntegerField(
         default=0,
         choices=(
-            (UserTaskStatus.UNRESOLVED, _('Unresolved')),
-            (UserTaskStatus.RESOLVED, _('Resolved')),
-            (UserTaskStatus.IGNORED, _('Ignored')),
+            (WorkBatchStatus.UNRESOLVED, _('Unresolved')),
+            (WorkBatchStatus.RESOLVED, _('Resolved')),
+            (WorkBatchStatus.IGNORED, _('Ignored')),
         ),
         db_index=True
     )
 
     class Meta:
         app_label = 'clims'
-        db_table = 'clims_usertask'
+        db_table = 'clims_workbatch'

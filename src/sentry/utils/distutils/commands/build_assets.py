@@ -19,8 +19,8 @@ class BuildAssetsCommand(BaseBuildCommand):
             'Relative path for JSON manifest. Defaults to {dist_name}/assets.json'
         ),
         (
-            'inplace', 'i', "ignore build-lib and put compiled javascript files into the source " +
-            "directory alongside your pure Python modules"
+            'inplace', 'i', "ignore build-lib and put compiled javascript files into the source "
+            + "directory alongside your pure Python modules"
         ),
         (
             'force', 'f', "Force rebuilding of static content. Defaults to rebuilding on version "
@@ -130,12 +130,21 @@ class BuildAssetsCommand(BaseBuildCommand):
         ))
 
     def _build_static(self):
-        # By setting NODE_ENV=production, a few things happen
-        #   * React optimizes out certain code paths
-        #   * Webpack will add version strings to built/referenced assets
         env = dict(os.environ)
+        node_env = env.get('NODE_ENV')
+        if node_env == 'development':
+            # If in development mode, we rely on the Makefile building the assets so we don't
+            # do it twice.
+            return
+
         env['SENTRY_STATIC_DIST_PATH'] = self.sentry_static_dist_path
-        env['NODE_ENV'] = 'production'
+
+        if node_env is None:
+            # By setting NODE_ENV=production, a few things happen
+            #   * React optimizes out certain code paths
+            #   * Webpack will add version strings to built/referenced assets
+            env['NODE_ENV'] = 'production'
+
         self._run_command(['node_modules/.bin/webpack', '--bail'], env=env)
 
     def _write_version_file(self, version_info):
