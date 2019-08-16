@@ -44,7 +44,7 @@ psql -d clims -c "ALTER ROLE camunda WITH LOGIN ENCRYPTED PASSWORD '$random_pass
 
 echo "Overwriting config files..."
 cp -f ./server.xml ~/.camunda/server/apache-tomcat-9.0.19/conf/server.xml
-perl -pi -e "s#{{ postgres_password }}#$random_pass#g" ~/.camunda/server/apache-tomcat-9.0.19/conf/server.xml
+perl -pi -e "s#\{\{ postgres_password \}\}#$random_pass#g" ~/.camunda/server/apache-tomcat-9.0.19/conf/server.xml
 
 echo 'Server is ready.'
 echo '- Startup: ~/.camunda/server/apache-tomcat-9.0.19/bin/startup.sh'
