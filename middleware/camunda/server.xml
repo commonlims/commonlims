@@ -62,7 +62,7 @@
               url="jdbc:postgresql:clims"
               defaultTransactionIsolation="READ_COMMITTED"
               username="camunda"
-              password="changeit"
+              password="{{ postgres_password }}"
               maxActive="20"
               minIdle="5"
               maxIdle="20" />
