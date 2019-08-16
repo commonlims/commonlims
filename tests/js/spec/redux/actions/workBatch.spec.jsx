@@ -68,7 +68,7 @@ describe('workBatch redux actions', function() {
       const workBatches = [mockWorkBatch];
       const store = mockStore({workBatches: []});
 
-      moxios.stubRequest('/api/0/organizations/sentry/work-batches/', {
+      moxios.stubRequest('/api/0/organizations/lab/work-batches/', {
         status: 200,
         responseText: workBatches,
       });
@@ -81,7 +81,7 @@ describe('workBatch redux actions', function() {
       return store.dispatch(workBatchesGet()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         const request = moxios.requests.mostRecent();
-        expect(request.url).toBe('/api/0/organizations/sentry/work-batches/');
+        expect(request.url).toBe('/api/0/organizations/lab/work-batches/');
       });
     });
   });

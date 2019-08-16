@@ -27,7 +27,7 @@ export const tasksGet = () => dispatch => {
   // TODO: create a new API client to replace api.jsx
   // and use axios instead of jquery there
   return axios
-    .get('/api/0/organizations/sentry/tasks/')
+    .get('/api/0/organizations/lab/workflow/aggregate/task/')
     .then(res => dispatch(tasksGetSuccess(res.data)))
     .catch(err => dispatch(tasksGetFailure(err)));
 };

@@ -60,7 +60,7 @@ describe('task redux actions', function() {
       const tasks = [mockTask];
       const store = mockStore({tasks: []});
 
-      moxios.stubRequest('/api/0/organizations/sentry/tasks/', {
+      moxios.stubRequest('/api/0/organizations/lab/workflow/aggregate/task/', {
         status: 200,
         responseText: tasks,
       });
@@ -73,7 +73,7 @@ describe('task redux actions', function() {
       return store.dispatch(tasksGet()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         const request = moxios.requests.mostRecent();
-        expect(request.url).toBe('/api/0/organizations/sentry/tasks/');
+        expect(request.url).toBe('/api/0/organizations/lab/workflow/aggregate/task/');
       });
     });
   });
