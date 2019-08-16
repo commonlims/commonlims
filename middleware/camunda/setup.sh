@@ -19,6 +19,14 @@ else
     echo "Camunda has already been installed"
 fi
 
+if [ ! -d ~/.camunda/modeler/camunda-modeler-3.2.3-linux-x64 ]; then
+    echo "Installing modeler..."
+    mkdir -p ~/.camunda/modeler
+    cd ~/.camunda/modeler
+    wget -nc https://camunda.org/release/camunda-modeler/3.2.3/camunda-modeler-3.2.3-linux-x64.tar.gz
+    tar xzvf camunda-modeler-3.2.3-linux-x64.tar.gz
+fi
+
 echo "Fetching postgres driver..."
 cd ~/.camunda/server/apache-tomcat-9.0.19/lib
 wget -nc https://jdbc.postgresql.org/download/postgresql-42.2.6.jar
