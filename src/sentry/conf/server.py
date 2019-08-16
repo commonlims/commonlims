@@ -1463,3 +1463,5 @@ INVALID_EMAIL_ADDRESS_PATTERN = re.compile(r'\@qq\.com$', re.I)
 SENTRY_USER_PERMISSIONS = (
     'broadcasts.admin',
 )
+
+CAMUNDA_API_URL = "http://localhost:8080/engine-rest"
