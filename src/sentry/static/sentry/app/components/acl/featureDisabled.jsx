@@ -91,8 +91,8 @@ class FeatureDisabled extends React.Component {
           <HelpDescription>
             <p>
               {tct(
-                `Enable this feature on your sentry installation by adding the
-                  following configuration into your [configFile:sentry.conf.py].
+                `Enable this feature on your Common LIMS installation by adding the
+                  following configuration into your [configFile:clims.conf.py].
                   See [configLink:the configuration documentation] for more
                   details.`,
                 {

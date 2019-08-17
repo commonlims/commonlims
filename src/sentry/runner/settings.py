@@ -12,7 +12,7 @@ import click
 
 DEFAULT_SETTINGS_MODULE = 'sentry.conf.server'
 DEFAULT_SETTINGS_CONF = 'config.yml'
-DEFAULT_SETTINGS_OVERRIDE = 'sentry.conf.py'
+DEFAULT_SETTINGS_OVERRIDE = 'clims.conf.py'
 
 
 def generate_secret_key():
@@ -45,37 +45,32 @@ def generate_settings(dev=False):
 
 def get_sentry_conf():
     """
-    Fetch the SENTRY_CONF value, either from the click context
-    if available, or SENTRY_CONF environment variable.
+    Fetch the CLIMS_CONF value, either from the click context
+    if available, or CLIMS_CONF environment variable.
     """
     try:
         ctx = click.get_current_context()
         return ctx.obj['config']
     except (RuntimeError, KeyError, TypeError):
         try:
-            return os.environ['SENTRY_CONF']
+            return os.environ['CLIMS_CONF']
         except KeyError:
-            return '~/.sentry'
+            return '~/.clims'
 
 
 def discover_configs():
     """
     Discover the locations of three configuration components:
-     * Config directory (~/.sentry)
-     * Optional python config file (~/.sentry/sentry.conf.py)
-     * Optional yaml config (~/.sentry/config.yml)
+     * Config directory (~/.clims)
+     * Optional python config file (~/.clims/clims.conf.py)
+     * Optional yaml config (~/.clims/config.yml)
     """
     try:
-        config = os.environ['SENTRY_CONF']
+        config = os.environ['CLIMS_CONF']
     except KeyError:
-        config = '~/.sentry'
+        config = '~/.clims'
 
     config = os.path.expanduser(config)
-
-    # This is the old, now deprecated code path where SENTRY_CONF is pointed directly
-    # to a python file
-    if config.endswith(('.py', '.conf')) or os.path.isfile(config):
-        return (os.path.dirname(config), config, None, )
 
     return (
         config, os.path.join(config, DEFAULT_SETTINGS_OVERRIDE),
@@ -115,7 +110,7 @@ def configure(ctx, py, yaml, skip_service_validation=False):
     from .importer import install
 
     if yaml is None:
-        # `yaml` will be None when SENTRY_CONF is pointed
+        # `yaml` will be None when CLIMS_CONF is pointed
         # directly to a file, in which case, this file must exist
         if not os.path.exists(py):
             if ctx:
@@ -128,7 +123,7 @@ def configure(ctx, py, yaml, skip_service_validation=False):
     elif not os.path.exists(yaml) and not os.path.exists(py):
         if ctx:
             raise click.ClickException(
-                "Configuration file does not exist. Use 'sentry init' to initialize the file."
+                "Configuration file does not exist. Use 'lims init' to initialize the file."
             )
         raise ValueError("Configuration file does not exist at '%s'" % click.format_filename(yaml))
 
