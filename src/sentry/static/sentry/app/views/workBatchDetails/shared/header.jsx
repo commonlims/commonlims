@@ -2,24 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import ApiMixin from 'app/mixins/apiMixin';
-import IndicatorStore from 'app/stores/indicatorStore';
-import ListLink from 'app/components/listLink';
 import NavTabs from 'app/components/navTabs';
 import OrganizationState from 'app/mixins/organizationState';
 import {t} from 'app/locale';
 import SentryTypes from 'app/sentryTypes';
 
+import WorkBatchStore from 'app/stores/workBatchStore';
 import WorkBatchActions from './actions';
 import WorkBatchSeenBy from './seenBy';
 import AssigneeSelector from './assigneeSelector';
-import WorkBatchStore from 'app/stores/workBatchStore';
 
 const WorkBatchHeader = createReactClass({
   displayName: 'WorkBatchHeader',
 
   propTypes: {
     workBatch: PropTypes.object.isRequired,
-    params: PropTypes.object,
   },
 
   contextTypes: {
@@ -28,27 +25,6 @@ const WorkBatchHeader = createReactClass({
   },
 
   mixins: [ApiMixin, OrganizationState],
-
-  onToggleMute() {
-    const workBatch = this.props.group;
-    const org = this.context.organization;
-    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-
-    this.api.bulkUpdate(
-      {
-        orgId: org.slug,
-        itemIds: [group.id],
-        data: {
-          status: workBatch.status === 'ignored' ? 'unresolved' : 'ignored',
-        },
-      },
-      {
-        complete: () => {
-          IndicatorStore.remove(loadingIndicator);
-        },
-      }
-    );
-  },
 
   getMessage() {
     const data = this.props.workBatch;
@@ -66,7 +42,7 @@ const WorkBatchHeader = createReactClass({
   buildLinks() {
     return this.props.workBatch.tabs.map(tab => {
       return (
-        <li className={tab.active ? 'active' : ''}>
+        <li className={tab.active ? 'active' : ''} key={tab.id}>
           <a onClick={() => WorkBatchStore.activateTab(tab.id)}>{tab.title}</a>
         </li>
       );
@@ -91,10 +67,6 @@ const WorkBatchHeader = createReactClass({
       className += ' isResolved';
     }
 
-    const workBatchId = workBatch.id;
-    const orgId = this.context.organization.slug;
-
-    const baseUrl = `/${orgId}/work-batches/`;
     const userActionTitle = 'Fragment analyzer'; // TODO
 
     return (

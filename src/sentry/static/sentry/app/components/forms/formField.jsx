@@ -31,7 +31,6 @@ export default class FormField extends React.PureComponent {
 
     // the following should only be used without form context
     onChange: PropTypes.func,
-    error: PropTypes.string,
     value: PropTypes.any,
   };
 

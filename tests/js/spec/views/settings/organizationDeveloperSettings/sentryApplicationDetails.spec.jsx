@@ -1,4 +1,4 @@
-/*global global*/
+/*global global*/ // eslint-disable-line no-unused-vars
 import {observable} from 'mobx';
 import React from 'react';
 

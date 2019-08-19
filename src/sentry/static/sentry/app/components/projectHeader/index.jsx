@@ -1,21 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Link} from 'react-router';
-import styled from 'react-emotion';
 
-import SentryTypes from 'app/sentryTypes';
 import ProjectLink from 'app/components/projectLink';
-import DropdownLink from 'app/components/dropdownLink';
-import MenuItem from 'app/components/menuItem';
-import Button from 'app/components/button';
 import NavTabs from 'app/components/navTabs';
 
 import {t} from 'app/locale';
-
-import {
-  setActiveEnvironment,
-  clearActiveEnvironment,
-} from 'app/actionCreators/environments';
 
 // NOLIMS: In clims, the projects are not as central as in sentry. The user might want
 // to filter on it, but not all the time, so this header is really not a "ProjectHeader" but
@@ -24,9 +13,7 @@ class ProjectHeader extends React.Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     organization: PropTypes.object.isRequired,
-    environments: PropTypes.array.isRequired,
     activeSection: PropTypes.string,
-    activeEnvironment: SentryTypes.Environment,
   };
 
   static defaultProps = {
@@ -34,23 +21,9 @@ class ProjectHeader extends React.Component {
   };
 
   render() {
-    const {project, environments, activeEnvironment} = this.props;
+    const {project} = this.props;
     const navSection = this.props.activeSection;
     const org = this.props.organization;
-    const allEnvironmentsLabel = t('All environments');
-
-    const pagesWithEnvironments = new Set([
-      'stream',
-      'releases',
-      'dashboard',
-      'events',
-      'user-feedback',
-    ]);
-    const showEnvironmentsToggle = pagesWithEnvironments.has(navSection);
-
-    const activeEnvironmentTitle = activeEnvironment
-      ? activeEnvironment.displayName
-      : allEnvironmentsLabel;
 
     return (
       <div className="sub-header flex flex-container flex-vertically-centered">
@@ -84,10 +57,5 @@ class ProjectHeader extends React.Component {
     );
   }
 }
-
-const EnvironmentsToggle = styled('div')`
-  display: flex;
-  position: relative;
-`;
 
 export default ProjectHeader;

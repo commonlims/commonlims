@@ -4,7 +4,6 @@ import styled, {css} from 'react-emotion';
 import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
-import WorkBatchGroupTitle from 'app/components/workBatch/workBatchGroupTitle';
 // TODO: rename file
 
 /**
@@ -68,7 +67,7 @@ class ProcessHeader extends React.Component {
         {...props}
         style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
       >
-        <TaskGroupTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
+        <div>Test</div>
       </Wrapper>
     );
   }

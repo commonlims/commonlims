@@ -63,7 +63,6 @@ describe('EventsChart', function() {
   });
 
   it('has correct history entries when zooming', function() {
-    let newParams;
     const chartZoomInstance = wrapper.find('ChartZoom').instance();
 
     doZoom(wrapper, chart);
@@ -114,8 +113,6 @@ describe('EventsChart', function() {
   });
 
   it('updates url params when restoring zoom level on chart', function() {
-    let newParams;
-
     doZoom(wrapper, chart);
     // Zoom again
     mockZoomRange(1543536000000, 1543708800000);

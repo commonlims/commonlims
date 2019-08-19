@@ -11,9 +11,7 @@ import Checkbox from 'app/components/checkbox';
 import IndicatorStore from 'app/stores/indicatorStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 import SentryTypes from 'app/sentryTypes';
-import ToolbarHeader from 'app/components/toolbarHeader';
 import AssignToWorkflowButton from 'app/views/samples/assignToWorkflow';
-import WorkOnButton from 'app/views/samples/workOnButton';
 import UploadSamplesButton from 'app/views/samples/uploadSamples';
 
 const BULK_LIMIT = 1000;

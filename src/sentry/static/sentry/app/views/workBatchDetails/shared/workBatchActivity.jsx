@@ -2,25 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 
-import {
-  addErrorMessage,
-  addLoadingMessage,
-  removeIndicator,
-} from 'app/actionCreators/indicator';
 import {t, tct, tn} from 'app/locale';
-import ApiMixin from 'app/mixins/apiMixin';
 import Avatar from 'app/components/avatar';
 import CommitLink from 'app/components/commitLink';
 import ConfigStore from 'app/stores/configStore';
 import Duration from 'app/components/duration';
 import ErrorBoundary from 'app/components/errorBoundary';
-import WorkBatchStore from 'app/stores/workBatchStore';
 import MemberListStore from 'app/stores/memberListStore';
 import NoteContainer from 'app/components/activity/noteContainer';
 import NoteInput from 'app/components/activity/noteInput';
 import PullRequestLink from 'app/components/pullRequestLink';
 import TeamStore from 'app/stores/teamStore';
-import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
 class WorkBatchActivityItem extends React.Component {

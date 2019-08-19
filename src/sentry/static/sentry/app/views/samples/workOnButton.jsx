@@ -30,7 +30,7 @@ const WorkOnButton = createReactClass({
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
     router: PropTypes.shape({
-      push: PropTypes.function,
+      push: PropTypes.func,
     }),
   },
 

@@ -1,4 +1,4 @@
-/*global global*/
+/*global global*/ // eslint-disable-line no-unused-vars
 import React from 'react';
 
 import {Client} from 'app/api';

@@ -1,13 +1,9 @@
-import {Flex} from 'grid-emotion';
 import React from 'react';
-import styled from 'react-emotion';
 
 import {extractMultilineFields} from 'app/utils';
 import {t, tct, tn} from 'app/locale';
-import Platformicon from 'app/components/platformicon';
 import getDynamicText from 'app/utils/getDynamicText';
 import slugify from 'app/utils/slugify';
-import space from 'app/styles/space';
 
 // Export route to make these forms searchable by label/help
 export const route = '/settings/:orgId/:projectId/';
@@ -265,11 +261,3 @@ export const fields = {
     help: t('Outbound requests will verify TLS (sometimes known as SSL) connections'),
   },
 };
-
-const PlatformWrapper = styled(Flex)`
-  align-items: center;
-`;
-const StyledPlatformicon = styled(Platformicon)`
-  border-radius: 3px;
-  margin-right: ${space(1)};
-`;

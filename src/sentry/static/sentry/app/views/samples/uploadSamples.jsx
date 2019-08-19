@@ -7,13 +7,6 @@ import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {FormState} from 'app/components/forms';
-import WorkflowFilter from 'app/views/samples/workflowFilter';
-import ProcessTaskSettings from 'app/components/processTaskSettings';
-import ProjectsStore from 'app/stores/projectsStore';
-import OrganizationStore from 'app/stores/organizationsStore';
-import SelectedSampleStore from 'app/stores/selectedSampleStore';
-import UploadFile from 'app/components/uploadFile';
-import SampleStore from 'app/stores/sampleStore';
 
 const UploadSamplesButton = createReactClass({
   displayName: 'UploadSamplesButton',
@@ -23,12 +16,12 @@ const UploadSamplesButton = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
+    query: PropTypes.string,
   },
 
   mixins: [ApiMixin],
 
   getInitialState() {
-    const {orgId} = this.props;
     return {
       isModalOpen: false,
       formData: {
@@ -103,21 +96,19 @@ const UploadSamplesButton = createReactClass({
       // discuss if we rather want a specific batch endpoint.
       // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
       const endpoint = '/user-files/';
-      const data = new FormData();
 
       const reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
       reader.onload = function() {
-        //data.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        const data = {
+        const data2 = {
           content: btoa(reader.result),
           fileName: 'abc',
         };
 
         this.api.request(endpoint, {
           method: 'POST',
-          data,
+          data2,
           success: response => {
             this.onToggle();
             this.setState({
@@ -153,7 +144,6 @@ const UploadSamplesButton = createReactClass({
 
   render() {
     const isSaving = this.state.state === FormState.SAVING;
-    const user = {};
     return (
       <React.Fragment>
         <a

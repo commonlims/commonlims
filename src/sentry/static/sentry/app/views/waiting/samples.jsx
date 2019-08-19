@@ -655,7 +655,6 @@ const WaitingSamples = createReactClass({
 
   renderSamplesBody() {
     let body;
-    const project = this.getProject();
     if (this.state.dataLoading) {
       body = this.renderLoading();
     } else if (this.state.error) {

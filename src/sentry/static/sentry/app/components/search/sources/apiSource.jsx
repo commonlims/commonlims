@@ -174,6 +174,7 @@ class ApiSource extends React.Component {
      * `results` - Results array filtered by `this.props.query`: [searchIndex, model, type]
      */
     children: PropTypes.func.isRequired,
+    organization: PropTypes.object,
   };
 
   static defaultProps = {

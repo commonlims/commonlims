@@ -2,32 +2,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import {browserHistory} from 'react-router';
 import DocumentTitle from 'react-document-title';
-import * as Sentry from '@sentry/browser';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import WorkBatchStore from 'app/stores/workBatchStore';
-import WorkBatchSettingsStore from 'app/stores/workBatchSettingsStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SentryTypes from 'app/sentryTypes';
 import {t} from 'app/locale';
-
-import WorkBatchHeader from './header';
-import {ERROR_TYPES} from './constants';
 
 import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
 import WorkBatchDetailsActivity from 'app/views/workBatchDetails/shared/workBatchActivity';
 import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner';
 
+import WorkBatchHeader from './header';
+import {ERROR_TYPES} from './constants';
+
 const WorkBatchDetails = createReactClass({
   displayName: 'WorkBatchDetails',
 
   propTypes: {
     // Provided in the project version of group details
-    project: SentryTypes.Project,
     environment: SentryTypes.Environment,
   },
 
@@ -176,6 +172,7 @@ const WorkBatchDetails = createReactClass({
         return tab;
       }
     }
+    throw new Error('No active tab found');
   },
 
   renderTabComponent() {
@@ -188,6 +185,8 @@ const WorkBatchDetails = createReactClass({
       return <WorkBatchDetailsFiles workBatch={this.state.workBatch} />;
     } else if (tab.id == 'activity') {
       return <WorkBatchDetailsActivity workBatch={this.state.workBatch} />;
+    } else {
+      throw new Error('Unexpected tab id ' + tab.id);
     }
   },
 
@@ -255,6 +254,9 @@ const TodoItem = props => {
 TodoItem.propTypes = {
   status: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  handleTitleClick: PropTypes.func.isRequired,
+  handleManualClick: PropTypes.func.isRequired,
+  manualOverride: PropTypes.bool.isRequired,
 };
 
 export default WorkBatchDetails;

@@ -51,7 +51,6 @@ describe('Sudo Modal', function() {
     const api = new Client();
     const successCb = jest.fn();
     const errorCb = jest.fn();
-    let orgDeleteMock;
 
     // No Modal
     expect(wrapper.find('ModalDialog')).toHaveLength(0);

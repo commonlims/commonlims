@@ -30,7 +30,7 @@ class WorkBatchDetailsFiles extends React.Component {
   }
 
   getFilesEndpoint() {
-    return `/work-batches/1/files/`;
+    return '/work-batches/1/files/';
   }
 
   handleRemove(id) {

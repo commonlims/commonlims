@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import TimeSince from 'app/components/timeSince';
 import ConfigStore from 'app/stores/configStore';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
 import {t} from 'app/locale';

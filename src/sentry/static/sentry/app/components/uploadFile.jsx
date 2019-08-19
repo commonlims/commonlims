@@ -1,40 +1,26 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
 
-import Well from 'app/components/well';
 import {Panel, PanelBody, PanelHeader} from './panels';
 import {addErrorMessage, addSuccessMessage} from '../actionCreators/indicator';
 import {t} from '../locale';
 import ApiMixin from '../mixins/apiMixin';
-import Avatar from './avatar';
-import AvatarCropper from './avatarCropper';
-import Button from './button';
-import ExternalLink from './externalLink';
 import LoadingError from './loadingError';
 import LoadingIndicator from './loadingIndicator';
-import RadioGroup from '../views/settings/components/forms/controls/radioGroup';
 
 const UploadFile = createReactClass({
   displayName: 'UploadFile',
 
   propTypes: {
     endpoint: PropTypes.string.isRequired,
-    allowGravatar: PropTypes.bool,
-    allowLetter: PropTypes.bool,
-    allowUpload: PropTypes.bool,
-    type: PropTypes.oneOf(['user', 'team', 'organization', 'project']),
     model: PropTypes.shape({
       avatar: PropTypes.shape({
         avatarType: PropTypes.oneOf(['upload', 'letter_avatar', 'gravatar']),
       }),
     }),
     // Is this a chooser for a User account?
-    isUser: PropTypes.bool,
-    savedDataUrl: PropTypes.string,
     onSave: PropTypes.func,
-    disabled: PropTypes.bool,
   },
 
   mixins: [ApiMixin],
@@ -132,15 +118,6 @@ const UploadFile = createReactClass({
   },
 
   render() {
-    const {
-      allowGravatar,
-      allowUpload,
-      allowLetter,
-      savedDataUrl,
-      type,
-      isUser,
-      disabled,
-    } = this.props;
     const {hasError, model} = this.state;
 
     if (hasError) {
@@ -149,17 +126,6 @@ const UploadFile = createReactClass({
     if (!model) {
       return <LoadingIndicator />;
     }
-
-    const avatarType = 'upload';
-    const isLetter = avatarType === 'letter_avatar';
-    // let isUpload = avatarType === 'upload';
-    const isTeam = type === 'team';
-    const isOrganization = type === 'organization';
-    const isProject = type === 'project';
-    const style = {
-      position: 'absolute',
-      opacity: 0,
-    };
 
     return (
       <Panel>
@@ -172,25 +138,5 @@ const UploadFile = createReactClass({
     );
   },
 });
-
-const AvatarGroup = styled.div`
-  display: flex;
-  flex-direction: ${p => (p.inline ? 'row' : 'column')};
-`;
-
-const AvatarForm = styled('div')`
-  line-height: 1.5em;
-  padding: 1em 1.25em;
-`;
-
-const AvatarSubmit = styled('fieldset')`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1em;
-`;
-
-const AvatarUploadSection = styled('div')`
-  margin-top: 1em;
-`;
 
 export default UploadFile;

@@ -8,19 +8,15 @@ import {openModal} from 'app/actionCreators/modal';
 import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import Button from 'app/components/button';
-import DropdownLink from 'app/components/dropdownLink';
 import Feature from 'app/components/acl/feature';
 import FeatureDisabled from 'app/components/acl/featureDisabled';
-import WorkBatchActions from 'app/actions/workBatchActions';
 import OrganizationState from 'app/mixins/organizationState';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
-import IgnoreActions from 'app/components/actions/ignore';
 import IndicatorStore from 'app/stores/indicatorStore';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import MenuItem from 'app/components/menuItem';
 import ResolveActions from 'app/components/actions/resolve';
 import SentryTypes from 'app/sentryTypes';
-import {uniqueId} from 'app/utils/guid';
+import space from 'app/styles/space';
 
 class DeleteActions extends React.Component {
   static propTypes = {
@@ -195,27 +191,7 @@ const WorkBatchActionsComponent = createReactClass({
   },
 
   onDiscard() {
-    const {group} = this.props;
-    const org = this.getOrganization();
-    const id = uniqueId();
-    const loadingIndicator = IndicatorStore.add(t('Discarding event..'));
-
-    GroupActions.discard(id, group.id);
-
-    this.api.request(`/issues/${group.id}/`, {
-      method: 'PUT',
-      data: {discard: true},
-      success: response => {
-        GroupActions.discardSuccess(id, group.id, response);
-        browserHistory.push(`/${org.slug}/`);
-      },
-      error: error => {
-        GroupActions.discardError(id, group.id, error);
-      },
-      complete: () => {
-        IndicatorStore.remove(loadingIndicator);
-      },
-    });
+    throw new Error('Not implemented');
   },
 
   render() {
@@ -228,7 +204,6 @@ const WorkBatchActionsComponent = createReactClass({
     }
 
     const isResolved = group.status === 'resolved';
-    const isIgnored = group.status === 'ignored';
 
     return (
       <div className="group-actions">

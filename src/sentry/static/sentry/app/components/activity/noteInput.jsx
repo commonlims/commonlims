@@ -140,8 +140,6 @@ const NoteInput = createReactClass({
   },
 
   create() {
-    const {group} = this.props;
-
     const loadingIndicator = IndicatorStore.add(t('Posting comment..'));
     // TODO: org is needed here!
     //
@@ -288,7 +286,6 @@ const NoteInput = createReactClass({
 
   mentionableTeams() {
     // TODO: Rewrite without requiring teams
-    const {group} = this.props;
     const project = 'internal';
 
     return (ProjectsStore.getBySlug(project) || {

@@ -181,7 +181,12 @@ const GroupEventToolbar = createReactClass({
               {isOverLatencyThreshold && <span className="icon-alert" />}
             </span>
           </Tooltip>
-          <a href={jsonUrl} target="_blank" rel="noopener noreferrer" className="json-link">
+          <a
+            href={jsonUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="json-link"
+          >
             {'JSON'} (<FileSize bytes={evt.size} />)
           </a>
         </span>

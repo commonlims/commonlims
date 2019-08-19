@@ -22,7 +22,6 @@ import ProjectsStore from 'app/stores/projectsStore';
 import SentryTypes from 'app/sentryTypes';
 import TextOverflow from 'app/components/textOverflow';
 import space from 'app/styles/space';
-import TeamStore from 'app/stores/teamStore';
 
 const AssigneeSelectorComponent = createReactClass({
   displayName: 'AssigneeSelector',

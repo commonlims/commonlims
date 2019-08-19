@@ -27,7 +27,12 @@ class UserContextType extends React.Component {
         <pre>
           {user.email}
           {EMAIL_REGEX.test(user.email) && (
-            <a href={`mailto:${user.email}`} target="_blank" rel="noopener noreferrer" className="external-icon">
+            <a
+              href={`mailto:${user.email}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-icon"
+            >
               <em className="icon-envelope" />
             </a>
           )}

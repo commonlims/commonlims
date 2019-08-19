@@ -7,10 +7,8 @@ import WorkBatchDetails from 'app/views/workBatchDetails/organization/index';
 
 import ProjectGroupDetails from 'app/views/groupDetails/project/index';
 import ProjectGroupEvents from 'app/views/groupDetails/project/groupEvents';
-import ProjectGroupEventDetails from 'app/views/groupDetails/project/groupEventDetails';
 import ProjectGroupMergedView from 'app/views/groupDetails/shared/groupMerged';
 import ProjectGroupSimilarView from 'app/views/groupDetails/shared/groupSimilar';
-import ProjectGroupTagValues from 'app/views/groupDetails/project/groupTagValues';
 import ProjectGroupTags from 'app/views/groupDetails/project/groupTags';
 import ProjectGroupUserFeedback from 'app/views/groupDetails/project/groupUserFeedback';
 import HookStore from 'app/stores/hookStore';
@@ -1174,8 +1172,6 @@ function routes() {
             component={errorHandler(ProjectGroupDetails)}
             ignoreScrollBehavior
           >
-            <IndexRoute component={errorHandler(ProjectGroupEventDetails)} />
-
             <Route
               path="activity/"
               componentPromise={() =>
@@ -1183,13 +1179,8 @@ function routes() {
               component={errorHandler(LazyLoad)}
             />
 
-            <Route
-              path="events/:eventId/"
-              component={errorHandler(ProjectGroupEventDetails)}
-            />
             <Route path="events/" component={errorHandler(ProjectGroupEvents)} />
             <Route path="tags/" component={errorHandler(ProjectGroupTags)} />
-            <Route path="tags/:tagKey/" component={errorHandler(ProjectGroupTagValues)} />
             <Route path="feedback/" component={errorHandler(ProjectGroupUserFeedback)} />
             <Route path="similar/" component={errorHandler(ProjectGroupSimilarView)} />
             <Route path="merged/" component={errorHandler(ProjectGroupMergedView)} />

@@ -1,4 +1,4 @@
-/* global module */
+/* global module */ // eslint-disable-line no-unused-vars
 import '@babel/polyfill';
 import 'bootstrap/js/alert';
 import 'bootstrap/js/tab';
