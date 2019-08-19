@@ -11,12 +11,11 @@ Development happens on gitlab.org/commonlims and will be moved to github.com/com
 To set up your environment, do the following:
 - Download and install Conda from: https://conda.io/en/latest/miniconda.html
 - Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
-- Download and install Camunda from: https://camunda.com/download/
 
 Start required services:
 - postgres server (specific to your installation)
 - redis server (specific to your installation)
-- `sudo /path/to/camunda/start-camunda.sh`
+- `~/.camunda/server/apache-tomcat-[VERSION]/bin/startup.sh`
 
 You may also need to create a postgres user that matches your Unix username:
 - `sudo -i -u postgres`
