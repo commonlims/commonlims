@@ -43,12 +43,12 @@ class ProjectGeneralSettings extends AsyncView {
   }
 
   getTitle() {
-    let {projectId} = this.props.params;
+    const {projectId} = this.props.params;
     return t('%s Settings', projectId);
   }
 
   getEndpoints() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return [['data', `/projects/${orgId}/${projectId}/`]];
   }
 
@@ -57,9 +57,11 @@ class ProjectGeneralSettings extends AsyncView {
   };
 
   handleRemoveProject = () => {
-    let {orgId} = this.props.params;
-    let project = this.state.data;
-    if (!project) return;
+    const {orgId} = this.props.params;
+    const project = this.state.data;
+    if (!project) {
+      return;
+    }
 
     removeProject(this.api, orgId, project).then(() => {
       // Need to hard reload because lots of components do not listen to Projects Store
@@ -68,10 +70,14 @@ class ProjectGeneralSettings extends AsyncView {
   };
 
   handleTransferProject = () => {
-    let {orgId} = this.props.params;
-    let project = this.state.data;
-    if (!project) return;
-    if (!this._form.email) return;
+    const {orgId} = this.props.params;
+    const project = this.state.data;
+    if (!project) {
+      return;
+    }
+    if (!this._form.email) {
+      return;
+    }
 
     transferProject(this.api, orgId, project, this._form.email).then(() => {
       // Need to hard reload because lots of components do not listen to Projects Store
@@ -80,11 +86,11 @@ class ProjectGeneralSettings extends AsyncView {
   };
 
   renderRemoveProject() {
-    let project = this.state.data;
-    let isProjectAdmin = getOrganizationState(this.context.organization)
+    const project = this.state.data;
+    const isProjectAdmin = getOrganizationState(this.context.organization)
       .getAccess()
       .has('project:admin');
-    let {isInternal} = project;
+    const {isInternal} = project;
 
     return (
       <Field
@@ -137,11 +143,11 @@ class ProjectGeneralSettings extends AsyncView {
   }
 
   renderTransferProject() {
-    let project = this.state.data;
-    let isProjectAdmin = getOrganizationState(this.context.organization)
+    const project = this.state.data;
+    const isProjectAdmin = getOrganizationState(this.context.organization)
       .getAccess()
       .has('project:admin');
-    let {isInternal} = project;
+    const {isInternal} = project;
 
     return (
       <Field
@@ -219,12 +225,12 @@ class ProjectGeneralSettings extends AsyncView {
   }
 
   renderBody() {
-    let {organization} = this.context;
-    let project = this.state.data;
-    let {orgId, projectId} = this.props.params;
-    let endpoint = `/projects/${orgId}/${projectId}/`;
-    let access = new Set(organization.access);
-    let jsonFormProps = {
+    const {organization} = this.context;
+    const project = this.state.data;
+    const {orgId, projectId} = this.props.params;
+    const endpoint = `/projects/${orgId}/${projectId}/`;
+    const access = new Set(organization.access);
+    const jsonFormProps = {
       additionalFieldProps: {organization},
       features: new Set(organization.features),
       access,
@@ -336,10 +342,14 @@ class ProjectGeneralSettings extends AsyncView {
 const ProjectGeneralSettingsContainer = createReactClass({
   mixins: [Reflux.listenTo(ProjectsStore, 'onProjectsUpdate')],
   onProjectsUpdate(projects) {
-    if (!this.changedSlug) return;
-    let project = ProjectsStore.getBySlug(this.changedSlug);
+    if (!this.changedSlug) {
+      return;
+    }
+    const project = ProjectsStore.getBySlug(this.changedSlug);
 
-    if (!project) return;
+    if (!project) {
+      return;
+    }
 
     browserHistory.replace(
       recreateRoute('', {

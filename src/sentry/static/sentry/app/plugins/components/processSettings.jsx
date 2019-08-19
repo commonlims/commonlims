@@ -29,16 +29,16 @@ class ProcessSettings extends PluginComponentBase {
   }
 
   getPluginEndpoint() {
-    let org = this.props.organization;
-    let project = this.props.project;
+    const org = this.props.organization;
+    const project = this.props.project;
     return `/projects/${org.slug}/${project.slug}/plugins/${this.props.plugin.id}/`;
   }
 
   changeField(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     // upon changing a field, remove errors
-    let errors = this.state.errors;
+    const errors = this.state.errors;
     delete errors[name];
     this.setState({formData, errors});
     this.props.onChanged(formData);
@@ -47,13 +47,13 @@ class ProcessSettings extends PluginComponentBase {
   onSubmit() {
     let repo = this.state.formData.repo;
     repo = repo && parseRepo(repo);
-    let parsedFormData = {...this.state.formData, repo};
+    const parsedFormData = {...this.state.formData, repo};
     this.api.request(this.getPluginEndpoint(), {
       data: parsedFormData,
       method: 'PUT',
       success: this.onSaveSuccess.bind(this, data => {
-        let formData = {};
-        let initialData = {};
+        const formData = {};
+        const initialData = {};
         data.config.forEach(field => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
@@ -78,11 +78,11 @@ class ProcessSettings extends PluginComponentBase {
     this.api.request(this.getPluginEndpoint(), {
       success: data => {
         // TODO: get the view required through an input parameter
-        let view = data.views[this.props.viewKey];
-        let viewFields = view.fields;
+        const view = data.views[this.props.viewKey];
+        const viewFields = view.fields;
 
-        let formData = {};
-        let initialData = {};
+        const formData = {};
+        const initialData = {};
         viewFields.forEach(field => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
@@ -107,7 +107,7 @@ class ProcessSettings extends PluginComponentBase {
       return <LoadingIndicator />;
     }
 
-    let data = this.state.rawData;
+    const data = this.state.rawData;
     if (data.config_error) {
       let authUrl = data.auth_url;
       if (authUrl.indexOf('?') === -1) {

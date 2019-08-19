@@ -46,7 +46,7 @@ const getBulkConfirmMessage = (action, queryCount) => {
 
 const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
   return function(action, canBeUndone, append = '') {
-    let question = allInQuerySelected
+    const question = allInQuerySelected
       ? getBulkConfirmMessage(`${action}${append}`, queryCount)
       : tn(
           `Are you sure you want to ${action} this %s issue${append}?`,
@@ -54,7 +54,7 @@ const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
           numIssues
         );
 
-    let message =
+    const message =
       action == 'delete'
         ? tct(
             'Bulk deletion is only recommended for junk data. To clear your stream, consider resolving or ignoring. [link:When should I delete events?]',
@@ -84,8 +84,8 @@ const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
 
 const getLabel = (numIssues, allInQuerySelected) => {
   return function(action, append = '') {
-    let capitalized = capitalize(action);
-    let text = allInQuerySelected
+    const capitalized = capitalize(action);
+    const text = allInQuerySelected
       ? t(`Bulk ${action} issues`)
       : tn(
           `${capitalized} %s selected issue`,
@@ -98,7 +98,9 @@ const getLabel = (numIssues, allInQuerySelected) => {
 };
 
 const ExtraDescription = ({all, query, queryCount}) => {
-  if (!all) return null;
+  if (!all) {
+    return null;
+  }
 
   if (query) {
     return (
@@ -188,7 +190,7 @@ const StreamActions = createReactClass({
     if (this.state.allInQuerySelected) {
       selectedIds = undefined; // undefined means "all"
     } else {
-      let itemIdSet = SelectedGroupStore.getSelectedIds();
+      const itemIdSet = SelectedGroupStore.getSelectedIds();
       selectedIds = this.props.groupIds.filter(itemId => itemIdSet.has(itemId));
     }
 
@@ -204,7 +206,7 @@ const StreamActions = createReactClass({
 
   onUpdate(data) {
     this.actionSelectedGroups(itemIds => {
-      let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
       this.api.bulkUpdate(
         {
           orgId: this.props.orgId,
@@ -224,7 +226,7 @@ const StreamActions = createReactClass({
   },
 
   onDelete(event) {
-    let loadingIndicator = IndicatorStore.add(t('Removing events..'));
+    const loadingIndicator = IndicatorStore.add(t('Removing events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.bulkDelete(
@@ -245,7 +247,7 @@ const StreamActions = createReactClass({
   },
 
   onMerge(event) {
-    let loadingIndicator = IndicatorStore.add(t('Merging events..'));
+    const loadingIndicator = IndicatorStore.add(t('Merging events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.merge(
@@ -284,7 +286,7 @@ const StreamActions = createReactClass({
   },
 
   shouldConfirm(action) {
-    let selectedItems = SelectedGroupStore.getSelectedIds();
+    const selectedItems = SelectedGroupStore.getSelectedIds();
     switch (action) {
       case 'resolve':
       case 'unresolve':
@@ -302,7 +304,7 @@ const StreamActions = createReactClass({
 
   render() {
     // TODO(mitsuhiko): very unclear how to translate this
-    let {
+    const {
       allResultsVisible,
       hasReleases,
       latestRelease,
@@ -313,16 +315,16 @@ const StreamActions = createReactClass({
       realtimeActive,
       statsPeriod,
     } = this.props;
-    let issues = this.state.selectedIds;
-    let numIssues = issues.size;
-    let {allInQuerySelected, anySelected, multiSelected, pageSelected} = this.state;
-    let confirm = getConfirm(numIssues, allInQuerySelected, query, queryCount);
-    let label = getLabel(numIssues, allInQuerySelected);
+    const issues = this.state.selectedIds;
+    const numIssues = issues.size;
+    const {allInQuerySelected, anySelected, multiSelected, pageSelected} = this.state;
+    const confirm = getConfirm(numIssues, allInQuerySelected, query, queryCount);
+    const label = getLabel(numIssues, allInQuerySelected);
 
     // resolve and merge require a single project to be active
     // in an org context projectId is null when 0 or >1 projects are selected.
-    let resolveDisabled = !(anySelected && projectId);
-    let mergeDisabled = !(multiSelected && projectId);
+    const resolveDisabled = !(anySelected && projectId);
+    const mergeDisabled = !(multiSelected && projectId);
 
     return (
       <Sticky>
@@ -351,7 +353,7 @@ const StreamActions = createReactClass({
             />
             <div className="btn-group hidden-sm hidden-xs">
               <ActionLink
-                className={'btn btn-default btn-sm action-merge'}
+                className="btn btn-default btn-sm action-merge"
                 disabled={mergeDisabled}
                 onAction={this.onMerge}
                 shouldConfirm={this.shouldConfirm('merge')}
@@ -364,7 +366,7 @@ const StreamActions = createReactClass({
             </div>
             <div className="btn-group hidden-xs">
               <ActionLink
-                className={'btn btn-default btn-sm action-bookmark hidden-sm hidden-xs'}
+                className="btn btn-default btn-sm action-bookmark hidden-sm hidden-xs"
                 onAction={() => this.onUpdate({isBookmarked: true})}
                 shouldConfirm={this.shouldConfirm('bookmark')}
                 message={confirm('bookmark', false)}
@@ -385,7 +387,7 @@ const StreamActions = createReactClass({
               >
                 <MenuItem noAnchor={true}>
                   <ActionLink
-                    className={'action-merge hidden-md hidden-lg hidden-xl'}
+                    className="action-merge hidden-md hidden-lg hidden-xl"
                     disabled={mergeDisabled}
                     onAction={this.onMerge}
                     shouldConfirm={this.shouldConfirm('merge')}
@@ -396,10 +398,10 @@ const StreamActions = createReactClass({
                     {t('Merge')}
                   </ActionLink>
                 </MenuItem>
-                <MenuItem divider={true} className={'hidden-md hidden-lg hidden-xl'} />
+                <MenuItem divider={true} className="hidden-md hidden-lg hidden-xl" />
                 <MenuItem noAnchor={true}>
                   <ActionLink
-                    className={'action-bookmark hidden-md hidden-lg hidden-xl'}
+                    className="action-bookmark hidden-md hidden-lg hidden-xl"
                     disabled={!anySelected}
                     onAction={() => this.onUpdate({isBookmarked: true})}
                     shouldConfirm={this.shouldConfirm('bookmark')}
@@ -410,7 +412,7 @@ const StreamActions = createReactClass({
                     {t('Add to Bookmarks')}
                   </ActionLink>
                 </MenuItem>
-                <MenuItem divider={true} className={'hidden-md hidden-lg hidden-xl'} />
+                <MenuItem divider={true} className="hidden-md hidden-lg hidden-xl" />
                 <MenuItem noAnchor={true}>
                   <ActionLink
                     className="action-remove-bookmark"

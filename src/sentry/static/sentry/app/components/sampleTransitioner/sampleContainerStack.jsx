@@ -3,8 +3,8 @@ import React from 'react';
 import {Panel, PanelBody} from 'app/components/panels';
 import SampleContainerStackActions from './actions';
 import {SampleContainer, SampleContainerDirectionality} from './sampleContainer';
-import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
-import { Sample } from 'app/components/sampleTransitioner/sample';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
+import {Sample} from 'app/components/sampleTransitioner/sample';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -44,7 +44,7 @@ class SampleContainerStack extends React.Component {
   }
 
   onSampleWellMouseOver(location, sampleId) {
-    if(!this.props.onWellMouseOver) {
+    if (!this.props.onWellMouseOver) {
       return;
     }
 
@@ -64,7 +64,7 @@ class SampleContainerStack extends React.Component {
       transitionSourceLocations,
       transitionTargetLocations,
       transitionTargetLocationsOfHoveredSample,
-      activeSampleTransitionSourceLocation
+      activeSampleTransitionSourceLocation,
     } = this.props;
 
     return (
@@ -90,7 +90,9 @@ class SampleContainerStack extends React.Component {
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               onMouseOut={this.props.onMouseOut}
               samples={samples}
-              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
+              transitionTargetLocationsOfHoveredSample={
+                transitionTargetLocationsOfHoveredSample
+              }
               activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
               transitionSourceLocations={transitionSourceLocations}
               transitionTargetLocations={transitionTargetLocations}

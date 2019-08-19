@@ -73,7 +73,7 @@ const SampleGroupDetails = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -91,8 +91,8 @@ const SampleGroupDetails = createReactClass({
         state: FormState.SAVING,
       },
       () => {
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let formData = this.state.formData;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const formData = this.state.formData;
         this.api.request(`/sample-groups/${this.props.params.appId}/`, {
           method: 'PUT',
           // TODO: currently you could change the sample group's status via this endpoint,
@@ -128,12 +128,15 @@ const SampleGroupDetails = createReactClass({
   },
 
   render() {
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
+    if (this.state.loading) {
+      return <LoadingIndicator />;
+    } else if (this.state.error) {
+      return <LoadingError onRetry={this.fetchData} />;
+    }
 
     //let app = this.state.app;
-    let isSaving = this.state.state === FormState.SAVING;
-    let errors = this.state.errors;
+    const isSaving = this.state.state === FormState.SAVING;
+    const errors = this.state.errors;
 
     return (
       <DocumentTitle title={this.getTitle()}>

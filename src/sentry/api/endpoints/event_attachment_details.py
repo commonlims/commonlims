@@ -40,7 +40,8 @@ class EventAttachmentDetailsEndpoint(ProjectEndpoint):
         :pparam string attachment_id: the id of the attachment.
         :auth: required
         """
-        if not features.has('organizations:event-attachments', project.organization, actor=request.user):
+        if not features.has('organizations:event-attachments',
+                            project.organization, actor=request.user):
             return self.respond(status=404)
 
         try:

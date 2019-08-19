@@ -35,7 +35,7 @@ class IssueDiff extends React.Component {
   }
 
   componentDidMount() {
-    let {baseIssueId, targetIssueId, baseEventId, targetEventId} = this.props;
+    const {baseIssueId, targetIssueId, baseEventId, targetEventId} = this.props;
 
     // Fetch component and event data
     Promise.all([
@@ -53,23 +53,29 @@ class IssueDiff extends React.Component {
   }
 
   getException(event) {
-    if (!event || !event.entries) return [];
+    if (!event || !event.entries) {
+      return [];
+    }
 
     // TODO(billyvg): This only accounts for the first exception, will need navigation to be able to
     // diff multiple exceptions
     //
     // See: https://github.com/getsentry/sentry/issues/6055
-    let exc = event.entries.find(({type}) => type === 'exception');
+    const exc = event.entries.find(({type}) => type === 'exception');
 
     if (!exc) {
       // Look for a message if not an exception
-      let msg = event.entries.find(({type}) => type === 'message');
-      if (!msg) return [];
+      const msg = event.entries.find(({type}) => type === 'message');
+      if (!msg) {
+        return [];
+      }
 
       return msg.data && msg.data.message && [msg.data.message];
     }
 
-    if (!exc.data) return [];
+    if (!exc.data) {
+      return [];
+    }
 
     return exc.data.values
       .filter(value => !!value.stacktrace)
@@ -97,9 +103,9 @@ class IssueDiff extends React.Component {
   }
 
   render() {
-    let {className} = this.props;
-    let DiffComponent = this.state.SplitDiffAsync;
-    let diffReady = !this.state.loading && !!DiffComponent;
+    const {className} = this.props;
+    const DiffComponent = this.state.SplitDiffAsync;
+    const diffReady = !this.state.loading && !!DiffComponent;
 
     return (
       <StyledIssueDiff className={className} loading={this.state.loading}>

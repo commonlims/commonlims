@@ -15,7 +15,9 @@ const getPeriod = ({period, start, end}, {shouldDoublePeriod}) => {
   // you can not specify both relative and absolute periods
   // relative period takes precendence
   if (period) {
-    if (!shouldDoublePeriod) return {statsPeriod: period};
+    if (!shouldDoublePeriod) {
+      return {statsPeriod: period};
+    }
     const [, periodNumber, periodLength] = period.match(/([0-9]+)([mhdw])/);
 
     return {statsPeriod: `${parseInt(periodNumber, 10) * 2}${periodLength}`};
@@ -72,7 +74,9 @@ export const doHealthRequest = (
     limit,
   }
 ) => {
-  if (!api) return Promise.reject(new Error('API client not available'));
+  if (!api) {
+    return Promise.reject(new Error('API client not available'));
+  }
 
   const path = timeseries ? 'graph/' : 'top/';
   const shouldDoublePeriod = timeseries && includePrevious;

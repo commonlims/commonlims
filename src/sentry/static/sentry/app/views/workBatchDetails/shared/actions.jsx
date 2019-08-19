@@ -1,11 +1,11 @@
-import { browserHistory } from 'react-router';
+import {browserHistory} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 
-import { analytics } from 'app/utils/analytics';
-import { openModal } from 'app/actionCreators/modal';
-import { t } from 'app/locale';
+import {analytics} from 'app/utils/analytics';
+import {openModal} from 'app/actionCreators/modal';
+import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import Button from 'app/components/button';
 import DropdownLink from 'app/components/dropdownLink';
@@ -20,7 +20,7 @@ import LinkWithConfirmation from 'app/components/linkWithConfirmation';
 import MenuItem from 'app/components/menuItem';
 import ResolveActions from 'app/components/actions/resolve';
 import SentryTypes from 'app/sentryTypes';
-import { uniqueId } from 'app/utils/guid';
+import {uniqueId} from 'app/utils/guid';
 
 class DeleteActions extends React.Component {
   static propTypes = {
@@ -29,35 +29,35 @@ class DeleteActions extends React.Component {
     onDiscard: PropTypes.func.isRequired,
   };
 
-  renderDiscardDisabled = ({ children, ...props }) =>
+  renderDiscardDisabled = ({children, ...props}) =>
     children({
       ...props,
-      renderDisabled: ({ features }) => (
+      renderDisabled: ({features}) => (
         <FeatureDisabled alert featureName="Discard and Delete" features={features} />
       ),
     });
 
-  renderDiscardModal = ({ Body, closeModal }) => (
+  renderDiscardModal = ({Body, closeModal}) => (
     <Feature
       features={['projects:discard-groups']}
       organization={this.props.organization}
       renderDisabled={this.renderDiscardDisabled}
     >
-      {({ hasFeature, renderDisabled, ...props }) => (
+      {({hasFeature, renderDisabled, ...props}) => (
         <React.Fragment>
           <Body>
-            {!hasFeature && renderDisabled({ hasFeature, ...props })}
+            {!hasFeature && renderDisabled({hasFeature, ...props})}
             {t(
               'Discarding this event will result in the deletion ' +
-              'of most data associated with this issue and future ' +
-              'events being discarded before reaching your stream. ' +
-              'Are you sure you wish to continue?'
+                'of most data associated with this issue and future ' +
+                'events being discarded before reaching your stream. ' +
+                'Are you sure you wish to continue?'
             )}
           </Body>
           <div className="modal-footer">
             <Button onClick={closeModal}>{t('Cancel')}</Button>
             <Button
-              style={{ marginLeft: space(1) }}
+              style={{marginLeft: space(1)}}
               priority="primary"
               onClick={this.props.onDiscard}
               disabled={!hasFeature}
@@ -106,24 +106,26 @@ const WorkBatchActionsComponent = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   getInitialState() {
-    return { ignoreModal: null, shareBusy: false };
+    return {ignoreModal: null, shareBusy: false};
   },
 
   getShareUrl(shareId, absolute) {
-    if (!shareId) return '';
+    if (!shareId) {
+      return '';
+    }
 
-    let path = `/share/issue/${shareId}/`;
+    const path = `/share/issue/${shareId}/`;
     if (!absolute) {
       return path;
     }
-    let { host, protocol } = window.location;
+    const {host, protocol} = window.location;
     return `${protocol}//${host}${path}`;
   },
 
   onDelete() {
-    let { group } = this.props;
-    let org = this.getOrganization();
-    let loadingIndicator = IndicatorStore.add(t('Delete event..'));
+    const {group} = this.props;
+    const org = this.getOrganization();
+    const loadingIndicator = IndicatorStore.add(t('Delete event..'));
 
     this.api.bulkDelete(
       {
@@ -141,9 +143,9 @@ const WorkBatchActionsComponent = createReactClass({
   },
 
   onUpdate(data) {
-    let { group } = this.props;
-    let org = this.getOrganization();
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const {group} = this.props;
+    const org = this.getOrganization();
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
@@ -160,9 +162,9 @@ const WorkBatchActionsComponent = createReactClass({
   },
 
   onShare(shared) {
-    let { group } = this.props;
-    let org = this.getOrganization();
-    this.setState({ shareBusy: true });
+    const {group} = this.props;
+    const org = this.getOrganization();
+    this.setState({shareBusy: true});
 
     // not sure why this is a bulkUpdate
     this.api.bulkUpdate(
@@ -178,7 +180,7 @@ const WorkBatchActionsComponent = createReactClass({
           IndicatorStore.add(t('Error sharing'), 'error');
         },
         complete: () => {
-          this.setState({ shareBusy: false });
+          this.setState({shareBusy: false});
         },
       }
     );
@@ -189,20 +191,20 @@ const WorkBatchActionsComponent = createReactClass({
   },
 
   onToggleBookmark() {
-    this.onUpdate({ isBookmarked: !this.props.group.isBookmarked });
+    this.onUpdate({isBookmarked: !this.props.group.isBookmarked});
   },
 
   onDiscard() {
-    let { group } = this.props;
-    let org = this.getOrganization();
-    let id = uniqueId();
-    let loadingIndicator = IndicatorStore.add(t('Discarding event..'));
+    const {group} = this.props;
+    const org = this.getOrganization();
+    const id = uniqueId();
+    const loadingIndicator = IndicatorStore.add(t('Discarding event..'));
 
     GroupActions.discard(id, group.id);
 
     this.api.request(`/issues/${group.id}/`, {
       method: 'PUT',
-      data: { discard: true },
+      data: {discard: true},
       success: response => {
         GroupActions.discardSuccess(id, group.id, response);
         browserHistory.push(`/${org.slug}/`);
@@ -217,16 +219,16 @@ const WorkBatchActionsComponent = createReactClass({
   },
 
   render() {
-    let { group } = this.props;
-    let org = this.getOrganization();
+    const {group} = this.props;
+    const org = this.getOrganization();
 
     let bookmarkClassName = 'group-bookmark btn btn-default btn-sm';
     if (group.isBookmarked) {
       bookmarkClassName += ' active';
     }
 
-    let isResolved = group.status === 'resolved';
-    let isIgnored = group.status === 'ignored';
+    const isResolved = group.status === 'resolved';
+    const isIgnored = group.status === 'ignored';
 
     return (
       <div className="group-actions">

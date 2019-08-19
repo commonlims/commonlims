@@ -70,7 +70,9 @@ const RuleRow = createReactClass({
   },
 
   onDelete() {
-    if (this.state.loading) return;
+    if (this.state.loading) {
+      return;
+    }
 
     const loadingIndicator = addLoadingMessage();
     const {orgId, projectId, data} = this.props;
@@ -211,7 +213,7 @@ class ProjectAlertRules extends AsyncView {
   };
 
   getEndpoints() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return [['ruleList', `/projects/${orgId}/${projectId}/rules/`]];
   }
 
@@ -232,9 +234,9 @@ class ProjectAlertRules extends AsyncView {
   }
 
   renderResults() {
-    let {orgId, projectId} = this.props.params;
-    let {organization} = this.context;
-    let canEditRule = organization.access.includes('project:write');
+    const {orgId, projectId} = this.props.params;
+    const {organization} = this.context;
+    const canEditRule = organization.access.includes('project:write');
 
     return (
       <div className="rules-list">
@@ -258,9 +260,9 @@ class ProjectAlertRules extends AsyncView {
   }
 
   renderBody() {
-    let {ruleList} = this.state;
-    let {organization} = this.context;
-    let canEditRule = organization.access.includes('project:write');
+    const {ruleList} = this.state;
+    const {organization} = this.context;
+    const canEditRule = organization.access.includes('project:write');
 
     return (
       <React.Fragment>

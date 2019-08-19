@@ -8,7 +8,7 @@ import React from 'react';
 
 class WorkBatchListActions extends React.Component {
   render() {
-    let {toggleSelectAll, allSelected} = this.props;
+    const {toggleSelectAll, allSelected} = this.props;
 
     return (
       <Sticky>

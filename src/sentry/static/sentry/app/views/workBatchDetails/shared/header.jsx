@@ -30,9 +30,9 @@ const WorkBatchHeader = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   onToggleMute() {
-    let workBatch = this.props.group;
-    let org = this.context.organization;
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const workBatch = this.props.group;
+    const org = this.context.organization;
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
@@ -51,8 +51,8 @@ const WorkBatchHeader = createReactClass({
   },
 
   getMessage() {
-    let data = this.props.workBatch;
-    let metadata = data.metadata;
+    const data = this.props.workBatch;
+    const metadata = data.metadata;
     switch (data.type) {
       case 'error':
         return metadata.value;
@@ -74,7 +74,7 @@ const WorkBatchHeader = createReactClass({
   },
 
   render() {
-    let {workBatch} = this.props;
+    const {workBatch} = this.props;
 
     let className = 'group-detail';
 
@@ -91,11 +91,11 @@ const WorkBatchHeader = createReactClass({
       className += ' isResolved';
     }
 
-    let workBatchId = workBatch.id;
-    let orgId = this.context.organization.slug;
+    const workBatchId = workBatch.id;
+    const orgId = this.context.organization.slug;
 
-    let baseUrl = `/${orgId}/work-batches/`;
-    let userActionTitle = 'Fragment analyzer'; // TODO
+    const baseUrl = `/${orgId}/work-batches/`;
+    const userActionTitle = 'Fragment analyzer'; // TODO
 
     return (
       <div className={className}>

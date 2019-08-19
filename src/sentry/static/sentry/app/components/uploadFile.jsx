@@ -79,20 +79,20 @@ const UploadFile = createReactClass({
   },
 
   handleSuccess(model) {
-    let {onSave} = this.props;
+    const {onSave} = this.props;
     this.setState({model});
     onSave(model);
     addSuccessMessage(t('Successfully saved avatar preferences'));
   },
 
   handleSaveSettings(ev) {
-    let {endpoint} = this.props;
+    const {endpoint} = this.props;
 
-    let {model, dataUrl} = this.state;
+    const {model, dataUrl} = this.state;
     ev.preventDefault();
     let data = {};
-    let avatarType = model && model.avatar ? model.avatar.avatarType : undefined;
-    let avatarPhoto = dataUrl ? dataUrl.split(',')[1] : null;
+    const avatarType = model && model.avatar ? model.avatar.avatarType : undefined;
+    const avatarPhoto = dataUrl ? dataUrl.split(',')[1] : null;
 
     data = {
       avatar_photo: avatarPhoto,
@@ -111,14 +111,16 @@ const UploadFile = createReactClass({
   },
 
   handleChange(id) {
-    let model = {...this.state.model};
+    const model = {...this.state.model};
     model.avatar.avatarType = id;
     this.updateState(model);
   },
 
   uploadClick(ev) {
     ev.preventDefault();
-    if (!this.file) return;
+    if (!this.file) {
+      return;
+    }
     this.file.click();
   },
 
@@ -130,7 +132,7 @@ const UploadFile = createReactClass({
   },
 
   render() {
-    let {
+    const {
       allowGravatar,
       allowUpload,
       allowLetter,
@@ -139,7 +141,7 @@ const UploadFile = createReactClass({
       isUser,
       disabled,
     } = this.props;
-    let {hasError, model} = this.state;
+    const {hasError, model} = this.state;
 
     if (hasError) {
       return <LoadingError />;
@@ -148,13 +150,13 @@ const UploadFile = createReactClass({
       return <LoadingIndicator />;
     }
 
-    let avatarType = 'upload';
-    let isLetter = avatarType === 'letter_avatar';
+    const avatarType = 'upload';
+    const isLetter = avatarType === 'letter_avatar';
     // let isUpload = avatarType === 'upload';
-    let isTeam = type === 'team';
-    let isOrganization = type === 'organization';
-    let isProject = type === 'project';
-    let style = {
+    const isTeam = type === 'team';
+    const isOrganization = type === 'organization';
+    const isProject = type === 'project';
+    const style = {
       position: 'absolute',
       opacity: 0,
     };

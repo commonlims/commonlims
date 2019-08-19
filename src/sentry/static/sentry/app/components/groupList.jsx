@@ -138,9 +138,11 @@ const GroupList = createReactClass({
   },
 
   render() {
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.groups.length === 0)
+    if (this.state.loading) {
+      return <LoadingIndicator />;
+    } else if (this.state.error) {
+      return <LoadingError onRetry={this.fetchData} />;
+    } else if (this.state.groups.length === 0) {
       return (
         <Panel>
           <PanelBody>
@@ -150,8 +152,9 @@ const GroupList = createReactClass({
           </PanelBody>
         </Panel>
       );
+    }
 
-    let {orgId} = this.props;
+    const {orgId} = this.props;
 
     return (
       <Panel>

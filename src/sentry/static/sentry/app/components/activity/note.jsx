@@ -4,7 +4,7 @@ import React from 'react';
 import TimeSince from 'app/components/timeSince';
 import ConfigStore from 'app/stores/configStore';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import marked from 'app/utils/marked';
 
 class Note extends React.Component {
@@ -16,16 +16,16 @@ class Note extends React.Component {
   };
 
   canEdit = () => {
-    let user = ConfigStore.get('user');
+    const user = ConfigStore.get('user');
     return user.isSuperuser || user.id === this.props.item.user.id;
   };
 
   render() {
-    let { item, author, onEdit, onDelete } = this.props;
+    const {item, author, onEdit, onDelete} = this.props;
 
     // TODO!
     // TODO: Add that date back in
-    let noteBody = marked(item.data.text ? item.data.text : "");
+    const noteBody = marked(item.data.text ? item.data.text : '');
     return (
       <div>
         {/*<TimeSince date={item.dateCreated} />*/}
@@ -45,7 +45,7 @@ class Note extends React.Component {
             </span>
           )}
         </div>
-        <div dangerouslySetInnerHTML={{ __html: noteBody }} />
+        <div dangerouslySetInnerHTML={{__html: noteBody}} />
       </div>
     );
   }

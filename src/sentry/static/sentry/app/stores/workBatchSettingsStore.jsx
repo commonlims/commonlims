@@ -4,7 +4,7 @@ import Reflux from 'reflux';
 import GroupActions from 'app/actions/groupActions';
 import IndicatorStore from 'app/stores/indicatorStore';
 import PendingChangeQueue from 'app/utils/pendingChangeQueue';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 function showAlert(msg, type) {
   IndicatorStore.add(msg, type, {
@@ -28,7 +28,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
   loadInitialData(items) {
     this.reset();
 
-    let itemIds = new Set();
+    const itemIds = new Set();
     items.forEach(item => {
       itemIds.add(item.id);
       this.items.push(item);
@@ -42,8 +42,8 @@ const WorkBatchSettingsStore = Reflux.createStore({
       items = [items];
     }
 
-    let itemsById = {};
-    let itemIds = new Set();
+    const itemsById = {};
+    const itemIds = new Set();
     items.forEach(item => {
       itemsById[item.id] = item;
       itemIds.add(item.id);
@@ -61,7 +61,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
     });
 
     // New items
-    for (let itemId in itemsById) {
+    for (const itemId in itemsById) {
       this.items.push(itemsById[itemId]);
     }
 
@@ -100,8 +100,10 @@ const WorkBatchSettingsStore = Reflux.createStore({
   },
 
   indexOfActivity(group_id, id) {
-    let group = this.get(group_id);
-    if (!group) return -1;
+    const group = this.get(group_id);
+    if (!group) {
+      return -1;
+    }
 
     for (let i = 0; i < group.activity.length; i++) {
       if (group.activity[i].id === id) {
@@ -112,8 +114,10 @@ const WorkBatchSettingsStore = Reflux.createStore({
   },
 
   addActivity(id, data, index = -1) {
-    let group = this.get(id);
-    if (!group) return;
+    const group = this.get(id);
+    if (!group) {
+      return;
+    }
 
     // insert into beginning by default
     if (index === -1) {
@@ -121,17 +125,23 @@ const WorkBatchSettingsStore = Reflux.createStore({
     } else {
       group.activity.splice(index, 0, data);
     }
-    if (data.type === 'note') group.numComments++;
+    if (data.type === 'note') {
+      group.numComments++;
+    }
 
     this.trigger(new Set([id]));
   },
 
   updateActivity(group_id, id, data) {
-    let group = this.get(group_id);
-    if (!group) return;
+    const group = this.get(group_id);
+    if (!group) {
+      return;
+    }
 
-    let index = this.indexOfActivity(group_id, id);
-    if (index === -1) return;
+    const index = this.indexOfActivity(group_id, id);
+    if (index === -1) {
+      return;
+    }
 
     // Here, we want to merge the new `data` being passed in
     // into the existing `data` object. This effectively
@@ -141,22 +151,28 @@ const WorkBatchSettingsStore = Reflux.createStore({
   },
 
   removeActivity(group_id, id) {
-    let group = this.get(group_id);
-    if (!group) return -1;
+    const group = this.get(group_id);
+    if (!group) {
+      return -1;
+    }
 
-    let index = this.indexOfActivity(group.id, id);
-    if (index === -1) return -1;
+    const index = this.indexOfActivity(group.id, id);
+    if (index === -1) {
+      return -1;
+    }
 
-    let activity = group.activity.splice(index, 1);
+    const activity = group.activity.splice(index, 1);
 
-    if (activity[0].type === 'note') group.numComments--;
+    if (activity[0].type === 'note') {
+      group.numComments--;
+    }
 
     this.trigger(new Set([group.id]));
     return index;
   },
 
   get(id) {
-    let pendingForId = [];
+    const pendingForId = [];
     this.pendingChanges.forEach(change => {
       if (change.id === id) {
         pendingForId.push(change);
@@ -168,7 +184,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
         let rItem = this.items[i];
         if (pendingForId.length) {
           // copy the object so dirty state doesnt mutate original
-          rItem = { ...rItem };
+          rItem = {...rItem};
 
           for (let c = 0; c < pendingForId.length; c++) {
             rItem = {
@@ -189,7 +205,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
 
   getAllItems() {
     // regroup pending changes by their itemID
-    let pendingById = {};
+    const pendingById = {};
     this.pendingChanges.forEach(change => {
       if (_.isUndefined(pendingById[change.id])) {
         pendingById[change.id] = [];
@@ -201,7 +217,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
       let rItem = item;
       if (!_.isUndefined(pendingById[item.id])) {
         // copy the object so dirty state doesnt mutate original
-        rItem = { ...rItem };
+        rItem = {...rItem};
         pendingById[item.id].forEach(change => {
           rItem = {
             ...rItem,
@@ -219,7 +235,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
   },
 
   onAssignToSuccess(changeId, itemId, response) {
-    let item = this.get(itemId);
+    const item = this.get(itemId);
     if (!item) {
       return;
     }
@@ -239,7 +255,9 @@ const WorkBatchSettingsStore = Reflux.createStore({
   onDeleteError(changeId, itemIds, response) {
     showAlert(t('Unable to delete events. Please try again.'), 'error');
 
-    if (!itemIds) return;
+    if (!itemIds) {
+      return;
+    }
 
     itemIds.forEach(itemId => {
       this.clearStatus(itemId, 'delete');
@@ -249,7 +267,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
 
   onDeleteSuccess(changeId, itemIds, response) {
     itemIds = this._itemIdsOrAll(itemIds);
-    let itemIdSet = new Set(itemIds);
+    const itemIdSet = new Set(itemIds);
     itemIds.forEach(itemId => {
       delete this.statuses[itemId];
       this.clearStatus(itemId, 'delete');
@@ -307,7 +325,7 @@ const WorkBatchSettingsStore = Reflux.createStore({
     });
 
     // Remove all but parent id (items were merged into this one)
-    let mergedIdSet = new Set(mergedIds);
+    const mergedIdSet = new Set(mergedIds);
 
     // Looks like the `PUT /api/0/projects/:orgId/:projectId/issues/` endpoint
     // actually returns a 204, so there is no `response` body

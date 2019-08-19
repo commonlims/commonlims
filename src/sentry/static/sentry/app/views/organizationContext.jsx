@@ -22,7 +22,7 @@ import TeamStore from 'app/stores/teamStore';
 import space from 'app/styles/space';
 import GlobalSelectionStore from 'app/stores/globalSelectionStore';
 
-let ERROR_TYPES = {
+const ERROR_TYPES = {
   ORG_NOT_FOUND: 'ORG_NOT_FOUND',
 };
 
@@ -86,7 +86,7 @@ const OrganizationContext = createReactClass({
     this.api.request(this.getOrganizationDetailsEndpoint(), {
       success: data => {
         // Allow injection via getsentry et all
-        let hooks = [];
+        const hooks = [];
         HookStore.get('organization:header').forEach(cb => {
           hooks.push(cb(data));
         });
@@ -122,7 +122,7 @@ const OrganizationContext = createReactClass({
         });
 
         // If user is superuser, open sudo window
-        let user = ConfigStore.get('user');
+        const user = ConfigStore.get('user');
         if (!user || !user.isSuperuser || err.status !== 403) {
           return;
         }
@@ -138,12 +138,16 @@ const OrganizationContext = createReactClass({
   },
 
   getTitle() {
-    if (this.state.organization) return this.state.organization.name;
+    if (this.state.organization) {
+      return this.state.organization.name;
+    }
     return 'Sentry';
   },
 
   renderSidebar() {
-    if (!this.props.includeSidebar) return null;
+    if (!this.props.includeSidebar) {
+      return null;
+    }
 
     return <Sidebar {...this.props} organization={this.state.organization} />;
   },

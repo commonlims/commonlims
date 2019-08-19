@@ -71,17 +71,23 @@ const SamplesGroup = createReactClass({
     if (!itemIds.has(this.props.id)) {
       return;
     }
-    let id = this.props.id;
-    let data = GroupStore.get(id);
+    const id = this.props.id;
+    const data = GroupStore.get(id);
     this.setState({
       data,
     });
   },
 
   toggleSelect(evt) {
-    if (evt.target.tagName === 'A') return;
-    if (evt.target.tagName === 'INPUT') return;
-    if (jQuery(evt.target).parents('a').length !== 0) return;
+    if (evt.target.tagName === 'A') {
+      return;
+    }
+    if (evt.target.tagName === 'INPUT') {
+      return;
+    }
+    if (jQuery(evt.target).parents('a').length !== 0) {
+      return;
+    }
 
     SelectedGroupStore.toggleSelect(this.state.data.id);
   },

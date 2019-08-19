@@ -21,24 +21,16 @@ class WorkflowTableRow extends React.Component {
   static defaultProps = {};
 
   render() {
-    let {
-      className,
-      workflow,
-      orgId,
-      projectId,
-      groupId,
-      tagList,
-      hasUser,
-    } = this.props;
-    let cx = classNames('events-table-row', className);
-    let tagMap = {};
+    const {className, workflow, orgId, projectId, groupId, tagList, hasUser} = this.props;
+    const cx = classNames('events-table-row', className);
+    const tagMap = {};
 
     return (
       <tr key={workflow.id} className={cx}>
         <td>
           <h5>
             <Link to={`/${orgId}/${projectId}/issues/${groupId}/events/${workflow.id}/`}>
-                { workflow.title }
+              {workflow.title}
             </Link>
           </h5>
         </td>

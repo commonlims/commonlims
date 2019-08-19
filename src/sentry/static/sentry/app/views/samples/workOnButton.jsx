@@ -37,11 +37,11 @@ const WorkOnButton = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
-    let organization = OrganizationStore.get(orgId);
-    let project = ProjectsStore.getBySlug(projectId);
+    const organization = OrganizationStore.get(orgId);
+    const project = ProjectsStore.getBySlug(projectId);
 
     return {
       isActivated: false,
@@ -80,7 +80,7 @@ const WorkOnButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -106,15 +106,15 @@ const WorkOnButton = createReactClass({
         state: FormState.SAVING,
       },
       () => {
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId} = this.props;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const {orgId} = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
         // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-        let endpoint = `/processes/${orgId}/sample-processes/`;
+        const endpoint = `/processes/${orgId}/sample-processes/`;
 
-        let data = {
+        const data = {
           samples: SelectedSampleStore.getSelectedIds(),
           variables: this.state.setProcessVariables,
           process: this.state.process,
@@ -147,7 +147,7 @@ const WorkOnButton = createReactClass({
   },
 
   onSelectWorkflow(key, value) {
-    let vars = [
+    const vars = [
       {
         name: 'Sequencer',
         type: 'string',
@@ -164,7 +164,7 @@ const WorkOnButton = createReactClass({
   startWorkBatch() {
     // 1. POST all these samples to the work-batch endpoint.
     // 2. Redirect to the work batch site
-    this.props.router.push(`/sentry/internal/plugins/clims_snpseq/fragment_analyze/123/`);
+    this.props.router.push('/sentry/internal/plugins/clims_snpseq/fragment_analyze/123/');
 
     /*
     this.api.request('/work-batch/', {
@@ -188,7 +188,7 @@ const WorkOnButton = createReactClass({
 
   render() {
     // TODO: Create another component for this
-    let isSaving = this.state.state === FormState.SAVING;
+    const isSaving = this.state.state === FormState.SAVING;
 
     return (
       <React.Fragment>

@@ -187,7 +187,9 @@ class DropdownAutoCompleteMenu extends React.Component {
   autoCompleteFilter = (items, inputValue) => {
     let itemCount = 0;
 
-    if (!items) return [];
+    if (!items) {
+      return [];
+    }
 
     if (items[0] && items[0].items) {
       //if the first item has children, we assume it is a group
@@ -276,7 +278,7 @@ class DropdownAutoCompleteMenu extends React.Component {
   };
 
   render() {
-    let {
+    const {
       onSelect,
       onChange,
       onOpen,
@@ -328,31 +330,31 @@ class DropdownAutoCompleteMenu extends React.Component {
           actions,
         }) => {
           // This is the value to use to filter (default to value in filter input)
-          let filterValueOrInput =
+          const filterValueOrInput =
             typeof filterValue !== 'undefined' ? filterValue : inputValue;
           // Only filter results if menu is open and there are items
-          let autoCompleteResults =
+          const autoCompleteResults =
             (isOpen &&
               items &&
               this.autoCompleteFilter(items, filterValueOrInput || '')) ||
             [];
 
           // Can't search if there are no items
-          let hasItems = items && !!items.length;
+          const hasItems = items && !!items.length;
           // Items are loading if null
-          let itemsLoading = items === null;
+          const itemsLoading = items === null;
           // Has filtered results
-          let hasResults = !!autoCompleteResults.length;
+          const hasResults = !!autoCompleteResults.length;
           // No items to display
-          let showNoItems = !busy && !filterValueOrInput && !hasItems;
+          const showNoItems = !busy && !filterValueOrInput && !hasItems;
           // Results mean there was an attempt to search
-          let showNoResultsMessage = !busy && filterValueOrInput && !hasResults;
+          const showNoResultsMessage = !busy && filterValueOrInput && !hasResults;
 
           // Hide the input when we have no items to filter, only if
           // emptyHidesInput is set to true.
-          let showInput = !hideInput && (hasItems || !emptyHidesInput);
+          const showInput = !hideInput && (hasItems || !emptyHidesInput);
 
-          let renderedFooter =
+          const renderedFooter =
             typeof menuFooter === 'function' ? menuFooter({actions}) : menuFooter;
 
           return (
@@ -436,15 +438,15 @@ class DropdownAutoCompleteMenu extends React.Component {
  * Otherwise apply radius to opposite side of `alignMenu`
  */
 const getMenuBorderRadius = ({blendCorner, alignMenu, theme}) => {
-  let radius = theme.borderRadius;
+  const radius = theme.borderRadius;
   if (!blendCorner) {
     return css`
       border-radius: ${radius};
     `;
   }
 
-  let hasTopLeftRadius = alignMenu !== 'left';
-  let hasTopRightRadius = !hasTopLeftRadius;
+  const hasTopLeftRadius = alignMenu !== 'left';
+  const hasTopRightRadius = !hasTopLeftRadius;
 
   return css`
     border-radius: ${hasTopLeftRadius ? radius : 0} ${hasTopRightRadius ? radius : 0}
@@ -453,8 +455,10 @@ const getMenuBorderRadius = ({blendCorner, alignMenu, theme}) => {
 };
 
 const getMenuArrow = ({menuWithArrow, alignMenu}) => {
-  if (!menuWithArrow) return '';
-  let alignRight = alignMenu === 'right';
+  if (!menuWithArrow) {
+    return '';
+  }
+  const alignRight = alignMenu === 'right';
 
   return css`
     top: 32px;
@@ -524,8 +528,12 @@ const StyledInput = styled(Input)`
 `;
 
 const getItemPaddingForSize = size => {
-  if (size === 'small') return `${space(0.5)} ${space(1)}`;
-  if (size === 'zero') return '0';
+  if (size === 'small') {
+    return `${space(0.5)} ${space(1)}`;
+  }
+  if (size === 'zero') {
+    return '0';
+  }
 
   return space(1);
 };

@@ -53,8 +53,12 @@ class OrganizationReleaseDetails extends AsyncView {
     const release = this.state.release;
     const {orgId} = this.props.params;
 
-    if (this.state.loading) return <LoadingIndicator />;
-    if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
+    if (this.state.loading) {
+      return <LoadingIndicator />;
+    }
+    if (this.state.error) {
+      return <LoadingError onRetry={this.fetchData} />;
+    }
 
     return (
       <Feature

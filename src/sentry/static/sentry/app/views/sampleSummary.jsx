@@ -33,9 +33,9 @@ const SampleSummary = createReactClass({
   },
 
   fetchData() {
-    let eventId = this.props.params.eventId || 'latest';
+    const eventId = this.props.params.eventId || 'latest';
 
-    let url =
+    const url =
       eventId === 'latest' || eventId === 'oldest'
         ? '/issues/' + this.getGroup().id + '/events/' + eventId + '/'
         : '/events/' + eventId + '/';
@@ -71,9 +71,9 @@ const SampleSummary = createReactClass({
   },
 
   render() {
-    let group = this.getGroup();
-    let evt = this.state.event;
-    let params = this.props.params;
+    const group = this.getGroup();
+    const evt = this.state.event;
+    const params = this.props.params;
 
     return (
       <div>

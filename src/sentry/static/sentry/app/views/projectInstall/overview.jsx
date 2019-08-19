@@ -1,8 +1,8 @@
-import { browserHistory, Link } from 'react-router';
+import {browserHistory, Link} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { t, tct } from 'app/locale';
+import {t, tct} from 'app/locale';
 import AutoSelectText from 'app/components/autoSelectText';
 import SettingsPageHeader from 'app/views/settings/components/settingsPageHeader';
 import TextBlock from 'app/views/settings/components/text/textBlock';
@@ -25,8 +25,8 @@ class ProjectInstallOverview extends React.Component {
   };
 
   redirectToDocs = platform => {
-    let { orgId, projectId } = this.props.params;
-    let prefix = recreateRoute('', { ...this.props, stepBack: -3 });
+    const {orgId, projectId} = this.props.params;
+    const prefix = recreateRoute('', {...this.props, stepBack: -3});
     let rootUrl = `${prefix}install`;
 
     if (this.isGettingStarted()) {
@@ -37,12 +37,12 @@ class ProjectInstallOverview extends React.Component {
   };
 
   toggleDsn = () => {
-    this.setState({ showDsn: !this.state.showDsn });
+    this.setState({showDsn: !this.state.showDsn});
   };
 
   render() {
-    let { data } = this.state;
-    let { orgId, projectId } = this.props.params;
+    const {data} = this.state;
+    const {orgId, projectId} = this.props.params;
 
     return (
       <div>
@@ -80,14 +80,14 @@ class ProjectInstallOverview extends React.Component {
             </div>
           </div>
         ) : (
-            <p>
-              <small>
-                {tct('Already have things setup? [link:Get your DSN]', {
-                  link: <a className="btn-xsmall" onClick={this.toggleDsn} />,
-                })}.
+          <p>
+            <small>
+              {tct('Already have things setup? [link:Get your DSN]', {
+                link: <a className="btn-xsmall" onClick={this.toggleDsn} />,
+              })}.
             </small>
-            </p>
-          )}
+          </p>
+        )}
         <p>
           {tct(
             `

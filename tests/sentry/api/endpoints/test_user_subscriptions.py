@@ -10,7 +10,8 @@ from sentry.models import UserEmail
 from sentry.testutils import APITestCase
 
 
-@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER != 'sentry.newsletter.dummy.DummyNewsletter')
+@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER !=
+                    'sentry.newsletter.dummy.DummyNewsletter')
 class UserSubscriptionsNewsletterTest(APITestCase):
     def setUp(self):
         self.user = self.create_user(email='foo@example.com')

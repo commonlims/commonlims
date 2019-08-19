@@ -107,7 +107,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   onWorkBatchChange() {
-    let id = this.props.params.groupId; // TODO: Rename to workBatchId
+    const id = this.props.params.groupId; // TODO: Rename to workBatchId
     if (WorkBatchStore.workBatch.id === id) {
       this.setState({
         workBatch: WorkBatchStore.workBatch,
@@ -116,19 +116,22 @@ const WorkBatchDetails = createReactClass({
   },
 
   getWorkBatchDetailsEndpoint() {
-    let id = this.props.params.groupId;
+    const id = this.props.params.groupId;
     return '/work-batches/' + id + '/';
   },
 
   getTitle() {
-    let workBatch = this.state.workBatch;
+    const workBatch = this.state.workBatch;
 
-    if (!workBatch) return 'Sentry';
+    if (!workBatch) {
+      return 'Sentry';
+    }
 
     switch (workBatch.type) {
       case 'error':
-        if (workBatch.metadata.type && workBatch.metadata.value)
+        if (workBatch.metadata.type && workBatch.metadata.value) {
           return `${workBatch.metadata.type}: ${workBatch.metadata.value}`;
+        }
         return workBatch.metadata.type || workBatch.metadata.value;
       case 'csp':
         return workBatch.metadata.message;
@@ -152,7 +155,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   renderTodoItems() {
-    let ret = this.state.workBatch.subtasks.map(x => {
+    const ret = this.state.workBatch.subtasks.map(x => {
       return (
         <TodoItem
           handleManualClick={() => this.subtaskManualClick(x)}
@@ -168,7 +171,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   activeTab() {
-    for (let tab of this.state.workBatch.tabs) {
+    for (const tab of this.state.workBatch.tabs) {
       if (tab.active) {
         return tab;
       }
@@ -176,7 +179,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   renderTabComponent() {
-    let tab = this.activeTab();
+    const tab = this.activeTab();
     if (tab.id == 'samples') {
       return <SampleTransitioner sampleBatch={this.state.workBatch.sampleBatch} />;
     } else if (tab.id == 'details') {
@@ -189,8 +192,8 @@ const WorkBatchDetails = createReactClass({
   },
 
   render() {
-    let params = this.props.params;
-    let {workBatch} = this.state;
+    const params = this.props.params;
+    const {workBatch} = this.state;
 
     if (this.state.error) {
       switch (this.state.errorType) {
@@ -203,7 +206,9 @@ const WorkBatchDetails = createReactClass({
         default:
           return <LoadingError onRetry={this.remountComponent} />;
       }
-    } else if (this.state.loading || !workBatch) return <LoadingIndicator />;
+    } else if (this.state.loading || !workBatch) {
+      return <LoadingIndicator />;
+    }
 
     return (
       <DocumentTitle title={this.getTitle()}>

@@ -319,7 +319,7 @@ export const Workflow = PropTypes.shape({
   definitionKey: PropTypes.string,
 });
 
-let ClimsTypes = {
+const ClimsTypes = {
   AnyModel: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }),

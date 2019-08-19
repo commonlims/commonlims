@@ -23,16 +23,18 @@ class ProcessesTableRow extends React.Component {
   };
 
   getActivities = process => {
-    if (process.activities.length == 0) return '';
-    else if (process.activities.length == 1) return process.activities[0].name;
-    else {
+    if (process.activities.length == 0) {
+      return '';
+    } else if (process.activities.length == 1) {
+      return process.activities[0].name;
+    } else {
       return process.activities[0].name + ' + ' + process.activities.length - 1 + ' more';
     }
   };
 
   render() {
-    let {className, process, orgId, projectId, truncate} = this.props;
-    let cx = classNames('events-table-row', className);
+    const {className, process, orgId, projectId, truncate} = this.props;
+    const cx = classNames('events-table-row', className);
 
     return (
       <tr key={process.id} className={cx}>

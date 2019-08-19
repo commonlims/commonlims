@@ -19,7 +19,7 @@ class DateTime extends React.Component {
   };
 
   getFormat = ({clock24Hours}) => {
-    let {dateOnly, seconds, shortDate} = this.props;
+    const {dateOnly, seconds, shortDate} = this.props;
 
     // October 26, 2017
     if (dateOnly) {
@@ -56,9 +56,9 @@ class DateTime extends React.Component {
       utc,
       ...carriedProps
     } = this.props;
-    let user = ConfigStore.get('user');
-    let options = user ? user.options : {};
-    let format = this.getFormat(options);
+    const user = ConfigStore.get('user');
+    const options = user ? user.options : {};
+    const format = this.getFormat(options);
 
     if (_.isString(date) || _.isNumber(date)) {
       date = new Date(date);

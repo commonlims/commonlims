@@ -92,10 +92,12 @@ const SampleProcesses = createReactClass({
   },
 
   handleSearch(query) {
-    let targetQueryParams = {};
-    if (query !== '') targetQueryParams.query = query;
+    const targetQueryParams = {};
+    if (query !== '') {
+      targetQueryParams.query = query;
+    }
 
-    let {groupId, orgId, projectId} = this.props.params;
+    const {groupId, orgId, projectId} = this.props.params;
     browserHistory.push({
       pathname: `/${orgId}/${projectId}/issues/${groupId}/events/`,
       query: targetQueryParams,
@@ -169,13 +171,17 @@ const SampleProcesses = createReactClass({
   renderBody() {
     let body;
 
-    if (this.state.loading) body = <LoadingIndicator />;
-    else if (this.state.error)
+    if (this.state.loading) {
+      body = <LoadingIndicator />;
+    } else if (this.state.error) {
       body = <LoadingError message={this.state.error} onRetry={this.fetchData} />;
-    else if (this.state.sampleProcesses.length > 0) body = this.renderResults();
-    else if (this.state.query && this.state.query !== '')
+    } else if (this.state.sampleProcesses.length > 0) {
+      body = this.renderResults();
+    } else if (this.state.query && this.state.query !== '') {
       body = this.renderNoQueryResults();
-    else body = this.renderEmpty();
+    } else {
+      body = this.renderEmpty();
+    }
 
     return body;
   },

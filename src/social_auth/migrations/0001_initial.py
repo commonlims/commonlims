@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserSocialAuth',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False, auto_created=True, primary_key=True)),
                 ('provider', models.CharField(max_length=32)),
                 ('uid', models.CharField(max_length=255)),
                 ('extra_data', social_auth.fields.JSONField(default=b'{}')),

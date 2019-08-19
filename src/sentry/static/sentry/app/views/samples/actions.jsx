@@ -60,7 +60,7 @@ const SamplesActions = createReactClass({
     if (this.state.allInQuerySelected) {
       selectedIds = undefined; // undefined means "all"
     } else {
-      let itemIdSet = SelectedSampleStore.getSelectedIds();
+      const itemIdSet = SelectedSampleStore.getSelectedIds();
       selectedIds = this.props.groupIds.filter(itemId => itemIdSet.has(itemId));
     }
 
@@ -76,7 +76,7 @@ const SamplesActions = createReactClass({
 
   onUpdate(data) {
     this.actionSelectedGroups(itemIds => {
-      let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
       this.api.bulkUpdate(
         {
@@ -97,7 +97,7 @@ const SamplesActions = createReactClass({
   },
 
   onDelete(event) {
-    let loadingIndicator = IndicatorStore.add(t('Removing events..'));
+    const loadingIndicator = IndicatorStore.add(t('Removing events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.bulkDelete(
@@ -118,7 +118,7 @@ const SamplesActions = createReactClass({
   },
 
   onMerge(event) {
-    let loadingIndicator = IndicatorStore.add(t('Merging events..'));
+    const loadingIndicator = IndicatorStore.add(t('Merging events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.merge(
@@ -157,7 +157,7 @@ const SamplesActions = createReactClass({
   },
 
   shouldConfirm(action) {
-    let selectedItems = SelectedSampleStore.getSelectedIds();
+    const selectedItems = SelectedSampleStore.getSelectedIds();
     switch (action) {
       case 'resolve':
       case 'unresolve':
@@ -174,10 +174,10 @@ const SamplesActions = createReactClass({
   },
 
   render() {
-    let {allResultsVisible, queryCount} = this.props;
-    let issues = this.state.selectedIds;
-    let numIssues = issues.size;
-    let {allInQuerySelected, anySelected, pageSelected} = this.state;
+    const {allResultsVisible, queryCount} = this.props;
+    const issues = this.state.selectedIds;
+    const numIssues = issues.size;
+    const {allInQuerySelected, anySelected, pageSelected} = this.state;
 
     // TODO(withrocks): Base the AssignToWorkflowButton on the Merge button so it gets the same UI
     return (

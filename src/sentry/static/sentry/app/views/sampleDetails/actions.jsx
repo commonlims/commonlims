@@ -20,20 +20,22 @@ const SampleDetailsActions = createReactClass({
   },
 
   getShareUrl(shareId, absolute) {
-    if (!shareId) return '';
+    if (!shareId) {
+      return '';
+    }
 
-    let path = `/share/issue/${shareId}/`;
+    const path = `/share/issue/${shareId}/`;
     if (!absolute) {
       return path;
     }
-    let {host, protocol} = window.location;
+    const {host, protocol} = window.location;
     return `${protocol}//${host}${path}`;
   },
 
   onUpdate(data) {
-    let group = this.getGroup();
-    let org = this.getOrganization();
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const group = this.getGroup();
+    const org = this.getOrganization();
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
@@ -50,8 +52,8 @@ const SampleDetailsActions = createReactClass({
   },
 
   onShare(shared) {
-    let group = this.getGroup();
-    let org = this.getOrganization();
+    const group = this.getGroup();
+    const org = this.getOrganization();
     this.setState({shareBusy: true});
 
     // not sure why this is a bulkUpdate
@@ -75,7 +77,7 @@ const SampleDetailsActions = createReactClass({
   },
 
   onToggleShare() {
-    let group = this.getGroup();
+    const group = this.getGroup();
     this.onShare(!group.isPublic);
   },
 
@@ -84,10 +86,10 @@ const SampleDetailsActions = createReactClass({
   },
 
   onDiscard() {
-    let group = this.getGroup();
-    let org = this.getOrganization();
-    let id = this.api.uniqueId();
-    let loadingIndicator = IndicatorStore.add(t('Discarding event..'));
+    const group = this.getGroup();
+    const org = this.getOrganization();
+    const id = this.api.uniqueId();
+    const loadingIndicator = IndicatorStore.add(t('Discarding event..'));
 
     GroupActions.discard(id, group.id);
 
@@ -108,8 +110,8 @@ const SampleDetailsActions = createReactClass({
   },
 
   render() {
-    let group = this.getGroup();
-    let orgFeatures = new Set(this.getOrganization().features);
+    const group = this.getGroup();
+    const orgFeatures = new Set(this.getOrganization().features);
 
     let bookmarkClassName = 'group-bookmark btn btn-default btn-sm';
     if (group.isBookmarked) {

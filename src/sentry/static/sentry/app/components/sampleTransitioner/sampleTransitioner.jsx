@@ -5,9 +5,9 @@ import ApiMixin from 'app/mixins/apiMixin';
 import OrganizationState from 'app/mixins/organizationState';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
-import { SampleTransition } from 'app/components/sampleTransitioner/sampleTransition';
-import { Sample } from 'app/components/sampleTransitioner/sample';
+import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
+import {SampleTransition} from 'app/components/sampleTransitioner/sampleTransition';
+import {Sample} from 'app/components/sampleTransitioner/sample';
 import WorkBatchStore from 'app/stores/workBatchStore';
 
 // TODO: Handle more than one by laying them down_first or right_first
@@ -33,7 +33,7 @@ class SampleTransitioner extends React.Component {
     // TODO: read transitions and target containers from workBatch sampleBatch
     const sourceContainers = sampleBatch.containers;
     const samples = sampleBatch.samples.map(s => {
-      const { containerId, row, col } = s.location;
+      const {containerId, row, col} = s.location;
       const location = new SampleLocation(containerId, row, col);
       return new Sample(s.id, s.name, location);
     });
@@ -69,7 +69,7 @@ class SampleTransitioner extends React.Component {
   completeActiveSampleTransition() {
     // TODO: should we de-dupe sample transitions here,
     // or leave that to the API?
-    const { sampleTransitions } = this.state;
+    const {sampleTransitions} = this.state;
     const activeSampleTransition = this.getActiveSampleTransition();
 
     if (activeSampleTransition.isComplete()) {
@@ -115,7 +115,7 @@ class SampleTransitioner extends React.Component {
   }
 
   onSourceWellMouseOver(sampleLocation, containsSampleId) {
-    const { sampleTransitions } = this.state;
+    const {sampleTransitions} = this.state;
 
     // If an empty well was hovered, ignore
     if (!containsSampleId || !sampleLocation.valid()) {
@@ -141,7 +141,7 @@ class SampleTransitioner extends React.Component {
     const {
       transitionTargetLocationsOfHoveredSample,
       activeSampleTransition,
-      sampleTransitions
+      sampleTransitions,
     } = this.state;
 
     let activeSampleTransitionSourceLocation;
@@ -179,7 +179,9 @@ class SampleTransitioner extends React.Component {
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
-              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
+              transitionTargetLocationsOfHoveredSample={
+                transitionTargetLocationsOfHoveredSample
+              }
               transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
             />
           </div>

@@ -34,12 +34,12 @@ class WorkBatchDetailsFiles extends React.Component {
   }
 
   handleRemove(id) {
-    let loadingIndicator = IndicatorStore.add(t('Removing artifact..'));
+    const loadingIndicator = IndicatorStore.add(t('Removing artifact..'));
 
     this.props.api.request(this.getFilesEndpoint() + `${id}/`, {
       method: 'DELETE',
       success: () => {
-        let fileList = this.state.fileList.filter(file => {
+        const fileList = this.state.fileList.filter(file => {
           return file.id !== id;
         });
 
@@ -63,7 +63,7 @@ class WorkBatchDetailsFiles extends React.Component {
   }
 
   render() {
-    let access = new Set(this.props.organization.access);
+    const access = new Set(this.props.organization.access);
     // TODO: Get rid of the size
 
     return (
@@ -140,5 +140,5 @@ class WorkBatchDetailsFiles extends React.Component {
   }
 }
 
-export { WorkBatchDetailsFiles };
+export {WorkBatchDetailsFiles};
 export default withOrganization(withApi(WorkBatchDetailsFiles));

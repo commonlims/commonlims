@@ -64,14 +64,15 @@ class SearchResult extends React.Component {
   };
 
   renderContent() {
-    let {highlighted, item, matches, params} = this.props;
+    const {highlighted, item, matches, params} = this.props;
     let {sourceType, title, description, model} = item;
 
     if (matches) {
       const HighlightedMarker = p => <HighlightMarker highlighted={highlighted} {...p} />;
 
-      let matchedTitle = matches && matches.find(({key}) => key === 'title');
-      let matchedDescription = matches && matches.find(({key}) => key === 'description');
+      const matchedTitle = matches && matches.find(({key}) => key === 'title');
+      const matchedDescription =
+        matches && matches.find(({key}) => key === 'description');
 
       title = matchedTitle
         ? highlightFuseMatches(matchedTitle, HighlightedMarker)
@@ -82,11 +83,11 @@ class SearchResult extends React.Component {
     }
 
     if (['organization', 'member', 'project', 'team'].includes(sourceType)) {
-      let DescriptionNode = (
+      const DescriptionNode = (
         <BadgeDetail highlighted={highlighted}>{description}</BadgeDetail>
       );
 
-      let badgeProps = {
+      const badgeProps = {
         displayName: title,
         displayEmail: DescriptionNode,
         description: DescriptionNode,
@@ -110,13 +111,13 @@ class SearchResult extends React.Component {
   }
 
   renderResultType() {
-    let {item} = this.props;
-    let {resultIcon, resultType, model} = item;
+    const {item} = this.props;
+    const {resultIcon, resultType, model} = item;
 
-    let isSettings = resultType === 'settings';
-    let isField = resultType === 'field';
-    let isRoute = resultType === 'route';
-    let isIntegration = resultType === 'integration';
+    const isSettings = resultType === 'settings';
+    const isField = resultType === 'field';
+    const isRoute = resultType === 'route';
+    const isIntegration = resultType === 'integration';
 
     if (resultIcon) {
       return resultIcon;

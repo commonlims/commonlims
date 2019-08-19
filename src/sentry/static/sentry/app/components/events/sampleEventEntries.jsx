@@ -58,12 +58,14 @@ const SampleEventEntries = createReactClass({
   },
 
   componentDidMount() {
-    let {event} = this.props;
+    const {event} = this.props;
 
-    if (!event.errors || !event.errors.length > 0) return;
-    let errors = event.errors;
-    let errorTypes = errors.map(errorEntries => errorEntries.type);
-    let errorMessages = errors.map(errorEntries => errorEntries.message);
+    if (!event.errors || !event.errors.length > 0) {
+      return;
+    }
+    const errors = event.errors;
+    const errorTypes = errors.map(errorEntries => errorEntries.type);
+    const errorMessages = errors.map(errorEntries => errorEntries.message);
 
     this.recordIssueError(errorTypes, errorMessages);
   },
@@ -77,10 +79,10 @@ const SampleEventEntries = createReactClass({
   interfaces: INTERFACES,
 
   render() {
-    let {group, isShare, event} = this.props;
-    let entries = event.entries.map((entry, entryIdx) => {
+    const {group, isShare, event} = this.props;
+    const entries = event.entries.map((entry, entryIdx) => {
       try {
-        let Component = this.interfaces[entry.type];
+        const Component = this.interfaces[entry.type];
         if (!Component) {
           /*eslint no-console:0*/
           window.console &&
@@ -113,7 +115,7 @@ const SampleEventEntries = createReactClass({
       }
     });
 
-    let hasContext =
+    const hasContext =
       !utils.objectIsEmpty(event.user) || !utils.objectIsEmpty(event.contexts);
 
     return (

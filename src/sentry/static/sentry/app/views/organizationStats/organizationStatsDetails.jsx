@@ -31,8 +31,8 @@ class OrganizationStats extends React.Component {
   };
 
   renderTooltip(point, pointIdx, chart) {
-    let timeLabel = chart.getTimeLabel(point);
-    let [accepted, rejected, blacklisted] = point.y;
+    const timeLabel = chart.getTimeLabel(point);
+    const [accepted, rejected, blacklisted] = point.y;
 
     let value = `${intcomma(accepted)} accepted`;
     if (rejected) {
@@ -51,7 +51,7 @@ class OrganizationStats extends React.Component {
   }
 
   render() {
-    let {
+    const {
       statsLoading,
       orgTotal,
       statsError,

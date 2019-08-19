@@ -28,7 +28,7 @@ const UploadSamplesButton = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId} = this.props;
+    const {orgId} = this.props;
     return {
       isModalOpen: false,
       formData: {
@@ -64,7 +64,7 @@ const UploadSamplesButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -92,23 +92,25 @@ const UploadSamplesButton = createReactClass({
   },
 
   handleUpload(event) {
-    if (!this.state.selectedFile) return;
+    if (!this.state.selectedFile) {
+      return;
+    }
 
     this.setState({state: FormState.SAVING}, () => {
-      let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
       // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
       // discuss if we rather want a specific batch endpoint.
       // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-      let endpoint = `/user-files/`;
+      const endpoint = '/user-files/';
       const data = new FormData();
 
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
       reader.onload = function() {
         //data.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        let data = {
+        const data = {
           content: btoa(reader.result),
           fileName: 'abc',
         };
@@ -150,8 +152,8 @@ const UploadSamplesButton = createReactClass({
   },
 
   render() {
-    let isSaving = this.state.state === FormState.SAVING;
-    let user = {};
+    const isSaving = this.state.state === FormState.SAVING;
+    const user = {};
     return (
       <React.Fragment>
         <a

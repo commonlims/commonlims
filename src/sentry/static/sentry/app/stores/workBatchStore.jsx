@@ -21,13 +21,13 @@ const WorkBatchStore = Reflux.createStore({
 
   setSubtaskManualOverride(subtaskId, value) {
     // TODO: using view
-    for (let current of this.workBatch.subtasks) {
+    for (const current of this.workBatch.subtasks) {
       if (current.view === subtaskId) {
         current.manualOverride = value;
-        let status = value ? 'done' : 'not done';
+        const status = value ? 'done' : 'not done';
 
         // TODO:
-        let activity = {
+        const activity = {
           id: '1',
           user: {
             id: '1',
@@ -59,7 +59,7 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   setField(field, value) {
-    for (let current of this.workBatch.fields) {
+    for (const current of this.workBatch.fields) {
       if (current.name === field.name) {
         current.value = value;
         break;
@@ -68,7 +68,7 @@ const WorkBatchStore = Reflux.createStore({
 
     // Validate that all required fields have been marked TODO wireframing here
     let allRequiredFilled = true;
-    for (let current of this.workBatch.fields) {
+    for (const current of this.workBatch.fields) {
       if (current.required && (current.value === null || current.value === '')) {
         allRequiredFilled = false;
         break;
@@ -90,7 +90,7 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   activateTab(tabId) {
-    for (let current of this.workBatch.tabs) {
+    for (const current of this.workBatch.tabs) {
       current.active = current.id === tabId;
     }
     this.trigger();
@@ -113,8 +113,8 @@ const WorkBatchStore = Reflux.createStore({
       items = [items];
     }
 
-    let itemsById = {};
-    let itemIds = new Set();
+    const itemsById = {};
+    const itemIds = new Set();
     items.forEach(item => {
       itemsById[item.id] = item;
       itemIds.add(item.id);
@@ -132,7 +132,7 @@ const WorkBatchStore = Reflux.createStore({
     });
 
     // New items
-    for (let itemId in itemsById) {
+    for (const itemId in itemsById) {
       this.items.push(itemsById[itemId]);
     }
 
@@ -171,8 +171,10 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   indexOfActivity(group_id, id) {
-    let group = this.get(group_id);
-    if (!group) return -1;
+    const group = this.get(group_id);
+    if (!group) {
+      return -1;
+    }
 
     for (let i = 0; i < group.activity.length; i++) {
       if (group.activity[i].id === id) {
@@ -197,11 +199,15 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   updateActivity(group_id, id, data) {
-    let group = this.get(group_id);
-    if (!group) return;
+    const group = this.get(group_id);
+    if (!group) {
+      return;
+    }
 
-    let index = this.indexOfActivity(group_id, id);
-    if (index === -1) return;
+    const index = this.indexOfActivity(group_id, id);
+    if (index === -1) {
+      return;
+    }
 
     // Here, we want to merge the new `data` being passed in
     // into the existing `data` object. This effectively
@@ -211,15 +217,21 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   removeActivity(group_id, id) {
-    let group = this.get(group_id);
-    if (!group) return -1;
+    const group = this.get(group_id);
+    if (!group) {
+      return -1;
+    }
 
-    let index = this.indexOfActivity(group.id, id);
-    if (index === -1) return -1;
+    const index = this.indexOfActivity(group.id, id);
+    if (index === -1) {
+      return -1;
+    }
 
-    let activity = group.activity.splice(index, 1);
+    const activity = group.activity.splice(index, 1);
 
-    if (activity[0].type === 'note') group.numComments--;
+    if (activity[0].type === 'note') {
+      group.numComments--;
+    }
 
     this.trigger(new Set([group.id]));
     return index;
@@ -238,7 +250,7 @@ const WorkBatchStore = Reflux.createStore({
 
   getAllItems() {
     // regroup pending changes by their itemID
-    let pendingById = {};
+    const pendingById = {};
     this.pendingChanges.forEach(change => {
       if (_.isUndefined(pendingById[change.id])) {
         pendingById[change.id] = [];
@@ -274,7 +286,7 @@ const WorkBatchStore = Reflux.createStore({
   },
 
   onAssignToSuccess(changeId, itemId, response) {
-    let item = this.get(itemId);
+    const item = this.get(itemId);
     if (!item) {
       return;
     }
@@ -294,7 +306,9 @@ const WorkBatchStore = Reflux.createStore({
   onDeleteError(changeId, itemIds, response) {
     showAlert(t('Unable to delete events. Please try again.'), 'error');
 
-    if (!itemIds) return;
+    if (!itemIds) {
+      return;
+    }
 
     itemIds.forEach(itemId => {
       this.clearStatus(itemId, 'delete');
@@ -304,7 +318,7 @@ const WorkBatchStore = Reflux.createStore({
 
   onDeleteSuccess(changeId, itemIds, response) {
     itemIds = this._itemIdsOrAll(itemIds);
-    let itemIdSet = new Set(itemIds);
+    const itemIdSet = new Set(itemIds);
     itemIds.forEach(itemId => {
       delete this.statuses[itemId];
       this.clearStatus(itemId, 'delete');
@@ -362,7 +376,7 @@ const WorkBatchStore = Reflux.createStore({
     });
 
     // Remove all but parent id (items were merged into this one)
-    let mergedIdSet = new Set(mergedIds);
+    const mergedIdSet = new Set(mergedIds);
 
     // Looks like the `PUT /api/0/projects/:orgId/:projectId/issues/` endpoint
     // actually returns a 204, so there is no `response` body

@@ -21,8 +21,9 @@ class EventsTableRow extends React.Component {
   getEventTitle = event => {
     switch (event.type) {
       case 'error':
-        if (event.metadata.type && event.metadata.value)
+        if (event.metadata.type && event.metadata.value) {
           return `${event.metadata.type}: ${event.metadata.value}`;
+        }
         return event.metadata.type || event.metadata.value || event.metadata.title;
       case 'csp':
         return event.metadata.message;
@@ -34,13 +35,13 @@ class EventsTableRow extends React.Component {
   };
 
   renderCrashFileLink() {
-    let {orgId, event, projectId} = this.props;
+    const {orgId, event, projectId} = this.props;
     if (!event.crashFile) {
       return null;
     }
-    let url = `/api/0/projects/${orgId}/${projectId}/events/${event.id}/attachments/${event
+    const url = `/api/0/projects/${orgId}/${projectId}/events/${event.id}/attachments/${event
       .crashFile.id}/?download=1`;
-    let crashFileType =
+    const crashFileType =
       event.crashFile.type === 'event.minidump' ? 'Minidump' : 'Crash file';
     return (
       <small>
@@ -50,8 +51,8 @@ class EventsTableRow extends React.Component {
   }
 
   render() {
-    let {className, event, orgId, projectId, groupId, tagList, hasUser} = this.props;
-    let tagMap = {};
+    const {className, event, orgId, projectId, groupId, tagList, hasUser} = this.props;
+    const tagMap = {};
     event.tags.forEach(tag => {
       tagMap[tag.key] = tag.value;
     });

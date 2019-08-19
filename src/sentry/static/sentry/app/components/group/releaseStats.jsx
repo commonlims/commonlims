@@ -32,7 +32,7 @@ const GroupReleaseStats = createReactClass({
   ],
 
   getInitialState() {
-    let envList = EnvironmentStore.getActive();
+    const envList = EnvironmentStore.getActive();
 
     return {
       envList,
@@ -41,8 +41,8 @@ const GroupReleaseStats = createReactClass({
   },
 
   getEnvironment(envName) {
-    let defaultEnv = EnvironmentStore.getDefault();
-    let queriedEnvironment = EnvironmentStore.getByName(envName);
+    const defaultEnv = EnvironmentStore.getDefault();
+    const queriedEnvironment = EnvironmentStore.getByName(envName);
 
     return queriedEnvironment || defaultEnv;
   },
@@ -52,14 +52,14 @@ const GroupReleaseStats = createReactClass({
   },
 
   render() {
-    let {group, project, allEnvironments} = this.props;
-    let {environment} = this.state;
+    const {group, project, allEnvironments} = this.props;
+    const {environment} = this.state;
 
-    let envName = environment ? environment.displayName : t('All Environments');
-    let projectId = project.slug;
-    let orgId = this.getOrganization().slug;
-    let hasRelease = new Set(project.features).has('releases');
-    let isLoading = !group || !allEnvironments;
+    const envName = environment ? environment.displayName : t('All Environments');
+    const projectId = project.slug;
+    const orgId = this.getOrganization().slug;
+    const hasRelease = new Set(project.features).has('releases');
+    const isLoading = !group || !allEnvironments;
 
     return (
       <div className="env-stats">

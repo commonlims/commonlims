@@ -32,7 +32,7 @@ const SampleExtraDetails = createReactClass({
   mixins: [ProjectState],
 
   render() {
-    let {
+    const {
       orgId,
       projectId,
       groupId,

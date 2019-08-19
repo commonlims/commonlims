@@ -49,20 +49,26 @@ class SamplesTagFilter extends React.Component {
   }
 
   componentWillUnmount() {
-    if (!this.api) return;
+    if (!this.api) {
+      return;
+    }
     this.api.clear();
   }
 
   getTagValuesAPIEndpoint = () => {
-    let {orgId, projectId, tag} = this.props;
+    const {orgId, projectId, tag} = this.props;
 
     return `/api/0/projects/${orgId}/${projectId}/tags/${tag.key}/values/`;
   };
 
   handleLoadOptions = () => {
-    let {tag} = this.props;
-    if (tag.isInput || tag.predefined) return;
-    if (!this.api) return;
+    const {tag} = this.props;
+    if (tag.isInput || tag.predefined) {
+      return;
+    }
+    if (!this.api) {
+      return;
+    }
 
     this.setState({
       isLoading: true,
@@ -83,7 +89,7 @@ class SamplesTagFilter extends React.Component {
   };
 
   handleChangeInput = e => {
-    let value = e.target.value;
+    const value = e.target.value;
     this.setState({
       textValue: value,
     });
@@ -95,7 +101,9 @@ class SamplesTagFilter extends React.Component {
   }, 150);
 
   handleOpenMenu = () => {
-    if (this.props.tag.predefined) return;
+    if (this.props.tag.predefined) {
+      return;
+    }
 
     this.setState(
       {
@@ -106,7 +114,7 @@ class SamplesTagFilter extends React.Component {
   };
 
   handleChangeSelect = valueObj => {
-    let value = valueObj ? valueObj.value : null;
+    const value = valueObj ? valueObj.value : null;
     this.handleChange(value);
   };
 
@@ -120,7 +128,7 @@ class SamplesTagFilter extends React.Component {
   };
 
   handleChange = value => {
-    let {onSelect, tag} = this.props;
+    const {onSelect, tag} = this.props;
 
     this.setState(
       {
@@ -133,7 +141,7 @@ class SamplesTagFilter extends React.Component {
   };
 
   render() {
-    let {tag} = this.props;
+    const {tag} = this.props;
 
     return (
       <div className="stream-tag-filter">

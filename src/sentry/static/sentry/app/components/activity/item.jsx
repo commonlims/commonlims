@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import marked from 'marked';
 
 import PullRequestLink from 'app/components/pullRequestLink';
@@ -15,7 +15,7 @@ import TeamStore from 'app/stores/teamStore';
 import TimeSince from 'app/components/timeSince';
 import Version from 'app/components/version';
 
-import { t, tn, tct } from 'app/locale';
+import {t, tn, tct} from 'app/locale';
 
 class ActivityItem extends React.Component {
   static propTypes = {
@@ -40,30 +40,30 @@ class ActivityItem extends React.Component {
 
   componentDidMount() {
     if (this.activityBubbleRef.current) {
-      let bubbleHeight = this.activityBubbleRef.current.offsetHeight;
+      const bubbleHeight = this.activityBubbleRef.current.offsetHeight;
 
       if (bubbleHeight > this.props.clipHeight) {
         // okay if this causes re-render; cannot determine until
         // rendered first anyways
         // eslint-disable-next-line react/no-did-mount-set-state
-        this.setState({ clipped: true });
+        this.setState({clipped: true});
       }
     }
   }
 
   formatProjectActivity = (author, item) => {
-    let data = item.data;
-    let orgId = this.props.orgId;
-    let project = item.project;
-    let issue = item.issue;
+    const data = item.data;
+    const orgId = this.props.orgId;
+    const project = item.project;
+    const issue = item.issue;
 
-    let issueLink = issue ? (
+    const issueLink = issue ? (
       <IssueLink orgId={orgId} projectId={project.slug} issue={issue}>
         {issue.shortId}
       </IssueLink>
     ) : null;
 
-    let versionLink = data.version ? (
+    const versionLink = data.version ? (
       <VersionHoverCard orgId={orgId} projectId={project.slug} version={data.version}>
         <Version version={data.version} orgId={orgId} projectId={project.slug} />
       </VersionHoverCard>
@@ -218,8 +218,8 @@ class ActivityItem extends React.Component {
               {data.source.shortId}
             </a>
           ) : (
-              t('a group')
-            ),
+            t('a group')
+          ),
           issueLink
         );
       case 'first_seen':
@@ -231,7 +231,7 @@ class ActivityItem extends React.Component {
         let assignee;
 
         if (data.assigneeType == 'team') {
-          let team = TeamStore.getById(data.assignee);
+          const team = TeamStore.getById(data.assignee);
           assignee = team ? team.slug : '<unknown-team>';
 
           return tct('[author] assigned [issue] to #[assignee]', {
@@ -294,29 +294,29 @@ class ActivityItem extends React.Component {
   };
 
   render() {
-    let item = this.props.item;
-    let orgId = this.props.orgId;
+    const item = this.props.item;
+    const orgId = this.props.orgId;
 
     let bubbleClassName = 'activity-item-bubble';
     if (this.state.clipped) {
       bubbleClassName += ' clipped';
     }
 
-    let avatar = item.user ? (
+    const avatar = item.user ? (
       <Avatar user={item.user} size={36} className="activity-avatar" />
     ) : (
-        <div className="activity-avatar avatar sentry">
-          <span className="icon-sentry-logo" />
-        </div>
-      );
+      <div className="activity-avatar avatar sentry">
+        <span className="icon-sentry-logo" />
+      </div>
+    );
 
-    let author = {
+    const author = {
       name: item.user ? item.user.name : 'Sentry',
       avatar,
     };
 
     if (item.type === 'note') {
-      let noteBody = marked(item.data.text);
+      const noteBody = marked(item.data.text);
       return (
         <li className="activity-item activity-item-compact">
           <div className="activity-item-content">
@@ -330,7 +330,7 @@ class ActivityItem extends React.Component {
             <div
               className={bubbleClassName}
               ref={this.activityBubbleRef}
-              dangerouslySetInnerHTML={{ __html: noteBody }}
+              dangerouslySetInnerHTML={{__html: noteBody}}
             />
             <div className="activity-meta">
               <Link className="project" to={`/${orgId}/${item.project.slug}/`}>

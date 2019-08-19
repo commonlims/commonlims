@@ -14,8 +14,8 @@ const SampleSeenBy = createReactClass({
   displayName: 'SampleSeenBy',
 
   render() {
-    let activeUser = ConfigStore.get('user');
-    let group = this.getGroup();
+    const activeUser = ConfigStore.get('user');
+    const group = this.getGroup();
 
     // NOTE: Sometimes group.seenBy is undefined, even though the /groups/{id} API
     //       endpoint guarantees an array. We haven't figured out HOW GroupSeenBy
@@ -24,7 +24,7 @@ const SampleSeenBy = createReactClass({
     //
     // See: https://github.com/getsentry/sentry/issues/2387
 
-    let seenBy = group.seenBy || [];
+    const seenBy = group.seenBy || [];
     if (seenBy.length === 0) {
       return null;
     }

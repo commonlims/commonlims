@@ -44,7 +44,7 @@ const SearchBar = createReactClass({
      */
     getLastTermIndex(query, cursor) {
       // TODO: work with quoted-terms
-      let cursorOffset = query.slice(cursor).search(/\s|$/);
+      const cursorOffset = query.slice(cursor).search(/\s|$/);
       return cursor + (cursorOffset === -1 ? 0 : cursorOffset);
     },
 
@@ -214,7 +214,7 @@ const SearchBar = createReactClass({
       loading: true,
     });
 
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
 
     this.api.request(`/projects/${orgId}/${projectId}/tags/${tag.key}/values/`, {
       data: {
@@ -240,13 +240,13 @@ const SearchBar = createReactClass({
    * with results
    */
   getPredefinedTagValues: function(tag, query, callback) {
-    let values = tag.values.filter(value => value.indexOf(query) > -1);
+    const values = tag.values.filter(value => value.indexOf(query) > -1);
 
     callback(values, tag.key);
   },
 
   onInputClick() {
-    let cursor = this.getCursorPosition();
+    const cursor = this.getCursorPosition();
 
     if (
       cursor === this.state.query.length &&
@@ -272,11 +272,11 @@ const SearchBar = createReactClass({
       this.blurTimeout = null;
     }
 
-    let cursor = this.getCursorPosition();
+    const cursor = this.getCursorPosition();
     let query = this.state.query;
 
-    let lastTermIndex = SearchBar.getLastTermIndex(query, cursor);
-    let terms = SearchBar.getQueryTerms(query.slice(0, lastTermIndex));
+    const lastTermIndex = SearchBar.getLastTermIndex(query, cursor);
+    const terms = SearchBar.getQueryTerms(query.slice(0, lastTermIndex));
 
     if (
       !terms || // no terms
@@ -293,11 +293,11 @@ const SearchBar = createReactClass({
       });
     }
 
-    let last = terms.pop();
+    const last = terms.pop();
     let autoCompleteItems;
     let matchValue;
     let tagName;
-    let index = last.indexOf(':');
+    const index = last.indexOf(':');
 
     if (index === -1) {
       // No colon present; must still be deciding key
@@ -312,7 +312,7 @@ const SearchBar = createReactClass({
 
       // filter existing items immediately, until API can return
       // with actual tag value results
-      let filteredSearchItems = this.state.searchItems.filter(
+      const filteredSearchItems = this.state.searchItems.filter(
         item => query && item.value.indexOf(query) !== -1
       );
 
@@ -321,9 +321,11 @@ const SearchBar = createReactClass({
         searchItems: filteredSearchItems,
       });
 
-      let tag = TagStore.getTag(tagName);
+      const tag = TagStore.getTag(tagName);
 
-      if (!tag) return undefined;
+      if (!tag) {
+        return undefined;
+      }
 
       // Ignore the environment tag if the feature is active and excludeEnvironment = true
       if (
@@ -349,7 +351,7 @@ const SearchBar = createReactClass({
 
   updateAutoCompleteState(autoCompleteItems, tagName) {
     autoCompleteItems = autoCompleteItems.map(item => {
-      let out = {
+      const out = {
         desc: item,
         value: item,
       };
@@ -385,10 +387,12 @@ const SearchBar = createReactClass({
   },
 
   onKeyDown(evt) {
-    let state = this.state;
-    let searchItems = state.searchItems;
+    const state = this.state;
+    const searchItems = state.searchItems;
 
-    if (!searchItems.length) return;
+    if (!searchItems.length) {
+      return;
+    }
 
     if (evt.key === 'ArrowDown' || evt.key === 'ArrowUp') {
       evt.preventDefault();
@@ -411,11 +415,11 @@ const SearchBar = createReactClass({
   },
 
   onAutoComplete(replaceText) {
-    let cursor = this.getCursorPosition();
-    let query = this.state.query;
+    const cursor = this.getCursorPosition();
+    const query = this.state.query;
 
-    let lastTermIndex = SearchBar.getLastTermIndex(query, cursor);
-    let terms = SearchBar.getQueryTerms(query.slice(0, lastTermIndex));
+    const lastTermIndex = SearchBar.getLastTermIndex(query, cursor);
+    const terms = SearchBar.getQueryTerms(query.slice(0, lastTermIndex));
     let newQuery;
 
     // If not postfixed with : (tag value), add trailing space
@@ -424,7 +428,7 @@ const SearchBar = createReactClass({
     if (!terms) {
       newQuery = replaceText;
     } else {
-      let last = terms.pop();
+      const last = terms.pop();
 
       newQuery = query.slice(0, lastTermIndex); // get text preceding last term
 
@@ -444,7 +448,7 @@ const SearchBar = createReactClass({
       },
       () => {
         // setting a new input value will lose focus; restore it
-        let node = ReactDOM.findDOMNode(this.refs.searchInput);
+        const node = ReactDOM.findDOMNode(this.refs.searchInput);
         node.focus();
 
         // then update the autocomplete box with new contextTypes
@@ -463,12 +467,14 @@ const SearchBar = createReactClass({
   },
 
   render() {
-    let dropdownStyle = {
+    const dropdownStyle = {
       display: this.state.dropdownVisible ? 'block' : 'none',
     };
 
-    let rootClassNames = ['search'];
-    if (this.props.disabled) rootClassNames.push('disabled');
+    const rootClassNames = ['search'];
+    if (this.props.disabled) {
+      rootClassNames.push('disabled');
+    }
 
     return (
       <div className={classNames(rootClassNames)}>

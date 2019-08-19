@@ -3,14 +3,14 @@ import React from 'react';
 
 import createReactClass from 'create-react-class';
 
-import { Panel, PanelBody } from 'app/components/panels';
+import {Panel, PanelBody} from 'app/components/panels';
 import ApiMixin from 'app/mixins/apiMixin';
 import CompactWorkBatch from 'app/components/compactWorkBatch';
 import EmptyMessage from 'app/views/settings/components/emptyMessage';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Pagination from 'app/components/pagination';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 const IssueList = createReactClass({
   displayName: 'IssueList',
@@ -50,9 +50,11 @@ const IssueList = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    let location = this.props.location;
-    let nextLocation = nextProps.location;
-    if (!location) return;
+    const location = this.props.location;
+    const nextLocation = nextProps.location;
+    if (!location) {
+      return;
+    }
 
     if (
       location.pathname != nextLocation.pathname ||
@@ -67,7 +69,7 @@ const IssueList = createReactClass({
   },
 
   fetchData() {
-    let location = this.props.location;
+    const location = this.props.location;
     this.api.clear();
     this.api.request(this.props.endpoint, {
       method: 'GET',
@@ -95,12 +97,14 @@ const IssueList = createReactClass({
 
   renderResults() {
     let body;
-    const { noBorder } = this.props;
+    const {noBorder} = this.props;
 
-    if (this.state.loading) body = this.renderLoading();
-    else if (this.state.error) body = <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.issueIds.length > 0) {
-      const panelStyle = noBorder ? { border: 0, borderRadius: 0 } : {};
+    if (this.state.loading) {
+      body = this.renderLoading();
+    } else if (this.state.error) {
+      body = <LoadingError onRetry={this.fetchData} />;
+    } else if (this.state.issueIds.length > 0) {
+      const panelStyle = noBorder ? {border: 0, borderRadius: 0} : {};
 
       body = (
         <Panel style={panelStyle}>
@@ -119,7 +123,9 @@ const IssueList = createReactClass({
           </PanelBody>
         </Panel>
       );
-    } else body = (this.props.renderEmpty || this.renderEmpty)();
+    } else {
+      body = (this.props.renderEmpty || this.renderEmpty)();
+    }
 
     return body;
   },
@@ -133,7 +139,7 @@ const IssueList = createReactClass({
   },
 
   renderEmpty() {
-    const { emptyText } = this.props;
+    const {emptyText} = this.props;
 
     return (
       <Panel>

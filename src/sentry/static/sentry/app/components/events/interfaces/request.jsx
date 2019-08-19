@@ -44,10 +44,10 @@ class RequestInterface extends React.Component {
   };
 
   render() {
-    let group = this.props.group;
-    let evt = this.props.event;
-    let data = this.props.data;
-    let view = this.state.view;
+    const group = this.props.group;
+    const evt = this.props.event;
+    const data = this.props.data;
+    const view = this.state.view;
 
     let fullUrl = data.url;
     let parsedUrl = null;
@@ -72,7 +72,7 @@ class RequestInterface extends React.Component {
       parsedUrl.href = fullUrl;
     }
 
-    let children = [];
+    const children = [];
 
     if (!this.isPartial() && fullUrl) {
       children.push(
@@ -117,7 +117,7 @@ class RequestInterface extends React.Component {
       </h3>
     );
 
-    let title = <div>{children}</div>;
+    const title = <div>{children}</div>;
 
     return (
       <GroupEventDataSection

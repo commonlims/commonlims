@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import classNames from 'classnames';
 
 class ListLink extends React.Component {
@@ -31,23 +31,27 @@ class ListLink extends React.Component {
 
   isActive = () => {
     return (this.props.isActive || this.context.router.isActive)(
-      { pathname: this.props.to, query: this.props.query },
+      {pathname: this.props.to, query: this.props.query},
       this.props.index
     );
   };
 
   getClassName = () => {
-    let _classNames = {};
+    const _classNames = {};
 
-    if (this.props.className) _classNames[this.props.className] = true;
+    if (this.props.className) {
+      _classNames[this.props.className] = true;
+    }
 
-    if (this.isActive()) _classNames[this.props.activeClassName] = true;
+    if (this.isActive()) {
+      _classNames[this.props.activeClassName] = true;
+    }
 
     return classNames(_classNames);
   };
 
   render() {
-    let carriedProps = _.omit(this.props, 'activeClassName', 'isActive', 'index');
+    const carriedProps = _.omit(this.props, 'activeClassName', 'isActive', 'index');
     return (
       <li className={this.getClassName()}>
         <Link {...carriedProps} onlyActiveOnIndex={this.props.index}>

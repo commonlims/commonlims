@@ -34,8 +34,8 @@ const ProjectInstallPlatform = createReactClass({
 
   getInitialState(props) {
     props = props || this.props;
-    let params = props.params;
-    let key = params.platform;
+    const params = props.params;
+    const key = params.platform;
     let integration;
     let platform;
 
@@ -77,7 +77,7 @@ const ProjectInstallPlatform = createReactClass({
   },
 
   fetchData() {
-    let {orgId, projectId, platform} = this.props.params;
+    const {orgId, projectId, platform} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/docs/${platform}/`, {
       success: data => {
         this.setState({
@@ -96,8 +96,8 @@ const ProjectInstallPlatform = createReactClass({
   },
 
   getPlatformLink(platform, display) {
-    let {orgId, projectId} = this.props.params;
-    let path = this.props.linkPath(orgId, projectId, platform);
+    const {orgId, projectId} = this.props.params;
+    const path = this.props.linkPath(orgId, projectId, platform);
     return (
       <Link key={platform} to={path} className="list-group-item">
         {display || platform}
@@ -106,8 +106,8 @@ const ProjectInstallPlatform = createReactClass({
   },
 
   render() {
-    let {integration, platform} = this.state;
-    let {orgId, projectId} = this.props.params;
+    const {integration, platform} = this.state;
+    const {orgId, projectId} = this.props.params;
 
     if (!integration || !platform) {
       return <NotFound />;

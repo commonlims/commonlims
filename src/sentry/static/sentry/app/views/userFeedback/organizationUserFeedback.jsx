@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import withOrganization from 'app/utils/withOrganization';
 import SentryTypes from 'app/sentryTypes';
 import Feature from 'app/components/acl/feature';
@@ -11,10 +11,10 @@ import EventUserFeedback from 'app/components/events/userFeedback';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import GlobalSelectionHeader from 'app/components/organizations/globalSelectionHeader';
 import AsyncView from 'app/views/asyncView';
-import { PageContent } from 'app/styles/organization';
+import {PageContent} from 'app/styles/organization';
 
 import UserFeedbackContainer from './container';
-import { getQuery } from './utils';
+import {getQuery} from './utils';
 
 class OrganizationUserFeedback extends AsyncView {
   static propTypes = {
@@ -22,7 +22,7 @@ class OrganizationUserFeedback extends AsyncView {
   };
 
   getEndpoints() {
-    const { organization, location: { search } } = this.props;
+    const {organization, location: {search}} = this.props;
 
     return [
       [
@@ -40,7 +40,7 @@ class OrganizationUserFeedback extends AsyncView {
   }
 
   renderResults() {
-    const { orgId } = this.props.params;
+    const {orgId} = this.props.params;
 
     const children = this.state.reportList.map(item => {
       const issue = item.issue;
@@ -83,7 +83,7 @@ class OrganizationUserFeedback extends AsyncView {
   }
 
   renderStreamBody() {
-    const { loading, reportList } = this.state;
+    const {loading, reportList} = this.state;
 
     if (loading) {
       return <LoadingIndicator />;
@@ -97,10 +97,10 @@ class OrganizationUserFeedback extends AsyncView {
   }
 
   renderBody() {
-    const { organization } = this.props;
-    const { location } = this.props;
-    const { status } = getQuery(location.search);
-    const { reportListPageLinks } = this.state;
+    const {organization} = this.props;
+    const {location} = this.props;
+    const {status} = getQuery(location.search);
+    const {reportListPageLinks} = this.state;
 
     return (
       <Feature
@@ -123,5 +123,5 @@ class OrganizationUserFeedback extends AsyncView {
   }
 }
 
-export { OrganizationUserFeedback };
+export {OrganizationUserFeedback};
 export default withOrganization(OrganizationUserFeedback);

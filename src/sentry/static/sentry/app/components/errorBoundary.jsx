@@ -1,16 +1,16 @@
-import { browserHistory } from 'react-router';
+import {browserHistory} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'react-emotion';
 import * as Sentry from '@sentry/browser';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import Alert from 'app/components/alert';
 import DetailedError from 'app/components/errors/detailedError';
 
-let exclamation = ['Error'];
+const exclamation = ['Error'];
 
-let getExclamation = () => {
+const getExclamation = () => {
   return exclamation[Math.floor(Math.random() * exclamation.length)];
 };
 
@@ -26,13 +26,13 @@ class ErrorBoundary extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: null };
+    this.state = {error: null};
   }
 
   componentDidMount() {
     // Listen for route changes so we can clear error
     this.unlistenBrowserHistory = browserHistory.listen(() =>
-      this.setState({ error: null })
+      this.setState({error: null})
     );
   }
 
@@ -43,7 +43,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({ error });
+    this.setState({error});
     Sentry.withScope(scope => {
       scope.setExtra('errorInfo', errorInfo);
       Sentry.captureException(error);
@@ -52,7 +52,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.error) {
-      let { mini, message, className } = this.props;
+      const {mini, message, className} = this.props;
 
       if (mini) {
         return (
@@ -66,9 +66,7 @@ class ErrorBoundary extends React.Component {
         <Wrapper>
           <DetailedError
             heading={getExclamation()}
-            message={t(
-              `There was an exception while rendering the page.`
-            )}
+            message={t('There was an exception while rendering the page.')}
           />
           <StackTrace>{this.state.error.toString()}</StackTrace>
         </Wrapper>

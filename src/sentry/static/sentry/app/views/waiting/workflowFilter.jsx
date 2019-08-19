@@ -48,12 +48,14 @@ class WorkflowFilter extends React.Component {
   }
 
   componentWillUnmount() {
-    if (!this.api) return;
+    if (!this.api) {
+      return;
+    }
     this.api.clear();
   }
 
   getTagValuesAPIEndpoint = () => {
-    let {orgId, projectId, tag} = this.props;
+    const {orgId, projectId, tag} = this.props;
 
     return `/api/0/projects/${orgId}/${projectId}/tags/${tag.key}/values/`;
   };
@@ -61,7 +63,7 @@ class WorkflowFilter extends React.Component {
   handleLoadOptions = () => {};
 
   handleChangeInput = e => {
-    let value = e.target.value;
+    const value = e.target.value;
     this.setState({
       textValue: value,
     });
@@ -73,7 +75,9 @@ class WorkflowFilter extends React.Component {
   }, 150);
 
   handleOpenMenu = () => {
-    if (this.props.tag.predefined) return;
+    if (this.props.tag.predefined) {
+      return;
+    }
 
     this.setState(
       {
@@ -84,7 +88,7 @@ class WorkflowFilter extends React.Component {
   };
 
   handleChangeSelect = valueObj => {
-    let value = valueObj ? valueObj.value : null;
+    const value = valueObj ? valueObj.value : null;
     this.handleChange(value);
   };
 
@@ -98,7 +102,7 @@ class WorkflowFilter extends React.Component {
   };
 
   handleChange = value => {
-    let {onSelect, tag} = this.props;
+    const {onSelect, tag} = this.props;
 
     this.setState(
       {
@@ -111,7 +115,7 @@ class WorkflowFilter extends React.Component {
   };
 
   render() {
-    let {tag} = this.props;
+    const {tag} = this.props;
 
     return (
       <div className="stream-tag-filter">

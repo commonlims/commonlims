@@ -38,7 +38,7 @@ class SamplesFilters extends React.Component {
   };
 
   render() {
-    let {
+    const {
       access,
       orgId,
       searchId,

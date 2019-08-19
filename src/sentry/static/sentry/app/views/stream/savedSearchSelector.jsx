@@ -55,7 +55,7 @@ const SaveSearchButton = withApi(
     }
 
     onFieldChange(name, value) {
-      let formData = this.state.formData;
+      const formData = this.state.formData;
       formData[name] = value;
       this.setState({
         formData,
@@ -76,15 +76,15 @@ const SaveSearchButton = withApi(
       if (this.state.state == FormState.SAVING) {
         return;
       }
-      let {api} = this.props;
+      const {api} = this.props;
 
       this.setState(
         {
           state: FormState.SAVING,
         },
         () => {
-          let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-          let {orgId, projectId} = this.props;
+          const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+          const {orgId, projectId} = this.props;
           api.request(`/projects/${orgId}/${projectId}/searches/`, {
             method: 'POST',
             data: this.state.formData,
@@ -113,8 +113,8 @@ const SaveSearchButton = withApi(
     }
 
     render() {
-      let isSaving = this.state.state === FormState.SAVING;
-      let {tooltip, buttonTitle, style, children, disabled} = this.props;
+      const isSaving = this.state.state === FormState.SAVING;
+      const {tooltip, buttonTitle, style, children, disabled} = this.props;
       return (
         <React.Fragment>
           <Tooltip
@@ -221,20 +221,22 @@ const SavedSearchSelector = withApi(
     };
 
     getTitle() {
-      let searchId = this.props.searchId || null;
-      if (!searchId) return t('Custom Search');
-      let results = this.props.savedSearchList.filter(search => {
+      const searchId = this.props.searchId || null;
+      if (!searchId) {
+        return t('Custom Search');
+      }
+      const results = this.props.savedSearchList.filter(search => {
         return searchId === search.id;
       });
       return results.length ? results[0].name : t('Custom Search');
     }
 
     render() {
-      let {orgId, projectId, queryCount, queryMaxCount} = this.props;
-      let hasProject = !!projectId;
+      const {orgId, projectId, queryCount, queryMaxCount} = this.props;
+      const hasProject = !!projectId;
 
-      let children = this.props.savedSearchList.map(search => {
-        let url = hasProject
+      const children = this.props.savedSearchList.map(search => {
+        const url = hasProject
           ? `/${orgId}/${projectId}/searches/${search.id}/`
           : `/organizations/${orgId}/issues/searches/${search.id}/`;
 

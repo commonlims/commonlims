@@ -26,9 +26,11 @@ const ProjectTable = ({projectMap, projectTotals, orgTotal, organization}) => {
   }
 
   return projectTotals.sort((a, b) => b.received - a.received).map((item, index) => {
-    let project = projectMap[item.id];
+    const project = projectMap[item.id];
 
-    if (!project) return null;
+    if (!project) {
+      return null;
+    }
 
     return (
       <StyledProjectTableLayout key={index}>

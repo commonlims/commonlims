@@ -89,7 +89,9 @@ class Result extends React.Component {
   };
 
   updateDimensions = () => {
-    if (!this.container) return;
+    if (!this.container) {
+      return;
+    }
 
     this.setState({
       height: this.container.clientHeight,

@@ -16,7 +16,7 @@ class DeletionInProgress extends Component {
   };
 
   render() {
-    let {organization} = this.props;
+    const {organization} = this.props;
     return (
       <NarrowLayout>
         <p>
@@ -51,7 +51,9 @@ class DeletionPending extends Component {
   }
 
   onRestore = () => {
-    if (this.state.submitInProgress) return;
+    if (this.state.submitInProgress) {
+      return;
+    }
     this.setState({submitInProgress: true});
     this.api.request(`/organizations/${this.props.organization.slug}/`, {
       method: 'PUT',
@@ -71,8 +73,8 @@ class DeletionPending extends Component {
   };
 
   render() {
-    let {organization} = this.props;
-    let access = new Set(organization.access);
+    const {organization} = this.props;
+    const access = new Set(organization.access);
     return (
       <NarrowLayout>
         <h3>{t('Deletion Scheduled')}</h3>
@@ -124,14 +126,15 @@ class OrganizationDetailsBody extends Component {
   };
 
   render() {
-    let {organization} = this.context;
+    const {organization} = this.context;
 
-    if (organization.status)
+    if (organization.status) {
       if (organization.status.id === 'pending_deletion') {
         return <DeletionPending organization={organization} />;
       } else if (organization.status.id === 'deletion_in_progress') {
         return <DeletionInProgress organization={organization} />;
       }
+    }
     return (
       <div className="container">
         <div className="content content-with-margin">

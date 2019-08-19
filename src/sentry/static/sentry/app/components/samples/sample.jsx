@@ -55,17 +55,23 @@ const SampleComponent = createReactClass({
     if (!itemIds.has(this.props.id)) {
       return;
     }
-    let id = this.props.id;
-    let data = SampleStore.get(id);
+    const id = this.props.id;
+    const data = SampleStore.get(id);
     this.setState({
       data,
     });
   },
 
   toggleSelect(evt) {
-    if (evt.target.tagName === 'A') return;
-    if (evt.target.tagName === 'INPUT') return;
-    if (jQuery(evt.target).parents('a').length !== 0) return;
+    if (evt.target.tagName === 'A') {
+      return;
+    }
+    if (evt.target.tagName === 'INPUT') {
+      return;
+    }
+    if (jQuery(evt.target).parents('a').length !== 0) {
+      return;
+    }
 
     SelectedSampleStore.toggleSelect(this.state.data.id);
   },

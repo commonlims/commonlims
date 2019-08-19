@@ -41,20 +41,24 @@ class RepositoryRow extends React.Component {
   }
 
   cancelDelete = () => {
-    let {api, orgId, repository, onRepositoryChange} = this.props;
+    const {api, orgId, repository, onRepositoryChange} = this.props;
     cancelDeleteRepository(api, orgId, repository.id).then(
       data => {
-        if (onRepositoryChange) onRepositoryChange(data);
+        if (onRepositoryChange) {
+          onRepositoryChange(data);
+        }
       },
       () => {}
     );
   };
 
   deleteRepo = () => {
-    let {api, orgId, repository, onRepositoryChange} = this.props;
+    const {api, orgId, repository, onRepositoryChange} = this.props;
     deleteRepository(api, orgId, repository.id).then(
       data => {
-        if (onRepositoryChange) onRepositoryChange(data);
+        if (onRepositoryChange) {
+          onRepositoryChange(data);
+        }
       },
       () => {}
     );
@@ -65,8 +69,8 @@ class RepositoryRow extends React.Component {
   }
 
   render() {
-    let {repository, showProvider} = this.props;
-    let isActive = this.isActive;
+    const {repository, showProvider} = this.props;
+    const isActive = this.isActive;
 
     return (
       <Access access={['org:admin']}>
