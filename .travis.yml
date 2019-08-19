@@ -12,6 +12,12 @@ cache:
     - node_modules
     - "${HOME}/google-cloud-sdk"
 
+# Limit builds to master and develop. Note that pull requests to these will still trigger builds
+branches:
+  only:
+    - "master"
+    - "develop"
+
 addons:
   apt:
     update: true
