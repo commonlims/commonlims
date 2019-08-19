@@ -10,5 +10,7 @@ module.exports = {
     tick: true,
     jest: true,
   },
-  rules: {},
+  rules: {
+  	"eqeqeq": "off"  // TODO: Enable again
+  },
 };
