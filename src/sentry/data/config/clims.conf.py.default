@@ -9,7 +9,7 @@ CONF_ROOT = os.path.dirname(__file__)
 DATABASES = {
     'default': {
         'ENGINE': 'sentry.db.postgres',
-        'NAME': 'sentry',
+        'NAME': 'clims',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',

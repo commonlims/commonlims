@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from six.moves.urllib.parse import urlparse
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-SENTRY_CONFIG = os.environ['SENTRY_CONF'] = os.path.join(HERE, 'sentry.conf.py')
+CLIMS_CONFIG = os.environ['CLIMS_CONF'] = os.path.join(HERE, 'clims.conf.py')
 os.environ['SENTRY_SKIP_BACKEND_VALIDATION'] = '1'
 
 # No sentry or django imports before this point
@@ -73,7 +73,7 @@ def launch_redis():
 
 def spawn_sentry():
     report('sentry', 'Launching sentry server')
-    cl = Popen(['sentry', '--config=' + SENTRY_CONFIG, 'run', 'web',
+    cl = Popen(['sentry', '--config=' + CLIMS_CONFIG, 'run', 'web',
                 '-w', '1', '--bind', '127.0.0.1:%s' % settings.SENTRY_APIDOCS_WEB_PORT])
     return cl
 

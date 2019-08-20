@@ -1,7 +1,7 @@
 """
 Obtain
 VISUALSTUDIO_CLIENT_ID & VISUALSTUDIO_CLIENT_SECRET
-and put into sentry.conf.py
+and put into clims.conf.py
 """
 from __future__ import absolute_import
 
