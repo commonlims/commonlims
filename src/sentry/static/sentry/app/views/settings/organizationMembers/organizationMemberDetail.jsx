@@ -139,6 +139,7 @@ class OrganizationMemberDetail extends AsyncView {
   };
 
   handleSelectAll = () => {
+    // eslint-disable-next-line prefer-const
     let {member, selectedTeams} = this.state;
     const {teams} = this.getOrganization();
 

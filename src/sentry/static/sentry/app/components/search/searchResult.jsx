@@ -65,6 +65,7 @@ class SearchResult extends React.Component {
 
   renderContent() {
     const {highlighted, item, matches, params} = this.props;
+    // eslint-disable-next-line prefer-const
     let {sourceType, title, description, model} = item;
 
     if (matches) {

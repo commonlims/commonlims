@@ -76,7 +76,7 @@ describe('Sudo Modal', function() {
 
     // Clear mocks and allow DELETE
     Client.clearMockResponses();
-    orgDeleteMock = Client.addMockResponse({
+    const orgDeleteMock = Client.addMockResponse({
       url: '/organizations/org-slug/',
       method: 'DELETE',
       statusCode: 200,

@@ -104,8 +104,8 @@ class ContextData extends React.Component {
 
     /*eslint no-shadow:0*/
     function walk(value, depth) {
-      let i = 0,
-        children = [];
+      let i = 0;
+      const children = [];
       if (value === null) {
         return <span className="val-null">{'None'}</span>;
       } else if (value === true || value === false) {

@@ -157,6 +157,7 @@ class TimeRangeSelector extends React.PureComponent {
   };
 
   handleUseUtc = () => {
+    // eslint-disable-next-line prefer-const
     let {onChange, start, end} = this.props;
 
     start = start || this.state.start;

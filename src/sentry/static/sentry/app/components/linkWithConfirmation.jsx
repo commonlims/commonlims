@@ -22,6 +22,7 @@ class LinkWithConfirmation extends React.PureComponent {
   }
 
   render() {
+    // eslint-disable-next-line prefer-const
     let {className, disabled, title, children, ...otherProps} = this.props;
     if (this.props.disabled) {
       className += ' disabled';

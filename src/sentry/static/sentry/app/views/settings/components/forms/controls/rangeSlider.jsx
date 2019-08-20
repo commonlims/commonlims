@@ -115,6 +115,7 @@ class RangeSlider extends React.Component {
   };
 
   render() {
+    // eslint-disable-next-line prefer-const
     let {name, min, max, step, disabled, allowedValues, formatLabel} = this.props;
     const {sliderValue} = this.state;
     let actualValue = sliderValue;

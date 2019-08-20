@@ -99,7 +99,7 @@ describe('EventsChart', function() {
     expect(chartZoomInstance.currentPeriod.period).toEqual(null);
     expect(chartZoomInstance.currentPeriod.start).toEqual('2018-11-29T00:00:00');
     expect(chartZoomInstance.currentPeriod.end).toEqual('2018-12-02T00:00:00');
-    newParams = {
+    const newParams = {
       period: null,
       start: '2018-11-29T00:00:00',
       end: '2018-12-02T00:00:00',
@@ -134,7 +134,7 @@ describe('EventsChart', function() {
       start: null,
       end: null,
     });
-    newParams = {
+    const newParams = {
       period: '14d',
       start: null,
       end: null,
