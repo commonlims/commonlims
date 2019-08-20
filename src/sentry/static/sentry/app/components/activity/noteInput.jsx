@@ -180,36 +180,6 @@ const NoteInput = createReactClass({
     IndicatorStore.remove(loadingIndicator);
 
     return;
-
-    this.api.request('/work-batches/' + group.id + '/comments/', {
-      method: 'POST',
-      data: {
-        text: this.cleanMarkdown(this.state.value),
-        mentions: this.finalizeMentions(),
-      },
-      error: error => {
-        this.setState({
-          loading: false,
-          preview: false,
-          error: true,
-          errorJSON: error.responseJSON || makeDefaultErrorJson(),
-        });
-      },
-      success: data => {
-        this.setState({
-          value: '',
-          preview: false,
-          expanded: false,
-          loading: false,
-          mentions: [],
-        });
-        GroupStore.addActivity(group.id, data);
-        this.finish();
-      },
-      complete: () => {
-        IndicatorStore.remove(loadingIndicator);
-      },
-    });
   },
 
   update() {

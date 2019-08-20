@@ -2,6 +2,6 @@
 
 exports[`EventsTable renders 1`] = `
 <h1>
-  stuff
+  test
 </h1>
 `;
