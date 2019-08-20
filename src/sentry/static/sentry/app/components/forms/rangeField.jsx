@@ -45,6 +45,7 @@ export default class RangeField extends InputField {
     if (this.props.disabled) {
       suffixClassNames += ' disabled';
     }
+    // eslint-disable-next-line react/no-find-dom-node
     $(ReactDOM.findDOMNode(this.refs.input))
       .on('slider:ready', (e, data) => {
         const value = parseInt(data.value, 10);

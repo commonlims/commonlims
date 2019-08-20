@@ -18,15 +18,18 @@ export default class InputField extends FormField {
 
   componentWillUnmount() {
     this.removeTooltips();
+    // eslint-disable-next-line react/no-find-dom-node
     $(ReactDOM.findDOMNode(this)).unbind();
     super.componentWillUnmount();
   }
 
   attachTooltips() {
+    // eslint-disable-next-line react/no-find-dom-node
     $('.tip', ReactDOM.findDOMNode(this)).tooltip();
   }
 
   removeTooltips() {
+    // eslint-disable-next-line react/no-find-dom-node
     $('.tip', ReactDOM.findDOMNode(this)).tooltip('destroy');
   }
 

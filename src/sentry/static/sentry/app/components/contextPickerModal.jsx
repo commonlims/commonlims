@@ -177,6 +177,7 @@ class ContextPickerModal extends React.Component {
       return;
     }
 
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.projectSelect)
       .querySelector('input')
       .focus();
@@ -187,6 +188,7 @@ class ContextPickerModal extends React.Component {
       return;
     }
 
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.orgSelect)
       .querySelector('input')
       .focus();

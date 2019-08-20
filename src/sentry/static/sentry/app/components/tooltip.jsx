@@ -48,6 +48,7 @@ class Tooltip extends React.Component {
   };
 
   attachTooltips = ref => {
+    // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 
     const {title, tooltipOptions} = this.props;
@@ -65,6 +66,7 @@ class Tooltip extends React.Component {
   };
 
   removeTooltips = ref => {
+    // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 
     const {tooltipOptions} = this.props;

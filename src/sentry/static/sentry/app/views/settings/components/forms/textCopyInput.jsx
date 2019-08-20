@@ -81,6 +81,7 @@ class TextCopyInput extends React.Component {
 
     // We use findDOMNode here because `this.textRef` is not a dom node,
     // it's a ref to AutoSelectText
+    // eslint-disable-next-line react/no-find-dom-node
     selectText(ReactDOM.findDOMNode(this.textRef.current));
   };
 

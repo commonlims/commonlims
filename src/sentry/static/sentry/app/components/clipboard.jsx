@@ -42,6 +42,7 @@ class Clipboard extends React.Component {
     const hasErrorCb = typeof onError === 'function';
     const bindEventHandlers = !hideMessages || hasSuccessCb || hasErrorCb;
 
+    // eslint-disable-next-line react/no-find-dom-node
     this.clipboard = new Clip(ReactDOM.findDOMNode(ref), {
       text: () => this.props.value,
     });

@@ -140,6 +140,7 @@ const SearchBar = createReactClass({
   DROPDOWN_BLUR_DURATION: 200,
 
   blur() {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.refs.searchInput).blur();
   },
 
@@ -180,6 +181,7 @@ const SearchBar = createReactClass({
   },
 
   getCursorPosition() {
+    // eslint-disable-next-line react/no-find-dom-node
     return ReactDOM.findDOMNode(this.refs.searchInput).selectionStart;
   },
 
@@ -255,6 +257,7 @@ const SearchBar = createReactClass({
       // If the cursor lands at the end of the input value, and the preceding character
       // is not whitespace, then add a space and move the cursor beyond that space.
       this.setState({query: this.state.query + ' '}, () => {
+        // eslint-disable-next-line react/no-find-dom-node
         ReactDOM.findDOMNode(this.refs.searchInput).setSelectionRange(
           cursor + 1,
           cursor + 1
@@ -448,6 +451,7 @@ const SearchBar = createReactClass({
       },
       () => {
         // setting a new input value will lose focus; restore it
+        // eslint-disable-next-line react/no-find-dom-node
         const node = ReactDOM.findDOMNode(this.refs.searchInput);
         node.focus();
 
