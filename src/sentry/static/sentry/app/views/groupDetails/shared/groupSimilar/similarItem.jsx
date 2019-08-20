@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 
 import SentryTypes from 'app/sentryTypes';
-import {openDiffModal} from 'app/actionCreators/modal';
 import Checkbox from 'app/components/checkbox';
 import Count from 'app/components/count';
 import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
@@ -73,13 +72,7 @@ const SimilarIssueItem = createReactClass({
   },
 
   handleShowDiff(e) {
-    const {groupId, issue} = this.props;
-    openDiffModal({
-      baseIssueId: groupId,
-      targetIssueId: issue.id,
-    });
-
-    e.stopPropagation();
+    throw new Error('Not implemented');
   },
 
   handleCheckClick() {
