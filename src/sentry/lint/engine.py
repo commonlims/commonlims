@@ -279,8 +279,6 @@ def py_format(file_list=None):
         'autopep8',
         '--in-place',
         '-j0',
-        '--ignore',
-        'E721,E722,W690',
     ], py_file_list)
 
 

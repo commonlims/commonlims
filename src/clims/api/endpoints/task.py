@@ -9,11 +9,11 @@ class UserTaskAggregateEndpoint(OrganizationEndpoint):
     def get(self, request, organization):
         from clims.models import CamundaTask
         from django.db.models import Count
-        tasks = CamundaTask.objects.select_related('process')
+        tasks = CamundaTask.objects.select_related('process_definition')
         tasks_count = tasks.values(
             'name',
-            'process__name',
-            'process__key').annotate(
+            'process_definition__name',
+            'process_definition__key').annotate(
             count=Count('name'))
 
         def serialize(entries):
