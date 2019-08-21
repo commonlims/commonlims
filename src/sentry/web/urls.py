@@ -65,13 +65,13 @@ def init_all_applications():
     """
     Forces import of all applications to ensure code is registered.
     """
-    from django.db.models import get_apps, get_models
+    # TODO: Is this still needed in Django 1.9+
+    from django.apps import apps
 
-    for app in get_apps():
-        try:
-            get_models(app)
-        except Exception:
-            continue
+    try:
+        apps.get_models()
+    except Exception:
+        pass
 
 
 init_all_applications()
