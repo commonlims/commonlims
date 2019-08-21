@@ -12,16 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from sudo.views import redirect_to_sudo
 
 from sentry import roles
-from sentry.api.serializers import serialize
-from sentry.auth import access
-from sentry.auth.superuser import is_active_superuser
-from sentry.models import (
-    Authenticator, Organization, OrganizationMember, OrganizationStatus, Project, ProjectStatus,
-    Team, TeamStatus
-)
-from sentry.utils import auth
-from sentry.utils.audit import create_audit_entry
-from sentry.web.helpers import render_to_response
+
 from sentry.web.frontend.generic import FOREVER_CACHE
 
 
@@ -38,6 +29,9 @@ class OrganizationMixin(object):
         Returns the currently active organization for the request or None
         if no organization.
         """
+        from sentry.auth.superuser import is_active_superuser  # Django 1.9 setup issue
+        from sentry.models import Organization  # Django 1.9 setup issue
+        from sentry.models import OrganizationStatus  # Django 1.9 setup issue
 
         # TODO(dcramer): this is a huge hack, and we should refactor this
         # it is currently needed to handle the is_auth_required check on
@@ -103,12 +97,14 @@ class OrganizationMixin(object):
         return active_organization
 
     def _is_org_member(self, user, organization):
+        from sentry.models import OrganizationMember  # Django 1.9 setup issue
         return OrganizationMember.objects.filter(
             user=user,
             organization=organization,
         ).exists()
 
     def is_not_2fa_compliant(self, user, organization):
+        from sentry.models import Authenticator  # Django 1.9 setup issue
         return organization.flags.require_2fa and not Authenticator.objects.user_has_2fa(user)
 
     def get_active_team(self, request, organization, team_slug):
@@ -116,6 +112,8 @@ class OrganizationMixin(object):
         Returns the currently selected team for the request or None
         if no match.
         """
+        from sentry.models import Team  # Django 1.9 setup issue
+        from sentry.models import TeamStatus  # Django 1.9 setup issue
         try:
             team = Team.objects.get_from_cache(
                 slug=team_slug,
@@ -130,6 +128,8 @@ class OrganizationMixin(object):
         return team
 
     def get_active_project(self, request, organization, project_slug):
+        from sentry.models import Project  # Django 1.9 setup issue
+        from sentry.models import ProjectStatus  # Django 1.9 setup issue
         try:
             project = Project.objects.get_from_cache(
                 slug=project_slug,
@@ -231,6 +231,7 @@ class BaseView(View, OrganizationMixin):
         return middleware.process_view(request, self.dispatch, [request], {})
 
     def get_access(self, request, *args, **kwargs):
+        from sentry.auth import access  # Django 1.9 setup issue
         return access.DEFAULT
 
     def convert_args(self, request, *args, **kwargs):
@@ -245,6 +246,7 @@ class BaseView(View, OrganizationMixin):
         )
 
     def handle_auth_required(self, request, *args, **kwargs):
+        from sentry.utils import auth  # Django 1.9 setup issue
         auth.initiate_login(request, next_url=request.get_full_path())
         if 'organization_slug' in kwargs:
             redirect_to = reverse('sentry-auth-organization', args=[kwargs['organization_slug']])
@@ -280,6 +282,7 @@ class BaseView(View, OrganizationMixin):
         return context
 
     def respond(self, template, context=None, status=200):
+        from sentry.web.helpers import render_to_response  # Django 1.9 setup issue
         default_context = self.default_context
         if context:
             default_context.update(context)
@@ -290,6 +293,7 @@ class BaseView(View, OrganizationMixin):
         return HttpResponseRedirect(url)
 
     def get_team_list(self, user, organization):
+        from sentry.models import Team  # Django 1.9 setup issue
         return Team.objects.get_for_user(
             organization=organization,
             user=user,
@@ -297,6 +301,7 @@ class BaseView(View, OrganizationMixin):
         )
 
     def create_audit_entry(self, request, transaction_id=None, **kwargs):
+        from sentry.utils.audit import create_audit_entry  # Django 1.9 setup issue
         return create_audit_entry(request, transaction_id, audit_logger, **kwargs)
 
 
@@ -311,6 +316,7 @@ class OrganizationView(BaseView):
     valid_sso_required = True
 
     def get_access(self, request, organization, *args, **kwargs):
+        from sentry.auth import access  # Django 1.9 setup issue
         if organization is None:
             return access.DEFAULT
         return access.from_request(request, organization)
@@ -339,6 +345,7 @@ class OrganizationView(BaseView):
         return True
 
     def is_auth_required(self, request, organization_slug=None, *args, **kwargs):
+        from sentry.models import Organization  # Django 1.9 setup issue
         result = super(OrganizationView, self).is_auth_required(request, *args, **kwargs)
         if result:
             return result
@@ -363,6 +370,7 @@ class OrganizationView(BaseView):
         return False
 
     def handle_permission_required(self, request, organization, *args, **kwargs):
+        from sentry.utils import auth  # Django 1.9 setup issue
         if self.needs_sso(request, organization):
             logger.info(
                 'access.must-sso',
@@ -378,6 +386,7 @@ class OrganizationView(BaseView):
         return self.redirect(redirect_uri)
 
     def needs_sso(self, request, organization):
+        from sentry.utils import auth  # Django 1.9 setup issue
         if not organization:
             return False
         # XXX(dcramer): this branch should really never hit
@@ -404,6 +413,8 @@ class OrganizationView(BaseView):
         return (args, kwargs)
 
     def get_allowed_roles(self, request, organization, member=None):
+        from sentry.auth.superuser import is_active_superuser  # Django 1.9 setup issue
+        from sentry.models import OrganizationMember  # Django 1.9 setup issue
         can_admin = request.access.has_scope('member:admin')
 
         allowed_roles = []
@@ -492,6 +503,7 @@ class ProjectView(OrganizationView):
     """
 
     def get_context_data(self, request, organization, project, **kwargs):
+        from sentry.api.serializers import serialize  # Django 1.9 setup issue
         context = super(ProjectView, self).get_context_data(request, organization)
         context['project'] = project
         context['processing_issues'] = serialize(project).get('processingIssues', 0)

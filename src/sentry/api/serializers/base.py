@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
-from django.contrib.auth.models import AnonymousUser
 
 registry = {}
 
 
 def serialize(objects, user=None, serializer=None, *args, **kwargs):
+    from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
     if user is None:
         user = AnonymousUser()
 

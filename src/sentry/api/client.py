@@ -5,7 +5,6 @@ __all__ = ('ApiClient', )
 from django.core.urlresolvers import resolve
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from sentry.auth.superuser import Superuser
 from sentry.utils import json
 from sentry.utils.compat import implements_to_string
 
@@ -40,6 +39,7 @@ class ApiClient(object):
         is_superuser=None,
         request=None
     ):
+        from sentry.auth.superuser import Superuser  # Django 1.9 setup issue
         if self.prefix not in path:
             full_path = self.prefix + path
         else:

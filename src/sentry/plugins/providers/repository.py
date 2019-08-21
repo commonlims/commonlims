@@ -7,9 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import IntegrityError, transaction
 from rest_framework.response import Response
 
-from sentry.api.serializers import serialize
 from sentry.exceptions import PluginError
-from sentry.models import Repository
 from sentry.plugins.config import ConfigValidator
 from sentry.signals import repo_linked
 
@@ -32,6 +30,7 @@ class RepositoryProvider(ProviderMixin):
         self.id = id
 
     def dispatch(self, request, organization, **kwargs):
+        from sentry.models import Repository  # Django 1.9 setup issue
         if self.needs_auth(request.user):
             # TODO(dcramer): this should be a 401
             return Response(
@@ -111,6 +110,7 @@ class RepositoryProvider(ProviderMixin):
         else:
             repo_linked.send_robust(repo=repo, user=request.user, sender=self.__class__)
 
+        from sentry.api.serializers import serialize  # Django 1.9 setup issue
         return Response(serialize(repo, request.user), status=201)
 
     def get_config(self):

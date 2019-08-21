@@ -9,9 +9,6 @@ from django.utils.functional import cached_property
 
 from sentry import roles
 from sentry.auth.superuser import is_active_superuser
-from sentry.models import (
-    AuthIdentity, AuthProvider, OrganizationMember, SentryApp, UserPermission
-)
 
 
 def _sso_params(member):
@@ -20,6 +17,9 @@ def _sso_params(member):
     """
     # TODO(dcramer): we want to optimize this access pattern as its several
     # network hops and needed in a lot of places
+    from sentry.models import AuthIdentity  # Django 1.9 setup issue
+    from sentry.models import AuthProvider  # Django 1.9 setup issue
+    from sentry.models import OrganizationMember  # Django 1.9 setup issue
     try:
         auth_provider = AuthProvider.objects.get(
             organization=member.organization_id,
@@ -169,6 +169,8 @@ class NoAccess(BaseAccess):
 
 
 def from_request(request, organization=None, scopes=None):
+    from sentry.models import OrganizationMember  # Django 1.9 setup issue
+    from sentry.models import UserPermission  # Django 1.9 setup issue
     if not organization:
         return from_user(request.user,
                          organization=organization,
@@ -208,6 +210,7 @@ def from_request(request, organization=None, scopes=None):
 
 
 def from_sentry_app(user, organization=None):
+    from sentry.models import SentryApp  # Django 1.9 setup issue
     if not organization:
         return NoAccess()
 
@@ -228,6 +231,8 @@ def from_sentry_app(user, organization=None):
 
 
 def from_user(user, organization=None, scopes=None):
+    from sentry.models import OrganizationMember  # Django 1.9 setup issue
+    from sentry.models import UserPermission  # Django 1.9 setup issue
     if not user or user.is_anonymous() or not user.is_active:
         return DEFAULT
 
@@ -255,6 +260,7 @@ def from_user(user, organization=None, scopes=None):
 def from_member(member, scopes=None):
     # TODO(dcramer): we want to optimize this access pattern as its several
     # network hops and needed in a lot of places
+    from sentry.models import UserPermission  # Django 1.9 setup issue
     requires_sso, sso_is_valid = _sso_params(member)
 
     team_memberships = member.get_teams()

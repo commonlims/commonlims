@@ -4,11 +4,11 @@ from sentry.api.bases.organization import (
     OrganizationEndpoint
 )
 from sentry.api.exceptions import ResourceDoesNotExist
-from sentry.models import Dashboard
 
 
 class OrganizationDashboardEndpoint(OrganizationEndpoint):
     def convert_args(self, request, organization_slug, dashboard_id, *args, **kwargs):
+        from sentry.models import Dashboard   # Django 1.9 setup issue
         args, kwargs = super(OrganizationDashboardEndpoint,
                              self).convert_args(request, organization_slug)
 
@@ -20,6 +20,7 @@ class OrganizationDashboardEndpoint(OrganizationEndpoint):
         return (args, kwargs)
 
     def _get_dashboard(self, request, organization, dashboard_id):
+        from sentry.models import Dashboard  # Django 1.9 setup issue
         return Dashboard.objects.get(
             id=dashboard_id,
             organization_id=organization.id

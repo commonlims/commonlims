@@ -10,13 +10,9 @@ from __future__ import absolute_import, print_function
 __all__ = ('PluginManager', )
 
 import logging
-import importlib
-import pkgutil
-import inspect
 
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
-from clims.models.workbatchsettings import WorkBatchSettingsBuilder
 
 
 class PluginManager(InstanceManager):
@@ -46,40 +42,7 @@ class PluginManager(InstanceManager):
             yield plugin
 
     def _register_work_batches(self, class_path):
-        # TODO: Not caching this load for now for simplicity, fix that in the child class
-        # TODO: Don't do this with string parsing! rather similar to o.__module__.__module__
-        # TODO: This is a sketch. We need to (for example) ensure that user tasks are reloaded
-        # when the owning plugin is reloaded. For now we'll just load the object
-        # once per process.
-
-        def builders():
-            prefix = ".".join(class_path.split(".")[0:-2])
-            if not prefix:
-                return
-            root_module = prefix + ".work_batches"
-
-            try:
-                parent_mod = importlib.import_module(root_module)
-            except ImportError:
-                return
-
-            for _, child_mod_name, _ in pkgutil.iter_modules(
-                    parent_mod.__path__, root_module + "."):
-                child_mod = importlib.import_module(child_mod_name)
-                for _name, cls in inspect.getmembers(child_mod, inspect.isclass):
-                    if (issubclass(cls, WorkBatchSettingsBuilder)
-                            and cls != WorkBatchSettingsBuilder):
-                        yield cls()
-
-        for builder in builders():
-            # TODO: Handler might be a better name than settings!
-            settings = builder.get_settings()
-            self.work_batches.append(settings)
-            for handles in settings.handles:
-                if handles in self.handlers_mapped_by_work_batch_type:
-                    raise WorkBatchRegistrationException(
-                        "WorkBatch '{}' already has a handler".format(handles))
-                self.handlers_mapped_by_work_batch_type[handles] = settings
+        pass
 
     def all_work_batches(self):
         return self.work_batches

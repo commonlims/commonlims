@@ -3,9 +3,7 @@ from __future__ import absolute_import
 from rest_framework.response import Response
 
 from sentry.api.base import EnvironmentMixin
-from sentry.api.serializers import serialize
 from sentry.api.paginator import OffsetPaginator
-from clims.models import WorkBatch, WorkBatchStatus
 
 from .organizationmember import OrganizationMemberEndpoint
 
@@ -15,12 +13,15 @@ ERR_INVALID_STATS_PERIOD = "Invalid stats_period. Valid choices are '', '24h', a
 class OrganizationIssuesEndpoint(OrganizationMemberEndpoint, EnvironmentMixin):
     def get_queryset(self, request, organization, member, project_list):
         # Must return a 'sorty_by' selector for pagination that is a datetime
+        from clims.models import WorkBatch  # Django 1.9 setup issue
         return WorkBatch.objects.none()
 
     def get(self, request, organization, member):
         """
         Return a list of issues assigned to the given member.
         """
+        from sentry.api.serializers import serialize  # Django 1.9 setup issue
+        from clims.models import WorkBatchStatus  # Django 1.9 setup issue
         queryset = self.get_queryset(request, organization, member, [])
         status = request.GET.get('status', 'unresolved')
         if status == 'unresolved':

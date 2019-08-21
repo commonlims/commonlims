@@ -6,7 +6,7 @@ from sentry import roles
 from sentry.api.base import Endpoint
 from sentry.api.exceptions import ResourceDoesNotExist, ProjectMoved
 from sentry.auth.superuser import is_active_superuser
-from sentry.models import OrganizationMember, Project, ProjectStatus, ProjectRedirect
+
 from sentry.utils.sdk import configure_scope
 
 from .organization import OrganizationPermission
@@ -22,6 +22,7 @@ class ProjectPermission(OrganizationPermission):
     }
 
     def has_object_permission(self, request, view, project):
+        from sentry.models import OrganizationMember  # Django 1.9 setup issue
         result = super(ProjectPermission,
                        self).has_object_permission(request, view, project.organization)
 
@@ -102,6 +103,9 @@ class ProjectEndpoint(Endpoint):
     permission_classes = (ProjectPermission, )
 
     def convert_args(self, request, organization_slug, project_slug, *args, **kwargs):
+        from sentry.models import Project  # Django 1.9 setup issue
+        from sentry.models import ProjectStatus  # Django 1.9 setup issue
+        from sentry.models import ProjectRedirect  # Django 1.9 setup issue
         try:
             project = Project.objects.filter(
                 organization__slug=organization_slug,

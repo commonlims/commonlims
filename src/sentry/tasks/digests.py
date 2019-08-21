@@ -9,10 +9,6 @@ from sentry.digests.notifications import (
     build_digest,
     split_key,
 )
-from sentry.models import (
-    Project,
-    ProjectOption,
-)
 from sentry.tasks.base import instrumented_task
 from sentry.utils import snuba
 
@@ -43,6 +39,8 @@ def schedule_digests():
 @instrumented_task(name='sentry.tasks.digests.deliver_digest', queue='digests.delivery')
 def deliver_digest(key, schedule_timestamp=None):
     from sentry import digests
+    from sentry.models import ProjectOption  # Django 1.9 setup issue
+    from sentry.models import Project  # Django 1.9 setup issue
 
     try:
         plugin, project = split_key(key)

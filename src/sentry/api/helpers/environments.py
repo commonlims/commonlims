@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
 from sentry.api.exceptions import ResourceDoesNotExist
-from sentry.models import Environment
 
 
 def get_environments(request, organization):
+    from sentry.models import Environment  # Django 1.9 setup issue
     requested_environments = set(request.GET.getlist('environment'))
 
     if not requested_environments:

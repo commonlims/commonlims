@@ -23,7 +23,6 @@ from .exceptions import (
     IntegrationFormError, UnsupportedResponseType
 )
 from .constants import ERR_UNAUTHORIZED, ERR_INTERNAL, ERR_UNSUPPORTED_RESPONSE_TYPE
-from sentry.models import Identity, OrganizationIntegration
 
 
 FeatureDescription = namedtuple('FeatureDescription', [
@@ -229,6 +228,7 @@ class IntegrationInstallation(object):
 
     @property
     def org_integration(self):
+        from sentry.models import OrganizationIntegration  # Django 1.9 setup issue
         if self._org_integration is None:
             self._org_integration = OrganizationIntegration.objects.get(
                 organization_id=self.organization_id,
@@ -266,6 +266,7 @@ class IntegrationInstallation(object):
         For Integrations that rely solely on user auth for authentication
         """
 
+        from sentry.models import Identity  # Django 1.9 setup issue
         identity = Identity.objects.get(id=self.org_integration.default_auth_id)
         return identity
 

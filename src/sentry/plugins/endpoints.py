@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 from sentry.api.bases.group import GroupEndpoint
 from sentry.api.bases.project import ProjectEndpoint
-from sentry.models import GroupMeta
 
 
 class PluginProjectEndpoint(ProjectEndpoint):
@@ -33,6 +32,7 @@ class PluginGroupEndpoint(GroupEndpoint):
     view = None
 
     def _handle(self, request, group, *args, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         if self.view is None:
             return Response(status=405)
 

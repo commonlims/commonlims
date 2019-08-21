@@ -10,14 +10,10 @@ from __future__ import absolute_import, print_function
 import logging
 
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.template import loader, RequestContext, Context
 
-from sentry.api.serializers.base import serialize
 from sentry.auth import access
-from sentry.models import Team
-from sentry.utils.auth import get_login_url  # NOQA: backwards compatibility
 
 logger = logging.getLogger('sentry')
 
@@ -25,6 +21,9 @@ logger = logging.getLogger('sentry')
 def get_default_context(request, existing_context=None, team=None):
     from sentry import options
     from sentry.plugins import plugins
+    from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
+    from sentry.api.serializers.base import serialize  # Django 1.9 setup issue
+    from sentry.models import Team  # Django 1.9 setup issue
 
     context = {
         'CSRF_COOKIE_NAME': settings.CSRF_COOKIE_NAME,
@@ -92,6 +91,7 @@ def get_default_context(request, existing_context=None, team=None):
 
 
 def render_to_string(template, context=None, request=None):
+    from sentry.models import Team  # Django 1.9 setup issue
 
     # HACK: set team session value for dashboard redirect
     if context and 'team' in context and isinstance(context['team'], Team):

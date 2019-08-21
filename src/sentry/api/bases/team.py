@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from sentry.api.base import Endpoint
 from sentry.api.exceptions import ResourceDoesNotExist
-from sentry.models import Team, TeamStatus
 from sentry.utils.sdk import configure_scope
 
 from .organization import OrganizationPermission
@@ -34,6 +33,8 @@ class TeamEndpoint(Endpoint):
     permission_classes = (TeamPermission, )
 
     def convert_args(self, request, organization_slug, team_slug, *args, **kwargs):
+        from sentry.models import Team  # Django 1.9 setup issue
+        from sentry.models import TeamStatus  # Django 1.9 setup issue
         try:
             team = Team.objects.filter(
                 organization__slug=organization_slug,
