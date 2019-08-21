@@ -43,6 +43,7 @@ import ProjectSettings from 'app/views/projectSettings';
 import SamplesContainer from 'app/views/samples/index';
 import WaitingContainer from 'app/views/waiting/index';
 import WorkBatchList from 'app/views/workBatchList/index';
+import TaskList from 'app/views/taskList/index';
 import SampleDetails from 'app/views/sampleDetails';
 import SampleProcesses from 'app/views/sampleProcesses';
 import ProjectPlugins from 'app/views/projectPlugins';
@@ -748,7 +749,7 @@ function routes() {
         <Route component={errorHandler(OrganizationRoot)}>
           <IndexRoute component={errorHandler(WorkBatchList)} />
 
-          <Route path="tasks/" component={errorHandler(WorkBatchList)} />
+          <Route path="tasks/" component={errorHandler(TaskList)} />
           <Route path="work-batches/" component={errorHandler(WorkBatchList)} />
           <Route path="samples/" component={errorHandler(SamplesContainer)} />
 
