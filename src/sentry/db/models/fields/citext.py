@@ -12,7 +12,7 @@ import six
 
 from django.conf import settings
 from django.db import connections, models
-from django.db.models.signals import pre_syncdb
+from django.db.models.signals import pre_migrate
 
 
 __all__ = ('CITextField', 'CICharField', 'CIEmailField')
@@ -65,4 +65,4 @@ def create_citext_extension(db, **kwargs):
             pass
 
 
-pre_syncdb.connect(create_citext_extension)
+pre_migrate.connect(create_citext_extension)
