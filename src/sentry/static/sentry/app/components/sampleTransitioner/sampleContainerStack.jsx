@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Panel, PanelBody} from 'app/components/panels';
+import {Sample} from 'app/components/sampleTransitioner/sample';
 import SampleContainerStackActions from './actions';
 import {SampleContainer, SampleContainerDirectionality} from './sampleContainer';
-import { SampleLocation } from 'app/components/sampleTransitioner/sampleLocation';
-import { Sample } from 'app/components/sampleTransitioner/sample';
 
 class SampleContainerStack extends React.Component {
   // A SampleContainerStack allows the user to move between 1..n different containers
@@ -44,7 +43,7 @@ class SampleContainerStack extends React.Component {
   }
 
   onSampleWellMouseOver(location, sampleId) {
-    if(!this.props.onWellMouseOver) {
+    if (!this.props.onWellMouseOver) {
       return;
     }
 
@@ -64,7 +63,7 @@ class SampleContainerStack extends React.Component {
       transitionSourceLocations,
       transitionTargetLocations,
       transitionTargetLocationsOfHoveredSample,
-      activeSampleTransitionSourceLocation
+      activeSampleTransitionSourceLocation,
     } = this.props;
 
     return (
@@ -90,7 +89,9 @@ class SampleContainerStack extends React.Component {
               onWellMouseOver={this.onSampleWellMouseOver.bind(this)}
               onMouseOut={this.props.onMouseOut}
               samples={samples}
-              transitionTargetLocationsOfHoveredSample={transitionTargetLocationsOfHoveredSample}
+              transitionTargetLocationsOfHoveredSample={
+                transitionTargetLocationsOfHoveredSample
+              }
               activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
               transitionSourceLocations={transitionSourceLocations}
               transitionTargetLocations={transitionTargetLocations}
@@ -103,7 +104,6 @@ class SampleContainerStack extends React.Component {
 }
 
 SampleContainerStack.propTypes = {
-  title: PropTypes.string,
   onWellClicked: PropTypes.func,
   onWellMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func.isRequired,
@@ -117,7 +117,7 @@ SampleContainerStack.propTypes = {
   transitionTargetLocationsOfHoveredSample: PropTypes.arrayOf(PropTypes.shape()),
   transitionTargetLocations: PropTypes.arrayOf(PropTypes.shape()),
   transitionSourceLocations: PropTypes.arrayOf(PropTypes.shape()),
-  activeSampleTransition: PropTypes.shape(),
+  activeSampleTransitionSourceLocation: PropTypes.object,
 };
 
 SampleContainerStack.defaultProps = {

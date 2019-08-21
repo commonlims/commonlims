@@ -25,7 +25,7 @@ describe('OrganizationDetails', function() {
             },
           }),
         });
-        let tree = render(
+        const tree = render(
           <OrganizationDetails params={{orgId: 'org-slug'}} location={{}} />,
           TestStubs.routerContext()
         );
@@ -44,7 +44,7 @@ describe('OrganizationDetails', function() {
             },
           }),
         });
-        let tree = render(
+        const tree = render(
           <OrganizationDetails params={{orgId: 'org-slug'}} location={{}} />,
           TestStubs.routerContext()
         );
@@ -67,7 +67,7 @@ describe('OrganizationDetails', function() {
       });
 
       it('should render a deletion in progress prompt', function() {
-        let tree = render(
+        const tree = render(
           <OrganizationDetails params={{orgId: 'org-slug'}} location={{}} />,
           TestStubs.routerContext()
         );

@@ -67,7 +67,9 @@ export default class MultipleProjectSelector extends React.PureComponent {
    */
   handleClose = props => {
     // Only update if there are changes
-    if (!this.state.hasChanges) return;
+    if (!this.state.hasChanges) {
+      return;
+    }
     this.doUpdate();
   };
 

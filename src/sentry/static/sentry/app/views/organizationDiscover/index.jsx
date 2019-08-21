@@ -170,7 +170,9 @@ class OrganizationDiscoverContainer extends React.Component {
     const {organization} = this.context;
     const hasFeature = new Set(organization.features).has('discover');
 
-    if (!hasFeature) return this.renderComingSoon();
+    if (!hasFeature) {
+      return this.renderComingSoon();
+    }
 
     return (
       <DocumentTitle title={`Discover - ${organization.slug} - Sentry`}>

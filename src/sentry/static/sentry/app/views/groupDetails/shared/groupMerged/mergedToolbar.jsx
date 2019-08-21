@@ -5,7 +5,6 @@ import _ from 'lodash';
 import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 
-import {openDiffModal} from 'app/actionCreators/modal';
 import {t} from 'app/locale';
 import Button from 'app/components/button';
 import GroupingStore from 'app/stores/groupingStore';
@@ -18,7 +17,6 @@ const MergedToolbar = createReactClass({
   displayName: 'MergedToolbar',
 
   propTypes: {
-    groupId: PropTypes.string,
     onUnmerge: PropTypes.func,
     onToggleCollapse: PropTypes.func,
   },
@@ -26,7 +24,7 @@ const MergedToolbar = createReactClass({
   mixins: [Reflux.listenTo(GroupingStore, 'onGroupingUpdate')],
 
   getInitialState() {
-    let {
+    const {
       unmergeList,
       unmergeLastCollapsed,
       unmergeDisabled,
@@ -42,7 +40,7 @@ const MergedToolbar = createReactClass({
   },
 
   onGroupingUpdate(updateObj) {
-    let allowedKeys = [
+    const allowedKeys = [
       'unmergeLastCollapsed',
       'unmergeDisabled',
       'unmergeList',
@@ -53,28 +51,12 @@ const MergedToolbar = createReactClass({
   },
 
   handleShowDiff(e) {
-    let {groupId} = this.props;
-    let entries = this.state.unmergeList.entries();
-
-    // `unmergeList` should only have 2 items in map
-    if (this.state.unmergeList.size !== 2) return;
-
-    // only need eventId, not fingerprint
-    let [baseEventId, targetEventId] = Array.from(entries).map(([, eventId]) => eventId);
-
-    openDiffModal({
-      baseIssueId: groupId,
-      targetIssueId: groupId,
-      baseEventId,
-      targetEventId,
-    });
-
-    e.stopPropagation();
+    throw new Error('Not implemented');
   },
 
   render() {
-    let {onUnmerge, onToggleCollapse} = this.props;
-    let unmergeCount = (this.state.unmergeList && this.state.unmergeList.size) || 0;
+    const {onUnmerge, onToggleCollapse} = this.props;
+    const unmergeCount = (this.state.unmergeList && this.state.unmergeList.size) || 0;
 
     return (
       <StyledToolbar>

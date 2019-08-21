@@ -43,7 +43,9 @@ export default createReactClass({
 
   fetchData(event) {
     // TODO(dcramer): this API request happens twice, and we need a store for it
-    if (!event) return;
+    if (!event) {
+      return;
+    }
     this.api.request(
       `/projects/${this.props.orgId}/${this.props
         .projectId}/events/${event.id}/attachments/`,
@@ -63,12 +65,12 @@ export default createReactClass({
   },
 
   getDownloadUrl(attachment) {
-    let {orgId, event, projectId} = this.props;
+    const {orgId, event, projectId} = this.props;
     return `/api/0/projects/${orgId}/${projectId}/events/${event.id}/attachments/${attachment.id}/?download=1`;
   },
 
   render() {
-    let {attachmentList} = this.state;
+    const {attachmentList} = this.state;
     if (!(attachmentList && attachmentList.length)) {
       return null;
     }

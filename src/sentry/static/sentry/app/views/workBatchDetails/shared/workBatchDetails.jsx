@@ -2,32 +2,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import {browserHistory} from 'react-router';
 import DocumentTitle from 'react-document-title';
-import * as Sentry from '@sentry/browser';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import WorkBatchStore from 'app/stores/workBatchStore';
-import WorkBatchSettingsStore from 'app/stores/workBatchSettingsStore';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import SentryTypes from 'app/sentryTypes';
 import {t} from 'app/locale';
-
-import WorkBatchHeader from './header';
-import {ERROR_TYPES} from './constants';
 
 import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
 import WorkBatchDetailsActivity from 'app/views/workBatchDetails/shared/workBatchActivity';
 import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner';
 
+import WorkBatchHeader from './header';
+import {ERROR_TYPES} from './constants';
+
 const WorkBatchDetails = createReactClass({
   displayName: 'WorkBatchDetails',
 
   propTypes: {
     // Provided in the project version of group details
-    project: SentryTypes.Project,
     environment: SentryTypes.Environment,
   },
 
@@ -107,7 +103,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   onWorkBatchChange() {
-    let id = this.props.params.groupId; // TODO: Rename to workBatchId
+    const id = this.props.params.groupId; // TODO: Rename to workBatchId
     if (WorkBatchStore.workBatch.id === id) {
       this.setState({
         workBatch: WorkBatchStore.workBatch,
@@ -116,19 +112,22 @@ const WorkBatchDetails = createReactClass({
   },
 
   getWorkBatchDetailsEndpoint() {
-    let id = this.props.params.groupId;
+    const id = this.props.params.groupId;
     return '/work-batches/' + id + '/';
   },
 
   getTitle() {
-    let workBatch = this.state.workBatch;
+    const workBatch = this.state.workBatch;
 
-    if (!workBatch) return 'Sentry';
+    if (!workBatch) {
+      return 'Sentry';
+    }
 
     switch (workBatch.type) {
       case 'error':
-        if (workBatch.metadata.type && workBatch.metadata.value)
+        if (workBatch.metadata.type && workBatch.metadata.value) {
           return `${workBatch.metadata.type}: ${workBatch.metadata.value}`;
+        }
         return workBatch.metadata.type || workBatch.metadata.value;
       case 'csp':
         return workBatch.metadata.message;
@@ -152,7 +151,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   renderTodoItems() {
-    let ret = this.state.workBatch.subtasks.map(x => {
+    const ret = this.state.workBatch.subtasks.map(x => {
       return (
         <TodoItem
           handleManualClick={() => this.subtaskManualClick(x)}
@@ -168,15 +167,16 @@ const WorkBatchDetails = createReactClass({
   },
 
   activeTab() {
-    for (let tab of this.state.workBatch.tabs) {
+    for (const tab of this.state.workBatch.tabs) {
       if (tab.active) {
         return tab;
       }
     }
+    throw new Error('No active tab found');
   },
 
   renderTabComponent() {
-    let tab = this.activeTab();
+    const tab = this.activeTab();
     if (tab.id == 'samples') {
       return <SampleTransitioner sampleBatch={this.state.workBatch.sampleBatch} />;
     } else if (tab.id == 'details') {
@@ -185,12 +185,14 @@ const WorkBatchDetails = createReactClass({
       return <WorkBatchDetailsFiles workBatch={this.state.workBatch} />;
     } else if (tab.id == 'activity') {
       return <WorkBatchDetailsActivity workBatch={this.state.workBatch} />;
+    } else {
+      throw new Error('Unexpected tab id ' + tab.id);
     }
   },
 
   render() {
-    let params = this.props.params;
-    let {workBatch} = this.state;
+    const params = this.props.params;
+    const {workBatch} = this.state;
 
     if (this.state.error) {
       switch (this.state.errorType) {
@@ -203,7 +205,9 @@ const WorkBatchDetails = createReactClass({
         default:
           return <LoadingError onRetry={this.remountComponent} />;
       }
-    } else if (this.state.loading || !workBatch) return <LoadingIndicator />;
+    } else if (this.state.loading || !workBatch) {
+      return <LoadingIndicator />;
+    }
 
     return (
       <DocumentTitle title={this.getTitle()}>
@@ -250,6 +254,9 @@ const TodoItem = props => {
 TodoItem.propTypes = {
   status: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  handleTitleClick: PropTypes.func.isRequired,
+  handleManualClick: PropTypes.func.isRequired,
+  manualOverride: PropTypes.bool.isRequired,
 };
 
 export default WorkBatchDetails;

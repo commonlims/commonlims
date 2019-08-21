@@ -36,28 +36,28 @@ describe('SampleWell', function() {
   };
 
   it('renders the empty well icon by default', () => {
-    let wrapper = mountSampleWell();
+    const wrapper = mountSampleWell();
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-empty');
   });
 
   it('renders the full well icon if the well contains a sample', () => {
-    let wrapper = mountSampleWell({containsSampleId: 5});
+    const wrapper = mountSampleWell({containsSampleId: 5});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-full');
   });
 
   it('renders the correct icon if the well is a transition source', () => {
-    let wrapper = mountSampleWell({isTransitionSource: true});
+    const wrapper = mountSampleWell({isTransitionSource: true});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-transitioned');
   });
 
   it('renders the correct icon if the well is a transition target', () => {
-    let wrapper = mountSampleWell({isTransitionTarget: true});
+    const wrapper = mountSampleWell({isTransitionTarget: true});
     expect(wrapper.find(InlineSvg).props().src).toBe('icon-well-added');
   });
 
   it('has the sample-well css class by default', () => {
-    let wrapper = mountSampleWell();
-    let td = wrapper.find('td');
+    const wrapper = mountSampleWell();
+    const td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(false);
@@ -65,8 +65,8 @@ describe('SampleWell', function() {
   });
 
   it('has the sample-well and selected css classes if it is the active transition source', () => {
-    let wrapper = mountSampleWell({isActiveTransitionSource: true});
-    let td = wrapper.find('td');
+    const wrapper = mountSampleWell({isActiveTransitionSource: true});
+    const td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(true);
     expect(td.hasClass('highlighted')).toBe(false);
@@ -74,8 +74,8 @@ describe('SampleWell', function() {
   });
 
   it('has the sample-well and highlighted css classes if it is a transition target of a hovered sample well', () => {
-    let wrapper = mountSampleWell({isTransitionTargetOfHoveredSample: true});
-    let td = wrapper.find('td');
+    const wrapper = mountSampleWell({isTransitionTargetOfHoveredSample: true});
+    const td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(true);
@@ -83,8 +83,8 @@ describe('SampleWell', function() {
   });
 
   it('has the sample-well and highlighted-background css classes if it is in a hovered row or column', () => {
-    let wrapper = mountSampleWell({inHoveredRowOrColumn: true});
-    let td = wrapper.find('td');
+    const wrapper = mountSampleWell({inHoveredRowOrColumn: true});
+    const td = wrapper.find('td');
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(false);
@@ -92,15 +92,15 @@ describe('SampleWell', function() {
   });
 
   it('invokes click handler on click', () => {
-    let wrapper = mountSampleWell();
-    let icon = wrapper.find(InlineSvg);
+    const wrapper = mountSampleWell();
+    const icon = wrapper.find(InlineSvg);
     icon.simulate('click');
     expect(onClick).toHaveBeenCalled();
   });
 
   it('invokes mouseover handler on hover', () => {
-    let wrapper = mountSampleWell();
-    let icon = wrapper.find(InlineSvg);
+    const wrapper = mountSampleWell();
+    const icon = wrapper.find(InlineSvg);
     icon.simulate('mouseover');
     expect(onMouseOver).toHaveBeenCalled();
   });

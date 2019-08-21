@@ -19,7 +19,7 @@ class DateTime extends React.Component {
   };
 
   getFormat = ({clock24Hours}) => {
-    let {dateOnly, seconds, shortDate} = this.props;
+    const {dateOnly, seconds, shortDate} = this.props;
 
     // October 26, 2017
     if (dateOnly) {
@@ -46,19 +46,20 @@ class DateTime extends React.Component {
   render() {
     let {
       date,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, prefer-const
       seconds,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, prefer-const
       shortDate,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, prefer-const
       dateOnly,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, prefer-const
       utc,
+      // eslint-disable-next-line prefer-const
       ...carriedProps
     } = this.props;
-    let user = ConfigStore.get('user');
-    let options = user ? user.options : {};
-    let format = this.getFormat(options);
+    const user = ConfigStore.get('user');
+    const options = user ? user.options : {};
+    const format = this.getFormat(options);
 
     if (_.isString(date) || _.isNumber(date)) {
       date = new Date(date);

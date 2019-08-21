@@ -24,8 +24,8 @@ const InstallPromptBanner = createReactClass({
   },
 
   componentDidMount() {
-    let {href} = window.location;
-    let {organization} = this.props;
+    const {href} = window.location;
+    const {organization} = this.props;
     analytics('install_prompt.banner_viewed', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -39,13 +39,13 @@ const InstallPromptBanner = createReactClass({
   },
 
   sentFirstEvent() {
-    let {projects} = this.props.organization;
+    const {projects} = this.props.organization;
     return !!projects.find(project => project.firstEvent);
   },
 
   recordAnalytics() {
-    let {href} = window.location;
-    let {organization} = this.props;
+    const {href} = window.location;
+    const {organization} = this.props;
     analytics('install_prompt.banner_clicked', {
       org_id: parseInt(organization.id, 10),
       page: href,
@@ -53,7 +53,7 @@ const InstallPromptBanner = createReactClass({
   },
 
   inSetupFlow() {
-    let path = window.location.pathname;
+    const path = window.location.pathname;
 
     return (
       path.indexOf('/getting-started/') !== -1 ||
@@ -63,13 +63,13 @@ const InstallPromptBanner = createReactClass({
   },
 
   render() {
-    let {sentFirstEvent} = this.state;
-    let hideBanner = sentFirstEvent || this.inSetupFlow();
+    const {sentFirstEvent} = this.state;
+    const hideBanner = sentFirstEvent || this.inSetupFlow();
 
     return (
       <React.Fragment>
         {!hideBanner && (
-          <StyledAlert type="warning" icon="icon-circle-exclamation" system={'system'}>
+          <StyledAlert type="warning" icon="icon-circle-exclamation" system="system">
             <div>{t('Welcome to Common LIMS.')}</div>
           </StyledAlert>
         )}

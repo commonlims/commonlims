@@ -47,8 +47,8 @@ const ProcessTaskSettings = createReactClass({
 
   getPluginEndpoint(pluginId) {
     // TODO:
-    let projectId = 'internal';
-    let orgId = 'snpseq';
+    const projectId = 'internal';
+    const orgId = 'snpseq';
     return `/projects/${orgId}/${projectId}/plugins/${pluginId}/`;
   },
 

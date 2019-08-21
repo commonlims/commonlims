@@ -42,7 +42,7 @@ const ProjectReleases = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let queryParams = this.props.location.query;
+    const queryParams = this.props.location.query;
 
     return {
       releaseList: [],
@@ -60,7 +60,7 @@ const ProjectReleases = createReactClass({
   },
 
   componentDidMount() {
-    let {organization, project} = this.context;
+    const {organization, project} = this.context;
 
     analytics('releases.tab_viewed', {
       org_id: parseInt(organization.id, 10),
@@ -75,7 +75,7 @@ const ProjectReleases = createReactClass({
     );
 
     if (searchHasChanged) {
-      let queryParams = nextProps.location.query;
+      const queryParams = nextProps.location.query;
       this.setState(
         {
           query: queryParams.query,
@@ -90,10 +90,12 @@ const ProjectReleases = createReactClass({
   },
 
   onSearch(query) {
-    let targetQueryParams = {};
-    if (query !== '') targetQueryParams.query = query;
+    const targetQueryParams = {};
+    if (query !== '') {
+      targetQueryParams.query = query;
+    }
 
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     browserHistory.push({
       pathname: `/${orgId}/${projectId}/releases/`,
       query: targetQueryParams,
@@ -143,11 +145,13 @@ const ProjectReleases = createReactClass({
 
   renderStreamBody() {
     let body;
-    let {params} = this.props;
+    const {params} = this.props;
 
-    if (this.state.loading) body = this.renderLoading();
-    else if (this.state.error) body = <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.releaseList.length > 0)
+    if (this.state.loading) {
+      body = this.renderLoading();
+    } else if (this.state.error) {
+      body = <LoadingError onRetry={this.fetchData} />;
+    } else if (this.state.releaseList.length > 0) {
       body = (
         <div>
           <ReleaseProgress project={this.context.project} />
@@ -158,9 +162,11 @@ const ProjectReleases = createReactClass({
           />
         </div>
       );
-    else if (this.state.query && this.state.query !== DEFAULT_QUERY)
+    } else if (this.state.query && this.state.query !== DEFAULT_QUERY) {
       body = this.renderNoQueryResults();
-    else body = this.renderEmpty();
+    } else {
+      body = this.renderEmpty();
+    }
 
     return body;
   },
@@ -180,7 +186,7 @@ const ProjectReleases = createReactClass({
   renderEmpty() {
     const {environment} = this.state;
     const {project} = this.context;
-    let anyProjectReleases = project.latestRelease;
+    const anyProjectReleases = project.latestRelease;
 
     const message = environment
       ? tct("There don't seem to be any releases in your [env] environment yet", {

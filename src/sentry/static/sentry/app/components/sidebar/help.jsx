@@ -29,7 +29,9 @@ class SidebarHelp extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.organization) return;
+    if (!this.props.organization) {
+      return;
+    }
 
     HookStore.get('sidebar:help-menu').map(cb =>
       cb(this.props.organization, {SidebarMenuItem}, this.handleSupportHookUpdate)

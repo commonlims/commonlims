@@ -51,10 +51,12 @@ const KeyRow = createReactClass({
   },
 
   handleRemove() {
-    if (this.state.loading) return;
+    if (this.state.loading) {
+      return;
+    }
 
-    let loadingIndicator = addLoadingMessage(t('Saving changes..'));
-    let {orgId, projectId, data} = this.props;
+    const loadingIndicator = addLoadingMessage(t('Saving changes..'));
+    const {orgId, projectId, data} = this.props;
     this.api.request(`/projects/${orgId}/${projectId}/keys/${data.id}/`, {
       method: 'DELETE',
       success: (d, _, jqXHR) => {
@@ -74,9 +76,11 @@ const KeyRow = createReactClass({
   },
 
   handleUpdate(params, cb) {
-    if (this.state.loading) return;
-    let loadingIndicator = addLoadingMessage(t('Saving changes..'));
-    let {orgId, projectId, data} = this.props;
+    if (this.state.loading) {
+      return;
+    }
+    const loadingIndicator = addLoadingMessage(t('Saving changes..'));
+    const {orgId, projectId, data} = this.props;
     this.api.request(`/projects/${orgId}/${projectId}/keys/${data.id}/`, {
       method: 'PUT',
       data: params,
@@ -113,11 +117,11 @@ const KeyRow = createReactClass({
   },
 
   render() {
-    let {access, data} = this.props;
-    let editUrl = recreateRoute(`${data.id}/`, this.props);
-    let controlActive = access.has('project:write') && !this.state.loading;
+    const {access, data} = this.props;
+    const editUrl = recreateRoute(`${data.id}/`, this.props);
+    const controlActive = access.has('project:write') && !this.state.loading;
 
-    let controls = [
+    const controls = [
       <Button key="edit" to={editUrl} size="small">
         {t('Configure')}
       </Button>,
@@ -191,7 +195,7 @@ export default class ProjectKeys extends AsyncView {
   }
 
   getEndpoints() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return [['keyList', `/projects/${orgId}/${projectId}/keys/`]];
   }
 
@@ -207,7 +211,7 @@ export default class ProjectKeys extends AsyncView {
 
   handleToggleKey = (data, newData) => {
     this.setState(state => {
-      let keyList = state.keyList;
+      const keyList = state.keyList;
       keyList.forEach(key => {
         if (key.id === data.id) {
           key.isActive = newData.isActive;
@@ -218,7 +222,7 @@ export default class ProjectKeys extends AsyncView {
   };
 
   handleCreateKey = () => {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/keys/`, {
       method: 'POST',
       success: (data, _, jqXHR) => {
@@ -247,9 +251,9 @@ export default class ProjectKeys extends AsyncView {
   }
 
   renderResults() {
-    let {routes, params} = this.props;
-    let {orgId, projectId} = params;
-    let access = getOrganizationState(this.context.organization).getAccess();
+    const {routes, params} = this.props;
+    const {orgId, projectId} = params;
+    const access = getOrganizationState(this.context.organization).getAccess();
 
     return (
       <div>
@@ -277,8 +281,8 @@ export default class ProjectKeys extends AsyncView {
   }
 
   renderBody() {
-    let access = getOrganizationState(this.context.organization).getAccess();
-    let isEmpty = !this.state.keyList.length;
+    const access = getOrganizationState(this.context.organization).getAccess();
+    const isEmpty = !this.state.keyList.length;
 
     return (
       <DocumentTitle title={t('Client Keys')}>

@@ -7,13 +7,6 @@ import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {FormState} from 'app/components/forms';
-import WorkflowFilter from 'app/views/samples/workflowFilter';
-import ProcessTaskSettings from 'app/components/processTaskSettings';
-import ProjectsStore from 'app/stores/projectsStore';
-import OrganizationStore from 'app/stores/organizationsStore';
-import SelectedSampleStore from 'app/stores/selectedSampleStore';
-import UploadFile from 'app/components/uploadFile';
-import SampleStore from 'app/stores/sampleStore';
 
 const UploadSamplesButton = createReactClass({
   displayName: 'UploadSamplesButton',
@@ -23,12 +16,12 @@ const UploadSamplesButton = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
+    query: PropTypes.string,
   },
 
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId} = this.props;
     return {
       isModalOpen: false,
       formData: {
@@ -64,7 +57,7 @@ const UploadSamplesButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -92,30 +85,30 @@ const UploadSamplesButton = createReactClass({
   },
 
   handleUpload(event) {
-    if (!this.state.selectedFile) return;
+    if (!this.state.selectedFile) {
+      return;
+    }
 
     this.setState({state: FormState.SAVING}, () => {
-      let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
       // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
       // discuss if we rather want a specific batch endpoint.
       // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-      let endpoint = `/user-files/`;
-      const data = new FormData();
+      const endpoint = '/user-files/';
 
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
       reader.onload = function() {
-        //data.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        let data = {
+        const data2 = {
           content: btoa(reader.result),
           fileName: 'abc',
         };
 
         this.api.request(endpoint, {
           method: 'POST',
-          data,
+          data2,
           success: response => {
             this.onToggle();
             this.setState({
@@ -150,8 +143,7 @@ const UploadSamplesButton = createReactClass({
   },
 
   render() {
-    let isSaving = this.state.state === FormState.SAVING;
-    let user = {};
+    const isSaving = this.state.state === FormState.SAVING;
     return (
       <React.Fragment>
         <a

@@ -39,15 +39,17 @@ class SidebarItem extends React.Component {
   };
 
   handleClick = e => {
-    let {id, onClick} = this.props;
+    const {id, onClick} = this.props;
 
-    if (typeof onClick !== 'function') return;
+    if (typeof onClick !== 'function') {
+      return;
+    }
 
     onClick(id, e);
   };
 
   render() {
-    let {
+    const {
       router,
       href,
       to,
@@ -62,13 +64,13 @@ class SidebarItem extends React.Component {
     } = this.props;
 
     // If there is no active panel open and if path is active according to react-router
-    let isActiveRouter =
+    const isActiveRouter =
       (!hasPanel && router && to && location.pathname.startsWith(to)) ||
       // TODO: this won't be necessary once we remove settingsHome
       (label === 'Settings' && location.pathname.startsWith('/settings/'));
 
-    let isTop = orientation === 'top';
-    let placement = isTop ? 'bottom' : 'right';
+    const isTop = orientation === 'top';
+    const placement = isTop ? 'bottom' : 'right';
 
     return (
       <Tooltip
@@ -105,7 +107,9 @@ class SidebarItem extends React.Component {
 export default withRouter(SidebarItem);
 
 const getActiveStyle = ({active, theme}) => {
-  if (!active) return '';
+  if (!active) {
+    return '';
+  }
   return css`
     color: ${theme.white};
 
@@ -195,7 +199,9 @@ const SidebarItemLabel = styled('span')`
 `;
 
 const getCollapsedBadgeStyle = ({collapsed, theme}) => {
-  if (!collapsed) return '';
+  if (!collapsed) {
+    return '';
+  }
 
   return css`
     text-indent: -99999em;

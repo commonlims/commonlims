@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 import marked from 'marked';
 import classNames from 'classnames';
 
-import { MentionsInput, Mention } from 'react-mentions';
+import {MentionsInput, Mention} from 'react-mentions';
 import _ from 'lodash';
 
 import ApiMixin from 'app/mixins/apiMixin';
@@ -13,17 +13,17 @@ import OrganizationState from 'app/mixins/organizationState';
 import GroupStore from 'app/stores/groupStore';
 import ProjectsStore from 'app/stores/projectsStore';
 import IndicatorStore from 'app/stores/indicatorStore';
-import { logException } from 'app/utils/logging';
+import {logException} from 'app/utils/logging';
 import localStorage from 'app/utils/localStorage';
 import NavTabs from 'app/components/navTabs';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import mentionsStyle from 'app/../styles/mentions-styles';
 import WorkBatchStore from 'app/stores/workBatchStore';
 
 const localStorageKey = 'noteinput:latest';
 
 function makeDefaultErrorJson() {
-  return { detail: t('Unknown error. Please try again.') };
+  return {detail: t('Unknown error. Please try again.')};
 }
 
 const buildUserId = id => `user:${id}`;
@@ -43,16 +43,16 @@ const NoteInput = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   getInitialState() {
-    let { item, group } = this.props;
-    let updating = !!item;
+    const {item, group} = this.props;
+    const updating = !!item;
     let defaultText = '';
 
     if (updating) {
       defaultText = item.data.text;
     } else {
-      let storage = localStorage.getItem(localStorageKey);
+      const storage = localStorage.getItem(localStorageKey);
       if (storage) {
-        let { groupId, value } = JSON.parse(storage);
+        const {groupId, value} = JSON.parse(storage);
         if (groupId === group.id) {
           defaultText = value;
         }
@@ -84,10 +84,14 @@ const NoteInput = createReactClass({
 
     // We can't support this when editing an existing Note since it'll
     // clobber the other storages
-    if (this.state.updating) return;
+    if (this.state.updating) {
+      return;
+    }
 
     // Nothing changed
-    if (this.state.value === nextState.value) return;
+    if (this.state.value === nextState.value) {
+      return;
+    }
 
     try {
       localStorage.setItem(
@@ -103,11 +107,11 @@ const NoteInput = createReactClass({
   },
 
   toggleEdit() {
-    this.setState({ preview: false });
+    this.setState({preview: false});
   },
 
   togglePreview() {
-    this.setState({ preview: true });
+    this.setState({preview: true});
   },
 
   onSubmit(e) {
@@ -136,31 +140,30 @@ const NoteInput = createReactClass({
   },
 
   create() {
-    let { group } = this.props;
-
-    let loadingIndicator = IndicatorStore.add(t('Posting comment..'));
+    const loadingIndicator = IndicatorStore.add(t('Posting comment..'));
     // TODO: org is needed here!
     //
 
     // TODO: While wireframing I'm just adding directly to the store.
     // NOTE: really consider doing the post in the store instead!
-    let data = {
+    const data = {
       data: {text: this.cleanMarkdown(this.state.value)},
       type: 'note',
       mentions: this.finalizeMentions(),
-      dateCreated: "2019-03-22T13:10:33.306Z",
+      dateCreated: '2019-03-22T13:10:33.306Z',
       user: {
-        "id": "1",
-        "name": "steinar.sturlaugsson@medsci.uu.se",
-        "avatarUrl": "https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm",
-        "avatar": {
-          "avatarUuid": null,
-          "avatarType": "letter_avatar"
+        id: '1',
+        name: 'steinar.sturlaugsson@medsci.uu.se',
+        avatarUrl:
+          'https://secure.gravatar.com/avatar/c454a1cd6f9395d199b0aa97aefd9e67?s=32&d=mm',
+        avatar: {
+          avatarUuid: null,
+          avatarType: 'letter_avatar',
         },
-        "hasPasswordAuth": true,
-        "permissions": [],
-        "email": "steinar.sturlaugsson@medsci.uu.se"
-      }
+        hasPasswordAuth: true,
+        permissions: [],
+        email: 'steinar.sturlaugsson@medsci.uu.se',
+      },
     };
 
     this.setState({
@@ -175,42 +178,12 @@ const NoteInput = createReactClass({
     IndicatorStore.remove(loadingIndicator);
 
     return;
-
-    this.api.request('/work-batches/' + group.id + '/comments/', {
-      method: 'POST',
-      data: {
-        text: this.cleanMarkdown(this.state.value),
-        mentions: this.finalizeMentions(),
-      },
-      error: error => {
-        this.setState({
-          loading: false,
-          preview: false,
-          error: true,
-          errorJSON: error.responseJSON || makeDefaultErrorJson(),
-        });
-      },
-      success: data => {
-        this.setState({
-          value: '',
-          preview: false,
-          expanded: false,
-          loading: false,
-          mentions: [],
-        });
-        GroupStore.addActivity(group.id, data);
-        this.finish();
-      },
-      complete: () => {
-        IndicatorStore.remove(loadingIndicator);
-      },
-    });
   },
 
   update() {
-    let { group, item } = this.props;
+    const {group, item} = this.props;
 
-    let loadingIndicator = IndicatorStore.add(t('Updating comment..'));
+    const loadingIndicator = IndicatorStore.add(t('Updating comment..'));
 
     this.api.request('/issues/' + group.id + '/commentsma/' + item.id + '/', {
       method: 'PUT',
@@ -232,7 +205,7 @@ const NoteInput = createReactClass({
           expanded: false,
           loading: false,
         });
-        GroupStore.updateActivity(group.id, item.id, { text: this.state.value });
+        GroupStore.updateActivity(group.id, item.id, {text: this.state.value});
         IndicatorStore.remove(loadingIndicator);
         this.finish();
       },
@@ -240,7 +213,7 @@ const NoteInput = createReactClass({
   },
 
   onChange(e) {
-    this.setState({ value: e.target.value });
+    this.setState({value: e.target.value});
   },
 
   onKeyDown(e) {
@@ -256,13 +229,13 @@ const NoteInput = createReactClass({
   },
 
   onAddMember(id, display) {
-    this.setState(({ memberMentions }) => ({
+    this.setState(({memberMentions}) => ({
       memberMentions: [...memberMentions, [id, display]],
     }));
   },
 
   onAddTeam(id, display) {
-    this.setState(({ teamMentions }) => ({
+    this.setState(({teamMentions}) => ({
       teamMentions: [...teamMentions, [id, display]],
     }));
   },
@@ -272,7 +245,7 @@ const NoteInput = createReactClass({
   },
 
   finalizeMentions() {
-    let { memberMentions, teamMentions } = this.state;
+    const {memberMentions, teamMentions} = this.state;
 
     // each mention looks like [id, display]
     return [...memberMentions, ...teamMentions]
@@ -281,14 +254,14 @@ const NoteInput = createReactClass({
   },
 
   expand(e) {
-    this.setState({ expanded: true });
+    this.setState({expanded: true});
 
     // HACK: Move cursor to end of text after autoFocus
     // we do this my making sure this is only done on the first
     // onFocus event
     if (!this.state._hasFocused) {
-      this.setState({ _hasFocused: true });
-      let value = e.target.value;
+      this.setState({_hasFocused: true});
+      const value = e.target.value;
       e.target.value = '';
       e.target.value = value;
     }
@@ -296,13 +269,13 @@ const NoteInput = createReactClass({
 
   maybeCollapse() {
     if (this.state.value === '') {
-      this.setState({ expanded: false });
+      this.setState({expanded: false});
     }
   },
 
   mentionableUsers() {
-    let { memberList, sessionUser } = this.props;
-    return _.uniqBy(memberList, ({ id }) => id)
+    const {memberList, sessionUser} = this.props;
+    return _.uniqBy(memberList, ({id}) => id)
       .filter(member => sessionUser.id !== member.id)
       .map(member => ({
         id: buildUserId(member.id),
@@ -313,8 +286,7 @@ const NoteInput = createReactClass({
 
   mentionableTeams() {
     // TODO: Rewrite without requiring teams
-    let { group } = this.props;
-    let project = "internal";
+    const project = 'internal';
 
     return (ProjectsStore.getBySlug(project) || {
       teams: [],
@@ -326,7 +298,7 @@ const NoteInput = createReactClass({
   },
 
   render() {
-    let {
+    const {
       error,
       errorJSON,
       loading,
@@ -337,18 +309,18 @@ const NoteInput = createReactClass({
       mentionableTeams,
     } = this.state;
 
-    let placeHolderText = t(
+    const placeHolderText = t(
       'Add details or updates to this event. \nTag users with @, or teams with #'
     );
 
-    let btnText = updating ? t('Save Comment') : t('Post Comment');
+    const btnText = updating ? t('Save Comment') : t('Post Comment');
 
-    let errorMessage =
+    const errorMessage =
       (errorJSON &&
         (typeof errorJSON.detail === 'string'
           ? errorJSON.detail
           : (errorJSON.detail && errorJSON.detail.message) ||
-          t('Unable to post comment'))) ||
+            t('Unable to post comment'))) ||
       null;
     return (
       <form
@@ -375,38 +347,38 @@ const NoteInput = createReactClass({
           {preview ? (
             <div
               className="note-preview"
-              dangerouslySetInnerHTML={{ __html: marked(this.cleanMarkdown(value)) }}
+              dangerouslySetInnerHTML={{__html: marked(this.cleanMarkdown(value))}}
             />
           ) : (
-              <MentionsInput
-                style={mentionsStyle}
-                placeholder={placeHolderText}
-                onChange={this.onChange}
-                onBlur={this.onBlur}
-                onKeyDown={this.onKeyDown}
-                value={value}
-                required={true}
-                autoFocus={true}
-                displayTransform={(id, display, type) =>
-                  `${type === 'member' ? '@' : ''}${display}`}
-                markup="**[sentry.strip:__type__]__display__**"
-              >
-                <Mention
-                  type="member"
-                  trigger="@"
-                  data={mentionableUsers}
-                  onAdd={this.onAddMember}
-                  appendSpaceOnAdd={true}
-                />
-                <Mention
-                  type="team"
-                  trigger="#"
-                  data={mentionableTeams}
-                  onAdd={this.onAddTeam}
-                  appendSpaceOnAdd={true}
-                />
-              </MentionsInput>
-            )}
+            <MentionsInput
+              style={mentionsStyle}
+              placeholder={placeHolderText}
+              onChange={this.onChange}
+              onBlur={this.onBlur}
+              onKeyDown={this.onKeyDown}
+              value={value}
+              required={true}
+              autoFocus={true}
+              displayTransform={(id, display, type) =>
+                `${type === 'member' ? '@' : ''}${display}`}
+              markup="**[sentry.strip:__type__]__display__**"
+            >
+              <Mention
+                type="member"
+                trigger="@"
+                data={mentionableUsers}
+                onAdd={this.onAddMember}
+                appendSpaceOnAdd={true}
+              />
+              <Mention
+                type="team"
+                trigger="#"
+                data={mentionableTeams}
+                onAdd={this.onAddTeam}
+                appendSpaceOnAdd={true}
+              />
+            </MentionsInput>
+          )}
           <div className="activity-actions">
             {errorMessage && <small className="error">{errorMessage}</small>}
             <button className="btn btn-default" type="submit" disabled={loading}>

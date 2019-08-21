@@ -1,6 +1,5 @@
 import React from 'react';
 
-import SentryTypes from 'app/sentryTypes';
 import PropTypes from 'prop-types';
 import {GenericField} from 'app/components/forms';
 import WorkBatchStore from 'app/stores/workBatchStore';
@@ -8,7 +7,6 @@ import WorkBatchStore from 'app/stores/workBatchStore';
 class WorkBatchFields extends React.Component {
   static propTypes = {
     workBatch: PropTypes.object.isRequired,
-    organization: SentryTypes.Organization.isRequired,
   };
 
   handleChange(field, value) {

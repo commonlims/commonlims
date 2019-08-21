@@ -9,8 +9,8 @@ class SampleTitle extends React.Component {
   };
 
   render() {
-    let {data} = this.props;
-    let {title} = data;
+    const {data} = this.props;
+    const {title} = data;
 
     return <span style={this.props.style}>{title}</span>;
   }

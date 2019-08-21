@@ -45,8 +45,8 @@ const ActivityFeed = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    let location = this.props.location;
-    let nextLocation = nextProps.location;
+    const location = this.props.location;
+    const nextLocation = nextProps.location;
     if (
       location.pathname != nextLocation.pathname ||
       location.search != nextLocation.search
@@ -60,7 +60,7 @@ const ActivityFeed = createReactClass({
   },
 
   fetchData() {
-    let location = this.props.location;
+    const location = this.props.location;
     this.api.clear();
     this.api.request(this.props.endpoint, {
       method: 'GET',
@@ -87,11 +87,13 @@ const ActivityFeed = createReactClass({
 
   renderResults() {
     let body;
-    let {orgId} = this.props.params;
+    const {orgId} = this.props.params;
 
-    if (this.state.loading) body = this.renderLoading();
-    else if (this.state.error) body = <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.itemList.length > 0) {
+    if (this.state.loading) {
+      body = this.renderLoading();
+    } else if (this.state.error) {
+      body = <LoadingError onRetry={this.fetchData} />;
+    } else if (this.state.itemList.length > 0) {
       body = (
         <div className="activity-container">
           <ul className="activity">
@@ -116,7 +118,9 @@ const ActivityFeed = createReactClass({
           </ul>
         </div>
       );
-    } else body = (this.props.renderEmpty || this.renderEmpty)();
+    } else {
+      body = (this.props.renderEmpty || this.renderEmpty)();
+    }
 
     return body;
   },

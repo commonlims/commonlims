@@ -33,11 +33,11 @@ class Newsletter(Service):
         return None
 
     def update_subscriptions(self, user, list_ids=None, subscribed=True, create=None,
-                            verified=None, subscribed_date=None, unsubscribed_date=None, **kwargs):
+                             verified=None, subscribed_date=None, unsubscribed_date=None, **kwargs):
         return None
 
     def create_or_update_subscriptions(self, user, list_ids=None, subscribed=True, verified=None,
-                                      subscribed_date=None, unsubscribed_date=None, **kwargs):
+                                       subscribed_date=None, unsubscribed_date=None, **kwargs):
         return self.update_subscriptions(
             user=user,
             list_ids=list_ids,

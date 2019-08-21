@@ -17,7 +17,7 @@ class Tooltip extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-    let {disabled} = this.props;
+    const {disabled} = this.props;
     if (newProps.disabled && !disabled) {
       this.removeTooltips(this.ref);
     } else if (!newProps.disabled && disabled) {
@@ -48,10 +48,11 @@ class Tooltip extends React.Component {
   };
 
   attachTooltips = ref => {
+    // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 
-    let {title, tooltipOptions} = this.props;
-    let options =
+    const {title, tooltipOptions} = this.props;
+    const options =
       typeof tooltipOptions === 'function'
         ? tooltipOptions.call(this)
         : tooltipOptions || {};
@@ -65,9 +66,10 @@ class Tooltip extends React.Component {
   };
 
   removeTooltips = ref => {
+    // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 
-    let {tooltipOptions} = this.props;
+    const {tooltipOptions} = this.props;
 
     this.$ref
       .tooltip('destroy') // destroy tooltips on parent ...
@@ -78,7 +80,7 @@ class Tooltip extends React.Component {
   };
 
   render() {
-    let {
+    const {
       className,
       title,
       children,

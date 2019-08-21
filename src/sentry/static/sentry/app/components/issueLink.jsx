@@ -101,14 +101,16 @@ export default class IssueLink extends React.Component {
   }
 
   getLinkTo() {
-    let {issue, orgId, projectId} = this.props;
+    const {issue, orgId, projectId} = this.props;
 
     return this.props.to || `/${orgId}/${projectId}/issues/${issue.id}/`;
   }
 
   render() {
-    let {card, issue} = this.props;
-    if (!card) return <Link to={this.getLinkTo()}>{this.props.children}</Link>;
+    const {card, issue} = this.props;
+    if (!card) {
+      return <Link to={this.getLinkTo()}>{this.props.children}</Link>;
+    }
 
     return (
       <Hovercard body={this.renderBody()} header={issue.shortId}>

@@ -22,7 +22,6 @@ import ProjectsStore from 'app/stores/projectsStore';
 import SentryTypes from 'app/sentryTypes';
 import TextOverflow from 'app/components/textOverflow';
 import space from 'app/styles/space';
-import TeamStore from 'app/stores/teamStore';
 
 const AssigneeSelectorComponent = createReactClass({
   displayName: 'AssigneeSelector',
@@ -49,14 +48,18 @@ const AssigneeSelectorComponent = createReactClass({
   statics: {
     putSessionUserFirst(members) {
       // If session user is in the filtered list of members, put them at the top
-      if (!members) return [];
+      if (!members) {
+        return [];
+      }
 
-      let sessionUser = ConfigStore.get('user');
-      let sessionUserIndex = members.findIndex(
+      const sessionUser = ConfigStore.get('user');
+      const sessionUserIndex = members.findIndex(
         member => sessionUser && member.id === sessionUser.id
       );
 
-      if (sessionUserIndex === -1) return members;
+      if (sessionUserIndex === -1) {
+        return members;
+      }
 
       return [members[sessionUserIndex]]
         .concat(members.slice(0, sessionUserIndex))
@@ -71,9 +74,9 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   getInitialState() {
-    let group = GroupStore.get(this.props.id);
-    let memberList = MemberListStore.loaded ? MemberListStore.getAll() : null;
-    let loading = GroupStore.hasStatus(this.props.id, 'assignTo');
+    const group = GroupStore.get(this.props.id);
+    const memberList = MemberListStore.loaded ? MemberListStore.getAll() : null;
+    const loading = GroupStore.hasStatus(this.props.id, 'assignTo');
 
     return {
       assignedTo: group && group.assignedTo,
@@ -83,9 +86,9 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    let loading = GroupStore.hasStatus(nextProps.id, 'assignTo');
+    const loading = GroupStore.hasStatus(nextProps.id, 'assignTo');
     if (nextProps.id !== this.props.id || loading !== this.state.loading) {
-      let group = GroupStore.get(this.props.id);
+      const group = GroupStore.get(this.props.id);
       this.setState({
         loading,
         assignedTo: group && group.assignedTo,
@@ -98,7 +101,7 @@ const AssigneeSelectorComponent = createReactClass({
       return true;
     }
 
-    let currentMembers = this.memberList();
+    const currentMembers = this.memberList();
     // XXX(billyvg): this means that once `memberList` is not-null, this component will never update due to `memberList` changes
     // Note: this allows us to show a "loading" state for memberList, but only before `MemberListStore.loadInitialData`
     // is called
@@ -116,7 +119,7 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   assignableTeams() {
-    let group = GroupStore.get(this.props.id);
+    const group = GroupStore.get(this.props.id);
 
     return (ProjectsStore.getBySlug(group.project.slug) || {
       teams: [],
@@ -134,7 +137,7 @@ const AssigneeSelectorComponent = createReactClass({
     if (!itemIds.has(this.props.id)) {
       return;
     }
-    let group = GroupStore.get(this.props.id);
+    const group = GroupStore.get(this.props.id);
     this.setState({
       assignedTo: group && group.assignedTo,
       loading: GroupStore.hasStatus(this.props.id, 'assignTo'),
@@ -171,8 +174,8 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   renderNewMemberNodes() {
-    let {size} = this.props;
-    let members = AssigneeSelectorComponent.putSessionUserFirst(this.memberList());
+    const {size} = this.props;
+    const members = AssigneeSelectorComponent.putSessionUserFirst(this.memberList());
 
     return members.map(member => {
       return {
@@ -196,7 +199,7 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   renderNewTeamNodes() {
-    let {size} = this.props;
+    const {size} = this.props;
 
     return this.assignableTeams().map(({id, display, team}) => {
       return {
@@ -217,8 +220,8 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   renderNewDropdownItems() {
-    let teams = this.renderNewTeamNodes();
-    let members = this.renderNewMemberNodes();
+    const teams = this.renderNewTeamNodes();
+    const members = this.renderNewMemberNodes();
 
     return [
       {id: 'team-header', hideGroupLabel: true, items: teams},
@@ -227,12 +230,12 @@ const AssigneeSelectorComponent = createReactClass({
   },
 
   render() {
-    let {className} = this.props;
-    let {organization} = this.context;
-    let {loading, assignedTo} = this.state;
-    let canInvite = ConfigStore.get('invitesEnabled');
-    let hasOrgWrite = organization.access.includes('org:write');
-    let memberList = this.memberList();
+    const {className} = this.props;
+    const {organization} = this.context;
+    const {loading, assignedTo} = this.state;
+    const canInvite = ConfigStore.get('invitesEnabled');
+    const hasOrgWrite = organization.access.includes('org:write');
+    const memberList = this.memberList();
 
     return (
       <div className={className}>
@@ -245,7 +248,9 @@ const AssigneeSelectorComponent = createReactClass({
             zIndex={2}
             onOpen={e => {
               // This can be called multiple times and does not always have `event`
-              if (!e) return;
+              if (!e) {
+                return;
+              }
               e.stopPropagation();
             }}
             busy={memberList === null}

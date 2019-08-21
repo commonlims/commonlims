@@ -23,8 +23,8 @@ class CompactWorkBatchHeader extends React.Component {
   };
 
   getTitle = () => {
-    let data = this.props.data;
-    data['type'] = 'error';
+    const data = this.props.data;
+    data.type = 'error';
 
     return (
       <span>
@@ -34,18 +34,18 @@ class CompactWorkBatchHeader extends React.Component {
   };
 
   getMessage = () => {
-    let data = this.props.data;
+    const data = this.props.data;
     return data.processTitle;
   };
 
   render() {
-    let {data, organization} = this.props;
+    const {data, organization} = this.props;
 
-    let hasNewRoutes = new Set(organization.features).has('sentry10');
+    const hasNewRoutes = new Set(organization.features).has('sentry10');
 
     let styles = {};
 
-    let basePath = hasNewRoutes
+    const basePath = hasNewRoutes
       ? `/organizations/${organization.slug}/issues/`
       : `/${organization.slug}/work-batches/`;
     if (data.subscriptionDetails && data.subscriptionDetails.reason === 'mentioned') {
@@ -112,26 +112,28 @@ const CompactWorkBatch = createReactClass({
     if (!itemIds.has(this.props.id)) {
       return;
     }
-    let id = this.props.id;
-    let issue = GroupStore.get(id);
+    const id = this.props.id;
+    const issue = GroupStore.get(id);
     this.setState({
       issue,
     });
   },
 
   onSnooze(duration) {
-    let data = {
+    const data = {
       status: 'ignored',
     };
 
-    if (duration) data.ignoreDuration = duration;
+    if (duration) {
+      data.ignoreDuration = duration;
+    }
 
     this.onUpdate(data);
   },
 
   onUpdate(data) {
-    let issue = this.state.issue;
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const issue = this.state.issue;
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
@@ -148,8 +150,8 @@ const CompactWorkBatch = createReactClass({
   },
 
   render() {
-    let issue = this.state.issue;
-    let {id, organization} = this.props;
+    const issue = this.state.issue;
+    const {id, organization} = this.props;
 
     let className = 'issue';
     if (issue.isBookmarked) {
@@ -171,7 +173,7 @@ const CompactWorkBatch = createReactClass({
       className += ' with-graph';
     }
 
-    let title = <span className="icon-more" />;
+    const title = <span className="icon-more" />;
 
     return (
       <PanelItem

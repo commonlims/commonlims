@@ -23,8 +23,8 @@ class SwitchOrganization extends React.Component {
   };
 
   render() {
-    let {organizations, canCreateOrganization} = this.props;
-    let hasOrganizations = organizations && !!organizations.length;
+    const {organizations, canCreateOrganization} = this.props;
+    const hasOrganizations = organizations && !!organizations.length;
 
     return (
       <DropdownMenu isNestedDropdown>
@@ -73,7 +73,7 @@ class SwitchOrganization extends React.Component {
                   {canCreateOrganization && (
                     <SidebarMenuItem
                       data-test-id="sidebar-create-org"
-                      to={'/organizations/new/'}
+                      to="/organizations/new/"
                       style={{alignItems: 'center'}}
                     >
                       <MenuItemLabelWithIcon>

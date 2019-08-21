@@ -29,7 +29,7 @@ export default class ProjectAlertSettings extends AsyncView {
   };
 
   getEndpoints() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return [
       ['project', `/projects/${orgId}/${projectId}/`],
       ['pluginList', `/projects/${orgId}/${projectId}/plugins/`],
@@ -41,7 +41,9 @@ export default class ProjectAlertSettings extends AsyncView {
   handleEnablePlugin = plugin => {
     this.setState({
       pluginList: this.state.pluginList.map(p => {
-        if (p.id !== plugin.id) return p;
+        if (p.id !== plugin.id) {
+          return p;
+        }
         return {
           ...plugin,
           enabled: true,
@@ -53,7 +55,9 @@ export default class ProjectAlertSettings extends AsyncView {
   handleDisablePlugin = plugin => {
     this.setState({
       pluginList: this.state.pluginList.map(p => {
-        if (p.id !== plugin.id) return p;
+        if (p.id !== plugin.id) {
+          return p;
+        }
         return {
           ...plugin,
           enabled: false,
@@ -67,9 +71,9 @@ export default class ProjectAlertSettings extends AsyncView {
   }
 
   renderBody() {
-    let {orgId, projectId} = this.props.params;
-    let {organization} = this.props;
-    let canEditRule = organization.access.includes('project:write');
+    const {orgId, projectId} = this.props.params;
+    const {organization} = this.props;
+    const canEditRule = organization.access.includes('project:write');
 
     return (
       <Access access={['project:write']}>
@@ -105,7 +109,7 @@ export default class ProjectAlertSettings extends AsyncView {
               }
             />
             <PermissionAlert />
-            <AlertLink to={'/settings/account/notifications/'} icon="icon-mail">
+            <AlertLink to="/settings/account/notifications/" icon="icon-mail">
               {t(
                 'Looking to fine-tune your personal notification preferences? Visit your Account Settings'
               )}

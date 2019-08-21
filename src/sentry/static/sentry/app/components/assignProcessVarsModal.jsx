@@ -41,7 +41,7 @@ export default class AssignProcessVarsModal extends React.Component {
   };
 
   render() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
 
     return (
       <Modal

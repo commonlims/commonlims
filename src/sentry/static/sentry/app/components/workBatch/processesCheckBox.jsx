@@ -34,7 +34,7 @@ const ProcessCheckBox = createReactClass({
   },
 
   onSelectedProcessChange() {
-    let isSelected = SelectedProcessStore.isSelected(this.props.id);
+    const isSelected = SelectedProcessStore.isSelected(this.props.id);
     if (isSelected !== this.state.isSelected) {
       this.setState({
         isSelected,
@@ -43,7 +43,7 @@ const ProcessCheckBox = createReactClass({
   },
 
   onSelect() {
-    let id = this.props.id;
+    const id = this.props.id;
     SelectedProcessStore.toggleSelect(id);
   },
 

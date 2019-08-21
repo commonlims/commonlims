@@ -53,9 +53,9 @@ const ReleaseProjectStatSparkline = createReactClass({
   },
 
   getStatReceived() {
-    let {orgId} = this.props;
-    let projectId = this.props.project.slug;
-    let path = `/projects/${orgId}/${projectId}/stats/`;
+    const {orgId} = this.props;
+    const projectId = this.props.project.slug;
+    const path = `/projects/${orgId}/${projectId}/stats/`;
     return this.api.requestPromise(path, {
       method: 'GET',
       data: 'stat=received',
@@ -74,9 +74,9 @@ const ReleaseProjectStatSparkline = createReactClass({
   },
 
   getNewIssuesCount() {
-    let {orgId, version} = this.props;
-    let projectId = this.props.project.slug;
-    let issuesPath = `/projects/${orgId}/${projectId}/releases/${encodeURIComponent(
+    const {orgId, version} = this.props;
+    const projectId = this.props.project.slug;
+    const issuesPath = `/projects/${orgId}/${projectId}/releases/${encodeURIComponent(
       version
     )}/`;
     return this.api.requestPromise(issuesPath, {
@@ -96,13 +96,17 @@ const ReleaseProjectStatSparkline = createReactClass({
   },
 
   render() {
-    let {orgId, project, version} = this.props;
+    const {orgId, project, version} = this.props;
 
-    if (this.state.loading) return <LoadingIndicator />;
-    if (this.state.error) return <LoadingError />;
+    if (this.state.loading) {
+      return <LoadingIndicator />;
+    }
+    if (this.state.error) {
+      return <LoadingError />;
+    }
 
-    let {Sparklines, SparklinesLine, newIssueCount, stats} = this.state;
-    let values = stats.map(tuple => tuple[1]);
+    const {Sparklines, SparklinesLine, newIssueCount, stats} = this.state;
+    const values = stats.map(tuple => tuple[1]);
 
     return (
       <li>

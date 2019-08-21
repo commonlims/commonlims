@@ -18,7 +18,7 @@ class ExternalIssueList extends AsyncComponent {
   };
 
   getEndpoints() {
-    let {group} = this.props;
+    const {group} = this.props;
     return [['integrations', `/groups/${group.id}/integrations/`]];
   }
 
@@ -71,7 +71,7 @@ class ExternalIssueList extends AsyncComponent {
     const pluginIssues = this.renderPluginIssues();
     const pluginActions = this.renderPluginActions();
 
-    if (!integrationIssues && !pluginIssues && !pluginActions)
+    if (!integrationIssues && !pluginIssues && !pluginActions) {
       return (
         <React.Fragment>
           <h6 data-test-id="linked-issues">
@@ -87,6 +87,7 @@ class ExternalIssueList extends AsyncComponent {
           </AlertLink>
         </React.Fragment>
       );
+    }
 
     return (
       <React.Fragment>

@@ -93,7 +93,9 @@ class MultipleEnvironmentSelector extends React.PureComponent {
 
   handleClose = () => {
     // Only update if there are changes
-    if (!this.state.hasChanges) return;
+    if (!this.state.hasChanges) {
+      return;
+    }
     this.doUpdate();
   };
 
@@ -215,13 +217,13 @@ const FetchOrganizationEnvironments = withApi(
     }
 
     componentDidMount() {
-      let {api, organization} = this.props;
+      const {api, organization} = this.props;
       fetchOrganizationEnvironments(api, organization.slug).then(environments =>
         this.setState({environments})
       );
     }
     render() {
-      let {children} = this.props;
+      const {children} = this.props;
       return children({
         environments: this.state.environments,
       });

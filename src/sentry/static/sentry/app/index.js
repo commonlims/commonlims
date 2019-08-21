@@ -1,4 +1,4 @@
-/* global module */
+/* global module */ // eslint-disable-line no-unused-vars
 import '@babel/polyfill';
 import 'bootstrap/js/alert';
 import 'bootstrap/js/tab';
@@ -7,7 +7,7 @@ import 'bootstrap/js/dropdown';
 import 'app/utils/statics-setup';
 import 'app/utils/emotion-setup';
 
-import { renderToStaticMarkup } from 'react-dom/server';
+import {renderToStaticMarkup} from 'react-dom/server';
 import * as Emotion from 'emotion';
 import * as EmotionTheming from 'emotion-theming';
 import * as GridEmotion from 'grid-emotion';
@@ -24,7 +24,7 @@ import createReactClass from 'create-react-class';
 import jQuery from 'jquery';
 import moment from 'moment';
 
-import { metric } from 'app/utils/analytics';
+import {metric} from 'app/utils/analytics';
 import * as tracing from 'app/utils/tracing';
 import ConfigStore from 'app/stores/configStore';
 import Main from 'app/main';
@@ -90,8 +90,8 @@ if (window.__initialData) {
 // these get exported to a global variable, which is important as its the only
 // way we can call into scoped objects
 
-let render = Component => {
-  let rootEl = document.getElementById('blk_router');
+const render = Component => {
+  const rootEl = document.getElementById('blk_router');
   ReactDOM.render(<Component />, rootEl);
 };
 
@@ -99,7 +99,7 @@ let render = Component => {
 // zxcvbn, a relatively byte-heavy password strength estimation library. Load
 // it on demand.
 async function loadPasswordStrength(callback) {
-  let module = await import(/* webpackChunkName: "passwordStrength" */ 'app/components/passwordStrength');
+  const module = await import(/* webpackChunkName: "passwordStrength" */ 'app/components/passwordStrength');
   callback(module);
 }
 
@@ -240,7 +240,7 @@ const globals = {
       withApi: require('app/utils/withApi').default,
       getDisplayName: require('app/utils/getDisplayName').default,
     },
-    passwordStrength: { load: loadPasswordStrength },
+    passwordStrength: {load: loadPasswordStrength},
   },
 };
 

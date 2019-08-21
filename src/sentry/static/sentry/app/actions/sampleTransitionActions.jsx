@@ -1,6 +1,6 @@
 import Reflux from 'reflux';
 
-let SampleTransitionActions = Reflux.createActions([
+const SampleTransitionActions = Reflux.createActions([
   'loadInitialState',
   'add',
   'remove',

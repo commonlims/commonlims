@@ -53,7 +53,7 @@ const SaveSearchButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -79,8 +79,8 @@ const SaveSearchButton = createReactClass({
         state: FormState.SAVING,
       },
       () => {
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId, projectId} = this.props;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const {orgId, projectId} = this.props;
         this.api.request(`/projects/${orgId}/${projectId}/searches/`, {
           method: 'POST',
           data: this.state.formData,
@@ -109,7 +109,7 @@ const SaveSearchButton = createReactClass({
   },
 
   render() {
-    let isSaving = this.state.state === FormState.SAVING;
+    const isSaving = this.state.state === FormState.SAVING;
     return (
       <React.Fragment>
         <a
@@ -202,17 +202,19 @@ const SavedSearchSelector = createReactClass({
   mixins: [ApiMixin],
 
   getTitle() {
-    let searchId = this.props.searchId || null;
-    if (!searchId) return t('Custom Search');
-    let results = this.props.savedSearchList.filter(search => {
+    const searchId = this.props.searchId || null;
+    if (!searchId) {
+      return t('Custom Search');
+    }
+    const results = this.props.savedSearchList.filter(search => {
       return searchId === search.id;
     });
     return results.length ? results[0].name : t('Custom Search');
   },
 
   render() {
-    let {orgId, projectId, queryCount, queryMaxCount} = this.props;
-    let children = this.props.savedSearchList.map(search => {
+    const {orgId, projectId, queryCount, queryMaxCount} = this.props;
+    const children = this.props.savedSearchList.map(search => {
       // TODO(dcramer): we want these to link directly to the saved
       // search ID, and pass that into the backend (probably)
       return (

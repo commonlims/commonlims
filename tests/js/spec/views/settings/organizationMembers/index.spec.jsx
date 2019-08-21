@@ -10,9 +10,9 @@ jest.mock('app/api');
 jest.mock('app/actionCreators/indicator');
 
 describe('OrganizationMembers', function() {
-  let members = TestStubs.Members();
-  let currentUser = members[1];
-  let defaultProps = {
+  const members = TestStubs.Members();
+  const currentUser = members[1];
+  const defaultProps = {
     orgId: 'org-slug',
     orgName: 'Organization Name',
     status: '',
@@ -26,7 +26,7 @@ describe('OrganizationMembers', function() {
     onRemove: () => {},
     onLeave: () => {},
   };
-  let organization = TestStubs.Organization({
+  const organization = TestStubs.Organization({
     access: ['member:admin', 'org:admin'],
   });
   let getStub;
@@ -81,12 +81,12 @@ describe('OrganizationMembers', function() {
   });
 
   it('can remove a member', async function() {
-    let deleteMock = Client.addMockResponse({
+    const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'DELETE',
     });
 
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -112,13 +112,13 @@ describe('OrganizationMembers', function() {
   });
 
   it('displays error message when failing to remove member', async function() {
-    let deleteMock = Client.addMockResponse({
+    const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'DELETE',
       statusCode: 500,
     });
 
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -144,12 +144,12 @@ describe('OrganizationMembers', function() {
   });
 
   it('can leave org', async function() {
-    let deleteMock = Client.addMockResponse({
+    const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[1].id}/`,
       method: 'DELETE',
     });
 
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -175,13 +175,13 @@ describe('OrganizationMembers', function() {
   });
 
   it('displays error message when failing to leave org', async function() {
-    let deleteMock = Client.addMockResponse({
+    const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[1].id}/`,
       method: 'DELETE',
       statusCode: 500,
     });
 
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -207,14 +207,14 @@ describe('OrganizationMembers', function() {
   });
 
   it('can re-send invite to member', async function() {
-    let inviteMock = MockApiClient.addMockResponse({
+    const inviteMock = MockApiClient.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'PUT',
       body: {
         id: '1234',
       },
     });
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -236,11 +236,11 @@ describe('OrganizationMembers', function() {
   });
 
   it('can approve pending access request', async function() {
-    let approveMock = MockApiClient.addMockResponse({
+    const approveMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/access-requests/pending-id/',
       method: 'PUT',
     });
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -269,11 +269,11 @@ describe('OrganizationMembers', function() {
   });
 
   it('can deny pending access request', async function() {
-    let denyMock = MockApiClient.addMockResponse({
+    const denyMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/access-requests/pending-id/',
       method: 'PUT',
     });
-    let wrapper = mount(
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         params={{
@@ -303,12 +303,12 @@ describe('OrganizationMembers', function() {
   });
 
   it('can search organization members', async function() {
-    let searchMock = MockApiClient.addMockResponse({
+    const searchMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/members/',
       body: [],
     });
-    let routerContext = TestStubs.routerContext();
-    let wrapper = mount(
+    const routerContext = TestStubs.routerContext();
+    const wrapper = mount(
       <OrganizationMembers
         {...defaultProps}
         location={{}}

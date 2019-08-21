@@ -29,7 +29,8 @@ class ClippedBox extends React.Component {
   }
 
   componentDidMount() {
-    let renderedHeight = ReactDOM.findDOMNode(this).offsetHeight;
+    // eslint-disable-next-line react/no-find-dom-node
+    const renderedHeight = ReactDOM.findDOMNode(this).offsetHeight;
 
     if (!this.state.clipped && renderedHeight > this.props.clipHeight) {
       /*eslint react/no-did-mount-set-state:0*/

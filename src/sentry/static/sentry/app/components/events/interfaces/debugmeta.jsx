@@ -19,8 +19,10 @@ class DebugMetaInterface extends React.Component {
       return null;
     }
 
-    let name = img.name.split(/^([a-z]:\\|\\\\)/i.test(img.name) ? '\\' : '/').pop();
-    if (name == 'dyld_sim') return null; // this is only for simulator builds
+    const name = img.name.split(/^([a-z]:\\|\\\\)/i.test(img.name) ? '\\' : '/').pop();
+    if (name == 'dyld_sim') {
+      return null;
+    } // this is only for simulator builds
 
     let version = null;
     if (
@@ -31,18 +33,23 @@ class DebugMetaInterface extends React.Component {
       if (img.major_version == 0 && img.minor_version == 0 && img.revision_version == 0) {
         // we show the version
         version = (evt.release && evt.release.shortVersion) || 'unknown';
-      } else
+      } else {
         version = `${img.major_version}.${img.minor_version}.${img.revision_version}`;
-    } else version = img.id || img.uuid || '<none>';
+      }
+    } else {
+      version = img.id || img.uuid || '<none>';
+    }
 
-    if (version) return [name, version];
+    if (version) {
+      return [name, version];
+    }
 
     return null;
   }
 
   render() {
-    let data = this.props.data;
-    let images = data.images
+    const data = this.props.data;
+    const images = data.images
       .map(img => this.getImageDetail(img, this.props.event))
       .filter(img => img); // removes null values
 

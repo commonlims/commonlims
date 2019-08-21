@@ -17,12 +17,14 @@ class TeamCrumb extends React.Component {
   };
 
   render() {
-    let {teams, params, routes, route, ...props} = this.props;
+    const {teams, params, routes, route, ...props} = this.props;
 
-    let team = teams.find(({slug}) => slug === params.teamId);
-    let hasMenu = teams.length > 1;
+    const team = teams.find(({slug}) => slug === params.teamId);
+    const hasMenu = teams.length > 1;
 
-    if (!team) return null;
+    if (!team) {
+      return null;
+    }
 
     return (
       <BreadcrumbDropdown

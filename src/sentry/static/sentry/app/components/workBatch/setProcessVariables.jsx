@@ -31,11 +31,11 @@ const SetProcessVariables = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
-    let organization = OrganizationStore.get(orgId);
-    let project = ProjectsStore.getBySlug(projectId);
+    const organization = OrganizationStore.get(orgId);
+    const project = ProjectsStore.getBySlug(projectId);
 
     return {
       isModalOpen: false,
@@ -70,7 +70,7 @@ const SetProcessVariables = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -97,15 +97,15 @@ const SetProcessVariables = createReactClass({
       },
       () => {
         // TODO: Start the process
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let {orgId} = this.props;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const {orgId} = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
         // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-        let endpoint = `/processes/${orgId}/sample-processes/`;
+        const endpoint = `/processes/${orgId}/sample-processes/`;
 
-        let data = {
+        const data = {
           processInstanceId: '143438f',
           variables: this.state.setProcessVariables,
           process: this.state.process,
@@ -138,7 +138,7 @@ const SetProcessVariables = createReactClass({
   },
 
   onSelectWorkflow(key, value) {
-    let vars = [
+    const vars = [
       {
         name: 'Sequencer',
         type: 'string',
@@ -153,10 +153,10 @@ const SetProcessVariables = createReactClass({
   },
 
   render() {
-    let isSaving = this.state.state === FormState.SAVING;
+    const isSaving = this.state.state === FormState.SAVING;
 
     // TODO(withrocks): mocked
-    let node = {
+    const node = {
       data: {
         isTestable: false,
         views: {},

@@ -124,7 +124,9 @@ const AccessContainer = createReactClass({
   },
 
   onConfigStoreUpdate(config) {
-    if (config === this.state.config) return;
+    if (config === this.state.config) {
+      return;
+    }
     this.setState({config});
   },
 

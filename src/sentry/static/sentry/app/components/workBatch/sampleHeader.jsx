@@ -4,7 +4,6 @@ import styled, {css} from 'react-emotion';
 import classNames from 'classnames';
 import ProjectLink from 'app/components/projectLink';
 import {Metadata} from 'app/sentryTypes';
-import WorkBatchGroupTitle from 'app/components/workBatch/workBatchGroupTitle';
 // TODO: rename file
 
 /**
@@ -35,18 +34,18 @@ class ProcessHeader extends React.Component {
   };
 
   getProcessInfo() {
-    let {data} = this.props;
-    let {processVersion, process} = data || {};
+    const {data} = this.props;
+    const {processVersion, process} = data || {};
     return process + '' + processVersion;
   }
 
   getTitle() {
-    let {includeLink, orgId, data} = this.props;
-    let props = {};
+    const {includeLink, orgId, data} = this.props;
+    const props = {};
     let Wrapper;
 
     if (includeLink) {
-      let running = this.props.data.running;
+      const running = this.props.data.running;
 
       if (running) {
         props.to = {
@@ -68,14 +67,14 @@ class ProcessHeader extends React.Component {
         {...props}
         style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
       >
-        <TaskGroupTitle {...this.props} style={{fontWeight: data.hasSeen ? 400 : 600}} />
+        <div>Test</div>
       </Wrapper>
     );
   }
 
   render() {
-    let {className} = this.props;
-    let cx = classNames('event-issue-header', className);
+    const {className} = this.props;
+    const cx = classNames('event-issue-header', className);
 
     return (
       <div className={cx}>

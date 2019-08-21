@@ -63,8 +63,8 @@ const OrganizationStream = createReactClass({
   ],
 
   getInitialState() {
-    let realtimeActiveCookie = Cookies.get('realtimeActive');
-    let realtimeActive =
+    const realtimeActiveCookie = Cookies.get('realtimeActive');
+    const realtimeActive =
       typeof realtimeActiveCookie === 'undefined'
         ? false
         : realtimeActiveCookie === 'true';
@@ -100,8 +100,8 @@ const OrganizationStream = createReactClass({
 
     fetchTags(this.props.organization.slug);
     fetchOrgMembers(this.api, this.props.organization.slug).then(members => {
-      let memberList = members.reduce((acc, member) => {
-        for (let project of member.projects) {
+      const memberList = members.reduce((acc, member) => {
+        for (const project of member.projects) {
           if (acc[project] === undefined) {
             acc[project] = [];
           }
@@ -159,14 +159,14 @@ const OrganizationStream = createReactClass({
   },
 
   getGroupStatsPeriod() {
-    let currentPeriod = this.props.location.query.groupStatsPeriod;
+    const currentPeriod = this.props.location.query.groupStatsPeriod;
     return STATS_PERIODS.has(currentPeriod) ? currentPeriod : DEFAULT_STATS_PERIOD;
   },
 
   getEndpointParams() {
-    let {selection} = this.props;
+    const {selection} = this.props;
 
-    let params = {
+    const params = {
       project: selection.projects,
       environment: selection.environments,
       query: this.getQuery(),
@@ -183,12 +183,12 @@ const OrganizationStream = createReactClass({
       params.start = getUtcDateString(params.start);
     }
 
-    let sort = this.getSort();
+    const sort = this.getSort();
     if (sort !== DEFAULT_SORT) {
       params.sort = sort;
     }
 
-    let groupStatsPeriod = this.getGroupStatsPeriod();
+    const groupStatsPeriod = this.getGroupStatsPeriod();
     if (groupStatsPeriod !== DEFAULT_STATS_PERIOD) {
       params.groupStatsPeriod = groupStatsPeriod;
     }
@@ -221,13 +221,13 @@ const OrganizationStream = createReactClass({
       error: false,
     });
 
-    let requestParams = {
+    const requestParams = {
       ...this.getEndpointParams(),
       limit: MAX_ITEMS,
       shortIdLookup: '1',
     };
 
-    let currentQuery = this.props.location.query || {};
+    const currentQuery = this.props.location.query || {};
     if ('cursor' in currentQuery) {
       requestParams.cursor = currentQuery.cursor;
     }
@@ -242,15 +242,15 @@ const OrganizationStream = createReactClass({
       method: 'GET',
       data: qs.stringify(requestParams),
       success: (data, ignore, jqXHR) => {
-        let {orgId} = this.props.params;
+        const {orgId} = this.props.params;
         // If this is a direct hit, we redirect to the intended result directly.
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           let redirect;
           if (data[0] && data[0].matchingEventId) {
-            let {id, matchingEventId} = data[0];
+            const {id, matchingEventId} = data[0];
             redirect = `/organizations/${orgId}/issues/${id}/events/${matchingEventId}/`;
           } else {
-            let {id} = data[0];
+            const {id} = data[0];
             redirect = `/organizations/${orgId}/issues/${id}/`;
           }
 
@@ -263,8 +263,8 @@ const OrganizationStream = createReactClass({
 
         this._streamManager.push(data);
 
-        let queryCount = jqXHR.getResponseHeader('X-Hits');
-        let queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
+        const queryCount = jqXHR.getResponseHeader('X-Hits');
+        const queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
 
         this.setState({
           error: false,
@@ -291,11 +291,11 @@ const OrganizationStream = createReactClass({
   },
 
   fetchProcessingIssues() {
-    let {orgId} = this.props.params;
-    let projects = this.props.selection.projects;
+    const {orgId} = this.props.params;
+    const projects = this.props.selection.projects;
     fetchProcessingIssues(this.api, orgId, projects).then(
       data => {
-        let haveIssues = data.filter(
+        const haveIssues = data.filter(
           p => p.hasIssues || p.resolveableIssues > 0 || p.issuesProcessing > 0
         );
 
@@ -317,10 +317,12 @@ const OrganizationStream = createReactClass({
   },
 
   resumePolling() {
-    if (!this.state.pageLinks) return;
+    if (!this.state.pageLinks) {
+      return;
+    }
 
     // Only resume polling if we're on the first page of results
-    let links = parseLinkHeader(this.state.pageLinks);
+    const links = parseLinkHeader(this.state.pageLinks);
     if (links && !links.previous.results && this.state.realtimeActive) {
       this._poller.setEndpoint(links.previous.href);
       this._poller.enable();
@@ -328,7 +330,7 @@ const OrganizationStream = createReactClass({
   },
 
   getGroupListEndpoint() {
-    let params = this.props.params;
+    const params = this.props.params;
 
     return `/organizations/${params.orgId}/issues/`;
   },
@@ -338,8 +340,8 @@ const OrganizationStream = createReactClass({
       return;
     }
 
-    let {searchId} = this.props.params;
-    let match = this.state.savedSearchList.find(search => search.id === searchId);
+    const {searchId} = this.props.params;
+    const match = this.state.savedSearchList.find(search => search.id === searchId);
     if (match) {
       let projects = [];
       if (match.projectId) {
@@ -377,7 +379,7 @@ const OrganizationStream = createReactClass({
   },
 
   onGroupChange() {
-    let groupIds = this._streamManager.getAllItems().map(item => item.id);
+    const groupIds = this._streamManager.getAllItems().map(item => item.id);
     if (!isEqual(groupIds, this.state.groupIds)) {
       this.setState({groupIds});
     }
@@ -405,7 +407,7 @@ const OrganizationStream = createReactClass({
   },
 
   onSidebarToggle() {
-    let {organization} = this.props;
+    const {organization} = this.props;
     this.setState({
       isSidebarVisible: !this.state.isSidebarVisible,
     });
@@ -415,12 +417,12 @@ const OrganizationStream = createReactClass({
   },
 
   onSelectedGroupChange() {
-    let selected = SelectedGroupStore.getSelectedIds();
-    let projects = [...selected]
+    const selected = SelectedGroupStore.getSelectedIds();
+    const projects = [...selected]
       .map(id => GroupStore.get(id))
       .map(group => group.project.slug);
 
-    let uniqProjects = uniq(projects);
+    const uniqProjects = uniq(projects);
 
     // we only want selectedProject set if there is 1 project
     // more or fewer should result in a null so that the action toolbar
@@ -442,7 +444,7 @@ const OrganizationStream = createReactClass({
       return;
     }
 
-    let orgId = this.props.organization.slug;
+    const orgId = this.props.organization.slug;
     fetchProject(this.api, orgId, projectSlug).then(project => {
       this.projectCache[project.slug] = project;
       this.setState({selectedProject: project});
@@ -453,19 +455,21 @@ const OrganizationStream = createReactClass({
    * Returns true if all results in the current query are visible/on this page
    */
   allResultsVisible() {
-    if (!this.state.pageLinks) return false;
+    if (!this.state.pageLinks) {
+      return false;
+    }
 
-    let links = parseLinkHeader(this.state.pageLinks);
+    const links = parseLinkHeader(this.state.pageLinks);
     return links && !links.previous.results && !links.next.results;
   },
 
   transitionTo(newParams = {}) {
-    let query = {
+    const query = {
       ...this.getEndpointParams(),
       ...newParams,
     };
-    let {organization} = this.props;
-    let {savedSearch} = this.state;
+    const {organization} = this.props;
+    const {savedSearch} = this.state;
     let path;
 
     if (savedSearch && query.query == savedSearch.query) {
@@ -493,19 +497,19 @@ const OrganizationStream = createReactClass({
 
   renderGroupNodes(ids, groupStatsPeriod) {
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
-    let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
-    let dateCutoff = new Date();
+    const userDateJoined = new Date(ConfigStore.get('user').dateJoined);
+    const dateCutoff = new Date();
     dateCutoff.setDate(dateCutoff.getDate() - 30);
 
-    let topIssue = ids[0];
-    let {memberList} = this.state;
+    const topIssue = ids[0];
+    const {memberList} = this.state;
 
-    let {orgId} = this.props.params;
-    let groupNodes = ids.map(id => {
-      let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
+    const {orgId} = this.props.params;
+    const groupNodes = ids.map(id => {
+      const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
 
-      let group = GroupStore.get(id);
-      let members = memberList[group.project.slug] || null;
+      const group = GroupStore.get(id);
+      const members = memberList[group.project.slug] || null;
 
       return (
         <StreamGroup
@@ -536,8 +540,8 @@ const OrganizationStream = createReactClass({
 
   renderStreamBody() {
     let body;
-    let selectedProjects = this.getGlobalSearchProjects();
-    let noEvents = selectedProjects.filter(p => !p.firstEvent).length > 0;
+    const selectedProjects = this.getGlobalSearchProjects();
+    const noEvents = selectedProjects.filter(p => !p.firstEvent).length > 0;
 
     if (this.state.loading) {
       body = this.renderLoading();
@@ -554,7 +558,7 @@ const OrganizationStream = createReactClass({
   },
 
   fetchSavedSearches() {
-    let {orgId} = this.props.params;
+    const {orgId} = this.props.params;
     this.setState({loading: true});
 
     fetchSavedSearches(this.api, orgId).then(
@@ -568,7 +572,7 @@ const OrganizationStream = createReactClass({
   },
 
   onSavedSearchCreate(data) {
-    let savedSearchList = this.state.savedSearchList;
+    const savedSearchList = this.state.savedSearchList;
 
     savedSearchList.push(data);
     this.setState({
@@ -578,11 +582,11 @@ const OrganizationStream = createReactClass({
   },
 
   renderProcessingIssuesHints() {
-    let pi = this.state.processingIssues;
+    const pi = this.state.processingIssues;
     if (!pi || this.showingProcessingIssues()) {
       return null;
     }
-    let {orgId} = this.props.params;
+    const {orgId} = this.props.params;
     return pi.map((p, idx) => {
       return (
         <ProcessingIssueHint
@@ -597,10 +601,10 @@ const OrganizationStream = createReactClass({
   },
 
   renderAwaitingEvents(projects) {
-    let {organization} = this.props;
-    let project = projects.length > 0 ? projects[0] : null;
+    const {organization} = this.props;
+    const project = projects.length > 0 ? projects[0] : null;
 
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
+    const sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
     return (
       <ErrorRobot
         org={organization}
@@ -615,29 +619,29 @@ const OrganizationStream = createReactClass({
     if (this.state.loading) {
       return this.renderLoading();
     }
-    let params = this.props.params;
-    let classes = ['stream-row'];
+    const params = this.props.params;
+    const classes = ['stream-row'];
     if (this.state.isSidebarVisible) {
       classes.push('show-sidebar');
     }
-    let {orgId, searchId} = this.props.params;
-    let access = this.getAccess();
-    let query = this.getQuery();
+    const {orgId, searchId} = this.props.params;
+    const access = this.getAccess();
+    const query = this.getQuery();
 
     // If we have a selected project we can get release data
     let hasReleases = false;
     let projectId = null;
     let latestRelease = null;
-    let {selectedProject} = this.state;
+    const {selectedProject} = this.state;
     if (selectedProject) {
-      let features = new Set(selectedProject.features);
+      const features = new Set(selectedProject.features);
       hasReleases = features.has('releases');
       latestRelease = selectedProject.latestRelease;
       projectId = selectedProject.slug;
     } else {
       // If the user has filtered down to a single project
       // we can hint the autocomplete/savedsearch picker with that.
-      let projects = this.getGlobalSearchProjects();
+      const projects = this.getGlobalSearchProjects();
       if (projects.length === 1) {
         projectId = projects[0].slug;
       }

@@ -1,22 +1,22 @@
 import * as Sentry from '@sentry/browser';
 
-import { Client } from 'app/api';
+import {Client} from 'app/api';
 import WorkBatchActions from 'app/actions/workBatchActions';
-import { buildUserId, buildTeamId } from 'app/utils';
-import { uniqueId } from 'app/utils/guid';
+import {buildUserId, buildTeamId} from 'app/utils';
+import {uniqueId} from 'app/utils/guid';
 
 export function assignToUser(params) {
   const api = new Client();
 
-  let endpoint = `/work-batches/${params.id}/`;
+  const endpoint = `/work-batches/${params.id}/`;
 
-  let id = uniqueId();
+  const id = uniqueId();
 
   WorkBatchActions.assignTo(id, params.id, {
     email: (params.member && params.member.email) || '',
   });
 
-  let request = api.requestPromise(endpoint, {
+  const request = api.requestPromise(endpoint, {
     method: 'PUT',
     // Sending an empty value to assignedTo is the same as "clear",
     // so if no member exists, that implies that we want to clear the
@@ -40,15 +40,15 @@ export function assignToUser(params) {
 export function clearAssignment(groupId) {
   const api = new Client();
 
-  let endpoint = `/issues/${groupId}/`;
+  const endpoint = `/issues/${groupId}/`;
 
-  let id = uniqueId();
+  const id = uniqueId();
 
   WorkBatchActions.assignTo(id, groupId, {
     email: '',
   });
 
-  let request = api.requestPromise(endpoint, {
+  const request = api.requestPromise(endpoint, {
     method: 'PUT',
     // Sending an empty value to assignedTo is the same as "clear"
     data: {
@@ -67,15 +67,15 @@ export function clearAssignment(groupId) {
   return request;
 }
 
-export function assignToActor({ id, actor }) {
+export function assignToActor({id, actor}) {
   const api = new Client();
 
-  let endpoint = `/issues/${id}/`;
+  const endpoint = `/issues/${id}/`;
 
-  let guid = uniqueId();
+  const guid = uniqueId();
   let actorId;
 
-  WorkBatchActions.assignTo(guid, id, { email: '' });
+  WorkBatchActions.assignTo(guid, id, {email: ''});
 
   switch (actor.type) {
     case 'user':
@@ -96,7 +96,7 @@ export function assignToActor({ id, actor }) {
   return api
     .requestPromise(endpoint, {
       method: 'PUT',
-      data: { assignedTo: actorId },
+      data: {assignedTo: actorId},
     })
     .then(data => {
       WorkBatchActions.assignToSuccess(guid, id, data);

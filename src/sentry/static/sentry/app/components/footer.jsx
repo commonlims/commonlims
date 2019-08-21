@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import ConfigStore from 'app/stores/configStore';
 import DynamicWrapper from 'app/components/dynamicWrapper';
 import Hook from 'app/components/hook';
@@ -26,7 +26,7 @@ const Footer = () => {
         {config.isOnPremise && (
           <div className="version pull-left">
             {'Common LIMS '}
-            <DynamicWrapper fixed="Acceptance Test" value={'0.1.0'} />
+            <DynamicWrapper fixed="Acceptance Test" value="0.1.0" />
           </div>
         )}
         <Hook name="footer" />

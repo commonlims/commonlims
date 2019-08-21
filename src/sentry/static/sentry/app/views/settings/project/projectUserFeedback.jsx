@@ -55,7 +55,7 @@ class ProjectUserFeedbackSettings extends AsyncView {
   }
 
   getEndpoints() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return [
       ['keyList', `/projects/${orgId}/${projectId}/keys/`],
       ['project', `/projects/${orgId}/${projectId}/`],
@@ -63,7 +63,7 @@ class ProjectUserFeedbackSettings extends AsyncView {
   }
 
   getInstructions() {
-    let dsn = this.state.keyList.length
+    const dsn = this.state.keyList.length
       ? this.state.keyList[0].dsn.public
       : 'https://public@sentry.example.com/1';
 
@@ -86,7 +86,7 @@ class ProjectUserFeedbackSettings extends AsyncView {
   }
 
   getBrowserJSInstructions() {
-    let dsn = this.state.keyList.length
+    const dsn = this.state.keyList.length
       ? this.state.keyList[0].dsn.public
       : 'https://public@sentry.example.com/1';
 
@@ -124,7 +124,7 @@ class ProjectUserFeedbackSettings extends AsyncView {
   };
 
   renderBody() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
 
     return (
       <div>

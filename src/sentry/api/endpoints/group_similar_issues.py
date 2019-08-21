@@ -34,7 +34,8 @@ class GroupSimilarIssuesEndpoint(GroupEndpoint):
             filter(
                 lambda group_id__scores: group_id__scores[0] is not None,
                 map(
-                    lambda group_id__scores: (serialized_groups.get(group_id__scores[0]), group_id__scores[1], ),
+                    lambda group_id__scores: (serialized_groups.get(
+                        group_id__scores[0]), group_id__scores[1], ),
                     results,
                 ),
             ),

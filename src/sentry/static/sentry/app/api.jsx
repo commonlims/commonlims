@@ -31,7 +31,7 @@ export class Request {
  * @param params
  */
 export function paramsToQueryArgs(params) {
-  let p = params.itemIds
+  const p = params.itemIds
     ? {id: params.itemIds} // items matching array of itemids
     : params.query
       ? {query: params.query} // items matching search query
@@ -58,13 +58,15 @@ export class Client {
    * If so, redirect user to new project slug
    */
   hasProjectBeenRenamed(response) {
-    let code = response?.responseJSON?.detail?.code;
+    const code = response?.responseJSON?.detail?.code;
 
     // XXX(billy): This actually will never happen because we can't intercept the 302
     // jQuery ajax will follow the redirect by default...
-    if (code !== PROJECT_MOVED) return false;
+    if (code !== PROJECT_MOVED) {
+      return false;
+    }
 
-    let slug = response?.responseJSON?.detail?.extra?.slug;
+    const slug = response?.responseJSON?.detail?.extra?.slug;
 
     redirectToProject(slug);
     return true;
@@ -77,14 +79,16 @@ export class Client {
     }
 
     return (...args) => {
-      let req = this.activeRequests[id];
+      const req = this.activeRequests[id];
       if (cleanup === true) {
         delete this.activeRequests[id];
       }
       if (req && req.alive) {
         // Check if API response is a 302 -- means project slug was renamed and user
         // needs to be redirected
-        if (this.hasProjectBeenRenamed(...args)) return;
+        if (this.hasProjectBeenRenamed(...args)) {
+          return;
+        }
 
         // Call success callback
         return func.apply(req, args);
@@ -96,14 +100,14 @@ export class Client {
    * Attempt to cancel all active XHR requests
    */
   clear() {
-    for (let id in this.activeRequests) {
+    for (const id in this.activeRequests) {
       this.activeRequests[id].cancel();
     }
   }
 
   handleRequestError({id, path, requestOptions}, response, ...responseArgs) {
-    let code = response?.responseJSON?.detail?.code;
-    let isSudoRequired = code === SUDO_REQUIRED || code === SUPERUSER_REQUIRED;
+    const code = response?.responseJSON?.detail?.code;
+    const isSudoRequired = code === SUDO_REQUIRED || code === SUPERUSER_REQUIRED;
 
     if (isSudoRequired) {
       openSudo({
@@ -112,17 +116,23 @@ export class Client {
         retryRequest: () => {
           return this.requestPromise(path, requestOptions)
             .then((...args) => {
-              if (typeof requestOptions.success !== 'function') return;
+              if (typeof requestOptions.success !== 'function') {
+                return;
+              }
 
               requestOptions.success(...args);
             })
             .catch((...args) => {
-              if (typeof requestOptions.error !== 'function') return;
+              if (typeof requestOptions.error !== 'function') {
+                return;
+              }
               requestOptions.error(...args);
             });
         },
         onClose: () => {
-          if (typeof requestOptions.error !== 'function') return;
+          if (typeof requestOptions.error !== 'function') {
+            return;
+          }
           // If modal was closed, then forward the original response
           requestOptions.error(response);
         },
@@ -131,8 +141,10 @@ export class Client {
     }
 
     // Call normal error callback
-    let errorCb = this.wrapCallback(id, requestOptions.error);
-    if (typeof errorCb !== 'function') return;
+    const errorCb = this.wrapCallback(id, requestOptions.error);
+    if (typeof errorCb !== 'function') {
+      return;
+    }
     errorCb(response, ...responseArgs);
   }
 
@@ -148,9 +160,9 @@ export class Client {
       });
       throw err;
     }
-    let method = options.method || (options.data ? 'POST' : 'GET');
+    const method = options.method || (options.data ? 'POST' : 'GET');
     let data = options.data;
-    let id = uniqueId();
+    const id = uniqueId();
     metric.mark(`api-request-start-${id}`);
 
     if (!isUndefined(data) && method !== 'GET') {
@@ -183,7 +195,7 @@ export class Client {
           'X-Span-ID': tracing.getSpanId(),
         },
         success: (...args) => {
-          let [, , xhr] = args || [];
+          const [, , xhr] = args || [];
           metric.measure({
             name: 'app.api.request-success',
             start: `api-request-start-${id}`,
@@ -196,7 +208,7 @@ export class Client {
           }
         },
         error: (...args) => {
-          let [, , xhr] = args || [];
+          const [, , xhr] = args || [];
           metric.measure({
             name: 'app.api.request-error',
             start: `api-request-start-${id}`,
@@ -256,12 +268,12 @@ export class Client {
   }
 
   bulkDelete(params, options) {
-    let path = params.projectId
+    const path = params.projectId
       ? `/projects/${params.orgId}/${params.projectId}/issues/`
       : `/organizations/${params.orgId}/issues/`;
 
-    let query = paramsToQueryArgs(params);
-    let id = uniqueId();
+    const query = paramsToQueryArgs(params);
+    const id = uniqueId();
 
     GroupActions.delete(id, params.itemIds);
 
@@ -282,12 +294,12 @@ export class Client {
   }
 
   bulkUpdate(params, options) {
-    let path = params.projectId
+    const path = params.projectId
       ? `/projects/${params.orgId}/${params.projectId}/issues/`
       : `/organizations/${params.orgId}/issues/`;
 
-    let query = paramsToQueryArgs(params);
-    let id = uniqueId();
+    const query = paramsToQueryArgs(params);
+    const id = uniqueId();
 
     GroupActions.update(id, params.itemIds, params.data);
 
@@ -309,9 +321,9 @@ export class Client {
   }
 
   merge(params, options) {
-    let path = '/projects/' + params.orgId + '/' + params.projectId + '/issues/';
-    let query = paramsToQueryArgs(params);
-    let id = uniqueId();
+    const path = '/projects/' + params.orgId + '/' + params.projectId + '/issues/';
+    const query = paramsToQueryArgs(params);
+    const id = uniqueId();
 
     GroupActions.merge(id, params.itemIds);
 

@@ -20,7 +20,8 @@ class EventOrGroupTitle extends React.Component {
   };
 
   render() {
-    let {data} = this.props;
+    const {data} = this.props;
+    // eslint-disable-next-line prefer-const
     let {metadata, title, type, culprit} = data;
     let subtitle = null;
 

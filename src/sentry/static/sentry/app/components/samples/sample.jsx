@@ -4,9 +4,8 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from 'react-emotion';
-import {Flex, Box} from 'grid-emotion';
+import {Box} from 'grid-emotion';
 
-import Count from 'app/components/count';
 import SampleCheckBox from 'app/components/samples/sampleCheckBox';
 import ProjectState from 'app/mixins/projectState';
 import SampleStore from 'app/stores/sampleStore';
@@ -55,17 +54,23 @@ const SampleComponent = createReactClass({
     if (!itemIds.has(this.props.id)) {
       return;
     }
-    let id = this.props.id;
-    let data = SampleStore.get(id);
+    const id = this.props.id;
+    const data = SampleStore.get(id);
     this.setState({
       data,
     });
   },
 
   toggleSelect(evt) {
-    if (evt.target.tagName === 'A') return;
-    if (evt.target.tagName === 'INPUT') return;
-    if (jQuery(evt.target).parents('a').length !== 0) return;
+    if (evt.target.tagName === 'A') {
+      return;
+    }
+    if (evt.target.tagName === 'INPUT') {
+      return;
+    }
+    if (jQuery(evt.target).parents('a').length !== 0) {
+      return;
+    }
 
     SelectedSampleStore.toggleSelect(this.state.data.id);
   },
@@ -109,11 +114,6 @@ const SampleCheckBoxDiv = styled(Box)`
     margin: 0;
     display: block;
   }
-`;
-
-const StyledCount = styled(Count)`
-  font-size: 18px;
-  color: ${p => p.theme.gray3};
 `;
 
 export default SampleComponent;

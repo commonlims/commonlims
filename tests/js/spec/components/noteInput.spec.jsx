@@ -26,7 +26,7 @@ describe('NoteInput', function() {
   });
 
   it('renders', function() {
-    let wrapper = shallow(
+    const wrapper = shallow(
       <NoteInput group={{project: {}}} memberList={[]} sessionUser={{}} />,
       TestStubs.routerContext()
     );
@@ -36,12 +36,12 @@ describe('NoteInput', function() {
   // TODO: Skip until we revisit the user task view
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip('submits when meta + enter is pressed', function() {
-    let wrapper = mount(
+    const wrapper = mount(
       <NoteInput group={{project: {}, id: 'groupId'}} memberList={[]} sessionUser={{}} />,
       TestStubs.routerContext()
     );
 
-    let input = wrapper.find('textarea');
+    const input = wrapper.find('textarea');
 
     input.simulate('keyDown', {key: 'Enter', metaKey: true});
     expect(spy).toHaveBeenCalled();
@@ -50,12 +50,12 @@ describe('NoteInput', function() {
   // TODO: Skip until we revisit the user task view
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip('submits when ctrl + enter is pressed', function() {
-    let wrapper = mount(
+    const wrapper = mount(
       <NoteInput group={{project: {}, id: 'groupId'}} memberList={[]} sessionUser={{}} />,
       TestStubs.routerContext()
     );
 
-    let input = wrapper.find('textarea');
+    const input = wrapper.find('textarea');
 
     input.simulate('keyDown', {key: 'Enter', ctrlKey: true});
     expect(spy).toHaveBeenCalled();
@@ -70,12 +70,12 @@ describe('NoteInput', function() {
       body: {detail: {message: '', code: 401, extra: ''}},
       statusCode: 401,
     });
-    let wrapper = mount(
+    const wrapper = mount(
       <NoteInput group={{project: {}, id: 'groupId'}} memberList={[]} sessionUser={{}} />,
       TestStubs.routerContext()
     );
 
-    let input = wrapper.find('textarea');
+    const input = wrapper.find('textarea');
 
     input.simulate('keyDown', {key: 'Enter', ctrlKey: true});
     wrapper.update();

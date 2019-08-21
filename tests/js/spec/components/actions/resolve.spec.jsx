@@ -6,7 +6,7 @@ import ResolveActions from 'app/components/actions/resolve';
 describe('ResolveActions', function() {
   describe('disabled', function() {
     let component, button;
-    let spy = sinon.stub();
+    const spy = sinon.stub();
 
     beforeEach(function() {
       component = mount(
@@ -14,8 +14,8 @@ describe('ResolveActions', function() {
           onUpdate={spy}
           disabled={true}
           hasRelease={false}
-          orgId={'org-1'}
-          projectId={'proj-1'}
+          orgId="org-1"
+          projectId="proj-1"
         />,
         TestStubs.routerContext()
       );
@@ -34,15 +34,15 @@ describe('ResolveActions', function() {
 
   describe('resolved', function() {
     let component;
-    let spy = sinon.stub();
+    const spy = sinon.stub();
     beforeEach(function() {
       component = mount(
         <ResolveActions
           onUpdate={spy}
           disabled={true}
           hasRelease={false}
-          orgId={'org-1'}
-          projectId={'proj-1'}
+          orgId="org-1"
+          projectId="proj-1"
           isResolved={true}
         />,
         TestStubs.routerContext()
@@ -50,7 +50,7 @@ describe('ResolveActions', function() {
     });
 
     it('displays resolved view', function() {
-      let button = component.find('a.btn.active');
+      const button = component.find('a.btn.active');
       expect(button).toHaveLength(1);
       expect(button.text()).toBe('');
     });
@@ -63,14 +63,14 @@ describe('ResolveActions', function() {
 
   describe('auto resolved', function() {
     it('cannot be unresolved manually', function() {
-      let spy = sinon.stub();
-      let component = mount(
+      const spy = sinon.stub();
+      const component = mount(
         <ResolveActions
           onUpdate={spy}
           disabled={true}
           hasRelease={false}
-          orgId={'org-1'}
-          projectId={'proj-1'}
+          orgId="org-1"
+          projectId="proj-1"
           isResolved={true}
           isAutoResolved={true}
         />,
@@ -84,14 +84,14 @@ describe('ResolveActions', function() {
 
   describe('without confirmation', function() {
     let component;
-    let spy = sinon.stub();
+    const spy = sinon.stub();
     beforeEach(function() {
       component = mount(
         <ResolveActions
           onUpdate={spy}
           hasRelease={false}
-          orgId={'org-1'}
-          projectId={'proj-1'}
+          orgId="org-1"
+          projectId="proj-1"
         />,
         TestStubs.routerContext()
       );
@@ -102,7 +102,7 @@ describe('ResolveActions', function() {
     });
 
     it('calls spy with resolved status when clicked', function() {
-      let button = component.find('a.btn.btn-default').first();
+      const button = component.find('a.btn.btn-default').first();
       button.simulate('click');
       expect(spy.calledOnce).toBe(true);
       expect(spy.calledWith({status: 'resolved'})).toBe(true);
@@ -111,17 +111,17 @@ describe('ResolveActions', function() {
 
   describe('with confirmation step', function() {
     let component, button;
-    let spy = sinon.stub();
+    const spy = sinon.stub();
 
     beforeEach(function() {
       component = mount(
         <ResolveActions
           onUpdate={spy}
           hasRelease={false}
-          orgId={'org-1'}
-          projectId={'proj-1'}
+          orgId="org-1"
+          projectId="proj-1"
           shouldConfirm={true}
-          confirmMessage={'Are you sure???'}
+          confirmMessage="Are you sure???"
         />,
         TestStubs.routerContext()
       );
@@ -135,7 +135,7 @@ describe('ResolveActions', function() {
     it('displays confirmation modal with message provided', function() {
       button.simulate('click');
 
-      let modal = $(document.body).find('.modal');
+      const modal = $(document.body).find('.modal');
       expect(modal.text()).toContain('Are you sure???');
       expect(spy.notCalled).toBe(true);
       $(document.body)

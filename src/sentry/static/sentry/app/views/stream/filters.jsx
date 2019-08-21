@@ -41,7 +41,7 @@ class StreamFilters extends React.Component {
   };
 
   render() {
-    let {
+    const {
       access,
       orgId,
       projectId,
