@@ -19,7 +19,7 @@ class TeamSelect extends React.Component {
   };
 
   render() {
-    let {
+    const {
       disabled,
       teams,
       selectedTeams,
@@ -28,8 +28,10 @@ class TeamSelect extends React.Component {
       allSelected,
     } = this.props;
     //no need to select a team when there's only one option
-    if (teams.length < 2) return null;
-    let hasSelectAll = !!onSelectAll && !!allSelected;
+    if (teams.length < 2) {
+      return null;
+    }
+    const hasSelectAll = !!onSelectAll && !!allSelected;
 
     return (
       <Panel className="new-invite-team">

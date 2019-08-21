@@ -27,8 +27,10 @@ export class RegisterValue extends React.Component {
 
   formatValue = value => {
     try {
-      let parsed = typeof value === 'string' ? parseInt(value, 16) : value;
-      if (isNaN(parsed)) return value;
+      const parsed = typeof value === 'string' ? parseInt(value, 16) : value;
+      if (isNaN(parsed)) {
+        return value;
+      }
 
       switch (this.state.view) {
         case 1:
@@ -66,7 +68,7 @@ class FrameRegisters extends React.Component {
   };
 
   render() {
-    let registers = objectToArray(this.props.data).filter(register =>
+    const registers = objectToArray(this.props.data).filter(register =>
       defined(register[1])
     );
 

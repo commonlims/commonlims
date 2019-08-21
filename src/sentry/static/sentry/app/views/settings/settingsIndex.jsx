@@ -46,8 +46,10 @@ class SettingsIndex extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
-    let {organization} = this.props;
-    if (prevProps.organization === organization) return;
+    const {organization} = this.props;
+    if (prevProps.organization === organization) {
+      return;
+    }
 
     // if there is no org in context, SidebarDropdown uses an org from `withLatestContext`
     // (which queries the org index endpoint instead of org details)
@@ -61,20 +63,20 @@ class SettingsIndex extends React.Component {
   }
 
   render() {
-    let {organization} = this.props;
-    let user = ConfigStore.get('user');
-    let isOnPremise = ConfigStore.get('isOnPremise');
-    let isSuperuser = user.isSuperuser;
+    const {organization} = this.props;
+    const user = ConfigStore.get('user');
+    const isOnPremise = ConfigStore.get('isOnPremise');
+    const isSuperuser = user.isSuperuser;
 
-    let organizationSettingsUrl =
+    const organizationSettingsUrl =
       (organization && `/settings/${organization.slug}/`) || '';
 
-    let supportLinkProps = {
+    const supportLinkProps = {
       isOnPremise,
       href: LINKS.FORUM,
       to: `${organizationSettingsUrl}support`,
     };
-    let supportText = isOnPremise ? t('Community Forums') : t('Contact Support');
+    const supportText = isOnPremise ? t('Community Forums') : t('Contact Support');
 
     return (
       <DocumentTitle title={organization ? `${organization.slug} Settings` : 'Settings'}>

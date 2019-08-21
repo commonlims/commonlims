@@ -45,7 +45,9 @@ class Sidebar extends React.Component {
       showPanel: false,
     };
 
-    if (!window.matchMedia) return;
+    if (!window.matchMedia) {
+      return;
+    }
     // TODO(billy): We should consider moving this into a component
     this.mq = window.matchMedia(`(max-width: ${theme.breakpoints[0]})`);
     this.mq.addListener(this.handleMediaQueryChange);
@@ -53,7 +55,7 @@ class Sidebar extends React.Component {
   }
 
   componentDidMount() {
-    let {router} = this.props;
+    const {router} = this.props;
     document.body.classList.add('body-sidebar');
     document.addEventListener('click', this.documentClickHandler);
 
@@ -72,15 +74,17 @@ class Sidebar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {collapsed, location} = this.props;
-    let nextLocation = nextProps.location;
+    const {collapsed, location} = this.props;
+    const nextLocation = nextProps.location;
 
     // Close active panel if we navigated anywhere
     if (nextLocation && location && location.pathname !== nextLocation.pathname) {
       this.hidePanel();
     }
 
-    if (collapsed === nextProps.collapsed) return;
+    if (collapsed === nextProps.collapsed) {
+      return;
+    }
 
     this.doCollapse(nextProps.collapsed);
   }
@@ -124,7 +128,7 @@ class Sidebar extends React.Component {
   }
 
   toggleSidebar = () => {
-    let {collapsed} = this.props;
+    const {collapsed} = this.props;
 
     if (!collapsed) {
       hideSidebar();
@@ -147,7 +151,9 @@ class Sidebar extends React.Component {
 
   // Hide slideout panel
   hidePanel = () => {
-    if (!this.state.sidePanel && this.state.currentPanel === '') return;
+    if (!this.state.sidePanel && this.state.currentPanel === '') {
+      return;
+    }
 
     this.setState({
       showPanel: false,
@@ -171,7 +177,7 @@ class Sidebar extends React.Component {
 
       // Handle cmd-click (mac) and meta-click (linux)
       if (evt.metaKey) {
-        let q = queryString.stringify(query);
+        const q = queryString.stringify(query);
         evt.currentTarget.href = `${evt.currentTarget.href}?${q}`;
         return;
       }
@@ -192,8 +198,11 @@ class Sidebar extends React.Component {
   };
 
   togglePanel = (panel, e) => {
-    if (this.state.currentPanel === panel) this.hidePanel();
-    else this.showPanel(panel);
+    if (this.state.currentPanel === panel) {
+      this.hidePanel();
+    } else {
+      this.showPanel(panel);
+    }
   };
 
   documentClickHandler = evt => {
@@ -204,20 +213,20 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    let {organization, collapsed} = this.props;
-    let {currentPanel, showPanel, horizontal} = this.state;
-    let config = ConfigStore.getConfig();
-    let user = ConfigStore.get('user');
-    let hasPanel = !!currentPanel;
-    let orientation = horizontal ? 'top' : 'left';
-    let sidebarItemProps = {
+    const {organization, collapsed} = this.props;
+    const {currentPanel, showPanel, horizontal} = this.state;
+    const config = ConfigStore.getConfig();
+    const user = ConfigStore.get('user');
+    const hasPanel = !!currentPanel;
+    const orientation = horizontal ? 'top' : 'left';
+    const sidebarItemProps = {
       orientation,
       collapsed,
       hasPanel,
     };
-    let hasOrganization = !!organization;
+    const hasOrganization = !!organization;
 
-    let hasSentry10 = hasOrganization && new Set(organization.features).has('sentry10');
+    const hasSentry10 = hasOrganization && new Set(organization.features).has('sentry10');
 
     return (
       <StyledSidebar innerRef={ref => (this.sidebar = ref)} collapsed={collapsed}>
@@ -473,7 +482,9 @@ const SidebarContainer = withRouter(
     },
 
     onPreferenceChange(store) {
-      if (store.collapsed === this.state.collapsed) return;
+      if (store.collapsed === this.state.collapsed) {
+        return;
+      }
 
       this.setState({
         collapsed: store.collapsed,

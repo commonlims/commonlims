@@ -16,6 +16,7 @@ const getUtcValue = utc => {
 //
 // TODO(billy): Make period parameter name consistent
 export function getParams(params = {}) {
+  // eslint-disable-next-line prefer-const
   let {start, end, period, statsPeriod, utc, ...otherParams} = params;
 
   // `statsPeriod` takes precendence for now

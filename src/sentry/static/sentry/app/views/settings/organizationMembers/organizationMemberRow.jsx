@@ -49,33 +49,39 @@ export default class OrganizationMemberRow extends React.PureComponent {
   }
 
   handleRemove = e => {
-    let {onRemove} = this.props;
+    const {onRemove} = this.props;
 
-    if (typeof onRemove !== 'function') return;
+    if (typeof onRemove !== 'function') {
+      return;
+    }
 
     this.setState({busy: true});
     onRemove(this.props.member, e);
   };
 
   handleLeave = e => {
-    let {onLeave} = this.props;
+    const {onLeave} = this.props;
 
-    if (typeof onLeave !== 'function') return;
+    if (typeof onLeave !== 'function') {
+      return;
+    }
 
     this.setState({busy: true});
     onLeave(this.props.member, e);
   };
 
   handleSendInvite = e => {
-    let {onSendInvite} = this.props;
+    const {onSendInvite} = this.props;
 
-    if (typeof onSendInvite !== 'function') return;
+    if (typeof onSendInvite !== 'function') {
+      return;
+    }
 
     onSendInvite(this.props.member, e);
   };
 
   render() {
-    let {
+    const {
       params,
       routes,
       member,
@@ -88,21 +94,21 @@ export default class OrganizationMemberRow extends React.PureComponent {
       canAddMembers,
     } = this.props;
 
-    let {id, flags, email, name, roleName, pending, expired, user} = member;
+    const {id, flags, email, name, roleName, pending, expired, user} = member;
 
     // if member is not the only owner, they can leave
-    let needsSso = !flags['sso:linked'] && requireLink;
-    let isCurrentUser = currentUser.email === email;
-    let showRemoveButton = !isCurrentUser;
-    let showLeaveButton = isCurrentUser;
-    let canRemoveMember = canRemoveMembers && !isCurrentUser;
+    const needsSso = !flags['sso:linked'] && requireLink;
+    const isCurrentUser = currentUser.email === email;
+    const showRemoveButton = !isCurrentUser;
+    const showLeaveButton = isCurrentUser;
+    const canRemoveMember = canRemoveMembers && !isCurrentUser;
     // member has a `user` property if they are registered with sentry
     // i.e. has accepted an invite to join org
-    let has2fa = user && user.has2fa;
-    let detailsUrl = recreateRoute(id, {routes, params});
-    let isInviteSuccessful = status === 'success';
-    let isInviting = status === 'loading';
-    let canResend = !expired && canAddMembers && (pending || needsSso);
+    const has2fa = user && user.has2fa;
+    const detailsUrl = recreateRoute(id, {routes, params});
+    const isInviteSuccessful = status === 'success';
+    const isInviting = status === 'loading';
+    const canResend = !expired && canAddMembers && (pending || needsSso);
 
     return (
       <PanelItem align="center" p={0} py={2}>

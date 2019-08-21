@@ -65,7 +65,8 @@ class QuotaTest(TestCase):
         with self.settings(SENTRY_DEFAULT_MAX_EVENTS_PER_MINUTE='50%', SENTRY_SINGLE_ORGANIZATION=False), self.options({'system.rate-limit': 10}):
             assert self.backend.get_organization_quota(org) == (5, 60)
 
-    def test_get_organization_quota_with_no_account_limit_and_relative_system_limit_single_org(self):
+    def test_get_organization_quota_with_no_account_limit_and_relative_system_limit_single_org(
+            self):
         org = self.create_organization()
         with self.settings(SENTRY_DEFAULT_MAX_EVENTS_PER_MINUTE='50%', SENTRY_SINGLE_ORGANIZATION=True), self.options({'system.rate-limit': 10}):
             assert self.backend.get_organization_quota(org) == (10, 60)

@@ -39,9 +39,11 @@ const PENDING_INVITE = 'pending-invite';
  * @param {function} onU2fTap Callback when u2f device is activated
  */
 const getFields = ({authenticator, hasSentCode, onSmsReset, onSmsSubmit, onU2fTap}) => {
-  let {form, qrcode, challenge, id} = authenticator || {};
+  const {form, qrcode, challenge, id} = authenticator || {};
 
-  if (!form) return null;
+  if (!form) {
+    return null;
+  }
 
   if (qrcode) {
     return [
@@ -76,7 +78,7 @@ const getFields = ({authenticator, hasSentCode, onSmsReset, onSmsSubmit, onU2fTa
         visible: () => hasSentCode,
       },
       () => (
-        <PanelItem key="sms-footer" justify="flex-end" p={2} pr={'36px'}>
+        <PanelItem key="sms-footer" justify="flex-end" p={2} pr="36px">
           {hasSentCode && (
             <Button css={{marginRight: 6}} onClick={onSmsReset}>
               {t('Start Over')}
@@ -92,7 +94,7 @@ const getFields = ({authenticator, hasSentCode, onSmsReset, onSmsSubmit, onU2fTa
 
   // Need to render device name field + U2f component
   if (id === 'u2f') {
-    let deviceNameField = form.find(({name}) => name === 'deviceName');
+    const deviceNameField = form.find(({name}) => name === 'deviceName');
     return [
       deviceNameField,
       () => (
@@ -129,7 +131,7 @@ class AccountSecurityEnroll extends AsyncView {
         {},
         {
           allowError: err => {
-            let alreadyEnrolled =
+            const alreadyEnrolled =
               err &&
               err.status === 400 &&
               err.responseJSON &&
@@ -188,12 +190,14 @@ class AccountSecurityEnroll extends AsyncView {
 
   // Handles
   handleSmsSubmit = dataModel => {
-    let {authenticator, hasSentCode} = this.state;
+    const {authenticator, hasSentCode} = this.state;
 
     // Don't submit if empty
-    if (!this._form.phone) return;
+    if (!this._form.phone) {
+      return;
+    }
 
-    let data = {
+    const data = {
       phone: this._form.phone,
       // Make sure `otp` is undefined if we are submitting OTP verification
       // Otherwise API will think that we are on verification step (e.g. after submitting phone)
@@ -236,7 +240,7 @@ class AccountSecurityEnroll extends AsyncView {
         },
         error => {
           this._form = {};
-          let isSmsInterface = authenticator.id === 'sms';
+          const isSmsInterface = authenticator.id === 'sms';
 
           this.setState({
             hasSentCode: !isSmsInterface,
@@ -245,7 +249,7 @@ class AccountSecurityEnroll extends AsyncView {
           // Re-mount because we want to fetch a fresh secret
           this.remountComponent();
 
-          let errorMessage = this.state.hasSentCode
+          const errorMessage = this.state.hasSentCode
             ? t('Incorrect OTP')
             : t('Error sending SMS');
           addErrorMessage(errorMessage);
@@ -268,9 +272,9 @@ class AccountSecurityEnroll extends AsyncView {
 
   // Currently only TOTP uses this
   handleSubmit = dataModel => {
-    let {authenticator} = this.state;
+    const {authenticator} = this.state;
 
-    let data = {
+    const data = {
       ...this._form,
       ...(dataModel || {}),
       secret: authenticator.secret,
@@ -291,7 +295,7 @@ class AccountSecurityEnroll extends AsyncView {
   // Handler when we successfully add a 2fa device
   handleEnrollSuccess = () => {
     this.loadOrganizationContext();
-    let authenticatorName =
+    const authenticatorName =
       (this.state.authenticator && this.state.authenticator.name) || 'Authenticator';
     this.props.router.push('/settings/account/security');
     openRecoveryOptions({
@@ -301,7 +305,7 @@ class AccountSecurityEnroll extends AsyncView {
 
   // Handler when we failed to add a 2fa device
   handleEnrollError = () => {
-    let authenticatorName =
+    const authenticatorName =
       (this.state.authenticator && this.state.authenticator.name) || 'Authenticator';
     this.setState({loading: false});
     addErrorMessage(t('Error adding %s authenticator', authenticatorName));
@@ -309,9 +313,11 @@ class AccountSecurityEnroll extends AsyncView {
 
   // Removes an authenticator
   handleRemove = () => {
-    let {authenticator} = this.state;
+    const {authenticator} = this.state;
 
-    if (!authenticator || !authenticator.authId) return;
+    if (!authenticator || !authenticator.authId) {
+      return;
+    }
 
     // `authenticator.authId` is NOT the same as `props.params.authId`
     // This is for backwards compatbility with API endpoint
@@ -332,15 +338,15 @@ class AccountSecurityEnroll extends AsyncView {
   };
 
   renderBody() {
-    let {authenticator} = this.state;
+    const {authenticator} = this.state;
 
     if (!authenticator) {
       return null;
     }
 
-    let endpoint = `${ENDPOINT}${this.props.params.authId}/`;
+    const endpoint = `${ENDPOINT}${this.props.params.authId}/`;
 
-    let fields = getFields({
+    const fields = getFields({
       authenticator,
       hasSentCode: this.state.hasSentCode,
       onSmsReset: this.handleSmsReset,

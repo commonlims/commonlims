@@ -16,7 +16,7 @@ import SentryTypes from 'app/sentryTypes';
 import {t} from 'app/locale';
 import withEnvironment from 'app/utils/withEnvironment';
 
-let ERROR_TYPES = {
+const ERROR_TYPES = {
   GROUP_NOT_FOUND: 'GROUP_NOT_FOUND',
 };
 
@@ -99,7 +99,7 @@ const SampleDetails = createReactClass({
         //
         // TODO: Climsify this
         if (this.props.params.sampleId != data.id) {
-          let location = this.props.location;
+          const location = this.props.location;
           return void browserHistory.push(
             location.pathname.replace(
               `/issues/${this.props.params.groupId}/`,
@@ -136,9 +136,9 @@ const SampleDetails = createReactClass({
   },
 
   onGroupChange(itemIds) {
-    let id = this.props.params.sampleId;
+    const id = this.props.params.sampleId;
     if (itemIds.has(id)) {
-      let group = GroupStore.get(id);
+      const group = GroupStore.get(id);
       if (group) {
         if (group.stale) {
           this.fetchData();
@@ -152,20 +152,23 @@ const SampleDetails = createReactClass({
   },
 
   getSampleDetailsEndpoint() {
-    let id = this.props.params.sampleId;
+    const id = this.props.params.sampleId;
 
     return '/samples/' + id + '/';
   },
 
   getTitle() {
-    let group = this.state.group;
+    const group = this.state.group;
 
-    if (!group) return 'Sentry';
+    if (!group) {
+      return 'Sentry';
+    }
 
     switch (group.type) {
       case 'error':
-        if (group.metadata.type && group.metadata.value)
+        if (group.metadata.type && group.metadata.value) {
           return `${group.metadata.type}: ${group.metadata.value}`;
+        }
         return group.metadata.type || group.metadata.value;
       case 'csp':
         return group.metadata.message;
@@ -181,8 +184,8 @@ const SampleDetails = createReactClass({
   },
 
   render() {
-    let group = this.state.group;
-    let params = this.props.params;
+    const group = this.state.group;
+    const params = this.props.params;
 
     if (this.state.error) {
       switch (this.state.errorType) {

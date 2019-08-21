@@ -15,7 +15,7 @@ const SelectedProcessStore = Reflux.createStore({
   },
 
   add(ids) {
-    let allSelected = this.allSelected();
+    const allSelected = this.allSelected();
     ids.forEach(id => {
       if (!this.records.hasOwnProperty(id)) {
         this.records[id] = allSelected;
@@ -24,10 +24,10 @@ const SelectedProcessStore = Reflux.createStore({
   },
 
   prune() {
-    let existingIds = new Set(ProcessStore.getAllItemIds());
+    const existingIds = new Set(ProcessStore.getAllItemIds());
 
     // Remove ids that no longer exist
-    for (let itemId in this.records) {
+    for (const itemId in this.records) {
       if (!existingIds.has(itemId)) {
         delete this.records[itemId];
       }
@@ -35,8 +35,8 @@ const SelectedProcessStore = Reflux.createStore({
   },
 
   allSelected() {
-    let itemIds = this.getSelectedIds();
-    let numRecords = this.numSelected();
+    const itemIds = this.getSelectedIds();
+    const numRecords = this.numSelected();
     return itemIds.size > 0 && itemIds.size === numRecords;
   },
 
@@ -45,30 +45,30 @@ const SelectedProcessStore = Reflux.createStore({
   },
 
   anySelected() {
-    let itemIds = this.getSelectedIds();
+    const itemIds = this.getSelectedIds();
     return itemIds.size > 0;
   },
 
   identicalFieldsSelected() {
     // Returns true if there is any field selected and they all have "identical" fields to be set
     // This means that they can be edited together
-    let itemIds = this.getSelectedIds();
-    let selected = new Set();
-    for (let itemId of itemIds) {
-      let item = ProcessStore.get(itemId);
+    const itemIds = this.getSelectedIds();
+    const selected = new Set();
+    for (const itemId of itemIds) {
+      const item = ProcessStore.get(itemId);
       selected.add(item.fieldsetId);
     }
     return selected.size == 1;
   },
 
   multiSelected() {
-    let itemIds = this.getSelectedIds();
+    const itemIds = this.getSelectedIds();
     return itemIds.size > 1;
   },
 
   getSelectedIds() {
-    let selected = new Set();
-    for (let itemId in this.records) {
+    const selected = new Set();
+    for (const itemId in this.records) {
       if (this.records[itemId]) {
         selected.add(itemId);
       }
@@ -81,22 +81,24 @@ const SelectedProcessStore = Reflux.createStore({
   },
 
   deselectAll() {
-    for (let itemId in this.records) {
+    for (const itemId in this.records) {
       this.records[itemId] = false;
     }
     this.trigger();
   },
 
   toggleSelect(itemId) {
-    if (!this.records.hasOwnProperty(itemId)) return;
+    if (!this.records.hasOwnProperty(itemId)) {
+      return;
+    }
     this.records[itemId] = !this.records[itemId];
     this.trigger();
   },
 
   toggleSelectAll() {
-    let allSelected = !this.allSelected();
+    const allSelected = !this.allSelected();
 
-    for (let itemId in this.records) {
+    for (const itemId in this.records) {
       this.records[itemId] = allSelected;
     }
 

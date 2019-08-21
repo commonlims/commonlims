@@ -11,10 +11,10 @@ class WorkBatchGroupTitle extends React.Component {
   };
 
   render() {
-    let {data} = this.props;
-    let {taskName, process, running} = data;
+    const {data} = this.props;
+    const {taskName, process, running} = data;
 
-    let status = running ? '(running)' : '(waiting)';
+    const status = running ? '(running)' : '(waiting)';
 
     return (
       <span style={this.props.style}>

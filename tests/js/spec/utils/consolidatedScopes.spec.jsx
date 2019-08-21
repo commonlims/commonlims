@@ -1,4 +1,4 @@
-/*global global*/
+/*global global*/ // eslint-disable-line no-unused-vars
 import ConsolidatedScopes from 'app/utils/consolidatedScopes';
 
 describe('ConsolidatedScopes', () => {

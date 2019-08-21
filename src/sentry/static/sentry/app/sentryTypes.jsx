@@ -869,14 +869,12 @@ export const SeriesUnit = PropTypes.shape({
 
 export const Series = PropTypes.arrayOf(SeriesUnit);
 
-
 // NOLIMS: Move to another file (climsTypes)
 export const Workflow = PropTypes.shape({
   definitionKey: PropTypes.string,
 });
 
-
-let SentryTypes = {
+const SentryTypes = {
   AnyModel: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }),

@@ -459,7 +459,7 @@ CELERY_IMPORTS = (
     'sentry.tasks.options', 'sentry.tasks.ping', 'sentry.tasks.post_process',
     'sentry.tasks.process_buffer', 'sentry.tasks.reports', 'sentry.tasks.reprocessing',
     'sentry.tasks.scheduler', 'sentry.tasks.signals', 'sentry.tasks.store', 'sentry.tasks.unmerge',
-    'sentry.tasks.symcache_update', 'sentry.tasks.servicehooks',
+    'sentry.tasks.servicehooks',
     'sentry.tagstore.tasks', 'sentry.tasks.assemble', 'sentry.tasks.integrations',
     'sentry.tasks.files', 'sentry.tasks.sentry_apps',
 )

@@ -31,16 +31,18 @@ const SampleRow = createReactClass({
   },
 
   onRemove() {
-    if (this.state.loading) return;
+    if (this.state.loading) {
+      return;
+    }
 
-    let sample = this.props.sample;
+    const sample = this.props.sample;
 
     this.setState(
       {
         loading: true,
       },
       () => {
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         this.api.request(`/samples/${sample.id}/`, {
           method: 'DELETE',
           success: data => {
@@ -63,11 +65,13 @@ const SampleRow = createReactClass({
   },
 
   render() {
-    let sample = this.props.sample;
+    const sample = this.props.sample;
 
     let btnClassName = 'btn btn-default';
-    if (this.state.loading) btnClassName += ' disabled';
-    let projectId = this.props.projectId;
+    if (this.state.loading) {
+      btnClassName += ' disabled';
+    }
+    const projectId = this.props.projectId;
 
     return (
       <tr>
@@ -144,9 +148,9 @@ const Samples = createReactClass({
   },
 
   createSample() {
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
     // todo validate that it exists
-    let {projectId} = this.props.params;
+    const {projectId} = this.props.params;
     this.api.request('/samples/', {
       method: 'POST',
       success: sample => {

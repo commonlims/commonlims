@@ -29,25 +29,25 @@ else:
 @click.option(
     '--config',
     default='',
-    envvar='SENTRY_CONF',
+    envvar='CLIMS_CONF',
     help='Path to configuration files.',
     metavar='PATH'
 )
 @click.version_option(version=version_string)
 @click.pass_context
 def cli(ctx, config):
-    """Sentry is cross-platform crash reporting built with love.
+    """Common LIMS is an extensible LIMS for everyone.
 
-    The configuration file is looked up in the `~/.sentry` config
-    directory but this can be overridden with the `SENTRY_CONF`
+    The configuration file is looked up in the `~/.clims` config
+    directory but this can be overridden with the `CLIMS_CONF`
     environment variable or be explicitly provided through the
     `--config` parameter.
     """
-    # Elevate --config option to SENTRY_CONF env var, and just assume this
+    # Elevate --config option to CLIMS_CONF env var, and just assume this
     # always will exist down the line
     if config:
-        os.environ['SENTRY_CONF'] = config
-    os.environ.setdefault('SENTRY_CONF', '~/.sentry')
+        os.environ['CLIMS_CONF'] = config
+    os.environ.setdefault('CLIMS_CONF', '~/.clims')
 
 
 # TODO(mattrobenolt): Autodiscover commands?

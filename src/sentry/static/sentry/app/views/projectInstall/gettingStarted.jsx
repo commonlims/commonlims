@@ -14,7 +14,7 @@ class GettingStartedBody extends React.Component {
   };
 
   render() {
-    let {project, organization} = this.context;
+    const {project, organization} = this.context;
     return (
       <Container>
         <div className="sub-header flex flex-container flex-vertically-centered">
@@ -39,7 +39,7 @@ class GettingStartedBody extends React.Component {
 
 class GettingStarted extends React.Component {
   render() {
-    let {projectId, orgId} = this.props.params;
+    const {projectId, orgId} = this.props.params;
     return (
       <ProjectContext orgId={orgId} projectId={projectId}>
         <GettingStartedBody>{this.props.children}</GettingStartedBody>

@@ -155,7 +155,8 @@ class AuthLoginTest(TestCase):
         assert resp.status_code == 200
 
 
-@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER != 'sentry.newsletter.dummy.DummyNewsletter')
+@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER !=
+                    'sentry.newsletter.dummy.DummyNewsletter')
 class AuthLoginNewsletterTest(TestCase):
     @fixture
     def path(self):

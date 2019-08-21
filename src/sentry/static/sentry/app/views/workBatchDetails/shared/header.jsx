@@ -2,24 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import ApiMixin from 'app/mixins/apiMixin';
-import IndicatorStore from 'app/stores/indicatorStore';
-import ListLink from 'app/components/listLink';
 import NavTabs from 'app/components/navTabs';
 import OrganizationState from 'app/mixins/organizationState';
 import {t} from 'app/locale';
 import SentryTypes from 'app/sentryTypes';
 
+import WorkBatchStore from 'app/stores/workBatchStore';
 import WorkBatchActions from './actions';
 import WorkBatchSeenBy from './seenBy';
 import AssigneeSelector from './assigneeSelector';
-import WorkBatchStore from 'app/stores/workBatchStore';
 
 const WorkBatchHeader = createReactClass({
   displayName: 'WorkBatchHeader',
 
   propTypes: {
     workBatch: PropTypes.object.isRequired,
-    params: PropTypes.object,
   },
 
   contextTypes: {
@@ -29,30 +26,9 @@ const WorkBatchHeader = createReactClass({
 
   mixins: [ApiMixin, OrganizationState],
 
-  onToggleMute() {
-    let workBatch = this.props.group;
-    let org = this.context.organization;
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-
-    this.api.bulkUpdate(
-      {
-        orgId: org.slug,
-        itemIds: [group.id],
-        data: {
-          status: workBatch.status === 'ignored' ? 'unresolved' : 'ignored',
-        },
-      },
-      {
-        complete: () => {
-          IndicatorStore.remove(loadingIndicator);
-        },
-      }
-    );
-  },
-
   getMessage() {
-    let data = this.props.workBatch;
-    let metadata = data.metadata;
+    const data = this.props.workBatch;
+    const metadata = data.metadata;
     switch (data.type) {
       case 'error':
         return metadata.value;
@@ -66,7 +42,7 @@ const WorkBatchHeader = createReactClass({
   buildLinks() {
     return this.props.workBatch.tabs.map(tab => {
       return (
-        <li className={tab.active ? 'active' : ''}>
+        <li className={tab.active ? 'active' : ''} key={tab.id}>
           <a onClick={() => WorkBatchStore.activateTab(tab.id)}>{tab.title}</a>
         </li>
       );
@@ -74,7 +50,7 @@ const WorkBatchHeader = createReactClass({
   },
 
   render() {
-    let {workBatch} = this.props;
+    const {workBatch} = this.props;
 
     let className = 'group-detail';
 
@@ -91,11 +67,7 @@ const WorkBatchHeader = createReactClass({
       className += ' isResolved';
     }
 
-    let workBatchId = workBatch.id;
-    let orgId = this.context.organization.slug;
-
-    let baseUrl = `/${orgId}/work-batches/`;
-    let userActionTitle = 'Fragment analyzer'; // TODO
+    const userActionTitle = 'Fragment analyzer'; // TODO
 
     return (
       <div className={className}>

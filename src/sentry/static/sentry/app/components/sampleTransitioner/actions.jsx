@@ -45,7 +45,7 @@ const SampleContainerStackActions = createReactClass({
     if (this.state.allInQuerySelected) {
       selectedIds = undefined; // undefined means "all"
     } else {
-      let itemIdSet = SelectedSampleStore.getSelectedIds();
+      const itemIdSet = SelectedSampleStore.getSelectedIds();
       selectedIds = this.props.groupIds.filter(itemId => itemIdSet.has(itemId));
     }
 
@@ -61,7 +61,7 @@ const SampleContainerStackActions = createReactClass({
 
   onUpdate(data) {
     this.actionSelectedGroups(itemIds => {
-      let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
       this.api.bulkUpdate(
         {
@@ -82,7 +82,7 @@ const SampleContainerStackActions = createReactClass({
   },
 
   onDelete(event) {
-    let loadingIndicator = IndicatorStore.add(t('Removing events..'));
+    const loadingIndicator = IndicatorStore.add(t('Removing events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.bulkDelete(
@@ -103,7 +103,7 @@ const SampleContainerStackActions = createReactClass({
   },
 
   onMerge(event) {
-    let loadingIndicator = IndicatorStore.add(t('Merging events..'));
+    const loadingIndicator = IndicatorStore.add(t('Merging events..'));
 
     this.actionSelectedGroups(itemIds => {
       this.api.merge(

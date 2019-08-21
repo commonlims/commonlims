@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Flex } from 'grid-emotion';
+import {Flex} from 'grid-emotion';
 
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
@@ -10,8 +10,8 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import IndicatorStore from 'app/stores/indicatorStore';
 import Pagination from 'app/components/pagination';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
-import { t } from 'app/locale';
-import { Panel, PanelHeader, PanelBody, PanelItem } from 'app/components/panels';
+import {t} from 'app/locale';
+import {Panel, PanelHeader, PanelBody, PanelItem} from 'app/components/panels';
 import EmptyStateWarning from 'app/components/emptyStateWarning';
 import withOrganization from 'app/utils/withOrganization';
 import withApi from 'app/utils/withApi';
@@ -43,8 +43,8 @@ class ReleaseArtifacts extends React.Component {
   }
 
   getFilesEndpoint() {
-    let { orgId, projectId, version } = this.props.params;
-    let encodedVersion = encodeURIComponent(version);
+    const {orgId, projectId, version} = this.props.params;
+    const encodedVersion = encodeURIComponent(version);
 
     return projectId
       ? `/projects/${orgId}/${projectId}/releases/${encodedVersion}/files/`
@@ -78,12 +78,12 @@ class ReleaseArtifacts extends React.Component {
   }
 
   handleRemove(id) {
-    let loadingIndicator = IndicatorStore.add(t('Removing artifact..'));
+    const loadingIndicator = IndicatorStore.add(t('Removing artifact..'));
 
     this.props.api.request(this.getFilesEndpoint() + `${id}/`, {
       method: 'DELETE',
       success: () => {
-        let fileList = this.state.fileList.filter(file => {
+        const fileList = this.state.fileList.filter(file => {
           return file.id !== id;
         });
 
@@ -107,9 +107,11 @@ class ReleaseArtifacts extends React.Component {
   }
 
   render() {
-    if (this.state.loading) return <LoadingIndicator />;
-    else if (this.state.error) return <LoadingError onRetry={this.fetchData} />;
-    else if (this.state.fileList.length === 0)
+    if (this.state.loading) {
+      return <LoadingIndicator />;
+    } else if (this.state.error) {
+      return <LoadingError onRetry={this.fetchData} />;
+    } else if (this.state.fileList.length === 0) {
       return (
         <Panel>
           <EmptyStateWarning>
@@ -117,8 +119,9 @@ class ReleaseArtifacts extends React.Component {
           </EmptyStateWarning>
         </Panel>
       );
+    }
 
-    let access = new Set(this.props.organization.access);
+    const access = new Set(this.props.organization.access);
 
     // TODO(dcramer): files should allow you to download them
     return (
@@ -138,7 +141,7 @@ class ReleaseArtifacts extends React.Component {
                   <Flex
                     flex="7"
                     pr={2}
-                    style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                    style={{wordWrap: 'break-word', wordBreak: 'break-all'}}
                   >
                     <strong>{file.name || '(empty)'}</strong>
                   </Flex>
@@ -160,17 +163,17 @@ class ReleaseArtifacts extends React.Component {
                           <span className="icon icon-open" />
                         </a>
                       ) : (
-                          <Tooltip
-                            title={t(
-                              'You do not have the required permission to download this artifact.'
-                            )}
-                          >
-                            <div className="btn btn-sm btn-default disabled">
-                              <span className="icon icon-open" />
-                            </div>
-                          </Tooltip>
-                        )}
-                      <div style={{ marginLeft: 5 }}>
+                        <Tooltip
+                          title={t(
+                            'You do not have the required permission to download this artifact.'
+                          )}
+                        >
+                          <div className="btn btn-sm btn-default disabled">
+                            <span className="icon icon-open" />
+                          </div>
+                        </Tooltip>
+                      )}
+                      <div style={{marginLeft: 5}}>
                         <LinkWithConfirmation
                           className="btn btn-sm btn-default"
                           title={t('Delete artifact')}
@@ -193,5 +196,5 @@ class ReleaseArtifacts extends React.Component {
   }
 }
 
-export { ReleaseArtifacts };
+export {ReleaseArtifacts};
 export default withOrganization(withApi(ReleaseArtifacts));

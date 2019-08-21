@@ -1,6 +1,6 @@
 import Reflux from 'reflux';
 
-let TaskActions = Reflux.createActions([
+const TaskActions = Reflux.createActions([
   'assignTo',
   'assignToError',
   'assignToSuccess',

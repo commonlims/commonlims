@@ -48,13 +48,13 @@ const WorkBatches = createReactClass({
   mixins: [ApiMixin, ProjectState],
 
   getInitialState() {
-    let searchId = this.props.params.searchId || null;
+    const searchId = this.props.params.searchId || null;
 
-    let currentQuery = this.props.location.query || {};
-    let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
+    const currentQuery = this.props.location.query || {};
+    const sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
 
-    let hasQuery = 'query' in currentQuery;
-    let statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
+    const hasQuery = 'query' in currentQuery;
+    const statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
       ? currentQuery.statsPeriod
       : DEFAULT_STATS_PERIOD;
 
@@ -97,18 +97,18 @@ const WorkBatches = createReactClass({
   componentWillReceiveProps(nextProps) {
     // you cannot apply both a query and a saved search (our routes do not
     // support it), so the searchId takes priority
-    let nextSearchId = nextProps.params.searchId || null;
+    const nextSearchId = nextProps.params.searchId || null;
 
-    let searchIdChanged = this.state.isDefaultSearch
+    const searchIdChanged = this.state.isDefaultSearch
       ? nextSearchId !== null
       : nextSearchId !== this.state.searchId;
 
     // We are using qs.parse with location.search since this.props.location.query
     // returns the same value as nextProps.location.query
-    let currentSearchTerm = qs.parse(this.props.location.search);
-    let nextSearchTerm = qs.parse(nextProps.location.search);
+    const currentSearchTerm = qs.parse(this.props.location.search);
+    const nextSearchTerm = qs.parse(nextProps.location.search);
 
-    let searchTermChanged = !isEqual(
+    const searchTermChanged = !isEqual(
       omit(currentSearchTerm, 'environment'),
       omit(nextSearchTerm, 'environment')
     );
@@ -118,7 +118,7 @@ const WorkBatches = createReactClass({
     }
 
     const workBatches = nextProps.workBatches;
-    let groupIds = workBatches.map(item => item.id.toString());
+    const groupIds = workBatches.map(item => item.id.toString());
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
         groupIds,
@@ -146,7 +146,7 @@ const WorkBatches = createReactClass({
           savedSearchList: data,
           loading: false,
         };
-        let needsData = this.state.loading;
+        const needsData = this.state.loading;
         if (searchId) {
           const match = data.find(search => search.id === searchId);
 
@@ -193,7 +193,7 @@ const WorkBatches = createReactClass({
   },
 
   fetchProcessingIssues() {
-    let {orgId} = this.props.params;
+    const {orgId} = this.props.params;
     this.api.request(`/projects/${orgId}/internal/processingissues/`, {
       success: data => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
@@ -214,8 +214,8 @@ const WorkBatches = createReactClass({
   },
 
   onSavedSearchCreate(data) {
-    let {orgId} = this.props.params;
-    let savedSearchList = this.state.savedSearchList;
+    const {orgId} = this.props.params;
+    const savedSearchList = this.state.savedSearchList;
     savedSearchList.push(data);
     // TODO(dcramer): sort
     this.setState({
@@ -225,19 +225,21 @@ const WorkBatches = createReactClass({
   },
 
   getQueryState(props) {
-    let currentQuery = props.location.query || {};
+    const currentQuery = props.location.query || {};
 
-    let hasQuery = 'query' in currentQuery;
+    const hasQuery = 'query' in currentQuery;
 
-    let searchId = hasQuery ? null : props.params.searchId || this.state.searchId || null;
+    const searchId = hasQuery
+      ? null
+      : props.params.searchId || this.state.searchId || null;
 
-    let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
+    const sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
 
-    let statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
+    const statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
       ? currentQuery.statsPeriod
       : DEFAULT_STATS_PERIOD;
 
-    let newState = {
+    const newState = {
       sort,
       statsPeriod,
       query: hasQuery ? currentQuery.query : '',
@@ -246,7 +248,7 @@ const WorkBatches = createReactClass({
     };
 
     if (searchId) {
-      let searchResult = this.state.savedSearchList.find(
+      const searchResult = this.state.savedSearchList.find(
         search => search.id === searchId
       );
       if (searchResult) {
@@ -259,7 +261,7 @@ const WorkBatches = createReactClass({
         newState.searchId = null;
       }
     } else if (!hasQuery) {
-      let defaultResult = this.state.savedSearchList.find(search => search.isDefault);
+      const defaultResult = this.state.savedSearchList.find(search => search.isDefault);
       if (defaultResult) {
         newState.isDefaultSearch = true;
         newState.searchId = defaultResult.id;
@@ -274,7 +276,7 @@ const WorkBatches = createReactClass({
 
   hasQuery(props) {
     props = props || this.props;
-    let currentQuery = props.location.query || {};
+    const currentQuery = props.location.query || {};
     return 'query' in currentQuery;
   },
 
@@ -287,7 +289,7 @@ const WorkBatches = createReactClass({
       error: false,
     });
 
-    let url = this.getTaskGroupEndpoint();
+    const url = this.getTaskGroupEndpoint();
 
     // Remove leading and trailing whitespace
     let query = queryString.formatQueryString(this.state.query);
@@ -295,13 +297,13 @@ const WorkBatches = createReactClass({
       query += ' ' + ':createdAfter -7d'; // always limit it unless specified
     }
 
-    let requestParams = {
+    const requestParams = {
       query,
       limit: MAX_ITEMS,
       createdAfter: '-7d',
     };
 
-    let currentQuery = this.props.location.query || {};
+    const currentQuery = this.props.location.query || {};
     if ('cursor' in currentQuery) {
       requestParams.cursor = currentQuery.cursor;
     }
@@ -321,8 +323,8 @@ const WorkBatches = createReactClass({
         // TODO(withrocks): look into this
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {id, matchingEventId} = data[0];
-            let redirect = `/${this.props.params
+            const {id, matchingEventId} = data[0];
+            const redirect = `/${this.props.params
               .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
             return void browserHistory.push(redirect);
           }
@@ -330,8 +332,8 @@ const WorkBatches = createReactClass({
 
         this._processesManager.push(data);
 
-        let queryCount = jqXHR.getResponseHeader('X-Hits');
-        let queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
+        const queryCount = jqXHR.getResponseHeader('X-Hits');
+        const queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
 
         return void this.setState({
           error: false,
@@ -397,14 +399,16 @@ const WorkBatches = createReactClass({
    * Returns true if all results in the current query are visible/on this page
    */
   allResultsVisible() {
-    if (!this.state.pageLinks) return false;
+    if (!this.state.pageLinks) {
+      return false;
+    }
 
-    let links = parseLinkHeader(this.state.pageLinks);
+    const links = parseLinkHeader(this.state.pageLinks);
     return links && !links.previous.results && !links.next.results;
   },
 
   transitionTo() {
-    let queryParams = {};
+    const queryParams = {};
 
     if (!this.state.searchId) {
       queryParams.query = this.state.query;
@@ -418,9 +422,9 @@ const WorkBatches = createReactClass({
       queryParams.statsPeriod = this.state.statsPeriod;
     }
 
-    let params = this.props.params;
+    const params = this.props.params;
 
-    let path = this.state.searchId
+    const path = this.state.searchId
       ? `/${params.orgId}/internal/searches/${this.state.searchId}/`
       : `/${params.orgId}/internal/`;
     browserHistory.push({
@@ -430,15 +434,15 @@ const WorkBatches = createReactClass({
   },
 
   renderProcessingIssuesHint() {
-    let pi = this.state.processingIssues;
+    const pi = this.state.processingIssues;
     if (!pi || this.showingProcessingIssues()) {
       return null;
     }
 
-    let {orgId} = this.props.params;
-    let link = `/${orgId}/internal/processing-issues/`;
+    const {orgId} = this.props.params;
+    const link = `/${orgId}/internal/processing-issues/`;
     let showButton = false;
-    let className = {
+    const className = {
       'processing-issues': true,
       alert: true,
     };
@@ -501,35 +505,35 @@ const WorkBatches = createReactClass({
     const {workBatches, toggleWorkBatchSelect} = this.props;
 
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
-    let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
-    let dateCutoff = new Date();
+    const userDateJoined = new Date(ConfigStore.get('user').dateJoined);
+    const dateCutoff = new Date();
     dateCutoff.setDate(dateCutoff.getDate() - 30);
 
-    let topIssue = ids[0];
+    const topIssue = ids[0];
 
-    let {orgId} = this.props.params;
-    let groupNodes = ids.map(id => {
+    const {orgId} = this.props.params;
+    const groupNodes = ids.map(id => {
       const workBatch = workBatches.find(ut => ut.id == id);
-      let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
-      let title = workBatch.name;
-      let culprit = title;
-      let filename = workBatch.handler;
-      let metadata = {value: title, filename};
-      let type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
-      let count = 1;
-      let userCount = 1;
-      let stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
-      let level = Math.floor(Math.random() * Math.floor(2)).toString();
-      let eventID = null;
-      let numComments = workBatch.num_comments;
-      let lastSeen = null; //'2019-06-02';
-      let firstSeen = workBatch.created;
-      let subscriptionDetails = {reason: 'Just cause'};
-      let annotations = ['an annotation'];
-      let assignedTo = {name: 'admin@localhost'};
-      let showAssignee = true;
-      let shortId = 'shortid';
-      let data = {
+      const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
+      const title = workBatch.name;
+      const culprit = title;
+      const filename = workBatch.handler;
+      const metadata = {value: title, filename};
+      const type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
+      const count = 1;
+      const userCount = 1;
+      const stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
+      const level = Math.floor(Math.random() * Math.floor(2)).toString();
+      const eventID = null;
+      const numComments = workBatch.num_comments;
+      const lastSeen = null; //'2019-06-02';
+      const firstSeen = workBatch.created;
+      const subscriptionDetails = {reason: 'Just cause'};
+      const annotations = ['an annotation'];
+      const assignedTo = {name: 'admin@localhost'};
+      const showAssignee = true;
+      const shortId = 'shortid';
+      const data = {
         id,
         metadata,
         type,
@@ -612,12 +616,14 @@ const WorkBatches = createReactClass({
     if (this.state.loading) {
       return this.renderLoading();
     }
-    let params = this.props.params;
-    let classes = ['stream-row'];
-    if (this.state.isSidebarVisible) classes.push('show-sidebar');
-    let {orgId} = this.props.params;
-    let searchId = this.state.searchId;
-    let access = this.getAccess();
+    const params = this.props.params;
+    const classes = ['stream-row'];
+    if (this.state.isSidebarVisible) {
+      classes.push('show-sidebar');
+    }
+    const {orgId} = this.props.params;
+    const searchId = this.state.searchId;
+    const access = this.getAccess();
     return (
       <div className={classNames(classes)}>
         <div className="stream-content">

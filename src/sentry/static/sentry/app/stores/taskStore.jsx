@@ -29,7 +29,7 @@ const TaskStore = Reflux.createStore({
   loadInitialData(items) {
     this.reset();
 
-    let itemIds = new Set();
+    const itemIds = new Set();
     items.forEach(item => {
       itemIds.add(item.id);
       this.items.push(item);
@@ -43,8 +43,8 @@ const TaskStore = Reflux.createStore({
       items = [items];
     }
 
-    let itemsById = {};
-    let itemIds = new Set();
+    const itemsById = {};
+    const itemIds = new Set();
     items.forEach(item => {
       itemsById[item.id] = item;
       itemIds.add(item.id);
@@ -62,7 +62,7 @@ const TaskStore = Reflux.createStore({
     });
 
     // New items
-    for (let itemId in itemsById) {
+    for (const itemId in itemsById) {
       this.items.push(itemsById[itemId]);
     }
 
@@ -101,8 +101,10 @@ const TaskStore = Reflux.createStore({
   },
 
   indexOfActivity(task_id, id) {
-    let task = this.get(task_id);
-    if (!task) return -1;
+    const task = this.get(task_id);
+    if (!task) {
+      return -1;
+    }
 
     for (let i = 0; i < task.activity.length; i++) {
       if (task.activity[i].id === id) {
@@ -113,8 +115,10 @@ const TaskStore = Reflux.createStore({
   },
 
   addActivity(id, data, index = -1) {
-    let task = this.get(id);
-    if (!task) return;
+    const task = this.get(id);
+    if (!task) {
+      return;
+    }
 
     // insert into beginning by default
     if (index === -1) {
@@ -122,17 +126,23 @@ const TaskStore = Reflux.createStore({
     } else {
       task.activity.splice(index, 0, data);
     }
-    if (data.type === 'note') task.numComments++;
+    if (data.type === 'note') {
+      task.numComments++;
+    }
 
     this.trigger(new Set([id]));
   },
 
   updateActivity(task_id, id, data) {
-    let task = this.get(task_id);
-    if (!task) return;
+    const task = this.get(task_id);
+    if (!task) {
+      return;
+    }
 
-    let index = this.indexOfActivity(task_id, id);
-    if (index === -1) return;
+    const index = this.indexOfActivity(task_id, id);
+    if (index === -1) {
+      return;
+    }
 
     // Here, we want to merge the new `data` being passed in
     // into the existing `data` object. This effectively
@@ -142,22 +152,28 @@ const TaskStore = Reflux.createStore({
   },
 
   removeActivity(task_id, id) {
-    let task = this.get(task_id);
-    if (!task) return -1;
+    const task = this.get(task_id);
+    if (!task) {
+      return -1;
+    }
 
-    let index = this.indexOfActivity(task.id, id);
-    if (index === -1) return -1;
+    const index = this.indexOfActivity(task.id, id);
+    if (index === -1) {
+      return -1;
+    }
 
-    let activity = task.activity.splice(index, 1);
+    const activity = task.activity.splice(index, 1);
 
-    if (activity[0].type === 'note') task.numComments--;
+    if (activity[0].type === 'note') {
+      task.numComments--;
+    }
 
     this.trigger(new Set([task.id]));
     return index;
   },
 
   get(id) {
-    let pendingForId = [];
+    const pendingForId = [];
     this.pendingChanges.forEach(change => {
       if (change.id === id) {
         pendingForId.push(change);
@@ -190,7 +206,7 @@ const TaskStore = Reflux.createStore({
 
   getAllItems() {
     // regroup pending changes by their itemID
-    let pendingById = {};
+    const pendingById = {};
     this.pendingChanges.forEach(change => {
       if (_.isUndefined(pendingById[change.id])) {
         pendingById[change.id] = [];
@@ -226,7 +242,7 @@ const TaskStore = Reflux.createStore({
   },
 
   onAssignToSuccess(changeId, itemId, response) {
-    let item = this.get(itemId);
+    const item = this.get(itemId);
     if (!item) {
       return;
     }
@@ -246,7 +262,9 @@ const TaskStore = Reflux.createStore({
   onDeleteError(changeId, itemIds, response) {
     showAlert(t('Unable to delete events. Please try again.'), 'error');
 
-    if (!itemIds) return;
+    if (!itemIds) {
+      return;
+    }
 
     itemIds.forEach(itemId => {
       this.clearStatus(itemId, 'delete');
@@ -256,7 +274,7 @@ const TaskStore = Reflux.createStore({
 
   onDeleteSuccess(changeId, itemIds, response) {
     itemIds = this._itemIdsOrAll(itemIds);
-    let itemIdSet = new Set(itemIds);
+    const itemIdSet = new Set(itemIds);
     itemIds.forEach(itemId => {
       delete this.statuses[itemId];
       this.clearStatus(itemId, 'delete');
@@ -314,7 +332,7 @@ const TaskStore = Reflux.createStore({
     });
 
     // Remove all but parent id (items were merged into this one)
-    let mergedIdSet = new Set(mergedIds);
+    const mergedIdSet = new Set(mergedIds);
 
     // Looks like the `PUT /api/0/projects/:orgId/:projectId/issues/` endpoint
     // actually returns a 204, so there is no `response` body

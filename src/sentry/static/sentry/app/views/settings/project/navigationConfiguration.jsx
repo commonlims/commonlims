@@ -3,7 +3,7 @@ import {t} from 'app/locale';
 const pathPrefix = '/settings/:orgId/:projectId';
 
 export default function getConfiguration({project}) {
-  let plugins = ((project && project.plugins) || []).filter(plugin => plugin.enabled);
+  const plugins = ((project && project.plugins) || []).filter(plugin => plugin.enabled);
 
   return [
     {
@@ -58,7 +58,9 @@ export default function getConfiguration({project}) {
           title: t('Processing Issues'),
           // eslint-disable-next-line no-shadow
           badge: ({project}) => {
-            if (project.processingIssues <= 0) return null;
+            if (project.processingIssues <= 0) {
+              return null;
+            }
             return project.processingIssues > 99 ? '99+' : project.processingIssues;
           },
         },

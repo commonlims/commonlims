@@ -42,17 +42,17 @@ const SidebarDropdown = withApi(
     };
 
     render() {
-      let {org, orientation, collapsed, config, user, onClick} = this.props;
-      let hasOrganization = !!org;
-      let hasUser = !!user;
+      const {org, orientation, collapsed, config, user, onClick} = this.props;
+      const hasOrganization = !!org;
+      const hasUser = !!user;
 
       // If there is no org in context, we use an org from `withLatestContext`
       // (which uses an org from organizations index endpoint versus details endpoint)
       // and does not have `access`
-      let hasOrgRead = org && org.access && org.access.indexOf('org:read') > -1;
-      let hasMemberRead = org && org.access && org.access.indexOf('member:read') > -1;
-      let hasTeamRead = org && org.access && org.access.indexOf('team:read') > -1;
-      let canCreateOrg = ConfigStore.get('features').has('organizations:create');
+      const hasOrgRead = org && org.access && org.access.indexOf('org:read') > -1;
+      const hasMemberRead = org && org.access && org.access.indexOf('member:read') > -1;
+      const hasTeamRead = org && org.access && org.access.indexOf('team:read') > -1;
+      const canCreateOrg = ConfigStore.get('features').has('organizations:create');
 
       // Avatar to use: Organization --> user --> Sentry
       const avatar =
@@ -145,13 +145,11 @@ const SidebarDropdown = withApi(
                           <SidebarMenuItem to="/settings/account/">
                             {t('User settings')}
                           </SidebarMenuItem>
-                          <SidebarMenuItem to={'/settings/account/api/'}>
+                          <SidebarMenuItem to="/settings/account/api/">
                             {t('API keys')}
                           </SidebarMenuItem>
                           {user.isSuperuser && (
-                            <SidebarMenuItem to={'/manage/'}>
-                              {t('Admin')}
-                            </SidebarMenuItem>
+                            <SidebarMenuItem to="/manage/">{t('Admin')}</SidebarMenuItem>
                           )}
                           <SidebarMenuItem
                             data-test-id="sidebarSignout"

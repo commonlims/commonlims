@@ -78,7 +78,9 @@ const ProjectContext = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.projectId === this.props.projectId) return;
+    if (nextProps.projectId === this.props.projectId) {
+      return;
+    }
 
     if (!nextProps.skipReload) {
       this.remountComponent();
@@ -103,9 +105,13 @@ const ProjectContext = createReactClass({
       prevState.project !== this.state.project ||
       prevState.organization !== this.state.organization
     ) {
-      if (!this.docTitle) return;
-      let docTitle = this.docTitleRef.docTitle;
-      if (docTitle) docTitle.forceUpdate();
+      if (!this.docTitle) {
+        return;
+      }
+      const docTitle = this.docTitleRef.docTitle;
+      if (docTitle) {
+        docTitle.forceUpdate();
+      }
     }
   },
 
@@ -114,13 +120,19 @@ const ProjectContext = createReactClass({
   },
 
   getTitle() {
-    if (this.state.project) return this.state.project.slug;
+    if (this.state.project) {
+      return this.state.project.slug;
+    }
     return 'Sentry';
   },
 
   onProjectChange(projectIds) {
-    if (!this.state.project) return;
-    if (!projectIds.has(this.state.project.id)) return;
+    if (!this.state.project) {
+      return;
+    }
+    if (!projectIds.has(this.state.project.id)) {
+      return;
+    }
 
     this.setState({
       project: {...ProjectsStore.getById(this.state.project.id)},
@@ -128,16 +140,16 @@ const ProjectContext = createReactClass({
   },
 
   identifyProject() {
-    let {projects, projectId} = this.props;
-    let projectSlug = projectId;
+    const {projects, projectId} = this.props;
+    const projectSlug = projectId;
     return projects.find(({slug}) => slug === projectSlug) || null;
   },
 
   fetchData() {
-    let {orgId, projectId, location, skipReload} = this.props;
+    const {orgId, projectId, location, skipReload} = this.props;
     // we fetch core access/information from the global organization data
-    let activeProject = this.identifyProject();
-    let hasAccess = activeProject && activeProject.hasAccess;
+    const activeProject = this.identifyProject();
+    const hasAccess = activeProject && activeProject.hasAccess;
 
     this.setState(state => ({
       // if `skipReload` is true, then don't change loading state
@@ -209,12 +221,12 @@ const ProjectContext = createReactClass({
   },
 
   getEnvironmentListEndpoint() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
     return `/projects/${orgId}/${projectId}/environments/`;
   },
 
   getMemberListEndpoint() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
     return `/projects/${orgId}/${projectId}/members/`;
   },
 

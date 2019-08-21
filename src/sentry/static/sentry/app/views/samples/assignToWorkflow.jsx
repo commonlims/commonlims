@@ -3,10 +3,10 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
-import { FormState } from 'app/components/forms';
+import {FormState} from 'app/components/forms';
 import WorkflowFilter from 'app/views/samples/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
 import OrganizationStore from 'app/stores/organizationsStore';
@@ -29,10 +29,10 @@ const AssignToWorkflowButton = createReactClass({
   mixins: [ApiMixin],
 
   getInitialState() {
-    let { orgId } = this.props;
+    const {orgId} = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
-    let organization = OrganizationStore.get(orgId);
+    const organization = OrganizationStore.get(orgId);
 
     return {
       isModalOpen: false,
@@ -49,7 +49,7 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   onVariableChange(key, value) {
-    let updated = Object.assign({}, this.state.setProcessVariables);
+    const updated = Object.assign({}, this.state.setProcessVariables);
     updated[key] = value;
     this.setState({
       setProcessVariables: updated,
@@ -70,7 +70,7 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -97,21 +97,21 @@ const AssignToWorkflowButton = createReactClass({
       },
       () => {
         // TODO: Start the process
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let { orgId } = this.props;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const {orgId} = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
         // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-        let endpoint = `/processes/${orgId}/sample-processes/`;
+        const endpoint = `/processes/${orgId}/sample-processes/`;
 
-        let data = {
+        const data = {
           samples: [],
           variables: this.state.setProcessVariables,
           process: this.state.process,
           something: 'abc',
         };
-        for (let a of SelectedSampleStore.getSelectedIds()) {
+        for (const a of SelectedSampleStore.getSelectedIds()) {
           // TODO: Don't know why I need to do this vs. just using the set
           data.samples.push(a);
         }
@@ -143,7 +143,7 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   onSelectWorkflow(key, value) {
-    let vars = [
+    const vars = [
       {
         name: 'Sequencer',
         type: 'string',
@@ -153,11 +153,11 @@ const AssignToWorkflowButton = createReactClass({
       },
     ];
 
-    this.setState(state => ({ workflowVars: vars, value, process: value }));
+    this.setState(state => ({workflowVars: vars, value, process: value}));
   },
 
   render() {
-    let isSaving = this.state.state === FormState.SAVING;
+    const isSaving = this.state.state === FormState.SAVING;
     // TODO: This is all hardcoded to snpseq to test how the plugin model
     // could work, but this needs to support any system and just send events to plugin handlers.
 

@@ -199,7 +199,7 @@ def _build_prev_values(cursor, results, key, limit, is_desc):
 
 
 def build_cursor(results, key, limit=100, is_desc=False, cursor=None, hits=None,
-        max_hits=None, on_results=None):
+                 max_hits=None, on_results=None):
     if cursor is None:
         cursor = Cursor(0, 0, 0)
 

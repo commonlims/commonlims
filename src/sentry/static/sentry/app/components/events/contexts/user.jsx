@@ -15,9 +15,9 @@ class UserContextType extends React.Component {
   };
 
   render() {
-    let user = this.props.data;
-    let builtins = [];
-    let children = [];
+    const user = this.props.data;
+    const builtins = [];
+    const children = [];
 
     // Handle our native attributes special
     user.id && builtins.push(['ID', <pre>{user.id}</pre>]);
@@ -27,7 +27,12 @@ class UserContextType extends React.Component {
         <pre>
           {user.email}
           {EMAIL_REGEX.test(user.email) && (
-            <a href={`mailto:${user.email}`} target="_blank" className="external-icon">
+            <a
+              href={`mailto:${user.email}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-icon"
+            >
               <em className="icon-envelope" />
             </a>
           )}

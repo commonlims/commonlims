@@ -9,9 +9,9 @@ class SampleTitle extends React.Component {
   };
 
   render() {
-    let {data} = this.props;
-    let {name} = data;
-    let subtitle = null;
+    const {data} = this.props;
+    const {name} = data;
+    const subtitle = null;
 
     if (subtitle) {
       return (

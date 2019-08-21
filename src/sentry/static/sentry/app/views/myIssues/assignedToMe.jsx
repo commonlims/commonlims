@@ -1,7 +1,7 @@
 import React from 'react';
 
 import OrganizationWorkBatchList from 'app/components/organizationWorkBatchList';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 
 class AssignedToMe extends React.Component {
   getEndpoint = () => {

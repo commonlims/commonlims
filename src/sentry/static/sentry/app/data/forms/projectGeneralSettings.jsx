@@ -1,20 +1,16 @@
-import { Flex } from 'grid-emotion';
 import React from 'react';
-import styled from 'react-emotion';
 
-import { extractMultilineFields } from 'app/utils';
-import { t, tct, tn } from 'app/locale';
-import Platformicon from 'app/components/platformicon';
+import {extractMultilineFields} from 'app/utils';
+import {t, tct, tn} from 'app/locale';
 import getDynamicText from 'app/utils/getDynamicText';
 import slugify from 'app/utils/slugify';
-import space from 'app/styles/space';
 
 // Export route to make these forms searchable by label/help
 export const route = '/settings/:orgId/:projectId/';
 
 const getResolveAgeAllowedValues = () => {
   let i = 0;
-  let values = [];
+  const values = [];
   while (i <= 720) {
     values.push(i);
     if (i < 12) {
@@ -39,7 +35,7 @@ const ORG_DISABLED_REASON = t(
 );
 
 // Check if a field has been set AND IS TRUTHY at the organization level.
-const hasOrgOverride = ({ organization, name }) => organization[name];
+const hasOrgOverride = ({organization, name}) => organization[name];
 
 export const fields = {
   name: {
@@ -101,7 +97,7 @@ export const fields = {
     saveOnBlur: false,
     saveMessage: tct(
       '[Caution]: Enabling auto resolve will immediately resolve anything that has ' +
-      'not been seen within this period of time. There is no undo!',
+        'not been seen within this period of time. There is no undo!',
       {
         Caution: <strong>Caution</strong>,
       }
@@ -188,7 +184,7 @@ export const fields = {
     help: t(
       'Store native crash reports such as Minidumps for improved processing and download in issue details'
     ),
-    visible: ({ features }) => features.has('event-attachments'),
+    visible: ({features}) => features.has('event-attachments'),
   },
   relayPiiConfig: {
     name: 'relayPiiConfig',
@@ -206,8 +202,8 @@ export const fields = {
         learn_more: <a href="https://docs.sentry.io/relay/pii-config/" />,
       }
     ),
-    visible: ({ features }) => features.has('relay'),
-    validate: ({ id, form }) => {
+    visible: ({features}) => features.has('relay'),
+    validate: ({id, form}) => {
       try {
         JSON.parse(form[id]);
       } catch (e) {
@@ -233,7 +229,7 @@ export const fields = {
     name: 'scrapeJavaScript',
     type: 'boolean',
     // if this is off for the organization, it cannot be enabled for the project
-    disabled: ({ organization, name }) => !organization[name],
+    disabled: ({organization, name}) => !organization[name],
     disabledReason: ORG_DISABLED_REASON,
     // `props` are the props given to FormField
     setValue: (val, props) => props.organization && props.organization[props.name] && val,
@@ -247,7 +243,7 @@ export const fields = {
     help: t(
       'Outbound requests matching Allowed Domains will have the header "{token_header}: {token}" appended'
     ),
-    setValue: value => getDynamicText({ value, fixed: '__SECURITY_TOKEN__' }),
+    setValue: value => getDynamicText({value, fixed: '__SECURITY_TOKEN__'}),
   },
   securityTokenHeader: {
     name: 'securityTokenHeader',
@@ -265,11 +261,3 @@ export const fields = {
     help: t('Outbound requests will verify TLS (sometimes known as SSL) connections'),
   },
 };
-
-const PlatformWrapper = styled(Flex)`
-  align-items: center;
-`;
-const StyledPlatformicon = styled(Platformicon)`
-  border-radius: 3px;
-  margin-right: ${space(1)};
-`;

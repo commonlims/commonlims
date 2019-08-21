@@ -3,16 +3,16 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
-import { FormState } from 'app/components/forms';
+import {FormState} from 'app/components/forms';
 import WorkflowFilter from 'app/views/samples/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
 import ProjectsStore from 'app/stores/projectsStore';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
-import { withRouter } from 'react-router';
+import {withRouter} from 'react-router';
 
 const WorkOnButton = createReactClass({
   // A button/view that allows the user to work on several samples that are in a waiting queue
@@ -30,18 +30,18 @@ const WorkOnButton = createReactClass({
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
     router: PropTypes.shape({
-      push: PropTypes.function,
+      push: PropTypes.func,
     }),
   },
 
   mixins: [ApiMixin],
 
   getInitialState() {
-    let { orgId, projectId } = this.props;
+    const {orgId, projectId} = this.props;
 
     // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
-    let organization = OrganizationStore.get(orgId);
-    let project = ProjectsStore.getBySlug(projectId);
+    const organization = OrganizationStore.get(orgId);
+    const project = ProjectsStore.getBySlug(projectId);
 
     return {
       isActivated: false,
@@ -63,7 +63,7 @@ const WorkOnButton = createReactClass({
   },
 
   onVariableChange(data) {
-    this.state.setState({ setProcessVariables: data });
+    this.state.setState({setProcessVariables: data});
   },
 
   onToggle() {
@@ -80,7 +80,7 @@ const WorkOnButton = createReactClass({
   },
 
   onFieldChange(name, value) {
-    let formData = this.state.formData;
+    const formData = this.state.formData;
     formData[name] = value;
     this.setState({
       formData,
@@ -107,15 +107,15 @@ const WorkOnButton = createReactClass({
       },
       () => {
         // TODO: Start the process
-        let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-        let { orgId } = this.props;
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+        const {orgId} = this.props;
 
         // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
         // discuss if we rather want a specific batch endpoint.
         // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-        let endpoint = `/processes/${orgId}/sample-processes/`;
+        const endpoint = `/processes/${orgId}/sample-processes/`;
 
-        let data = {
+        const data = {
           samples: SelectedSampleStore.getSelectedIds(),
           variables: this.state.setProcessVariables,
           process: this.state.process,
@@ -148,7 +148,7 @@ const WorkOnButton = createReactClass({
   },
 
   onSelectWorkflow(key, value) {
-    let vars = [
+    const vars = [
       {
         name: 'Sequencer',
         type: 'string',
@@ -158,7 +158,7 @@ const WorkOnButton = createReactClass({
       },
     ];
 
-    this.setState(state => ({ workflowVars: vars, value, process: value }));
+    this.setState(state => ({workflowVars: vars, value, process: value}));
 
     // Fetch the variables for this, if they don't exist yet:
   },
@@ -187,7 +187,7 @@ const WorkOnButton = createReactClass({
 
   render() {
     // TODO: Create another component for this
-    let isSaving = this.state.state === FormState.SAVING;
+    const isSaving = this.state.state === FormState.SAVING;
 
     return (
       <React.Fragment>

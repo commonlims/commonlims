@@ -54,7 +54,7 @@ export default class ProcessActionsComponent extends React.Component {
   }
 
   renderResolved() {
-    let {isAutoResolved, onUpdate} = this.props;
+    const {isAutoResolved, onUpdate} = this.props;
 
     if (isAutoResolved) {
       return (
@@ -87,7 +87,7 @@ export default class ProcessActionsComponent extends React.Component {
   }
 
   render() {
-    let {
+    const {
       isResolved,
       onUpdate,
       orgId,
@@ -98,13 +98,13 @@ export default class ProcessActionsComponent extends React.Component {
       confirmLabel,
     } = this.props;
 
-    let buttonClass = this.getButtonClass();
+    const buttonClass = this.getButtonClass();
 
     if (isResolved) {
       return this.renderResolved();
     }
 
-    let actionLinkProps = {
+    const actionLinkProps = {
       shouldConfirm,
       message: confirmMessage,
       confirmLabel,
@@ -123,7 +123,7 @@ export default class ProcessActionsComponent extends React.Component {
         <div className="btn-group">
           <ActionLink
             {...actionLinkProps}
-            title={'Work'}
+            title="Work"
             className={buttonClass}
             onAction={() => onUpdate({status: 'resolved'})}
           >

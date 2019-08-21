@@ -55,19 +55,19 @@ const Stream = createReactClass({
   mixins: [Reflux.listenTo(GroupStore, 'onGroupChange'), ApiMixin, ProjectState],
 
   getInitialState() {
-    let searchId = this.props.params.searchId || null;
-    let project = this.getProject();
-    let realtimeActiveCookie = Cookies.get('realtimeActive');
-    let realtimeActive =
+    const searchId = this.props.params.searchId || null;
+    const project = this.getProject();
+    const realtimeActiveCookie = Cookies.get('realtimeActive');
+    const realtimeActive =
       typeof realtimeActiveCookie === 'undefined'
         ? project && !project.firstEvent
         : realtimeActiveCookie === 'true';
 
-    let currentQuery = this.props.location.query || {};
-    let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
+    const currentQuery = this.props.location.query || {};
+    const sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
 
-    let hasQuery = 'query' in currentQuery;
-    let statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
+    const hasQuery = 'query' in currentQuery;
+    const statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
       ? currentQuery.statsPeriod
       : DEFAULT_STATS_PERIOD;
 
@@ -121,18 +121,18 @@ const Stream = createReactClass({
 
     // you cannot apply both a query and a saved search (our routes do not
     // support it), so the searchId takes priority
-    let nextSearchId = nextProps.params.searchId || null;
+    const nextSearchId = nextProps.params.searchId || null;
 
-    let searchIdChanged = this.state.isDefaultSearch
+    const searchIdChanged = this.state.isDefaultSearch
       ? nextSearchId !== null
       : nextSearchId !== this.state.searchId;
 
     // We are using qs.parse with location.search since this.props.location.query
     // returns the same value as nextProps.location.query
-    let currentSearchTerm = qs.parse(this.props.location.search);
-    let nextSearchTerm = qs.parse(nextProps.location.search);
+    const currentSearchTerm = qs.parse(this.props.location.search);
+    const nextSearchTerm = qs.parse(nextProps.location.search);
 
-    let searchTermChanged = !isEqual(
+    const searchTermChanged = !isEqual(
       omit(currentSearchTerm, 'environment'),
       omit(nextSearchTerm, 'environment')
     );
@@ -174,7 +174,7 @@ const Stream = createReactClass({
           savedSearchList: data,
           loading: false,
         };
-        let needsData = this.state.loading;
+        const needsData = this.state.loading;
         if (searchId) {
           const match = data.find(search => search.id === searchId);
 
@@ -231,7 +231,7 @@ const Stream = createReactClass({
   },
 
   fetchProcessingIssues() {
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/processingissues/`, {
       success: data => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
@@ -252,8 +252,8 @@ const Stream = createReactClass({
   },
 
   onSavedSearchCreate(data) {
-    let {orgId, projectId} = this.props.params;
-    let savedSearchList = this.state.savedSearchList;
+    const {orgId, projectId} = this.props.params;
+    const savedSearchList = this.state.savedSearchList;
     savedSearchList.push(data);
 
     this.setState({
@@ -263,19 +263,21 @@ const Stream = createReactClass({
   },
 
   getQueryState(props) {
-    let currentQuery = props.location.query || {};
+    const currentQuery = props.location.query || {};
 
-    let hasQuery = 'query' in currentQuery;
+    const hasQuery = 'query' in currentQuery;
 
-    let searchId = hasQuery ? null : props.params.searchId || this.state.searchId || null;
+    const searchId = hasQuery
+      ? null
+      : props.params.searchId || this.state.searchId || null;
 
-    let sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
+    const sort = 'sort' in currentQuery ? currentQuery.sort : DEFAULT_SORT;
 
-    let statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
+    const statsPeriod = STATS_PERIODS.has(currentQuery.statsPeriod)
       ? currentQuery.statsPeriod
       : DEFAULT_STATS_PERIOD;
 
-    let newState = {
+    const newState = {
       sort,
       statsPeriod,
       query: hasQuery ? currentQuery.query : '',
@@ -284,7 +286,7 @@ const Stream = createReactClass({
     };
 
     if (searchId) {
-      let searchResult = this.state.savedSearchList.find(
+      const searchResult = this.state.savedSearchList.find(
         search => search.id === searchId
       );
       if (searchResult) {
@@ -305,7 +307,7 @@ const Stream = createReactClass({
         newState.searchId = null;
       }
     } else if (!hasQuery) {
-      let defaultResult = this.state.savedSearchList.find(search => search.isDefault);
+      const defaultResult = this.state.savedSearchList.find(search => search.isDefault);
       if (defaultResult) {
         newState.isDefaultSearch = true;
         newState.searchId = defaultResult.id;
@@ -320,7 +322,7 @@ const Stream = createReactClass({
 
   hasQuery(props) {
     props = props || this.props;
-    let currentQuery = props.location.query || {};
+    const currentQuery = props.location.query || {};
     return 'query' in currentQuery;
   },
 
@@ -333,14 +335,14 @@ const Stream = createReactClass({
       error: false,
     });
 
-    let url = this.getGroupListEndpoint();
+    const url = this.getGroupListEndpoint();
 
     // Remove leading and trailing whitespace
-    let query = queryString.formatQueryString(this.state.query);
+    const query = queryString.formatQueryString(this.state.query);
 
-    let {environment} = this.state;
+    const {environment} = this.state;
 
-    let requestParams = {
+    const requestParams = {
       query,
       limit: MAX_ITEMS,
       sort: this.state.sort,
@@ -358,7 +360,7 @@ const Stream = createReactClass({
       requestParams.environment = environment.name;
     }
 
-    let currentQuery = this.props.location.query || {};
+    const currentQuery = this.props.location.query || {};
     if ('cursor' in currentQuery) {
       requestParams.cursor = currentQuery.cursor;
     }
@@ -379,7 +381,7 @@ const Stream = createReactClass({
         // different projects.
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
-            let {project, id, matchingEventId, matchingEventEnvironment} = data[0];
+            const {project, id, matchingEventId, matchingEventEnvironment} = data[0];
             let redirect = `/${this.props.params
               .orgId}/${project.slug}/issues/${id}/events/${matchingEventId}/`;
             // Also direct to the environment of this specific event if this
@@ -397,8 +399,8 @@ const Stream = createReactClass({
 
         this._streamManager.push(data);
 
-        let queryCount = jqXHR.getResponseHeader('X-Hits');
-        let queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
+        const queryCount = jqXHR.getResponseHeader('X-Hits');
+        const queryMaxCount = jqXHR.getResponseHeader('X-Max-Hits');
 
         return void this.setState({
           error: false,
@@ -426,10 +428,12 @@ const Stream = createReactClass({
   },
 
   resumePolling() {
-    if (!this.state.pageLinks) return;
+    if (!this.state.pageLinks) {
+      return;
+    }
 
     // Only resume polling if we're on the first page of results
-    let links = parseLinkHeader(this.state.pageLinks);
+    const links = parseLinkHeader(this.state.pageLinks);
     if (links && !links.previous.results && this.state.realtimeActive) {
       this._poller.setEndpoint(links.previous.href);
       this._poller.enable();
@@ -437,7 +441,7 @@ const Stream = createReactClass({
   },
 
   getGroupListEndpoint() {
-    let params = this.props.params;
+    const params = this.props.params;
 
     return '/projects/' + params.orgId + '/' + params.projectId + '/issues/';
   },
@@ -473,7 +477,7 @@ const Stream = createReactClass({
   },
 
   onGroupChange() {
-    let groupIds = this._streamManager.getAllItems().map(item => item.id);
+    const groupIds = this._streamManager.getAllItems().map(item => item.id);
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
         groupIds,
@@ -507,7 +511,7 @@ const Stream = createReactClass({
 
     // Ignore saved searches
     if (this.state.savedSearchList.map(s => s.query == this.state.query).length > 0) {
-      let {orgId, projectId} = this.props.params;
+      const {orgId, projectId} = this.props.params;
       analytics('issue.search', {
         query: this.state.query,
         organization_id: orgId,
@@ -526,7 +530,7 @@ const Stream = createReactClass({
   },
 
   onSidebarToggle() {
-    let org = this.getOrganization();
+    const org = this.getOrganization();
     this.setState({
       isSidebarVisible: !this.state.isSidebarVisible,
     });
@@ -539,14 +543,16 @@ const Stream = createReactClass({
    * Returns true if all results in the current query are visible/on this page
    */
   allResultsVisible() {
-    if (!this.state.pageLinks) return false;
+    if (!this.state.pageLinks) {
+      return false;
+    }
 
-    let links = parseLinkHeader(this.state.pageLinks);
+    const links = parseLinkHeader(this.state.pageLinks);
     return links && !links.previous.results && !links.next.results;
   },
 
   transitionTo() {
-    let queryParams = {};
+    const queryParams = {};
 
     if (this.props.location.query.environment) {
       queryParams.environment = this.props.location.query.environment;
@@ -564,9 +570,9 @@ const Stream = createReactClass({
       queryParams.statsPeriod = this.state.statsPeriod;
     }
 
-    let params = this.props.params;
+    const params = this.props.params;
 
-    let path = this.state.searchId
+    const path = this.state.searchId
       ? `/${params.orgId}/${params.projectId}/searches/${this.state.searchId}/`
       : `/${params.orgId}/${params.projectId}/`;
     browserHistory.push({
@@ -576,25 +582,25 @@ const Stream = createReactClass({
   },
 
   renderProcessingIssuesHint() {
-    let pi = this.state.processingIssues;
+    const pi = this.state.processingIssues;
     if (!pi || this.showingProcessingIssues()) {
       return null;
     }
-    let {orgId, projectId} = this.props.params;
+    const {orgId, projectId} = this.props.params;
     return <ProcessingIssueHint issue={pi} projectId={projectId} orgId={orgId} />;
   },
 
   renderGroupNodes(ids, statsPeriod) {
     // Restrict this guide to only show for new users (joined<30 days) and add guide anhor only to the first issue
-    let userDateJoined = new Date(ConfigStore.get('user').dateJoined);
-    let dateCutoff = new Date();
+    const userDateJoined = new Date(ConfigStore.get('user').dateJoined);
+    const dateCutoff = new Date();
     dateCutoff.setDate(dateCutoff.getDate() - 30);
 
-    let topIssue = ids[0];
+    const topIssue = ids[0];
 
-    let {orgId} = this.props.params;
-    let groupNodes = ids.map(id => {
-      let hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
+    const {orgId} = this.props.params;
+    const groupNodes = ids.map(id => {
+      const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
         <StreamGroup
           key={id}
@@ -610,9 +616,9 @@ const Stream = createReactClass({
   },
 
   renderAwaitingEvents() {
-    let org = this.getOrganization();
-    let project = this.getProject();
-    let sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
+    const org = this.getOrganization();
+    const project = this.getProject();
+    const sampleIssueId = this.state.groupIds.length > 0 ? this.state.groupIds[0] : '';
     return (
       <ErrorRobot
         org={org}
@@ -644,7 +650,7 @@ const Stream = createReactClass({
 
   renderStreamBody() {
     let body;
-    let project = this.getProject();
+    const project = this.getProject();
 
     if (project.firstEvent) {
       ConfigStore.set('sentFirstEvent', project.firstEvent);
@@ -669,13 +675,15 @@ const Stream = createReactClass({
     if (this.state.loading) {
       return this.renderLoading();
     }
-    let params = this.props.params;
-    let classes = ['stream-row'];
-    if (this.state.isSidebarVisible) classes.push('show-sidebar');
-    let {orgId, projectId} = this.props.params;
-    let searchId = this.state.searchId;
-    let access = this.getAccess();
-    let projectFeatures = this.getProjectFeatures();
+    const params = this.props.params;
+    const classes = ['stream-row'];
+    if (this.state.isSidebarVisible) {
+      classes.push('show-sidebar');
+    }
+    const {orgId, projectId} = this.props.params;
+    const searchId = this.state.searchId;
+    const access = this.getAccess();
+    const projectFeatures = this.getProjectFeatures();
     return (
       <div className={classNames(classes)}>
         <div className="stream-content">

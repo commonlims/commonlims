@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 
 import SentryTypes from 'app/sentryTypes';
-import {openDiffModal} from 'app/actionCreators/modal';
 import Checkbox from 'app/components/checkbox';
 import Count from 'app/components/count';
 import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
@@ -48,7 +47,7 @@ const SimilarIssueItem = createReactClass({
   },
 
   onGroupingUpdate({mergeState}) {
-    let {issue} = this.props;
+    const {issue} = this.props;
     if (mergeState) {
       const stateForId = mergeState.has(issue.id) && mergeState.get(issue.id);
       if (stateForId) {
@@ -64,7 +63,7 @@ const SimilarIssueItem = createReactClass({
   },
 
   handleToggle(e) {
-    let {issue} = this.props;
+    const {issue} = this.props;
 
     // clicking anywhere in the row will toggle the checkbox
     if (!this.state.busy) {
@@ -73,13 +72,7 @@ const SimilarIssueItem = createReactClass({
   },
 
   handleShowDiff(e) {
-    let {groupId, issue} = this.props;
-    openDiffModal({
-      baseIssueId: groupId,
-      targetIssueId: issue.id,
-    });
-
-    e.stopPropagation();
+    throw new Error('Not implemented');
   },
 
   handleCheckClick() {
@@ -88,13 +81,13 @@ const SimilarIssueItem = createReactClass({
   },
 
   render() {
-    let {aggregate, scoresByInterface, issue} = this.props;
+    const {aggregate, scoresByInterface, issue} = this.props;
 
     if (!this.state.visible) {
       return null;
     }
 
-    let cx = classNames('group', 'similar-issue', {
+    const cx = classNames('group', 'similar-issue', {
       isResolved: issue.status === 'resolved',
       busy: this.state.busy,
     });
@@ -134,10 +127,10 @@ const SimilarIssueItem = createReactClass({
           <Count className="similar-score-column" value={issue.count} />
 
           {similarInterfaces.map(interfaceName => {
-            let avgScore = aggregate[interfaceName];
-            let scoreList = scoresByInterface[interfaceName] || [];
+            const avgScore = aggregate[interfaceName];
+            const scoreList = scoresByInterface[interfaceName] || [];
             // Check for valid number (and not NaN)
-            let scoreValue =
+            const scoreValue =
               typeof avgScore === 'number' && !Number.isNaN(avgScore) ? avgScore : 0;
 
             return (

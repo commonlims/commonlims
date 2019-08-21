@@ -17,11 +17,11 @@ class InitTest(CliTestCase):
             rv = self.invoke('config')
             assert rv.exit_code == 0, rv.output
             contents = os.listdir('config')
-            assert set(contents) == {'sentry.conf.py', 'config.yml'}
+            assert set(contents) == {'clims.conf.py', 'config.yml'}
 
             # Make sure the python file is valid
-            ctx = {'__file__': 'sentry.conf.py'}
-            with open('config/sentry.conf.py') as fp:
+            ctx = {'__file__': 'clims.conf.py'}
+            with open('config/clims.conf.py') as fp:
                 six.exec_(fp.read(), ctx)
             assert 'DEBUG' in ctx
 
@@ -30,7 +30,3 @@ class InitTest(CliTestCase):
             with open('config/config.yml', 'rb') as fp:
                 ctx = safe_load(fp)
             assert 'system.secret-key' in ctx
-
-    def test_no_directory(self):
-        rv = self.invoke('sentry.conf.py')
-        assert rv.exit_code != 0, rv.output

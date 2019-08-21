@@ -41,7 +41,9 @@ class Hovercard extends React.Component {
     const {header, body} = this.props;
 
     // Don't toggle hovercard if both of these are null
-    if (!header && !body) return;
+    if (!header && !body) {
+      return;
+    }
 
     if (this.hoverWait !== null) {
       clearTimeout(this.hoverWait);
@@ -64,7 +66,9 @@ class Hovercard extends React.Component {
   };
 
   positionCard() {
-    if (!this.cardElement.current || this.state.visible) return;
+    if (!this.cardElement.current || this.state.visible) {
+      return;
+    }
     const rect = this.cardElement.current.getBoundingClientRect();
 
     // Computes the offset that the hovercard should be from the anchor point

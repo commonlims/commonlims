@@ -23,8 +23,6 @@ export default class NavigationGroup extends React.Component {
     ...SentryTypes.NavigationGroup,
     organization: SentryTypes.Organization,
     project: SentryTypes.Project,
-    access: PropTypes.object,
-    features: PropTypes.object,
   };
 
   static contextTypes = {
@@ -33,16 +31,20 @@ export default class NavigationGroup extends React.Component {
   };
 
   render() {
-    let {organization, project, name, items} = this.props;
+    const {organization, project, name, items} = this.props;
 
     return (
       <NavSection data-test-id={name}>
         <SettingsHeading>{name}</SettingsHeading>
         {items.map(({path, title, index, show, badge}) => {
-          if (typeof show === 'function' && !show(this.props)) return null;
-          if (typeof show !== 'undefined' && !show) return null;
-          let badgeResult = typeof badge === 'function' ? badge(this.props) : null;
-          let to = replaceRouterParams(path, {
+          if (typeof show === 'function' && !show(this.props)) {
+            return null;
+          }
+          if (typeof show !== 'undefined' && !show) {
+            return null;
+          }
+          const badgeResult = typeof badge === 'function' ? badge(this.props) : null;
+          const to = replaceRouterParams(path, {
             orgId: organization && organization.slug,
             projectId: project && project.slug,
           });

@@ -22,7 +22,7 @@ const NewProject = createReactClass({
         </div>
         <div className="container">
           <Content>
-            <DocumentTitle title={'Common LIMS'} />
+            <DocumentTitle title="Common LIMS" />
           </Content>
         </div>
       </Container>

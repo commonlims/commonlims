@@ -17,7 +17,9 @@ class AutoSelectText extends React.Component {
   };
 
   selectText = () => {
-    if (!this.el) return;
+    if (!this.el) {
+      return;
+    }
 
     selectText(this.el);
   };
@@ -27,7 +29,7 @@ class AutoSelectText extends React.Component {
   };
 
   render() {
-    let {children, ...props} = this.props;
+    const {children, ...props} = this.props;
 
     if (typeof children === 'function') {
       return children({

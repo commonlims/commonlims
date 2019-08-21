@@ -5,7 +5,7 @@ from clims.legacy.repository import LegacyRepository, FileRepository
 from clims.legacy.utils import lazyprop
 from clims.legacy import LegacySession
 from clims.legacy.service import (ArtifactService, FileService, StepLoggerService, LegacyService,
-                                   ProcessService, ValidationService)
+                                  ProcessService, ValidationService)
 from clims.legacy.repository import StepRepository
 from clims.legacy import utils
 from clims.legacy.service.file_service import OSService

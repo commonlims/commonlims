@@ -27,10 +27,10 @@ const SampleDetailsHeader = createReactClass({
   mixins: [ApiMixin, OrganizationState],
 
   onToggleMute() {
-    let group = this.props.group;
-    let project = this.getProject();
-    let org = this.getOrganization();
-    let loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    const group = this.props.group;
+    const project = this.getProject();
+    const org = this.getOrganization();
+    const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
     this.api.bulkUpdate(
       {
@@ -50,8 +50,8 @@ const SampleDetailsHeader = createReactClass({
   },
 
   getMessage() {
-    let data = this.props.group;
-    let metadata = data.metadata;
+    const data = this.props.group;
+    const metadata = data.metadata;
     switch (data.type) {
       case 'error':
         return metadata.value;
@@ -63,7 +63,7 @@ const SampleDetailsHeader = createReactClass({
   },
 
   render() {
-    let group = this.props.group;
+    const group = this.props.group;
 
     let className = 'group-detail';
 
@@ -80,14 +80,14 @@ const SampleDetailsHeader = createReactClass({
       className += ' isResolved';
     }
 
-    let projectId = '5'; // TODO: Not a project-specific view
-    let groupId = group.id,
+    const projectId = '5'; // TODO: Not a project-specific view
+    const groupId = group.id,
       //projectId = this.getProject().slug,
       orgId = this.getOrganization().slug;
-    let message = this.getMessage();
+    const message = this.getMessage();
 
     //let hasSimilarView = projectFeatures.has('similarity-view');
-    let sample = {
+    const sample = {
       title: 'hund-123',
       container: 'hund-container-1',
       position: 'A1',
@@ -121,7 +121,7 @@ const SampleDetailsHeader = createReactClass({
                       </a>
                     </Tooltip>
                   </h6>
-                  <ShortId shortId={'5'} />
+                  <ShortId shortId="5" />
                 </div>
               )}
             </div>
@@ -133,8 +133,8 @@ const SampleDetailsHeader = createReactClass({
           <ListLink
             to={`/${orgId}/${projectId}/issues/${groupId}/`}
             isActive={() => {
-              let rootGroupPath = `/${orgId}/${projectId}/issues/${groupId}/`;
-              let pathname = this.context.location.pathname;
+              const rootGroupPath = `/${orgId}/${projectId}/issues/${groupId}/`;
+              const pathname = this.context.location.pathname;
 
               // Because react-router 1.0 removes router.isActive(route)
               return pathname === rootGroupPath || /events\/\w+\/$/.test(pathname);

@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import styled from 'react-emotion';
 
 import GroupStore from 'app/stores/groupStore';
 import IssueList from 'app/components/issueList';
 import PageHeading from 'app/components/pageHeading';
 import OrganizationHomeContainer from 'app/components/organizations/homeContainer';
-import { t } from 'app/locale';
+import {t} from 'app/locale';
 import space from 'app/styles/space';
 
 class OrganizationWorkBatchList extends React.Component {
@@ -34,16 +34,16 @@ class OrganizationWorkBatchList extends React.Component {
   }
 
   getQueryStringState = props => {
-    let query = props.location.query;
-    let status = 'status' in query ? query.status : 'unresolved';
+    const query = props.location.query;
+    const status = 'status' in query ? query.status : 'unresolved';
     return {
       status,
     };
   };
 
   render() {
-    let path = this.props.location.pathname;
-    let { status } = this.state;
+    const path = this.props.location.pathname;
+    const {status} = this.state;
     return (
       <OrganizationHomeContainer>
         <div className="pull-right">
@@ -57,7 +57,7 @@ class OrganizationWorkBatchList extends React.Component {
               {t('Unresolved')}
             </Link>
             <Link
-              to={{ pathname: path, query: { status: '' } }}
+              to={{pathname: path, query: {status: ''}}}
               className={'btn btn-sm btn-default' + (status === '' ? ' active' : '')}
             >
               {t('All tasks')}

@@ -76,7 +76,9 @@ const OrganizationInnerContext = createReactClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.projectId === this.props.projectId) return;
+    if (nextProps.projectId === this.props.projectId) {
+      return;
+    }
 
     if (!nextProps.skipReload) {
       this.remountComponent();
@@ -101,9 +103,13 @@ const OrganizationInnerContext = createReactClass({
       prevState.project !== this.state.project ||
       prevState.organization !== this.state.organization
     ) {
-      if (!this.docTitle) return;
-      let docTitle = this.docTitleRef.docTitle;
-      if (docTitle) docTitle.forceUpdate();
+      if (!this.docTitle) {
+        return;
+      }
+      const docTitle = this.docTitleRef.docTitle;
+      if (docTitle) {
+        docTitle.forceUpdate();
+      }
     }
   },
 
@@ -112,13 +118,19 @@ const OrganizationInnerContext = createReactClass({
   },
 
   getTitle() {
-    if (this.state.project) return this.state.project.slug;
+    if (this.state.project) {
+      return this.state.project.slug;
+    }
     return 'Sentry';
   },
 
   onProjectChange(projectIds) {
-    if (!this.state.project) return;
-    if (!projectIds.has(this.state.project.id)) return;
+    if (!this.state.project) {
+      return;
+    }
+    if (!projectIds.has(this.state.project.id)) {
+      return;
+    }
 
     this.setState({
       project: {...ProjectsStore.getById(this.state.project.id)},
@@ -126,8 +138,8 @@ const OrganizationInnerContext = createReactClass({
   },
 
   identifyProject() {
-    let {projects, projectId} = this.props;
-    let projectSlug = projectId;
+    const {projects, projectId} = this.props;
+    const projectSlug = projectId;
     return projects.find(({slug}) => slug === projectSlug) || null;
   },
 
@@ -140,12 +152,12 @@ const OrganizationInnerContext = createReactClass({
   },
 
   getEnvironmentListEndpoint() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
     return `/projects/${orgId}/${projectId}/environments/`;
   },
 
   getMemberListEndpoint() {
-    let {orgId, projectId} = this.props;
+    const {orgId, projectId} = this.props;
     return `/projects/${orgId}/${projectId}/members/`;
   },
 

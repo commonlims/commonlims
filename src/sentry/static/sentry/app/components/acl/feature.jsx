@@ -89,7 +89,7 @@ class Feature extends React.Component {
   };
 
   getAllFeatures() {
-    let {organization, project, configFeatures} = this.props;
+    const {organization, project, configFeatures} = this.props;
     return {
       configFeatures: configFeatures || [],
       organization: (organization && organization.features) || [],
@@ -98,11 +98,11 @@ class Feature extends React.Component {
   }
 
   hasFeature(feature, features) {
-    let shouldMatchOnlyProject = feature.match(/^projects:(.+)/);
-    let shouldMatchOnlyOrg = feature.match(/^organizations:(.+)/);
+    const shouldMatchOnlyProject = feature.match(/^projects:(.+)/);
+    const shouldMatchOnlyOrg = feature.match(/^organizations:(.+)/);
 
     // Array of feature strings
-    let {configFeatures, organization, project} = features;
+    const {configFeatures, organization, project} = features;
 
     // Check config store first as this overrides features scoped to org or
     // project contexts.
@@ -123,7 +123,7 @@ class Feature extends React.Component {
   }
 
   render() {
-    let {
+    const {
       children,
       features,
       renderDisabled,
@@ -132,9 +132,9 @@ class Feature extends React.Component {
       requireAll,
     } = this.props;
 
-    let allFeatures = this.getAllFeatures();
-    let method = requireAll ? 'every' : 'some';
-    let hasFeature =
+    const allFeatures = this.getAllFeatures();
+    const method = requireAll ? 'every' : 'some';
+    const hasFeature =
       !features || features[method](feat => this.hasFeature(feat, allFeatures));
 
     // Default renderDisabled to the ComingSoon component
@@ -151,7 +151,7 @@ class Feature extends React.Component {
         .map(hookFn => (customDisabledRender = hookFn));
     }
 
-    let renderProps = {
+    const renderProps = {
       organization,
       project,
       features,
@@ -189,12 +189,14 @@ const FeatureContainer = createReactClass({
   },
 
   onConfigStoreUpdate(config) {
-    if (config === this.state.config) return;
+    if (config === this.state.config) {
+      return;
+    }
     this.setState({config});
   },
 
   render() {
-    let features = this.state.config.features
+    const features = this.state.config.features
       ? Array.from(this.state.config.features)
       : [];
 

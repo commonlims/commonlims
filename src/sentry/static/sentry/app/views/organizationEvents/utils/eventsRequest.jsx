@@ -141,7 +141,9 @@ class EventsRequest extends React.PureComponent {
       timeseriesData = null;
     }
 
-    if (this.unmounting) return;
+    if (this.unmounting) {
+      return;
+    }
 
     this.setState({
       reloading: false,
@@ -189,7 +191,9 @@ class EventsRequest extends React.PureComponent {
   transformPreviousPeriodData = (current, previous) => {
     // Need the current period data array so we can take the timestamp
     // so we can be sure the data lines up
-    if (!previous) return null;
+    if (!previous) {
+      return null;
+    }
 
     return {
       seriesName: 'Previous Period',
@@ -204,7 +208,9 @@ class EventsRequest extends React.PureComponent {
    * Aggregate all counts for each time stamp
    */
   transformAggregatedTimeseries = (data, seriesName) => {
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
 
     return {
       seriesName,
@@ -228,7 +234,9 @@ class EventsRequest extends React.PureComponent {
   };
 
   transformData = data => {
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
 
     return this.transformTimeseriesData(data);
   };

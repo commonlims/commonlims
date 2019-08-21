@@ -34,7 +34,7 @@ const SampleCheckBox = createReactClass({
   },
 
   onSelectedSampleChange() {
-    let isSelected = SelectedSampleStore.isSelected(this.props.id);
+    const isSelected = SelectedSampleStore.isSelected(this.props.id);
     if (isSelected !== this.state.isSelected) {
       this.setState({
         isSelected,
@@ -43,7 +43,7 @@ const SampleCheckBox = createReactClass({
   },
 
   onSelect() {
-    let id = this.props.id;
+    const id = this.props.id;
     SelectedSampleStore.toggleSelect(id);
   },
 

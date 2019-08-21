@@ -40,7 +40,7 @@ const Incidents = createReactClass({
   },
 
   render() {
-    let {
+    const {
       orientation,
       collapsed,
       currentPanel,
@@ -49,13 +49,17 @@ const Incidents = createReactClass({
       onShowPanel,
     } = this.props;
 
-    let {status} = this.state;
-    if (!status) return null;
+    const {status} = this.state;
+    if (!status) {
+      return null;
+    }
 
-    let active = currentPanel === 'statusupdate';
-    let isEmpty = !status.incidents || status.incidents.length === 0;
+    const active = currentPanel === 'statusupdate';
+    const isEmpty = !status.incidents || status.incidents.length === 0;
 
-    if (isEmpty) return null;
+    if (isEmpty) {
+      return null;
+    }
 
     return (
       <React.Fragment>

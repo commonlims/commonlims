@@ -104,7 +104,7 @@ describe('GlobalSelectionHeader', function() {
   });
 
   it('updates GlobalSelection store when re-rendered with different query params', async function() {
-    let wrapper = mount(
+    const wrapper = mount(
       <GlobalSelectionHeader organization={organization} />,
       changeQuery(routerContext, {
         statsPeriod: '7d',
@@ -141,7 +141,7 @@ describe('GlobalSelectionHeader', function() {
   });
 
   it('does not update store if url params have not changed', async function() {
-    let wrapper = mount(
+    const wrapper = mount(
       <GlobalSelectionHeader organization={organization} />,
       changeQuery(routerContext, {
         statsPeriod: '7d',
