@@ -27,12 +27,12 @@ class PromptsActivitySerializer(serializers.Serializer):
         required=True,
     )
 
-    def validate_feature(self, attrs, source):
-        if attrs[source] is None:
+    def validate_feature(self, value):
+        if value is None:
             raise serializers.ValidationError('Must specify feature name')
-        if attrs[source] not in PROMPTS:
+        if value not in PROMPTS:
             raise serializers.ValidationError('Not a valid feature prompt')
-        return attrs
+        return value
 
 
 class PromptsActivityEndpoint(Endpoint):

@@ -106,8 +106,7 @@ class OrganizationSerializer(serializers.Serializer):
         org = self.context['organization']
         return AuthProvider.objects.filter(organization=org).exists()
 
-    def validate_slug(self, attrs, source):
-        value = attrs[source]
+    def validate_slug(self, value):
         # Historically, the only check just made sure there was more than 1
         # character for the slug, but since then, there are many slugs that
         # fit within this new imposed limit. We're not fixing existing, but
@@ -125,22 +124,19 @@ class OrganizationSerializer(serializers.Serializer):
         ).exclude(id=self.context['organization'].id)
         if qs.exists():
             raise serializers.ValidationError('The slug "%s" is already in use.' % (value, ))
-        return attrs
+        return value
 
-    def validate_sensitiveFields(self, attrs, source):
-        value = attrs[source]
+    def validate_sensitiveFields(self, value):
         if value and not all(value):
             raise serializers.ValidationError('Empty values are not allowed.')
-        return attrs
+        return value
 
-    def validate_safeFields(self, attrs, source):
-        value = attrs[source]
+    def validate_safeFields(self, value):
         if value and not all(value):
             raise serializers.ValidationError('Empty values are not allowed.')
-        return attrs
+        return value
 
-    def validate_require2FA(self, attrs, source):
-        value = attrs[source]
+    def validate_require2FA(self, value):
         user = self.context['user']
         has_2fa = Authenticator.objects.user_has_2fa(user)
         if value and not has_2fa:
@@ -148,11 +144,11 @@ class OrganizationSerializer(serializers.Serializer):
 
         if value and self._has_sso_enabled():
             raise serializers.ValidationError(ERR_SSO_ENABLED)
-        return attrs
+        return value
 
-    def validate_trustedRelays(self, attrs, source):
-        if not attrs[source]:
-            return attrs
+    def validate_trustedRelays(self, value):
+        if not value:
+            return value
 
         from sentry import features
 
@@ -165,19 +161,19 @@ class OrganizationSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Organization does not have the relay feature enabled'
             )
-        return attrs
+        return value
 
-    def validate_accountRateLimit(self, attrs, source):
+    def validate_accountRateLimit(self, value):
         if not self._has_legacy_rate_limits:
             raise serializers.ValidationError(
                 'The accountRateLimit option cannot be configured for this organization')
-        return attrs
+        return value
 
-    def validate_projectRateLimit(self, attrs, source):
+    def validate_projectRateLimit(self, value):
         if not self._has_legacy_rate_limits:
             raise serializers.ValidationError(
                 'The accountRateLimit option cannot be configured for this organization')
-        return attrs
+        return value
 
     def validate(self, attrs):
         attrs = super(OrganizationSerializer, self).validate(attrs)

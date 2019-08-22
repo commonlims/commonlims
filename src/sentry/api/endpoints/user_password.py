@@ -19,21 +19,20 @@ class UserPasswordSerializer(serializers.ModelSerializer):
         model = User
         fields = ('password', 'passwordNew', 'passwordVerify', )
 
-    def validate_password(self, attrs, source):
-        if self.context['has_usable_password'] and not self.object.check_password(
-                attrs.get('password')):
+    def validate_password(self, value):
+        if self.context['has_usable_password'] and not self.object.check_password(value):
             raise serializers.ValidationError('The password you entered is not correct.')
-        return attrs
+        return value
 
-    def validate_passwordNew(self, attrs, source):
+    def validate_passwordNew(self, value):
         # this will raise a ValidationError if password is invalid
-        password_validation.validate_password(attrs[source])
+        password_validation.validate_password(value)
 
         if self.context['is_managed']:
             raise serializers.ValidationError(
                 'This account is managed and the password cannot be changed via Sentry.')
 
-        return attrs
+        return value
 
     def validate(self, attrs):
         attrs = super(UserPasswordSerializer, self).validate(attrs)

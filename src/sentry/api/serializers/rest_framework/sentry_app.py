@@ -41,11 +41,12 @@ class SentryAppSerializer(Serializer):
     isAlertable = serializers.BooleanField(required=False)
     overview = serializers.CharField(required=False)
 
-    def validate_events(self, attrs, source):
+    def validate(self, attrs):
+        # TODO: Validate this code against previous versions - signature change after 3.0+
         if not attrs.get('scopes'):
             return attrs
 
-        for resource in attrs.get(source):
+        for resource in attrs.get('events'):
             needed_scope = REQUIRED_EVENT_PERMISSIONS[resource]
             if needed_scope not in attrs['scopes']:
                 raise ValidationError(

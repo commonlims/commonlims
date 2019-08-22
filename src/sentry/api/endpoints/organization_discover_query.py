@@ -113,10 +113,9 @@ class DiscoverQuerySerializer(serializers.Serializer):
 
         return data
 
-    def validate_projects(self, attrs, source):
+    def validate_projects(self, projects):
         organization = self.context['organization']
         member = self.member
-        projects = attrs[source]
 
         org_projects = set(project[0] for project in self.context['projects'])
 
@@ -124,18 +123,17 @@ class DiscoverQuerySerializer(serializers.Serializer):
                 member, organization, projects):
             raise PermissionDenied
 
-        return attrs
+        return projects
 
-    def validate_conditions(self, attrs, source):
+    def validate_conditions(self, value):
         # Handle error (exception_stacks), stack(exception_frames)
-        if attrs.get(source):
-            conditions = [self.get_condition(condition) for condition in attrs[source]]
-            attrs[source] = conditions
-        return attrs
+        if value:
+            value = [self.get_condition(condition) for condition in value]
+        return value
 
-    def validate_aggregations(self, attrs, source):
+    def validate_aggregations(self, value):
         valid_functions = set(['count()', 'uniq', 'avg'])
-        requested_functions = set(agg[0] for agg in attrs[source])
+        requested_functions = set(agg[0] for agg in value)
 
         if not requested_functions.issubset(valid_functions):
             invalid_functions = ', '.join((requested_functions - valid_functions))
@@ -144,7 +142,7 @@ class DiscoverQuerySerializer(serializers.Serializer):
                 u'Invalid aggregate function - {}'.format(invalid_functions)
             )
 
-        return attrs
+        return value
 
     def get_array_field(self, field):
         pattern = r"^(error|stack)\..+"

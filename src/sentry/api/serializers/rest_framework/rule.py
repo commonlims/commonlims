@@ -71,34 +71,31 @@ class RuleSerializer(serializers.Serializer):
     )
     frequency = serializers.IntegerField(min_value=5, max_value=60 * 24 * 30)
 
-    def validate_environment(self, attrs, source):
-        name = attrs.get(source)
-        if name is None:
-            return attrs
+    def validate_environment(self, environment):
+        if environment is None:
+            return environment
 
         try:
-            attrs['environment'] = Environment.get_for_organization_id(
+            environment = Environment.get_for_organization_id(
                 self.context['project'].organization_id,
-                name,
+                environment,
             ).id
         except Environment.DoesNotExist:
             raise serializers.ValidationError(u'This environment has not been created.')
 
-        return attrs
+        return environment
 
-    def validate_conditions(self, attrs, source):
-        name = attrs.get(source)
+    def validate_conditions(self, name):
         if not name:
             raise serializers.ValidationError(u'Must select a condition')
 
-        return attrs
+        return name
 
-    def validate_actions(self, attrs, source):
-        name = attrs.get(source)
+    def validate_actions(self, name):
         if not name:
             raise serializers.ValidationError(u'Must select an action')
 
-        return attrs
+        return name
 
     def save(self, rule):
         rule.project = self.context['project']

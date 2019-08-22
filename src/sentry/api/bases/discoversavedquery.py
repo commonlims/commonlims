@@ -40,9 +40,8 @@ class DiscoverSavedQuerySerializer(serializers.Serializer):
         allow_null=True,
     )
 
-    def validate_projects(self, attrs, source):
+    def validate_projects(self, projects):
         organization = self.context['organization']
-        projects = attrs[source]
 
         org_projects = set(Project.objects.filter(
             organization=organization,
@@ -53,7 +52,7 @@ class DiscoverSavedQuerySerializer(serializers.Serializer):
         if set(projects) != org_projects:
             raise PermissionDenied
 
-        return attrs
+        return projects
 
     def validate(self, data):
         query = {}

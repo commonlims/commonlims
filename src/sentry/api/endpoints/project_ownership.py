@@ -18,11 +18,12 @@ class ProjectOwnershipSerializer(serializers.Serializer):
     raw = serializers.CharField()
     fallthrough = serializers.BooleanField()
 
-    def validate_raw(self, attrs, source):
-        if not attrs[source].strip():
+    def validate(self, attrs):
+        raw = attrs.get('raw', '').strip()
+        if not raw:
             return attrs
         try:
-            rules = parse_rules(attrs[source])
+            rules = parse_rules(raw)
         except ParseError as e:
             raise serializers.ValidationError(
                 u'Parse error: %r (line %d, column %d)' % (

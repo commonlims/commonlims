@@ -26,11 +26,10 @@ class CommitPatchSetSerializer(serializers.Serializer):
     path = serializers.CharField(max_length=255)
     type = serializers.CharField(max_length=1)
 
-    def validate_type(self, attrs, source):
-        value = attrs[source]
+    def validate_type(self, value):
         if not CommitFileChange.is_valid_type(value):
             raise serializers.ValidationError('Commit patch_set type %s is not supported.' % value)
-        return attrs
+        return value
 
 
 class CommitSerializerWithPatchSet(CommitSerializer):
@@ -45,11 +44,10 @@ class ReleaseSerializer(serializers.Serializer):
     dateReleased = serializers.DateTimeField(required=False)
     commits = serializers.ListField(child=CommitSerializerWithPatchSet(), required=False, allow_null=False)
 
-    def validate_version(self, attrs, source):
-        value = attrs[source]
+    def validate_version(self, value):
         if not Release.is_valid_version(value):
             raise serializers.ValidationError('Invalid value for release')
-        return attrs
+        return value
 
 
 class ProjectReleasesEndpoint(ProjectEndpoint, EnvironmentMixin):

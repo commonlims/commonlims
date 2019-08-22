@@ -52,11 +52,10 @@ class UserOptionsSerializer(serializers.Serializer):
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
-    def validate_username(self, attrs, source):
-        value = attrs[source]
+    def validate_username(self, value):
         if User.objects.filter(username__iexact=value).exclude(id=self.object.id).exists():
             raise serializers.ValidationError('That username is already in use.')
-        return attrs
+        return value
 
     def validate(self, attrs):
         attrs = super(BaseUserSerializer, self).validate(attrs)
