@@ -21,10 +21,12 @@ class TaskListItem extends React.Component {
 
     return (
       <Group onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
-        <GroupSummary w={[8 / 12, 8 / 12, 6 / 12]} ml={2} mr={1} flex="1">
-          {name}
-        </GroupSummary>
-        <Flex w={[40, 60, 80, 80]} mx={2} justify="flex-start">
+        <Flex flex="1">
+          <GroupSummary w={200} mx={2} justify="flex-start">
+            {name}
+          </GroupSummary>
+        </Flex>
+        <Flex w={200} mx={2} justify="flex-start">
           <StyledCount value={count} />
         </Flex>
         <Flex w={200} mx={2} justify="flex-end">

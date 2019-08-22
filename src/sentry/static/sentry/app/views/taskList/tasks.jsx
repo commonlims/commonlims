@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import styled from 'react-emotion';
+import {Flex} from 'grid-emotion';
 import React from 'react';
 import {connect} from 'react-redux';
 import {t} from 'app/locale';
@@ -64,11 +66,38 @@ class Tasks extends React.Component {
   render() {
     return (
       <Panel>
+        <Sticky>
+          <StyledFlex py={1} px={0} align="center">
+            <Flex flex="1">
+              <Flex w={200} mx={2} justify="flex-start">
+                Step name
+              </Flex>
+            </Flex>
+            <Flex w={200} mx={2} justify="flex-start">
+              Num samples
+            </Flex>
+            <Flex w={200} mx={2} justify="flex-end" />
+          </StyledFlex>
+        </Sticky>
         <PanelBody>{this.renderBody()}</PanelBody>
       </Panel>
     );
   }
 }
+
+const Sticky = styled.div`
+  position: sticky;
+  z-index: ${p => p.theme.zIndex.header};
+  top: -1px;
+`;
+
+const StyledFlex = styled(Flex)`
+  align-items: center;
+  background: ${p => p.theme.offWhite};
+  border-bottom: 1px solid ${p => p.theme.borderDark};
+  border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
+  margin-bottom: -1px;
+`;
 
 Tasks.propTypes = {
   getTasks: PropTypes.func,
