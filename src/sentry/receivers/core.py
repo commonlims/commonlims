@@ -6,7 +6,7 @@ from click import echo
 from django.conf import settings
 from django.db import connections, transaction
 from django.db.utils import OperationalError, ProgrammingError
-from django.db.models.signals import post_syncdb, post_save
+from django.db.models.signals import post_save, post_migrate
 from functools import wraps
 from pkg_resources import parse_version as Version
 
@@ -36,8 +36,8 @@ def handle_db_failure(func):
     return wrapped
 
 
-def create_default_projects(created_models, app=None, verbosity=2, **kwargs):
-    if app and app.__name__ != 'sentry.models':
+def create_default_projects(sender, verbosity=2, **kwargs):
+    if sender.label != "sentry":
         return
 
     create_default_project(
@@ -134,7 +134,7 @@ def create_keys_for_project(instance, created, app=None, **kwargs):
 
 # Anything that relies on default objects that may not exist with default
 # fields should be wrapped in handle_db_failure
-post_syncdb.connect(
+post_migrate.connect(
     handle_db_failure(create_default_projects),
     dispatch_uid="create_default_project",
     weak=False,
