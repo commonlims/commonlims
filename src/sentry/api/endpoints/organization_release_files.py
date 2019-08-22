@@ -98,10 +98,10 @@ class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        if 'file' not in request.FILES:
+        if 'file' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
 
-        fileobj = request.FILES['file']
+        fileobj = request.data['file']
 
         full_name = request.data.get('name', fileobj.name)
         if not full_name or full_name == 'file':

@@ -89,10 +89,10 @@ class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
         logger = logging.getLogger('clims.files')
         logger.info('workbatchfile.start')
 
-        if 'file' not in request.FILES:
+        if 'file' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
 
-        fileobj = request.FILES['file']
+        fileobj = request.data['file']
 
         full_name = request.data.get('name', fileobj.name)
         if not full_name or full_name == 'file':
