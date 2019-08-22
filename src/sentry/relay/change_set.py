@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def execute_changesets(relay, changesets):
-    from django.utils.importlib import import_module
+    from importlib import import_module
 
     for changeset in changesets:
         try:
