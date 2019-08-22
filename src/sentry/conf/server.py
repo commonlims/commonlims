@@ -69,11 +69,17 @@ def env(key, default='', type=None):
 
 env._cache = {}
 
-ENVIRONMENT = os.environ.get('SENTRY_ENVIRONMENT', 'production')
+ENVIRONMENT = os.environ.get('CLIMS_ENVIRONMENT', 'production')
 
 IS_DEV = ENVIRONMENT == 'development'
 
 DEBUG = IS_DEV
+
+if DEBUG:
+    # NOTE: According to the documentation, this should happen automatically in DEBUG mode,
+    # but it doesn't behave that way on my machine: https://docs.djangoproject.com/en/1.8/ref/settings/#allowed-hosts
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+
 TEMPLATE_DEBUG = True
 MAINTENANCE = False
 

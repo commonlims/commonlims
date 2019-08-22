@@ -11,7 +11,7 @@ import click
 import six
 from six.moves.urllib.parse import urlparse
 
-from sentry.runner.decorators import configuration, log_options
+from sentry.runner.decorators import log_options
 
 
 @click.command()
@@ -45,7 +45,6 @@ from sentry.runner.decorators import configuration, log_options
     envvar='SENTRY_DEVSERVER_BIND',
 )
 @log_options()
-@configuration
 def devserver(reload, watchers, workers, browser_reload,
               styleguide, prefix, environment, bind, vscode_debug):
     "Starts a lightweight web server for development."
@@ -59,11 +58,18 @@ def devserver(reload, watchers, workers, browser_reload,
 
     import os
 
-    os.environ['SENTRY_ENVIRONMENT'] = environment
+    os.environ['CLIMS_ENVIRONMENT'] = environment
+
+    from sentry.runner import configure
+    configure()
 
     from django.conf import settings
     from sentry import options
     from sentry.services.http import SentryHTTPServer
+
+    # NOTE: We have to set this variable here rather than directly in the config file
+    # because the config file is imported before we're able to set the _ENVIRONMENT variable
+    settings.DEBUG = environment == 'development'
 
     url_prefix = options.get('system.url-prefix', '')
     parsed_url = urlparse(url_prefix)
