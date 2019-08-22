@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from rest_framework import serializers
 
 
-class MultipleChoiceField(serializers.WritableField):
+class MultipleChoiceField(serializers.Field):
     error_messages = {
         'invalid_choice':
         ('Select a valid choice. {value} is not one of '

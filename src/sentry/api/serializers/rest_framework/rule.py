@@ -12,7 +12,7 @@ from . import ListField
 ValidationError = serializers.ValidationError
 
 
-class RuleNodeField(serializers.WritableField):
+class RuleNodeField(serializers.Field):
     def __init__(self, type):
         super(RuleNodeField, self).__init__()
         self.type_name = type

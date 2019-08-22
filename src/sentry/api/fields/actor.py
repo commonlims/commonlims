@@ -74,7 +74,7 @@ class Actor(namedtuple('Actor', 'id type')):
         }
 
 
-class ActorField(serializers.WritableField):
+class ActorField(serializers.Field):
     def to_representation(self, obj):
         return obj.get_actor_id()
 

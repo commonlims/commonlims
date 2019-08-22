@@ -7,7 +7,7 @@ from sentry.models import ApiScopes
 from sentry.models.sentryapp import VALID_EVENT_RESOURCES, REQUIRED_EVENT_PERMISSIONS
 
 
-class ApiScopesField(serializers.WritableField):
+class ApiScopesField(serializers.Field):
     def validate(self, data):
         valid_scopes = ApiScopes()
         if data is None:
@@ -17,8 +17,14 @@ class ApiScopesField(serializers.WritableField):
             if scope not in valid_scopes:
                 raise ValidationError(u'{} not a valid scope'.format(scope))
 
+    def to_internal_value(self, data):
+        return data
 
-class EventListField(serializers.WritableField):
+
+class EventListField(serializers.Field):
+    def to_internal_value(self, data):
+        return data
+
     def validate(self, data):
         if not set(data).issubset(VALID_EVENT_RESOURCES):
             raise ValidationError(u'Invalid event subscription: {}'.format(

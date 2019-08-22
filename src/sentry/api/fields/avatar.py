@@ -18,7 +18,7 @@ class ImageTooLarge(APIException):
     default_code = 'too_large'
 
 
-class AvatarField(serializers.WritableField):
+class AvatarField(serializers.Field):
     def __init__(
         self,
         max_size=settings.SENTRY_MAX_AVATAR_SIZE,

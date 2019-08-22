@@ -8,7 +8,7 @@ from sentry.models import User
 from sentry.utils.auth import find_users
 
 
-class UserField(serializers.WritableField):
+class UserField(serializers.Field):
     def to_representation(self, obj):
         return obj.username
 
