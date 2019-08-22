@@ -2,7 +2,8 @@ from __future__ import absolute_import
 
 from datetime import timedelta
 from django.db import models
-from django.db.models import get_model
+from django.apps import apps
+get_model = apps.get_model
 from django.utils import timezone
 from jsonfield import JSONField
 from uuid import uuid4

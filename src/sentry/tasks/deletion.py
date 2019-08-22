@@ -4,7 +4,8 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import get_model
+from django.apps import apps
+get_model = apps.get_model
 from django.utils import timezone
 
 from sentry.constants import ObjectStatus
