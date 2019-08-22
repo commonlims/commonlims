@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from rest_framework import serializers
 
-from .list import ListField
 from sentry.api.fields.actor import ActorField
 
 from sentry.models import User, Team
@@ -24,7 +23,7 @@ def seperate_resolved_actors(actors):
 
 class NoteSerializer(serializers.Serializer):
     text = serializers.CharField()
-    mentions = ListField(child=ActorField(), required=False)
+    mentions = serializers.ListField(child=ActorField(), required=False)
 
     def validate_mentions(self, attrs, source):
         if source in attrs and 'group' in self.context:

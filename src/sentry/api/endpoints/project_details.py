@@ -18,7 +18,7 @@ from sentry.api.bases.project import ProjectEndpoint, ProjectPermission
 from sentry.api.decorators import sudo_required
 from sentry.api.serializers import serialize
 from sentry.api.serializers.models.project import DetailedProjectSerializer
-from sentry.api.serializers.rest_framework import ListField, OriginField
+from sentry.api.serializers.rest_framework import OriginField
 from sentry.constants import RESERVED_PROJECT_SLUGS
 from sentry.models import (
     AuditLogEntryEvent, Group, GroupStatus, Project, ProjectBookmark, ProjectRedirect,
@@ -91,13 +91,13 @@ class ProjectAdminSerializer(ProjectMemberSerializer):
     defaultEnvironment = serializers.CharField(required=False, allow_none=True)
     dataScrubber = serializers.BooleanField(required=False)
     dataScrubberDefaults = serializers.BooleanField(required=False)
-    sensitiveFields = ListField(child=serializers.CharField(), required=False)
-    safeFields = ListField(child=serializers.CharField(), required=False)
+    sensitiveFields = serializers.ListField(child=serializers.CharField(), required=False)
+    safeFields = serializers.ListField(child=serializers.CharField(), required=False)
     storeCrashReports = serializers.BooleanField(required=False)
     relayPiiConfig = serializers.CharField(required=False)
     scrubIPAddresses = serializers.BooleanField(required=False)
     scrapeJavaScript = serializers.BooleanField(required=False)
-    allowedDomains = ListField(child=OriginField(), required=False)
+    allowedDomains = serializers.ListField(child=OriginField(), required=False)
     resolveAge = serializers.IntegerField(required=False)
     platform = serializers.CharField(required=False)
 

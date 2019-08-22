@@ -11,7 +11,6 @@ from sentry.api.exceptions import InvalidRepository, ResourceDoesNotExist
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework import (
     CommitSerializer,
-    ListField,
     ReleaseHeadCommitSerializerDeprecated,
     ReleaseHeadCommitSerializer,
 )
@@ -47,11 +46,11 @@ class ReleaseSerializer(serializers.Serializer):
     ref = serializers.CharField(max_length=VERSION_LENGTH, required=False)
     url = serializers.URLField(required=False)
     dateReleased = serializers.DateTimeField(required=False)
-    commits = ListField(child=CommitSerializer(), required=False, allow_null=False)
-    headCommits = ListField(
+    commits = serializers.ListField(child=CommitSerializer(), required=False, allow_null=False)
+    headCommits = serializers.ListField(
         child=ReleaseHeadCommitSerializerDeprecated(), required=False, allow_null=False
     )
-    refs = ListField(
+    refs = serializers.ListField(
         child=ReleaseHeadCommitSerializer(),
         required=False,
         allow_null=False,

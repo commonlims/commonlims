@@ -11,7 +11,6 @@ from sentry.api.bases.organization import (
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import (
     DetailedUserSerializer, serialize, RoleSerializer, OrganizationMemberWithTeamsSerializer)
-from sentry.api.serializers.rest_framework import ListField
 from sentry.auth.superuser import is_active_superuser
 from sentry.models import (
     AuditLogEntryEvent, AuthIdentity, AuthProvider, OrganizationMember, OrganizationMemberTeam, Team, TeamStatus)
@@ -50,7 +49,7 @@ class OrganizationMemberSerializer(serializers.Serializer):
     reinvite = serializers.BooleanField()
     regenerate = serializers.BooleanField()
     role = serializers.ChoiceField(choices=roles.get_choices(), required=True)
-    teams = ListField(required=False, allow_null=False)
+    teams = serializers.ListField(required=False, allow_null=False)
 
 
 class RelaxedMemberPermission(OrganizationPermission):

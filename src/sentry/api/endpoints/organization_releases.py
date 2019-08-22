@@ -5,6 +5,7 @@ from django.db import IntegrityError, transaction
 
 from rest_framework.response import Response
 
+from rest_framework import serializers
 from sentry.api.bases import NoProjects, OrganizationEventsError
 from .project_releases import ReleaseSerializer
 from sentry.api.base import DocSection, EnvironmentMixin
@@ -13,7 +14,7 @@ from sentry.api.exceptions import InvalidRepository
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework import (
-    ReleaseHeadCommitSerializer, ReleaseHeadCommitSerializerDeprecated, ListField
+    ReleaseHeadCommitSerializer, ReleaseHeadCommitSerializerDeprecated
 )
 from sentry.models import Activity, Release
 from sentry.signals import release_created
@@ -66,13 +67,13 @@ def list_org_releases_scenario(runner):
 
 
 class ReleaseSerializerWithProjects(ReleaseSerializer):
-    projects = ListField()
-    headCommits = ListField(
+    projects = serializers.ListField()
+    headCommits = serializers.ListField(
         child=ReleaseHeadCommitSerializerDeprecated(),
         required=False,
         allow_null=False,
     )
-    refs = ListField(
+    refs = serializers.ListField(
         child=ReleaseHeadCommitSerializer(),
         required=False,
         allow_null=False,

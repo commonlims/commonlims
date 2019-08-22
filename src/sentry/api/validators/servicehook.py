@@ -4,12 +4,10 @@ from rest_framework import serializers
 
 from sentry.models import SERVICE_HOOK_EVENTS
 
-from sentry.api.serializers.rest_framework.list import ListField
-
 
 class ServiceHookValidator(serializers.Serializer):
     url = serializers.URLField(required=True)
-    events = ListField(
+    events = serializers.ListField(
         child=serializers.CharField(max_length=255),
         required=False,
     )

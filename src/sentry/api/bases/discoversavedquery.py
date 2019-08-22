@@ -1,13 +1,12 @@
 from __future__ import absolute_import
 from rest_framework import serializers
-from sentry.api.serializers.rest_framework import ListField
 from rest_framework.exceptions import PermissionDenied
 from sentry.models import Project, ProjectStatus
 
 
 class DiscoverSavedQuerySerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
-    projects = ListField(
+    projects = serializers.ListField(
         child=serializers.IntegerField(),
         required=False,
         allow_null=True,
@@ -16,7 +15,7 @@ class DiscoverSavedQuerySerializer(serializers.Serializer):
     start = serializers.DateTimeField(required=False)
     end = serializers.DateTimeField(required=False)
     range = serializers.CharField(required=False)
-    fields = ListField(
+    fields = serializers.ListField(
         child=serializers.CharField(),
         required=False,
         allow_null=True,
@@ -24,18 +23,18 @@ class DiscoverSavedQuerySerializer(serializers.Serializer):
     limit = serializers.IntegerField(min_value=0, max_value=1000, required=False)
     rollup = serializers.IntegerField(required=False)
     orderby = serializers.CharField(required=False)
-    conditions = ListField(
-        child=ListField(),
+    conditions = serializers.ListField(
+        child=serializers.ListField(),
         required=False,
         allow_null=True,
     )
-    aggregations = ListField(
-        child=ListField(),
+    aggregations = serializers.ListField(
+        child=serializers.ListField(),
         required=False,
         allow_null=True,
         default=[]
     )
-    groupby = ListField(
+    groupby = serializers.ListField(
         child=serializers.CharField(),
         required=False,
         allow_null=True,

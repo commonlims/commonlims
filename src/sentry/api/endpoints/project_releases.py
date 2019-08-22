@@ -10,7 +10,7 @@ from sentry.api.bases.project import ProjectEndpoint, ProjectReleasePermission
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.fields.user import UserField
 from sentry.api.serializers import serialize
-from sentry.api.serializers.rest_framework import CommitSerializer, ListField
+from sentry.api.serializers.rest_framework import CommitSerializer
 from sentry.models import (
     Activity,
     CommitFileChange,
@@ -34,7 +34,7 @@ class CommitPatchSetSerializer(serializers.Serializer):
 
 
 class CommitSerializerWithPatchSet(CommitSerializer):
-    patch_set = ListField(child=CommitPatchSetSerializer(), required=False, allow_null=False)
+    patch_set = serializers.ListField(child=CommitPatchSetSerializer(), required=False, allow_null=False)
 
 
 class ReleaseSerializer(serializers.Serializer):
@@ -43,7 +43,7 @@ class ReleaseSerializer(serializers.Serializer):
     url = serializers.URLField(required=False)
     owner = UserField(required=False)
     dateReleased = serializers.DateTimeField(required=False)
-    commits = ListField(child=CommitSerializerWithPatchSet(), required=False, allow_null=False)
+    commits = serializers.ListField(child=CommitSerializerWithPatchSet(), required=False, allow_null=False)
 
     def validate_version(self, attrs, source):
         value = attrs[source]

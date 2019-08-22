@@ -7,8 +7,6 @@ from rest_framework import serializers
 from sentry.models import Environment
 from sentry.rules import rules
 
-from . import ListField
-
 ValidationError = serializers.ValidationError
 
 
@@ -65,10 +63,10 @@ class RuleSerializer(serializers.Serializer):
     actionMatch = serializers.ChoiceField(
         choices=(('all', 'all'), ('any', 'any'), ('none', 'none'), )
     )
-    actions = ListField(
+    actions = serializers.ListField(
         child=RuleNodeField(type='action/event'),
     )
-    conditions = ListField(
+    conditions = serializers.ListField(
         child=RuleNodeField(type='condition/event'),
     )
     frequency = serializers.IntegerField(min_value=5, max_value=60 * 24 * 30)

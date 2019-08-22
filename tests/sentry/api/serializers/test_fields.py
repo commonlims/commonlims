@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from sentry.testutils import TestCase
 
-from sentry.api.serializers.rest_framework import ListField, ActorField
+from sentry.api.serializers.rest_framework import ActorField
 from sentry.models import User, Team
 
 
@@ -14,7 +14,7 @@ class ChildSerializer(serializers.Serializer):
 
 
 class DummySerializer(serializers.Serializer):
-    a_field = ListField(
+    a_field = serializers.ListField(
         child=ChildSerializer(),
         required=False,
         allow_null=False,
@@ -48,7 +48,7 @@ class TestListField(TestCase):
         serializer = DummySerializer(data=data)
         assert not serializer.is_valid()
         assert serializer.errors == {
-            'a_field': ['non_field_errors: No input provided'],
+            'a_field': [u'This field may not be null.'],
         }
 
     def test_child_validates(self):
