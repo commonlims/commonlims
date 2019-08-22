@@ -1,21 +1,12 @@
 import {Flex, Box} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
-import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 import {PanelItem} from 'app/components/panels';
 import Count from 'app/components/count';
 import Button from 'app/components/button';
 
-const TaskListItem = createReactClass({
-  displayName: 'TaskListItem',
-
-  propTypes: {
-    name: PropTypes.string.isRequired,
-    count: PropTypes.number.isRequired,
-    processKey: PropTypes.string.isRequired,
-  },
-
+class TaskListItem extends React.Component {
   selectTask() {
     const {processKey} = this.props;
     // eslint-disable-next-line no-console
@@ -23,13 +14,13 @@ const TaskListItem = createReactClass({
       'TODO: Redirect to Create New Work Batch (not implemented yet)',
       processKey
     );
-  },
+  }
 
   render() {
     const {name, count} = this.props;
 
     return (
-      <Group onClick={this.selectTask} py={1} px={0} align="center">
+      <Group onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
         <GroupSummary w={[8 / 12, 8 / 12, 6 / 12]} ml={2} mr={1} flex="1">
           {name}
         </GroupSummary>
@@ -37,12 +28,20 @@ const TaskListItem = createReactClass({
           <StyledCount value={count} />
         </Flex>
         <Flex w={200} mx={2} justify="flex-end">
-          <Button onClick={this.selectTask}>Select Samples</Button>
+          <Button onClick={this.selectTask.bind(this)}>Select Samples</Button>
         </Flex>
       </Group>
     );
-  },
-});
+  }
+}
+
+TaskListItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+  processKey: PropTypes.string.isRequired,
+};
+
+TaskListItem.displayName = 'TaskListItem';
 
 const Group = styled(PanelItem)`
   line-height: 1.1;
