@@ -5,6 +5,7 @@ Babel
 # https://github.com/jaraco/configparser/issues/27
 # https://github.com/jaraco/configparser/issues/30
 configparser!=3.5.2,!=3.5.3,!=3.7.0
+django-debug-toolbar>=1.9.1,<1.10.0
 flake8>=3.5.0,<3.6.0
 inflect
 ipython

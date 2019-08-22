@@ -234,7 +234,7 @@ MIDDLEWARE_CLASSES = (
     # 'sentry.middleware.social_auth.SentrySocialAuthExceptionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sentry.middleware.tracing.SentryTracingMiddleware',
-    'sentry.debug.middleware.DebugMiddleware',
+    # 'sentry.debug.middleware.DebugMiddleware',
 )
 
 ROOT_URLCONF = 'sentry.conf.urls'
@@ -265,7 +265,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'debug_toolbar',
+    # 'debug_toolbar',  # TODO: Removed temporarily
     'rest_framework',
     'sentry',
     'sentry.analytics',
