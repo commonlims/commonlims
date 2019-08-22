@@ -6,28 +6,43 @@ import {PanelBody} from 'app/components/panels';
 import TaskListItem from 'app/components/task/taskListItem';
 
 class ProcessListItem extends React.Component {
-  toggleProcess() {
-    // TODO
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTasks: true,
+    };
+  }
+
+  toggleTasks() {
+    this.setState({
+      showTasks: !this.state.showTasks,
+    });
   }
 
   renderTasks() {
     const {tasks} = this.props;
     return tasks.map((task, i) => {
-      const {count, name, processKey} = task;
-      return <TaskListItem name={name} count={count} processKey={processKey} key={i} />;
+      const {count, name, taskDefinitionKey} = task;
+      return (
+        <TaskListItem
+          name={name}
+          count={count}
+          taskDefinitionKey={taskDefinitionKey}
+          key={i}
+        />
+      );
     });
-  }
-
-  samplesLabelText(count) {
-    return count === 1 ? 'sample' : 'samples';
   }
 
   render() {
     const {processDefinitionName, processDefinitionKey, count} = this.props;
+    const {showTasks} = this.state;
+    const taskListClass = showTasks ? '' : 'hidden';
+    const samplesLabelText = count === 1 ? 'sample' : 'samples';
 
     return (
       <ProcessListItemContainer>
-        <Sticky>
+        <Sticky onClick={this.toggleTasks.bind(this)}>
           <StyledFlex py={1} px={0} align="center">
             <Flex flex="1">
               <Flex w={200} mx={2} justify="flex-start">
@@ -35,12 +50,12 @@ class ProcessListItem extends React.Component {
               </Flex>
             </Flex>
             <Flex w={200} mx={2} justify="flex-start">
-              {count} {this.samplesLabelText(count)}
+              {count} {samplesLabelText}
             </Flex>
             <Flex w={200} mx={2} justify="flex-end" />
           </StyledFlex>
         </Sticky>
-        <PanelBody>{this.renderTasks()}</PanelBody>
+        <PanelBody className={taskListClass}>{this.renderTasks()}</PanelBody>
       </ProcessListItemContainer>
     );
   }
@@ -48,7 +63,7 @@ class ProcessListItem extends React.Component {
 
 ProcessListItem.propTypes = {
   processDefinitionKey: PropTypes.string.isRequired,
-  processDefinitionName: PropTypes.string.isRequired,
+  processDefinitionName: PropTypes.string,
   count: PropTypes.number.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
 };

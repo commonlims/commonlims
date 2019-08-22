@@ -8,11 +8,11 @@ import Button from 'app/components/button';
 
 class TaskListItem extends React.Component {
   selectTask() {
-    const {processKey} = this.props;
+    const {taskDefinitionKey} = this.props;
     // eslint-disable-next-line no-console
     console.info(
       'TODO: Redirect to Create New Work Batch (not implemented yet)',
-      processKey
+      taskDefinitionKey
     );
   }
 
@@ -40,7 +40,7 @@ class TaskListItem extends React.Component {
 TaskListItem.propTypes = {
   name: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
-  processKey: PropTypes.string.isRequired,
+  taskDefinitionKey: PropTypes.string.isRequired,
 };
 
 TaskListItem.displayName = 'TaskListItem';
