@@ -91,7 +91,7 @@ class ProjectKeyDetailsEndpoint(ProjectEndpoint):
         except ProjectKey.DoesNotExist:
             raise ResourceDoesNotExist
 
-        serializer = KeySerializer(data=request.DATA, partial=True)
+        serializer = KeySerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
             result = serializer.object

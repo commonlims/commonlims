@@ -311,7 +311,7 @@ class OrganizationDiscoverQueryEndpoint(OrganizationEndpoint):
         ).values_list('id', 'slug')
 
         serializer = DiscoverQuerySerializer(
-            data=request.DATA, context={
+            data=request.data, context={
                 'organization': organization, 'projects': projects, 'user': request.user})
 
         if not serializer.is_valid():

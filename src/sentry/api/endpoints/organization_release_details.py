@@ -130,7 +130,7 @@ class OrganizationReleaseDetailsEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        serializer = ReleaseSerializer(data=request.DATA)
+        serializer = ReleaseSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)

@@ -97,7 +97,7 @@ class OrganizationRepositoriesEndpoint(OrganizationEndpoint):
                 'detail': ['You do not have that feature enabled']
             }, status=403)
 
-        provider_id = request.DATA.get('provider')
+        provider_id = request.data.get('provider')
 
         if provider_id is not None and provider_id.startswith('integrations:'):
             try:

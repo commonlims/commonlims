@@ -99,7 +99,7 @@ class WorkBatchFileDetailsEndpoint(WorkBatchBaseEndpoint):
         except WorkBatchFile.DoesNotExist:
             raise ResourceDoesNotExist
 
-        serializer = WorkBatchFileSerializer(data=request.DATA)
+        serializer = WorkBatchFileSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)

@@ -79,7 +79,7 @@ class AcceptProjectTransferEndpoint(Endpoint):
     @sudo_required
     def post(self, request):
         try:
-            data = request.DATA['data']
+            data = request.data['data']
         except KeyError:
             raise Http404
 
@@ -90,8 +90,8 @@ class AcceptProjectTransferEndpoint(Endpoint):
 
         transaction_id = data['transaction_id']
 
-        org_slug = request.DATA.get('organization')
-        team_id = request.DATA.get('team')
+        org_slug = request.data.get('organization')
+        team_id = request.data.get('team')
 
         if org_slug is not None and team_id is not None:
             return Response({

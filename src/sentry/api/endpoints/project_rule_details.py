@@ -54,7 +54,7 @@ class ProjectRuleDetailsEndpoint(ProjectEndpoint):
                 'frequency': rule.data.get('frequency') or Rule.DEFAULT_FREQUENCY,
             },
             context={'project': project},
-            data=request.DATA,
+            data=request.data,
             partial=True
         )
 

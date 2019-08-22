@@ -96,7 +96,7 @@ class ReleaseDeploysEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        serializer = DeploySerializer(data=request.DATA)
+        serializer = DeploySerializer(data=request.data)
 
         if serializer.is_valid():
             projects = list(release.projects.all())

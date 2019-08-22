@@ -36,7 +36,7 @@ class WorkBatchNotesEndpoint(WorkBatchBaseEndpoint):
         )
 
     def post(self, request, work_batch_id):
-        serializer = NoteSerializer(data=request.DATA, context={'work_batch': work_batch_id})
+        serializer = NoteSerializer(data=request.data, context={'work_batch': work_batch_id})
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

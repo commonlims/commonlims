@@ -51,7 +51,7 @@ class UserPasswordEndpoint(UserEndpoint):
         # pass some context to serializer otherwise when we create a new serializer instance,
         # user.password gets set to new plaintext password from request and
         # `user.has_usable_password` becomes False
-        serializer = UserPasswordSerializer(user, data=request.DATA, context={
+        serializer = UserPasswordSerializer(user, data=request.data, context={
             'is_managed': user.is_managed,
             'has_usable_password': user.has_usable_password(),
         })

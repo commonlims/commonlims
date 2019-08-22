@@ -26,7 +26,7 @@ class IntegrationRepositoryProvider(object):
         from sentry.integrations.exceptions import IntegrationError  # Django 1.9 setup issue
         from sentry.models import Repository  # Django 1.9 setup issue
         try:
-            config = self.get_repository_data(organization, request.DATA)
+            config = self.get_repository_data(organization, request.data)
             result = self.build_repository_config(
                 organization=organization,
                 data=config,

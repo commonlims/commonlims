@@ -47,7 +47,7 @@ class SentryAppInstallationsEndpoint(SentryAppInstallationsBaseEndpoint):
 
     @requires_feature('organizations:internal-catchall')
     def post(self, request, organization):
-        serializer = SentryAppInstallationsSerializer(data=request.DATA)
+        serializer = SentryAppInstallationsSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)

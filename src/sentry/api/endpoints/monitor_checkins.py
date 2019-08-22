@@ -97,7 +97,7 @@ class MonitorCheckInsEndpoint(Endpoint):
         :auth: required
         """
         serializer = CheckInSerializer(
-            data=request.DATA,
+            data=request.data,
             context={
                 'project': project,
                 'request': request,

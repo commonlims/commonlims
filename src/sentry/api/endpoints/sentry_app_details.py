@@ -27,7 +27,7 @@ class SentryAppDetailsEndpoint(SentryAppBaseEndpoint):
 
             return Response(status=404)
 
-        serializer = SentryAppSerializer(data=request.DATA, partial=True)
+        serializer = SentryAppSerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
             result = serializer.object

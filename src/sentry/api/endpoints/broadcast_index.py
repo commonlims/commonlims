@@ -95,7 +95,7 @@ class BroadcastIndexEndpoint(Endpoint):
         )
 
     def put(self, request):
-        validator = BroadcastValidator(data=request.DATA, partial=True)
+        validator = BroadcastValidator(data=request.data, partial=True)
         if not validator.is_valid():
             return self.respond(validator.errors, status=400)
 
@@ -140,7 +140,7 @@ class BroadcastIndexEndpoint(Endpoint):
         if not (is_active_superuser(request) and request.access.has_permission('broadcasts.admin')):
             return self.respond(status=401)
 
-        validator = AdminBroadcastValidator(data=request.DATA)
+        validator = AdminBroadcastValidator(data=request.data)
         if not validator.is_valid():
             return self.respond(validator.errors, status=400)
 
