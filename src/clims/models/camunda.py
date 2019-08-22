@@ -50,7 +50,7 @@ class CamundaTask(models.Model):
     name = models.TextField(db_column='name_')
     parent_task = models.TextField(db_column='parent_task_id')
     description = models.TextField(db_column='description_')
-    task_def_key = models.TextField(db_column='task_def_key_')
+    task_definition_key = models.TextField(db_column='task_def_key_')
     owner = models.TextField(db_column='owner_')
     assignee = models.TextField(db_column='assignee_')
     delegation = models.TextField(db_column='delegation_')
