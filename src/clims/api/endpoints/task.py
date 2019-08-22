@@ -11,10 +11,18 @@ class UserTaskAggregateEndpoint(OrganizationEndpoint):
         from django.db.models import Count
         tasks = CamundaTask.objects.select_related('process_definition')
         tasks_count = tasks.values(
+            'task_definition_key',
             'name',
             'process_definition__name',
             'process_definition__key').annotate(
             count=Count('name'))
+
+        def py_to_js(name):
+            elements = name.split("_")
+            ret = list(elements[0])
+            for element in elements[1:]:
+                ret.append(element.capitalize())
+            return "".join(ret)
 
         def serialize(entries):
             # A serializer that renames e.g. process__name to processName.
@@ -22,11 +30,7 @@ class UserTaskAggregateEndpoint(OrganizationEndpoint):
             def rename_keys(entry):
                 new_entry = dict()
                 for key in entry:
-                    if "__" in key:
-                        a, b = key.split("__")
-                        new_key = a + b.capitalize()
-                    else:
-                        new_key = key
+                    new_key = py_to_js(key)
                     new_entry[new_key] = entry[key]
                 return new_entry
             return [rename_keys(entry) for entry in entries]
