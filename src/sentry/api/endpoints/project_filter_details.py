@@ -26,6 +26,6 @@ class ProjectFilterDetailsEndpoint(ProjectEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        filter.enable(serializer.object)
+        filter.enable(serializer.validated_data)
 
         return Response(status=201)

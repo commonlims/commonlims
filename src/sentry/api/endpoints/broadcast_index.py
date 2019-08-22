@@ -99,7 +99,7 @@ class BroadcastIndexEndpoint(Endpoint):
         if not validator.is_valid():
             return self.respond(validator.errors, status=400)
 
-        result = validator.object
+        result = validator.validated_data
 
         queryset = Broadcast.objects.filter(
             is_active=True,
@@ -144,7 +144,7 @@ class BroadcastIndexEndpoint(Endpoint):
         if not validator.is_valid():
             return self.respond(validator.errors, status=400)
 
-        result = validator.object
+        result = validator.validated_data
 
         with transaction.atomic():
             broadcast = Broadcast.objects.create(

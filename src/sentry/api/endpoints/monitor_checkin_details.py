@@ -111,7 +111,7 @@ class MonitorCheckInDetailsEndpoint(Endpoint):
         if not serializer.is_valid():
             return self.respond(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
 
         current_datetime = timezone.now()
         params = {

@@ -30,7 +30,7 @@ class SentryAppDetailsEndpoint(SentryAppBaseEndpoint):
         serializer = SentryAppSerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             updated_app = Updater.run(
                 sentry_app=sentry_app,

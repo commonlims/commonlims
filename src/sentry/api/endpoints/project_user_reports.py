@@ -134,7 +134,7 @@ class ProjectUserReportsEndpoint(ProjectEndpoint, EnvironmentMixin):
         if not serializer.is_valid():
             return self.respond(serializer.errors, status=400)
 
-        report = serializer.object
+        report = serializer.validated_data
         report.project = project
 
         # TODO(dcramer): we should probably create the user if they dont

@@ -53,7 +53,7 @@ class OrganizationRepositoryDetailsEndpoint(OrganizationEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
         update_kwargs = {}
         if result.get('status'):
             if result['status'] in ('visible', 'active'):

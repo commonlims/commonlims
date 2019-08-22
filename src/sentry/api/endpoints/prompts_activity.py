@@ -69,7 +69,7 @@ class PromptsActivityEndpoint(Endpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        serialized = serializer.object
+        serialized = serializer.validated_data
         feature = serialized['feature']
         status = serialized['status']
 

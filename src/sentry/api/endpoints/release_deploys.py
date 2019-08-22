@@ -99,7 +99,7 @@ class ReleaseDeploysEndpoint(OrganizationReleasesBaseEndpoint):
 
         if serializer.is_valid():
             projects = list(release.projects.all())
-            result = serializer.object
+            result = serializer.validated_data
 
             env = Environment.objects.get_or_create(
                 name=result['environment'],

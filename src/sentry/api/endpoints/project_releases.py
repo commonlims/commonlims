@@ -139,7 +139,7 @@ class ProjectReleasesEndpoint(ProjectEndpoint, EnvironmentMixin):
         serializer = ReleaseSerializer(data=request.data)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             # release creation is idempotent to simplify user
             # experiences

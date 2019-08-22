@@ -378,7 +378,7 @@ def update_groups(request, projects, organization_id, search_fn):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-    result = dict(serializer.object)
+    result = dict(serializer.validated_data)
 
     # so we won't have to requery for each group
     project_lookup = {p.id: p for p in projects}

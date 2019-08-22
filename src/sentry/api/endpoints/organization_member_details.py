@@ -146,7 +146,7 @@ class OrganizationMemberDetailsEndpoint(OrganizationEndpoint):
             auth_provider = None
 
         allowed_roles = None
-        result = serializer.object
+        result = serializer.validated_data
 
         # XXX(dcramer): if/when this expands beyond reinvite we need to check
         # access level

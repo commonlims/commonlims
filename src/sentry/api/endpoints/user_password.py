@@ -20,7 +20,7 @@ class UserPasswordSerializer(serializers.ModelSerializer):
         fields = ('password', 'passwordNew', 'passwordVerify', )
 
     def validate_password(self, value):
-        if self.context['has_usable_password'] and not self.object.check_password(value):
+        if self.context['has_usable_password'] and not self.instance.check_password(value):
             raise serializers.ValidationError('The password you entered is not correct.')
         return value
 
@@ -58,9 +58,9 @@ class UserPasswordEndpoint(UserEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        result = serializer.object
+        result = serializer.validated_data
 
-        user.set_password(result.passwordNew)
+        user.set_password(result['passwordNew'])
         user.refresh_session_nonce(request._request)
         user.clear_lost_passwords()
 

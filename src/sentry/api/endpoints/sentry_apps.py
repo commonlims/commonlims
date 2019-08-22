@@ -27,7 +27,7 @@ class SentryAppsEndpoint(SentryAppsBaseEndpoint):
         serializer = SentryAppSerializer(data=request.json_body)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             sentry_app = Creator.run(
                 name=result.get('name'),

@@ -91,9 +91,9 @@ class UserNotificationDetailsEndpoint(UserEndpoint):
         serializer = UserNotificationDetailsSerializer(data=request.data)
 
         if serializer.is_valid():
-            for key in serializer.object:
+            for key in serializer.validated_data:
                 db_key = USER_OPTION_SETTINGS[key]['key']
-                val = six.text_type(int(serializer.object[key]))
+                val = six.text_type(int(serializer.validated_data[key]))
                 (uo, created) = UserOption.objects.get_or_create(
                     user=user, key=db_key, project=None, organization=None)
                 uo.update(value=val)

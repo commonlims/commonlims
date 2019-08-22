@@ -57,7 +57,7 @@ class SampleGroupDetailsEndpoint(Endpoint):
         serializer = SampleGroupSerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
             csv = result['csv'].split("\n")
             header = csv[0]
             body = csv[1:]

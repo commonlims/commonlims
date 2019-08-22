@@ -99,17 +99,17 @@ class RuleSerializer(serializers.Serializer):
 
     def save(self, rule):
         rule.project = self.context['project']
-        if 'environment' in self.data:
-            rule.environment_id = self.data['environment']
-        if self.data.get('name'):
-            rule.label = self.data['name']
-        if self.data.get('actionMatch'):
-            rule.data['action_match'] = self.data['actionMatch']
-        if self.data.get('actions') is not None:
-            rule.data['actions'] = self.data['actions']
-        if self.data.get('conditions') is not None:
-            rule.data['conditions'] = self.data['conditions']
-        if self.data.get('frequency'):
-            rule.data['frequency'] = self.data['frequency']
+        if 'environment' in self.initial_data:
+            rule.environment_id = self.initial_data['environment']
+        if self.initial_data.get('name'):
+            rule.label = self.initial_data['name']
+        if self.initial_data.get('actionMatch'):
+            rule.data['action_match'] = self.initial_data['actionMatch']
+        if self.initial_data.get('actions') is not None:
+            rule.data['actions'] = self.initial_data['actions']
+        if self.initial_data.get('conditions') is not None:
+            rule.data['conditions'] = self.initial_data['conditions']
+        if self.initial_data.get('frequency'):
+            rule.data['frequency'] = self.initial_data['frequency']
         rule.save()
         return rule

@@ -104,7 +104,7 @@ class WorkBatchFileDetailsEndpoint(WorkBatchBaseEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
 
         work_batch_file.update(name=result['name'])
 

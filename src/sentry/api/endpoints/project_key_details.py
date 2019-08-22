@@ -94,7 +94,7 @@ class ProjectKeyDetailsEndpoint(ProjectEndpoint):
         serializer = KeySerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             if result.get('name'):
                 key.label = result['name']

@@ -216,7 +216,7 @@ class OrganizationIndexEndpoint(Endpoint):
         serializer = OrganizationSerializer(data=request.data)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             try:
                 with transaction.atomic():

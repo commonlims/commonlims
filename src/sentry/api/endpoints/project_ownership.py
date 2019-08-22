@@ -55,18 +55,18 @@ class ProjectOwnershipSerializer(serializers.Serializer):
         ownership = self.context['ownership']
 
         changed = False
-        if 'raw' in self.object:
-            raw = self.object['raw']
+        if 'raw' in self.validated_data:
+            raw = self.validated_data['raw']
             if not raw.strip():
                 raw = None
 
             if ownership.raw != raw:
                 ownership.raw = raw
-                ownership.schema = self.object.get('schema')
+                ownership.schema = self.validated_data.get('schema')
                 changed = True
 
-        if 'fallthrough' in self.object:
-            fallthrough = self.object['fallthrough']
+        if 'fallthrough' in self.validated_data:
+            fallthrough = self.validated_data['fallthrough']
             if ownership.fallthrough != fallthrough:
                 ownership.fallthrough = fallthrough
                 changed = True

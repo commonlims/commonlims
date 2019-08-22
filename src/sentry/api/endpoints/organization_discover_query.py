@@ -315,7 +315,7 @@ class OrganizationDiscoverQueryEndpoint(OrganizationEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        serialized = serializer.object
+        serialized = serializer.validated_data
 
         has_aggregations = len(serialized.get('aggregations')) > 0
 

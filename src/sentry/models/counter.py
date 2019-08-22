@@ -95,14 +95,14 @@ def increment_project_counter(project, delta=1):
 
 # this must be idempotent because it seems to execute twice
 # (at least during test runs)
-def create_counter_function(db, created_models, app=None, **kwargs):
-    if app and app.__name__ != 'sentry.models':
+def create_counter_function(sender, using, **kwargs):
+    if sender.label != "sentry":
         return
 
-    if not is_postgres(db):
+    if not is_postgres(using):
         return
 
-    cursor = connections[db].cursor()
+    cursor = connections[using].cursor()
     cursor.execute(
         '''
         create or replace function sentry_increment_project_counter(

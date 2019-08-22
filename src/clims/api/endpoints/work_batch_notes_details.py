@@ -52,7 +52,7 @@ class WorkBatchNotesDetailsEndpoint(GroupEndpoint):
 
         if serializer.is_valid():
             # Would be nice to have a last_modified timestamp we could bump here
-            note.data = dict(serializer.object)
+            note.data = dict(serializer.validated_data)
             note.save()
 
             return Response(serialize(note, request.user), status=200)

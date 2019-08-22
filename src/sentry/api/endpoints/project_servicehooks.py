@@ -120,7 +120,7 @@ class ProjectServiceHooksEndpoint(ProjectEndpoint):
         if not validator.is_valid():
             return self.respond(validator.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        result = validator.object
+        result = validator.validated_data
 
         with transaction.atomic():
             hook = ServiceHook.objects.create(
