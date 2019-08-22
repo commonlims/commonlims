@@ -195,7 +195,7 @@ class OrganizationSerializer(serializers.Serializer):
         changed_data = {}
 
         for key, option, type_, default_value in ORG_OPTIONS:
-            if key not in self.init_data:
+            if key not in self.initial_data:
                 continue
             try:
                 option_inst = OrganizationOption.objects.get(
@@ -204,33 +204,33 @@ class OrganizationSerializer(serializers.Serializer):
                 OrganizationOption.objects.set_value(
                     organization=org,
                     key=option,
-                    value=type_(self.init_data[key]),
+                    value=type_(self.initial_data[key]),
                 )
 
-                if self.init_data[key] != default_value:
-                    changed_data[key] = u'to {}'.format(self.init_data[key])
+                if self.initial_data[key] != default_value:
+                    changed_data[key] = u'to {}'.format(self.initial_data[key])
             else:
-                option_inst.value = self.init_data[key]
+                option_inst.value = self.initial_data[key]
                 # check if ORG_OPTIONS changed
                 if option_inst.has_changed('value'):
                     old_val = option_inst.old_value('value')
                     changed_data[key] = u'from {} to {}'.format(old_val, option_inst.value)
                 option_inst.save()
 
-        if 'openMembership' in self.init_data:
-            org.flags.allow_joinleave = self.init_data['openMembership']
-        if 'allowSharedIssues' in self.init_data:
-            org.flags.disable_shared_issues = not self.init_data['allowSharedIssues']
-        if 'enhancedPrivacy' in self.init_data:
-            org.flags.enhanced_privacy = self.init_data['enhancedPrivacy']
-        if 'isEarlyAdopter' in self.init_data:
-            org.flags.early_adopter = self.init_data['isEarlyAdopter']
-        if 'require2FA' in self.init_data:
-            org.flags.require_2fa = self.init_data['require2FA']
-        if 'name' in self.init_data:
-            org.name = self.init_data['name']
-        if 'slug' in self.init_data:
-            org.slug = self.init_data['slug']
+        if 'openMembership' in self.initial_data:
+            org.flags.allow_joinleave = self.initial_data['openMembership']
+        if 'allowSharedIssues' in self.initial_data:
+            org.flags.disable_shared_issues = not self.initial_data['allowSharedIssues']
+        if 'enhancedPrivacy' in self.initial_data:
+            org.flags.enhanced_privacy = self.initial_data['enhancedPrivacy']
+        if 'isEarlyAdopter' in self.initial_data:
+            org.flags.early_adopter = self.initial_data['isEarlyAdopter']
+        if 'require2FA' in self.initial_data:
+            org.flags.require_2fa = self.initial_data['require2FA']
+        if 'name' in self.initial_data:
+            org.name = self.initial_data['name']
+        if 'slug' in self.initial_data:
+            org.slug = self.initial_data['slug']
 
         org_tracked_field = {
             'name': org.name,
@@ -259,14 +259,14 @@ class OrganizationSerializer(serializers.Serializer):
 
         org.save()
 
-        if 'avatar' in self.init_data or 'avatarType' in self.init_data:
+        if 'avatar' in self.initial_data or 'avatarType' in self.initial_data:
             OrganizationAvatar.save_avatar(
                 relation={'organization': org},
-                type=self.init_data.get('avatarType', 'upload'),
-                avatar=self.init_data.get('avatar'),
+                type=self.initial_data.get('avatarType', 'upload'),
+                avatar=self.initial_data.get('avatar'),
                 filename=u'{}.png'.format(org.slug),
             )
-        if 'require2FA' in self.init_data and self.init_data['require2FA'] is True:
+        if 'require2FA' in self.initial_data and self.initial_data['require2FA'] is True:
             org.handle_2fa_required(self.context['request'])
         return org, changed_data
 
@@ -277,9 +277,9 @@ class OwnerOrganizationSerializer(OrganizationSerializer):
 
     def save(self, *args, **kwargs):
         org = self.context['organization']
-        cancel_deletion = 'cancelDeletion' in self.init_data and org.status in DELETION_STATUSES
-        if 'defaultRole' in self.init_data:
-            org.default_role = self.init_data['defaultRole']
+        cancel_deletion = 'cancelDeletion' in self.initial_data and org.status in DELETION_STATUSES
+        if 'defaultRole' in self.initial_data:
+            org.default_role = self.initial_data['defaultRole']
         if cancel_deletion:
             org.status = OrganizationStatus.VISIBLE
         return super(OwnerOrganizationSerializer, self).save(*args, **kwargs)
