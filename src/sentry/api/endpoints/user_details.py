@@ -68,9 +68,10 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def restore_object(self, attrs, instance=None):
-        instance = super(BaseUserSerializer, self).restore_object(attrs, instance)
-        instance.is_active = attrs.get('isActive', instance.is_active)
+    def update(self, instance, validated_data):
+        instance = super(BaseUserSerializer, self).update(instance, validated_data)
+        instance.is_active = validated_data.get('isActive', instance.is_active)
+        instance.save()
         return instance
 
 
