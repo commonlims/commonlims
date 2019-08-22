@@ -27,6 +27,7 @@ class UserTaskAggregateEndpoint(OrganizationEndpoint):
                         new_key = a + b.capitalize()
                     else:
                         new_key = key
+                    new_key = new_key.replace("process_definition", "processDefinition")
                     new_entry[new_key] = entry[key]
                 return new_entry
             return [rename_keys(entry) for entry in entries]
