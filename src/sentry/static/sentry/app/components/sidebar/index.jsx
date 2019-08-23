@@ -249,8 +249,16 @@ class Sidebar extends React.Component {
                   index
                   onClick={this.hidePanel}
                   icon={<InlineSvg src="icon-projects" />}
-                  label={t('Tasks')}
+                  label={t('Available Work')}
                   to={`/${organization.slug}/tasks/`}
+                />
+                <SidebarItem
+                  {...sidebarItemProps}
+                  index
+                  onClick={this.hidePanel}
+                  icon={<InlineSvg src="icon-projects" />}
+                  label={t('Work in Progress')}
+                  to={`/${organization.slug}/work-batches/`}
                 />
                 <SidebarItem
                   {...sidebarItemProps}

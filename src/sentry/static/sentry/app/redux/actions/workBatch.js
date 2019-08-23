@@ -29,7 +29,7 @@ export const workBatchesGet = () => dispatch => {
   // TODO: create a new API client to replace api.jsx
   // and use axios instead of jquery there
   return axios
-    .get('/api/0/organizations/sentry/work-batches/')
+    .get('/api/0/organizations/lab/work-batches/')
     .then(res => dispatch(workBatchesGetSuccess(res.data)))
     .catch(err => dispatch(workBatchesGetFailure(err)));
 };
