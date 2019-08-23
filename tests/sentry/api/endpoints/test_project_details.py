@@ -81,7 +81,7 @@ class ProjectDetailsTest(APITestCase):
         assert response.data['slug'] == 'foobar'
         assert response.data['detail']['extra']['url'] == '/api/0/projects/%s/%s/' % (
             project.organization.slug, 'foobar')
-        assert response['Location'] == 'http://testserver/api/0/projects/%s/%s/' % (
+        assert response['Location'] == '/api/0/projects/%s/%s/' % (
             project.organization.slug, 'foobar')
 
 

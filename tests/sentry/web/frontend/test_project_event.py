@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from django.core.urlresolvers import reverse
 from sentry.testutils import TestCase
-from sentry import options
 
 
 class ProjectEventTest(TestCase):
@@ -31,8 +30,7 @@ class ProjectEventTest(TestCase):
                     self.project.slug,
                     'a' * 32]))
         assert resp.status_code == 302
-        assert resp['Location'] == '{}/{}/{}/issues/{}/events/{}/'.format(
-            options.get('system.url-prefix'),
+        assert resp['Location'] == '/{}/{}/issues/{}/events/{}/'.format(
             self.org.slug,
             self.project.slug,
             self.group.id,
