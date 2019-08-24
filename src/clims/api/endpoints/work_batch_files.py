@@ -4,6 +4,7 @@ import re
 import logging
 from django.db import transaction
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 
 from sentry.api.base import DocSection
 from sentry.api.content_negotiation import ConditionalContentNegotiation
@@ -21,6 +22,7 @@ _filename_re = re.compile(r"[\n\t\r\f\v\\]")
 class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
     doc_section = DocSection.WORKBATCH
     content_negotiation_class = ConditionalContentNegotiation
+    parser_classes = (MultiPartParser,)
 
     def get(self, request, work_batch_id):
         """
@@ -79,7 +81,7 @@ class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
         :auth: required
         """
 
-        from sentry.models.work_batch import WorkBatch
+        from sentry.models.workbatch import WorkBatch
 
         try:
             work_batch = WorkBatch.objects.get(pk=int(work_batch_id))

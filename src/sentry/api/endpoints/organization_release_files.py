@@ -5,6 +5,7 @@ import logging
 from django.db import IntegrityError, transaction
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import MultiPartParser
 
 from sentry.api.base import DocSection
 from sentry.api.bases.organization import OrganizationReleasesBaseEndpoint
@@ -21,6 +22,7 @@ _filename_re = re.compile(r"[\n\t\r\f\v\\]")
 class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
     doc_section = DocSection.RELEASES
     content_negotiation_class = ConditionalContentNegotiation
+    parser_classes = (MultiPartParser,)
 
     def get(self, request, organization, version):
         """

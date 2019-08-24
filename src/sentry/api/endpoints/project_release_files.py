@@ -5,6 +5,8 @@ import logging
 from django.db import IntegrityError, transaction
 from six import BytesIO
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+
 
 from sentry.api.base import DocSection
 from sentry.api.bases.project import ProjectEndpoint, ProjectReleasePermission
@@ -53,6 +55,7 @@ class ProjectReleaseFilesEndpoint(ProjectEndpoint):
     doc_section = DocSection.RELEASES
     content_negotiation_class = ConditionalContentNegotiation
     permission_classes = (ProjectReleasePermission, )
+    parser_classes = (MultiPartParser,)
 
     @attach_scenarios([list_files_scenario])
     def get(self, request, project, version):
