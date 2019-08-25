@@ -75,10 +75,10 @@ class Actor(namedtuple('Actor', 'id type')):
 
 
 class ActorField(serializers.WritableField):
-    def to_native(self, obj):
+    def to_representation(self, obj):
         return obj.get_actor_id()
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         if not data:
             return None
 

@@ -10,7 +10,7 @@ class MultipleChoiceField(serializers.WritableField):
          'the available choices.'),
     }
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         if isinstance(data, list):
             for item in data:
                 if item not in self.choices:
@@ -22,7 +22,7 @@ class MultipleChoiceField(serializers.WritableField):
             return data
         raise serializers.ValidationError('Please provide a valid list.')
 
-    def to_native(self, value):
+    def to_representation(self, value):
         return value
 
     def __init__(self, choices=None, *args, **kwargs):

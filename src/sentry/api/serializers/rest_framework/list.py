@@ -18,10 +18,10 @@ class ListField(WritableField):
         if self.child:
             self.child.initialize(parent, field_name)
 
-    def to_native(self, value):
+    def to_representation(self, value):
         return value
 
-    def from_native(self, value):
+    def to_internal_value(self, value):
         if value is None:
             return None
 
@@ -35,7 +35,7 @@ class ListField(WritableField):
         if self.child is None:
             return value
 
-        return [self.child.from_native(item) for item in value]
+        return [self.child.to_internal_value(item) for item in value]
 
     def format_child_errors(self):
         errors = []
@@ -54,7 +54,7 @@ class ListField(WritableField):
             raise ValidationError(msg % type(value).__name__)
 
         if self.child:
-            # the `self.child.from_native` call might have already
+            # the `self.child.to_internal_value` call might have already
             # validated/changed data so check for child errors first
             if self.child._errors:
                 raise ValidationError(self.format_child_errors())

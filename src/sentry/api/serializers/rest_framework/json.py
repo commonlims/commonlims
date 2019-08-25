@@ -15,7 +15,7 @@ class JSONField(WritableField):
         'invalid': _('Value must be valid JSON.')
     }
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         try:
             json.dumps(data)
         except (TypeError, ValueError):

@@ -17,10 +17,10 @@ class RuleNodeField(serializers.WritableField):
         super(RuleNodeField, self).__init__()
         self.type_name = type
 
-    def to_native(self, obj):
+    def to_representation(self, obj):
         return obj
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         if not isinstance(data, dict):
             msg = 'Incorrect type. Expected a mapping, but got %s'
             raise ValidationError(msg % type(data).__name__)

@@ -31,12 +31,12 @@ class AvatarField(serializers.WritableField):
         self.min_dimension = min_dimension
         self.max_dimension = max_dimension
 
-    def to_native(self, obj):
+    def to_representation(self, obj):
         if not obj:
             return ''
         return obj.getvalue()
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         if not data:
             return None
         data = b64decode(data)
