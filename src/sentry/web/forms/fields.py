@@ -10,7 +10,7 @@ from __future__ import absolute_import
 import six
 
 from django.forms.widgets import RadioFieldRenderer, TextInput, Widget
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.forms import (
     Field, CharField, EmailField, TypedChoiceField, ValidationError
 )
