@@ -31,12 +31,12 @@ class DiscoverQuerySerializer(serializers.Serializer):
         required=True,
         allow_null=False,
     )
-    start = serializers.CharField(required=False, allow_none=True)
-    end = serializers.CharField(required=False, allow_none=True)
-    range = serializers.CharField(required=False, allow_none=True)
-    statsPeriod = serializers.CharField(required=False, allow_none=True)
-    statsPeriodStart = serializers.CharField(required=False, allow_none=True)
-    statsPeriodEnd = serializers.CharField(required=False, allow_none=True)
+    start = serializers.CharField(required=False, allow_null=True)
+    end = serializers.CharField(required=False, allow_null=True)
+    range = serializers.CharField(required=False, allow_null=True)
+    statsPeriod = serializers.CharField(required=False, allow_null=True)
+    statsPeriodStart = serializers.CharField(required=False, allow_null=True)
+    statsPeriodEnd = serializers.CharField(required=False, allow_null=True)
     fields = serializers.ListField(
         child=serializers.CharField(),
         required=False,

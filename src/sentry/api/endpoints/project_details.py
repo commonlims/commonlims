@@ -88,7 +88,7 @@ class ProjectAdminSerializer(ProjectMemberSerializer):
     securityToken = serializers.RegexField(r'^[-a-zA-Z0-9+/=\s]+$', max_length=255)
     securityTokenHeader = serializers.RegexField(r'^[a-zA-Z0-9_\-]+$', max_length=20)
     verifySSL = serializers.BooleanField(required=False)
-    defaultEnvironment = serializers.CharField(required=False, allow_none=True)
+    defaultEnvironment = serializers.CharField(required=False, allow_null=True)
     dataScrubber = serializers.BooleanField(required=False)
     dataScrubberDefaults = serializers.BooleanField(required=False)
     sensitiveFields = serializers.ListField(child=serializers.CharField(), required=False)

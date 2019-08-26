@@ -59,7 +59,7 @@ class RuleNodeField(serializers.Field):
 
 class RuleSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=64)
-    environment = serializers.CharField(max_length=64, required=False, allow_none=True)
+    environment = serializers.CharField(max_length=64, required=False, allow_null=True)
     actionMatch = serializers.ChoiceField(
         choices=(('all', 'all'), ('any', 'any'), ('none', 'none'), )
     )
