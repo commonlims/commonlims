@@ -17,19 +17,19 @@ class TaskListItem extends React.Component {
   }
 
   render() {
-    const {name, count} = this.props;
+    const {name, count, flexMargin, flexWidth} = this.props;
 
     return (
       <Group onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
         <Flex flex="1">
-          <GroupSummary w={200} mx={2} justify="flex-start">
+          <GroupSummary w={flexWidth} mx={flexMargin} justify="flex-start">
             {name}
           </GroupSummary>
         </Flex>
-        <Flex w={200} mx={2} justify="flex-start">
+        <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
           <StyledCount value={count} />
         </Flex>
-        <Flex w={200} mx={2} justify="flex-end">
+        <Flex w={flexWidth} mx={flexMargin} justify="flex-end">
           <Button onClick={this.selectTask.bind(this)}>Select Samples</Button>
         </Flex>
       </Group>
@@ -41,6 +41,13 @@ TaskListItem.propTypes = {
   name: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
   taskDefinitionKey: PropTypes.string.isRequired,
+  flexWidth: PropTypes.number,
+  flexMargin: PropTypes.number,
+};
+
+TaskListItem.defaultProps = {
+  flexWidth: 200,
+  flexMargin: 2,
 };
 
 TaskListItem.displayName = 'TaskListItem';

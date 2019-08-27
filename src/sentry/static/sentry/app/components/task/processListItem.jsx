@@ -11,6 +11,8 @@ class ProcessListItem extends React.Component {
     this.state = {
       showTasks: true,
     };
+    this.flexWidth = 300;
+    this.flexMargin = 2;
   }
 
   toggleTasks() {
@@ -28,6 +30,8 @@ class ProcessListItem extends React.Component {
           name={name}
           count={count}
           taskDefinitionKey={taskDefinitionKey}
+          flexWidth={this.flexWidth}
+          flexMargin={this.flexMargin}
           key={i}
         />
       );
@@ -45,14 +49,14 @@ class ProcessListItem extends React.Component {
         <Sticky onClick={this.toggleTasks.bind(this)}>
           <StyledFlex py={1} px={0} align="center">
             <Flex flex="1">
-              <Flex w={200} mx={2} justify="flex-start">
+              <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-start">
                 {processDefinitionName || processDefinitionKey}
               </Flex>
             </Flex>
-            <Flex w={200} mx={2} justify="flex-start">
+            <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-start">
               {count} {samplesLabelText}
             </Flex>
-            <Flex w={200} mx={2} justify="flex-end" />
+            <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-end" />
           </StyledFlex>
         </Sticky>
         <PanelBody className={taskListClass}>{this.renderTasks()}</PanelBody>
