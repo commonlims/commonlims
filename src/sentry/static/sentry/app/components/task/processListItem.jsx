@@ -72,7 +72,15 @@ ProcessListItem.propTypes = {
   processDefinitionKey: PropTypes.string.isRequired,
   processDefinitionName: PropTypes.string,
   count: PropTypes.number.isRequired,
-  tasks: PropTypes.arrayOf(PropTypes.shape({})),
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      count: PropTypes.number.isRequired,
+      taskDefinitionKey: PropTypes.string.isRequired,
+      flexWidth: PropTypes.number,
+      flexMargin: PropTypes.number,
+    })
+  ),
 };
 
 ProcessListItem.displayName = 'ProcessListItem';
