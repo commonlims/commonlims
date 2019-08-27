@@ -1,9 +1,7 @@
 import {Flex, Box} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'react-emotion';
 import {PanelItem} from 'app/components/panels';
-import Count from 'app/components/count';
 import Button from 'app/components/button';
 
 class TaskListItem extends React.Component {
@@ -20,19 +18,19 @@ class TaskListItem extends React.Component {
     const {name, count, flexMargin, flexWidth} = this.props;
 
     return (
-      <Group onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
+      <PanelItem onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
         <Flex flex="1">
-          <GroupSummary w={flexWidth} mx={flexMargin} justify="flex-start">
+          <Box w={flexWidth} mx={flexMargin} justify="flex-start">
             {name}
-          </GroupSummary>
+          </Box>
         </Flex>
         <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
-          <StyledCount value={count} />
+          <span className="task-list-item-sample-count">{count}</span>
         </Flex>
         <Flex w={flexWidth} mx={flexMargin} justify="flex-end">
           <Button onClick={this.selectTask.bind(this)}>Select Samples</Button>
         </Flex>
-      </Group>
+      </PanelItem>
     );
   }
 }
@@ -51,18 +49,5 @@ TaskListItem.defaultProps = {
 };
 
 TaskListItem.displayName = 'TaskListItem';
-
-const Group = styled(PanelItem)`
-  line-height: 1.1;
-`;
-
-const GroupSummary = styled(Box)`
-  overflow: hidden;
-`;
-
-const StyledCount = styled(Count)`
-  font-size: 18px;
-  color: ${p => p.theme.gray3};
-`;
 
 export default TaskListItem;
