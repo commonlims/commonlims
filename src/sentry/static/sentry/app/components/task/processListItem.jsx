@@ -46,7 +46,10 @@ class ProcessListItem extends React.Component {
 
     return (
       <ProcessListItemContainer>
-        <Sticky onClick={this.toggleTasks.bind(this)}>
+        <Sticky
+          onClick={this.toggleTasks.bind(this)}
+          className="process-list-item-header"
+        >
           <StyledFlex py={1} px={0} align="center">
             <Flex flex="1">
               <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-start">
