@@ -36,9 +36,7 @@ export class Tasks extends React.Component {
   }
 
   groupTasksByProcess(tasks) {
-    const processes = {};
-
-    tasks.forEach((task, i) => {
+    let processes = tasks.reduce((r, task) => {
       const {
         count,
         name,
@@ -49,18 +47,19 @@ export class Tasks extends React.Component {
 
       const prunedTask = {count, name, taskDefinitionKey};
 
-      if (!processes[processDefinitionKey]) {
-        processes[processDefinitionKey] = {
-          processDefinitionKey,
-          processDefinitionName,
-          count,
-        };
-        processes[processDefinitionKey].tasks = [prunedTask];
-      } else {
-        processes[processDefinitionKey].count += count;
-        processes[processDefinitionKey].tasks.push(prunedTask);
-      }
-    });
+      r[processDefinitionKey] = r[processDefinitionKey]
+        ? {...r[processDefinitionKey]}
+        : {
+            tasks: [],
+            count: 0,
+            processDefinitionKey,
+            processDefinitionName,
+          };
+      r[processDefinitionKey].count += count;
+      r[processDefinitionKey].tasks.push(prunedTask);
+
+      return r;
+    }, {});
 
     const arrProcesses = [];
     for (let key in processes) {
