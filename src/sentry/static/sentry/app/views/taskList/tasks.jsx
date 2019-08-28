@@ -8,7 +8,7 @@ import ProcessListItem from 'app/components/task/processListItem';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 
-class Tasks extends React.Component {
+export class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -35,8 +35,7 @@ class Tasks extends React.Component {
     return body;
   }
 
-  groupTasksByProcess() {
-    const {tasks} = this.props;
+  groupTasksByProcess(tasks) {
     const processes = {};
 
     tasks.forEach((task, i) => {
@@ -72,7 +71,8 @@ class Tasks extends React.Component {
   }
 
   renderProcesses() {
-    const processes = this.groupTasksByProcess();
+    const {tasks} = this.props;
+    const processes = this.groupTasksByProcess(tasks);
 
     const items = processes.map((p, i) => {
       return <ProcessListItem {...p} key={i} />;
@@ -108,7 +108,15 @@ class Tasks extends React.Component {
 
 Tasks.propTypes = {
   getTasks: PropTypes.func,
-  tasks: PropTypes.arrayOf(PropTypes.shape({})),
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      count: PropTypes.number.isRequired,
+      taskDefinitionKey: PropTypes.string.isRequired,
+      processDefinitionKey: PropTypes.string.isRequired,
+      processDefinitionName: PropTypes.string,
+    })
+  ),
   loading: PropTypes.bool,
   errorMessage: PropTypes.string,
 };
