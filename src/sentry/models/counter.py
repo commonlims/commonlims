@@ -8,17 +8,17 @@ sentry.models.counter
 
 from __future__ import absolute_import
 
-from django.db import connection, connections
+from django.db import connection, connections, models
 from django.db.models.signals import post_migrate
 
-from sentry.db.models import (FlexibleForeignKey, Model, sane_repr, BoundedBigIntegerField)
+from sentry.db.models import (Model, sane_repr, BoundedBigIntegerField)
 from sentry.utils.db import is_mysql, is_postgres, is_sqlite
 
 
 class Counter(Model):
     __core__ = True
 
-    project = FlexibleForeignKey('sentry.Project', unique=True)
+    project = models.OneToOneField('sentry.Project')
     value = BoundedBigIntegerField()
 
     __repr__ = sane_repr('project')

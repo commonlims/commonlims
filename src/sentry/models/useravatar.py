@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from django.db import models
 
-from sentry.db.models import BaseManager, FlexibleForeignKey
+from sentry.db.models import BaseManager
 
 from . import AvatarBase
 
@@ -17,7 +17,7 @@ class UserAvatar(AvatarBase):
 
     FILE_TYPE = 'avatar.file'
 
-    user = FlexibleForeignKey('sentry.User', unique=True, related_name='avatar')
+    user = models.OneToOneField('sentry.User', related_name='avatar')
     avatar_type = models.PositiveSmallIntegerField(default=0, choices=AVATAR_TYPES)
 
     objects = BaseManager(cache_fields=['user'])

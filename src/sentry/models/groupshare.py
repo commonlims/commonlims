@@ -27,7 +27,7 @@ class GroupShare(Model):
     __core__ = False
 
     project = FlexibleForeignKey('sentry.Project')
-    group = FlexibleForeignKey('sentry.Group', unique=True)
+    group = models.OneToOneField('sentry.Group')
     uuid = models.CharField(max_length=32, unique=True, default=default_uuid)
     # Tracking the user that initiated the share.
     user = FlexibleForeignKey(settings.AUTH_USER_MODEL, null=True)

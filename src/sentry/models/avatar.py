@@ -7,7 +7,7 @@ from PIL import Image
 from six import BytesIO
 from uuid import uuid4
 
-from sentry.db.models import FlexibleForeignKey, Model
+from sentry.db.models import Model
 from sentry.utils.cache import cache
 
 
@@ -23,7 +23,7 @@ class AvatarBase(Model):
 
     FILE_TYPE = None
 
-    file = FlexibleForeignKey('sentry.File', unique=True, null=True, on_delete=models.SET_NULL)
+    file = models.OneToOneField('sentry.File', null=True, on_delete=models.SET_NULL)
     ident = models.CharField(max_length=32, unique=True, db_index=True)
 
     class Meta:

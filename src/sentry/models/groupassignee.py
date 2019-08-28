@@ -235,7 +235,7 @@ class GroupAssignee(Model):
     objects = GroupAssigneeManager()
 
     project = FlexibleForeignKey('sentry.Project', related_name="assignee_set1")
-    group = FlexibleForeignKey('sentry.Group', related_name="assignee_set1", unique=True)
+    group = models.OneToOneField('sentry.Group', related_name="assignee_set1")
     user = FlexibleForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="sentry_assignee_set1",

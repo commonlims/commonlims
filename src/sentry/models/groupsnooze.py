@@ -7,7 +7,7 @@ from django.utils import timezone
 from jsonfield import JSONField
 
 from sentry.db.models import (
-    BaseManager, BoundedPositiveIntegerField, FlexibleForeignKey, Model, sane_repr
+    BaseManager, BoundedPositiveIntegerField, Model, sane_repr
 )
 
 
@@ -27,7 +27,7 @@ class GroupSnooze(Model):
     """
     __core__ = False
 
-    group = FlexibleForeignKey('sentry.Group', unique=True)
+    group = models.OneToOneField('sentry.Group')
     until = models.DateTimeField(null=True)
     count = BoundedPositiveIntegerField(null=True)
     window = BoundedPositiveIntegerField(null=True)

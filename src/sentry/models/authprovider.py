@@ -5,14 +5,14 @@ from django.db import models
 from django.utils import timezone
 
 from sentry.db.models import (
-    BoundedPositiveIntegerField, EncryptedJsonField, FlexibleForeignKey, Model, sane_repr
+    BoundedPositiveIntegerField, EncryptedJsonField, Model, sane_repr
 )
 
 
 class AuthProvider(Model):
     __core__ = True
 
-    organization = FlexibleForeignKey('sentry.Organization', unique=True)
+    organization = models.OneToOneField('sentry.Organization')
     provider = models.CharField(max_length=128)
     config = EncryptedJsonField()
 
