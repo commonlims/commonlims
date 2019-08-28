@@ -3,6 +3,8 @@ import {shallow} from 'enzyme';
 
 import {Tasks} from 'app/views/taskList/tasks';
 import ProcessListItem from 'app/components/task/processListItem';
+import LoadingIndicator from 'app/components/loadingIndicator';
+import LoadingError from 'app/components/loadingError';
 
 describe('Tasks', function() {
   let mockProps;
@@ -58,7 +60,6 @@ describe('Tasks', function() {
     tasks = [task1, task2, task3];
     const wrapper = mountTasks({tasks});
     const procs = wrapper.find(ProcessListItem);
-    expect(procs.length).toBe(2);
 
     const proc1 = procs.at(0);
     const props1 = proc1.props();
@@ -76,5 +77,25 @@ describe('Tasks', function() {
     expect(props2.processDefinitionName).toBe('Process2');
     expect(props2.processDefinitionKey).toBe('process2');
     expect(props2.tasks).toEqual([{name: 'Task2', count: 3, taskDefinitionKey: 'task2'}]);
+  });
+
+  it('renders loader while loading data', () => {
+    const wrapper = mountTasks({loading: true});
+    expect(wrapper.find(LoadingIndicator).length).toBe(1);
+  });
+
+  it('renders error component if there is an error loading data', () => {
+    const wrapper = mountTasks({errorMessage: 'Oopsy Daisy'});
+    const error = wrapper.find(LoadingError);
+    expect(error.length).toBe(1);
+    const props = error.at(0).props();
+    expect(props.message).toBe('Oopsy Daisy');
+    expect(props.onRetry).toBe(getTasks);
+  });
+
+  it('renders empty component if there are no tasks', () => {
+    const wrapper = mountTasks();
+    const error = wrapper.find('.empty-stream');
+    expect(error.length).toBe(1);
   });
 });
