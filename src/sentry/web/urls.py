@@ -587,5 +587,5 @@ urlpatterns += patterns(
     ),
 
     # Legacy
-    url(r'/$', react_page_view),
+    url(r'$', react_page_view),
 )
