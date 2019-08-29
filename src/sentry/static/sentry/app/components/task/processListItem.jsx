@@ -11,8 +11,10 @@ class ProcessListItem extends React.Component {
     this.state = {
       showTasks: true,
     };
-    this.flexWidth = 300;
-    this.flexMargin = 2;
+    this.layout = {
+      flexWidth: 300,
+      flexMargin: 2,
+    };
   }
 
   toggleTasks() {
@@ -30,8 +32,7 @@ class ProcessListItem extends React.Component {
           name={name}
           count={count}
           taskDefinitionKey={taskDefinitionKey}
-          flexWidth={this.flexWidth}
-          flexMargin={this.flexMargin}
+          layout={this.layout}
           key={i}
         />
       );
@@ -43,6 +44,7 @@ class ProcessListItem extends React.Component {
     const {showTasks} = this.state;
     const taskListClass = showTasks ? '' : 'hidden';
     const samplesLabelText = count === 1 ? 'sample' : 'samples';
+    const {flexWidth, flexMargin} = this.layout;
 
     return (
       <ProcessListItemContainer>
@@ -52,14 +54,14 @@ class ProcessListItem extends React.Component {
         >
           <StyledFlex py={1} px={0} align="center">
             <Flex flex="1">
-              <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-start">
+              <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
                 {processDefinitionName || processDefinitionKey}
               </Flex>
             </Flex>
-            <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-start">
+            <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
               {count} {samplesLabelText}
             </Flex>
-            <Flex w={this.flexWidth} mx={this.flexMargin} justify="flex-end" />
+            <Flex w={flexWidth} mx={flexMargin} justify="flex-end" />
           </StyledFlex>
         </Sticky>
         <PanelBody className={taskListClass}>{this.renderTasks()}</PanelBody>
@@ -77,8 +79,6 @@ ProcessListItem.propTypes = {
       name: PropTypes.string.isRequired,
       count: PropTypes.number.isRequired,
       taskDefinitionKey: PropTypes.string.isRequired,
-      flexWidth: PropTypes.number,
-      flexMargin: PropTypes.number,
     })
   ),
 };

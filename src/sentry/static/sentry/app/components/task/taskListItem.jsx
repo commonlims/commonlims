@@ -15,7 +15,8 @@ class TaskListItem extends React.Component {
   }
 
   render() {
-    const {name, count, flexMargin, flexWidth} = this.props;
+    const {name, count, layout} = this.props;
+    const {flexMargin, flexWidth} = layout;
 
     return (
       <PanelItem onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
@@ -39,13 +40,17 @@ TaskListItem.propTypes = {
   name: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
   taskDefinitionKey: PropTypes.string.isRequired,
-  flexWidth: PropTypes.number,
-  flexMargin: PropTypes.number,
+  layout: PropTypes.shape({
+    flexWidth: PropTypes.number,
+    flexMargin: PropTypes.number,
+  }),
 };
 
 TaskListItem.defaultProps = {
-  flexWidth: 200,
-  flexMargin: 2,
+  layout: {
+    flexWidth: 300,
+    flexMargin: 2,
+  },
 };
 
 TaskListItem.displayName = 'TaskListItem';
