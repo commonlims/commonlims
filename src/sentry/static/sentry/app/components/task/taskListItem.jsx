@@ -1,9 +1,7 @@
 import {Flex, Box} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'react-emotion';
 import {PanelItem} from 'app/components/panels';
-import Count from 'app/components/count';
 import Button from 'app/components/button';
 
 class TaskListItem extends React.Component {
@@ -17,22 +15,23 @@ class TaskListItem extends React.Component {
   }
 
   render() {
-    const {name, count} = this.props;
+    const {name, count, layout} = this.props;
+    const {flexMargin, flexWidth} = layout;
 
     return (
-      <Group onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
+      <PanelItem onClick={this.selectTask.bind(this)} py={1} px={0} align="center">
         <Flex flex="1">
-          <GroupSummary w={200} mx={2} justify="flex-start">
+          <Box w={flexWidth} mx={flexMargin} justify="flex-start">
             {name}
-          </GroupSummary>
+          </Box>
         </Flex>
-        <Flex w={200} mx={2} justify="flex-start">
-          <StyledCount value={count} />
+        <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
+          <span className="task-list-item-sample-count">{count}</span>
         </Flex>
-        <Flex w={200} mx={2} justify="flex-end">
+        <Flex w={flexWidth} mx={flexMargin} justify="flex-end">
           <Button onClick={this.selectTask.bind(this)}>Select Samples</Button>
         </Flex>
-      </Group>
+      </PanelItem>
     );
   }
 }
@@ -41,21 +40,19 @@ TaskListItem.propTypes = {
   name: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
   taskDefinitionKey: PropTypes.string.isRequired,
+  layout: PropTypes.shape({
+    flexWidth: PropTypes.number,
+    flexMargin: PropTypes.number,
+  }),
+};
+
+TaskListItem.defaultProps = {
+  layout: {
+    flexWidth: 300,
+    flexMargin: 2,
+  },
 };
 
 TaskListItem.displayName = 'TaskListItem';
-
-const Group = styled(PanelItem)`
-  line-height: 1.1;
-`;
-
-const GroupSummary = styled(Box)`
-  overflow: hidden;
-`;
-
-const StyledCount = styled(Count)`
-  font-size: 18px;
-  color: ${p => p.theme.gray3};
-`;
 
 export default TaskListItem;

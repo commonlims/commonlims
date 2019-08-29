@@ -11,6 +11,10 @@ class ProcessListItem extends React.Component {
     this.state = {
       showTasks: true,
     };
+    this.layout = {
+      flexWidth: 300,
+      flexMargin: 2,
+    };
   }
 
   toggleTasks() {
@@ -28,6 +32,7 @@ class ProcessListItem extends React.Component {
           name={name}
           count={count}
           taskDefinitionKey={taskDefinitionKey}
+          layout={this.layout}
           key={i}
         />
       );
@@ -39,20 +44,24 @@ class ProcessListItem extends React.Component {
     const {showTasks} = this.state;
     const taskListClass = showTasks ? '' : 'hidden';
     const samplesLabelText = count === 1 ? 'sample' : 'samples';
+    const {flexWidth, flexMargin} = this.layout;
 
     return (
       <ProcessListItemContainer>
-        <Sticky onClick={this.toggleTasks.bind(this)}>
+        <Sticky
+          onClick={this.toggleTasks.bind(this)}
+          className="process-list-item-header"
+        >
           <StyledFlex py={1} px={0} align="center">
             <Flex flex="1">
-              <Flex w={200} mx={2} justify="flex-start">
+              <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
                 {processDefinitionName || processDefinitionKey}
               </Flex>
             </Flex>
-            <Flex w={200} mx={2} justify="flex-start">
+            <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
               {count} {samplesLabelText}
             </Flex>
-            <Flex w={200} mx={2} justify="flex-end" />
+            <Flex w={flexWidth} mx={flexMargin} justify="flex-end" />
           </StyledFlex>
         </Sticky>
         <PanelBody className={taskListClass}>{this.renderTasks()}</PanelBody>
@@ -65,7 +74,13 @@ ProcessListItem.propTypes = {
   processDefinitionKey: PropTypes.string.isRequired,
   processDefinitionName: PropTypes.string,
   count: PropTypes.number.isRequired,
-  tasks: PropTypes.arrayOf(PropTypes.shape({})),
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      count: PropTypes.number.isRequired,
+      taskDefinitionKey: PropTypes.string.isRequired,
+    })
+  ),
 };
 
 ProcessListItem.displayName = 'ProcessListItem';

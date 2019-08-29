@@ -32,3 +32,19 @@ Typically, each API resource should have its own action and reducer file in `app
 We use the following convention for naming actions: `[RESOURCE_NAME]_[ACTION]_[REQUEST|SUCCESS|FAILURE]`, where ACTION is usually (but not necessarily) an HTTP method. For example: 'USER_TASKS_GET_SUCCESS'. Each action should be wrapped in its own function, such as userTasksGetSuccess(). In addition, you will want to create a thunk wrapper for any asynchronous API calls, such as userTasksGet().
 
 Every action should be handled in the corresponding reducer file.
+
+### Testing Redux-connected components
+
+When writing tests, there is a trick to importing Redux-connected components, i.e. components exported in this way:
+
+`export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);`
+
+In addition to the default export, the component should also be made available as a named export, like so:
+
+`export class MyComponent extends React.Component {}`
+
+In the test, import the __named__ export by enclosing it in curly braces, like so:
+
+`import { MyComponent } from 'app/views/myComponent';`
+
+You can then test the component like any other.
