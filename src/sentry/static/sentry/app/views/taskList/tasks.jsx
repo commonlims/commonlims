@@ -36,7 +36,7 @@ export class Tasks extends React.Component {
   }
 
   groupTasksByProcess(tasks) {
-    let processes = tasks.reduce((r, task) => {
+    const processes = tasks.reduce((r, task) => {
       const {
         count,
         name,
@@ -62,7 +62,7 @@ export class Tasks extends React.Component {
     }, {});
 
     const arrProcesses = [];
-    for (let key in processes) {
+    for (const key in processes) {
       arrProcesses.push(processes[key]);
     }
 
