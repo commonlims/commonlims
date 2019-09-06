@@ -27,7 +27,10 @@ def register_plugins(settings):
     #     ],
     # },
 
-    for ep in iter_entry_points('sentry.plugins'):
+    groups = ['sentry.plugins', 'clims.plugins']
+    entry_points = [ep for group in groups for ep in iter_entry_points(group)]
+
+    for ep in entry_points:
         try:
             plugin = ep.load()
         except Exception:
