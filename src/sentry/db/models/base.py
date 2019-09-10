@@ -137,6 +137,9 @@ class Model(BaseModel):
 
     __repr__ = sane_repr('id')
 
+    def __str__(self):
+        return repr(self)
+
 
 def __model_post_save(instance, **kwargs):
     if not isinstance(instance, BaseModel):
