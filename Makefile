@@ -19,6 +19,8 @@ build: locale
 drop-db:
 	@echo "--> Dropping existing 'clims' database"
 	dropdb clims || true
+	@echo "--> Dropping existing 'test_clims' database"
+	dropdb test_clims || true
 
 create-db:
 	@echo "--> Creating 'clims' database"
