@@ -164,7 +164,7 @@ class UpdateSentryAppDetailsTest(SentryAppDetailsTest):
 
         assert response.status_code == 400
         assert response.data == \
-            {'events': ['issue webhooks require the event:read permission.']}
+            {'non_field_errors': ['issue webhooks require the event:read permission.']}
 
     @with_feature('organizations:internal-catchall')
     def test_cannot_update_scopes_published_app(self):
