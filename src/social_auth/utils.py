@@ -9,7 +9,7 @@ from django.conf import settings
 from django.db.models import Model
 from django.contrib.contenttypes.models import ContentType
 from django.utils.functional import empty, SimpleLazyObject
-from django.utils.importlib import import_module
+from importlib import import_module
 from six.moves.urllib.parse import urlencode, urlparse, urlunparse
 from six.moves.urllib.request import urlopen
 

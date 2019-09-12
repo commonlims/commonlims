@@ -7,20 +7,18 @@ from rest_framework import serializers
 from sentry.models import Environment
 from sentry.rules import rules
 
-from . import ListField
-
 ValidationError = serializers.ValidationError
 
 
-class RuleNodeField(serializers.WritableField):
+class RuleNodeField(serializers.Field):
     def __init__(self, type):
         super(RuleNodeField, self).__init__()
         self.type_name = type
 
-    def to_native(self, obj):
+    def to_representation(self, obj):
         return obj
 
-    def from_native(self, data):
+    def to_internal_value(self, data):
         if not isinstance(data, dict):
             msg = 'Incorrect type. Expected a mapping, but got %s'
             raise ValidationError(msg % type(data).__name__)
@@ -61,60 +59,57 @@ class RuleNodeField(serializers.WritableField):
 
 class RuleSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=64)
-    environment = serializers.CharField(max_length=64, required=False, allow_none=True)
+    environment = serializers.CharField(max_length=64, required=False, allow_null=True)
     actionMatch = serializers.ChoiceField(
         choices=(('all', 'all'), ('any', 'any'), ('none', 'none'), )
     )
-    actions = ListField(
+    actions = serializers.ListField(
         child=RuleNodeField(type='action/event'),
     )
-    conditions = ListField(
+    conditions = serializers.ListField(
         child=RuleNodeField(type='condition/event'),
     )
     frequency = serializers.IntegerField(min_value=5, max_value=60 * 24 * 30)
 
-    def validate_environment(self, attrs, source):
-        name = attrs.get(source)
-        if name is None:
-            return attrs
+    def validate_environment(self, environment):
+        if environment is None:
+            return environment
 
         try:
-            attrs['environment'] = Environment.get_for_organization_id(
+            environment = Environment.get_for_organization_id(
                 self.context['project'].organization_id,
-                name,
+                environment,
             ).id
         except Environment.DoesNotExist:
             raise serializers.ValidationError(u'This environment has not been created.')
 
-        return attrs
+        return environment
 
-    def validate_conditions(self, attrs, source):
-        name = attrs.get(source)
+    def validate_conditions(self, name):
         if not name:
             raise serializers.ValidationError(u'Must select a condition')
 
-        return attrs
+        return name
 
-    def validate_actions(self, attrs, source):
-        name = attrs.get(source)
+    def validate_actions(self, name):
         if not name:
             raise serializers.ValidationError(u'Must select an action')
 
-        return attrs
+        return name
 
     def save(self, rule):
         rule.project = self.context['project']
-        if 'environment' in self.data:
-            rule.environment_id = self.data['environment']
-        if self.data.get('name'):
-            rule.label = self.data['name']
-        if self.data.get('actionMatch'):
-            rule.data['action_match'] = self.data['actionMatch']
-        if self.data.get('actions') is not None:
-            rule.data['actions'] = self.data['actions']
-        if self.data.get('conditions') is not None:
-            rule.data['conditions'] = self.data['conditions']
-        if self.data.get('frequency'):
-            rule.data['frequency'] = self.data['frequency']
+        if 'environment' in self.initial_data:
+            rule.environment_id = self.initial_data['environment']
+        if self.initial_data.get('name'):
+            rule.label = self.initial_data['name']
+        if self.initial_data.get('actionMatch'):
+            rule.data['action_match'] = self.initial_data['actionMatch']
+        if self.initial_data.get('actions') is not None:
+            rule.data['actions'] = self.initial_data['actions']
+        if self.initial_data.get('conditions') is not None:
+            rule.data['conditions'] = self.initial_data['conditions']
+        if self.initial_data.get('frequency'):
+            rule.data['frequency'] = self.initial_data['frequency']
         rule.save()
         return rule

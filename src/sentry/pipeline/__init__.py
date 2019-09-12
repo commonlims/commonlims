@@ -2,7 +2,6 @@ from __future__ import absolute_import, print_function
 
 from types import LambdaType
 
-from sentry.models import Organization
 from sentry.web.frontend.base import BaseView
 from sentry.utils.session_store import RedisSessionStore
 from sentry.utils.hashlib import md5_text
@@ -128,6 +127,7 @@ class Pipeline(object):
 
     @classmethod
     def get_for_request(cls, request):
+        from sentry.models import Organization  # Django 1.9 setup issue
         state = RedisSessionStore(request, cls.pipeline_name)
         if not state.is_valid():
             return None

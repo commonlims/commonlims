@@ -8,17 +8,16 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 
-from six.moves import reduce
+from functools import reduce
 
 from sentry.db.models import Model, sane_repr
-from sentry.db.models.fields import FlexibleForeignKey
 from sentry.ownership.grammar import load_schema
 
 
 class ProjectOwnership(Model):
     __core__ = True
 
-    project = FlexibleForeignKey('sentry.Project', unique=True)
+    project = models.OneToOneField('sentry.Project')
     raw = models.TextField(null=True)
     schema = JSONField(null=True)
     fallthrough = models.BooleanField(default=True)

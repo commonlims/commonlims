@@ -1,10 +1,10 @@
 from __future__ import absolute_import
-from sentry.models import (
-    ApiKey, AuditLogEntry, AuditLogEntryEvent, DeletedOrganization, DeletedProject, DeletedTeam, Organization, Project, Team
-)
 
 
 def create_audit_entry(request, transaction_id=None, logger=None, **kwargs):
+    from sentry.models import ApiKey  # Django 1.9 setup issue
+    from sentry.models import AuditLogEntry  # Django 1.9 setup issue
+    from sentry.models import AuditLogEntryEvent  # Django 1.9 setup issue
     user = request.user if request.user.is_authenticated() else None
     api_key = request.auth if hasattr(request, 'auth') \
         and isinstance(request.auth, ApiKey) else None
@@ -48,6 +48,8 @@ def create_audit_entry(request, transaction_id=None, logger=None, **kwargs):
 
 
 def create_org_delete_log(entry):
+    from sentry.models import DeletedOrganization  # Django 1.9 setup issue
+    from sentry.models import Organization  # Django 1.9 setup issue
     delete_log = DeletedOrganization()
     organization = Organization.objects.get(id=entry.target_object)
 
@@ -59,6 +61,8 @@ def create_org_delete_log(entry):
 
 
 def create_project_delete_log(entry):
+    from sentry.models import DeletedProject  # Django 1.9 setup issue
+    from sentry.models import Project  # Django 1.9 setup issue
     delete_log = DeletedProject()
 
     project = Project.objects.get(id=entry.target_object)
@@ -75,6 +79,8 @@ def create_project_delete_log(entry):
 
 
 def create_team_delete_log(entry):
+    from sentry.models import DeletedTeam  # Django 1.9 setup issue
+    from sentry.models import Team  # Django 1.9 setup issue
     delete_log = DeletedTeam()
 
     team = Team.objects.get(id=entry.target_object)

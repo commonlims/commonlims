@@ -130,11 +130,11 @@ class ProjectUserReportsEndpoint(ProjectEndpoint, EnvironmentMixin):
         if hasattr(request.auth, 'project_id') and project.id != request.auth.project_id:
             return self.respond(status=400)
 
-        serializer = UserReportSerializer(data=request.DATA)
+        serializer = UserReportSerializer(data=request.data)
         if not serializer.is_valid():
             return self.respond(serializer.errors, status=400)
 
-        report = serializer.object
+        report = serializer.validated_data
         report.project = project
 
         # TODO(dcramer): we should probably create the user if they dont

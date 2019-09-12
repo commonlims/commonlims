@@ -20,7 +20,7 @@ class GroupResolution(Model):
         pending = 0
         resolved = 1
 
-    group = FlexibleForeignKey('sentry.Group', unique=True)
+    group = models.OneToOneField('sentry.Group')
     # the release in which its suggested this was resolved
     # which allows us to indicate if it still happens in newer versions
     release = FlexibleForeignKey('sentry.Release')

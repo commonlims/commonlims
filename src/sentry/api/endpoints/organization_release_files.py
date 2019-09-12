@@ -5,6 +5,7 @@ import logging
 from django.db import IntegrityError, transaction
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import MultiPartParser
 
 from sentry.api.base import DocSection
 from sentry.api.bases.organization import OrganizationReleasesBaseEndpoint
@@ -21,6 +22,7 @@ _filename_re = re.compile(r"[\n\t\r\f\v\\]")
 class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
     doc_section = DocSection.RELEASES
     content_negotiation_class = ConditionalContentNegotiation
+    parser_classes = (MultiPartParser,)
 
     def get(self, request, organization, version):
         """
@@ -98,12 +100,12 @@ class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        if 'file' not in request.FILES:
+        if 'file' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
 
-        fileobj = request.FILES['file']
+        fileobj = request.data['file']
 
-        full_name = request.DATA.get('name', fileobj.name)
+        full_name = request.data.get('name', fileobj.name)
         if not full_name or full_name == 'file':
             return Response({'detail': 'File name must be specified'}, status=400)
 
@@ -116,7 +118,7 @@ class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
                 }, status=400
             )
 
-        dist_name = request.DATA.get('dist')
+        dist_name = request.data.get('dist')
         dist = None
         if dist_name:
             dist = release.add_dist(dist_name)
@@ -124,7 +126,7 @@ class OrganizationReleaseFilesEndpoint(OrganizationReleasesBaseEndpoint):
         headers = {
             'Content-Type': fileobj.content_type,
         }
-        for headerval in request.DATA.getlist('header') or ():
+        for headerval in request.data.getlist('header') or ():
             try:
                 k, v = headerval.split(':', 1)
             except ValueError:

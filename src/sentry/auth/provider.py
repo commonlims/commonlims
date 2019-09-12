@@ -3,8 +3,6 @@ from __future__ import absolute_import, print_function
 import logging
 from collections import namedtuple
 
-from .view import ConfigureView
-
 
 class MigratingIdentityId(namedtuple('MigratingIdentityId', ['id', 'legacy_id'])):
     """
@@ -38,6 +36,7 @@ class Provider(object):
         """
         Return the view which handles configuration (post-setup).
         """
+        from .view import ConfigureView  # Django 1.9 setup issue
         return ConfigureView.as_view()
 
     def get_auth_pipeline(self):

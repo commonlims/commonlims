@@ -5,6 +5,8 @@ import logging
 from django.db import IntegrityError, transaction
 from six import BytesIO
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+
 
 from sentry.api.base import DocSection
 from sentry.api.bases.project import ProjectEndpoint, ProjectReleasePermission
@@ -53,6 +55,7 @@ class ProjectReleaseFilesEndpoint(ProjectEndpoint):
     doc_section = DocSection.RELEASES
     content_negotiation_class = ConditionalContentNegotiation
     permission_classes = (ProjectReleasePermission, )
+    parser_classes = (MultiPartParser,)
 
     @attach_scenarios([list_files_scenario])
     def get(self, request, project, version):
@@ -132,12 +135,12 @@ class ProjectReleaseFilesEndpoint(ProjectEndpoint):
         logger = logging.getLogger('sentry.files')
         logger.info('projectreleasefile.start')
 
-        if 'file' not in request.FILES:
+        if 'file' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
 
-        fileobj = request.FILES['file']
+        fileobj = request.data['file']
 
-        full_name = request.DATA.get('name', fileobj.name)
+        full_name = request.data.get('name', fileobj.name)
         if not full_name or full_name == 'file':
             return Response({'detail': 'File name must be specified'}, status=400)
 
@@ -150,7 +153,7 @@ class ProjectReleaseFilesEndpoint(ProjectEndpoint):
                 }, status=400
             )
 
-        dist_name = request.DATA.get('dist')
+        dist_name = request.data.get('dist')
         dist = None
         if dist_name:
             dist = release.add_dist(dist_name)
@@ -158,7 +161,7 @@ class ProjectReleaseFilesEndpoint(ProjectEndpoint):
         headers = {
             'Content-Type': fileobj.content_type,
         }
-        for headerval in request.DATA.getlist('header') or ():
+        for headerval in request.data.getlist('header') or ():
             try:
                 k, v = headerval.split(':', 1)
             except ValueError:

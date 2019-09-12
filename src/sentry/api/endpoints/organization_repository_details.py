@@ -48,12 +48,12 @@ class OrganizationRepositoryDetailsEndpoint(OrganizationEndpoint):
         if repo.status == ObjectStatus.DELETION_IN_PROGRESS:
             return Response(status=400)
 
-        serializer = RepositorySerializer(data=request.DATA, partial=True)
+        serializer = RepositorySerializer(data=request.data, partial=True)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
         update_kwargs = {}
         if result.get('status'):
             if result['status'] in ('visible', 'active'):

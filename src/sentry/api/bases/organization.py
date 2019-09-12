@@ -12,11 +12,7 @@ from sentry.api.utils import (
     InvalidParams,
 )
 from sentry.auth.superuser import is_active_superuser
-from sentry.models import (
-    ApiKey, Authenticator, Organization, OrganizationMemberTeam, Project,
-    ProjectStatus, ReleaseProject,
-)
-from sentry.utils import auth
+
 from sentry.utils.sdk import configure_scope
 
 
@@ -37,9 +33,11 @@ class OrganizationPermission(SentryPermission):
     }
 
     def is_not_2fa_compliant(self, user, organization):
+        from sentry.models import Authenticator  # Django 1.9 setup issue
         return organization.flags.require_2fa and not Authenticator.objects.user_has_2fa(user)
 
     def needs_sso(self, request, organization):
+        from sentry.utils import auth  # Django 1.9 setup issue
         # XXX(dcramer): this is very similar to the server-rendered views
         # logic for checking valid SSO
         if not request.access.requires_sso:
@@ -141,6 +139,9 @@ class OrganizationEndpoint(Endpoint):
         standardize how this is used and remove this parameter.
         :return: A list of project ids, or raises PermissionDenied.
         """
+        from sentry.models import OrganizationMemberTeam  # Django 1.9 setup issue
+        from sentry.models import Project  # Django 1.9 setup issue
+        from sentry.models import ProjectStatus  # Django 1.9 setup issue
         project_ids = set(map(int, request.GET.getlist('project')))
 
         requested_projects = project_ids.copy()
@@ -226,6 +227,7 @@ class OrganizationEndpoint(Endpoint):
         return params
 
     def convert_args(self, request, organization_slug, *args, **kwargs):
+        from sentry.models import Organization  # Django 1.9 setup issue
         try:
             organization = Organization.objects.get_from_cache(
                 slug=organization_slug,
@@ -253,6 +255,7 @@ class OrganizationReleasesBaseEndpoint(OrganizationEndpoint):
     permission_classes = (OrganizationReleasePermission, )
 
     def get_projects(self, request, organization):
+        from sentry.models import ApiKey  # Django 1.9 setup issue
         has_valid_api_key = False
         if isinstance(request.auth, ApiKey):
             if request.auth.organization_id != organization.id:
@@ -274,6 +277,7 @@ class OrganizationReleasesBaseEndpoint(OrganizationEndpoint):
         )
 
     def has_release_permission(self, request, organization, release):
+        from sentry.models import ReleaseProject  # Django 1.9 setup issue
         return ReleaseProject.objects.filter(
             release=release,
             project__in=self.get_projects(request, organization),

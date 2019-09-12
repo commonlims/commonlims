@@ -17,7 +17,6 @@ from random import random
 from django.db.utils import ProgrammingError, OperationalError
 from django.utils import timezone
 from django.utils.functional import cached_property
-from sentry.db.models.query import create_or_update
 from sentry.utils.hashlib import md5_text
 
 Key = namedtuple('Key', ('name', 'default', 'type', 'flags', 'ttl', 'grace', 'cache_key'))
@@ -199,6 +198,7 @@ class OptionsStore(object):
         return self.set_cache(key, value)
 
     def set_store(self, key, value):
+        from sentry.db.models.query import create_or_update  # Django 1.9 setup issue
         create_or_update(
             model=self.model,
             key=key.name,

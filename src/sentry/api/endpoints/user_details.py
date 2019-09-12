@@ -17,7 +17,6 @@ from sentry.api.bases.user import UserEndpoint
 from sentry.api.decorators import sudo_required
 from sentry.api.serializers import serialize
 from sentry.api.serializers.models.user import DetailedUserSerializer
-from sentry.api.serializers.rest_framework import ListField
 from sentry.auth.superuser import is_active_superuser
 from sentry.constants import LANGUAGES
 from sentry.models import Organization, OrganizationMember, OrganizationStatus, User, UserOption
@@ -53,25 +52,25 @@ class UserOptionsSerializer(serializers.Serializer):
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
-    def validate_username(self, attrs, source):
-        value = attrs[source]
-        if User.objects.filter(username__iexact=value).exclude(id=self.object.id).exists():
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exclude(id=self.instance.id).exists():
             raise serializers.ValidationError('That username is already in use.')
-        return attrs
+        return value
 
     def validate(self, attrs):
         attrs = super(BaseUserSerializer, self).validate(attrs)
 
-        if self.object.email == self.object.username:
-            if attrs.get('username', self.object.email) != self.object.email:
+        if self.instance.email == self.instance.username:
+            if attrs.get('username', self.instance.email) != self.instance.email:
                 # ... this probably needs to handle newsletters and such?
                 attrs.setdefault('email', attrs['username'])
 
         return attrs
 
-    def restore_object(self, attrs, instance=None):
-        instance = super(BaseUserSerializer, self).restore_object(attrs, instance)
-        instance.is_active = attrs.get('isActive', instance.is_active)
+    def update(self, instance, validated_data):
+        instance = super(BaseUserSerializer, self).update(instance, validated_data)
+        instance.is_active = validated_data.get('isActive', instance.is_active)
+        instance.save()
         return instance
 
 
@@ -99,7 +98,7 @@ class AdminUserSerializer(BaseUserSerializer):
 
 
 class OrganizationsSerializer(serializers.Serializer):
-    organizations = ListField(child=serializers.CharField(required=False), required=True)
+    organizations = serializers.ListField(child=serializers.CharField(required=False), required=True)
 
 
 class UserDetailsEndpoint(UserEndpoint):
@@ -134,10 +133,10 @@ class UserDetailsEndpoint(UserEndpoint):
             serializer_cls = AdminUserSerializer
         else:
             serializer_cls = UserSerializer
-        serializer = serializer_cls(user, data=request.DATA, partial=True)
+        serializer = serializer_cls(user, data=request.data, partial=True)
 
         serializer_options = UserOptionsSerializer(
-            data=request.DATA.get('options', {}), partial=True)
+            data=request.data.get('options', {}), partial=True)
 
         # This serializer should NOT include privileged fields e.g. password
         if not serializer.is_valid() or not serializer_options.is_valid():
@@ -151,7 +150,7 @@ class UserDetailsEndpoint(UserEndpoint):
             'clock24Hours': 'clock_24_hours',
         }
 
-        options_result = serializer_options.object
+        options_result = serializer_options.validated_data
 
         for key in key_map:
             if key in options_result:
@@ -176,7 +175,7 @@ class UserDetailsEndpoint(UserEndpoint):
         :auth required:
         """
 
-        serializer = OrganizationsSerializer(data=request.DATA)
+        serializer = OrganizationsSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -196,7 +195,7 @@ class UserDetailsEndpoint(UserEndpoint):
             })
 
         avail_org_slugs = set([o['organization'].slug for o in org_results])
-        orgs_to_remove = set(serializer.object.get('organizations')).intersection(avail_org_slugs)
+        orgs_to_remove = set(serializer.validated_data.get('organizations')).intersection(avail_org_slugs)
 
         for result in org_results:
             if result['single_owner']:

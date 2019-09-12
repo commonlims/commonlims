@@ -12,16 +12,10 @@ import six
 from django import forms
 from django.conf import settings
 from django.utils.html import format_html
-from social_auth.models import UserSocialAuth
 
-from sentry.models import (
-    Activity,
-    Event,
-    GroupMeta,
-)
+
 from sentry.plugins import Plugin
 from sentry.signals import issue_tracker_used
-from sentry.utils.auth import get_auth_providers
 from sentry.utils.http import absolute_uri
 from sentry.utils.safe import safe_execute
 
@@ -79,6 +73,7 @@ class IssueTrackingPlugin(Plugin):
         """
         Return a ``UserSocialAuth`` object for the given user based on this plugins ``auth_provider``.
         """
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
         assert self.auth_provider, 'There is no auth provider configured for this plugin.'
 
         if not user.is_authenticated():
@@ -94,6 +89,7 @@ class IssueTrackingPlugin(Plugin):
         Return ``True`` if the authenticated user needs to associate an auth service before
         performing actions with this plugin.
         """
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
         if self.auth_provider is None:
             return False
 
@@ -186,13 +182,17 @@ class IssueTrackingPlugin(Plugin):
         if not self.auth_provider:
             return True
 
+        from sentry.utils.auth import get_auth_providers  # Django 1.9 setup issue
         return self.auth_provider in get_auth_providers()
 
     def handle_unlink_issue(self, request, group, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         GroupMeta.objects.unset_value(group, '%s:tid' % self.get_conf_key())
         return self.redirect(group.get_absolute_url())
 
     def view(self, request, group, **kwargs):
+        from sentry.models import Activity  # Django 1.9 setup issue
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         has_auth_configured = self.has_auth_configured()
         if not (has_auth_configured and self.is_configured(
                 project=group.project, request=request)):
@@ -225,6 +225,7 @@ class IssueTrackingPlugin(Plugin):
 
         prefix = self.get_conf_key()
         event = group.get_latest_event()
+        from sentry.models import Event  # Django 1.9 setup issue
         Event.objects.bind_nodes([event], 'data')
 
         op = request.POST.get('op', 'create')
@@ -314,6 +315,7 @@ class IssueTrackingPlugin(Plugin):
         return self.render(self.create_issue_template, context)
 
     def actions(self, request, group, action_list, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         if not self.is_configured(request=request, project=group.project):
             return action_list
         prefix = self.get_conf_key()
@@ -326,6 +328,7 @@ class IssueTrackingPlugin(Plugin):
         return action_list
 
     def tags(self, request, group, tag_list, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         if not self.is_configured(request=request, project=group.project):
             return tag_list
 

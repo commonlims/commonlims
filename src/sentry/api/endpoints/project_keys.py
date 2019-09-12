@@ -88,10 +88,10 @@ class ProjectKeysEndpoint(ProjectEndpoint):
                                      belong to.
         :param string name: the name for the new key.
         """
-        serializer = KeySerializer(data=request.DATA)
+        serializer = KeySerializer(data=request.data)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             key = ProjectKey.objects.create(
                 project=project,

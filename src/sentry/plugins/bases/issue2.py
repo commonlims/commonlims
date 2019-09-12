@@ -3,22 +3,19 @@ from __future__ import absolute_import
 import six
 
 from rest_framework.response import Response
-from social_auth.models import UserSocialAuth
 
 from django.conf import settings
 from django.conf.urls import url
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
-from sentry.api.serializers.models.plugin import PluginSerializer
 # api compat
 from sentry.exceptions import PluginError  # NOQA
-from sentry.models import Activity, Event, GroupMeta
+
 from sentry.plugins import Plugin
 from sentry.plugins.base.configuration import react_plugin_config
 from sentry.plugins.endpoints import PluginGroupEndpoint
 from sentry.signals import issue_tracker_used
-from sentry.utils.auth import get_auth_providers
 from sentry.utils.http import absolute_uri
 from sentry.utils.safe import safe_execute
 
@@ -29,6 +26,7 @@ class IssueGroupActionEndpoint(PluginGroupEndpoint):
     plugin = None
 
     def _handle(self, request, group, *args, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         GroupMeta.objects.populate_cache([group])
 
         return getattr(self.plugin, self.view_method_name)(request, group, *args, **kwargs)
@@ -100,6 +98,7 @@ class IssueTrackingPlugin2(Plugin):
         """
         Return a ``UserSocialAuth`` object for the given user based on this plugins ``auth_provider``.
         """
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
         assert self.auth_provider, 'There is no auth provider configured for this plugin.'
 
         if not user.is_authenticated():
@@ -115,6 +114,7 @@ class IssueTrackingPlugin2(Plugin):
         Return ``True`` if the authenticated user needs to associate an auth service before
         performing actions with this plugin.
         """
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
         if self.auth_provider is None:
             return False
 
@@ -191,6 +191,7 @@ class IssueTrackingPlugin2(Plugin):
         pass
 
     def has_auth_configured(self, **kwargs):
+        from sentry.utils.auth import get_auth_providers  # Django 1.9 setup issue
         if not self.auth_provider:
             return True
 
@@ -221,6 +222,7 @@ class IssueTrackingPlugin2(Plugin):
         }
 
     def build_issue(self, group):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         issue_field_map = self.get_issue_field_map()
         issue = {}
         for key, meta_name in six.iteritems(issue_field_map):
@@ -233,12 +235,16 @@ class IssueTrackingPlugin2(Plugin):
         return bool(self.build_issue(group))
 
     def unlink_issue(self, request, group, issue, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
         issue_field_map = self.get_issue_field_map()
         for meta_name in six.itervalues(issue_field_map):
             GroupMeta.objects.unset_value(group, meta_name)
         return self.redirect(group.get_absolute_url())
 
     def view_create(self, request, group, **kwargs):
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
+        from sentry.models import Event  # Django 1.9 setup issue
+
         auth_errors = self.check_config_and_auth(request, group)
         if auth_errors:
             return Response(auth_errors, status=400)
@@ -257,14 +263,14 @@ class IssueTrackingPlugin2(Plugin):
         if request.method == 'GET':
             return Response(fields)
 
-        errors = self.validate_form(fields, request.DATA)
+        errors = self.validate_form(fields, request.data)
         if errors:
             return Response({'error_type': 'validation', 'errors': errors}, status=400)
 
         try:
             issue = self.create_issue(
                 group=group,
-                form_data=request.DATA,
+                form_data=request.data,
                 request=request,
             )
         except Exception as e:
@@ -281,11 +287,12 @@ class IssueTrackingPlugin2(Plugin):
                 GroupMeta.objects.unset_value(group, meta_name)
 
         issue_information = {
-            'title': issue.get('title') or request.DATA.get('title') or self._get_issue_label_compat(group, issue),
+            'title': issue.get('title') or request.data.get('title') or self._get_issue_label_compat(group, issue),
             'provider': self.get_title(),
             'location': self._get_issue_url_compat(group, issue),
             'label': self._get_issue_label_compat(group, issue),
         }
+        from sentry.models import Activity  # Django 1.9 setup issue
         Activity.objects.create(
             project=group.project,
             group=group,
@@ -304,6 +311,9 @@ class IssueTrackingPlugin2(Plugin):
                          'id': issue['id']})
 
     def view_link(self, request, group, **kwargs):
+        from sentry.models import Event  # Django 1.9 setup issue
+        from sentry.models import GroupMeta  # Django 1.9 setup issue
+
         auth_errors = self.check_config_and_auth(request, group)
         if auth_errors:
             return Response(auth_errors, status=400)
@@ -323,22 +333,22 @@ class IssueTrackingPlugin2(Plugin):
             return self.handle_api_error(e)
         if request.method == 'GET':
             return Response(fields)
-        errors = self.validate_form(fields, request.DATA)
+        errors = self.validate_form(fields, request.data)
         if errors:
             return Response({'error_type': 'validation', 'errors': errors}, status=400)
 
         try:
             issue = self.link_issue(
                 group=group,
-                form_data=request.DATA,
+                form_data=request.data,
                 request=request,
             ) or {}
         except Exception as e:
             return self.handle_api_error(e)
 
         # HACK(dcramer): maintain data for legacy issues
-        if 'id' not in issue and 'issue_id' in request.DATA:
-            issue['id'] = request.DATA['issue_id']
+        if 'id' not in issue and 'issue_id' in request.data:
+            issue['id'] = request.data['issue_id']
 
         issue_field_map = self.get_issue_field_map()
         for key, meta_name in six.iteritems(issue_field_map):
@@ -353,6 +363,7 @@ class IssueTrackingPlugin2(Plugin):
             'location': self._get_issue_url_compat(group, issue),
             'label': self._get_issue_label_compat(group, issue),
         }
+        from sentry.models import Activity  # Django 1.9 setup issue
         Activity.objects.create(
             project=group.project,
             group=group,
@@ -392,6 +403,7 @@ class IssueTrackingPlugin2(Plugin):
                 'label': self._get_issue_label_compat(group, issue),
             }
 
+        from sentry.api.serializers.models.plugin import PluginSerializer  # Django 1.9 setup issue
         item.update(PluginSerializer(group.project).serialize(self, None, request.user))
         plugin_issues.append(item)
         return plugin_issues

@@ -11,7 +11,6 @@ from sentry.api.exceptions import InvalidRepository, ResourceDoesNotExist
 from sentry.api.serializers import serialize
 from sentry.api.serializers.rest_framework import (
     CommitSerializer,
-    ListField,
     ReleaseHeadCommitSerializerDeprecated,
     ReleaseHeadCommitSerializer,
 )
@@ -47,11 +46,11 @@ class ReleaseSerializer(serializers.Serializer):
     ref = serializers.CharField(max_length=VERSION_LENGTH, required=False)
     url = serializers.URLField(required=False)
     dateReleased = serializers.DateTimeField(required=False)
-    commits = ListField(child=CommitSerializer(), required=False, allow_null=False)
-    headCommits = ListField(
+    commits = serializers.ListField(child=CommitSerializer(), required=False, allow_null=False)
+    headCommits = serializers.ListField(
         child=ReleaseHeadCommitSerializerDeprecated(), required=False, allow_null=False
     )
-    refs = ListField(
+    refs = serializers.ListField(
         child=ReleaseHeadCommitSerializer(),
         required=False,
         allow_null=False,
@@ -131,12 +130,12 @@ class OrganizationReleaseDetailsEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        serializer = ReleaseSerializer(data=request.DATA)
+        serializer = ReleaseSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
 
         was_released = bool(release.date_released)
 

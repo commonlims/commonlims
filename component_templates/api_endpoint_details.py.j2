@@ -10,7 +10,6 @@ from uuid import uuid4
 from sentry.api.base import Endpoint, SessionAuthentication
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
-from sentry.api.serializers.rest_framework import ListField
 from sentry.models import ApiApplication, ApiApplicationStatus
 from sentry.models import SampleGroup
 from sentry.tasks.deletion import delete_api_application
@@ -56,7 +55,7 @@ class SampleGroupDetailsEndpoint(Endpoint):
         except ApiApplication.DoesNotExist:
             raise ResourceDoesNotExist
 
-        serializer = SampleGroupSerializer(data=request.DATA, partial=True)
+        serializer = SampleGroupSerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
             result = serializer.object

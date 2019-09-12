@@ -48,11 +48,11 @@ class WorkBatchNotesDetailsEndpoint(GroupEndpoint):
         except Activity.DoesNotExist:
             raise ResourceDoesNotExist
 
-        serializer = NoteSerializer(data=request.DATA)
+        serializer = NoteSerializer(data=request.data)
 
         if serializer.is_valid():
             # Would be nice to have a last_modified timestamp we could bump here
-            note.data = dict(serializer.object)
+            note.data = dict(serializer.validated_data)
             note.save()
 
             return Response(serialize(note, request.user), status=200)

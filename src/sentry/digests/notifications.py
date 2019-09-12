@@ -10,17 +10,11 @@ from collections import (
     defaultdict,
     namedtuple,
 )
-from six.moves import reduce
 
 from sentry.app import tsdb
 from sentry.digests import Record
-from sentry.models import (
-    Project,
-    Group,
-    GroupStatus,
-    Rule,
-)
 from sentry.utils.dates import to_timestamp
+from functools import reduce
 
 logger = logging.getLogger('sentry.digests')
 
@@ -29,6 +23,7 @@ Notification = namedtuple('Notification', 'event rules')
 
 def split_key(key):
     from sentry.plugins import plugins  # XXX
+    from sentry.models import Project  # Django 1.9 setup issue
     plugin_slug, _, project_id = key.split(':', 2)
     return plugins.get(plugin_slug), Project.objects.get(pk=project_id)
 
@@ -58,6 +53,8 @@ def fetch_state(project, records):
     # reverse chronological order, and we query the database in chronological
     # order.
     # NOTE: This doesn't account for any issues that are filtered out later.
+    from sentry.models import Group  # Django 1.9 setup issue
+    from sentry.models import Rule  # Django 1.9 setup issue
     start = records[-1].datetime
     end = records[0].datetime
 
@@ -203,6 +200,7 @@ def sort_rule_groups(rules):
 
 
 def build_digest(project, records, state=None):
+    from sentry.models import GroupStatus  # Django 1.9 setup issue
     records = list(records)
     if not records:
         return

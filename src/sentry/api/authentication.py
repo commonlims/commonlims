@@ -1,11 +1,9 @@
 from __future__ import absolute_import
 
-from django.contrib.auth.models import AnonymousUser
 from django.utils.crypto import constant_time_compare
 from rest_framework.authentication import (BasicAuthentication, get_authorization_header)
 from rest_framework.exceptions import AuthenticationFailed
 
-from sentry.models import ApiApplication, ApiKey, ApiToken, ProjectKey, Relay
 from sentry.relay.utils import get_header_relay_id, get_header_relay_signature
 from sentry.utils.sdk import configure_scope
 
@@ -47,6 +45,8 @@ class RelayAuthentication(BasicAuthentication):
         return self.authenticate_credentials(relay_id, relay_sig, request)
 
     def authenticate_credentials(self, relay_id, relay_sig, request):
+        from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
+        from sentry.models import Relay  # Django 1.9 setup issue
         with configure_scope() as scope:
             scope.set_tag('relay_id', relay_id)
 
@@ -70,6 +70,8 @@ class RelayAuthentication(BasicAuthentication):
 
 class ApiKeyAuthentication(QuietBasicAuthentication):
     def authenticate_credentials(self, userid, password):
+        from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
+        from sentry.models import ApiKey  # Django 1.9 setup issue
         if password:
             return None
 
@@ -98,6 +100,7 @@ class ClientIdSecretAuthentication(QuietBasicAuthentication):
     """
 
     def authenticate(self, request):
+        from sentry.models import ApiApplication  # Django 1.9 setup issue
         if not request.json_body:
             raise AuthenticationFailed('Invalid request')
 
@@ -127,6 +130,7 @@ class TokenAuthentication(StandardAuthentication):
     token_name = b'bearer'
 
     def authenticate_credentials(self, token):
+        from sentry.models import ApiToken  # Django 1.9 setup issue
         try:
             token = ApiToken.objects.filter(
                 token=token,
@@ -154,6 +158,8 @@ class DSNAuthentication(StandardAuthentication):
     token_name = b'dsn'
 
     def authenticate_credentials(self, token):
+        from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
+        from sentry.models import ProjectKey  # Django 1.9 setup issue
         try:
             key = ProjectKey.from_dsn(token)
         except ProjectKey.DoesNotExist:

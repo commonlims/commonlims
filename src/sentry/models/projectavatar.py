@@ -2,8 +2,6 @@ from __future__ import absolute_import
 
 from django.db import models
 
-from sentry.db.models import FlexibleForeignKey
-
 from . import AvatarBase
 
 
@@ -17,7 +15,7 @@ class ProjectAvatar(AvatarBase):
 
     FILE_TYPE = 'avatar.file'
 
-    project = FlexibleForeignKey('sentry.Project', unique=True, related_name='avatar')
+    project = models.OneToOneField('sentry.Project', related_name='avatar')
     avatar_type = models.PositiveSmallIntegerField(default=0, choices=AVATAR_TYPES)
 
     class Meta:

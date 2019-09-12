@@ -4,9 +4,6 @@ from rest_framework import permissions
 
 from sentry.api.exceptions import SuperuserRequired
 from sentry.api.exceptions import SsoRequired, TwoFactorRequired
-from sentry.auth import access
-from sentry.auth.superuser import is_active_superuser
-from sentry.utils import auth
 
 
 class RelayPermission(permissions.BasePermission):
@@ -53,6 +50,7 @@ class ScopedPermission(permissions.BasePermission):
 
 class SuperuserPermission(permissions.BasePermission):
     def has_permission(self, request, view):
+        from sentry.auth.superuser import is_active_superuser  # Django 1.9 setup issue
         if is_active_superuser(request):
             return True
         if request.user.is_authenticated() and request.user.is_superuser:
@@ -69,6 +67,8 @@ class SentryPermission(ScopedPermission):
 
     def determine_access(self, request, organization):
         from sentry.api.base import logger
+        from sentry.auth import access  # Django 1.9 setup issue
+        from sentry.utils import auth
 
         if request.user and request.user.is_authenticated() and request.auth:
             request.access = access.from_request(

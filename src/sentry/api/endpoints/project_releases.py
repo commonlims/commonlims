@@ -10,7 +10,7 @@ from sentry.api.bases.project import ProjectEndpoint, ProjectReleasePermission
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.fields.user import UserField
 from sentry.api.serializers import serialize
-from sentry.api.serializers.rest_framework import CommitSerializer, ListField
+from sentry.api.serializers.rest_framework import CommitSerializer
 from sentry.models import (
     Activity,
     CommitFileChange,
@@ -26,15 +26,14 @@ class CommitPatchSetSerializer(serializers.Serializer):
     path = serializers.CharField(max_length=255)
     type = serializers.CharField(max_length=1)
 
-    def validate_type(self, attrs, source):
-        value = attrs[source]
+    def validate_type(self, value):
         if not CommitFileChange.is_valid_type(value):
             raise serializers.ValidationError('Commit patch_set type %s is not supported.' % value)
-        return attrs
+        return value
 
 
 class CommitSerializerWithPatchSet(CommitSerializer):
-    patch_set = ListField(child=CommitPatchSetSerializer(), required=False, allow_null=False)
+    patch_set = serializers.ListField(child=CommitPatchSetSerializer(), required=False, allow_null=False)
 
 
 class ReleaseSerializer(serializers.Serializer):
@@ -43,13 +42,12 @@ class ReleaseSerializer(serializers.Serializer):
     url = serializers.URLField(required=False)
     owner = UserField(required=False)
     dateReleased = serializers.DateTimeField(required=False)
-    commits = ListField(child=CommitSerializerWithPatchSet(), required=False, allow_null=False)
+    commits = serializers.ListField(child=CommitSerializerWithPatchSet(), required=False, allow_null=False)
 
-    def validate_version(self, attrs, source):
-        value = attrs[source]
+    def validate_version(self, value):
         if not Release.is_valid_version(value):
             raise serializers.ValidationError('Invalid value for release')
-        return attrs
+        return value
 
 
 class ProjectReleasesEndpoint(ProjectEndpoint, EnvironmentMixin):
@@ -138,10 +136,10 @@ class ProjectReleasesEndpoint(ProjectEndpoint, EnvironmentMixin):
                                       the current time is assumed.
         :auth: required
         """
-        serializer = ReleaseSerializer(data=request.DATA)
+        serializer = ReleaseSerializer(data=request.data)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
 
             # release creation is idempotent to simplify user
             # experiences

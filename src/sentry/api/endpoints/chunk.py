@@ -6,6 +6,7 @@ from io import BytesIO
 from gzip import GzipFile
 from itertools import izip
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 from six.moves.urllib.parse import urljoin
 from rest_framework.response import Response
 from django.core.urlresolvers import reverse
@@ -36,6 +37,7 @@ class GzipChunk(BytesIO):
 
 class ChunkUploadEndpoint(OrganizationEndpoint):
     permission_classes = (OrganizationReleasePermission, )
+    parser_classes = (MultiPartParser,)
 
     def get(self, request, organization):
         """
@@ -79,8 +81,8 @@ class ChunkUploadEndpoint(OrganizationEndpoint):
         logger = logging.getLogger('sentry.files')
         logger.info('chunkupload.start')
 
-        files = request.FILES.getlist('file')
-        files += [GzipChunk(chunk) for chunk in request.FILES.getlist('file_gzip')]
+        files = request.data.getlist('file')
+        files += [GzipChunk(chunk) for chunk in request.data.getlist('file_gzip')]
         if len(files) == 0:
             # No files uploaded is ok
             logger.info('chunkupload.end', extra={'status': status.HTTP_200_OK})

@@ -30,7 +30,6 @@ from sentry.exceptions import PluginError
 from sentry.integrations.exceptions import ApiError
 from sentry.plugins import Notification, Plugin
 from sentry.plugins.base.configuration import react_plugin_config
-from sentry.models import ProjectOption
 from sentry.tasks.digests import deliver_digest
 
 
@@ -82,6 +81,7 @@ class NotificationPlugin(Plugin):
             return False
 
     def rule_notify(self, event, futures):
+        from sentry.models import ProjectOption  # Django 1.9 setup issue
         rules = []
         extra = {
             'event_id': event.id,

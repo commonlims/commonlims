@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from rest_framework import serializers
 
-from .list import ListField
 from sentry.api.fields.actor import ActorField
 
 from sentry.models import User, Team
@@ -24,12 +23,11 @@ def seperate_resolved_actors(actors):
 
 class NoteSerializer(serializers.Serializer):
     text = serializers.CharField()
-    mentions = ListField(child=ActorField(), required=False)
+    mentions = serializers.ListField(child=ActorField(), required=False)
 
-    def validate_mentions(self, attrs, source):
-        if source in attrs and 'group' in self.context:
-
-            mentions = attrs[source]
+    def validate_mentions(self, mentions):
+        # TODO: Validate that this code still works
+        if 'group' in self.context:
             seperated_actors = seperate_actors(mentions)
             # Validate that all mentioned users exist and are on the project.
             users = seperated_actors['users']
@@ -55,4 +53,4 @@ class NoteSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     'Mentioned team not found or not associated with project')
 
-        return attrs
+        return mentions

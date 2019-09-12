@@ -6,13 +6,8 @@ from sentry.api.base import Endpoint
 from sentry.api.bases.project import ProjectPermission
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.utils.sdk import configure_scope
-from sentry.models import Group, GroupStatus, get_group_with_redirect
 
 logger = logging.getLogger(__name__)
-
-EXCLUDED_STATUSES = (
-    GroupStatus.PENDING_DELETION, GroupStatus.DELETION_IN_PROGRESS, GroupStatus.PENDING_MERGE
-)
 
 
 class GroupPermission(ProjectPermission):
@@ -41,6 +36,9 @@ class GroupEndpoint(Endpoint):
         # string replacement, or making the endpoint aware of the URL pattern
         # that caused it to be dispatched, and reversing it with the correct
         # `issue_id` keyword argument.
+        from sentry.models import Group  # Django 1.9 setup issue
+        from sentry.models import GroupStatus  # Django 1.9 setup issue
+        from sentry.models import get_group_with_redirect  # Django 1.9 setup issue
         try:
             group, _ = get_group_with_redirect(
                 issue_id,
@@ -55,7 +53,11 @@ class GroupEndpoint(Endpoint):
             scope.set_tag("project", group.project_id)
             scope.set_tag("organization", group.project.organization_id)
 
-        if group.status in EXCLUDED_STATUSES:
+        excluded_statuses = (
+            GroupStatus.PENDING_DELETION, GroupStatus.DELETION_IN_PROGRESS, GroupStatus.PENDING_MERGE
+        )
+
+        if group.status in excluded_statuses:
             raise ResourceDoesNotExist
 
         request._request.organization = group.project.organization

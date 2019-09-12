@@ -109,7 +109,7 @@ class WorkBatchAssignee(Model):
     objects = WorkBatchAssigneeManager()
 
     organization = FlexibleForeignKey('sentry.Organization', related_name="assignee_set")
-    work_batch = FlexibleForeignKey('clims.WorkBatch', related_name="assignee_set", unique=True)
+    work_batch = models.OneToOneField('clims.WorkBatch', related_name="assignee_set")
     user = FlexibleForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="sentry_assignee_set",

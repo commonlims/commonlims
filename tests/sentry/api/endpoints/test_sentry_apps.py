@@ -136,7 +136,7 @@ class PostSentryAppsTest(SentryAppsTest):
 
         assert response.status_code == 422
         assert response.data['errors'] == \
-            {'events': ['issue webhooks require the event:read permission.']}
+            {'non_field_errors': ['issue webhooks require the event:read permission.']}
 
     @with_feature('organizations:internal-catchall')
     def test_missing_name(self):

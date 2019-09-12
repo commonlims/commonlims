@@ -17,7 +17,6 @@ from django.utils.six.moves.urllib.parse import unquote
 from django.views import static
 from django.views.generic import TemplateView as BaseTemplateView
 
-from sentry.web.helpers import render_to_response
 
 FOREVER_CACHE = 'max-age=315360000'
 NEVER_CACHE = 'max-age=0, no-cache, no-store, must-revalidate'
@@ -98,6 +97,7 @@ def static_media(request, **kwargs):
 
 class TemplateView(BaseTemplateView):
     def render_to_response(self, context, **response_kwargs):
+        from sentry.web.helpers import render_to_response  # Django 1.9 setup issue
         return render_to_response(
             request=self.request,
             template=self.get_template_names(),

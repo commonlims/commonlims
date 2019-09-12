@@ -10,9 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from sentry import features
 from sentry.exceptions import PluginError
-from sentry.models import Event
 from sentry.plugins.bases import notify
-from sentry.http import is_valid_url, safe_urlopen
 from sentry.utils.safe import safe_execute
 
 
@@ -23,6 +21,7 @@ def split_urls(value):
 
 
 def validate_urls(value, **kwargs):
+    from sentry.http import is_valid_url  # Django 1.9 setup issue
     urls = split_urls(value)
     if any((not u.startswith(('http://', 'https://')) or not is_valid_url(u)) for u in urls):
         raise PluginError('Not a valid URL.')
@@ -77,6 +76,7 @@ class WebHooksPlugin(notify.NotificationPlugin):
         ]
 
     def get_group_data(self, group, event, triggering_rules):
+        from sentry.models import Event  # Django 1.9 setup issue
         data = {
             'id': six.text_type(group.id),
             'project': group.project.slug,
@@ -106,6 +106,7 @@ class WebHooksPlugin(notify.NotificationPlugin):
         return split_urls(self.get_option('urls', project))
 
     def send_webhook(self, url, payload):
+        from sentry.http import safe_urlopen  # Django 1.9 setup issue
         return safe_urlopen(
             url=url,
             json=payload,

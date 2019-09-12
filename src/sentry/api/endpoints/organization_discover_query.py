@@ -9,7 +9,6 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 
-from sentry.api.serializers.rest_framework import ListField
 from sentry.api.bases.organization import OrganizationPermission
 from sentry.api.bases import OrganizationEndpoint
 from sentry.api.paginator import GenericOffsetPaginator
@@ -27,18 +26,18 @@ class OrganizationDiscoverQueryPermission(OrganizationPermission):
 
 
 class DiscoverQuerySerializer(serializers.Serializer):
-    projects = ListField(
+    projects = serializers.ListField(
         child=serializers.IntegerField(),
         required=True,
         allow_null=False,
     )
-    start = serializers.CharField(required=False, allow_none=True)
-    end = serializers.CharField(required=False, allow_none=True)
-    range = serializers.CharField(required=False, allow_none=True)
-    statsPeriod = serializers.CharField(required=False, allow_none=True)
-    statsPeriodStart = serializers.CharField(required=False, allow_none=True)
-    statsPeriodEnd = serializers.CharField(required=False, allow_none=True)
-    fields = ListField(
+    start = serializers.CharField(required=False, allow_null=True)
+    end = serializers.CharField(required=False, allow_null=True)
+    range = serializers.CharField(required=False, allow_null=True)
+    statsPeriod = serializers.CharField(required=False, allow_null=True)
+    statsPeriodStart = serializers.CharField(required=False, allow_null=True)
+    statsPeriodEnd = serializers.CharField(required=False, allow_null=True)
+    fields = serializers.ListField(
         child=serializers.CharField(),
         required=False,
         allow_null=True,
@@ -46,18 +45,18 @@ class DiscoverQuerySerializer(serializers.Serializer):
     limit = serializers.IntegerField(min_value=0, max_value=10000, required=False)
     rollup = serializers.IntegerField(required=False)
     orderby = serializers.CharField(required=False)
-    conditions = ListField(
-        child=ListField(),
+    conditions = serializers.ListField(
+        child=serializers.ListField(),
         required=False,
         allow_null=True,
     )
-    aggregations = ListField(
-        child=ListField(),
+    aggregations = serializers.ListField(
+        child=serializers.ListField(),
         required=False,
         allow_null=True,
         default=[]
     )
-    groupby = ListField(
+    groupby = serializers.ListField(
         child=serializers.CharField(),
         required=False,
         allow_null=True,
@@ -114,10 +113,9 @@ class DiscoverQuerySerializer(serializers.Serializer):
 
         return data
 
-    def validate_projects(self, attrs, source):
+    def validate_projects(self, projects):
         organization = self.context['organization']
         member = self.member
-        projects = attrs[source]
 
         org_projects = set(project[0] for project in self.context['projects'])
 
@@ -125,18 +123,17 @@ class DiscoverQuerySerializer(serializers.Serializer):
                 member, organization, projects):
             raise PermissionDenied
 
-        return attrs
+        return projects
 
-    def validate_conditions(self, attrs, source):
+    def validate_conditions(self, value):
         # Handle error (exception_stacks), stack(exception_frames)
-        if attrs.get(source):
-            conditions = [self.get_condition(condition) for condition in attrs[source]]
-            attrs[source] = conditions
-        return attrs
+        if value:
+            value = [self.get_condition(condition) for condition in value]
+        return value
 
-    def validate_aggregations(self, attrs, source):
+    def validate_aggregations(self, value):
         valid_functions = set(['count()', 'uniq', 'avg'])
-        requested_functions = set(agg[0] for agg in attrs[source])
+        requested_functions = set(agg[0] for agg in value)
 
         if not requested_functions.issubset(valid_functions):
             invalid_functions = ', '.join((requested_functions - valid_functions))
@@ -145,7 +142,7 @@ class DiscoverQuerySerializer(serializers.Serializer):
                 u'Invalid aggregate function - {}'.format(invalid_functions)
             )
 
-        return attrs
+        return value
 
     def get_array_field(self, field):
         pattern = r"^(error|stack)\..+"
@@ -312,13 +309,13 @@ class OrganizationDiscoverQueryEndpoint(OrganizationEndpoint):
         ).values_list('id', 'slug')
 
         serializer = DiscoverQuerySerializer(
-            data=request.DATA, context={
+            data=request.data, context={
                 'organization': organization, 'projects': projects, 'user': request.user})
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        serialized = serializer.object
+        serialized = serializer.validated_data
 
         has_aggregations = len(serialized.get('aggregations')) > 0
 

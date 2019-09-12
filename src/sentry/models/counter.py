@@ -8,17 +8,17 @@ sentry.models.counter
 
 from __future__ import absolute_import
 
-from django.db import connection, connections
-from django.db.models.signals import post_syncdb
+from django.db import connection, connections, models
+from django.db.models.signals import post_migrate
 
-from sentry.db.models import (FlexibleForeignKey, Model, sane_repr, BoundedBigIntegerField)
+from sentry.db.models import (Model, sane_repr, BoundedBigIntegerField)
 from sentry.utils.db import is_mysql, is_postgres, is_sqlite
 
 
 class Counter(Model):
     __core__ = True
 
-    project = FlexibleForeignKey('sentry.Project', unique=True)
+    project = models.OneToOneField('sentry.Project')
     value = BoundedBigIntegerField()
 
     __repr__ = sane_repr('project')
@@ -95,14 +95,14 @@ def increment_project_counter(project, delta=1):
 
 # this must be idempotent because it seems to execute twice
 # (at least during test runs)
-def create_counter_function(db, created_models, app=None, **kwargs):
-    if app and app.__name__ != 'sentry.models':
+def create_counter_function(sender, using, **kwargs):
+    if sender.label != "sentry":
         return
 
-    if not is_postgres(db):
+    if not is_postgres(using):
         return
 
-    cursor = connections[db].cursor()
+    cursor = connections[using].cursor()
     cursor.execute(
         '''
         create or replace function sentry_increment_project_counter(
@@ -131,7 +131,7 @@ def create_counter_function(db, created_models, app=None, **kwargs):
     )
 
 
-post_syncdb.connect(
+post_migrate.connect(
     create_counter_function,
     dispatch_uid='create_counter_function',
     weak=False,

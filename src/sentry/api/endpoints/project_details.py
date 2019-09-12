@@ -18,7 +18,7 @@ from sentry.api.bases.project import ProjectEndpoint, ProjectPermission
 from sentry.api.decorators import sudo_required
 from sentry.api.serializers import serialize
 from sentry.api.serializers.models.project import DetailedProjectSerializer
-from sentry.api.serializers.rest_framework import ListField, OriginField
+from sentry.api.serializers.rest_framework import OriginField
 from sentry.constants import RESERVED_PROJECT_SLUGS
 from sentry.models import (
     AuditLogEntryEvent, Group, GroupStatus, Project, ProjectBookmark, ProjectRedirect,
@@ -88,51 +88,41 @@ class ProjectAdminSerializer(ProjectMemberSerializer):
     securityToken = serializers.RegexField(r'^[-a-zA-Z0-9+/=\s]+$', max_length=255)
     securityTokenHeader = serializers.RegexField(r'^[a-zA-Z0-9_\-]+$', max_length=20)
     verifySSL = serializers.BooleanField(required=False)
-    defaultEnvironment = serializers.CharField(required=False, allow_none=True)
+    defaultEnvironment = serializers.CharField(required=False, allow_null=True)
     dataScrubber = serializers.BooleanField(required=False)
     dataScrubberDefaults = serializers.BooleanField(required=False)
-    sensitiveFields = ListField(child=serializers.CharField(), required=False)
-    safeFields = ListField(child=serializers.CharField(), required=False)
+    sensitiveFields = serializers.ListField(child=serializers.CharField(), required=False)
+    safeFields = serializers.ListField(child=serializers.CharField(), required=False)
     storeCrashReports = serializers.BooleanField(required=False)
     relayPiiConfig = serializers.CharField(required=False)
     scrubIPAddresses = serializers.BooleanField(required=False)
     scrapeJavaScript = serializers.BooleanField(required=False)
-    allowedDomains = ListField(child=OriginField(), required=False)
+    allowedDomains = serializers.ListField(child=OriginField(), required=False)
     resolveAge = serializers.IntegerField(required=False)
     platform = serializers.CharField(required=False)
 
-    def validate_digestsMinDelay(self, attrs, source):
-        max_delay = attrs['digestsMaxDelay'] if 'digestsMaxDelay' in attrs else self.context['project'].get_option(
-            'digests:mail:maximum_delay')
+    def validate(self, attrs):
+        min_delay = attrs.get('digestsMinDelay', self.context['project'].get_option('digests:mail:minimum_delay'))
+        max_delay = attrs.get('digestsMaxDelay', self.context['project'].get_option('digests:mail:maximum_delay'))
 
-        # allow min to be set if max is not set
-        if max_delay is not None and attrs[source] > max_delay:
-            raise serializers.ValidationError(
-                'The minimum delay on digests must be lower than the maximum.'
-            )
+        # allows max to be set if min is not set and the other way round
+        if min_delay and max_delay:
+            if min_delay > max_delay:
+                raise serializers.ValidationError(
+                    'The maximum delay on digests must be higher than the minimum.'
+                )
+
         return attrs
 
-    def validate_digestsMaxDelay(self, attrs, source):
-        min_delay = attrs['digestsMinDelay'] if 'digestsMinDelay' in attrs else self.context['project'].get_option(
-            'digests:mail:minimum_delay')
-
-        # allows max to be set if min is not set
-        if min_delay is not None and attrs[source] < min_delay:
-            raise serializers.ValidationError(
-                'The maximum delay on digests must be higher than the minimum.'
-            )
-        return attrs
-
-    def validate_allowedDomains(self, attrs, source):
-        attrs[source] = filter(bool, attrs[source])
-        if len(attrs[source]) == 0:
+    def validate_allowedDomains(self, value):
+        value = filter(bool, value)
+        if len(value) == 0:
             raise serializers.ValidationError(
                 'Empty value will block all requests, use * to accept from all domains'
             )
-        return attrs
+        return value
 
-    def validate_slug(self, attrs, source):
-        slug = attrs[source]
+    def validate_slug(self, slug):
         if slug in RESERVED_PROJECT_SLUGS:
             raise serializers.ValidationError(
                 'The slug "%s" is reserved and not allowed.' %
@@ -146,11 +136,11 @@ class ProjectAdminSerializer(ProjectMemberSerializer):
             raise serializers.ValidationError(
                 'Another project (%s) is already using that slug' % other.name
             )
-        return attrs
+        return slug
 
-    def validate_relayPiiConfig(self, attrs, source):
-        if not attrs[source]:
-            return attrs
+    def validate_relayPiiConfig(self, value):
+        if not value:
+            return value
 
         from sentry import features
 
@@ -163,7 +153,7 @@ class ProjectAdminSerializer(ProjectMemberSerializer):
             raise serializers.ValidationError(
                 'Organization does not have the relay feature enabled'
             )
-        return attrs
+        return value
 
 
 class RelaxedProjectPermission(ProjectPermission):
@@ -254,7 +244,7 @@ class ProjectDetailsEndpoint(ProjectEndpoint):
             serializer_cls = ProjectMemberSerializer
 
         serializer = serializer_cls(
-            data=request.DATA,
+            data=request.data,
             partial=True,
             context={
                 'project': project,
@@ -264,12 +254,12 @@ class ProjectDetailsEndpoint(ProjectEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        result = serializer.object
+        result = serializer.validated_data
 
         if not has_project_write:
             # options isn't part of the serializer, but should not be editable by members
             for key in chain(six.iterkeys(ProjectAdminSerializer.base_fields), ['options']):
-                if request.DATA.get(key) and not result.get(key):
+                if request.data.get(key) and not result.get(key):
                     return Response(
                         {
                             'detail': ['You do not have permission to perform this action.']
@@ -405,7 +395,7 @@ class ProjectDetailsEndpoint(ProjectEndpoint):
 
         # TODO(dcramer): rewrite options to use standard API config
         if has_project_write:
-            options = request.DATA.get('options', {})
+            options = request.data.get('options', {})
             if 'sentry:origins' in options:
                 project.update_option(
                     'sentry:origins', clean_newline_inputs(

@@ -4,9 +4,6 @@ import six
 
 from django.core.urlresolvers import reverse
 from rest_framework.response import Response
-from social_auth.models import UserSocialAuth
-
-from sentry.models import Integration, OrganizationIntegration
 
 from sentry.exceptions import InvalidIdentity, PluginError
 
@@ -16,6 +13,8 @@ class ProviderMixin(object):
     logger = None
 
     def link_auth(self, user, organization, data):
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
+        from sentry.models import Integration  # Django 1.9 setup issue
         try:
             usa = UserSocialAuth.objects.get(
                 user=user,
@@ -80,6 +79,8 @@ class ProviderMixin(object):
         Return ``True`` if the authenticated user needs to associate an auth
         service before performing actions with this provider.
         """
+        from sentry.models import OrganizationIntegration  # Django 1.9 setup issue
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
         if self.auth_provider is None:
             return False
 
@@ -101,6 +102,8 @@ class ProviderMixin(object):
         ).exists()
 
     def get_auth(self, user, **kwargs):
+        from social_auth.models import UserSocialAuth  # Django 1.9 setup issue
+        from sentry.models import OrganizationIntegration  # Django 1.9 setup issue
         if self.auth_provider is None:
             return None
 

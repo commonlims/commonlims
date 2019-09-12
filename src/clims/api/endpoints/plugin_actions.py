@@ -17,8 +17,8 @@ class PluginActionsEndpoint(Endpoint):
         return Response([obj])
 
     def post(self, request, organization_slug, plugin_id):
-        correlation = request.DATA
+        correlation = request.data
         plugin = plugins.get(correlation["plugin"])
-        plugin.handle_event(correlation["handler"], correlation["method"], request.DATA)
+        plugin.handle_event(correlation["handler"], correlation["method"], request.data)
 
         return Response({}, 201)

@@ -40,7 +40,7 @@ from django.http import HttpRequest
 from django.test import TestCase, TransactionTestCase
 from django.test.utils import CaptureQueriesContext
 from django.utils import timezone
-from django.utils.importlib import import_module
+from importlib import import_module
 from exam import before, after, fixture, Exam
 from mock import patch
 from pkg_resources import iter_entry_points
@@ -140,6 +140,7 @@ class BaseTestCase(Fixtures, Exam):
         request.META['REMOTE_ADDR'] = '127.0.0.1'
         request.META['SERVER_NAME'] = 'testserver'
         request.META['SERVER_PORT'] = 80
+        # TODO: REQUEST is now GET/POST
         request.REQUEST = {}
 
         # order matters here, session -> user -> other things

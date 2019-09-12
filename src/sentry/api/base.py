@@ -19,8 +19,6 @@ from rest_framework.views import APIView
 from simplejson import JSONDecodeError
 
 from sentry import tsdb
-from sentry.auth import access
-from sentry.models import Environment
 from sentry.utils.cursors import Cursor
 from sentry.utils.dates import to_datetime
 from sentry.utils.http import absolute_uri, is_valid_origin
@@ -183,6 +181,7 @@ class Endpoint(APIView):
                 self.kwargs = kwargs
             else:
                 handler = self.http_method_not_allowed
+            from sentry.auth import access  # Django 1.9 setup issue
 
             if getattr(request, 'access', None) is None:
                 # setup default access
@@ -281,6 +280,7 @@ class EnvironmentMixin(object):
         return environment and environment.id
 
     def _get_environment_from_request(self, request, organization_id):
+        from sentry.models import Environment  # Django 1.9 setup issue
         if not hasattr(request, '_cached_environment'):
             environment_param = request.GET.get('environment')
             if environment_param is None:

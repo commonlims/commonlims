@@ -15,12 +15,11 @@ from requests.exceptions import HTTPError
 
 from sentry import options
 from sentry.api import client
-from sentry.api.serializers import serialize
-from sentry.models import ProjectOption
 from sentry.utils import json
 
 
 def react_plugin_config(plugin, project, request):
+    from sentry.api.serializers import serialize  # Django 1.9 setup issue
     response = client.get(
         u'/projects/{}/{}/plugins/{}/'.format(
             project.organization.slug,
@@ -51,6 +50,7 @@ def react_plugin_config(plugin, project, request):
 
 
 def default_plugin_config(plugin, project, request):
+    from sentry.models import ProjectOption  # Django 1.9 setup issue
     if plugin.can_enable_for_projects() and \
        not plugin.can_configure_for_project(project):
         raise Http404()
@@ -121,6 +121,7 @@ def default_plugin_config(plugin, project, request):
 
 
 def default_issue_plugin_config(plugin, project, form_data):
+    from sentry.models import ProjectOption  # Django 1.9 setup issue
     plugin_key = plugin.get_conf_key()
     for field, value in six.iteritems(form_data):
         key = '%s:%s' % (plugin_key, field)
@@ -131,6 +132,7 @@ def default_issue_plugin_config(plugin, project, form_data):
 
 
 def default_plugin_options(plugin, project):
+    from sentry.models import ProjectOption  # Django 1.9 setup issue
     form_class = plugin.get_conf_form(project)
     if form_class is None:
         return {}

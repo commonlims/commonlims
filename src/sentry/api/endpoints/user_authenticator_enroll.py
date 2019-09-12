@@ -154,7 +154,7 @@ class UserAuthenticatorEnrollEndpoint(UserEndpoint):
         if serializer_cls is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = serializer_cls(data=request.DATA)
+        serializer = serializer_cls(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -169,18 +169,18 @@ class UserAuthenticatorEnrollEndpoint(UserEndpoint):
             return Response(ALREADY_ENROLLED_ERR, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            interface.secret = request.DATA['secret']
+            interface.secret = request.data['secret']
         except KeyError:
             pass
 
         context = {}
         # Need to update interface with phone number before validating OTP
-        if 'phone' in request.DATA:
-            interface.phone_number = serializer.data['phone']
+        if 'phone' in request.data:
+            interface.phone_number = serializer.validated_data['phone']
 
             # Disregarding value of 'otp', if no OTP was provided,
             # send text message to phone number with OTP
-            if 'otp' not in request.DATA:
+            if 'otp' not in request.data:
                 if interface.send_text(for_enrollment=True, request=request._request):
                     return Response(status=status.HTTP_204_NO_CONTENT)
                 else:
@@ -188,19 +188,19 @@ class UserAuthenticatorEnrollEndpoint(UserEndpoint):
                     return Response(SEND_SMS_ERR, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Attempt to validate OTP
-        if 'otp' in request.DATA and not interface.validate_otp(serializer.data['otp']):
+        if 'otp' in request.data and not interface.validate_otp(serializer.validated_data['otp']):
             return Response(INVALID_OTP_ERR, status=status.HTTP_400_BAD_REQUEST)
 
         # Try u2f enrollment
         if interface_id == 'u2f':
             # What happens when this fails?
             interface.try_enroll(
-                serializer.data['challenge'],
-                serializer.data['response'],
-                serializer.data['deviceName']
+                serializer.validated_data['challenge'],
+                serializer.validated_data['response'],
+                serializer.validated_data['deviceName']
             )
             context.update({
-                'device_name': serializer.data['deviceName']
+                'device_name': serializer.validated_data['deviceName']
             })
 
         try:
@@ -225,8 +225,8 @@ class UserAuthenticatorEnrollEndpoint(UserEndpoint):
             Authenticator.objects.auto_add_recovery_codes(request.user)
 
             # Try to accept an org invite pending 2FA enrollment
-            member_id = serializer.data.get('memberId')
-            token = serializer.data.get('token')
+            member_id = serializer.validated_data.get('memberId')
+            token = serializer.validated_data.get('token')
 
             if member_id and token:
                 try:

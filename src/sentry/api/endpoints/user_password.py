@@ -19,21 +19,20 @@ class UserPasswordSerializer(serializers.ModelSerializer):
         model = User
         fields = ('password', 'passwordNew', 'passwordVerify', )
 
-    def validate_password(self, attrs, source):
-        if self.context['has_usable_password'] and not self.object.check_password(
-                attrs.get('password')):
+    def validate_password(self, value):
+        if self.context['has_usable_password'] and not self.instance.check_password(value):
             raise serializers.ValidationError('The password you entered is not correct.')
-        return attrs
+        return value
 
-    def validate_passwordNew(self, attrs, source):
+    def validate_passwordNew(self, value):
         # this will raise a ValidationError if password is invalid
-        password_validation.validate_password(attrs[source])
+        password_validation.validate_password(value)
 
         if self.context['is_managed']:
             raise serializers.ValidationError(
                 'This account is managed and the password cannot be changed via Sentry.')
 
-        return attrs
+        return value
 
     def validate(self, attrs):
         attrs = super(UserPasswordSerializer, self).validate(attrs)
@@ -51,7 +50,7 @@ class UserPasswordEndpoint(UserEndpoint):
         # pass some context to serializer otherwise when we create a new serializer instance,
         # user.password gets set to new plaintext password from request and
         # `user.has_usable_password` becomes False
-        serializer = UserPasswordSerializer(user, data=request.DATA, context={
+        serializer = UserPasswordSerializer(user, data=request.data, context={
             'is_managed': user.is_managed,
             'has_usable_password': user.has_usable_password(),
         })
@@ -59,9 +58,9 @@ class UserPasswordEndpoint(UserEndpoint):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        result = serializer.object
+        result = serializer.validated_data
 
-        user.set_password(result.passwordNew)
+        user.set_password(result['passwordNew'])
         user.refresh_session_nonce(request._request)
         user.clear_lost_passwords()
 

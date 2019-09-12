@@ -79,7 +79,7 @@ class SampleBatchEndpoint(Endpoint):
     permission_classes = (IsAuthenticated, )
 
     def put(self, request):
-        data = request.DATA
+        data = request.data
 
         # -1. Figure out which plugins want to hook into saving sample batches.
         # Hard code for now
@@ -103,4 +103,4 @@ class SampleBatchEndpoint(Endpoint):
         # 2. Actually save the data
 
         # 3.
-        return Response(request.DATA, status=201)
+        return Response(request.data, status=201)

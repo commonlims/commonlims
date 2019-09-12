@@ -8,9 +8,7 @@ from django.db import DataError
 from django.utils import timezone
 
 from sentry.constants import STATUS_CHOICES
-from sentry.models import EventUser, Team, User
 from sentry.search.base import ANY
-from sentry.utils.auth import find_users
 
 
 class InvalidQuery(Exception):
@@ -19,6 +17,7 @@ class InvalidQuery(Exception):
 
 def get_user_tag(projects, key, value):
     # TODO(dcramer): do something with case of multiple matches
+    from sentry.models import EventUser  # Django 1.9 setup issue
     try:
         lookup = EventUser.attr_from_keyword(key)
         euser = EventUser.objects.filter(
@@ -185,6 +184,7 @@ def get_date_params(value, from_field, to_field):
 
 
 def parse_team_value(projects, value, user):
+    from sentry.models import Team  # Django 1.9 setup issue
     return Team.objects.filter(
         slug__iexact=value[1:],
         projectteam__project__in=projects,
@@ -198,6 +198,8 @@ def parse_actor_value(projects, value, user):
 
 
 def parse_user_value(value, user):
+    from sentry.models import User  # Django 1.9 setup issue
+    from sentry.utils.auth import find_users  # Django 1.9 setup issue
     if value == 'me':
         return user
 

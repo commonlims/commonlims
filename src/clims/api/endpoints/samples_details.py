@@ -46,10 +46,10 @@ class SampleDetailsEndpoint(Endpoint):
         # except ApiApplication.DoesNotExist:
         #     raise ResourceDoesNotExist
 
-        # serializer = SampleSerializer(data=request.DATA, partial=True)
+        # serializer = SampleSerializer(data=request.data, partial=True)
 
         # if serializer.is_valid():
-        #     result = serializer.object
+        #     result = serializer.validated_data
         #     csv = result['csv'].split("\n")
         #     header = csv[0]
         #     body = csv[1:]
@@ -108,7 +108,7 @@ class SampleWorkflowsBatchEndpoint(Endpoint):
 
     def post(self, request, organization_slug):
         # TODO(withrocks): Go through a serializer object for this, and validate
-        data = request.DATA
+        data = request.data
         engine = WorkflowEngine()
 
         for sample in data["samples"]:

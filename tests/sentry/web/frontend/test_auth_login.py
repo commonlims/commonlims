@@ -136,7 +136,7 @@ class AuthLoginTest(TestCase):
         )
         assert resp.status_code == 302
         assert next not in resp['Location']
-        assert resp['Location'] == 'http://testserver/auth/login/'
+        assert resp['Location'] == '/auth/login/'
 
     def test_redirects_already_authed_non_superuser(self):
         self.user.update(is_superuser=False)
@@ -145,7 +145,7 @@ class AuthLoginTest(TestCase):
             resp = self.client.get(self.path)
 
         assert resp.status_code == 302
-        assert resp['Location'] == 'http://testserver/organizations/new/'
+        assert resp['Location'] == '/organizations/new/'
 
     def test_doesnt_redirect_already_authed_superuser(self):
         self.login_as(self.user, superuser=False)

@@ -23,11 +23,10 @@ class DeploySerializer(serializers.Serializer):
     dateStarted = serializers.DateTimeField(required=False)
     dateFinished = serializers.DateTimeField(required=False)
 
-    def validate_environment(self, attrs, source):
-        value = attrs[source]
+    def validate_environment(self, value):
         if not Environment.is_valid_name(value):
             raise serializers.ValidationError('Invalid value for environment')
-        return attrs
+        return value
 
 
 class ReleaseDeploysEndpoint(OrganizationReleasesBaseEndpoint):
@@ -96,11 +95,11 @@ class ReleaseDeploysEndpoint(OrganizationReleasesBaseEndpoint):
         if not self.has_release_permission(request, organization, release):
             raise PermissionDenied
 
-        serializer = DeploySerializer(data=request.DATA)
+        serializer = DeploySerializer(data=request.data)
 
         if serializer.is_valid():
             projects = list(release.projects.all())
-            result = serializer.object
+            result = serializer.validated_data
 
             env = Environment.objects.get_or_create(
                 name=result['environment'],

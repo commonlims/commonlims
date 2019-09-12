@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 
-from sentry.db.models import FlexibleForeignKey, Model, sane_repr
+from sentry.db.models import Model, sane_repr
 from sentry.utils.http import absolute_uri
 
 CHARACTERS = u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -22,7 +22,7 @@ CHARACTERS = u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 class LostPasswordHash(Model):
     __core__ = False
 
-    user = FlexibleForeignKey(settings.AUTH_USER_MODEL, unique=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     hash = models.CharField(max_length=32)
     date_added = models.DateTimeField(default=timezone.now)
 

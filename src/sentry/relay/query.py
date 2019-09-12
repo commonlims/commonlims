@@ -7,7 +7,7 @@ from sentry.relay.utils import type_to_class_name
 
 
 def execute_queries(relay, queries):
-    from django.utils.importlib import import_module
+    from importlib import import_module
 
     query_results = {}
     for query_id, query in six.iteritems(queries):

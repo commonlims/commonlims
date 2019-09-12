@@ -10,7 +10,6 @@ from uuid import uuid4
 from sentry.api.base import Endpoint, SessionAuthentication
 from sentry.api.exceptions import ResourceDoesNotExist
 from sentry.api.serializers import serialize
-from sentry.api.serializers.rest_framework import ListField
 from sentry.models import ApiApplication, ApiApplicationStatus
 from sentry.tasks.deletion import delete_api_application
 
@@ -19,11 +18,11 @@ delete_logger = logging.getLogger('sentry.deletions.api')
 
 class ApiApplicationSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=64)
-    redirectUris = ListField(
+    redirectUris = serializers.ListField(
         child=serializers.URLField(max_length=255),
         required=False,
     )
-    allowedOrigins = ListField(
+    allowedOrigins = serializers.ListField(
         # TODO(dcramer): make this validate origins
         child=serializers.CharField(max_length=255),
         required=False,
@@ -68,10 +67,10 @@ class ApiApplicationDetailsEndpoint(Endpoint):
         except ApiApplication.DoesNotExist:
             raise ResourceDoesNotExist
 
-        serializer = ApiApplicationSerializer(data=request.DATA, partial=True)
+        serializer = ApiApplicationSerializer(data=request.data, partial=True)
 
         if serializer.is_valid():
-            result = serializer.object
+            result = serializer.validated_data
             kwargs = {}
             if 'name' in result:
                 kwargs['name'] = result['name']

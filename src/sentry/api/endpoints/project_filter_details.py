@@ -22,10 +22,10 @@ class ProjectFilterDetailsEndpoint(ProjectEndpoint):
         except filters.FilterNotRegistered:
             raise ResourceDoesNotExist
 
-        serializer = filter.serializer_cls(data=request.DATA, partial=True)
+        serializer = filter.serializer_cls(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
-        filter.enable(serializer.object)
+        filter.enable(serializer.validated_data)
 
         return Response(status=201)

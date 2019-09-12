@@ -7,9 +7,6 @@ from django.utils import timezone
 from rest_framework.response import Response
 
 from sentry import analytics
-from sentry.api.serializers import serialize
-from sentry.integrations.exceptions import IntegrationError
-from sentry.models import Repository, Integration
 from sentry.signals import repo_linked
 
 
@@ -26,8 +23,10 @@ class IntegrationRepositoryProvider(object):
         self.id = id
 
     def dispatch(self, request, organization, **kwargs):
+        from sentry.integrations.exceptions import IntegrationError  # Django 1.9 setup issue
+        from sentry.models import Repository  # Django 1.9 setup issue
         try:
-            config = self.get_repository_data(organization, request.DATA)
+            config = self.get_repository_data(organization, request.data)
             result = self.build_repository_config(
                 organization=organization,
                 data=config,
@@ -74,9 +73,12 @@ class IntegrationRepositoryProvider(object):
             id=result.get('integration_id'),
             organization_id=organization.id,
         )
+        from sentry.api.serializers import serialize  # Django 1.9 setup issue
         return Response(serialize(repo, request.user), status=201)
 
     def handle_api_error(self, error):
+        from sentry.integrations.exceptions import IntegrationError  # Django 1.9 setup issue
+        from sentry.models import Integration  # Django 1.9 setup issue
         context = {
             'error_type': 'unknown',
         }

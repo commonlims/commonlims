@@ -20,6 +20,9 @@ class WorkBatchEndpoint(OrganizationEndpoint):
             on_results=lambda x: WorkBatchSerializer(x, many=True).data,
         )
 
+    def post(self, request, organization):
+        return Response([])
+
 
 class WorkBatchDetailsEndpoint(WorkBatchBaseEndpoint):
     def get(self, request, work_batch_id):

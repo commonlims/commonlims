@@ -6,7 +6,6 @@ from sentry.utils.sdk import configure_scope
 from sentry.api.authentication import ClientIdSecretAuthentication
 from sentry.api.base import Endpoint
 from sentry.api.permissions import SentryPermission
-from sentry.models import SentryApp, SentryAppInstallation, Organization
 
 
 def ensure_scoped_permission(request, allowed_scopes):
@@ -134,6 +133,7 @@ class SentryAppBaseEndpoint(Endpoint):
     permission_classes = (SentryAppPermission, )
 
     def convert_args(self, request, sentry_app_slug, *args, **kwargs):
+        from sentry.models import SentryApp  # Django 1.9 setup issue
         try:
             sentry_app = SentryApp.objects.get(
                 slug=sentry_app_slug,
@@ -178,6 +178,7 @@ class SentryAppInstallationsBaseEndpoint(Endpoint):
     permission_classes = (SentryAppInstallationsPermission, )
 
     def convert_args(self, request, organization_slug, *args, **kwargs):
+        from sentry.models import Organization  # Django 1.9 setup issue
         if request.user.is_superuser:
             organizations = Organization.objects.all()
         else:
@@ -222,6 +223,7 @@ class SentryAppInstallationBaseEndpoint(Endpoint):
     permission_classes = (SentryAppInstallationPermission, )
 
     def convert_args(self, request, uuid, *args, **kwargs):
+        from sentry.models import SentryAppInstallation  # Django 1.9 setup issue
         try:
             installation = SentryAppInstallation.objects.get(
                 uuid=uuid,

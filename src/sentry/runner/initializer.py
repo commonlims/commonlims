@@ -204,6 +204,7 @@ def configure_structlog():
     """
     from django.conf import settings
     import logging
+    import logging.config
     import structlog
     from sentry import options
     from sentry.logging import LoggingFormat
@@ -270,8 +271,6 @@ def initialize_app(config, skip_service_validation=False):
 
     if 'south' in settings.INSTALLED_APPS:
         fix_south(settings)
-
-    apply_legacy_settings(settings)
 
     # Commonly setups don't correctly configure themselves for production envs
     # so lets try to provide a bit more guidance
@@ -410,95 +409,6 @@ def show_big_error(message):
         click.secho('!! %s !!' % line.center(maxline), err=True, fg='red')
     click.secho('!! %s !!' % ('!' * min(maxline, 80), ), err=True, fg='red')
     click.echo('', err=True)
-
-
-def apply_legacy_settings(settings):
-    from sentry import options
-
-    # SENTRY_USE_QUEUE used to determine if Celery was eager or not
-    if hasattr(settings, 'SENTRY_USE_QUEUE'):
-        warnings.warn(
-            DeprecatedSettingWarning(
-                'SENTRY_USE_QUEUE',
-                'CELERY_ALWAYS_EAGER',
-                'https://docs.sentry.io/on-premise/server/queue/',
-            )
-        )
-        settings.CELERY_ALWAYS_EAGER = (not settings.SENTRY_USE_QUEUE)
-
-    for old, new in (
-        ('SENTRY_ADMIN_EMAIL', 'system.admin-email'), ('SENTRY_URL_PREFIX', 'system.url-prefix'),
-        ('SENTRY_SYSTEM_MAX_EVENTS_PER_MINUTE',
-         'system.rate-limit'), ('SENTRY_ENABLE_EMAIL_REPLIES', 'mail.enable-replies'),
-        ('SENTRY_SMTP_HOSTNAME',
-         'mail.reply-hostname'), ('MAILGUN_API_KEY', 'mail.mailgun-api-key'),
-        ('SENTRY_FILESTORE',
-         'filestore.backend'), ('SENTRY_FILESTORE_OPTIONS', 'filestore.options'),
-    ):
-        if new not in settings.SENTRY_OPTIONS and hasattr(settings, old):
-            warnings.warn(DeprecatedSettingWarning(old, "SENTRY_OPTIONS['%s']" % new))
-            settings.SENTRY_OPTIONS[new] = getattr(settings, old)
-
-    if hasattr(settings, 'SENTRY_REDIS_OPTIONS'):
-        if 'redis.clusters' in settings.SENTRY_OPTIONS:
-            raise Exception(
-                "Cannot specify both SENTRY_OPTIONS['redis.clusters'] option and SENTRY_REDIS_OPTIONS setting."
-            )
-        else:
-            warnings.warn(
-                DeprecatedSettingWarning(
-                    'SENTRY_REDIS_OPTIONS',
-                    'SENTRY_OPTIONS["redis.clusters"]',
-                    removed_in_version='8.5',
-                )
-            )
-            settings.SENTRY_OPTIONS['redis.clusters'] = {
-                'default': settings.SENTRY_REDIS_OPTIONS,
-            }
-    else:
-        # Provide backwards compatibility to plugins expecting there to be a
-        # ``SENTRY_REDIS_OPTIONS`` setting by using the ``default`` cluster.
-        # This should be removed when ``SENTRY_REDIS_OPTIONS`` is officially
-        # deprecated. (This also assumes ``FLAG_NOSTORE`` on the configuration
-        # option.)
-        settings.SENTRY_REDIS_OPTIONS = options.get('redis.clusters')['default']
-
-    if not hasattr(settings, 'SENTRY_URL_PREFIX'):
-        url_prefix = options.get('system.url-prefix', silent=True)
-        if not url_prefix:
-            # HACK: We need to have some value here for backwards compatibility
-            url_prefix = 'http://sentry.example.com'
-        settings.SENTRY_URL_PREFIX = url_prefix
-
-    if settings.TIME_ZONE != 'UTC':
-        # non-UTC timezones are not supported
-        show_big_error('TIME_ZONE should be set to UTC')
-
-    # Set ALLOWED_HOSTS if it's not already available
-    if not settings.ALLOWED_HOSTS:
-        settings.ALLOWED_HOSTS = ['*']
-
-    if hasattr(settings, 'SENTRY_ALLOW_REGISTRATION'):
-        warnings.warn(
-            DeprecatedSettingWarning(
-                'SENTRY_ALLOW_REGISTRATION', 'SENTRY_FEATURES["auth:register"]'
-            )
-        )
-        settings.SENTRY_FEATURES['auth:register'] = settings.SENTRY_ALLOW_REGISTRATION
-
-    settings.DEFAULT_FROM_EMAIL = settings.SENTRY_OPTIONS.get(
-        'mail.from', settings.SENTRY_DEFAULT_OPTIONS.get('mail.from')
-    )
-
-    # HACK(mattrobenolt): This is a one-off assertion for a system.secret-key value.
-    # If this becomes a pattern, we could add another flag to the OptionsManager to cover this, but for now
-    # this is the only value that should prevent the app from booting up. Currently FLAG_REQUIRED is used to
-    # trigger the Installation Wizard, not abort startup.
-    if not settings.SENTRY_OPTIONS.get('system.secret-key'):
-        from .importer import ConfigurationError
-        raise ConfigurationError(
-            "`system.secret-key` MUST be set. Use 'sentry config generate-secret-key' to get one."
-        )
 
 
 def skip_migration_if_applied(settings, app_name, table_name, name='0001_initial'):

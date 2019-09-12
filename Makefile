@@ -154,7 +154,12 @@ test-styleguide:
 
 test-python:
 	@echo "--> Running Python tests"
-	py.test tests/integration tests/sentry --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
+	py.test tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
+	@echo ""
+
+test-python-failed:
+	@echo "--> Running Python tests - failed only"
+	py.test tests/integration tests/sentry tests/clims --last-failed || exit 1
 	@echo ""
 
 test-snuba:

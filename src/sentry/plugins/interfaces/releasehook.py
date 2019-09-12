@@ -14,7 +14,6 @@ from django.db import IntegrityError, transaction
 from django.utils import timezone
 
 from sentry.exceptions import HookValidationError
-from sentry.models import Activity, Release
 
 
 class ReleaseHook(object):
@@ -22,6 +21,7 @@ class ReleaseHook(object):
         self.project = project
 
     def start_release(self, version, **values):
+        from sentry.models import Release  # Django 1.9 setup issue
         if not Release.is_valid_version(version):
             raise HookValidationError('Invalid release version: %s' % version)
 
@@ -48,6 +48,7 @@ class ReleaseHook(object):
 
         Calling this method will remove all existing commit history.
         """
+        from sentry.models import Release  # Django 1.9 setup issue
         if not Release.is_valid_version(version):
             raise HookValidationError('Invalid release version: %s' % version)
 
@@ -67,6 +68,8 @@ class ReleaseHook(object):
         pass
 
     def finish_release(self, version, **values):
+        from sentry.models import Activity  # Django 1.9 setup issue
+        from sentry.models import Release  # Django 1.9 setup issue
         if not Release.is_valid_version(version):
             raise HookValidationError('Invalid release version: %s' % version)
 

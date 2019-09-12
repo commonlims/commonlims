@@ -4,7 +4,7 @@ import pytest
 import six
 
 from sentry.runner.importer import ConfigurationError
-from sentry.runner.initializer import bootstrap_options, apply_legacy_settings
+from sentry.runner.initializer import bootstrap_options
 
 
 @pytest.fixture
@@ -162,57 +162,7 @@ def test_bootstrap_options_empty_file(settings, config_yml):
     assert settings.SENTRY_OPTIONS == {}
 
 
-def test_apply_legacy_settings(settings):
-    settings.ALLOWED_HOSTS = []
-    settings.SENTRY_USE_QUEUE = True
-    settings.SENTRY_ALLOW_REGISTRATION = True
-    settings.SENTRY_ADMIN_EMAIL = 'admin-email'
-    settings.SENTRY_URL_PREFIX = 'http://url-prefix'
-    settings.SENTRY_SYSTEM_MAX_EVENTS_PER_MINUTE = 10
-    settings.SENTRY_REDIS_OPTIONS = {'foo': 'bar'}
-    settings.SENTRY_ENABLE_EMAIL_REPLIES = True
-    settings.SENTRY_SMTP_HOSTNAME = 'reply-hostname'
-    settings.MAILGUN_API_KEY = 'mailgun-api-key'
-    settings.SENTRY_OPTIONS = {
-        'system.secret-key': 'secret-key',
-        'mail.from': 'mail-from',
-    }
-    settings.SENTRY_FILESTORE = 'some-filestore'
-    settings.SENTRY_FILESTORE_OPTIONS = {'filestore-foo': 'filestore-bar'}
-    apply_legacy_settings(settings)
-    assert settings.CELERY_ALWAYS_EAGER is False
-    assert settings.SENTRY_FEATURES['auth:register'] is True
-    assert settings.SENTRY_OPTIONS == {
-        'system.admin-email': 'admin-email',
-        'system.url-prefix': 'http://url-prefix',
-        'system.rate-limit': 10,
-        'system.secret-key': 'secret-key',
-        'redis.clusters': {
-            'default': {
-                'foo': 'bar'
-            }
-        },
-        'mail.from': 'mail-from',
-        'mail.enable-replies': True,
-        'mail.reply-hostname': 'reply-hostname',
-        'mail.mailgun-api-key': 'mailgun-api-key',
-        'filestore.backend': 'some-filestore',
-        'filestore.options': {
-            'filestore-foo': 'filestore-bar'
-        },
-    }
-    assert settings.DEFAULT_FROM_EMAIL == 'mail-from'
-    assert settings.ALLOWED_HOSTS == ['*']
-
-
 def test_initialize_app(settings):
     "Just a sanity check of the full initialization process"
     settings.SENTRY_OPTIONS = {'system.secret-key': 'secret-key'}
     bootstrap_options(settings)
-    apply_legacy_settings(settings)
-
-
-def test_require_secret_key(settings):
-    assert 'system.secret-key' not in settings.SENTRY_OPTIONS
-    with pytest.raises(ConfigurationError):
-        apply_legacy_settings(settings)

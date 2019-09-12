@@ -21,7 +21,6 @@ from django.core.signing import BadSignature
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare, get_random_string
 
-from sentry.utils.auth import has_completed_sso
 
 logger = logging.getLogger('sentry.superuser')
 
@@ -91,6 +90,7 @@ class Superuser(object):
         """
         Returns ``(bool is_privileged, str reason)``
         """
+        from sentry.utils.auth import has_completed_sso  # Django 1.9 setup issue
         allowed_ips = self.allowed_ips
         # if we've bound superuser to an organization they must
         # have completed SSO to gain status

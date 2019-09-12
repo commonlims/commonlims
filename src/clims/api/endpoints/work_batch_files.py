@@ -4,6 +4,7 @@ import re
 import logging
 from django.db import transaction
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 
 from sentry.api.base import DocSection
 from sentry.api.content_negotiation import ConditionalContentNegotiation
@@ -21,6 +22,7 @@ _filename_re = re.compile(r"[\n\t\r\f\v\\]")
 class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
     doc_section = DocSection.WORKBATCH
     content_negotiation_class = ConditionalContentNegotiation
+    parser_classes = (MultiPartParser,)
 
     def get(self, request, work_batch_id):
         """
@@ -79,7 +81,7 @@ class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
         :auth: required
         """
 
-        from sentry.models.work_batch import WorkBatch
+        from sentry.models.workbatch import WorkBatch
 
         try:
             work_batch = WorkBatch.objects.get(pk=int(work_batch_id))
@@ -89,12 +91,12 @@ class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
         logger = logging.getLogger('clims.files')
         logger.info('workbatchfile.start')
 
-        if 'file' not in request.FILES:
+        if 'file' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
 
-        fileobj = request.FILES['file']
+        fileobj = request.data['file']
 
-        full_name = request.DATA.get('name', fileobj.name)
+        full_name = request.data.get('name', fileobj.name)
         if not full_name or full_name == 'file':
             return Response({'detail': 'File name must be specified'}, status=400)
 
@@ -110,7 +112,7 @@ class WorkBatchFilesEndpoint(WorkBatchBaseEndpoint):
         headers = {
             'Content-Type': fileobj.content_type,
         }
-        for headerval in request.DATA.getlist('header') or ():
+        for headerval in request.data.getlist('header') or ():
             try:
                 k, v = headerval.split(':', 1)
             except ValueError:

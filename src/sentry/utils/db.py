@@ -12,7 +12,7 @@ from contextlib import contextmanager, closing
 
 from django.conf import settings
 from django.db import connections, DEFAULT_DB_ALIAS
-from django.db.models.fields.related import SingleRelatedObjectDescriptor
+from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
 
 
 def get_db_engine(alias='default'):
@@ -58,7 +58,7 @@ def attach_foreignkey(objects, field):
 
     database = list(objects)[0]._state.db
 
-    is_foreignkey = isinstance(field, SingleRelatedObjectDescriptor)
+    is_foreignkey = isinstance(field, ReverseOneToOneDescriptor)
 
     if not is_foreignkey:
         field = field.field

@@ -14,10 +14,7 @@ import urllib3
 from django.conf import settings
 
 from sentry import quotas
-from sentry.models import (
-    Environment, Group, GroupRelease,
-    Organization, Project, Release, ReleaseProject
-)
+
 from sentry.net.http import connection_from_url
 from sentry.utils import metrics, json
 from sentry.utils.dates import to_timestamp
@@ -376,6 +373,8 @@ def raw_query(start, end, groupby=None, conditions=None, filter_keys=None,
     `aggregations` a list of (aggregation_function, column, alias) tuples to be
     passed to the query.
     """
+    from sentry.models import Organization  # Django 1.9 setup issue
+    from sentry.models import Project  # Django 1.9 setup issue
 
     # convert to naive UTC datetimes, as Snuba only deals in UTC
     # and this avoids offset-naive and offset-aware issues
@@ -576,6 +575,9 @@ def get_snuba_translators(filter_keys, is_grouprelease=False):
     translations as long as you can express them as forward(filters) and reverse(row)
     functions.
     """
+    from sentry.models import Environment  # Django 1.9 setup issue
+    from sentry.models import GroupRelease  # Django 1.9 setup issue
+    from sentry.models import Release  # Django 1.9 setup issue
 
     # Helper lambdas to compose translator functions
     identity = (lambda x: x)
@@ -660,6 +662,8 @@ def get_related_project_ids(column, ids):
     """
     Get the project_ids from a model that has a foreign key to project.
     """
+    from sentry.models import ReleaseProject  # Django 1.9 setup issue
+    from sentry.models import Group  # Django 1.9 setup issue
     mappings = {
         'issue': (Group, 'id', 'project_id'),
         'tags[sentry:release]': (ReleaseProject, 'release_id', 'project_id'),
@@ -700,6 +704,7 @@ def shrink_time_window(issues, start):
     asynchronously by buffers, and will cause queries to skip recently seen data on
     stale groups.
     """
+    from sentry.models import Group  # Django 1.9 setup issue
     if issues and len(issues) == 1:
         group = Group.objects.get(pk=list(issues)[0])
         start = max(start, naiveify_datetime(group.first_seen) - timedelta(minutes=5))
