@@ -1,11 +1,9 @@
 from __future__ import absolute_import, print_function
 
+
 from django.conf.urls import patterns, url
 
 from .endpoints.work_batch import WorkBatchEndpoint, WorkBatchDetailsEndpoint, WorkBatchDetailsActivityEndpoint
-
-from .endpoints.sample import SampleEndpoint, SampleBatchEndpoint
-from .endpoints.samples_details import SampleDetailsEndpoint, SampleWorkflowsEndpoint, SampleProcessesEndpoint, SampleWorkflowsBatchEndpoint
 
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
@@ -29,15 +27,7 @@ from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.task import UserTaskAggregateEndpoint
 
 urlpatterns = patterns(
-    # Samples: TODO: have them per organization (that is in projects that are per organization)
-    # TODO: Should be items
-    url(r'^samples/$', SampleEndpoint.as_view(), name='clims-api-0-samples'),
-    url(r'^samples/(?P<sample_id>[^\/]+)/$',
-        SampleDetailsEndpoint.as_view(),
-        name='clims-api-0-sample-details'
-        ),
 
-    # Workflow
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/aggregate/task/$',
         UserTaskAggregateEndpoint.as_view(),
         name='clims-api-0-workflow-aggregate-task'),
@@ -86,32 +76,6 @@ urlpatterns = patterns(
     url(r'^work-batch-settings/(?P<work_batch_type>[^\/]+)/$',
         WorkBatchSettingsDetailsEndpoint.as_view(),
         name='clims-api-0-work-batch-settings-details'),
-
-    url(r'^sample-batches/$', SampleBatchEndpoint.as_view(), name='clims-api-0-sample-batches'),
-
-    # Sample level workflows for this sample
-    url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
-        SampleWorkflowsEndpoint.as_view(),
-        name='clims-api-0-sample-details-workflows'
-        ),
-
-    # Sample level workflows for this sample
-    url(r'^samples/(?P<sample_id>[^\/]+)/workflows/$',
-        SampleWorkflowsEndpoint.as_view(),
-        name='clims-api-0-sample-details-workflows'
-        ),
-
-    # TODO: Only use the name process, not workflows
-    url(r'^samples/(?P<sample_id>[^\/]+)/processes/$',
-        SampleProcessesEndpoint.as_view(),
-        name='clims-api-0-sample-details-processes'
-        ),
-
-    url(
-        r'^processes/(?P<organization_slug>[^\/]+)/sample-processes/$',
-        SampleWorkflowsBatchEndpoint.as_view(),
-        name='clims-api-0-sample-workflows-batch'
-    ),
 
     # Processes and Tasks
     url(
