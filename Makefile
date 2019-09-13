@@ -19,6 +19,8 @@ build: locale
 drop-db:
 	@echo "--> Dropping existing 'clims' database"
 	dropdb clims || true
+	@echo "--> Dropping existing 'test_clims' database"
+	dropdb test_clims || true
 
 create-db:
 	@echo "--> Creating 'clims' database"
@@ -152,7 +154,7 @@ test-styleguide:
 	@npm run snapshot
 	@echo ""
 
-test-python:
+test-python: clean
 	@echo "--> Running Python tests"
 	py.test tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
 	@echo ""
