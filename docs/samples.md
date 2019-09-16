@@ -17,13 +17,15 @@ Examples of `Substance`s are:
     * Pool
     * Solution used to dilute a liquid sample
 
+The details for how substances are kept on a database level are [here](./deep-dive/substances.md).
+
 # Auditing
 
 The general rule is never to delete any data. Individual labs can of course decide to archive old samples if required, but (given that you backup your data) you should always be easily able to track the status of a sample in any state it has ever been in. The history of samples is maintained by creating new version of each of its properties on every change.
 
 # Ancestry
 
-Every sample is either an original sample or an ancestor of such a sample. Samples can keep their name when properties change, but then they'll always get a new version number (see the chapter on Auditing).
+Every sample is either an original sample or derived from some sample. Samples can keep their name when properties change, but then they'll always get a new version number (see the chapter on Auditing).
 
 It's easiest to understand the sample lifetime by looking at an example.
 
