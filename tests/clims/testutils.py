@@ -30,7 +30,7 @@ def create_substance_type(name=None, org=None, plugin=None, properties=None):
     ]
     plugin = plugin or create_plugin()
 
-    substance_type = substances.register_type('GemstoneSample', 'substances', plugin, properties=properties)
+    substance_type = substances.register_type(name, 'substances', plugin, properties=properties)
 
     return substance_type
 
