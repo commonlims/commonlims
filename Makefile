@@ -11,7 +11,7 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: setup-camunda node-version-check update-submodules install-yarn-pkgs install-sentry-dev
+develop-only: clean setup-camunda node-version-check update-submodules install-yarn-pkgs install-sentry-dev
 test: lint test-js test-python test-cli
 
 build: locale
