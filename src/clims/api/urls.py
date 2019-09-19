@@ -3,7 +3,11 @@ from __future__ import absolute_import, print_function
 
 from django.conf.urls import patterns, url
 
-from .endpoints.work_batch import WorkBatchEndpoint, WorkBatchDetailsEndpoint, WorkBatchDetailsActivityEndpoint
+from .endpoints.work_batch import (WorkBatchEndpoint,
+        WorkBatchDetailsEndpoint, WorkBatchDetailsActivityEndpoint)
+
+from .endpoints.substance import SubstanceEndpoint
+from .endpoints.substance_details import SubstanceDetailsEndpoint
 
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
@@ -15,7 +19,8 @@ from .endpoints.user_files import UserFilesEndpoint
 from .endpoints.work_batch_files import WorkBatchFilesEndpoint
 from .endpoints.work_batch_file_details import WorkBatchFileDetailsEndpoint
 
-from .endpoints.work_batch_settings import WorkBatchSettingsEndpoint, WorkBatchSettingsDetailsEndpoint
+from .endpoints.work_batch_settings import (WorkBatchSettingsEndpoint,
+        WorkBatchSettingsDetailsEndpoint)
 
 from .endpoints.work_batch_notes import WorkBatchNotesEndpoint
 from .endpoints.work_batch_notes_details import WorkBatchNotesDetailsEndpoint
@@ -26,14 +31,31 @@ from .endpoints.plugin_views import PluginViewsEndpoint
 from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.task import UserTaskAggregateEndpoint
 
-urlpatterns = patterns(
 
+def fmt(s):
+    """Formats rules with common patterns"""
+    s = s.replace('{org}', r'(?P<organization_slug>[^\/]+)')
+    s = s.replace('{project}', r'(?P<project_slug>[^\/]+)')
+    return s
+
+
+urlpatterns = patterns(
+    # Workflow
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/aggregate/task/$',
         UserTaskAggregateEndpoint.as_view(),
         name='clims-api-0-workflow-aggregate-task'),
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
+
+    url(r'^substances/(?P<substance_id>[^\/]+)/$',
+        SubstanceDetailsEndpoint.as_view(),
+        name='clims-api-0-substance-details'
+        ),
+
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/$',
+        SubstanceEndpoint.as_view(), name='clims-api-0-substances'),
+
 
     # work-batches: user task activities that have been grouped together in 1..n sized batches
     url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
@@ -130,7 +152,7 @@ urlpatterns = patterns(
         name='clims-api-0-plugin-actions'
     ),
     url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/(?P<plugin_id>[^\/]+)/views/$',
+        fmt('^projects/{org}/{project}/plugins/(?P<plugin_id>[^\/]+)/views/$'),
         PluginViewsEndpoint.as_view(),
         name='clims-api-0-plugin-views'
     ),

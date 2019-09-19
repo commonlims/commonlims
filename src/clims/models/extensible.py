@@ -24,6 +24,10 @@ class ExtensibleType(Model):
     category = models.TextField()
     plugin = models.ForeignKey('clims.PluginRegistration')
 
+    @property
+    def full_name(self):
+        return "{}.{}.{}".format(self.plugin.name, self.category, self.name)
+
     class Meta:
         app_label = 'clims'
         db_table = 'clims_extensibletype'
