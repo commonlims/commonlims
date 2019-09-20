@@ -22,6 +22,12 @@ drop-db:
 	@echo "--> Dropping existing 'test_clims' database"
 	dropdb test_clims || true
 
+create-camunda-tables:
+	# Assumes that the database is clean
+	@echo "--> Creating database tables for camunda"
+	./middleware/camunda/db-install.sh
+	./middleware/camunda/restart.sh
+
 create-db:
 	@echo "--> Creating 'clims' database"
 	createdb -E utf-8 clims
@@ -29,7 +35,7 @@ create-db:
 	-psql -d postgres -c "CREATE ROLE postgres WITH LOGIN"
 	-psql -d postgres -c "ALTER ROLE postgres WITH SUPERUSER;"
 
-reset-db: clean drop-db create-db
+reset-db: clean drop-db create-db create-camunda-tables
 	@echo "--> Applying migrations"
 	lims upgrade
 	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"
