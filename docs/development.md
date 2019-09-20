@@ -22,10 +22,11 @@ You may also need to create a postgres user that matches your Unix username:
 - `psql template1 postgres -c 'CREATE USER "[your-unix-username]" SUPERUSER;'`
 
 From the root of the 'commonlims' project, run:
-- `source devboot.sh`
-- `make develop`
+- `source devboot`
+- alt: `source devboot-conda`  # If you want to use conda instead of pyenv
 
-Ensure that your 'commonlimsN" conda environment is activated. Then, from the root of the 'commonlims-snpseq' project, run: `pip install -e .`
+Then run:
+- `make develop`
 
 From the root of the 'commonlims' project, run: `lims devserver --browser-reload`
 
@@ -36,7 +37,7 @@ Camunda should be available at: http://localhost:8080/camunda/app/cockpit
 
 After initial setup, do the following to start your environment:
 - Start postgres, redis and camunda services
-- Run `source devboot.sh`
+- Run `source devboot`
 - Run `lims devserver --browser-reload`
 
 # Roadmap

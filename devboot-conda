@@ -2,10 +2,10 @@
 
 if $(git branch | grep "*" | grep -q py3); then
     CLIMS_PYTHON_VERSION="3.7"
-    CLIMS_CONDA_ENV="commonlims3"
+    CLIMS_CONDA_ENV="clims3"
 else
     CLIMS_PYTHON_VERSION="2.7"
-    CLIMS_CONDA_ENV="commonlims2"
+    CLIMS_CONDA_ENV="clims2"
 fi
 
 conda create --name=$CLIMS_CONDA_ENV python="$CLIMS_PYTHON_VERSION"
@@ -17,14 +17,6 @@ echo "using conda env: $CLIMS_CONDA_ENV"
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`echo $CONDA_EXE | awk '{gsub("bin/conda", "lib")}1'`
 echo "set LD_LIBRARY_PATH to $LD_LIBRARY_PATH"
 
-echo "Installing nvm"
-if ! type "nvm" > /dev/null; then
-  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-  source ~/.bashrc
-fi
+export CLIMS_PYTHON_PATH=$(which python)  # For use in e.g. vscode
 
-echo "Installing correct node version"
-nvm install $(cat .nvmrc)
-
-echo "Activating recommended node version"
-nvm use $(cat .nvmrc)
+source ./devboot-js
