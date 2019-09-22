@@ -98,6 +98,8 @@ install-yarn-pkgs:
 
 install-clims-dev:
 	@echo "--> Installing Common LIMS (for development)"
+	# Install overrides
+	pip install -r requirements-not-pypi.txt
 	NODE_ENV=development $(PIP) install -e ".[dev,tests,optional]"
 
 build-js-po: node-version-check

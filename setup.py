@@ -14,6 +14,7 @@ from __future__ import absolute_import
 #     print 'Error: Sentry requires Python 2.7'
 #     sys.exit(1)
 
+import re
 import os
 import os.path
 import sys
@@ -50,10 +51,20 @@ IS_LIGHT_BUILD = os.environ.get('CLIMS_LIGHT_BUILD') == '1'
 
 # we use pip requirements files to improve Docker layer caching
 
+# git+git@github.com:commonlims/django-templatetag-sugar.git@master#egg=django_templatetag_sugar
+GIT_REGEX = re.compile(r'^git+.*/(.*)\.git.*')
+
+
+def parse_req(line):
+    m = GIT_REGEX.search(line)
+    if m:
+        return m.group(1)
+    return line
+
 
 def get_requirements(env):
     with open(u'requirements-{}.txt'.format(env)) as fp:
-        return [x.strip() for x in fp.read().split('\n') if not x.startswith('#')]
+        return [parse_req(x.strip()) for x in fp.read().split('\n') if not x.startswith('#')]
 
 
 install_requires = get_requirements('base')
