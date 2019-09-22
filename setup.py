@@ -61,14 +61,6 @@ dev_requires = get_requirements('dev')
 tests_require = get_requirements('test')
 optional_requires = get_requirements('optional')
 
-# override django version in requirements file if DJANGO_VERSION is set
-DJANGO_VERSION = os.environ.get('DJANGO_VERSION')
-if DJANGO_VERSION:
-    install_requires = [
-        u'Django{}'.format(DJANGO_VERSION)
-        if r.startswith('Django>=') else r
-        for r in install_requires
-    ]
 
 
 class SentrySDistCommand(SDistCommand):
