@@ -11,7 +11,7 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: clean setup-camunda node-version-check update-submodules install-yarn-pkgs install-sentry-dev
+develop-only: clean setup-camunda node-version-check update-submodules install-yarn-pkgs install-clims-dev
 test: lint test-js test-python test-cli
 
 build: locale
@@ -96,8 +96,8 @@ install-yarn-pkgs:
 	# Use NODE_ENV=development so that yarn installs both dependencies + devDependencies
 	NODE_ENV=development yarn install --pure-lockfile
 
-install-sentry-dev:
-	@echo "--> Installing Sentry (for development)"
+install-clims-dev:
+	@echo "--> Installing Common LIMS (for development)"
 	NODE_ENV=development $(PIP) install -e ".[dev,tests,optional]"
 
 build-js-po: node-version-check
@@ -121,21 +121,21 @@ update-transifex: build-js-po
 
 build-platform-assets:
 	@echo "--> Building platform assets"
-	sentry init
-	@echo "from sentry.utils.integrationdocs import sync_docs; sync_docs(quiet=True)" | sentry exec
+	lims init
+	@echo "from sentry.utils.integrationdocs import sync_docs; sync_docs(quiet=True)" | lims exec
 
 fetch-release-registry:
 	@echo "--> Fetching release registry"
-	sentry init
-	@echo "from sentry.utils.distutils import sync_registry; sync_registry()" | sentry exec
+	lims init
+	@echo "from sentry.utils.distutils import sync_registry; sync_registry()" | lims exec
 
 test-cli:
 	@echo "--> Testing CLI"
 	rm -rf test_cli
 	mkdir test_cli
-	cd test_cli && sentry init test_conf > /dev/null
-	cd test_cli && sentry --config=test_conf upgrade --traceback --noinput > /dev/null
-	cd test_cli && sentry --config=test_conf help 2>&1 | grep start > /dev/null
+	cd test_cli && lims init test_conf > /dev/null
+	cd test_cli && lims --config=test_conf upgrade --traceback --noinput > /dev/null
+	cd test_cli && lims --config=test_conf help 2>&1 | grep start > /dev/null
 	rm -r test_cli
 	@echo ""
 
@@ -198,7 +198,7 @@ publish:
 	python setup.py sdist bdist_wheel upload
 
 
-.PHONY: develop develop-only test build test reset-db clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-sentry-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish
+.PHONY: develop develop-only test build test reset-db clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish
 
 
 ############################
@@ -232,7 +232,7 @@ travis-test-dist:
 	# causes the build to fail with a EAGAIN when writing a large amount of
 	# data to STDOUT.
 	# See: https://github.com/travis-ci/travis-ci/issues/4704
-	SENTRY_BUILD=$(TRAVIS_COMMIT) SENTRY_LIGHT_BUILD=0 python setup.py -q sdist bdist_wheel
+	SENTRY_BUILD=$(TRAVIS_COMMIT) CLIMS_LIGHT_BUILD=0 python setup.py -q sdist bdist_wheel
 	@ls -lh dist/
 
 .PHONY: scan-python travis-scan-sqlite travis-scan-postgres travis-scan-mysql travis-scan-acceptance travis-scan-snuba travis-scan-js travis-scan-cli travis-scan-dist
