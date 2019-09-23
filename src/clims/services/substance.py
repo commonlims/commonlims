@@ -167,4 +167,64 @@ class SubstanceService(object):
         return substance_type
 
 
+class SubstanceBaseField(object):
+    pass
+
+
+class IntField(SubstanceBaseField):
+    pass
+
+
+class FloatField(SubstanceBaseField):
+    pass
+
+
+class TextField(object):
+    def __init__(self, prop_name=None):
+        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
+        self.prop_name = prop_name
+
+    def validate(self, obj, value):
+        print("HERE validating", obj, value)  # noqa
+        # prop = obj._wrapped.extensible_type.property_types.filter(name=self.prop_name)
+
+    def __get__(self, obj, type=None):
+        return obj.properties[self.prop_name]
+
+    def __set__(self, obj, value):
+        # TODO: Validate
+        self.validate(obj, value)
+        obj.properties[self.prop_name] = value
+
+
+class SubstanceBase(object):
+    """
+    A base object for defining substances in the system, e.g. Sample, Aliquot or Pool.
+
+    Details:
+
+    Under the hood, this object wraps a Substance object and its related Extensible* classes.
+    """
+
+    def __init__(self, name, org, **kwargs):
+        type_name = "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+        self.properties = kwargs
+        extensible_type = substances.get_extensible_type(org, type_name)
+        self._wrapped = Substance(name=name, extensible_type=extensible_type, organization=org)
+
+    @property
+    def name(self):
+        return self._wrapped.name
+
+    def save(self):
+        if self._wrapped.id:
+            pass  # UPDATE
+        else:
+            self._wrapped = substances.create(
+                self._wrapped.name,
+                self._wrapped.extensible_type,
+                self._wrapped.organization,
+                properties=self.properties)
+
+
 substances = SubstanceService()

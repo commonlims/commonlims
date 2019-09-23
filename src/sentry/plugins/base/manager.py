@@ -9,7 +9,9 @@ from __future__ import absolute_import, print_function
 
 __all__ = ('PluginManager', )
 
+import six
 import logging
+import inspect
 
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
@@ -21,11 +23,21 @@ class PluginManager(InstanceManager):
         self.work_batches = list()
         self.handlers_mapped_by_work_batch_type = dict()  # TODO: clean up names!
 
+        self.handlers = dict()
+        self.register_handler_baseclasses()
+
     def __iter__(self):
         return iter(self.all())
 
     def __len__(self):
         return sum(1 for i in self.all())
+
+    def register_handler_baseclasses(self):
+        from clims import handlers
+
+        for _name, cls in inspect.getmembers(handlers, inspect.isclass):
+            if cls != handlers.Handler and issubclass(cls, handlers.Handler):
+                self.handlers[cls] = set()
 
     def all(self, version=1):
         """
@@ -119,9 +131,66 @@ class PluginManager(InstanceManager):
                 return result
 
     def register(self, cls):
-        # If the plugin has a `handlers` module. Import that so that it will register everything
         self.add('%s.%s' % (cls.__module__, cls.__name__))
+        self.register_handlers(cls)
         return cls
+
+    def get_registered_base_handler(self, cls):
+        """
+        Returns True if cls is an implementation of a registered handler type
+        """
+        for handler_type in self.handlers:
+            if issubclass(cls, handler_type):
+                return handler_type
+        return None
+
+    def register_handlers(self, cls):
+        import inspect
+        import importlib
+
+        # Registers handlers. Handlers must be in a module directly  below
+        # the plugin's module:
+        handlers_module = "{}.handlers".format(cls.__module__)
+        mod = importlib.import_module(cls.__module__)
+
+        try:
+            mod = importlib.import_module(handlers_module)
+            for _name, impl in inspect.getmembers(mod, inspect.isclass):
+                baseclass = self.get_registered_base_handler(impl)
+                if baseclass and baseclass != impl:
+                    # We've found an implementation of the baseclass. Before adding however, we'll
+                    # need to make sure that if we already have a less concrete implementation in
+                    # the set we should use the more concrete one:
+
+                    if baseclass.unique_registration and len(self.handlers[baseclass]) > 1:
+                        # Invariant: There must be only one instance of this baseclass if we're here
+                        assert len(self.handlers[baseclass]) == 1
+
+                        impl_already_reg = self.handlers[baseclass]
+                        if issubclass(impl, impl_already_reg):
+                            # Current class is more concrete, let's replace it:
+                            self.handlers[baseclass].clear()
+                            self.handlers[baseclass].add(impl)
+                        elif issubclass(impl_already_reg, impl):
+                            # The implementation we've already registered is more concrete
+                            pass
+                        else:
+                            # We got two registrations of the same implementation
+                            # TODO: In this case the user should be able to add a config variable
+                            # to select the implementation to use
+                            from clims.handlers import MultipleHandlersNotAllowed
+                            raise MultipleHandlersNotAllowed(
+                                "Trying to register the handler '{}' as the unique implementation "
+                                "of '{}' but already have '{}' registered".format(
+                                    impl, baseclass, impl_already_reg))
+                    else:
+                        self.handlers[baseclass].add(impl)
+
+        except ImportError as ex:
+            # TODO: Would prefer not to use the error message to check for the
+            # exact type of error being thrown
+            if six.text_type(ex) != "No module named handlers":
+                raise ex
 
     def unregister(self, cls):
         self.remove('%s.%s' % (cls.__module__, cls.__name__))

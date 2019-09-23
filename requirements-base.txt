@@ -32,6 +32,7 @@ mistune>0.7,<0.9
 mmh3>=2.3.1,<2.4
 mock==2.0.0
 oauth2>=1.5.167
+openpyxl
 parsimonious==0.8.0
 percy>=1.1.2
 petname>=2.0,<2.1
