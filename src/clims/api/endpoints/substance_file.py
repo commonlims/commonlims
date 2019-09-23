@@ -51,7 +51,7 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
         :auth: required
         """
         from sentry.plugins import plugins
-        from clims.handlers import SubstancesSubmissionHandler
+        from clims.handlers import SubstancesSubmissionHandler, HandlerContext
         submission_handlers = plugins.handlers[SubstancesSubmissionHandler]
         if len(submission_handlers) == 0:
             return Response({'detail':
@@ -100,7 +100,8 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
 
             # Call handler synchronously:
             for handler in submission_handlers:
-                instance = handler()
+                context = HandlerContext(organization=organization)
+                instance = handler(context)
                 instance.handle(org_file)
 
             return Response(ret, status=status.HTTP_201_CREATED)

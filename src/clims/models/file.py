@@ -4,7 +4,6 @@ from django.db import models
 
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
-from functools32 import lru_cache
 
 
 class StructuredFileMixin(object):
@@ -13,21 +12,18 @@ class StructuredFileMixin(object):
     without having to import requirements etc.
     """
 
-    @lru_cache
     def as_excel(self):
         """
         Returns the file as an excel file
         """
         return load_workbook(self.file.getfile())
 
-    @lru_cache
     def as_xml(self):
         raise NotImplementedError()
 
     def as_csv(self):
-        # TODO: Add @lru_cache to the method when ready
         from clims.services import Csv
-        return Csv(self.file.getfile())
+        return Csv(self.file.getfile(), file_name=self.file.name)
 
 
 class OrganizationFile(StructuredFileMixin, Model):

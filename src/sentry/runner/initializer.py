@@ -62,6 +62,8 @@ def register_plugins(settings):
         except AttributeError:
             pass
 
+    plugins.register_extensible_types()
+
 
 def init_plugin(plugin):
     from sentry.plugins import bindings
@@ -105,11 +107,13 @@ def init_plugin(plugin):
         plugin_version = "NA"
 
     try:
-        registered_name = "{}.{}".format(plugin_type.__module__, plugin_type.__name__)
         # NOTE: Registration currently happens for all organizations:
         for org in Organization.objects.all():
-            PluginRegistration.objects.get_or_create(
-                name=registered_name, version=plugin_version, organization=org)
+            try:
+                PluginRegistration.objects.get_or_create(
+                    name=plugin_type.full_name, version=plugin_version, organization=org)
+            except AttributeError:
+                pass
     except ProgrammingError:
         # If the database is being created for the first time we won't have access
         # to the PluginRegistration object

@@ -9,6 +9,16 @@ class MultipleHandlersNotAllowed(Exception):
     pass
 
 
+class HandlerContext(object):
+    """
+    Has information on in which context a handler was called, e.g. what the current
+    organization is etc.
+    """
+
+    def __init__(self, organization):
+        self.organization = organization
+
+
 class Handler(object):
     """
     The base class for handlers that are defined by plugins.
@@ -28,9 +38,10 @@ class Handler(object):
     in any order, except if a handler is found that has a subclass that's implementing it.
     """
 
-    def __init__(self):
+    def __init__(self, context):
         from clims.services import substances
         self.substances = substances
+        self.context = context
 
 
 class SubstancesSubmissionHandler(Handler):

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import pytest
 from clims.models import Substance
 from tests.clims import testutils
-from clims.services import substances
+from clims.services import substances, extensibles, ExtensibleTypeValidationError
 from django.db.models import FieldDoesNotExist
 from random import random
 from ...fixtures.plugins.gemstones_inc.models import GemstoneSample
@@ -34,8 +34,8 @@ class TestSubstance(TestCase):
             'color': 'red'
         }
 
-        # NOTE: One must change substances via the service rather than the django objects if all
-        # business rules are to be respected
+        # NOTE: One must change substances via the service rather than the django
+        # objects if all business rules are to be respected
         substance = substances.create(
             name='gem-sample-001',
             extensible_type=self.gemstone_sample_type,
@@ -133,9 +133,9 @@ class TestSubstance(TestCase):
 
         # 2. ... but the ID of the properties should differ
         original_prop_ids = {x.id for x in original.properties.all()}
-        childd_prop_ids = {x.id for x in child.properties.all()}
+        child_prop_ids = {x.id for x in child.properties.all()}
 
-        assert original_prop_ids != childd_prop_ids, "Expecting new IDs for property objects"
+        assert original_prop_ids != child_prop_ids, "Expecting new IDs for property objects"
 
     def test_creating_child_can_override_props(self):
         props = dict(preciousness='*o*', color='red')
@@ -211,6 +211,29 @@ class TestSubstance(TestCase):
         do_asserts(child)
 
 
+class TestSubstanceType(TestCase):
+    def setUp(self):
+        pass
+
+    def test_it(self):
+        # TODO: This is really an extensible test
+        plugin = testutils.create_plugin()
+        extensibles.register(plugin, GemstoneSample)
+
+        from clims.models import ExtensibleType
+        name = "{}.{}".format(GemstoneSample.__module__, GemstoneSample.__name__)
+        created_model = ExtensibleType.objects.get(name=name)
+
+        actual = sorted([(x.name, x.raw_type) for x in created_model.property_types.all()])
+        expected = [('color', 's'),
+                    ('index', 'i'),
+                    ('payload', 'j'),
+                    ('preciousness', 's'),
+                    ('weight', 'i')]
+
+        assert actual == expected
+
+
 class TestSubstanceHighLevel(TestCase):
     def setUp(self):
         self.org = testutils.create_organization()
@@ -240,9 +263,30 @@ class TestSubstanceHighLevel(TestCase):
         assert len(props) == 1
         assert props[0].value == sample.color
 
-    def test_assigning_incorrect_type_fails(self):
+    def test_assigning_int_to_string_field_fails(self):
         sample = GemstoneSample("somename-{}".format(random()), self.org)
-        sample.color = 10
-        sample.save()
-        sub = Substance.objects.get(name=sample.name)
-        assert sample.name == sub.name
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.color = 10
+
+    def test_assigning_string_to_int_field_fails(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.index = "test"
+
+    def test_assigning_string_to_float_field_fails(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.weight = "test"
+
+    def test_assigning_int_to_float_field_succeeds(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.weight = 10
+
+    def test_assigning_float_to_int_field_succeeds_if_not_lossy(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.weight = 10.0
+
+    def test_assigning_float_to_int_field_fails_if_lossy(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.weight = 10.5
