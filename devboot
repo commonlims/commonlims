@@ -1,0 +1,22 @@
+# This file must be sourced
+
+if [ ! -d ~/.pyenv ]; then
+    echo "Please install pyenv: https://github.com/pyenv/pyenv"
+    exit 1
+fi
+
+if [ ! -d ~/.pyenv/versions/2.7.15 ]; then
+    echo "Installing Python 2.7.15..."
+    pyenv install 2.7.15
+fi
+
+if [ ! -d ~/.pyenv/versions/clims2 ]; then
+    echo "Creating virtualenv ..."
+    pyenv virtualenv 2.7.15 clims2
+fi
+
+pyenv activate clims2
+
+export CLIMS_PYTHON_PATH=$(which python)  # For use in e.g. vscode
+
+source ./devboot-js

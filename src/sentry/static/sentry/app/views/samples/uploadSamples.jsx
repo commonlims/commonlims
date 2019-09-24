@@ -92,33 +92,26 @@ const UploadSamplesButton = createReactClass({
     this.setState({state: FormState.SAVING}, () => {
       const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
-      // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
-      // discuss if we rather want a specific batch endpoint.
-      // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
-      const endpoint = '/user-files/';
+      const endpoint = '/organizations/lab/substances/files/';
 
       const reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
       reader.onload = function() {
-        const data2 = {
+        const data = {
           content: btoa(reader.result),
-          fileName: 'abc',
+          filename: this.state.selectedFile.name,
         };
 
         this.api.request(endpoint, {
           method: 'POST',
-          data2,
+          data,
           success: response => {
             this.onToggle();
             this.setState({
               state: FormState.READY,
               errors: {},
             });
-
-            // TODO: In later versions (post-poc) we'll want to upload the file to a queue rather than
-            // processing it directly, as a number of plugins may need to handle it and may time out.
-            // In that case, this logic needs to be set on a timer/callback:
           },
           error: err => {
             let errors = err.responseJSON || true;

@@ -488,6 +488,11 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         except OSError:
             pass
 
+    @property
+    def full_name(self):
+        plugin_type = type(self)
+        return "{}.{}".format(plugin_type.__module__, plugin_type.__name__)
+
 
 @six.add_metaclass(PluginMount)
 class Plugin2(IPlugin2):

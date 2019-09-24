@@ -153,18 +153,112 @@ class SubstanceService(object):
 
         return substance
 
-    @transaction.atomic
-    def register_type(self, name, org, plugin, category='default', properties=None):
-        properties = properties or dict()
-        substance_type, _ = ExtensibleType.objects.get_or_create(
-            name=name,
-            category=category,
-            plugin=plugin)
 
-        for kwargs in properties:
-            ExtensiblePropertyType.objects.get_or_create(
-                extensible_type=substance_type, **kwargs)
-        return substance_type
+class ExtensibleBaseField(object):
+    def __init__(self, prop_name=None, display_name=None):
+        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
+        self.prop_name = prop_name
+        self.display_name = display_name or prop_name
+
+    def validate(self, prop_type, value):
+        # Override this in subclasses
+        pass
+
+    def _handle_validate(self, obj, value):
+        prop_type = obj._wrapped.extensible_type.property_types.get(name=self.prop_name)
+        self.validate(prop_type, value)
+
+    def __get__(self, obj, type=None):
+        return obj.properties[self.prop_name]
+
+    def __set__(self, obj, value):
+        self._handle_validate(obj, value)
+        obj.properties[self.prop_name] = value
+
+
+class ExtensibleTypeValidationError(Exception):
+    pass
+
+
+def validate_with_casting(value, fn):
+    valid = True
+    try:
+        cast = fn(value)
+        if cast != value:
+            valid = False
+    except ValueError:
+        valid = False
+
+    if not valid:
+        raise ExtensibleTypeValidationError(
+            "Value can not be interpreted as '{}'".format(fn.__name__))
+
+
+class IntField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        validate_with_casting(value, int)
+
+    @property
+    def raw_type(self):
+        # NOTE: Implemented as a property as the constant we're using lies in the models and
+        # we can't load the models too soon. It would be nice to change this!
+        from clims.models import ExtensiblePropertyType
+        return ExtensiblePropertyType.INT
+
+
+class FloatField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        validate_with_casting(value, float)
+
+    @property
+    def raw_type(self):
+        from clims.models import ExtensiblePropertyType
+        return ExtensiblePropertyType.FLOAT
+
+
+class TextField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        if not isinstance(value, six.string_types):
+            raise ExtensibleTypeValidationError("Expected string")
+
+    @property
+    def raw_type(self):
+        from clims.models import ExtensiblePropertyType
+        return ExtensiblePropertyType.STRING
+
+
+class ExtensibleBase(object):
+    pass
+
+
+class SubstanceBase(ExtensibleBase):
+    """
+    A base object for defining substances in the system, e.g. Sample, Aliquot or Pool.
+
+    Details:
+
+    Under the hood, this object wraps a Substance object and its related Extensible* classes.
+    """
+
+    def __init__(self, name, org, **kwargs):
+        type_name = "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+        self.properties = kwargs
+        extensible_type = substances.get_extensible_type(org, type_name)
+        self._wrapped = Substance(name=name, extensible_type=extensible_type, organization=org)
+
+    @property
+    def name(self):
+        return self._wrapped.name
+
+    def save(self):
+        if self._wrapped.id:
+            pass  # UPDATE
+        else:
+            self._wrapped = substances.create(
+                self._wrapped.name,
+                self._wrapped.extensible_type,
+                self._wrapped.organization,
+                properties=self.properties)
 
 
 substances = SubstanceService()

@@ -12,6 +12,8 @@ import os
 import six
 
 from django.conf import settings
+from django.db.utils import ProgrammingError
+
 
 from sentry.utils import warnings
 from sentry.utils.sdk import configure_sdk
@@ -21,11 +23,6 @@ from sentry.utils.warnings import DeprecatedSettingWarning
 def register_plugins(settings):
     from pkg_resources import iter_entry_points
     from sentry.plugins import plugins
-    # entry_points={
-    #    'sentry.plugins': [
-    #         'phabricator = sentry_phabricator.plugins:PhabricatorPlugin'
-    #     ],
-    # },
 
     groups = ['sentry.plugins', 'clims.plugins']
     entry_points = [ep for group in groups for ep in iter_entry_points(group)]
@@ -65,6 +62,8 @@ def register_plugins(settings):
         except AttributeError:
             pass
 
+    plugins.register_extensible_types()
+
 
 def init_plugin(plugin):
     from sentry.plugins import bindings
@@ -96,6 +95,29 @@ def init_plugin(plugin):
             q = Queue(name, routing_key=routing_key)
             q.durable = False
             settings.CELERY_QUEUES.append(q)
+
+    # TODO: Register only during a `lims upgrade`
+    # Make sure we have a plugin registration here:
+    from clims.models import PluginRegistration
+    from sentry.models import Organization
+    plugin_type = type(plugin)
+    try:
+        plugin_version = plugin.version
+    except AttributeError:
+        plugin_version = "NA"
+
+    try:
+        # NOTE: Registration currently happens for all organizations:
+        for org in Organization.objects.all():
+            try:
+                PluginRegistration.objects.get_or_create(
+                    name=plugin_type.full_name, version=plugin_version, organization=org)
+            except AttributeError:
+                pass
+    except ProgrammingError:
+        # If the database is being created for the first time we won't have access
+        # to the PluginRegistration object
+        pass
 
 
 def initialize_receivers():
@@ -334,13 +356,15 @@ def initialize_app(config, skip_service_validation=False):
 
 def setup_services(validate=True):
     from sentry import (
-        analytics, buffer, digests, newsletter, nodestore, quotas, ratelimits, search, tagstore, tsdb
+        analytics, buffer, digests, newsletter, nodestore, quotas,
+        ratelimits, search, tagstore, tsdb
     )
     from .importer import ConfigurationError
     from sentry.utils.settings import reraise_as
 
     service_list = (
-        analytics, buffer, digests, newsletter, nodestore, quotas, ratelimits, search, tagstore, tsdb,
+        analytics, buffer, digests, newsletter, nodestore, quotas,
+        ratelimits, search, tagstore, tsdb,
     )
 
     for service in service_list:

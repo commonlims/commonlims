@@ -32,6 +32,8 @@ class ExtensibleType(Model):
         app_label = 'clims'
         db_table = 'clims_extensibletype'
 
+    __repr__ = sane_repr('name')
+
 
 class ExtensiblePropertyType(Model):
     """
@@ -68,6 +70,8 @@ class ExtensiblePropertyType(Model):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_extensiblepropertytype'
+
+    __repr__ = sane_repr('name', 'raw_type')
 
 
 class ExtensiblePropertyValue(Model):

@@ -31,6 +31,8 @@ from .endpoints.plugin_views import PluginViewsEndpoint
 from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.task import UserTaskAggregateEndpoint
 
+from .endpoints.substance_file import SubstanceFileEndpoint
+
 
 def fmt(s):
     """Formats rules with common patterns"""
@@ -44,6 +46,7 @@ urlpatterns = patterns(
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/aggregate/task/$',
         UserTaskAggregateEndpoint.as_view(),
         name='clims-api-0-workflow-aggregate-task'),
+
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
@@ -56,6 +59,11 @@ urlpatterns = patterns(
     url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/$',
         SubstanceEndpoint.as_view(), name='clims-api-0-substances'),
 
+    url(
+        fmt(r'^organizations/{org}/substances/files/$'),
+        SubstanceFileEndpoint.as_view(),
+        name='clims-api-0-organization-substances-files'
+    ),
 
     # work-batches: user task activities that have been grouped together in 1..n sized batches
     url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',

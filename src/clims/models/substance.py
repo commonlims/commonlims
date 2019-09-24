@@ -10,15 +10,16 @@ class Substance(Model):
     can also represent other elements that can be combined with a sample or aliquot to make
     another substance.
 
-    Substances can have plugin-defined key/values which are defined in `ExtensibleProperty` instances.
-    All of these extra properties have a detailed version history that can be directly retrieved through
-    the API.
+    Substances can have plugin-defined key/values which are defined in `ExtensibleProperty`
+    instances. All of these extra properties have a detailed version history that can be directly
+    retrieved through the API.
 
-    NOTE: Use the substances service class (`from clims.services import substances`) to create or update substances and properties
-    as otherwise business rules will be broken, e.g. you might update a substance but not its properties.
+    NOTE: Use the substances service class (`from clims.services import substances`) to create or
+    update substances and properties as otherwise business rules will be broken, e.g. you might
+    update a substance but not its properties.
 
-    NOTE: It's currently not supported to change the original name of the substance, but a plugin can specify
-    a versioned name property that can be changed.
+    NOTE: It's currently not supported to change the original name of the substance, but a plugin
+    can specify a versioned name property that can be changed.
     """
     __core__ = True
 
@@ -52,33 +53,3 @@ class Substance(Model):
         app_label = 'clims'
         db_table = 'clims_substance'
         unique_together = ('name', 'organization', 'extensible_type')
-
-
-class SubstanceBaseField(object):
-    pass
-
-
-class IntField(SubstanceBaseField):
-    pass
-
-
-class FloatField(SubstanceBaseField):
-    pass
-
-
-class TextField(SubstanceBaseField):
-    pass
-
-
-class SubstanceBase(object):
-    """
-    The base object plugins must implement in order to register new substance types.
-
-    The objects acts as a proxy for the `Substance` and `SubstanceProperty` types.
-
-    Note that users should not inherit directly from the Substance model
-    as Django would then think that they are models that need to be registered.
-    """
-
-    def __init__(self, name, **kwargs):
-        self._wrapped = Substance(name=name)

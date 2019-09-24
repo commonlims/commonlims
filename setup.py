@@ -1,23 +1,9 @@
 #!/usr/bin/env python
 """
-Sentry
+Common LIMS
 ======
 
-Sentry is a realtime event logging and aggregation platform. It specializes
-in monitoring errors and extracting all the information needed to do a proper
-post-mortem without any of the hassle of the standard user feedback loop.
-
-Sentry is a Server
-------------------
-
-The Sentry package, at its core, is just a simple server and web UI. It will
-handle authentication clients (such as `the Python one
-<https://github.com/getsentry/sentry-python>`_)
-and all of the logic behind storage and aggregation.
-
-That said, Sentry is not limited to Python. The primary implementation is in
-Python, but it contains a full API for sending events from any language, in
-any application.
+Original copyright:
 
 :copyright: (c) 2011-2014 by the Sentry Team, see AUTHORS for more details.
 :license: BSD, see LICENSE for more details.
@@ -28,6 +14,7 @@ from __future__ import absolute_import
 #     print 'Error: Sentry requires Python 2.7'
 #     sys.exit(1)
 
+import re
 import os
 import os.path
 import sys
@@ -60,14 +47,24 @@ for m in ('multiprocessing', 'billiard'):
     except ImportError:
         pass
 
-IS_LIGHT_BUILD = os.environ.get('SENTRY_LIGHT_BUILD') == '1'
+IS_LIGHT_BUILD = os.environ.get('CLIMS_LIGHT_BUILD') == '1'
 
 # we use pip requirements files to improve Docker layer caching
+
+# git+git@github.com:commonlims/django-templatetag-sugar.git@master#egg=django_templatetag_sugar
+GIT_REGEX = re.compile(r'^git+.*/(.*)\.git.*')
+
+
+def parse_req(line):
+    m = GIT_REGEX.search(line)
+    if m:
+        return m.group(1)
+    return line
 
 
 def get_requirements(env):
     with open(u'requirements-{}.txt'.format(env)) as fp:
-        return [x.strip() for x in fp.read().split('\n') if not x.startswith('#')]
+        return [parse_req(x.strip()) for x in fp.read().split('\n') if not x.startswith('#')]
 
 
 install_requires = get_requirements('base')
@@ -75,14 +72,6 @@ dev_requires = get_requirements('dev')
 tests_require = get_requirements('test')
 optional_requires = get_requirements('optional')
 
-# override django version in requirements file if DJANGO_VERSION is set
-DJANGO_VERSION = os.environ.get('DJANGO_VERSION')
-if DJANGO_VERSION:
-    install_requires = [
-        u'Django{}'.format(DJANGO_VERSION)
-        if r.startswith('Django>=') else r
-        for r in install_requires
-    ]
 
 
 class SentrySDistCommand(SDistCommand):

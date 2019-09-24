@@ -1,11 +1,13 @@
 from __future__ import absolute_import
 
 import pytest
-from django.test import TestCase
 from clims.models import Substance
 from tests.clims import testutils
-from clims.services import substances
+from clims.services import substances, extensibles, ExtensibleTypeValidationError
 from django.db.models import FieldDoesNotExist
+from random import random
+from ...fixtures.plugins.gemstones_inc.models import GemstoneSample
+from sentry.testutils import TestCase
 
 
 class TestSubstance(TestCase):
@@ -14,7 +16,10 @@ class TestSubstance(TestCase):
         self.gemstone_sample_type = testutils.create_substance_type(org=self.org)
 
     def test_can_create_substance(self):
-        substance = substances.create(name='gem-sample-001', extensible_type=self.gemstone_sample_type, organization=self.org)
+        substance = substances.create(
+            name='gem-sample-001',
+            extensible_type=self.gemstone_sample_type,
+            organization=self.org)
         assert substance.version == 1
 
     def test_can_save_substance_properties(self):
@@ -29,8 +34,8 @@ class TestSubstance(TestCase):
             'color': 'red'
         }
 
-        # NOTE: One must change substances via the service rather than the django objects if all business rules
-        # are to be respected
+        # NOTE: One must change substances via the service rather than the django
+        # objects if all business rules are to be respected
         substance = substances.create(
             name='gem-sample-001',
             extensible_type=self.gemstone_sample_type,
@@ -40,7 +45,8 @@ class TestSubstance(TestCase):
         def do_asserts(substance):
             assert substance.version == 1
             assert len(substance.properties.all()) == 2
-            key_value_set = {(prop.extensible_property_type.name, prop.value) for prop in substance.properties.all()}
+            key_value_set = {(prop.extensible_property_type.name, prop.value)
+                             for prop in substance.properties.all()}
             expected_key_value_set = {item for item in props.items()}
             assert key_value_set == expected_key_value_set
 
@@ -74,9 +80,9 @@ class TestSubstance(TestCase):
         assert substance.version == 1
         assert {prop.version for prop in substance.properties.all()} == {1}
 
-        # NOTE: The high level link between substances and properties (where they are versioned together)
-        # is (currently) only supported via the SubstanceService, so it's not possible to change properties on the object
-        # we just created above.
+        # NOTE: The high level link between substances and properties (where they are
+        # versioned together) is (currently) only supported via the SubstanceService,
+        # so it's not possible to change properties on the object we just created above.
 
         new_props = dict(preciousness='*O*')
         fresh_substance = substances.update(
@@ -87,7 +93,8 @@ class TestSubstance(TestCase):
 
         # Now, getting all the properties should mean we get 2 versions of preciousness
         # but one of color:
-        vals = {(x.extensible_property_type.name, x.value, x.version, x.latest) for x in fresh_substance.properties.all()}
+        vals = {(x.extensible_property_type.name, x.value, x.version, x.latest)
+                for x in fresh_substance.properties.all()}
         expected_vals = {
             ('color', 'red', 1, True),
             ('preciousness', '*o*', 1, False),
@@ -103,8 +110,9 @@ class TestSubstance(TestCase):
         do_asserts()
 
     def test_creating_child_retains_props_by_default(self):
-        # Creating a child from a substance (e.g. an aliquot from a sample) should retain all properties, unless
-        # specified. This leads to new properties being created, but they all point to the exact same values
+        # Creating a child from a substance (e.g. an aliquot from a sample) should retain
+        # all properties, unless specified. This leads to new properties being
+        # created, but they all point to the exact same values
         props = dict(preciousness='*o*', color='red')
 
         original = substances.create(
@@ -125,9 +133,9 @@ class TestSubstance(TestCase):
 
         # 2. ... but the ID of the properties should differ
         original_prop_ids = {x.id for x in original.properties.all()}
-        childd_prop_ids = {x.id for x in child.properties.all()}
+        child_prop_ids = {x.id for x in child.properties.all()}
 
-        assert original_prop_ids != childd_prop_ids, "Expecting new IDs for property objects"
+        assert original_prop_ids != child_prop_ids, "Expecting new IDs for property objects"
 
     def test_creating_child_can_override_props(self):
         props = dict(preciousness='*o*', color='red')
@@ -201,3 +209,84 @@ class TestSubstance(TestCase):
         # Assert the same is true if we fetch the child by name:
         child = Substance.objects.get(name=child.name)
         do_asserts(child)
+
+
+class TestSubstanceType(TestCase):
+    def setUp(self):
+        pass
+
+    def test_it(self):
+        # TODO: This is really an extensible test
+        plugin = testutils.create_plugin()
+        extensibles.register(plugin, GemstoneSample)
+
+        from clims.models import ExtensibleType
+        name = "{}.{}".format(GemstoneSample.__module__, GemstoneSample.__name__)
+        created_model = ExtensibleType.objects.get(name=name)
+
+        actual = sorted([(x.name, x.raw_type) for x in created_model.property_types.all()])
+        expected = [('color', 's'),
+                    ('index', 'i'),
+                    ('payload', 'j'),
+                    ('preciousness', 's'),
+                    ('weight', 'i')]
+
+        assert actual == expected
+
+
+class TestSubstanceHighLevel(TestCase):
+    def setUp(self):
+        self.org = testutils.create_organization()
+        testutils.create_substance_type(
+            name="tests.fixtures.plugins.gemstones_inc.models.GemstoneSample")
+
+    def test_can_create_substance(self):
+        # TODO: The user should not have to add the org. Would be added via some
+        # context that's on the handler.
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.save()
+
+        sub = Substance.objects.get(name=sample.name)
+        assert sub.name == sample.name
+
+    def test_can_add_substance_property(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.color = "red"
+        sample.save()
+
+        sub = Substance.objects.get(name=sample.name)
+
+        # Might seem obvious, but we're going via a descriptor, so this assert is important
+        assert sample.color == "red"
+        assert sub.name == sample.name
+        props = sub.properties.all()
+        assert len(props) == 1
+        assert props[0].value == sample.color
+
+    def test_assigning_int_to_string_field_fails(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.color = 10
+
+    def test_assigning_string_to_int_field_fails(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.index = "test"
+
+    def test_assigning_string_to_float_field_fails(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.weight = "test"
+
+    def test_assigning_int_to_float_field_succeeds(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.weight = 10
+
+    def test_assigning_float_to_int_field_succeeds_if_not_lossy(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample.weight = 10.0
+
+    def test_assigning_float_to_int_field_fails_if_lossy(self):
+        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.weight = 10.5

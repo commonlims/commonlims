@@ -19,6 +19,9 @@ enum34>=1.1.6,<1.2.0
 exam>=0.5.1
 functools32>=3.2.3,<3.3
 futures>=3.2.0,<4.0.0
+# temporary repo for django-templatetag-sugar, contains a fix for django 1.9. We will drop
+# this package later
+git+git@github.com:commonlims/django-templatetag-sugar.git@1.0.1#egg=django_templatetag_sugar
 # broken on python3
 hiredis>=0.1.0,<0.2.0
 honcho>=1.0.0,<1.1.0
@@ -32,6 +35,7 @@ mistune>0.7,<0.9
 mmh3>=2.3.1,<2.4
 mock==2.0.0
 oauth2>=1.5.167
+openpyxl
 parsimonious==0.8.0
 percy>=1.1.2
 petname>=2.0,<2.1
