@@ -38,9 +38,8 @@ class Handler(object):
     in any order, except if a handler is found that has a subclass that's implementing it.
     """
 
-    def __init__(self, context):
-        from clims.services import substances
-        self.substances = substances
+    def __init__(self, context, app):
+        self.app = app
         self.context = context
 
 

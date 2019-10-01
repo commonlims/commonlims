@@ -5,34 +5,33 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from sentry.api.base import DEFAULT_AUTHENTICATION
-from clims.models import Substance, ExtensibleProperty
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.substance import SubstanceSerializer
-from django.db.models import Prefetch
-from clims.services import substances
 
 
 class SubstanceEndpoint(OrganizationEndpoint):
     authentication_classes = DEFAULT_AUTHENTICATION
-    permission_classes = (IsAuthenticated, )  # TODO
+    permission_classes = (IsAuthenticated, )
 
-    # TODO: The index endpoint must be on sample level!
     def get(self, request, organization):
-        # TODO: Add version as query parameter
-        # Prefetch the latest properties on the object
-        prefetch = Prefetch(
-            'properties',
-            queryset=ExtensibleProperty.objects.filter(latest=True))
+        # TODO: Filter by the organization
+        queryset = self.app.substances.all_qs()
 
-        queryset = Substance.objects.all().prefetch_related(prefetch)
+        def handle_results(qs):
+            ret = list()
+            # NOTE: This could be simplified substantially if we had a queryset that returned
+            # the wrapper object directly.
+            for entry in qs:
+                wrapper = self.app.substances.to_wrapper(entry)
+                ret.append(SubstanceSerializer(wrapper).data)
+            return ret
 
         return self.paginate(
             request=request,
             queryset=queryset,
             paginator_cls=OffsetPaginator,
-            on_results=lambda x: SubstanceSerializer(x, many=True).data,
-        )
+            on_results=lambda data: handle_results(data))
 
     def post(self, request, organization):
         # TODO: Add user info to all actions
@@ -41,10 +40,11 @@ class SubstanceEndpoint(OrganizationEndpoint):
             return self.respond(validator.errors, status=400)
 
         validated = validator.validated_data
-
-        properties = validated.get('properties', None)
-        substance = substances.create(validated['name'],
-            validated['extensible_type'], organization, properties=properties)
+        substance = self.app.extensibles.create(
+            validated['name'],
+            validated['type_full_name'],
+            organization,
+            validated.get('properties', None))
         ret = {"id": substance.id}
 
         return Response(ret, status=status.HTTP_201_CREATED)

@@ -1,8 +1,42 @@
 from __future__ import absolute_import, print_function
 
 from django.db import models
-from sentry.db.models import (Model, sane_repr)
+from sentry.db.models import (Model, sane_repr, FlexibleForeignKey)
 import json
+
+
+class ExtensibleModel(Model):
+    """
+    Base class for extensible models
+    """
+    __core__ = False
+
+    extensible_type = FlexibleForeignKey('clims.ExtensibleType')
+
+    class Meta:
+        abstract = True
+
+
+class ExtensibleVersion(Model):
+    """
+    Represents a particular version of an Extensible
+
+    Parent/Child relationship is always between a particular version of an Extensible.
+    """
+    __core__ = False
+
+    # This field is only populated if a user renames the extensible. In this case we record
+    # the name change here in the version model. This makes handling unique constraints simpler.
+    previous_name = models.TextField(null=True)
+
+    version = models.IntegerField(default=1)
+
+    latest = models.BooleanField(default=True)
+
+    properties = models.ManyToManyField('clims.ExtensibleProperty')
+
+    class Meta:
+        abstract = True
 
 
 class ExtensibleType(Model):
@@ -21,7 +55,9 @@ class ExtensibleType(Model):
     __core__ = True
 
     name = models.TextField()
+
     category = models.TextField()
+
     plugin = models.ForeignKey('clims.PluginRegistration')
 
     @property
@@ -38,7 +74,6 @@ class ExtensibleType(Model):
 class ExtensiblePropertyType(Model):
     """
     Defines the type of an ExtensibleProperty.
-
     """
     __core__ = True
 
@@ -74,38 +109,6 @@ class ExtensiblePropertyType(Model):
     __repr__ = sane_repr('name', 'raw_type')
 
 
-class ExtensiblePropertyValue(Model):
-    """
-    The value of an extensible property.
-
-    Values of ExtensibleProperties are kept separate from the ExtensibleProperty because they
-    may be reused by inherited objects.
-
-    Example:
-
-    doc = '<large document>'
-    sample1 = substances.create('sample1', ..., properties={doc=doc})
-    aliquot1 = substances.copy(sample, 'aliquot1')
-
-    The "large document" is not copied in the database since it hasn't changed.
-
-    If someone later changes the property on either sample1 or aliquot1, the other
-    object will not be affected, because a new value will be created.
-    """
-
-    __core__ = True
-
-    # Supported values (TODO: add more)
-    float_value = models.FloatField(null=True)
-    int_value = models.IntegerField(null=True)
-    string_value = models.TextField(null=True)
-    bool_value = models.NullBooleanField(null=True)
-
-    class Meta:
-        app_label = 'clims'
-        db_table = 'clims_extensiblepropertyvalue'
-
-
 class ExtensibleProperty(Model):
     """
     A class for properties that can be hooked up to `Extensible` objects.
@@ -123,20 +126,45 @@ class ExtensibleProperty(Model):
     The type of a property is determined by a plugin when the system is upgraded. They are
     modelled with `ExtensiblePropertyType`.
     """
-    __core__ = True
-
-    version = models.IntegerField(null=False, default=1)
-
-    # True if this is the latest version of this instance
-    latest = models.BooleanField(null=False, default=True)
+    __core__ = False
 
     extensible_property_type = models.ForeignKey("clims.ExtensiblePropertyType")
 
-    extensible_property_value = models.ForeignKey("clims.ExtensiblePropertyValue")
+    # Supported values (TODO: add more)
+    float_value = models.FloatField(null=True)
+    int_value = models.IntegerField(null=True)
+    string_value = models.TextField(null=True)
+    bool_value = models.NullBooleanField(null=True)
 
     def __init__(self, *args, **kwargs):
         super(ExtensibleProperty, self).__init__(*args, **kwargs)
-        self.is_versioned = kwargs.get('is_versioned', True)
+
+    def _get_field_from_type(self):
+        raw_type = self.extensible_property_type.raw_type
+        if raw_type == ExtensiblePropertyType.INT:
+            return "int_value"
+        elif raw_type == ExtensiblePropertyType.FLOAT:
+            return "float_value"
+        elif raw_type == ExtensiblePropertyType.STRING or raw_type == ExtensiblePropertyType.JSON:
+            return "string_value"
+        elif raw_type == ExtensiblePropertyType.BOOL:
+            return "bool_value"
+        else:
+            raise AssertionError("Unexpected raw type {}".format(raw_type))
+
+    def _serialize(self, value):
+        raw_type = self.extensible_property_type.raw_type
+        if raw_type == ExtensiblePropertyType.JSON:
+            return json.dumps(value)
+        else:
+            return value
+
+    def _deserialize(self, value):
+        raw_type = self.extensible_property_type.raw_type
+        if raw_type == ExtensiblePropertyType.JSON:
+            return json.loads(value)
+        else:
+            return value
 
     @property
     def name(self):
@@ -145,45 +173,23 @@ class ExtensibleProperty(Model):
         return self.extensible_property_type.name
 
     @property
-    def value(self):
-        if not self.extensible_property_value:
+    def display_name(self):
+        if not self.extensible_property_type:
             return None
-        raw_type = self.extensible_property_type.raw_type
-        if raw_type == ExtensiblePropertyType.INT:
-            return self.extensible_property_value.int_value
-        elif raw_type == ExtensiblePropertyType.FLOAT:
-            return self.extensible_property_value.float_value
-        elif raw_type == ExtensiblePropertyType.STRING:
-            return self.extensible_property_value.string_value
-        elif raw_type == ExtensiblePropertyType.BOOL:
-            return self.extensible_property_value.bool_value
-        elif raw_type == ExtensiblePropertyType.JSON:
-            return json.loads(self.extensible_property_value.string_value)
-        else:
-            raise ValueError("Unexpected raw type {}".format(raw_type))
+        return self.extensible_property_type.display_name
 
-    def create_extensible_property_value(self, value):
-        """
-        Creates a property value that fits with the type of this property
-        """
-        ret = ExtensiblePropertyValue()
-        raw_type = self.extensible_property_type.raw_type
-        if raw_type == ExtensiblePropertyType.INT:
-            ret.int_value = value
-        elif raw_type == ExtensiblePropertyType.FLOAT:
-            ret.float_value = value
-        elif raw_type == ExtensiblePropertyType.STRING:
-            ret.string_value = value
-        elif raw_type == ExtensiblePropertyType.BOOL:
-            ret.bool_value = value
-        elif raw_type == ExtensiblePropertyType.JSON:
-            ret.string_value = json.dumps(value)
-        else:
-            raise ValueError("Unexpected raw type {}".format(raw_type))
-        return ret
+    @property
+    def value(self):
+        field_name = self._get_field_from_type()
+        return self._deserialize(getattr(self, field_name))
+
+    @value.setter
+    def value(self, val):
+        field_name = self._get_field_from_type()
+        setattr(self, field_name, self._serialize(val))
 
     class Meta:
         app_label = 'clims'
         db_table = 'clims_extensibleproperty'
 
-    __repr__ = sane_repr('version', 'value', 'latest')
+    __repr__ = sane_repr('name', 'value', 'display_name')

@@ -63,6 +63,13 @@ class Endpoint(APIView):
     parser_classes = (JSONParser, )
     permission_classes = (NoPermission, )
 
+    @property
+    def app(self):
+        if not hasattr(self, "_app"):
+            from clims.services import ApplicationService
+            self._app = ApplicationService()
+        return self._app
+
     def build_cursor_link(self, request, name, cursor):
         querystring = u'&'.join(
             u'{0}={1}'.format(urlquote(k), urlquote(v)) for k, v in six.iteritems(request.GET)

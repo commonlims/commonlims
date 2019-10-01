@@ -1,26 +1,42 @@
 from __future__ import absolute_import
 
 import pytest
-from clims.models import Substance
-from tests.clims import testutils
-from clims.services import substances, extensibles, ExtensibleTypeValidationError
-from django.db.models import FieldDoesNotExist
-from random import random
-from ...fixtures.plugins.gemstones_inc.models import GemstoneSample
+from clims.models import Substance, SubstanceVersion
+from clims.services import ExtensibleTypeValidationError
 from sentry.testutils import TestCase
+from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
 
-class TestSubstance(TestCase):
-    def setUp(self):
-        self.org = testutils.create_organization()
-        self.gemstone_sample_type = testutils.create_substance_type(org=self.org)
+class SubstanceTestCase(TestCase):
+    def create_gemstone(self, *args, **kwargs):
+        return self.create_substance(GemstoneSample, *args, **kwargs)
 
+    def register_gemstone_type(self):
+        return self.register_extensible(GemstoneSample)
+
+
+class TestSubstance(SubstanceTestCase):
     def test_can_create_substance(self):
-        substance = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org)
+        substance = self.create_gemstone()
         assert substance.version == 1
+
+    def test_update_name_updates_version(self):
+        substance = self.create_gemstone()
+        assert substance.version == 1
+        substance.name = substance.name + "!!!"
+        substance.save()
+        assert substance.version == 2
+
+    def test_update_name_saves_previous_name(self):
+        substance = self.create_gemstone()
+        original_name = substance.name
+        substance.name = substance.name + "-UPDATED"
+        substance.save()
+
+        model = Substance.objects.get(id=substance.id)
+        actual = {(entry.version, entry.previous_name) for entry in model.versions.all()}
+        expected = {(1, None), (2, original_name)}
+        assert actual == expected
 
     def test_can_save_substance_properties(self):
         """
@@ -29,264 +45,134 @@ class TestSubstance(TestCase):
 
         It should also leave the old property unchanged
         """
+
+        # NOTE: One must change substances via the service rather than the django
+        # objects if all business rules are to be respected
+
         props = {
             'preciousness': ':o',
             'color': 'red'
         }
-
-        # NOTE: One must change substances via the service rather than the django
-        # objects if all business rules are to be respected
-        substance = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=props)
+        substance = self.create_gemstone(**props)
 
         def do_asserts(substance):
+            assert substance._wrapped is not None
             assert substance.version == 1
-            assert len(substance.properties.all()) == 2
-            key_value_set = {(prop.extensible_property_type.name, prop.value)
-                             for prop in substance.properties.all()}
-            expected_key_value_set = {item for item in props.items()}
-            assert key_value_set == expected_key_value_set
+            assert {key: prop.value for key, prop in substance.properties.items()} == props
 
         # Assert we get the expected results on the object
         do_asserts(substance)
 
         # ... as well as on the object freshly fetched from the db
-        fresh_substance = Substance.objects.get(name='gem-sample-001')
-        do_asserts(fresh_substance)
-
-    def test_saving_an_unregistered_property_raises(self):
-        props = dict(weirdness=1)
-
-        with pytest.raises(FieldDoesNotExist):
-            substances.create(
-                name='gem-sample-001',
-                extensible_type=self.gemstone_sample_type,
-                organization=self.org,
-                properties=props
-            )
+        fresh_substance = Substance.objects.get(name=substance.name)
+        do_asserts(self.app.substances.to_wrapper(fresh_substance))
 
     def test_updating_properties_via_update_or_create_updates_version(self):
         props = dict(preciousness='*o*', color='red')
+        substance = self.create_gemstone(**props)
 
-        substance = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=props)
+        def props_to_dict(props):
+            # NOTE: We are often mapping back to dict for the props. Might be good to allow
+            # equality checks against a dict, or just return a dict in extensible.properties
+            return {key: prop.value for key, prop in props.items()}
 
         assert substance.version == 1
-        assert {prop.version for prop in substance.properties.all()} == {1}
+        assert props_to_dict(substance.properties) == props
 
-        # NOTE: The high level link between substances and properties (where they are
-        # versioned together) is (currently) only supported via the SubstanceService,
-        # so it's not possible to change properties on the object we just created above.
+        substance.preciousness = '*O*'
+        substance.save()
 
-        new_props = dict(preciousness='*O*')
-        fresh_substance = substances.update(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=new_props)
+        # 1. Assert that the in-memory version has the expected values:
+        assert props_to_dict(substance.properties) == dict(preciousness='*O*', color='red')
 
-        # Now, getting all the properties should mean we get 2 versions of preciousness
-        # but one of color:
-        vals = {(x.extensible_property_type.name, x.value, x.version, x.latest)
-                for x in fresh_substance.properties.all()}
-        expected_vals = {
-            ('color', 'red', 1, True),
-            ('preciousness', '*o*', 1, False),
-            ('preciousness', '*O*', 2, True)
-        }
+        # 2. Assert that we get the expected values for all versions when querying the backend:
 
-        def do_asserts():
-            assert vals == expected_vals
-            assert fresh_substance.version == 2
+        # TODO: substances service should return this instead
+        versions = [self.app.substances.to_wrapper(s)
+                for s in SubstanceVersion.objects.filter(substance_id=substance.id)]
 
-        do_asserts()
-        fresh_substance = Substance.objects.get(name='gem-sample-001')
-        do_asserts()
-
-    def test_creating_child_retains_props_by_default(self):
-        # Creating a child from a substance (e.g. an aliquot from a sample) should retain
-        # all properties, unless specified. This leads to new properties being
-        # created, but they all point to the exact same values
-        props = dict(preciousness='*o*', color='red')
-
-        original = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=props)
-
-        # When copying, we specify the props that change:
-        new_name = original.name + "-derived"
-        child = substances.copy(original, new_name)
-
-        # 1. All props should have the same value
-        original_prop_vals = {x.value for x in original.properties.all()}
-        childd_prop_vals = {x.value for x in child.properties.all()}
-
-        assert original_prop_vals == childd_prop_vals
-
-        # 2. ... but the ID of the properties should differ
-        original_prop_ids = {x.id for x in original.properties.all()}
-        child_prop_ids = {x.id for x in child.properties.all()}
-
-        assert original_prop_ids != child_prop_ids, "Expecting new IDs for property objects"
-
-    def test_creating_child_can_override_props(self):
-        props = dict(preciousness='*o*', color='red')
-
-        original = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=props)
-
-        new_name = original.name + "-derived"
-        child = substances.copy(
-            original, new_name, overridden_properties=dict(preciousness=':('))
-
-        original_prop_vals = {x.value for x in original.properties.all()}
-        childd_prop_vals = {x.value for x in child.properties.all()}
-
-        assert original_prop_vals.symmetric_difference(childd_prop_vals) == {u'*o*', u':('}
-        assert original_prop_vals.intersection(childd_prop_vals) == {u'red'}
+        actual = {v.version: props_to_dict(v.properties) for v in versions}
+        expected = {1: {u'color': u'red', u'preciousness': u'*o*'},
+                    2: {u'color': u'red', u'preciousness': u'*O*'}}
+        assert actual == expected
 
     def test_can_create_json_value(self):
         payload = {"extra_val": 10}
-        props = dict(payload=payload)
-
-        original = substances.create(
-            name='gem-sample-001',
-            extensible_type=self.gemstone_sample_type,
-            organization=self.org,
-            properties=props)
+        original = self.create_gemstone()
+        original.payload = payload
+        original.save()
 
         fetched = Substance.objects.get(name=original.name)
-        payload = fetched.properties.get(extensible_property_type__name='payload')
+        fetched = self.app.substances.to_wrapper(fetched)
+        assert fetched.payload == payload
 
-        assert payload.value['extra_val'] == 10
+    def test_can_get_all_substances(self):
+        # There are two ways to get the substance, either query Substance.objects.all()
+        # or use the substances service.
+        sample = self.create_gemstone(color='red')
+        result1 = {s.name for s in self.app.substances.all()}
+        assert sample.name in result1
+        result2 = {self.app.substances.to_wrapper(s).name for s in Substance.objects.all()}
+        assert result1 == result2
 
-    def test_children_are_automatically_named(self):
-        original = testutils.create_substance()
-        child = substances.copy(original)
-        assert child.name.startswith(original.name)
-        assert child.name != original.name
+    def test_can_get_substance_by_name(self):
+        sample = self.create_gemstone(color='red')
+        same = self.app.substances.get(name=sample.name)
 
-    def test_children_get_increased_depth(self):
-        original = testutils.create_substance()
-        child = substances.copy(original)
-        assert original.depth == 1
-        assert child.depth == 2
+        assert same._wrapped.id == sample._wrapped.id
+        assert same.name == sample.name
+        assert same.color == sample.color
 
-    def test_initial_substance_has_no_origins(self):
-        original = testutils.create_substance()
-        assert len(original.origins.all()) == 0
-
-    def test_children_retain_origin(self):
-        original = testutils.create_substance()
-        child = substances.copy(original)
-
-        assert child.origins.all()[0] == original
-
-        child_of_child = substances.copy(child)
-        assert [x.id for x in child_of_child.origins.all()] == [x.id for x in child.origins.all()]
-
-    def test_child_has_parent(self):
-        original = testutils.create_substance()
-        child = substances.copy(original)
-
-        def do_asserts(child):
-            parents = child.parents.all()
-            assert len(parents) == 1
-            assert parents[0] == original
-
-        do_asserts(child)
-        # Assert the same is true if we fetch the child by name:
-        child = Substance.objects.get(name=child.name)
-        do_asserts(child)
-
-
-class TestSubstanceType(TestCase):
-    def setUp(self):
-        pass
-
-    def test_it(self):
-        # TODO: This is really an extensible test
-        plugin = testutils.create_plugin()
-        extensibles.register(plugin, GemstoneSample)
-
-        from clims.models import ExtensibleType
-        name = "{}.{}".format(GemstoneSample.__module__, GemstoneSample.__name__)
-        created_model = ExtensibleType.objects.get(name=name)
-
-        actual = sorted([(x.name, x.raw_type) for x in created_model.property_types.all()])
-        expected = [('color', 's'),
-                    ('index', 'i'),
-                    ('payload', 'j'),
-                    ('preciousness', 's'),
-                    ('weight', 'i')]
-
-        assert actual == expected
-
-
-class TestSubstanceHighLevel(TestCase):
-    def setUp(self):
-        self.org = testutils.create_organization()
-        testutils.create_substance_type(
-            name="tests.fixtures.plugins.gemstones_inc.models.GemstoneSample")
-
-    def test_can_create_substance(self):
-        # TODO: The user should not have to add the org. Would be added via some
-        # context that's on the handler.
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
-        sample.save()
-
+    def test_get_expected_name(self):
+        sample = self.create_gemstone(color='red')
         sub = Substance.objects.get(name=sample.name)
         assert sub.name == sample.name
 
-    def test_can_add_substance_property(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
-        sample.color = "red"
-        sample.save()
-
-        sub = Substance.objects.get(name=sample.name)
-
-        # Might seem obvious, but we're going via a descriptor, so this assert is important
+    def test_can_update_substance(self):
+        sample = self.create_gemstone(color='red')
         assert sample.color == "red"
-        assert sub.name == sample.name
-        props = sub.properties.all()
-        assert len(props) == 1
-        assert props[0].value == sample.color
+
+        retrieved = self.app.substances.get(sample.name)
+        assert retrieved.color == "red"
+
+        sample.color = "blue"
+        assert sample.color == "blue"
+        sample.save()
+        retreived = self.app.substances.get(sample.name)
+        assert retreived.color == "blue"
 
     def test_assigning_int_to_string_field_fails(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
             sample.color = 10
 
     def test_assigning_string_to_int_field_fails(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
             sample.index = "test"
 
     def test_assigning_string_to_float_field_fails(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
             sample.weight = "test"
 
     def test_assigning_int_to_float_field_succeeds(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         sample.weight = 10
 
     def test_assigning_float_to_int_field_succeeds_if_not_lossy(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         sample.weight = 10.0
 
     def test_assigning_float_to_int_field_fails_if_lossy(self):
-        sample = GemstoneSample("somename-{}".format(random()), self.org)
+        sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
             sample.weight = 10.5
+
+    def test_can_iterate_through_all_versions_given_an_object(self):
+        sample = self.create_gemstone(color='red')
+        sample.color = 'blue'
+        sample.save()
+
+        versions = [(s.version, s.properties) for s in sample.iter_versions()]
+        assert len(versions) == 2

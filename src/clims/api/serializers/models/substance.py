@@ -25,14 +25,10 @@ class PropertyOverviewSerializer(serializers.Serializer):
 
 class PropertiesField(Field):
     def to_representation(self, obj):
-        ret = dict()
-        for prop in obj.filter(latest=True):
-            prop_type = prop.extensible_property_type
-            display_name = prop_type.display_name if prop_type.display_name else prop_type.name
-            ret[prop_type.name] = dict(value=prop.value, display_name=display_name)
-        return ret
+        return {key: prop.value for key, prop in obj.items()}
 
     def to_internal_value(self, data):
+        # TODO
         return data
 
 
@@ -41,21 +37,12 @@ class VersionField(Field):
         return obj
 
 
-class ExtensibleTypeField(Field):
-    def to_representation(self, obj):
-        return "{}.substances.{}".format(obj.plugin.name, obj.name)
-
-    def to_internal_value(self, data):
-        return data
-
-
 class SubstanceSerializer(serializers.Serializer):
-
-    id = serializers.IntegerField(read_only=True)
+    id = serializers.CharField(read_only=True)
     version = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     properties = PropertiesField()
-    extensible_type = ExtensibleTypeField()
+    type_full_name = serializers.CharField()
 
     def create(self, validated_data):
         return Substance.objects.create(**validated_data)
