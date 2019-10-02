@@ -10,10 +10,8 @@ from __future__ import absolute_import, print_function
 import click
 import django
 
-from django.conf import settings
-from sentry.runner.decorators import configuration
 import logging
-from clims.workflow import WorkflowEngine, WorkflowEngineException
+from sentry.runner.decorators import configuration
 
 logger = logging.getLogger(__name__)
 
@@ -22,53 +20,24 @@ DJANGO_17 = django.VERSION[0] > 1 or (django.VERSION[0] == 1 and django.VERSION[
 
 def _upgrade(interactive, traceback, verbosity, repair):
     from django.core.management import call_command as dj_call_command
-    logger.info("Updating workflow definitions")
-
     from sentry.plugins import plugins
-    for plugin in plugins.all(2):
-        definitions = list(plugin.workflow_definitions())
-        workflows = WorkflowEngine()
-        # TODO: Validate that each workflow has a valid name, corresponding with
-        # the name of the plugin
-        if definitions:
-            for definition in definitions:
-                import os
-                file_name = os.path.basename(definition)
-                try:
-                    workflows.deploy(definition)
-                    logger.info(
-                        "Uploaded workflow definition {} for plugin {}".format(
-                            file_name, plugin))
-                except WorkflowEngineException as e:
-                    # TODO: Disable the plugin in this case (if not in dev mode)
-                    logger.error(
-                        "Can't upload workflow definition {} for plugin {}".format(
-                            file_name, plugin))
-                    logger.error(e)
-
-    if 'south' in settings.INSTALLED_APPS or DJANGO_17:
-        dj_call_command(
-            'migrate',
-            interactive=interactive,
-            traceback=traceback,
-            verbosity=verbosity,
-            migrate=True,
-            merge=True,
-            ignore_ghost_migrations=True,
-        )
-    else:
-        dj_call_command(
-            'syncdb',
-            interactive=interactive,
-            traceback=traceback,
-            verbosity=verbosity,
-        )
+    dj_call_command(
+        'migrate',
+        interactive=interactive,
+        traceback=traceback,
+        verbosity=verbosity,
+        migrate=True,
+        merge=True,
+        ignore_ghost_migrations=True,
+    )
 
     if repair:
         from sentry.runner import call_command
         call_command(
             'sentry.runner.commands.repair.repair',
         )
+
+    plugins.auto_register()
 
 
 @click.command()
