@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from clims.services import SubstanceBase, TextField, IntField, FloatField
+from clims.services.substance import SubstanceBase, TextField, IntField
 
 
 class GemstoneSample(SubstanceBase):
