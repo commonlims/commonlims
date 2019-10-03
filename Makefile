@@ -28,13 +28,22 @@ create-camunda-tables:
 	./middleware/camunda/db-install.sh
 	./middleware/camunda/restart.sh
 
+CLIMS_DB_PASSWORD := $(shell openssl rand -base64 32)
+
+setup-db-user: create-db
+	@echo "--> Make sure we have user called 'clims'"
+	-psql -d postgres -c "CREATE ROLE clims WITH LOGIN"
+	-psql -d postgres -c "ALTER ROLE clims WITH SUPERUSER;"
+	-psql -d clims -c "ALTER ROLE clims WITH LOGIN ENCRYPTED PASSWORD '$(CLIMS_DB_PASSWORD)'"
+	@echo "Add the following line to ~/.pgpass: 'localhost:*:clims:clims:$(CLIMS_DB_PASSWORD)'"
+	@echo "Set the permissions of ~/.pgpass to 0600: chmod 0600 ~/.pgpass "
+
 create-db:
 	@echo "--> Creating 'clims' database"
 	createdb -E utf-8 clims
-	@echo "--> Make sure we have user called 'postgres'"
-	-psql -d postgres -c "CREATE ROLE postgres WITH LOGIN"
-	-psql -d postgres -c "ALTER ROLE postgres WITH SUPERUSER;"
 
+# TODO Don't know if we should create the user here, since it is not super intuative to reset the
+#      db to create a user. /JD 2019-10-03
 reset-db: clean drop-db create-db create-camunda-tables
 	@echo "--> Applying migrations"
 	lims upgrade
