@@ -4,6 +4,7 @@ from django.db import models
 
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
+from tempfile import NamedTemporaryFile
 
 
 class StructuredFileMixin(object):
@@ -16,13 +17,21 @@ class StructuredFileMixin(object):
         """
         Returns the file as an excel file
         """
-        return load_workbook(self.file.getfile())
+        with NamedTemporaryFile(suffix='.xlsx') as tmp:
+            with open(tmp.name, 'wb') as f:
+                for _, chunk in enumerate(self.file.getfile()):
+                    f.write(chunk)
+
+            workbook = load_workbook(tmp.name, data_only=True)
+
+        return workbook
 
     def as_xml(self):
         raise NotImplementedError()
 
     def as_csv(self):
-        from clims.services import Csv
+        # TODO: Add @lru_cache to the method when ready
+        from clims.services.file_service.csv import Csv
         return Csv(self.file.getfile(), file_name=self.file.name)
 
 
