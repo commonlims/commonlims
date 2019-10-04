@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pytest --last-failed --tb=no tests/integration tests/sentry tests/clims

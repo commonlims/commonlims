@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo $(pwd)
+watchmedo shell-command --patterns="*.py" --recursive --command='flock -n /tmp/test-clims-follow.lock ./scripts/test-clims'
