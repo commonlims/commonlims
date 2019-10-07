@@ -36,7 +36,7 @@ class ExtensibleService(object):
 
     def get_implementation(self, extensible_type_full_name):
         try:
-            return self._implementation_cache[extensible_type_full_name]
+            return self._implementations[extensible_type_full_name]
         except KeyError:
             raise ExtensibleTypeNotRegistered(extensible_type_full_name)
 
@@ -63,7 +63,7 @@ class ExtensibleService(object):
             property_types.append(prop_type)
 
         name = "{}.{}".format(extensible_base.__module__, extensible_base.__name__)
-        self._implementation_cache[name] = extensible_base
+        self._implementations[name] = extensible_base
         extensible_type = self._register_model(
             name, 'default', plugin, property_types=property_types)
         return extensible_type
