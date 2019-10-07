@@ -9,12 +9,14 @@ from __future__ import absolute_import, print_function
 
 __all__ = ('PluginManager', )
 
+import os
 import six
 import logging
 import inspect
 
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
+from clims.workflow import WorkflowEngine, WorkflowEngineException
 
 logger = logging.getLogger('clims.plugins')
 
@@ -41,6 +43,88 @@ class PluginManager(InstanceManager):
             if cls != handlers.Handler and issubclass(cls, handlers.Handler):
                 self.handlers[cls] = set()
 
+    def auto_register(self):
+        """Registers all plugins that can be found in the Python environment"""
+
+        # TODO: The plugin mechanism is rather unclean at the moment. CLIMS introduced
+        # PluginRegistration which is required so that we can see which plugin+version made which
+        # change. Sentry's plugins are more liberal and don't require that.
+        # Because of this, we want plugins to be registered only during `lims upgrade` (or
+        # be configured) so that users don't accidentally make changes by just pip installing
+        # some package.
+        # So the workflow should be:
+        #   * regular startup: Make plugins available only if there exists a PluginRegistration
+        #   * upgrade: Add a PluginRegistration object (register a plugin) if it has been pip
+        #              installed
+        # TODO: Newer versions should take precedence over older.
+        for plugin in self.all(2):
+            # TODO: Do this in a transaction
+            self.register_model(plugin)
+            self.register_plugin_workflow(plugin)
+            self.register_extensible_types(plugin)
+
+    def register_plugin_workflow(self, plugin):
+        definitions = list(plugin.workflow_definitions())
+        workflows = WorkflowEngine()
+        # TODO: Validate that each workflow has a valid name, corresponding with
+        # the name of the plugin
+        if definitions:
+            for definition in definitions:
+                file_name = os.path.basename(definition)
+                try:
+                    workflows.deploy(definition)
+                    logger.info(
+                        "Uploaded workflow definition {} for plugin {}".format(
+                            file_name, plugin))
+                except WorkflowEngineException as e:
+                    # TODO: Disable the plugin in this case (if not in dev mode)
+                    logger.error(
+                        "Can't upload workflow definition {} for plugin {}".format(
+                            file_name, plugin))
+                    logger.error(e)
+
+    def register_model(self, plugin):
+        """
+        Registers the plugin in the database.
+
+        This method should be called when upgrading the system, so the end-user is in control
+        of when a new model is available.
+        """
+        # Make sure we have a plugin registration here:
+        from clims.models import PluginRegistration
+        from sentry.models import Organization
+        try:
+            plugin_version = plugin.version
+        except AttributeError:
+            plugin_version = "NA"
+
+        # NOTE: Registration currently happens for all organizations. We can limit that
+        # further in a future release.
+        for org in Organization.objects.all():
+            PluginRegistration.objects.get_or_create(
+                name=plugin.full_name, version=plugin_version, organization=org)
+
+    def register_extensible_types(self, plugin):
+        """
+        Registers extensible types in the plugin if any are found
+        """
+        from clims.services import ExtensibleBase, SubstanceBase, extensibles
+        from clims.models import PluginRegistration
+
+        # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
+        # knowledge of which bases are not to be registered is elsewhere
+        known_bases = [ExtensibleBase, SubstanceBase]
+
+        mod = self.get_plugin_module(plugin, 'models')
+        if not mod:
+            return
+
+        plugin_model = PluginRegistration.objects.get(name=plugin.full_name)
+        for _name, class_to_register in inspect.getmembers(mod, inspect.isclass):
+            if issubclass(class_to_register, ExtensibleBase) and \
+                    class_to_register not in known_bases:
+                extensibles.register(plugin_model, class_to_register)
+
     def all(self, version=1):
         """
         Returns all enabled plugins with the specified interface version.
@@ -65,23 +149,6 @@ class PluginManager(InstanceManager):
         super(PluginManager, self).add(class_path)
 
         self._register_work_batches(class_path)
-
-        # import pkgutil
-        # for mod in pkgutil.walk_packages():
-        #    print(mod)
-
-        # Walk the plugin and check if it implements WorkBatchSettings
-
-        # def import_submodules(context, root_module, path):
-        # for loader, module_name, is_pkg in pkgutil.walk_packages(path, root_module + '.'):
-        #     # this causes a Runtime error with model conflicts
-        #     # module = loader.find_module(module_name).load_module(module_name)
-        #     module = __import__(module_name, globals(), locals(), ['__name__'])
-        #     for k, v in six.iteritems(vars(module)):
-        #         if not k.startswith('_'):
-        #             context[k] = v
-        # context[module_name] = module
-        # > import_submodules(globals(), __name__, __path__)
 
     def configurable_for_project(self, project, version=1):
         for plugin in self.all(version=version):
@@ -132,9 +199,11 @@ class PluginManager(InstanceManager):
             if result is not None:
                 return result
 
+    # TODO: This should be called e.g. load, as it's just the in-process loading. The registration
+    # is when we register in the database
     def register(self, cls):
         self.add('%s.%s' % (cls.__module__, cls.__name__))
-        self.register_handlers(cls)
+        self.load_handlers(cls)
         return cls
 
     def get_registered_base_handler(self, cls):
@@ -159,26 +228,7 @@ class PluginManager(InstanceManager):
             if six.text_type(ex) != "No module named {}".format(name):
                 raise ex
 
-    def register_extensible_types(self):
-        from clims.services import ExtensibleBase, SubstanceBase, extensibles
-        from clims.models import PluginRegistration
-
-        # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
-        # knowledge of which bases are not to be registered is elsewhere
-        known_bases = [ExtensibleBase, SubstanceBase]
-        for plugin in self.all(2):
-            mod = self.get_plugin_module(plugin, 'models')
-            if not mod:
-                continue
-
-            plugin_model = PluginRegistration.objects.get(name=plugin.full_name)
-            for _name, class_to_register in inspect.getmembers(mod, inspect.isclass):
-                if issubclass(class_to_register, ExtensibleBase) and \
-                        class_to_register not in known_bases:
-                    extensibles.register(plugin_model, class_to_register)
-
-    def register_handlers(self, cls):
-        import inspect
+    def load_handlers(self, cls):
 
         # Registers handlers. Handlers must be in a module directly below
         # the plugin's module:

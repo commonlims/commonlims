@@ -12,7 +12,6 @@ import os
 import six
 
 from django.conf import settings
-from django.db.utils import ProgrammingError
 
 
 from sentry.utils import warnings
@@ -62,8 +61,6 @@ def register_plugins(settings):
         except AttributeError:
             pass
 
-    plugins.register_extensible_types()
-
 
 def init_plugin(plugin):
     from sentry.plugins import bindings
@@ -95,29 +92,6 @@ def init_plugin(plugin):
             q = Queue(name, routing_key=routing_key)
             q.durable = False
             settings.CELERY_QUEUES.append(q)
-
-    # TODO: Register only during a `lims upgrade`
-    # Make sure we have a plugin registration here:
-    from clims.models import PluginRegistration
-    from sentry.models import Organization
-    plugin_type = type(plugin)
-    try:
-        plugin_version = plugin.version
-    except AttributeError:
-        plugin_version = "NA"
-
-    try:
-        # NOTE: Registration currently happens for all organizations:
-        for org in Organization.objects.all():
-            try:
-                PluginRegistration.objects.get_or_create(
-                    name=plugin_type.full_name, version=plugin_version, organization=org)
-            except AttributeError:
-                pass
-    except ProgrammingError:
-        # If the database is being created for the first time we won't have access
-        # to the PluginRegistration object
-        pass
 
 
 def initialize_receivers():

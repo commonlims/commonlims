@@ -45,3 +45,4 @@ junit.xml
 package-lock.json
 dump.rdb
 .lasterrors
+.ipynb_checkpoints/

@@ -1,10 +1,11 @@
 from __future__ import absolute_import, print_function
 
 from django.db import models
-from sentry.db.models import (Model, FlexibleForeignKey, sane_repr)
+from sentry.db.models import (FlexibleForeignKey, sane_repr)
+from clims.models.extensible import ExtensibleModel, ExtensibleVersion
 
 
-class Substance(Model):
+class Substance(ExtensibleModel):
     """
     A substance is a model that describe primarily samples and aliquots but they
     can also represent other elements that can be combined with a sample or aliquot to make
@@ -17,9 +18,6 @@ class Substance(Model):
     NOTE: Use the substances service class (`from clims.services import substances`) to create or
     update substances and properties as otherwise business rules will be broken, e.g. you might
     update a substance but not its properties.
-
-    NOTE: It's currently not supported to change the original name of the substance, but a plugin
-    can specify a versioned name property that can be changed.
     """
     __core__ = True
 
@@ -28,28 +26,30 @@ class Substance(Model):
 
     name = models.TextField()
 
-    version = models.IntegerField(default=1)
-
     organization = FlexibleForeignKey('sentry.Organization')
 
     project = FlexibleForeignKey('sentry.Project', null=True)
-
-    extensible_type = FlexibleForeignKey('clims.ExtensibleType')
-
-    # The depth of the substance. Depth is increased by one for a copy.
-    depth = models.IntegerField(default=1)
 
     # The original substance or substances (e.g. in the case of pools) this
     # substance originates from
     origins = models.ManyToManyField('clims.Substance')
 
-    properties = models.ManyToManyField('clims.ExtensibleProperty')
+    parents = models.ManyToManyField('clims.SubstanceVersion', related_name='children')
 
-    parents = models.ManyToManyField('self', related_name='children')
+    # The depth of the extensible in the ancestry graph
+    depth = models.IntegerField(default=1)
 
-    __repr__ = sane_repr('name', 'version', 'organization_id', 'extensible_type_id')
+    __repr__ = sane_repr('name',)
 
     class Meta:
         app_label = 'clims'
         db_table = 'clims_substance'
         unique_together = ('name', 'organization', 'extensible_type')
+
+
+class SubstanceVersion(ExtensibleVersion):
+    __core__ = True
+
+    substance = models.ForeignKey("clims.Substance", related_name='versions')
+
+    __repr__ = sane_repr('substance_id', 'version', 'latest')
