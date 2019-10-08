@@ -25,7 +25,7 @@ def xfail_if_mysql(function):
     )(function)
 
 
-@pytest.mark.skip(reason="Tag store v2 not used and migrations missing")
+@pytest.mark.checkskip
 class TagStorage(TestCase):
     def setUp(self):
         self.ts = V2TagStorage()

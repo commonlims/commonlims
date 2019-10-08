@@ -75,8 +75,7 @@ def test_does_default_ip_address_to_user(user):
 
 
 @mock.patch('sentry.interfaces.geo.Geo.from_ip_address')
-@pytest.mark.skipif(
-    ENABLE_RUST, reason="geoip is tested in semaphore repo, mock doesnt work for rust")
+@pytest.mark.checkskip
 def test_does_geo_from_ip(from_ip_address_mock):
     from sentry.interfaces.geo import Geo
 

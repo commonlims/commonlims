@@ -1,13 +1,11 @@
 from __future__ import absolute_import
 
-import platform
 import responses
 import pytest
 import tempfile
 
 from django.core.exceptions import SuspiciousOperation
 from mock import patch
-from urllib3.util.connection import HAS_IPV6
 
 from sentry import http
 from sentry.testutils import TestCase
@@ -41,13 +39,13 @@ class HttpTest(TestCase):
             # '2130706433' is dword for '127.0.0.1'
             http.safe_urlopen('http://2130706433')
 
-    @pytest.mark.skipif(not HAS_IPV6, reason='needs ipv6')
+    @pytest.mark.checkskip
     @override_blacklist('::1')
     def test_ip_blacklist_ipv6(self):
         with pytest.raises(SuspiciousOperation):
             http.safe_urlopen('http://[::1]')
 
-    @pytest.mark.skipif(HAS_IPV6, reason='stub for non-ipv6 systems')
+    @pytest.mark.checkskip
     @override_blacklist('::1')
     @patch('socket.getaddrinfo')
     def test_ip_blacklist_ipv6_fallback(self, mock_getaddrinfo):
@@ -55,10 +53,7 @@ class HttpTest(TestCase):
         with pytest.raises(SuspiciousOperation):
             http.safe_urlopen('http://[::1]')
 
-    @pytest.mark.skipif(
-        platform.system() == 'Darwin',
-        reason='macOS is always broken, see comment in sentry/http.py'
-    )
+    @pytest.mark.checkskip
     @override_blacklist('127.0.0.1')
     def test_garbage_ip(self):
         with pytest.raises(SuspiciousOperation):

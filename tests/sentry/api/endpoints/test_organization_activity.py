@@ -8,7 +8,7 @@ from sentry.testutils import APITestCase
 
 
 class OrganizationActivityTest(APITestCase):
-    @pytest.mark.skip(reason="TODO: Ignore until we remove the connection to Group.")
+    @pytest.mark.skip
     def test_simple(self):
         group = self.group
         org = group.organization

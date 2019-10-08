@@ -15,7 +15,6 @@ from sentry.api.paginator import (
 from sentry.models import User
 from sentry.testutils import TestCase
 from sentry.utils.cursors import Cursor
-from sentry.utils.db import is_mysql
 
 
 class PaginatorTest(TestCase):
@@ -244,7 +243,7 @@ class DateTimePaginatorTest(TestCase):
         result4 = paginator.get_result(limit=10, cursor=result1.next)
         assert len(result4) == 0, result4
 
-    @pytest.mark.skipif(is_mysql(), reason='MySQL does not support above second accuracy')
+    @pytest.mark.checkskip
     def test_rounding_offset(self):
         joined = timezone.now()
 
