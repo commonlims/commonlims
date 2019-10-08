@@ -32,40 +32,17 @@ def pytest_configure(config):
     from sentry.utils import integrationdocs
     integrationdocs.DOC_FOLDER = os.environ['INTEGRATION_DOC_FOLDER']
 
-    if not settings.configured:
-        # only configure the db if its not already done
-        test_db = os.environ.get('DB', 'postgres')
-        if test_db == 'mysql':
-            settings.DATABASES['default'].update(
-                {
-                    'ENGINE': 'django.db.backends.mysql',
-                    'NAME': 'clims',
-                    'USER': 'root',
-                    'HOST': '127.0.0.1',
-                }
-            )
-            # mysql requires running full migration all the time
-        elif test_db == 'postgres':
-            settings.DATABASES['default'].update(
-                {
-                    'ENGINE': 'sentry.db.postgres',
-                    'USER': 'postgres',
-                    'NAME': 'clims',
-                    'HOST': '127.0.0.1',
-                }
-            )
-            # postgres requires running full migration all the time
-            # since it has to install stored functions which come from
-            # an actual migration.
-        elif test_db == 'sqlite':
-            settings.DATABASES['default'].update(
-                {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': ':memory:',
-                }
-            )
-        else:
-            raise RuntimeError('oops, wrong database: %r' % test_db)
+    # Configure the test database
+
+    settings.DATABASES['default'].update(
+        {
+            'ENGINE': 'sentry.db.postgres',
+            'USER': 'test_clims',
+            # This will actually be test_clims when connecting, since django adds this
+            # automatically.
+            'NAME': 'clims',
+        }
+    )
 
     settings.TEMPLATE_DEBUG = True
 
