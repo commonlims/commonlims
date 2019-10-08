@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pytest --tb=no --last-failed -v -s ./tests/clims

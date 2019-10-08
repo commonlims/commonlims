@@ -2,8 +2,11 @@ from __future__ import absolute_import
 
 from tests.clims.models.test_substance import SubstanceTestCase
 
+import pytest
+
 
 class TestSubstance(SubstanceTestCase):
+    @pytest.mark.now
     def test_can_render_substance_graph(self):
         sample1 = self.create_gemstone()  # sample1.v1
         original_id = sample1.id
@@ -27,5 +30,5 @@ class TestSubstance(SubstanceTestCase):
         assert (aliquot2.parents[0].id, aliquot2.parents[0].version) == (original_id, 3)
 
         ancestry = sample1.to_ancestry()  # returns everything with the same origins (i.e. sample1)
-        ancestry.to_graphviz_src()
+        print(ancestry.to_graphviz_src())
         ancestry.to_svg()
