@@ -9,72 +9,62 @@ Development happens on gitlab.org/commonlims and will be moved to github.com/com
 ## Setup
 
 To set up your environment, do the following:
+
 - Download and install Conda from: https://conda.io/en/latest/miniconda.html
 - Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
 
 Start required services:
+
 - postgres server (specific to your installation)
 - redis server (specific to your installation)
-- `~/.camunda/server/apache-tomcat-[VERSION]/bin/startup.sh`
 
 You may also need to create a postgres user that matches your Unix username:
+
 - `sudo -i -u postgres`
 - `psql template1 postgres -c 'CREATE USER "[your-unix-username]" SUPERUSER;'`
+- Go into `/etc/postgresql/9.6/main/pg_hba.conf` (replace your postgresql version as necessary) and add the following
+  line under the "local" section:
+
+```
+local   all             camunda                                 password
+local   all             clims                                   password
+```
+
+- Restart postgres with `sudo service postgresql restart`
 
 From the root of the 'commonlims' project, run:
+
 - `source devboot`
-- alt: `source devboot-conda`  # If you want to use conda instead of pyenv
+- alt: `source devboot-conda` # If you want to use conda instead of pyenv
 
 Then run:
+
+- `make setup-db-user`
+- Add the password to ~/.pgpassword (as in structed by the above command)
 - `make develop`
+- `lims createuser --email admin@localhost --password changeit --superuser --no-input`
+- `lims upgrade`
 
 From the root of the 'commonlims' project, run: `lims devserver --browser-reload`
 
-Sentry should be available at: http://localhost:8000/
+CommonLims should be available at: http://localhost:8000/
 Camunda should be available at: http://localhost:8080/camunda/app/cockpit
+
+The default login is, `admin@localhost` with the password: `changeit`, or as specified above.
 
 ## Subsequent runs
 
 After initial setup, do the following to start your environment:
-- Start postgres, redis and camunda services
+
 - Run `source devboot`
+- Run `lims init`
 - Run `lims devserver --browser-reload`
-
-# Roadmap
-
-## v0.1.0 - Core framework set up (DONE)
-
-* The main building blocks and core roadmap are in place
-
- * Main design
- * UI
- * Workflow engine
- * Plugin mechanism
- * Several use cases in early draft (authentication, authorization, groups, settings, feature management and more)
- * A large part of the workflows in SNP&SEQ were implemented as POC
-
-A large part of this was achieved so early by leveraging another open source system, https://sentry.io.
-
-## v0.1.0 - A basic use case implemented for SNP&SEQ (CURRENT)
-
-UI general:
-
-* Users can see all queued tasks and limit to only what they will be working on
-* Users can select samples to batch process and enter a per-batch workflow.
-* Users can enter a specific per-batch subprocess required for SNP&SEQ, fragment_analyzer.
-
-fragment_analyzer:
-
-* Users can position samples as required. This means that a transition graph is created to/from different containers (e.g. sample cont1@a1 => cont2@a1)
-* Implement the transition engine (see below for core design)
-* Generic UI for FA specific variables
-*
 
 # Adding models
 
-* Add or edit a model definition under ./src/clims/models/
-* Run `lims django makemigrations`
-* Run `lims upgrade`
+- Add or edit a model definition under ./src/clims/models/
+- Run `lims django makemigrations`
+- Run `lims upgrade`
 
 # Resetting the database
 
@@ -82,17 +72,17 @@ You can get a fresh install of your database by running: `make reset-db`
 
 ## Create a rest layer
 
-* Add an endpoint class, e.g. `SamplesEndpoint` in e.g. `sentry/api/endpoints/samples.py`
-* Add a details class, e.g. `SamplesDetailsEndpoint` in e.g. `sentry/api/endpoints/samples.py`
-* Register the route to these endpoints in `sentry/api/urls.py`
-* Create serializers for the domain objects in `sentry/api/serializers/models/samples.py`
+- Add an endpoint class, e.g. `SamplesEndpoint` in e.g. `sentry/api/endpoints/samples.py`
+- Add a details class, e.g. `SamplesDetailsEndpoint` in e.g. `sentry/api/endpoints/samples.py`
+- Register the route to these endpoints in `sentry/api/urls.py`
+- Create serializers for the domain objects in `sentry/api/serializers/models/samples.py`
 
 # Adding workflows
 
 (TODO: Add more details)
 
-* Modify your workflow in Camunda modeler
-* Run `lims upgrade`
+- Modify your workflow in Camunda modeler
+- Run `lims upgrade`
 
 # Frontend development
 

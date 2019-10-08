@@ -10,7 +10,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'sentry.db.postgres',
         'NAME': 'clims',
-        'USER': 'postgres',
+        'USER': 'clims',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
