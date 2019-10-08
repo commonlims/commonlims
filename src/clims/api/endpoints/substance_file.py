@@ -1,20 +1,15 @@
 from __future__ import absolute_import
 
-import logging
-import re
 import StringIO
+import base64
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError
 
-from clims.models import OrganizationFile
 from sentry.api.bases.organization import OrganizationEndpoint
-from sentry.models import File
-import base64
-
-FILENAME_RE = re.compile(r"[\n\t\r\f\v\\]")
+from clims.services import RequiredHandlerNotFound, FileNameValidationError
 
 
 class SubstanceFileEndpoint(OrganizationEndpoint):
@@ -50,63 +45,29 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
                               type.
         :auth: required
         """
-        from sentry.plugins import plugins
-        from clims.handlers import SubstancesSubmissionHandler, HandlerContext
-        submission_handlers = plugins.handlers[SubstancesSubmissionHandler]
-        if len(submission_handlers) == 0:
-            return Response({'detail':
-                'No registered handler that supports the request. Please install a plugin that '
-                'supports handling substance files.'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        logger = logging.getLogger('clims.files')
-        logger.info('substance_batch_import.start')
-
         if 'content' not in request.data:
             return Response({'detail': 'Missing uploaded file'}, status=400)
+
         content = request.data['content']
         content = base64.b64decode(content)
         fileobj = StringIO.StringIO(content)
         full_name = request.data.get('filename')
         if not full_name or full_name == 'file':
             return Response({'detail': 'File name must be specified'}, status=400)
-        name = full_name.rsplit('/', 1)[-1]
-        if FILENAME_RE.search(name):
-            return Response(
-                {
-                    'detail': 'File name must not contain special whitespace characters'
-                }, status=400
-            )
-
-        file_model = File.objects.create(
-            name=name,
-            type='substance-batch-file',
-            headers=list(),
-        )
-        file_model.putfile(fileobj, logger=logger)
 
         try:
-            # NOTE: This behaviour comes from Sentry. I don't know why they
-            # delete the file afterwards rather than having everything within the same
-            # transaction
-            with transaction.atomic():
-                org_file = OrganizationFile.objects.create(
-                    organization_id=organization.id,
-                    file=file_model,
-                    name=full_name,
-                )
-
+            org_file = self.app.substances.load_file(organization, full_name, fileobj)
             ret = dict(id=org_file.id)
-
-            # Call handler synchronously:
-            for handler in submission_handlers:
-                context = HandlerContext(organization=organization)
-                instance = handler(context)
-                instance.handle(org_file)
-
             return Response(ret, status=status.HTTP_201_CREATED)
+
+        except RequiredHandlerNotFound:
+            return Response({'detail':
+                'No registered handler that supports the request. Please install a plugin that '
+                'supports handling substance files.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except FileNameValidationError as ex:
+            return Response({'detail': ex.msg}, status=400)
         except IntegrityError:
-            file_model.delete()
             return Response(
                 {'detail': 'A file matching this name already exists in this organization'},
                 status=409)

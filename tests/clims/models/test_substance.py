@@ -141,7 +141,6 @@ class TestSubstance(SubstanceTestCase):
         retreived = self.app.substances.get(sample.name)
         assert retreived.color == "blue"
 
-    @pytest.mark.now
     def test_assigning_int_to_string_field_fails(self):
         sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
