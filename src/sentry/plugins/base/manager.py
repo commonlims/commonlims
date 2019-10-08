@@ -9,6 +9,7 @@ from __future__ import absolute_import, print_function
 
 __all__ = ('PluginManager', )
 
+import sys
 import os
 import six
 import logging
@@ -228,7 +229,8 @@ class PluginManager(InstanceManager):
             return importlib.import_module(module_name)
         except ImportError as ex:
             if six.text_type(ex) != "No module named {}".format(name):
-                raise ex
+                trace = sys.exc_info()[2]
+                raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
 
     def load_handlers(self, cls):
 
