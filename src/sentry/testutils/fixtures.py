@@ -34,6 +34,7 @@ from sentry.models import (
     UserReport
 )
 from sentry.utils.canonical import CanonicalKeyDict
+from clims.models import PluginRegistration
 
 loremipsum = Generator()
 
@@ -738,3 +739,26 @@ class Fixtures(object):
         )
 
         return userreport
+
+    def create_plugin(self, org=None):
+        org = org or self.organization
+        plugin, _ = PluginRegistration.objects.get_or_create(
+            name='tests_utils.create_plugin', version='1.0.0', organization=org)
+        return plugin
+
+    def register_extensible(self, klass, plugin=None):
+        plugin = plugin or self.create_plugin()
+        ret = self.app.extensibles.register(plugin, klass)
+        return ret
+
+    def create_substance(self, klass, name=None, **kwargs):
+        # TODO: This shouldn't be necessary as there should be only one app instance per test
+        properties = kwargs or dict()
+        ret = self.register_extensible(klass)
+
+        if not name:
+            name = "sample-{}".format(uuid4())
+        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+
+        assert ret.version == 1
+        return ret

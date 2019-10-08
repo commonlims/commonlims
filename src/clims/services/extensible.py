@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import six
-from clims.services.substance import ExtensibleBaseField
 from clims.models import ExtensibleType, ExtensiblePropertyType
 from django.db import transaction
 
@@ -95,3 +94,85 @@ class ExtensibleService(object):
             prop_type.save()
 
         return extensible_type
+
+
+class ExtensibleBase(object):
+    def __init__(self, **kwargs):
+        pass
+
+    @property
+    def id(self):
+        """Returns the ID of the substance.
+
+        Use (self.id, self.version) as a unique key for versions of a substance.
+        """
+        return self._wrapped.id
+
+    @property
+    def type_full_name(self):
+        """
+        Returns the full name of this type
+        """
+        return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+
+    @property
+    def name(self):
+        return self._wrapped.name
+
+    @name.setter
+    def name(self, value):
+        if self._name_before_change is None:
+            self._name_before_change = self._wrapped.name
+        self._wrapped.name = value
+
+    @property
+    def created_at(self):
+        return self._wrapped.created_at
+
+    @property
+    def updated_at(self):
+        return self._wrapped.updated_at
+
+    @property
+    def properties(self):
+        """
+        Returns the properties as a dictionary.
+
+        Note that one must use `.value` to get to the actual value of the property, e.g.:
+
+        >>>   sample.properties['color'].value
+        """
+        return {prop.name: prop for prop in self._wrapped_version.properties.all()}
+
+
+class FieldDoesNotExist(Exception):
+    pass
+
+
+class ExtensibleBaseField(object):
+    def __init__(self, prop_name=None, display_name=None):
+        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
+        self.prop_name = prop_name
+        self.display_name = display_name or prop_name
+
+    def validate(self, prop_type, value):
+        # Override this in subclasses
+        pass
+
+    def _handle_validate(self, obj, value):
+        try:
+            prop_type = obj._wrapped.extensible_type.property_types.get(name=self.prop_name)
+        except ExtensiblePropertyType.DoesNotExist:
+            raise FieldDoesNotExist(self.prop_name)
+        self.validate(prop_type, value)
+
+    def __get__(self, obj, type=None):
+        return obj._property_bag[self.prop_name]
+
+    def __set__(self, obj, value):
+        self._handle_validate(obj, value)
+        obj._property_bag[self.prop_name] = value
+
+
+class ExtensibleTypeValidationError(Exception):
+    pass

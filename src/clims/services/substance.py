@@ -3,6 +3,8 @@ from __future__ import absolute_import
 import six
 
 from clims.models import Substance, ExtensibleProperty, ExtensiblePropertyType, SubstanceVersion
+from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
+        ExtensibleTypeValidationError)
 from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
@@ -158,39 +160,6 @@ class _PropertyBag(object):
         self.new_values[key] = value
 
 
-class FieldDoesNotExist(Exception):
-    pass
-
-
-class ExtensibleBaseField(object):
-    def __init__(self, prop_name=None, display_name=None):
-        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
-        self.prop_name = prop_name
-        self.display_name = display_name or prop_name
-
-    def validate(self, prop_type, value):
-        # Override this in subclasses
-        pass
-
-    def _handle_validate(self, obj, value):
-        try:
-            prop_type = obj._wrapped.extensible_type.property_types.get(name=self.prop_name)
-        except ExtensiblePropertyType.DoesNotExist:
-            raise FieldDoesNotExist(self.prop_name)
-        self.validate(prop_type, value)
-
-    def __get__(self, obj, type=None):
-        return obj._property_bag[self.prop_name]
-
-    def __set__(self, obj, value):
-        self._handle_validate(obj, value)
-        obj._property_bag[self.prop_name] = value
-
-
-class ExtensibleTypeValidationError(Exception):
-    pass
-
-
 def validate_with_casting(value, fn):
     valid = True
     try:
@@ -245,10 +214,6 @@ class JsonField(ExtensibleBaseField):
         return ExtensiblePropertyType.JSON
 
 
-class ExtensibleBase(object):
-    pass
-
-
 class SubstanceAncestry(object):
     """
     A companion class to the `Substance` class. Used to visualize the substance's ancestry.
@@ -266,7 +231,7 @@ class SubstanceAncestry(object):
         for entry in Substance.objects.filter(origins__in=self.substance.origins):
             yield self.substance._to_wrapper(entry)
 
-    def to_graphviz_src(self):
+    def to_graphviz_src(self, include_created=True):
         """Generates a graphviz graph for the ancestry of this substance."""
         def create_node_id(substance_at_version):
             return "node_{}_v{}".format(substance_at_version.id, substance_at_version.version)
@@ -274,7 +239,11 @@ class SubstanceAncestry(object):
         def node(substance):
             node_id = create_node_id(substance)
             node_name = "{}.v{}".format(substance.name, substance.version)
-            key_vals = list(substance.properties.items())
+            key_vals = list((key, prop.value) for key, prop in substance.properties.items())
+            # Add created/updated
+            if include_created:
+                key_vals.append(("created", substance.created_at))
+
             keys = " | ".join(key for key, val in key_vals)
             vals = " | ".join(six.text_type(val) for key, val in key_vals)
 
@@ -320,9 +289,9 @@ class SubstanceAncestry(object):
 
         return templ.replace("{NODES}", nodes).replace("{EDGES}", edges)
 
-    def to_svg(self):
+    def to_svg(self, include_created=True):
         from graphviz import Source
-        s = Source(self.to_graphviz_src())
+        s = Source(self.to_graphviz_src(include_created))
         return s
 
 
@@ -336,15 +305,14 @@ class SubstanceBase(ExtensibleBase):
     """
 
     def __init__(self, **kwargs):
-        self._app = kwargs.get("_app")
-        assert self._app
+        super(SubstanceBase, self).__init__(**kwargs)
+
+        from clims.services.application import ioc
+        self._app = ioc.app
+
         self._property_bag = _PropertyBag(self)
         self._name_before_change = None
 
-        # TODO:
-        # self._read_only = kwargs.get("_read_only", False)
-
-        # TODO: Most of this should be in ExtensibleBase
         wrapped_version = kwargs.get("_wrapped_version", None)
         if wrapped_version:
             self._wrapped_version = wrapped_version
@@ -366,31 +334,6 @@ class SubstanceBase(ExtensibleBase):
         Wraps either a SubstanceVersion or Substance as a higher-level object
         """
         return self._app.substances.to_wrapper(model)
-
-    @property
-    def type_full_name(self):
-        """
-        Returns the full name of this type
-        """
-        return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
-
-    @property
-    def id(self):
-        """Returns the ID of the substance.
-
-        Use (self.id, self.version) as a unique key for versions of a substance.
-        """
-        return self._wrapped.id
-
-    @property
-    def name(self):
-        return self._wrapped.name
-
-    @name.setter
-    def name(self, value):
-        if self._name_before_change is None:
-            self._name_before_change = self._wrapped.name
-        self._wrapped.name = value
 
     @property
     def version(self):
@@ -422,17 +365,6 @@ class SubstanceBase(ExtensibleBase):
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
-
-    @property
-    def properties(self):
-        """
-        Returns the properties as a dictionary.
-
-        Note that one must use `.value` to get to the actual value of the property, e.g.:
-
-        >>>   sample.properties['color'].value
-        """
-        return {prop.name: prop for prop in self._wrapped_version.properties.all()}
 
     @transaction.atomic
     def save(self):

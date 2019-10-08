@@ -12,3 +12,14 @@ class ApplicationService(object):
     def __init__(self):
         self.extensibles = ExtensibleService(self)
         self.substances = SubstanceService(self)
+
+
+class InversionOfControl(object):
+    def __init__(self):
+        self.app = None
+
+    def set_application(self, app):
+        self.app = app
+
+
+ioc = InversionOfControl()

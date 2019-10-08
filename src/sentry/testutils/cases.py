@@ -24,7 +24,6 @@ import requests
 import six
 import types
 import logging
-from uuid import uuid4
 
 from sentry_sdk import Hub
 
@@ -59,7 +58,6 @@ from sentry.models import (
     GroupEnvironment, GroupHash, GroupMeta, ProjectOption, Repository, DeletedOrganization,
     Environment, GroupStatus, Organization, TotpInterface, UserReport,
 )
-from clims.models import PluginRegistration
 from sentry.plugins import plugins
 from sentry.rules import EventState
 from sentry.utils import json
@@ -70,7 +68,7 @@ from .helpers import (
     AuthProvider, Feature, get_auth_header, TaskRunner, override_options, parse_queries
 )
 
-from clims.services import ApplicationService
+from clims.services import ApplicationService, ioc
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 
@@ -91,7 +89,8 @@ class BaseTestCase(Fixtures, Exam):
     def setup_services(self):
         # Set up clean service classes. This should ensure that each test case has a clean cache
         # as caches should only be in services.
-        self.app = ApplicationService()
+        ioc.set_application(ApplicationService())
+        self.app = ioc.app
 
     @before
     def setup_dummy_auth_provider(self):
@@ -386,28 +385,6 @@ class BaseTestCase(Fixtures, Exam):
 
         with context:
             func(*args, **kwargs)
-
-    def create_plugin(self, org=None):
-        org = org or self.organization
-        plugin, _ = PluginRegistration.objects.get_or_create(
-            name='tests_utils.create_plugin', version='1.0.0', organization=org)
-        return plugin
-
-    def register_extensible(self, klass, plugin=None):
-        plugin = plugin or self.create_plugin()
-        ret = self.app.extensibles.register(plugin, klass)
-        return ret
-
-    def create_substance(self, klass, name=None, **kwargs):
-        properties = kwargs or dict()
-        ret = self.register_extensible(klass)
-
-        if not name:
-            name = "sample-{}".format(uuid4())
-        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
-
-        assert ret.version == 1
-        return ret
 
 
 class _AssertQueriesContext(CaptureQueriesContext):
