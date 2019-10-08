@@ -16,6 +16,7 @@ from django.core.urlresolvers import reverse
 from django.db import IntegrityError, models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 
 from sentry.db.models import BaseManager, BaseModel, BoundedAutoField
 from sentry.models import LostPasswordHash
@@ -122,9 +123,11 @@ class User(BaseModel, AbstractBaseUser):
     def delete(self):
         if self.username == 'sentry':
             raise Exception('You cannot delete the "sentry" user as it is required by Sentry.')
-        avatar = self.avatar.first()
-        if avatar:
+        try:
+            avatar = self.avatar.first()
             avatar.delete()
+        except ObjectDoesNotExist:
+            pass
         return super(User, self).delete()
 
     def save(self, *args, **kwargs):
@@ -167,10 +170,11 @@ class User(BaseModel, AbstractBaseUser):
         return first_name.capitalize()
 
     def get_avatar_type(self):
-        avatar = self.avatar.first()
-        if avatar:
+        try:
+            avatar = self.avatar.first()
             return avatar.get_avatar_type_display()
-        return 'letter_avatar'
+        except ObjectDoesNotExist:
+            return 'letter_avatar'
 
     def send_confirm_email_singular(self, email, is_new_user=False):
         from sentry import options
