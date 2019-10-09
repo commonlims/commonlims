@@ -9,6 +9,7 @@ from __future__ import absolute_import, print_function
 
 __all__ = ('PluginManager', )
 
+import sys
 import os
 import six
 import logging
@@ -228,7 +229,18 @@ class PluginManager(InstanceManager):
             return importlib.import_module(module_name)
         except ImportError as ex:
             if six.text_type(ex) != "No module named {}".format(name):
-                raise ex
+                trace = sys.exc_info()[2]
+                raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
+
+    def clear_handler_implementations(self, baseclass=None):
+        if baseclass is not None:
+            self.handlers[baseclass].clear()
+        else:
+            for key in self.handlers:
+                self.handlers[key].clear()
+
+    def load_handler_implementation(self, baseclass, impl):
+        self.handlers[baseclass].add(impl)
 
     def load_handlers(self, cls):
 
@@ -253,8 +265,8 @@ class PluginManager(InstanceManager):
                     impl_already_reg = self.handlers[baseclass]
                     if issubclass(impl, impl_already_reg):
                         # Current class is more concrete, let's replace it:
-                        self.handlers[baseclass].clear()
-                        self.handlers[baseclass].add(impl)
+                        self.clear_handler_implementations(baseclass)
+                        self.load_handler_implementation(baseclass, impl)
                     elif issubclass(impl_already_reg, impl):
                         # The implementation we've already registered is more concrete
                         pass

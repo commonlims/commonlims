@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 
 import six
+import re
+import logging
 
 from clims.models import Substance, ExtensibleProperty, ExtensiblePropertyType, SubstanceVersion
 from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
@@ -8,10 +10,23 @@ from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
 from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
+from sentry.models.file import File
+from clims.models.file import OrganizationFile
 
 
 class ExtensibleBaseQuerySet(QuerySet):
     pass
+
+
+class RequiredHandlerNotFound(Exception):
+    pass
+
+
+class FileNameValidationError(Exception):
+    pass
+
+
+FILENAME_RE = re.compile(r"[\n\t\r\f\v\\]")
 
 
 class SubstanceService(object):
@@ -58,6 +73,39 @@ class SubstanceService(object):
 
         return SubstanceVersion.objects.filter(latest=True).prefetch_related('properties')
 
+    @transaction.atomic
+    def load_file(self, organization, full_path, fileobj):
+        from sentry.plugins import plugins
+        from clims.handlers import SubstancesSubmissionHandler, HandlerContext
+        submission_handlers = plugins.handlers[SubstancesSubmissionHandler]
+        if len(submission_handlers) == 0:
+            raise RequiredHandlerNotFound("No handler that supports substance submission found")
+        logger = logging.getLogger('clims.files')
+        logger.info('substance_batch_import.start')
+
+        name = full_path.rsplit('/', 1)[-1]
+        if FILENAME_RE.search(name):
+            raise FileNameValidationError('File name must not contain special whitespace characters')
+
+        file_model = File.objects.create(
+            name=name,
+            type='substance-batch-file',
+            headers=list(),
+        )
+        file_model.putfile(fileobj, logger=logger)
+
+        org_file = OrganizationFile.objects.create(
+            organization_id=organization.id,
+            file=file_model,
+            name=full_path,
+        )
+
+        # Call handler synchronously:
+        for handler in submission_handlers:
+            context = HandlerContext(organization=organization)
+            instance = handler(context, self._app)
+            instance.handle(org_file)
+
     def to_wrapper(self, model):
         if isinstance(model, SubstanceVersion):
             return self._app.substances.substance_version_to_wrapper(model)
@@ -77,8 +125,7 @@ class SubstanceService(object):
             # an instance that used to be registered but the Python version has been removed
             # or rename.d
             # We must use the base class to wrap it:
-            return SubstanceBase(_wrapped_version=substance_version, _unregistered=True,
-                    _app=self._app)
+            return SubstanceBase(_wrapped_version=substance_version, _unregistered=True)
 
     def substance_to_wrapper(self, substance, version=None):
         if version is not None:
