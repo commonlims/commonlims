@@ -55,7 +55,7 @@ class SubstancesSubmissionHandler(Handler):
 
     unique_registration = True
 
-    def handle(file_obj):
+    def handle(self, file_obj):
         pass
 
 
