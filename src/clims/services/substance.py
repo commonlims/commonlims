@@ -135,7 +135,6 @@ class SubstanceService(object):
             return self.substance_to_wrapper(model)
 
     def substance_version_to_wrapper(self, substance_version):
-        from clims.services import SubstanceBase
         from clims.services.extensible import ExtensibleTypeNotRegistered
 
         try:
@@ -143,11 +142,9 @@ class SubstanceService(object):
                 substance_version.archetype.extensible_type.name)
             return SpecificExtensibleType(_wrapped_version=substance_version, _app=self._app)
         except ExtensibleTypeNotRegistered:
-            # This is an unregistered instance. This can happen for example when we have
-            # an instance that used to be registered but the Python version has been removed
-            # or rename.
-            # We must use the base class to wrap it:
-            return SubstanceBase(_wrapped_version=substance_version, _unregistered=True)
+            raise ExtensibleTypeNotRegistered(
+                'Extensible type is not yet registered: {}'
+                .format(substance_version.substance.extensible_type.name))
 
     def substance_to_wrapper(self, substance, version=None):
         if version is not None:
