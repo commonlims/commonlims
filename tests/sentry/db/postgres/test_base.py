@@ -13,7 +13,6 @@ def psycopg2_version():
     return tuple(map(int, version))
 
 
-@pytest.mark.checkskip
 class CursorWrapperTestCase(TestCase):
     def test_null_bytes(self):
         from django.db import connection

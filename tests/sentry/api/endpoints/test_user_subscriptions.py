@@ -9,7 +9,6 @@ from sentry.models import UserEmail
 from sentry.testutils import APITestCase
 
 
-@pytest.mark.checkskip
 class UserSubscriptionsNewsletterTest(APITestCase):
     def setUp(self):
         self.user = self.create_user(email='foo@example.com')

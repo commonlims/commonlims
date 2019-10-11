@@ -25,7 +25,6 @@ def xfail_if_mysql(function):
     )(function)
 
 
-@pytest.mark.checkskip
 class TagStorage(TestCase):
     def setUp(self):
         self.ts = V2TagStorage()

@@ -243,7 +243,6 @@ class DateTimePaginatorTest(TestCase):
         result4 = paginator.get_result(limit=10, cursor=result1.next)
         assert len(result4) == 0, result4
 
-    @pytest.mark.checkskip
     def test_rounding_offset(self):
         joined = timezone.now()
 

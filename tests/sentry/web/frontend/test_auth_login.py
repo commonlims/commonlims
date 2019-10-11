@@ -154,7 +154,6 @@ class AuthLoginTest(TestCase):
         assert resp.status_code == 200
 
 
-@pytest.mark.checkskip
 class AuthLoginNewsletterTest(TestCase):
     @fixture
     def path(self):

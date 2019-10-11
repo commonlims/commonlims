@@ -12,7 +12,7 @@ from sentry.testutils import TestCase
 
 
 class GroupActivityTestCase(TestCase):
-    @pytest.mark.checkskip
+
     def test_pr_activity(self):
         self.org = self.create_organization(
             name='Rowdy Tiger',
@@ -45,7 +45,6 @@ class GroupActivityTestCase(TestCase):
         assert pull_request['repository']['name'] == 'organization-bar'
         assert pull_request['message'] == 'kartoffel'
 
-    @pytest.mark.checkskip
     def test_commit_activity(self):
         self.org = self.create_organization(
             name='Rowdy Tiger',
