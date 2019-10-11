@@ -29,18 +29,32 @@ create-camunda-tables:
 	./middleware/camunda/restart.sh
 
 CLIMS_DB_PASSWORD := $(shell openssl rand -base64 32)
+CLIMS_TEST_DB_PASSWORD := $(shell openssl rand -base64 32)
 
 setup-db-user: create-db
 	@echo "--> Make sure we have user called 'clims'"
-	-psql -d postgres -c "CREATE ROLE clims WITH LOGIN"
+	-psql -d postgres -c "CREATE ROLE clims WITH LOGIN" || true
 	-psql -d postgres -c "ALTER ROLE clims WITH SUPERUSER;"
 	-psql -d clims -c "ALTER ROLE clims WITH LOGIN ENCRYPTED PASSWORD '$(CLIMS_DB_PASSWORD)'"
-	@echo "Add the following line to ~/.pgpass: 'localhost:*:clims:clims:$(CLIMS_DB_PASSWORD)'"
+
+	@echo "--> Make sure we have user called 'test_clims'"
+	-psql -d postgres -c "CREATE ROLE test_clims WITH LOGIN" || true
+	-psql -d postgres -c "ALTER ROLE test_clims WITH SUPERUSER;"
+	-psql -d clims -c "ALTER ROLE test_clims WITH LOGIN ENCRYPTED PASSWORD '$(CLIMS_TEST_DB_PASSWORD)'"
+
+	@echo "Add the following lines to ~/.pgpass:"
+	@echo "localhost:*:clims:clims:$(CLIMS_DB_PASSWORD)"
+	@echo "localhost:*:test_clims:test_clims:$(CLIMS_TEST_DB_PASSWORD)"
 	@echo "Set the permissions of ~/.pgpass to 0600: chmod 0600 ~/.pgpass "
 
 create-db:
 	@echo "--> Creating 'clims' database"
-	createdb -E utf-8 clims
+	createdb -E utf-8 clims || true
+
+create-example-data:
+	@echo "--> Add example data"
+	lims createexampledata
+
 
 # TODO Don't know if we should create the user here, since it is not super intuative to reset the
 #      db to create a user. /JD 2019-10-03

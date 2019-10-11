@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import pytest
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 from exam import fixture
@@ -155,8 +154,6 @@ class AuthLoginTest(TestCase):
         assert resp.status_code == 200
 
 
-@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER !=
-                    'sentry.newsletter.dummy.DummyNewsletter')
 class AuthLoginNewsletterTest(TestCase):
     @fixture
     def path(self):

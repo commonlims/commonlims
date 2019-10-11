@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import pytest
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from sentry import newsletter
@@ -10,8 +9,6 @@ from sentry.models import UserEmail
 from sentry.testutils import APITestCase
 
 
-@pytest.mark.skipIf(lambda x: settings.SENTRY_NEWSLETTER !=
-                    'sentry.newsletter.dummy.DummyNewsletter')
 class UserSubscriptionsNewsletterTest(APITestCase):
     def setUp(self):
         self.user = self.create_user(email='foo@example.com')

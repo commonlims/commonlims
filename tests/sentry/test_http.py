@@ -7,11 +7,11 @@ import tempfile
 
 from django.core.exceptions import SuspiciousOperation
 from mock import patch
-from urllib3.util.connection import HAS_IPV6
 
 from sentry import http
 from sentry.testutils import TestCase
 from sentry.testutils.helpers import override_blacklist
+from urllib3.util.connection import HAS_IPV6
 
 
 class HttpTest(TestCase):

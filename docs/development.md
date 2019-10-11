@@ -28,6 +28,7 @@ You may also need to create a postgres user that matches your Unix username:
 ```
 local   all             camunda                                 password
 local   all             clims                                   password
+local   all             test_clims                              password
 ```
 
 - Restart postgres with `sudo service postgresql restart`
@@ -40,7 +41,7 @@ From the root of the 'commonlims' project, run:
 Then run:
 
 - `make setup-db-user`
-- Add the password to ~/.pgpassword (as in structed by the above command)
+- Add the passwords for `clims` and `test_clims` to ~/.pgpassword (as in structed by the above command)
 - `make develop`
 - `lims createuser --email admin@localhost --password changeit --superuser --no-input`
 - `lims upgrade`

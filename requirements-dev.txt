@@ -1,5 +1,5 @@
 autopep8>=1.3.5,<1.4.0
-Babel
+Babel>=2.7.0,<3.0.0
 
 # Dependency of flake8
 # https://github.com/jaraco/configparser/issues/27
@@ -7,10 +7,11 @@ Babel
 configparser!=3.5.2,!=3.5.3,!=3.7.0
 django-debug-toolbar>=1.9.1,<1.10.0
 flake8>=3.5.0,<3.6.0
-inflect
-ipython
+graphviz<1
+inflect>=2.1,<3.0.0
+ipython>=5.8,<6.0.0
 isort>=4.3.4,<4.4.0
 jupyter>=1.0.0,<2.0.0
 pycodestyle>=2.3.1,<2.4.0
 sentry-flake8>=0.0.1
-stringcase
+stringcase>=1.2.0,<2.0.0
