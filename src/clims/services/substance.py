@@ -123,7 +123,7 @@ class SubstanceService(object):
         except ExtensibleTypeNotRegistered:
             # This is an unregistered instance. This can happen for example when we have
             # an instance that used to be registered but the Python version has been removed
-            # or rename.d
+            # or rename.
             # We must use the base class to wrap it:
             return SubstanceBase(_wrapped_version=substance_version, _unregistered=True)
 
@@ -375,6 +375,11 @@ class SubstanceBase(ExtensibleBase):
         extensible_type = self._app.extensibles.get_extensible_type(org, self.type_full_name)
         self._wrapped = Substance(name=name, extensible_type=extensible_type, organization=org)
         self._wrapped_version = SubstanceVersion()
+
+        # Add any remaning properties in kwargs. This is necessary so that user
+        # can instantiate objects using e.g. syntax like: Sample(my_value=1)
+        for key, value in six.iteritems(kwargs):
+            setattr(self, key, value)
 
     def _to_wrapper(self, model):
         """
