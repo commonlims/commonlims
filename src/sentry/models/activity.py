@@ -71,7 +71,6 @@ class Activity(Model):
     )
 
     project = FlexibleForeignKey('sentry.Project')
-    work_batch = FlexibleForeignKey('clims.WorkBatch', null=True)
     group = FlexibleForeignKey('sentry.Group', null=True)
     # index on (type, ident)
     type = BoundedPositiveIntegerField(choices=TYPE)

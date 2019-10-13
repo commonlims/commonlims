@@ -24,7 +24,7 @@ class WorkBatch(Model):
     # All user tasks can have one or more sample batch
     name = models.CharField('name', max_length=200, blank=True)
     organization = FlexibleForeignKey('sentry.Organization')
-    plugin = FlexibleForeignKey('clims.PluginRegistration', null=True)  # TODO: Should not be null
+    plugin = FlexibleForeignKey('clims.PluginRegistration')
     handler = models.TextField('handler')
     created = models.DateTimeField('created', default=timezone.now, db_index=True, null=False)
 

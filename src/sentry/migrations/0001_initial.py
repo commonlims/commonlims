@@ -33,7 +33,6 @@ import sentry.db.models.fields.encrypted
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clims', '0001_initial'),
     ]
 
     operations = [
@@ -2810,12 +2809,6 @@ class Migration(migrations.Migration):
             model_name='activity',
             name='user',
             field=sentry.db.models.fields.foreignkey.FlexibleForeignKey(to=settings.AUTH_USER_MODEL, null=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='activity',
-            name='user_task',
-            field=sentry.db.models.fields.foreignkey.FlexibleForeignKey(to='clims.UserTask', null=True),
             preserve_default=True,
         ),
     ]
