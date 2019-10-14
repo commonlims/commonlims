@@ -7,15 +7,12 @@ from clims.api.serializers.models.extensible_property import ExtensiblePropertyS
 from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType, ExtensibleType
 from clims.models.plugin_registration import PluginRegistration
 
-from sentry.models.organization import Organization
-
 
 class ExtensiblePropertyTypeSerializerTestCase(TestCase):
 
     def setUp(self):
-        org, _ = Organization.objects.get_or_create(name="testorg")
         example_plugin, _ = PluginRegistration.objects.get_or_create(
-            name='clims.example.plugin', version='1.0.0', organization=org)
+            name='clims.example.plugin', version='1.0.0', organization=self.organization)
         self.extensible_type = ExtensibleType(name="test type", category="test category", plugin=example_plugin)
 
     def create_prop(self, prop_name, disp_name, prop_type, value):

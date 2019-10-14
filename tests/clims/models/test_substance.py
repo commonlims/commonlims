@@ -3,9 +3,13 @@ from __future__ import absolute_import
 import random
 
 import pytest
+
+from sentry.testutils import TestCase
+
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
-from sentry.testutils import TestCase
+from clims.services.substance import SubstanceBase, FloatField
+
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
 
@@ -20,14 +24,6 @@ class SubstanceTestCase(TestCase):
 class SubstancePropertiesTestCase(TestCase):
 
     def test_can_create_substance_with_properties(self):
-        from clims.services.substance import SubstanceBase, FloatField
-        from clims.models.plugin_registration import PluginRegistration
-        from sentry.models.organization import Organization
-
-        org = Organization.objects.get(name="lab")
-
-        example_plugin, _ = PluginRegistration.objects.get_or_create(
-            name='clims.example.plugin', version='1.0.0', organization=org)
 
         class ExampleSample(SubstanceBase):
             moxy = FloatField("moxy")
@@ -38,10 +34,10 @@ class SubstancePropertiesTestCase(TestCase):
         cool = random.randint(1, 100)
         erudite = random.randint(1, 100)
 
-        self.app.extensibles.register(example_plugin, ExampleSample)
+        self.register_extensible(ExampleSample)
         name = "sample-{}".format(random.randint(1, 1000000))
         sample = ExampleSample(name=name,
-                               organization=org,
+                               organization=self.organization,
                                moxy=moxy,
                                cool=cool,
                                erudite=erudite)
