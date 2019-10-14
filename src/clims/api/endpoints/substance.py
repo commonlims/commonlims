@@ -24,7 +24,17 @@ class SubstanceEndpoint(OrganizationEndpoint):
             # the wrapper object directly.
             for entry in qs:
                 wrapper = self.app.substances.to_wrapper(entry)
-                ret.append(SubstanceSerializer(wrapper).data)
+                json = SubstanceSerializer(wrapper).data
+                json['position'] = {'index': "A:1", 'container': {'name': "cont1"}}
+                if 'volume' not in json['properties']:
+                    json['properties']['volume'] = 10
+                if 'sample_type' not in json['properties']:
+                    json['properties']['sample_type'] = 'amplicon'
+                if 'priority' not in json:
+                    json['priority'] = 3
+                if 'days_waiting' not in json:
+                    json['days_waiting'] = 56   # NOTE: We would have created and origin_created instead
+                ret.append(json)
             return ret
 
         return self.paginate(
