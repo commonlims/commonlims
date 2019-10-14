@@ -30,15 +30,6 @@ class Container(ExtensibleModel):
 
     __repr__ = sane_repr('container_type_id', 'name')
 
-    # TODO:
-    # def get_scopes(self):
-    #     if self.scope_list:
-    #         return self.scope_list
-    #     return [k for k, v in six.iteritems(self.scopes) if v]
-    #
-    # def has_scope(self, scope):
-    #     return scope in self.get_scopes()
-
 
 class ContainerVersion(ExtensibleVersion):
     __core__ = True
@@ -51,7 +42,6 @@ class ContainerVersion(ExtensibleVersion):
 class ContainerType(Model):
     __core__ = True
 
-    # TODO: limited char field
     name = models.TextField(null=True)
     rows = models.IntegerField('rows')
     cols = models.IntegerField('cols')
