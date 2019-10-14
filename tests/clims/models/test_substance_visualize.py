@@ -27,5 +27,4 @@ class TestSubstance(SubstanceTestCase):
         assert (aliquot2.parents[0].id, aliquot2.parents[0].version) == (original_id, 3)
 
         ancestry = sample1.to_ancestry()  # returns everything with the same origins (i.e. sample1)
-        print(ancestry.to_graphviz_src())
         ancestry.to_svg()
