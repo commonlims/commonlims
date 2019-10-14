@@ -7,15 +7,12 @@ from clims.api.serializers.models.extensible_property import ExtensiblePropertyS
 from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType, ExtensibleType
 from clims.models.plugin_registration import PluginRegistration
 
-from clims.services.application import ioc, ApplicationService
 from sentry.models.organization import Organization
 
 
 class ExtensiblePropertyTypeSerializerTestCase(TestCase):
 
     def setUp(self):
-        app = ApplicationService()
-        ioc.set_application(app)
         org, _ = Organization.objects.get_or_create(name="testorg")
         example_plugin, _ = PluginRegistration.objects.get_or_create(
             name='clims.example.plugin', version='1.0.0', organization=org)
