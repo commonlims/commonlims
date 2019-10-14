@@ -1,9 +1,11 @@
 from __future__ import absolute_import
 
+import pytest
 from sentry.testutils import TestCase
 from clims.services import ContainerBase, SubstanceBase
 from clims.services import FloatField, TextField
 from clims.models import Container
+from django.db import IntegrityError
 
 
 class TestContainer(TestCase):
@@ -15,6 +17,14 @@ class TestContainer(TestCase):
         container = HairSampleContainer(name="container1", organization=self.organization)
         container.save()
         Container.objects.get(name=container.name)  # Raises DoesNotExist if it wasn't created
+
+    def test_name_is_unique(self):
+        self.register_extensible(HairSampleContainer)
+        container = HairSampleContainer(name="container1", organization=self.organization)
+        container.save()
+        container2 = HairSampleContainer(name=container.name, organization=self.organization)
+        with pytest.raises(IntegrityError):
+            container2.save()
 
     def test_can_add_custom_property(self):
         self.register_extensible(HairSampleContainer)

@@ -11,6 +11,7 @@ from clims.services import ExtensibleTypeValidationError
 from clims.services.substance import SubstanceBase, FloatField
 
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
+from django.db import IntegrityError
 
 
 class SubstanceTestCase(TestCase):
@@ -71,6 +72,11 @@ class TestSubstance(SubstanceTestCase):
         actual = {(entry.version, entry.previous_name) for entry in model.versions.all()}
         expected = {(1, None), (2, original_name)}
         assert actual == expected
+
+    def test_names_are_unique(self):
+        substance = self.create_gemstone()
+        with pytest.raises(IntegrityError):
+            substance = self.create_gemstone(name=substance.name)
 
     def test_can_save_substance_properties(self):
         """

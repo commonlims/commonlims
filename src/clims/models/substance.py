@@ -46,7 +46,7 @@ class Substance(ExtensibleModel):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_substance'
-        unique_together = ('name', 'organization', 'extensible_type')
+        unique_together = ('name', 'organization')
 
 
 class SubstanceVersion(ExtensibleVersion):

@@ -27,6 +27,7 @@ class Container(ExtensibleModel):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_container'
+        unique_together = ('name', 'organization')
 
     __repr__ = sane_repr('container_type_id', 'name')
 
