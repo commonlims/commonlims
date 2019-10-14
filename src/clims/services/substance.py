@@ -376,7 +376,7 @@ class SubstanceBase(ExtensibleBase):
         self._wrapped = Substance(name=name, extensible_type=extensible_type, organization=org)
         self._wrapped_version = SubstanceVersion()
 
-        # Add any remaning properties in kwargs. This is necessary so that user
+        # Add any remaining properties in kwargs. This is necessary so that user
         # can instantiate objects using e.g. syntax like: Sample(my_value=1)
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
