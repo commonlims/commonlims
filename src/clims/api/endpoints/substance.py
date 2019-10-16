@@ -22,18 +22,19 @@ class SubstanceEndpoint(OrganizationEndpoint):
             ret = list()
             # NOTE: This could be simplified substantially if we had a queryset that returned
             # the wrapper object directly.
+            import random
             for entry in qs:
                 wrapper = self.app.substances.to_wrapper(entry)
                 json = SubstanceSerializer(wrapper).data
                 json['position'] = {'index': "A:1", 'container': {'name': "cont1"}}
                 if 'volume' not in json['properties']:
-                    json['properties']['volume'] = 10
+                    json['properties']['volume'] = random.randint(0, 500)
                 if 'sample_type' not in json['properties']:
-                    json['properties']['sample_type'] = 'amplicon'
+                    json['properties']['sample_type'] = random.choice(["Amplicon", "WGS", "WES"])
                 if 'priority' not in json:
-                    json['priority'] = 3
+                    json['priority'] = random.randint(1, 10)
                 if 'days_waiting' not in json:
-                    json['days_waiting'] = 56   # NOTE: We would have created and origin_created instead
+                    json['days_waiting'] = random.randint(0, 100)   # NOTE: We would have created and origin_created instead
                 ret.append(json)
             return ret
 
