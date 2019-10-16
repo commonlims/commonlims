@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 import six
-from clims.models import ExtensibleType, ExtensiblePropertyType
+from clims.models import ExtensibleType, ExtensiblePropertyType, ExtensibleProperty
 from django.db import transaction
 
 
@@ -98,15 +98,78 @@ class ExtensibleService(object):
 
 class ExtensibleBase(object):
     def __init__(self, **kwargs):
-        pass
+        from clims.services.application import ioc
+        self._app = ioc.app
+        self._property_bag = PropertyBag(self)
+        self._name_before_change = None
+        self._wrapped_version = kwargs.get("_wrapped_version", None)
+        self._has_ancestry = True
+        if self._wrapped_version:
+            self._archetype = self._wrapped_version.archetype
+
+        # Stop here if we're wrapping a version that already exists
+        if self._wrapped_version:
+            return
+
+        name = kwargs.pop("name", None)
+        org = kwargs.pop("organization", None)
+
+        if not name or not org:
+            raise AttributeError("You must supply name and organization")
+
+        extensible_type = self._app.extensibles.get_extensible_type(org, self.type_full_name)
+        self._archetype = self.WrappedArchetype(name=name, extensible_type=extensible_type,
+                organization=org)
+        self._wrapped_version = self.WrappedVersion()
+
+        # Add any remaining properties in kwargs. This is necessary so that user
+        # can instantiate objects using e.g. syntax like: Sample(my_value=1)
+        for key, value in six.iteritems(kwargs):
+            setattr(self, key, value)
+
+
+    @transaction.atomic
+    def save(self):
+        creating = self.id is None
+        if creating:
+            self._archetype.save()
+            self._wrapped_version.archetype = self._archetype
+            self._wrapped_version.save()
+
+            if self._has_ancestry:
+                # We want the origin point(s) to always be populated, also for the origins themselves, in
+                # which case it points to itself. This way we can find all related samples in one query.
+                self._archetype.origins.add(self._archetype)
+            self._property_bag.save(self._wrapped_version)
+        else:
+            # Updating
+            old_version = self._archetype.versions.get(latest=True)
+            old_version.latest = False
+            old_version.save()
+            properties = old_version.properties.all()
+
+            new_version = old_version
+            new_version.pk = None
+            new_version.version += 1
+            new_version.latest = True
+            new_version.previous_name = self._name_before_change
+            new_version.save()
+
+            # Connect the new object with the properties on the old_version
+            for prop in properties:
+                new_version.properties.add(prop)
+
+            self._archetype.versions.add(new_version)
+            self._property_bag.save(new_version)
+            self._wrapped_version = new_version
 
     @property
     def id(self):
-        """Returns the ID of the substance.
+        """Returns the ID of the archetype.
 
-        Use (self.id, self.version) as a unique key for versions of a substance.
+        Use (self.id, self.version) as a unique key for versions of an extensible.
         """
-        return self._wrapped.id
+        return self._archetype.id
 
     @property
     def type_full_name(self):
@@ -117,21 +180,21 @@ class ExtensibleBase(object):
 
     @property
     def name(self):
-        return self._wrapped.name
+        return self._archetype.name
 
     @name.setter
     def name(self, value):
         if self._name_before_change is None:
-            self._name_before_change = self._wrapped.name
-        self._wrapped.name = value
+            self._name_before_change = self._archetype.name
+        self._archetype.name = value
 
     @property
     def created_at(self):
-        return self._wrapped.created_at
+        return self._archetype.created_at
 
     @property
     def updated_at(self):
-        return self._wrapped.updated_at
+        return self._archetype.updated_at
 
     @property
     def properties(self):
@@ -161,7 +224,7 @@ class ExtensibleBaseField(object):
 
     def _handle_validate(self, obj, value):
         try:
-            prop_type = obj._wrapped.extensible_type.property_types.get(name=self.prop_name)
+            prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
         except ExtensiblePropertyType.DoesNotExist:
             raise FieldDoesNotExist(self.prop_name)
         self.validate(prop_type, value)
@@ -176,3 +239,67 @@ class ExtensibleBaseField(object):
 
 class ExtensibleTypeValidationError(Exception):
     pass
+
+
+class PropertyBag(object):
+    """
+    Handles properties on an extensible object.
+    """
+
+    def __init__(self, extensible_wrapper):
+        # TODO: validation should happen here
+        # TODO: Move versioning of properties here from the service
+        self.extensible_wrapper = extensible_wrapper
+        self.new_values = dict()
+
+    def save(self, versioned_object):
+        """
+        Saves the properties to django objects. Must be called after the wrapped class
+        has been saved.
+        """
+        # TODO: Make sure we're not trying to save to a "latest" entry
+        if not self.extensible_wrapper.id:
+            raise AssertionError(
+                "Properties can't be saved before the extensible object has been saved")
+
+        def create(key, value):
+            prop_type = versioned_object.archetype.extensible_type.property_types.get(name=key)
+            prop = ExtensibleProperty(extensible_property_type=prop_type)
+            prop.value = value
+            prop.save()
+            versioned_object.properties.add(prop)
+
+        def update(key, value, old_prop):
+            # Then, create a new entry with the new value with the same version
+            # as the current extensible object
+            prop_type = versioned_object.archetype.extensible_type.property_types.get(name=key)
+            prop = ExtensibleProperty(extensible_property_type=prop_type)
+            prop.value = value
+            prop.save()
+            versioned_object.properties.remove(old_prop)
+            versioned_object.properties.add(prop)
+
+        for key, value in self.new_values.items():
+            try:
+                prop = versioned_object.properties.get(extensible_property_type__name=key)
+                if prop.value == value:
+                    continue
+                update(key, value, prop)
+            except ExtensibleProperty.DoesNotExist:
+                create(key, value)
+
+        self.new_values.clear()
+
+    def __getitem__(self, key):
+        try:
+            new_value = self.new_values.get(key, None)
+            if new_value:
+                return new_value
+            persisted_value = self.extensible_wrapper._wrapped_version.properties.get(
+                extensible_property_type__name=key)
+            return persisted_value.value
+        except ExtensibleProperty.DoesNotExist:
+            return None
+
+    def __setitem__(self, key, value):
+        self.new_values[key] = value

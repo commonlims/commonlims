@@ -108,9 +108,9 @@ class SubstanceService(object):
 
     def to_wrapper(self, model):
         if isinstance(model, SubstanceVersion):
-            return self._app.substances.substance_version_to_wrapper(model)
+            return self.substance_version_to_wrapper(model)
         elif isinstance(model, Substance):
-            return self._app.substances.substance_to_wrapper(model)
+            return self.substance_to_wrapper(model)
 
     def substance_version_to_wrapper(self, substance_version):
         from clims.services import SubstanceBase
@@ -118,7 +118,7 @@ class SubstanceService(object):
 
         try:
             SpecificExtensibleType = self._app.extensibles.get_implementation(
-                substance_version.substance.extensible_type.name)
+                substance_version.archetype.extensible_type.name)
             return SpecificExtensibleType(_wrapped_version=substance_version, _app=self._app)
         except ExtensibleTypeNotRegistered:
             # This is an unregistered instance. This can happen for example when we have
@@ -139,72 +139,8 @@ class SubstanceService(object):
 
     def get(self, name):
         substance_model = SubstanceVersion.objects.prefetch_related('properties').get(
-            substance__name=name, latest=True)
+            archetype__name=name, latest=True)
         return self.to_wrapper(substance_model)
-
-
-class _PropertyBag(object):
-    """
-    Handles properties on an extensible object.
-    """
-
-    def __init__(self, extensible_wrapper):
-        # TODO: validation should happen here
-        # TODO: Move versioning of properties here from the service
-        self.extensible_wrapper = extensible_wrapper
-        self.new_values = dict()
-
-    def save(self, versioned_object):
-        """
-        Saves the properties to django objects. Must be called after the wrapped class
-        has been saved.
-        """
-        # TODO: Make sure we're not trying to save to a "latest" entry
-        if not self.extensible_wrapper.id:
-            raise AssertionError(
-                "Properties can't be saved before the extensible object has been saved")
-
-        def create(key, value):
-            prop_type = versioned_object.substance.extensible_type.property_types.get(name=key)
-            prop = ExtensibleProperty(extensible_property_type=prop_type)
-            prop.value = value
-            prop.save()
-            versioned_object.properties.add(prop)
-
-        def update(key, value, old_prop):
-            # Then, create a new entry with the new value with the same version
-            # as the current substance object
-            prop_type = versioned_object.substance.extensible_type.property_types.get(name=key)
-            prop = ExtensibleProperty(extensible_property_type=prop_type)
-            prop.value = value
-            prop.save()
-            versioned_object.properties.remove(old_prop)
-            versioned_object.properties.add(prop)
-
-        for key, value in self.new_values.items():
-            try:
-                prop = versioned_object.properties.get(extensible_property_type__name=key)
-                if prop.value == value:
-                    continue
-                update(key, value, prop)
-            except ExtensibleProperty.DoesNotExist:
-                create(key, value)
-
-        self.new_values.clear()
-
-    def __getitem__(self, key):
-        try:
-            new_value = self.new_values.get(key, None)
-            if new_value:
-                return new_value
-            persisted_value = self.extensible_wrapper._wrapped_version.properties.get(
-                extensible_property_type__name=key)
-            return persisted_value.value
-        except ExtensibleProperty.DoesNotExist:
-            return None
-
-    def __setitem__(self, key, value):
-        self.new_values[key] = value
 
 
 def validate_with_casting(value, fn):
@@ -351,35 +287,11 @@ class SubstanceBase(ExtensibleBase):
     Under the hood, this object wraps a Substance object and its related Extensible* classes.
     """
 
+    WrappedArchetype = Substance
+    WrappedVersion = SubstanceVersion
+
     def __init__(self, **kwargs):
         super(SubstanceBase, self).__init__(**kwargs)
-
-        from clims.services.application import ioc
-        self._app = ioc.app
-
-        self._property_bag = _PropertyBag(self)
-        self._name_before_change = None
-
-        wrapped_version = kwargs.get("_wrapped_version", None)
-        if wrapped_version:
-            self._wrapped_version = wrapped_version
-            self._wrapped = wrapped_version.substance
-            return
-
-        name = kwargs.pop("name", None)
-        org = kwargs.pop("organization", None)
-
-        if not name or not org:
-            raise AttributeError("You must supply name and organization")
-
-        extensible_type = self._app.extensibles.get_extensible_type(org, self.type_full_name)
-        self._wrapped = Substance(name=name, extensible_type=extensible_type, organization=org)
-        self._wrapped_version = SubstanceVersion()
-
-        # Add any remaining properties in kwargs. This is necessary so that user
-        # can instantiate objects using e.g. syntax like: Sample(my_value=1)
-        for key, value in six.iteritems(kwargs):
-            setattr(self, key, value)
 
     def _to_wrapper(self, model):
         """
@@ -393,19 +305,19 @@ class SubstanceBase(ExtensibleBase):
 
     @property
     def organization(self):
-        return self._wrapped.organization
+        return self._archetype.organization
 
     @property
     def extensible_type(self):
-        return self._wrapped.extensible_type
+        return self._archetype.extensible_type
 
     @property
     def depth(self):
-        return self._wrapped.depth
+        return self._archetype.depth
 
     @property
     def origins(self):
-        return [origin.id for origin in self._wrapped.origins.all()]
+        return [origin.id for origin in self._archetype.origins.all()]
 
     @property
     def parents(self):
@@ -413,50 +325,16 @@ class SubstanceBase(ExtensibleBase):
         Returns the parents (of a particular version) of the substance, if there are any.
         """
         return [self._app.substances.substance_version_to_wrapper(parent)
-                for parent in self._wrapped.parents.all()]
+                for parent in self._archetype.parents.all()]
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
-
-    @transaction.atomic
-    def save(self):
-        creating = self.id is None
-        if creating:
-            self._wrapped.save()
-            self._wrapped_version.substance = self._wrapped
-            self._wrapped_version.save()
-
-            # We want the origin point(s) to always be populated, also for the origins themselves, in
-            # which case it points to itself. This way we can find all related samples in one query.
-            self._wrapped_version.substance.origins.add(self._wrapped)
-            self._property_bag.save(self._wrapped_version)
-        else:
-            # Updating
-            old_version = self._wrapped.versions.get(latest=True)
-            old_version.latest = False
-            old_version.save()
-            properties = old_version.properties.all()
-
-            new_version = old_version
-            new_version.pk = None
-            new_version.version += 1
-            new_version.latest = True
-            new_version.previous_name = self._name_before_change
-            new_version.save()
-
-            # Connect the new object with the properties on the old_version
-            for prop in properties:
-                new_version.properties.add(prop)
-
-            self._wrapped.versions.add(new_version)
-            self._property_bag.save(new_version)
-            self._wrapped_version = new_version
 
     def iter_versions(self):
         """
         Iterate through all versions of this sample
         """
-        for version in self._wrapped.versions.order_by('version'):
+        for version in self._archetype.versions.order_by('version'):
             yield self._to_wrapper(version)
 
     @transaction.atomic
@@ -470,7 +348,7 @@ class SubstanceBase(ExtensibleBase):
         """
 
         overridden_properties = kwargs
-        parent_version = self._wrapped.versions.get(latest=True)
+        parent_version = self._archetype.versions.get(latest=True)
 
         if not name:
             name = "{}:{}".format(self.name, uuid4())
@@ -481,14 +359,14 @@ class SubstanceBase(ExtensibleBase):
             extensible_type=self.extensible_type)
         child.depth = self.depth + 1
         child.save()
-        version = SubstanceVersion(substance=child)
+        version = SubstanceVersion(archetype=child)
         version.save()
 
         # Origin points to the first ancestor(s) of this substance. If the substance being cloned
         # has origins, we'll get the same origins. Otherwise the substance being
         # cloned is the origin - in that case, it points to itself.
 
-        for origin in self._wrapped.origins.all():
+        for origin in self._archetype.origins.all():
             child.origins.add(origin)
 
         child.parents.add(parent_version)

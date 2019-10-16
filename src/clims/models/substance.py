@@ -30,6 +30,8 @@ class Substance(ExtensibleModel):
 
     project = FlexibleForeignKey('sentry.Project', null=True)
 
+    location = FlexibleForeignKey('clims.Location', null=True)
+
     # The original substance or substances (e.g. in the case of pools) this
     # substance originates from
     origins = models.ManyToManyField('clims.Substance')
@@ -44,12 +46,12 @@ class Substance(ExtensibleModel):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_substance'
-        unique_together = ('name', 'organization', 'extensible_type')
+        unique_together = ('name', 'organization')
 
 
 class SubstanceVersion(ExtensibleVersion):
     __core__ = True
 
-    substance = models.ForeignKey("clims.Substance", related_name='versions')
+    archetype = models.ForeignKey("clims.Substance", related_name='versions')
 
     __repr__ = sane_repr('substance_id', 'version', 'latest')

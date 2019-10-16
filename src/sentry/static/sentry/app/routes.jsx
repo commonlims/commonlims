@@ -37,7 +37,7 @@ import ProjectInstallOverview from 'app/views/projectInstall/overview';
 import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
-import SamplesContainer from 'app/views/samples/index';
+import SubstancesContainer from 'app/views/substances/index';
 import WaitingContainer from 'app/views/waiting/index';
 import WorkBatchList from 'app/views/workBatchList/index';
 import TaskList from 'app/views/taskList/index';
@@ -742,7 +742,7 @@ function routes() {
 
           <Route path="tasks/" component={errorHandler(TaskList)} />
           <Route path="work-batches/" component={errorHandler(WorkBatchList)} />
-          <Route path="samples/" component={errorHandler(SamplesContainer)} />
+          <Route path="substances/" component={errorHandler(SubstancesContainer)} />
 
           <Route
             path="work-batches/:groupId/"
@@ -986,7 +986,6 @@ function routes() {
 
           <Route path="issues/" component={errorHandler(Stream)} />
 
-          <Route path="searches/:searchId/" component={errorHandler(SamplesContainer)} />
           <Route
             path="dashboard/"
             componentPromise={() =>
@@ -1037,7 +1036,6 @@ function routes() {
               component={errorHandler(LazyLoad)}
             />
           </Route>
-          <Route path="samples/" component={errorHandler(SamplesContainer)} />
           {/* NOTE: This has nothing to do with projects, but we keep it under there for the prototype,
               as sentry heavily depends on projects being in context all the time */}
           <Route

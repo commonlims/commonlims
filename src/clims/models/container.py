@@ -3,8 +3,10 @@ from __future__ import absolute_import, print_function
 from django.db import models
 from sentry.db.models import (Model, FlexibleForeignKey, sane_repr)
 
+from clims.models.extensible import ExtensibleModel, ExtensibleVersion
 
-class Container(Model):
+
+class Container(ExtensibleModel):
     """
     Represents a container for either a Sample or another Container. Containers can be of any
     type defined in ContainerType.
@@ -17,28 +19,30 @@ class Container(Model):
     # TODO: Benefits of FlexibleForeignKey
     # TODO: Decide on naming for related_name
     container_type = FlexibleForeignKey('ContainerType', null=True, related_name="containers")
+
     name = models.TextField(null=True)
+
+    organization = FlexibleForeignKey('sentry.Organization')
 
     class Meta:
         app_label = 'clims'
         db_table = 'clims_container'
+        unique_together = ('name', 'organization')
 
     __repr__ = sane_repr('container_type_id', 'name')
 
-    # TODO:
-    # def get_scopes(self):
-    #     if self.scope_list:
-    #         return self.scope_list
-    #     return [k for k, v in six.iteritems(self.scopes) if v]
-    #
-    # def has_scope(self, scope):
-    #     return scope in self.get_scopes()
+
+class ContainerVersion(ExtensibleVersion):
+    __core__ = True
+
+    archetype = models.ForeignKey("clims.Container", related_name='versions')
+
+    __repr__ = sane_repr('container_id', 'version', 'latest')
 
 
 class ContainerType(Model):
     __core__ = True
 
-    # TODO: limited char field
     name = models.TextField(null=True)
     rows = models.IntegerField('rows')
     cols = models.IntegerField('cols')

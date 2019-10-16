@@ -11,6 +11,7 @@ from clims.services import ExtensibleTypeValidationError
 from clims.services.substance import SubstanceBase, FloatField
 
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
+from django.db import IntegrityError
 
 
 class SubstanceTestCase(TestCase):
@@ -72,6 +73,11 @@ class TestSubstance(SubstanceTestCase):
         expected = {(1, None), (2, original_name)}
         assert actual == expected
 
+    def test_names_are_unique(self):
+        substance = self.create_gemstone()
+        with pytest.raises(IntegrityError):
+            substance = self.create_gemstone(name=substance.name)
+
     def test_can_save_substance_properties(self):
         """
         Saving a property through the related substance should increase the version
@@ -90,7 +96,7 @@ class TestSubstance(SubstanceTestCase):
         substance = self.create_gemstone(**props)
 
         def do_asserts(substance):
-            assert substance._wrapped is not None
+            assert substance._archetype is not None
             assert substance.version == 1
             assert {key: prop.value for key, prop in substance.properties.items()} == props
 
@@ -123,7 +129,7 @@ class TestSubstance(SubstanceTestCase):
 
         # TODO: substances service should return this instead
         versions = [self.app.substances.to_wrapper(s)
-                for s in SubstanceVersion.objects.filter(substance_id=substance.id)]
+                for s in SubstanceVersion.objects.filter(archetype_id=substance.id)]
 
         actual = {v.version: props_to_dict(v.properties) for v in versions}
         expected = {1: {u'color': u'red', u'preciousness': u'*o*'},
@@ -153,7 +159,7 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         same = self.app.substances.get(name=sample.name)
 
-        assert same._wrapped.id == sample._wrapped.id
+        assert same._archetype.id == sample._archetype.id
         assert same.name == sample.name
         assert same.color == sample.color
 
