@@ -205,6 +205,7 @@ from .endpoints.setup_wizard import SetupWizard
 urlpatterns = patterns(
     '',
 
+    # Commmon LIMS urls
     url(
         r'',
         include('clims.api.urls')

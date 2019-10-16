@@ -41,7 +41,7 @@ def fmt(s):
     return s
 
 
-urlpatterns = patterns(
+urlpatterns = patterns('',
     # Workflow
     url(r'^organizations/(?P<organization_slug>[^\/]+)/workflow/aggregate/task/$',
         UserTaskAggregateEndpoint.as_view(),
