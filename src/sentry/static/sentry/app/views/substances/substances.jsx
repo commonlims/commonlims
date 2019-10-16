@@ -62,6 +62,7 @@ class Substances extends React.Component {
           data={this.props.substances}
           columns={this.getHeaders()}
           defaultPageSize={10}
+          defaultSorted={[{id: 'name', desc: true}]}
           className="-striped -highlight"
         />
         <br />
