@@ -107,6 +107,64 @@ class TestSubstance(SubstanceTestCase):
         fresh_substance = Substance.objects.get(name=substance.name)
         do_asserts(self.app.substances.to_wrapper(fresh_substance))
 
+    @pytest.mark.now
+    def test_create_pool__from_two_aliquots__pool_origin_are_original_samples(self):
+        # Arrange
+        props = dict(preciousness='*o*', color='red')
+        sample1 = self.create_gemstone(**props)
+        sample2 = self.create_gemstone(**props)
+        aliquot1 = sample1.create_child()
+        aliquot2 = sample2.create_child()
+
+        # Act
+        pool = GemstoneSample(
+            name='pool1', organization=self.organization,
+            parents=[aliquot1, aliquot2])
+        pool.save()
+
+        # Assert
+        assert len(pool.origins) == 2
+        assert set(pool.origins) == {sample1.id, sample2.id}
+
+    def test_set_property_for_pool__fetched_object_from_db_ok(self):
+        # Arrange
+        props = dict(preciousness='*o*', color='red')
+        substance1 = self.create_gemstone(**props)
+        substance2 = self.create_gemstone(**props)
+
+        # Act
+        pool = GemstoneSample(
+            name='pool1', organization=self.organization,
+            parents=[substance1, substance2])
+        pool.preciousness = 'xxx'
+        pool.save()
+
+        # Assert
+        fetched = self.app.substances.get(name='pool1')
+
+        assert 'xxx' == fetched.preciousness
+        assert 2 == len(fetched.parents)
+
+    def test_depth__with_multiple_parents_with_different_depths__new_depth_based_on_highest(self):
+        # I just picked a policy for this, I had to choose something
+        # Arrange
+        props = dict(preciousness='*o*', color='red')
+        substance1 = self.create_gemstone(**props)
+        substance1._archetype.depth = 4
+        substance1.save()
+        substance2 = self.create_gemstone(**props)
+
+        # Act
+        pool = GemstoneSample(
+            name='pool1', organization=self.organization,
+            parents=[substance1, substance2])
+        pool.save()
+
+        # Assert
+        assert substance1.depth == 4
+        assert substance2.depth == 1
+        assert pool.depth == 5
+
     def test_updating_properties_via_update_or_create_updates_version(self):
         props = dict(preciousness='*o*', color='red')
         substance = self.create_gemstone(**props)

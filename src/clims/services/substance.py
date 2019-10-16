@@ -5,7 +5,8 @@ import re
 import logging
 from datetime import datetime
 
-from clims.models import Substance, ExtensibleProperty, ExtensiblePropertyType, SubstanceVersion
+from clims.models.substance import Substance, SubstanceVersion
+from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType
 from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
         ExtensibleTypeValidationError)
 from django.db import transaction
@@ -321,7 +322,18 @@ class SubstanceBase(ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
+        self._cached_parents = self._fetch_parents(kwargs)
         super(SubstanceBase, self).__init__(**kwargs)
+
+    def _fetch_parents(self, kwargs):
+        wrapped_version = kwargs.get("_wrapped_version", None)
+        parents = kwargs.pop("parents", None)
+
+        if wrapped_version and parents:
+            raise AssertionError(
+                'Substance cannot be initialized with both wrapped version and parents')
+
+        return parents
 
     def _to_wrapper(self, model):
         """
@@ -359,6 +371,32 @@ class SubstanceBase(ExtensibleBase):
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
+
+    def _save_parents(self):
+        parents = [substance_base._wrapped_version for substance_base in self._cached_parents]
+        self._archetype.parents.add(*parents)
+        self._archetype.depth = max([p.depth for p in self._cached_parents]) + 1
+        self._archetype.save()
+
+    def _get_origins(self):
+        origins = list()
+        if self._cached_parents:
+            for p in self._cached_parents:
+                for origin in p._archetype.origins.all():
+                    origins.append(origin)
+        else:
+            origins.append(self._archetype)
+        return origins
+
+    def _save_subclass_specifics(self, creating):
+        if creating:
+            if self._cached_parents:
+                self._save_parents()
+
+            # We want the origin point(s) to always be populated, also for the origins themselves, in
+            # which case it points to itself. This way we can find all related samples in one query.
+            origins = self._get_origins()
+            self._archetype.origins.add(*origins)
 
     def iter_versions(self):
         """

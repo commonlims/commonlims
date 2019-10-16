@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 import six
-from clims.models import ExtensibleType, ExtensiblePropertyType, ExtensibleProperty
+from clims.models.extensible import ExtensibleType, ExtensiblePropertyType, ExtensibleProperty
 from django.db import transaction
 
 
@@ -107,12 +107,9 @@ class ExtensibleBase(object):
         self._property_bag = PropertyBag(self)
         self._name_before_change = None
         self._wrapped_version = kwargs.get("_wrapped_version", None)
-        self._has_ancestry = True
         if self._wrapped_version:
             self._archetype = self._wrapped_version.archetype
-
-        # Stop here if we're wrapping a version that already exists
-        if self._wrapped_version:
+            # Stop here if we're wrapping a version that already exists
             return
 
         name = kwargs.pop("name", None)
@@ -131,6 +128,10 @@ class ExtensibleBase(object):
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
+    def _save_subclass_specifics(self, creating):
+        # override this!
+        pass
+
     @transaction.atomic
     def save(self):
         creating = self.id is None
@@ -138,11 +139,6 @@ class ExtensibleBase(object):
             self._archetype.save()
             self._wrapped_version.archetype = self._archetype
             self._wrapped_version.save()
-
-            if self._has_ancestry:
-                # We want the origin point(s) to always be populated, also for the origins themselves, in
-                # which case it points to itself. This way we can find all related samples in one query.
-                self._archetype.origins.add(self._archetype)
             self._property_bag.save(self._wrapped_version)
         else:
             # Updating
@@ -165,6 +161,8 @@ class ExtensibleBase(object):
             self._archetype.versions.add(new_version)
             self._property_bag.save(new_version)
             self._wrapped_version = new_version
+
+        self._save_subclass_specifics(creating)
 
     @property
     def id(self):
