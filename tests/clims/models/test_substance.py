@@ -107,40 +107,39 @@ class TestSubstance(SubstanceTestCase):
         fresh_substance = Substance.objects.get(name=substance.name)
         do_asserts(self.app.substances.to_wrapper(fresh_substance))
 
-    @pytest.mark.now
-    def test_create_pool__from_two_aliquots__pool_origin_are_original_samples(self):
+    def test_create_combined_sample__from_two_childs__origins_of_combined_are_original_samples(self):
         # Arrange
         props = dict(preciousness='*o*', color='red')
         sample1 = self.create_gemstone(**props)
         sample2 = self.create_gemstone(**props)
-        aliquot1 = sample1.create_child()
-        aliquot2 = sample2.create_child()
+        child1 = sample1.create_child()
+        child2 = sample2.create_child()
 
         # Act
-        pool = GemstoneSample(
-            name='pool1', organization=self.organization,
-            parents=[aliquot1, aliquot2])
-        pool.save()
+        combined = GemstoneSample(
+            name='combined1', organization=self.organization,
+            parents=[child1, child2])
+        combined.save()
 
         # Assert
-        assert len(pool.origins) == 2
-        assert set(pool.origins) == {sample1.id, sample2.id}
+        assert len(combined.origins) == 2
+        assert set(combined.origins) == {sample1.id, sample2.id}
 
-    def test_set_property_for_pool__fetched_object_from_db_ok(self):
+    def test_set_property_for_combined_sample__fetched_object_from_db_ok(self):
         # Arrange
         props = dict(preciousness='*o*', color='red')
         substance1 = self.create_gemstone(**props)
         substance2 = self.create_gemstone(**props)
 
         # Act
-        pool = GemstoneSample(
-            name='pool1', organization=self.organization,
+        combined = GemstoneSample(
+            name='combined1', organization=self.organization,
             parents=[substance1, substance2])
-        pool.preciousness = 'xxx'
-        pool.save()
+        combined.preciousness = 'xxx'
+        combined.save()
 
         # Assert
-        fetched = self.app.substances.get(name='pool1')
+        fetched = self.app.substances.get(name='combined1')
 
         assert 'xxx' == fetched.preciousness
         assert 2 == len(fetched.parents)
@@ -155,15 +154,15 @@ class TestSubstance(SubstanceTestCase):
         substance2 = self.create_gemstone(**props)
 
         # Act
-        pool = GemstoneSample(
-            name='pool1', organization=self.organization,
+        combined = GemstoneSample(
+            name='combined1', organization=self.organization,
             parents=[substance1, substance2])
-        pool.save()
+        combined.save()
 
         # Assert
         assert substance1.depth == 4
         assert substance2.depth == 1
-        assert pool.depth == 5
+        assert combined.depth == 5
 
     def test_updating_properties_via_update_or_create_updates_version(self):
         props = dict(preciousness='*o*', color='red')
