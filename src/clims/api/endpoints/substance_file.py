@@ -8,16 +8,34 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
 
+from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
-from clims.services import RequiredHandlerNotFound, FileNameValidationError
+from clims.services import FileNameValidationError
+from clims.handlers import RequiredHandlerNotFound
+from clims.api.serializers.models.organization_file import OrganizationFileSerializer
 
 
 class SubstanceFileEndpoint(OrganizationEndpoint):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, organization):
-        # TODO: and write test
-        return Response({})
+        """
+        List all substance submission files in the system
+        `````````````````````````````````````````````````
+
+        :pparam string organization_slug: the slug of the organization the
+                                          release belongs to.
+        :auth: required
+        """
+        file_list = self.app.substances.all_files(organization)
+
+        return self.paginate(
+            request=request,
+            queryset=file_list,
+            order_by='name',
+            paginator_cls=OffsetPaginator,
+            on_results=lambda x: OrganizationFileSerializer(x, many=True).data,
+        )
 
     def post(self, request, organization):
         """
@@ -52,6 +70,7 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
         content = base64.b64decode(content)
         fileobj = StringIO.StringIO(content)
         full_name = request.data.get('filename')
+
         if not full_name or full_name == 'file':
             return Response({'detail': 'File name must be specified'}, status=400)
 
@@ -69,5 +88,5 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
             return Response({'detail': ex.msg}, status=400)
         except IntegrityError:
             return Response(
-                {'detail': 'A file matching this name already exists in this organization'},
+                {'detail': 'A file matching this one already exists in this organization'},
                 status=409)

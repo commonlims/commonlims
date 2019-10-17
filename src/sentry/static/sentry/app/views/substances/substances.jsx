@@ -6,6 +6,9 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
+import {Panel, PanelBody} from 'app/components/panels';
+import UploadSubstancesButton from 'app/views/substances/uploadSubstancesButton';
+import {t} from 'app/locale';
 
 class Substances extends React.Component {
   componentWillMount() {
@@ -57,16 +60,19 @@ class Substances extends React.Component {
     }
 
     return (
-      <div>
-        <ReactTable
-          data={this.props.substances}
-          columns={this.getHeaders()}
-          defaultPageSize={10}
-          defaultSorted={[{id: 'name', desc: true}]}
-          className="-striped -highlight"
-        />
-        <br />
-      </div>
+      <Panel>
+        <UploadSubstancesButton disabled={false}>
+          {t('Import samples')}
+        </UploadSubstancesButton>
+        <PanelBody>
+          <ReactTable
+            data={this.props.substances}
+            columns={this.getHeaders()}
+            defaultPageSize={10}
+            className="-striped -highlight"
+          />
+        </PanelBody>
+      </Panel>
     );
   }
 }

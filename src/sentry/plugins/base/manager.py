@@ -18,6 +18,7 @@ import inspect
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
 from clims.workflow import WorkflowEngine, WorkflowEngineException
+from clims.handlers import RequiredHandlerNotFound
 
 logger = logging.getLogger('clims.plugins')
 
@@ -285,6 +286,44 @@ class PluginManager(InstanceManager):
     def unregister(self, cls):
         self.remove('%s.%s' % (cls.__module__, cls.__name__))
         return cls
+
+    def handler_count(self, cls):
+        return len(self.handlers[cls])
+
+    def require_single_handler(self, cls):
+        handlers = self.handlers[cls]
+        count = len(handlers)
+        if count == 0:
+            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
+        elif count > 1:
+            # TODO: New type or change the type name
+            raise RequiredHandlerNotFound("Too many registered handlers found for '{}'".format(cls))
+
+    def require_handler(self, cls):
+        handlers = self.handlers[cls]
+        count = len(handlers)
+        if count == 0:
+            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
+
+    def handle(self, cls, context, required, *args):
+        """
+        Runs all handlers registered for cls in sequence. *args are sent to the handler as arguments.
+
+        Returns a list of the handlers that were executed
+        """
+
+        ret = list()
+        if required:
+            self.require_handler(cls)
+        handlers = self.handlers[cls]
+        for handler in handlers:
+            # TODO: the plugins manager should have an instance of the app
+
+            from clims.services import ioc
+            instance = handler(context, ioc.app)
+            ret.append(instance)
+            instance.handle(*args)
+        return ret
 
 
 class WorkBatchRegistrationException(Exception):

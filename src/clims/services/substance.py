@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import six
 import re
 import logging
+from datetime import datetime
 
 from clims.models import Substance, ExtensibleProperty, ExtensiblePropertyType, SubstanceVersion
 from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
@@ -11,14 +12,18 @@ from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
 from sentry.models.file import File
+from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
+from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 
 
-class ExtensibleBaseQuerySet(QuerySet):
+class NotFound(Exception):
     pass
 
 
-class RequiredHandlerNotFound(Exception):
+# TODO: Decide what to do if a plugin does something that requires more rights than the action
+# that initiated it (and if that's required)
+class ExtensibleBaseQuerySet(QuerySet):
     pass
 
 
@@ -73,13 +78,30 @@ class SubstanceService(object):
 
         return SubstanceVersion.objects.filter(latest=True).prefetch_related('properties')
 
+    def all_submission_files(self, organization):
+        # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
+        #       So add a "type" to the file.
+        return OrganizationFile.objects.filter(organization=organization)
+
+    def get_submission_file(self, file_id):
+        try:
+            return OrganizationFile.objects.get(id=file_id)
+        except OrganizationFile.DoesNotExist:
+            raise NotFound("Can't find file with id '{}'".format(file_id))
+
     @transaction.atomic
-    def load_file(self, organization, full_path, fileobj):
+    def load_file(self, organization, full_path, fileobj, add_timestamp=False):
+        # TODO: Decide what we want to happen here. Should the user be able to load files
+        # with an identical name or not? Makes more sense to me that we inspect if samples
+        # with the same name have been uploaded or not. So for now we add this timestamp to the name
+
+        # Add a timestamp (so files can be uploaded that have the same name)
+        if add_timestamp:
+            full_path, ext = full_path.rsplit(".", 1)
+            full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
+
         from sentry.plugins import plugins
-        from clims.handlers import SubstancesSubmissionHandler, HandlerContext
-        submission_handlers = plugins.handlers[SubstancesSubmissionHandler]
-        if len(submission_handlers) == 0:
-            raise RequiredHandlerNotFound("No handler that supports substance submission found")
+        plugins.require_handler(SubstancesSubmissionHandler)
         logger = logging.getLogger('clims.files')
         logger.info('substance_batch_import.start')
 
@@ -100,11 +122,11 @@ class SubstanceService(object):
             name=full_path,
         )
 
-        # Call handler synchronously:
-        for handler in submission_handlers:
-            context = HandlerContext(organization=organization)
-            instance = handler(context, self._app)
-            instance.handle(org_file)
+        # Call handler synchronously and in the same DB transaction
+        context = HandlerContext(organization=organization)
+        plugins.handle(SubstancesSubmissionHandler, context, True, org_file)
+
+        return org_file
 
     def to_wrapper(self, model):
         if isinstance(model, SubstanceVersion):
@@ -141,6 +163,17 @@ class SubstanceService(object):
         substance_model = SubstanceVersion.objects.prefetch_related('properties').get(
             archetype__name=name, latest=True)
         return self.to_wrapper(substance_model)
+
+    def create_submission_demo(self, file_type):
+        import os
+        from clims.handlers import SubstancesSubmissionFileDemoHandler
+        plugins.require_single_handler(SubstancesSubmissionFileDemoHandler)
+        handlers = plugins.handle(SubstancesSubmissionFileDemoHandler, None, True, file_type)
+        handler = handlers[0]
+        handler.demo_file.seek(0, os.SEEK_END)
+        size = handler.demo_file.tell()
+        handler.demo_file.seek(0)
+        return handler.demo_file, handler.demo_file_name, size
 
 
 def validate_with_casting(value, fn):
