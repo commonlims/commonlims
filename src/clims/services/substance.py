@@ -324,7 +324,7 @@ class SubstanceBase(ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
-        self._cached_parents = self._fetch_parents(kwargs)
+        self._unsaved_parents = self._fetch_parents(kwargs)
         super(SubstanceBase, self).__init__(**kwargs)
 
     def _fetch_parents(self, kwargs):
@@ -377,15 +377,15 @@ class SubstanceBase(ExtensibleBase):
         return SubstanceAncestry(self)
 
     def _save_parents(self):
-        parents = [substance_base._wrapped_version for substance_base in self._cached_parents]
+        parents = [substance_base._wrapped_version for substance_base in self._unsaved_parents]
         self._archetype.parents.add(*parents)
-        self._archetype.depth = max([p.depth for p in self._cached_parents]) + 1
+        self._archetype.depth = max([p.depth for p in self._unsaved_parents]) + 1
         self._archetype.save()
 
     def _get_origins(self):
         origins = list()
-        if self._cached_parents:
-            for p in self._cached_parents:
+        if self._unsaved_parents:
+            for p in self._unsaved_parents:
                 for origin in p._archetype.origins.all():
                     origins.append(origin)
         else:
@@ -394,7 +394,7 @@ class SubstanceBase(ExtensibleBase):
 
     def _save_subclass_specifics(self, creating):
         if creating:
-            if self._cached_parents:
+            if self._unsaved_parents:
                 self._save_parents()
 
             # We want the origin point(s) to always be populated, also for the origins themselves, in
