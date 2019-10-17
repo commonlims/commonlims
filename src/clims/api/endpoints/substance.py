@@ -35,6 +35,8 @@ class SubstanceEndpoint(OrganizationEndpoint):
                     json['priority'] = random.randint(1, 10)
                 if 'days_waiting' not in json:
                     json['days_waiting'] = random.randint(0, 100)   # NOTE: We would have created and origin_created instead
+                if 'container' not in json['properties']:
+                    json['properties']['container'] = random.choice(["container 1", "container 2", "container 3"])
                 ret.append(json)
             return ret
 

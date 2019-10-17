@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {substancesGet} from 'app/redux/actions/substance';
+//import Switch from 'app/components/switch';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingError from 'app/components/loadingError';
@@ -22,32 +23,49 @@ class Substances extends React.Component {
       {
         Header: 'Sample name',
         accessor: 'name',
+        aggregate: vals => '',
+      },
+      {
+        Header: 'Container',
+        id: 'container',
+        accessor: d => d.properties.container,
       },
       {
         Header: 'Position',
         id: 'position',
         accessor: d => d.position.index,
+        aggregate: vals => '',
       },
       {
         Header: 'Volume',
         id: 'volume',
         accessor: d => d.properties.volume,
+        aggregate: vals => '',
       },
       {
         Header: 'Sample Type',
         id: 'sample_type',
         accessor: d => d.properties.sample_type,
+        aggregate: vals =>
+          Array.from(new Set(vals))
+            .sort()
+            .join(', '),
       },
       {
         Header: 'Priority',
         id: 'priority',
         accessor: d => d.priority,
+        aggregate: vals => '',
       },
       {
         Header: 'Waiting',
         id: 'days_waiting',
         accessor: d => d.days_waiting,
         Cell: row => <WaitingCell value={row.value} />,
+        aggregate: vals => '',
+        Aggregated: row => {
+          <span />;
+        },
       },
     ];
   }
@@ -58,6 +76,10 @@ class Substances extends React.Component {
     } else if (this.props.errorMessage) {
       return <LoadingError />;
     }
+
+    // TODO Add back
+    // Group by container
+    // <Switch isActive={true} />
 
     return (
       <Panel>
@@ -70,6 +92,7 @@ class Substances extends React.Component {
             columns={this.getHeaders()}
             defaultPageSize={10}
             className="-striped -highlight"
+            pivotBy={['container']}
           />
         </PanelBody>
       </Panel>
