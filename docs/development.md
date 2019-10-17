@@ -10,7 +10,7 @@ Development happens on gitlab.org/commonlims and will be moved to github.com/com
 
 To set up your environment, do the following:
 
-- Download and install Conda from: https://conda.io/en/latest/miniconda.html
+- Install a virtualenv, e.g. Conda (https://conda.io/en/latest/miniconda.html)
 - Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
 
 Start required services:
@@ -41,7 +41,7 @@ From the root of the 'commonlims' project, run:
 Then run:
 
 - `make setup-db-user`
-- Add the passwords for `clims` and `test_clims` to ~/.pgpassword (as in structed by the above command)
+- Add the passwords for `clims` and `test_clims` to ~/.pgpassword (as in structed by the output from the above command)
 - `make develop`
 - `lims createuser --email admin@localhost --password changeit --superuser --no-input`
 - `lims upgrade`
@@ -88,3 +88,15 @@ You can get a fresh install of your database by running: `make reset-db`
 # Frontend development
 
 See [frontend.md](frontend.md)
+
+# Troubleshooting
+
+Some problems are difficult to track down because of e.g. caching in different layers, mismatched
+dependencies and so on. You can do this to fully reset the application:
+
+```
+make reset-db
+make develop
+lims upgrade  # to execute all plugin-defined dependencies
+# run in a clean browser session (clear cookies)
+```
