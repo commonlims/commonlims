@@ -32,6 +32,8 @@ from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.task import UserTaskAggregateEndpoint
 
 from .endpoints.substance_file import SubstanceFileEndpoint
+from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
+    SubstanceFileDemoDetailsEndpoint)
 
 
 def fmt(s):
@@ -63,6 +65,18 @@ urlpatterns = patterns('',
         fmt(r'^organizations/{org}/substances/files/$'),
         SubstanceFileEndpoint.as_view(),
         name='clims-api-0-organization-substances-files'
+    ),
+
+    url(
+        fmt(r'^organizations/{org}/substances/files/demo/$'),
+        SubstanceFileDemoDetailsEndpoint.as_view(),
+        name='clims-api-0-organization-substances-files'
+    ),
+
+    url(
+        fmt(r'^organizations/{org}/substances/files/(?P<file_id>[^\/]+)/$'),
+        SubstanceFileDetailsEndpoint.as_view(),
+        name='clims-api-0-organization-substances-file-details'
     ),
 
     # work-batches: user task activities that have been grouped together in 1..n sized batches

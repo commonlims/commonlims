@@ -41,12 +41,16 @@ class ExtensibleService(object):
 
     def get_extensible_type(self, org, name):
         """
-        Returns an extensible_type by name. Can be cached.
+        Returns an extensible_type by name.
         """
         if (org.id, name) not in self._model_cache:
-            substance_type = ExtensibleType.objects.prefetch_related(
-                'property_types').get(plugin__organization=org, name=name)
-            self._model_cache[(org.id, name)] = substance_type
+            try:
+                substance_type = ExtensibleType.objects.prefetch_related(
+                    'property_types').get(plugin__organization=org, name=name)
+                self._model_cache[(org.id, name)] = substance_type
+            except ExtensibleType.DoesNotExist:
+                raise ExtensibleTypeNotRegistered("The type '{}' is not registered in '{}'".format(
+                    name, org.slug))
         return self._model_cache[(org.id, name)]
 
     def register(self, plugin, extensible_base):
@@ -126,7 +130,6 @@ class ExtensibleBase(object):
         # can instantiate objects using e.g. syntax like: Sample(my_value=1)
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
-
 
     @transaction.atomic
     def save(self):

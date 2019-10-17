@@ -1,6 +1,10 @@
 from __future__ import absolute_import
 
 
+class RequiredHandlerNotFound(Exception):
+    pass
+
+
 class NoHandlerRegistered(Exception):
     pass
 
@@ -52,4 +56,20 @@ class SubstancesSubmissionHandler(Handler):
     unique_registration = True
 
     def handle(file_obj):
+        pass
+
+
+class SubstancesSubmissionFileDemoHandler(Handler):
+    """
+    Executed when the user requests to create a demo file.
+    """
+    unique_registration = True
+
+    demo_file = None  # The generated file
+
+    demo_file_name = None  # The name of the file
+
+    def handle(file_type):
+        # TODO: file_type should be a string identifier that the user can define
+        # in the plugin
         pass
