@@ -38,7 +38,6 @@ import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SubstancesContainer from 'app/views/substances/index';
-import WaitingContainer from 'app/views/waiting/index';
 import WorkBatchList from 'app/views/workBatchList/index';
 import TaskList from 'app/views/taskList/index';
 import SampleDetails from 'app/views/sampleDetails';
@@ -969,13 +968,6 @@ function routes() {
         </Route>
 
         <Route path=":projectId/" component={errorHandler(ProjectDetails)}>
-          {/* TODO: This route must be provided by the plugin */}
-
-          <Route
-            path="waiting/:processId/:taskId/"
-            component={errorHandler(WaitingContainer)}
-          />
-
           <Route
             path="samples/:sampleId/"
             component={errorHandler(SampleDetails)}
