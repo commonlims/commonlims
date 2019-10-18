@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {substancesGet} from 'app/redux/actions/substance';
-//import Switch from 'app/components/switch';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import LoadingError from 'app/components/loadingError';
@@ -10,8 +9,17 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import {Panel, PanelBody} from 'app/components/panels';
 import UploadSubstancesButton from 'app/views/substances/uploadSubstancesButton';
 import {t} from 'app/locale';
+import DropdownButton from 'app/components/dropdownButton';
+import DropdownAutoComplete from 'app/components/dropdownAutoComplete';
 
 class Substances extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      groupBy: {value: 'container', label: 'Container'},
+    };
+  }
+
   componentWillMount() {
     this.props.getSubstances();
   }
@@ -70,6 +78,56 @@ class Substances extends React.Component {
     ];
   }
 
+  selectGroupBy(selection) {
+    this.setState({groupBy: {value: selection.value, label: selection.label}});
+  }
+
+  renderDropdown() {
+    const groupedItems = [
+      {
+        value: 'Fields',
+        label: <div>Field</div>,
+        items: [
+          {
+            value: 'sample',
+            label: 'Sample',
+          },
+          {
+            value: 'container',
+            label: 'Container',
+          },
+          {
+            value: 'sample_type',
+            label: 'Sample Type',
+          },
+        ],
+      },
+    ];
+
+    return (
+      <DropdownAutoComplete
+        items={groupedItems}
+        alignMenu="left"
+        onSelect={this.selectGroupBy.bind(this)}
+      >
+        {({isOpen, selectedItem}) => (
+          <DropdownButton isOpen={isOpen}>
+            {'Group by: ' + this.state.groupBy.label}
+          </DropdownButton>
+        )}
+      </DropdownAutoComplete>
+    );
+  }
+
+  currentGrouping() {
+    if (this.state.groupBy.value == 'sample') {
+      // Grouping by sample is the same as not grouping at all
+      return [];
+    } else {
+      return [this.state.groupBy.value];
+    }
+  }
+
   render() {
     if (this.props.loading) {
       return <LoadingIndicator />;
@@ -77,12 +135,9 @@ class Substances extends React.Component {
       return <LoadingError />;
     }
 
-    // TODO Add back
-    // Group by container
-    // <Switch isActive={true} />
-
     return (
       <Panel>
+        {this.renderDropdown()}
         <UploadSubstancesButton disabled={false}>
           {t('Import samples')}
         </UploadSubstancesButton>
@@ -92,7 +147,7 @@ class Substances extends React.Component {
             columns={this.getHeaders()}
             defaultPageSize={10}
             className="-striped -highlight"
-            pivotBy={['container']}
+            pivotBy={this.currentGrouping()}
           />
         </PanelBody>
       </Panel>
