@@ -8,7 +8,8 @@ from sentry.testutils import TestCase
 
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
-from clims.services.substance import SubstanceBase, FloatField
+from clims.services.substance import SubstanceBase
+from clims.services.extensible import FloatField
 
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 from django.db import IntegrityError
@@ -24,30 +25,59 @@ class SubstanceTestCase(TestCase):
 
 class SubstancePropertiesTestCase(TestCase):
 
+    class ExampleSample(SubstanceBase):
+        moxy = FloatField("moxy")
+        cool = FloatField("cool")
+        erudite = FloatField("erudite", nullable=False)
+
+    def setUp(self):
+        self.register_extensible(self.ExampleSample)
+
     def test_can_create_substance_with_properties(self):
-
-        class ExampleSample(SubstanceBase):
-            moxy = FloatField("moxy")
-            cool = FloatField("cool")
-            erudite = FloatField("erudite")
-
         moxy = random.randint(1, 100)
         cool = random.randint(1, 100)
         erudite = random.randint(1, 100)
 
-        self.register_extensible(ExampleSample)
         name = "sample-{}".format(random.randint(1, 1000000))
-        sample = ExampleSample(name=name,
-                               organization=self.organization,
-                               moxy=moxy,
-                               cool=cool,
-                               erudite=erudite)
+        sample = self.ExampleSample(name=name,
+                                    organization=self.organization,
+                                    moxy=moxy,
+                                    cool=cool,
+                                    erudite=erudite)
         sample.save()
 
         fetched_sample = self.app.substances.get(name=sample.name)
-        fetched_sample.moxy == moxy
-        fetched_sample.cool == cool
-        fetched_sample.erudite == erudite
+        assert fetched_sample.moxy == moxy
+        assert fetched_sample.cool == cool
+        assert fetched_sample.erudite == erudite
+
+    def test_can_create_substance_with_property_set_to_none(self):
+        name = "sample-{}".format(random.randint(1, 1000000))
+        cool = random.randint(1, 100)
+        erudite = random.randint(1, 100)
+
+        sample = self.ExampleSample(name=name,
+                                    organization=self.organization,
+                                    moxy=None,
+                                    cool=cool,
+                                    erudite=erudite)
+        sample.save()
+
+        fetched_sample = self.app.substances.get(name=sample.name)
+        assert fetched_sample.moxy is None
+        assert fetched_sample.cool == cool
+        assert fetched_sample.erudite == erudite
+
+    def test_cannot_create_substance_with_property_set_to_none_unless_nullable(self):
+        name = "sample-{}".format(random.randint(1, 1000000))
+        cool = random.randint(1, 100)
+
+        with pytest.raises(ExtensibleTypeValidationError):
+            self.ExampleSample(name=name,
+                               organization=self.organization,
+                               moxy=None,
+                               cool=cool,
+                               erudite=None)
 
 
 class TestSubstance(SubstanceTestCase):

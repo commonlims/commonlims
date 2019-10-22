@@ -214,10 +214,24 @@ class FieldDoesNotExist(Exception):
 
 
 class ExtensibleBaseField(object):
-    def __init__(self, prop_name=None, display_name=None):
+    def __init__(self, prop_name=None, display_name=None, nullable=True):
         # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
         self.prop_name = prop_name
         self.display_name = display_name or prop_name
+        self.nullable = nullable
+
+    def validate_with_casting(self, value, fn):
+        valid = True
+        try:
+            cast = fn(value)
+            if cast != value:
+                valid = False
+        except ValueError:
+            valid = False
+
+        if not valid:
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as '{}'".format(fn.__name__))
 
     def validate(self, prop_type, value):
         # Override this in subclasses
@@ -228,6 +242,15 @@ class ExtensibleBaseField(object):
             prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
         except ExtensiblePropertyType.DoesNotExist:
             raise FieldDoesNotExist(self.prop_name)
+
+        if value is None:
+            if self.nullable:
+                return
+            else:
+                raise ExtensibleTypeValidationError("None was not a valid value for Field: {}, if you want to "
+                                                    "be able to set value to None, set nullable=True on "
+                                                    "the Field.".format(self.prop_name))
+
         self.validate(prop_type, value)
 
     def __get__(self, obj, type=None):
@@ -304,3 +327,43 @@ class PropertyBag(object):
 
     def __setitem__(self, key, value):
         self.new_values[key] = value
+
+
+class IntField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        self.validate_with_casting(value, int)
+
+    @property
+    def raw_type(self):
+        # NOTE: Implemented as a property as the constant we're using lies in the models and
+        # we can't load the models too soon. It would be nice to change this!
+        return ExtensiblePropertyType.INT
+
+
+class FloatField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        self.validate_with_casting(value, float)
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.FLOAT
+
+
+class TextField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        if not isinstance(value, six.string_types):
+            raise ExtensibleTypeValidationError("Expected string")
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.STRING
+
+
+class JsonField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        import json
+        json.dumps(value)
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.JSON
