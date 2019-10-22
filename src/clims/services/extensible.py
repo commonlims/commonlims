@@ -327,3 +327,43 @@ class PropertyBag(object):
 
     def __setitem__(self, key, value):
         self.new_values[key] = value
+
+
+class IntField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        self.validate_with_casting(value, int)
+
+    @property
+    def raw_type(self):
+        # NOTE: Implemented as a property as the constant we're using lies in the models and
+        # we can't load the models too soon. It would be nice to change this!
+        return ExtensiblePropertyType.INT
+
+
+class FloatField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        self.validate_with_casting(value, float)
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.FLOAT
+
+
+class TextField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        if not isinstance(value, six.string_types):
+            raise ExtensibleTypeValidationError("Expected string")
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.STRING
+
+
+class JsonField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        import json
+        json.dumps(value)
+
+    @property
+    def raw_type(self):
+        return ExtensiblePropertyType.JSON

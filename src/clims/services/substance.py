@@ -6,9 +6,8 @@ import logging
 from datetime import datetime
 
 from clims.models.substance import Substance, SubstanceVersion
-from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType
-from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
-        ExtensibleTypeValidationError)
+from clims.models.extensible import ExtensibleProperty
+from clims.services.extensible import ExtensibleBase
 from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
@@ -174,46 +173,6 @@ class SubstanceService(object):
         size = handler.demo_file.tell()
         handler.demo_file.seek(0)
         return handler.demo_file, handler.demo_file_name, size
-
-
-class IntField(ExtensibleBaseField):
-    def validate(self, prop_type, value):
-        self.validate_with_casting(value, int)
-
-    @property
-    def raw_type(self):
-        # NOTE: Implemented as a property as the constant we're using lies in the models and
-        # we can't load the models too soon. It would be nice to change this!
-        return ExtensiblePropertyType.INT
-
-
-class FloatField(ExtensibleBaseField):
-    def validate(self, prop_type, value):
-        self.validate_with_casting(value, float)
-
-    @property
-    def raw_type(self):
-        return ExtensiblePropertyType.FLOAT
-
-
-class TextField(ExtensibleBaseField):
-    def validate(self, prop_type, value):
-        if not isinstance(value, six.string_types):
-            raise ExtensibleTypeValidationError("Expected string")
-
-    @property
-    def raw_type(self):
-        return ExtensiblePropertyType.STRING
-
-
-class JsonField(ExtensibleBaseField):
-    def validate(self, prop_type, value):
-        import json
-        json.dumps(value)
-
-    @property
-    def raw_type(self):
-        return ExtensiblePropertyType.JSON
 
 
 class SubstanceAncestry(object):

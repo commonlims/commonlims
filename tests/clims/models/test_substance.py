@@ -8,7 +8,8 @@ from sentry.testutils import TestCase
 
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
-from clims.services.substance import SubstanceBase, FloatField
+from clims.services.substance import SubstanceBase
+from clims.services.extensible import FloatField
 
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 from django.db import IntegrityError
