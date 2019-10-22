@@ -47,9 +47,9 @@ class SubstancePropertiesTestCase(TestCase):
         sample.save()
 
         fetched_sample = self.app.substances.get(name=sample.name)
-        fetched_sample.moxy == moxy
-        fetched_sample.cool == cool
-        fetched_sample.erudite == erudite
+        assert fetched_sample.moxy == moxy
+        assert fetched_sample.cool == cool
+        assert fetched_sample.erudite == erudite
 
     def test_can_create_substance_with_property_set_to_none(self):
         name = "sample-{}".format(random.randint(1, 1000000))
@@ -64,9 +64,9 @@ class SubstancePropertiesTestCase(TestCase):
         sample.save()
 
         fetched_sample = self.app.substances.get(name=sample.name)
-        fetched_sample.moxy is None
-        fetched_sample.cool == cool
-        fetched_sample.erudite == erudite
+        assert fetched_sample.moxy is None
+        assert fetched_sample.cool == cool
+        assert fetched_sample.erudite == erudite
 
     def test_cannot_create_substance_with_property_set_to_none_unless_nullable(self):
         name = "sample-{}".format(random.randint(1, 1000000))
