@@ -176,23 +176,9 @@ class SubstanceService(object):
         return handler.demo_file, handler.demo_file_name, size
 
 
-def validate_with_casting(value, fn):
-    valid = True
-    try:
-        cast = fn(value)
-        if cast != value:
-            valid = False
-    except ValueError:
-        valid = False
-
-    if not valid:
-        raise ExtensibleTypeValidationError(
-            "Value can not be interpreted as '{}'".format(fn.__name__))
-
-
 class IntField(ExtensibleBaseField):
     def validate(self, prop_type, value):
-        validate_with_casting(value, int)
+        self.validate_with_casting(value, int)
 
     @property
     def raw_type(self):
@@ -203,7 +189,7 @@ class IntField(ExtensibleBaseField):
 
 class FloatField(ExtensibleBaseField):
     def validate(self, prop_type, value):
-        validate_with_casting(value, float)
+        self.validate_with_casting(value, float)
 
     @property
     def raw_type(self):

@@ -214,10 +214,24 @@ class FieldDoesNotExist(Exception):
 
 
 class ExtensibleBaseField(object):
-    def __init__(self, prop_name=None, display_name=None):
+    def __init__(self, prop_name=None, display_name=None, nullable=True):
         # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
         self.prop_name = prop_name
         self.display_name = display_name or prop_name
+        self.nullable = nullable
+
+    def validate_with_casting(self, value, fn):
+        valid = True
+        try:
+            cast = fn(value)
+            if cast != value:
+                valid = False
+        except ValueError:
+            valid = False
+
+        if not valid:
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as '{}'".format(fn.__name__))
 
     def validate(self, prop_type, value):
         # Override this in subclasses
@@ -228,6 +242,15 @@ class ExtensibleBaseField(object):
             prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
         except ExtensiblePropertyType.DoesNotExist:
             raise FieldDoesNotExist(self.prop_name)
+
+        if value is None:
+            if self.nullable:
+                return
+            else:
+                raise ExtensibleTypeValidationError("None was not a valid value for Field: {}, if you want to "
+                                                    "be able to set value to None, set nullable=True on "
+                                                    "the Field.".format(self.prop_name))
+
         self.validate(prop_type, value)
 
     def __get__(self, obj, type=None):
