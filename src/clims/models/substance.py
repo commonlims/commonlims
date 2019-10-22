@@ -26,8 +26,9 @@ class Substance(ExtensibleModel):
 
     name = models.TextField()
 
-    organization = FlexibleForeignKey('sentry.Organization')
+    organization = FlexibleForeignKey('sentry.Organization', related_name='%(class)s_organization')
 
+    # TODO This should be associated with the clims.Project instead
     project = FlexibleForeignKey('sentry.Project', null=True)
 
     # The original substance or substances (e.g. in the case of pools) this
