@@ -6,8 +6,9 @@ import logging
 from datetime import datetime
 
 from clims.models.substance import Substance, SubstanceVersion
-from clims.models.extensible import ExtensibleProperty
-from clims.services.extensible import ExtensibleBase
+from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType
+from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
+        ExtensibleTypeValidationError, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
@@ -148,11 +149,8 @@ class SubstanceService(object):
             # We must use the base class to wrap it:
             return SubstanceBase(_wrapped_version=substance_version, _unregistered=True)
 
-    def substance_to_wrapper(self, substance, version=None):
-        if version is not None:
-            versioned = substance.versions.get(version=version)
-        else:
-            versioned = substance.versions.get(latest=True)
+    def substance_to_wrapper(self, substance):
+        versioned = substance.versions.get(latest=True)
         return self.substance_version_to_wrapper(versioned)
 
     def filter(self, *args, **kwargs):
@@ -256,7 +254,7 @@ class SubstanceAncestry(object):
         return s
 
 
-class SubstanceBase(ExtensibleBase):
+class SubstanceBase(HasLocationMixin, ExtensibleBase):
     """
     A base object for defining substances in the system, e.g. Sample, Aliquot or Pool.
 
@@ -271,6 +269,7 @@ class SubstanceBase(ExtensibleBase):
     def __init__(self, **kwargs):
         self._unsaved_parents = self._fetch_parents(kwargs)
         super(SubstanceBase, self).__init__(**kwargs)
+        self._new_location = None
 
     def _fetch_parents(self, kwargs):
         wrapped_version = kwargs.get("_wrapped_version", None)
@@ -337,7 +336,7 @@ class SubstanceBase(ExtensibleBase):
             origins.append(self._archetype)
         return origins
 
-    def _save_subclass_specifics(self, creating):
+    def _save_custom(self, creating):
         if creating:
             if self._unsaved_parents:
                 self._save_parents()
@@ -346,6 +345,8 @@ class SubstanceBase(ExtensibleBase):
             # which case it points to itself. This way we can find all related samples in one query.
             origins = self._get_origins()
             self._archetype.origins.add(*origins)
+
+        self._save_location()
 
     def iter_versions(self):
         """

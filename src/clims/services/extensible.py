@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 import six
-from clims.models.extensible import ExtensibleType, ExtensiblePropertyType, ExtensibleProperty
+from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, ExtensibleProperty)
+from clims.models.location import SubstanceLocation
 from django.db import transaction
 
 
@@ -100,6 +101,39 @@ class ExtensibleService(object):
         return extensible_type
 
 
+class HasLocationMixin(object):
+    """
+    A mixin for extensibles that have a location
+    """
+
+    def move(self, container, index):
+        """
+        Set the location of this item to the particular index in the container.
+        The index must have x, y and z.
+        """
+        # NOTE: This only saves the current location to the list of items we want to apply
+        # in the end
+        x, y, z = index
+        self._new_location = (container, x, y, z)
+
+    def _save_location(self):
+        """
+        Saves the current location. Needs to be called in any class that uses this mixin.
+        """
+        if self._new_location:
+            container, x, y, z = self._new_location
+            new_location = SubstanceLocation(
+                container=container._wrapped_version.archetype,
+                substance=self._wrapped_version.archetype,
+                x=x, y=y, z=z,
+                container_version=container.version,
+                substance_version=self.version,
+                current=True)
+            new_location.save()
+            self._wrapped_version.archetype.location = new_location
+            self._wrapped_version.archetype.save()
+
+
 class ExtensibleBase(object):
     def __init__(self, **kwargs):
         from clims.services.application import ioc
@@ -109,7 +143,8 @@ class ExtensibleBase(object):
         self._wrapped_version = kwargs.get("_wrapped_version", None)
         if self._wrapped_version:
             self._archetype = self._wrapped_version.archetype
-            # Stop here if we're wrapping a version that already exists
+            self.is_dirty = False
+            # Stop here as we're wrapping a version that already exists
             return
 
         name = kwargs.pop("name", None)
@@ -128,8 +163,14 @@ class ExtensibleBase(object):
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
-    def _save_subclass_specifics(self, creating):
-        # override this!
+        # This is new, so we should set is_dirty to True:
+        self.is_dirty = True
+
+    def _save_custom(self, creating):
+        """
+        Custom save that's called after the extensible has saved, but in the same transaction.
+        Intended for subclasses.
+        """
         pass
 
     @transaction.atomic
@@ -162,7 +203,7 @@ class ExtensibleBase(object):
             self._property_bag.save(new_version)
             self._wrapped_version = new_version
 
-        self._save_subclass_specifics(creating)
+        self._save_custom(creating)
 
     @property
     def id(self):
@@ -178,6 +219,10 @@ class ExtensibleBase(object):
         Returns the full name of this type
         """
         return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+
+    @property
+    def version(self):
+        return self._wrapped_version.version
 
     @property
     def name(self):

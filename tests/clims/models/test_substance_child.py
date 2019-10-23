@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-import pytest
 from clims.models import Substance
 from tests.clims.models.test_substance import SubstanceTestCase
 
@@ -12,7 +11,6 @@ class TestSubstanceParentChild(SubstanceTestCase):
         child.save()
         assert {(sample.id, sample.version)} == {(p.id, p.version) for p in child.parents}
 
-    @pytest.mark.now
     def test_original_substance_has_no_parent(self):
         sample = self.create_gemstone()
         assert len(sample.parents) == 0
