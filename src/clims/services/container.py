@@ -4,6 +4,7 @@ import re
 import six
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
+from clims.services.wrapper import WrapperMixin
 
 
 class IndexOutOfBounds(Exception):
@@ -84,36 +85,6 @@ class PlateIndex(ContainerIndex):
 
     def __repr__(self):
         return "{}:{}".format(chr(self.row + 65), self.column + 1)
-
-
-class ContainerService(object):
-    def __init__(self, app):
-        self._app = app
-
-    def get(self, name):
-        model = Container.objects.get(name=name)
-        return self.to_wrapper(model)
-
-    # TODO: Some code-copying form SubstanceService
-    def to_wrapper(self, model):
-        if isinstance(model, ContainerVersion):
-            return self.container_version_to_wrapper(model)
-        elif isinstance(model, Container):
-            return self.container_to_wrapper(model)
-
-    def container_version_to_wrapper(self, container_version):
-        from clims.services.extensible import ExtensibleTypeNotRegistered
-
-        try:
-            SpecificExtensibleType = self._app.extensibles.get_implementation(
-                container_version.archetype.extensible_type.name)
-            return SpecificExtensibleType(_wrapped_version=container_version, _app=self._app)
-        except ExtensibleTypeNotRegistered:
-            return ContainerBase(_wrapped_version=container_version, _unregistered=True)
-
-    def container_to_wrapper(self, container):
-        versioned = container.versions.get(latest=True)
-        return self.container_version_to_wrapper(versioned)
 
 
 class ContainerBase(ExtensibleBase):
@@ -267,3 +238,16 @@ class PlateBase(ContainerBase):
         if header:
             rows.insert(0, self.name)
         return "\n".join(map(six.text_type, rows))
+
+
+class ContainerService(WrapperMixin):
+    _archetype_version = ContainerVersion
+    _archetype = Container
+    _archetype_base = ContainerBase
+
+    def __init__(self, app):
+        self._app = app
+
+    def get(self, name):
+        model = Container.objects.get(name=name)
+        return self.to_wrapper(model)
