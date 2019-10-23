@@ -385,6 +385,19 @@ class IntField(ExtensibleBaseField):
         return ExtensiblePropertyType.INT
 
 
+class BoolField(ExtensibleBaseField):
+    def validate(self, prop_type, value):
+        if not isinstance(value, bool):
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as bool")
+
+    @property
+    def raw_type(self):
+        # NOTE: Implemented as a property as the constant we're using lies in the models and
+        # we can't load the models too soon. It would be nice to change this!
+        return ExtensiblePropertyType.BOOL
+
+
 class FloatField(ExtensibleBaseField):
     def validate(self, prop_type, value):
         self.validate_with_casting(value, float)
