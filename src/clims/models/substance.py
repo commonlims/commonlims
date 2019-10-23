@@ -30,8 +30,6 @@ class Substance(ExtensibleModel):
 
     project = FlexibleForeignKey('sentry.Project', null=True)
 
-    location = FlexibleForeignKey('clims.Location', null=True)
-
     # The original substance or substances (e.g. in the case of pools) this
     # substance originates from
     origins = models.ManyToManyField('clims.Substance')
