@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from clims.services import SubstanceBase, TextField, IntField, FloatField, JsonField
+from clims.services import SubstanceBase, TextField, IntField, FloatField, JsonField, BoolField
 
 
 class GemstoneSample(SubstanceBase):
@@ -8,3 +8,4 @@ class GemstoneSample(SubstanceBase):
     index = IntField(prop_name="index")
     weight = IntField(prop_name="weight")
     payload = JsonField(prop_name="payload")
+    has_something = BoolField(prop_name="has_something")

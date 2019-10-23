@@ -342,7 +342,9 @@ class IntField(ExtensibleBaseField):
 
 class BoolField(ExtensibleBaseField):
     def validate(self, prop_type, value):
-        self.validate_with_casting(value, bool)
+        if not isinstance(value, bool):
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as bool")
 
     @property
     def raw_type(self):

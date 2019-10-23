@@ -291,6 +291,21 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         sample.weight = 10.0
 
+    def test_assigning_bool_to_bool_field_succeeds(self):
+        sample = self.create_gemstone(color='red')
+        sample.has_something = True
+
+    def test_assigning_string_to_bool_field_fails(self):
+        sample = self.create_gemstone(color='red')
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.has_something = 'True'
+
+    @pytest.mark.now
+    def test_assigning_int_to_bool_field_fails(self):
+        sample = self.create_gemstone(color='red')
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.has_something = 1
+
     def test_assigning_float_to_int_field_fails_if_lossy(self):
         sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
