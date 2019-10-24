@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from clims.services.extensible import ExtensibleService
 from clims.services.substance import SubstanceService
 from clims.services.container import ContainerService
+from clims.services.project import ProjectService
 
 
 class ApplicationService(object):
@@ -14,6 +15,7 @@ class ApplicationService(object):
         self.extensibles = ExtensibleService(self)
         self.substances = SubstanceService(self)
         self.containers = ContainerService(self)
+        self.projects = ProjectService(self)
 
 
 class InversionOfControl(object):

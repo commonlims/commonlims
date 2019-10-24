@@ -6,9 +6,8 @@ import logging
 from datetime import datetime
 
 from clims.models.substance import Substance, SubstanceVersion
-from clims.models.extensible import ExtensibleProperty, ExtensiblePropertyType
-from clims.services.extensible import (ExtensibleBase, ExtensibleBaseField,
-        ExtensibleTypeValidationError, HasLocationMixin)
+from clims.models.extensible import ExtensibleProperty
+from clims.services.extensible import (ExtensibleBase, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
@@ -16,6 +15,8 @@ from sentry.models.file import File
 from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
+from clims.services.wrapper import WrapperMixin
+from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
 
 class NotFound(Exception):
@@ -33,144 +34,6 @@ class FileNameValidationError(Exception):
 
 
 FILENAME_RE = re.compile(r"[\n\t\r\f\v\\]")
-
-
-class SubstanceService(object):
-    """
-    Provides an API for dealing with both substances (samples, aliquots etc.)
-    and their associated containers.
-
-    Plugins change the state of the system only via service classes or REST API
-    calls. Access to lower-level APIs is possible, but not suggested to ensure
-    backwards compatibility and business rule constraints.
-
-    NOTE: Use this class instead of the manager on Substance even in framework code (unless
-    you're sure of what you're doing) because interaction of the substance and its properties must
-    be strictly maintained.
-    """
-
-    def __init__(self, app):
-        self._app = app
-
-    def all(self):
-        """
-        Returns all instances of a substance. Only the latest version is
-        returned.
-        """
-        # TODO: We should filter by organization
-
-        # TODO: It would be preferable if we could return a regular django queryset here,
-        # which in turn would return the wrapper when materialized. For that to work smoothly,
-        # we'll need to look into implementation details of django querysets.
-
-        # TODO: how does the prefetch perform when fetching all objects like this
-        for entry in self.all_qs():
-            yield self.to_wrapper(entry)
-
-    def all_qs(self):
-        """Returns a queryset for all substances of a particular version or latest if nothing
-        is supplied
-
-        Note that you must call SubstanceService.to_wrapper to wrap it as a high level object.
-        """
-
-        # TODO: `all` should return a queryset that automatically wraps the Django object and
-        # after that we can remove methods named `*_qs`.
-
-        return SubstanceVersion.objects.filter(latest=True).prefetch_related('properties')
-
-    def all_submission_files(self, organization):
-        # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
-        #       So add a "type" to the file.
-        return OrganizationFile.objects.filter(organization=organization)
-
-    def get_submission_file(self, file_id):
-        try:
-            return OrganizationFile.objects.get(id=file_id)
-        except OrganizationFile.DoesNotExist:
-            raise NotFound("Can't find file with id '{}'".format(file_id))
-
-    @transaction.atomic
-    def load_file(self, organization, full_path, fileobj, add_timestamp=False):
-        # TODO: Decide what we want to happen here. Should the user be able to load files
-        # with an identical name or not? Makes more sense to me that we inspect if samples
-        # with the same name have been uploaded or not. So for now we add this timestamp to the name
-
-        # Add a timestamp (so files can be uploaded that have the same name)
-        if add_timestamp:
-            full_path, ext = full_path.rsplit(".", 1)
-            full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
-
-        from sentry.plugins import plugins
-        plugins.require_handler(SubstancesSubmissionHandler)
-        logger = logging.getLogger('clims.files')
-        logger.info('substance_batch_import.start')
-
-        name = full_path.rsplit('/', 1)[-1]
-        if FILENAME_RE.search(name):
-            raise FileNameValidationError('File name must not contain special whitespace characters')
-
-        file_model = File.objects.create(
-            name=name,
-            type='substance-batch-file',
-            headers=list(),
-        )
-        file_model.putfile(fileobj, logger=logger)
-
-        org_file = OrganizationFile.objects.create(
-            organization_id=organization.id,
-            file=file_model,
-            name=full_path,
-        )
-
-        # Call handler synchronously and in the same DB transaction
-        context = HandlerContext(organization=organization)
-        plugins.handle(SubstancesSubmissionHandler, context, True, org_file)
-
-        return org_file
-
-    def to_wrapper(self, model):
-        if isinstance(model, SubstanceVersion):
-            return self.substance_version_to_wrapper(model)
-        elif isinstance(model, Substance):
-            return self.substance_to_wrapper(model)
-
-    def substance_version_to_wrapper(self, substance_version):
-        from clims.services.extensible import ExtensibleTypeNotRegistered
-
-        try:
-            SpecificExtensibleType = self._app.extensibles.get_implementation(
-                substance_version.archetype.extensible_type.name)
-            return SpecificExtensibleType(_wrapped_version=substance_version, _app=self._app)
-        except ExtensibleTypeNotRegistered:
-            # This is an unregistered instance. This can happen for example when we have
-            # an instance that used to be registered but the Python version has been removed
-            # or rename.
-            # We must use the base class to wrap it:
-            return SubstanceBase(_wrapped_version=substance_version, _unregistered=True)
-
-    def substance_to_wrapper(self, substance):
-        versioned = substance.versions.get(latest=True)
-        return self.substance_version_to_wrapper(versioned)
-
-    def filter(self, *args, **kwargs):
-        pass
-
-    def get(self, name):
-        substance_model = SubstanceVersion.objects.prefetch_related('properties').get(
-            archetype__name=name, latest=True)
-        return self.to_wrapper(substance_model)
-
-    def create_submission_demo(self, file_type):
-        import os
-        from clims.handlers import SubstancesSubmissionFileDemoHandler
-        plugins.require_single_handler(SubstancesSubmissionFileDemoHandler)
-        handlers = plugins.handle(SubstancesSubmissionFileDemoHandler, None, True, file_type)
-        handler = handlers[0]
-        handler.demo_file.seek(0, os.SEEK_END)
-        size = handler.demo_file.tell()
-        handler.demo_file.seek(0)
-        return handler.demo_file, handler.demo_file_name, size
 
 
 class SubstanceAncestry(object):
@@ -254,7 +117,7 @@ class SubstanceAncestry(object):
         return s
 
 
-class SubstanceBase(HasLocationMixin, ExtensibleBase):
+class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     """
     A base object for defining substances in the system, e.g. Sample, Aliquot or Pool.
 
@@ -314,7 +177,7 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         """
         Returns the parents (of a particular version) of the substance, if there are any.
         """
-        return [self._app.substances.substance_version_to_wrapper(parent)
+        return [self._app.substances.to_wrapper(parent)
                 for parent in self._archetype.parents.all()]
 
     def to_ancestry(self):
@@ -414,4 +277,87 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
             prop.save()
             version.properties.add(prop)
 
-        return self._app.substances.substance_to_wrapper(child)
+        return self._app.substances.to_wrapper(child)
+
+
+class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
+    """
+    Provides an API for dealing with both substances (samples, aliquots etc.)
+    and their associated containers.
+
+    Plugins change the state of the system only via service classes or REST API
+    calls. Access to lower-level APIs is possible, but not suggested to ensure
+    backwards compatibility and business rule constraints.
+
+    NOTE: Use this class instead of the manager on Substance even in framework code (unless
+    you're sure of what you're doing) because interaction of the substance and its properties must
+    be strictly maintained.
+    """
+
+    _archetype_version_class = SubstanceVersion
+    _archetype_class = Substance
+    _archetype_base_class = SubstanceBase
+
+    def __init__(self, app):
+        self._app = app
+
+    def all_submission_files(self, organization):
+        # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
+        #       So add a "type" to the file.
+        return OrganizationFile.objects.filter(organization=organization)
+
+    def get_submission_file(self, file_id):
+        try:
+            return OrganizationFile.objects.get(id=file_id)
+        except OrganizationFile.DoesNotExist:
+            raise NotFound("Can't find file with id '{}'".format(file_id))
+
+    @transaction.atomic
+    def load_file(self, organization, full_path, fileobj, add_timestamp=False):
+        # TODO: Decide what we want to happen here. Should the user be able to load files
+        # with an identical name or not? Makes more sense to me that we inspect if samples
+        # with the same name have been uploaded or not. So for now we add this timestamp to the name
+
+        # Add a timestamp (so files can be uploaded that have the same name)
+        if add_timestamp:
+            full_path, ext = full_path.rsplit(".", 1)
+            full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
+
+        from sentry.plugins import plugins
+        plugins.require_handler(SubstancesSubmissionHandler)
+        logger = logging.getLogger('clims.files')
+        logger.info('substance_batch_import.start')
+
+        name = full_path.rsplit('/', 1)[-1]
+        if FILENAME_RE.search(name):
+            raise FileNameValidationError('File name must not contain special whitespace characters')
+
+        file_model = File.objects.create(
+            name=name,
+            type='substance-batch-file',
+            headers=list(),
+        )
+        file_model.putfile(fileobj, logger=logger)
+
+        org_file = OrganizationFile.objects.create(
+            organization_id=organization.id,
+            file=file_model,
+            name=full_path,
+        )
+
+        # Call handler synchronously and in the same DB transaction
+        context = HandlerContext(organization=organization)
+        plugins.handle(SubstancesSubmissionHandler, context, True, org_file)
+
+        return org_file
+
+    def create_submission_demo(self, file_type):
+        import os
+        from clims.handlers import SubstancesSubmissionFileDemoHandler
+        plugins.require_single_handler(SubstancesSubmissionFileDemoHandler)
+        handlers = plugins.handle(SubstancesSubmissionFileDemoHandler, None, True, file_type)
+        handler = handlers[0]
+        handler.demo_file.seek(0, os.SEEK_END)
+        size = handler.demo_file.tell()
+        handler.demo_file.seek(0)
+        return handler.demo_file, handler.demo_file_name, size

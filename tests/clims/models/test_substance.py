@@ -259,13 +259,13 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         assert sample.color == "red"
 
-        retrieved = self.app.substances.get(sample.name)
+        retrieved = self.app.substances.get(name=sample.name)
         assert retrieved.color == "red"
 
         sample.color = "blue"
         assert sample.color == "blue"
         sample.save()
-        retreived = self.app.substances.get(sample.name)
+        retreived = self.app.substances.get(name=sample.name)
         assert retreived.color == "blue"
 
     def test_assigning_int_to_string_field_fails(self):

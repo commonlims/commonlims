@@ -13,7 +13,8 @@ def createexampledata():
     Create example data for clims
     """
     from clims.services.application import ioc, ApplicationService
-    from clims.services.substance import SubstanceBase, FloatField
+    from clims.services.substance import SubstanceBase
+    from clims.services.extensible import FloatField
     from clims.models.plugin_registration import PluginRegistration
     from sentry.models.organization import Organization
 

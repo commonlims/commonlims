@@ -26,9 +26,9 @@ class Substance(ExtensibleModel):
 
     name = models.TextField()
 
-    organization = FlexibleForeignKey('sentry.Organization')
+    organization = FlexibleForeignKey('sentry.Organization', related_name='substances')
 
-    project = FlexibleForeignKey('sentry.Project', null=True)
+    project = FlexibleForeignKey('clims.Project', null=True)
 
     # The original substance or substances (e.g. in the case of pools) this
     # substance originates from
