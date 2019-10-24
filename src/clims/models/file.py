@@ -4,7 +4,6 @@ from django.db import models
 
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
-from tempfile import NamedTemporaryFile
 
 
 class StructuredFileMixin(object):
@@ -13,16 +12,15 @@ class StructuredFileMixin(object):
     without having to import requirements etc.
     """
 
-    def as_excel(self):
+    def as_excel(self, temp_file, read_only=True):
         """
         Returns the file as an excel file
         """
-        with NamedTemporaryFile(suffix='.xlsx') as tmp:
-            with open(tmp.name, 'wb') as f:
-                for _, chunk in enumerate(self.file.getfile()):
-                    f.write(chunk)
+        with open(temp_file.name, 'wb') as f:
+            for _, chunk in enumerate(self.file.getfile()):
+                f.write(chunk)
 
-            workbook = load_workbook(tmp.name, data_only=True)
+        workbook = load_workbook(temp_file.name, data_only=True, read_only=read_only)
 
         return workbook
 
