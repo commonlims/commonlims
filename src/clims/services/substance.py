@@ -293,9 +293,9 @@ class SubstanceService(WrapperMixin, object):
     be strictly maintained.
     """
 
-    _archetype_version = SubstanceVersion
-    _archetype = Substance
-    _archetype_base = SubstanceBase
+    _archetype_version_class = SubstanceVersion
+    _archetype_class = Substance
+    _archetype_base_class = SubstanceBase
 
     def __init__(self, app):
         self._app = app

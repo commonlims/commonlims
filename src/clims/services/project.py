@@ -41,9 +41,9 @@ class ProjectBase(ExtensibleBase, object):
 
 class ProjectService(WrapperMixin):
 
-    _archetype_version = ProjectVersion
-    _archetype = Project
-    _archetype_base = ProjectBase
+    _archetype_version_class = ProjectVersion
+    _archetype_class = Project
+    _archetype_base_class = ProjectBase
 
     def __init__(self, app):
         self._app = app
