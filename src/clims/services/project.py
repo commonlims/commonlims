@@ -6,7 +6,7 @@ from clims.models import Project, ProjectVersion
 from clims.services.wrapper import WrapperMixin
 
 
-class ProjectBase(ExtensibleBase):
+class ProjectBase(ExtensibleBase, object):
     WrappedArchetype = Project
     WrappedVersion = ProjectVersion
 
@@ -15,7 +15,7 @@ class ProjectBase(ExtensibleBase):
 
     def _to_wrapper(self, model):
         """
-        Wraps either a SubstanceVersion or Substance as a higher-level object
+        Wraps either a ProjectVersion or Project as a higher-level object
         """
         return self._app.projects.to_wrapper(model)
 

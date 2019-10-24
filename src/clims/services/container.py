@@ -240,7 +240,7 @@ class PlateBase(ContainerBase):
         return "\n".join(map(six.text_type, rows))
 
 
-class ContainerService(WrapperMixin):
+class ContainerService(WrapperMixin, object):
     _archetype_version = ContainerVersion
     _archetype = Container
     _archetype_base = ContainerBase

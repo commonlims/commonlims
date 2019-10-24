@@ -279,7 +279,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         return self._app.substances.to_wrapper(child)
 
 
-class SubstanceService(WrapperMixin):
+class SubstanceService(WrapperMixin, object):
     """
     Provides an API for dealing with both substances (samples, aliquots etc.)
     and their associated containers.
