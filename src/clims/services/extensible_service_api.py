@@ -35,11 +35,14 @@ class ExtensibleServiceAPIMixin(object):
         pass
 
     def get(self, **kwargs):
+        # TODO I'm not at all sure that this is a perfect method to handle this.
+        #      but for now it might be suff
         get_args = {}
-        for key, value in kwargs.items():
-            get_args['archetype__{}'.format(key)] = value
         if 'latest' not in get_args.keys():
             get_args['latest'] = True
+        for key, value in kwargs.items():
+            if not key == 'latest':
+                get_args['archetype__{}'.format(key)] = value
 
-        substance_model = self._archetype_version_class.objects.prefetch_related('properties').get(**get_args)
-        return self.to_wrapper(substance_model)
+        model = self._archetype_version_class.objects.prefetch_related('properties').get(**get_args)
+        return self.to_wrapper(model)
