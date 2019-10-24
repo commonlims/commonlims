@@ -4,9 +4,10 @@ from __future__ import absolute_import
 from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion
 from clims.services.wrapper import WrapperMixin
+from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
 
-class ProjectBase(ExtensibleBase, object):
+class ProjectBase(ExtensibleBase):
     WrappedArchetype = Project
     WrappedVersion = ProjectVersion
 
@@ -39,7 +40,7 @@ class ProjectBase(ExtensibleBase, object):
             yield self._to_wrapper(version)
 
 
-class ProjectService(WrapperMixin):
+class ProjectService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
     _archetype_version_class = ProjectVersion
     _archetype_class = Project

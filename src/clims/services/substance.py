@@ -16,6 +16,7 @@ from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.services.wrapper import WrapperMixin
+from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
 
 class NotFound(Exception):
@@ -279,7 +280,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         return self._app.substances.to_wrapper(child)
 
 
-class SubstanceService(WrapperMixin, object):
+class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     """
     Provides an API for dealing with both substances (samples, aliquots etc.)
     and their associated containers.
@@ -299,33 +300,6 @@ class SubstanceService(WrapperMixin, object):
 
     def __init__(self, app):
         self._app = app
-
-    def all(self):
-        """
-        Returns all instances of a substance. Only the latest version is
-        returned.
-        """
-        # TODO: We should filter by organization
-
-        # TODO: It would be preferable if we could return a regular django queryset here,
-        # which in turn would return the wrapper when materialized. For that to work smoothly,
-        # we'll need to look into implementation details of django querysets.
-
-        # TODO: how does the prefetch perform when fetching all objects like this
-        for entry in self.all_qs():
-            yield self.to_wrapper(entry)
-
-    def all_qs(self):
-        """Returns a queryset for all substances of a particular version or latest if nothing
-        is supplied
-
-        Note that you must call SubstanceService.to_wrapper to wrap it as a high level object.
-        """
-
-        # TODO: `all` should return a queryset that automatically wraps the Django object and
-        # after that we can remove methods named `*_qs`.
-
-        return SubstanceVersion.objects.filter(latest=True).prefetch_related('properties')
 
     def all_submission_files(self, organization):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
@@ -376,14 +350,6 @@ class SubstanceService(WrapperMixin, object):
         plugins.handle(SubstancesSubmissionHandler, context, True, org_file)
 
         return org_file
-
-    def filter(self, *args, **kwargs):
-        pass
-
-    def get(self, name):
-        substance_model = SubstanceVersion.objects.prefetch_related('properties').get(
-            archetype__name=name, latest=True)
-        return self.to_wrapper(substance_model)
 
     def create_submission_demo(self, file_type):
         import os

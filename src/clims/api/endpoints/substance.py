@@ -16,7 +16,8 @@ class SubstanceEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        queryset = self.app.substances.all_qs()
+        # TODO This should probably not use the django query set directly.
+        queryset = self.app.substances._all_qs()
 
         def handle_results(qs):
             ret = list()
