@@ -110,14 +110,15 @@ class PluginManager(InstanceManager):
         """
         Registers extensible types in the plugin if any are found
         """
-        from clims.services import ExtensibleBase, SubstanceBase
+        from clims.services import ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase
         from clims.models import PluginRegistration
         from clims.services import ApplicationService
         app = ApplicationService()
 
         # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
         # knowledge of which bases are not to be registered is elsewhere
-        known_bases = [ExtensibleBase, SubstanceBase]
+        # flake8: noqa
+        known_bases = [ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase]
 
         mod = self.get_plugin_module(plugin, 'models')
         if not mod:
