@@ -26,7 +26,7 @@ class Substance(ExtensibleModel):
 
     name = models.TextField()
 
-    organization = FlexibleForeignKey('sentry.Organization', related_name='%(class)s_organization')
+    organization = FlexibleForeignKey('sentry.Organization', related_name='substances')
 
     project = FlexibleForeignKey('clims.Project', null=True)
 

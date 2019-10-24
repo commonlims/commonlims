@@ -20,7 +20,7 @@ class Project(ExtensibleModel):
         super(Project, self).__init__(*args, **kwargs)
 
     name = models.TextField()
-    organization = FlexibleForeignKey('sentry.Organization', related_name='%(class)s_organization')
+    organization = FlexibleForeignKey('sentry.Organization', related_name='projects')
 
     # TODO What other properties do we want to be native to the projects?
     #      I think that there are more things that could be added to the project
