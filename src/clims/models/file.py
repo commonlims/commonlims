@@ -14,7 +14,8 @@ class StructuredFileMixin(object):
 
     def as_excel(self, temp_file, read_only=True):
         """
-        Returns the file as an excel file
+        Returns the file as an excel file. The caller has the responsibility to
+        delete the temp file after usage!
         """
         with open(temp_file.name, 'wb') as f:
             for _, chunk in enumerate(self.file.getfile()):
