@@ -172,7 +172,6 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'clims_organizationfile',
             },
-            bases=(clims.models.file.StructuredFileMixin, models.Model),
         ),
         migrations.CreateModel(
             name='PluginRegistration',

@@ -6,10 +6,10 @@ from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
 
 
-class ExcelFileWrapper(object):
+class MultiFormatFile(object):
     """
-    Wraps an organization file in order to produce an excel file.
-    This functionality is wrapped in its own class because excel handling
+    Wraps an organization file in order to generate any file format from it.
+    This functionality is wrapped in a separate class because excel handling
     needs a temporary file that needs to be removed after usage.
     """
 
@@ -17,19 +17,21 @@ class ExcelFileWrapper(object):
         self.temp_file = None
         self.organization_file = organization_file
         self.name = organization_file.name
+        self.temp_file_name = None  # for testing
 
     def __enter__(self):
         self.temp_file = NamedTemporaryFile(suffix='.xlsx')
+        self.temp_file_name = self.temp_file.name
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         os.remove(self.temp_file.name)
 
     def as_excel(self, read_only=True):
-        """
-        Returns the file as an excel file. The caller has the responsibility to
-        delete the temp file after usage!
-        """
+        if self.temp_file is None:
+            raise AssertionError('MultiFormatFile must be initiated as a context manager '
+                                 'in order to export excel files, e.g. '
+                                 'with MultiFormatFile(org_file) as wrapped: ...')
         with open(self.temp_file.name, 'wb') as f:
             for _, chunk in enumerate(self.organization_file.file.getfile()):
                 f.write(chunk)
@@ -38,26 +40,17 @@ class ExcelFileWrapper(object):
 
         return workbook
 
-    def as_csv(self):
-        return self.organization_file.as_csv()
-
-
-class StructuredFileMixin(object):
-    """
-    A helper mixin for allowing plugin developers to easily parse files to common formats
-    without having to import requirements etc.
-    """
-
     def as_xml(self):
         raise NotImplementedError()
 
     def as_csv(self):
         # TODO: Add @lru_cache to the method when ready
         from clims.services.file_service.csv import Csv
-        return Csv(self.file.getfile(), file_name=self.file.name)
+        return Csv(self.organization_file.file.getfile(),
+                   file_name=self.organization_file.file.name)
 
 
-class OrganizationFile(StructuredFileMixin, Model):
+class OrganizationFile(Model):
     """
     Connection between a `File` and an `Organization`.
     """

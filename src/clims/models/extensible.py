@@ -52,7 +52,7 @@ class ExtensibleType(Model):
     when running `lims upgrade`.
 
     These types are examples of those that will be extensible, meaning that they can
-    be customized by plugins. Currently the Substance is the only one that's implemented.
+    be customized by plugins.
 
     * Substance
     * Container
