@@ -78,6 +78,9 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
 
 
 class MyHandler(SubstancesSubmissionHandler):
+    def __init__(self, context, app):
+        super(MyHandler, self).__init__(context, app)
+
     def handle(self, file_obj):
         csv = self._as_csv(file_obj)
         for line in csv:
@@ -91,8 +94,10 @@ class MyHandler(SubstancesSubmissionHandler):
         if file_obj.name.endswith('.csv'):
             csv = file_obj.as_csv()
         elif file_obj.name.endswith('.xlsx'):
-            workbook = file_obj.as_excel()
-            csv = self._xlsx_to_csv(workbook)
+            from tempfile import NamedTemporaryFile
+            with NamedTemporaryFile(suffix='.xlsx') as temp_file:
+                workbook = file_obj.as_excel(temp_file)
+                csv = self._xlsx_to_csv(workbook)
         else:
             _, ext = os.path.splitext(file_obj.name)
             NotImplementedError('File type not recognized: {}'.format(ext))
