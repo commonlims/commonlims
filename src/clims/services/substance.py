@@ -347,7 +347,9 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
         # Call handler synchronously and in the same DB transaction
         context = HandlerContext(organization=organization)
-        plugins.handle(SubstancesSubmissionHandler, context, True, org_file)
+        from clims.models.file import MultiFormatFile
+        with MultiFormatFile(org_file) as wrapped_org_file:
+            plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
 
         return org_file
 

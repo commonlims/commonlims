@@ -1,8 +1,10 @@
 from __future__ import absolute_import
+import pytest
 import os
 import tests
 from six import BytesIO, binary_type
 import StringIO
+import logging
 from tests.clims.models.test_substance import SubstanceTestCase
 from clims.models.substance import Substance
 from sentry.plugins import plugins
@@ -32,10 +34,13 @@ def csv_sample_submission_path():
 class TestGemstoneSampleSubmission(SubstanceTestCase):
     def setUp(self):
         self.gemstone_sample_type = self.register_gemstone_type()
+        logger = logging.getLogger('clims.files')
+        logger.setLevel(logging.CRITICAL)
 
         # TODO: It would be cleaner to have the plugins instance in the ApplicationService
         plugins.load_handler_implementation(SubstancesSubmissionHandler, MyHandler)
 
+    @pytest.mark.now
     def test_run_gemstone_sample_submission_handler__with_csv__6_samples_found_in_db(self):
         # Arrange
         content = read_binary_file(csv_sample_submission_path())
@@ -94,10 +99,8 @@ class MyHandler(SubstancesSubmissionHandler):
         if file_obj.name.endswith('.csv'):
             csv = file_obj.as_csv()
         elif file_obj.name.endswith('.xlsx'):
-            from tempfile import NamedTemporaryFile
-            with NamedTemporaryFile(suffix='.xlsx') as temp_file:
-                workbook = file_obj.as_excel(temp_file)
-                csv = self._xlsx_to_csv(workbook)
+            workbook = file_obj.as_excel()
+            csv = self._xlsx_to_csv(workbook)
         else:
             _, ext = os.path.splitext(file_obj.name)
             NotImplementedError('File type not recognized: {}'.format(ext))
