@@ -14,29 +14,29 @@ class MultiFormatFile(object):
     """
 
     def __init__(self, organization_file):
-        self.temp_file = None
-        self.organization_file = organization_file
         self.name = organization_file.name
-        self.temp_file_name = None  # for testing
+        self._temp_file = None
+        self._organization_file = organization_file
+        self._temp_file_name = None  # for testing
 
     def __enter__(self):
-        self.temp_file = NamedTemporaryFile(suffix='.xlsx')
-        self.temp_file_name = self.temp_file.name
+        self._temp_file = NamedTemporaryFile(suffix='.xlsx')
+        self._temp_file_name = self._temp_file.name
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        os.remove(self.temp_file.name)
+        os.remove(self._temp_file.name)
 
     def as_excel(self, read_only=True):
-        if self.temp_file is None:
+        if self._temp_file is None:
             raise AssertionError('MultiFormatFile must be initiated as a context manager '
                                  'in order to export excel files, e.g. '
                                  'with MultiFormatFile(org_file) as wrapped: ...')
-        with open(self.temp_file.name, 'wb') as f:
-            for _, chunk in enumerate(self.organization_file.file.getfile()):
+        with open(self._temp_file.name, 'wb') as f:
+            for _, chunk in enumerate(self._organization_file.file.getfile()):
                 f.write(chunk)
 
-        workbook = load_workbook(self.temp_file.name, data_only=True, read_only=read_only)
+        workbook = load_workbook(self._temp_file.name, data_only=True, read_only=read_only)
 
         return workbook
 
@@ -46,8 +46,8 @@ class MultiFormatFile(object):
     def as_csv(self):
         # TODO: Add @lru_cache to the method when ready
         from clims.services.file_service.csv import Csv
-        return Csv(self.organization_file.file.getfile(),
-                   file_name=self.organization_file.file.name)
+        return Csv(self._organization_file.file.getfile(),
+                   file_name=self._organization_file.file.name)
 
 
 class OrganizationFile(Model):

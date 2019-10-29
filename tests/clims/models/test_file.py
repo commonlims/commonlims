@@ -11,7 +11,7 @@ class TestFile(TestCase):
 
         # Act
         with MultiFormatFile(org_file) as wrapped:
-            temp_file_name = wrapped.temp_file_name
+            temp_file_name = wrapped._temp_file_name
             assert os.path.exists(temp_file_name)
 
         # Assert
@@ -25,8 +25,8 @@ class TestFile(TestCase):
         wrapped = MultiFormatFile(org_file)
 
         # Assert
-        assert wrapped.temp_file is None
-        assert wrapped.temp_file_name is None
+        assert wrapped._temp_file is None
+        assert wrapped._temp_file_name is None
 
 
 class FakeOrgFile:
