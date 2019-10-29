@@ -17,6 +17,7 @@ from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
+from clims.utils import lazyprop
 
 
 class NotFound(Exception):
@@ -130,21 +131,25 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
-        self._unsaved_parents = self._fetch_parents(kwargs)
+        self._check_parameters(kwargs)
+        self._unsaved_parents = kwargs.pop("parents", None)
+        self._unsaved_project = kwargs.pop('project', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
 
-    def _fetch_parents(self, kwargs):
+    def _check_parameters(self, kwargs):
         wrapped_version = kwargs.get("_wrapped_version", None)
-        parents = kwargs.pop("parents", None)
-
-        if wrapped_version and parents:
+        name = kwargs.get('name', None)
+        organization = kwargs.get('organization', None)
+        parents = kwargs.get("parents", None)
+        project = kwargs.get('project', None)
+        has_specific_parameteres = name or organization or project or parents
+        if has_specific_parameteres and wrapped_version:
             raise AssertionError(
                 'A substance may either be instantiated from a wrapped version '
                 '(i.e. an already created object fetched from db), or '
-                'a new set of of parents. This call had both!')
-
-        return parents
+                'a new set of specific parameters, like name, project and so forth. '
+                'This call has both!')
 
     def _to_wrapper(self, model):
         """
@@ -180,6 +185,16 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         return [self._app.substances.to_wrapper(parent)
                 for parent in self._archetype.parents.all()]
 
+    @lazyprop
+    def project(self):
+        if self._unsaved_project:
+            project_model = self._unsaved_project._archetype
+        elif self._archetype.project:
+            project_model = self._archetype.project
+        else:
+            return None
+        return self._app.projects.to_wrapper(project_model)
+
     def to_ancestry(self):
         return SubstanceAncestry(self)
 
@@ -187,7 +202,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         parents = [substance_base._wrapped_version for substance_base in self._unsaved_parents]
         self._archetype.parents.add(*parents)
         self._archetype.depth = max([p.depth for p in self._unsaved_parents]) + 1
-        self._archetype.save()
 
     def _get_origins(self):
         origins = list()
@@ -203,6 +217,11 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         if creating:
             if self._unsaved_parents:
                 self._save_parents()
+
+            if self._unsaved_project:
+                self._archetype.project = self._unsaved_project._archetype
+
+            self._archetype.save()
 
             # We want the origin point(s) to always be populated, also for the origins themselves, in
             # which case it points to itself. This way we can find all related samples in one query.
