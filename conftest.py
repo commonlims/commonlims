@@ -13,10 +13,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 # I'm 99.9% sure there is a plugin for easily skipping based on patterns from a file
 # (or that it's supported in the core) but I didn't find it right away, so:
 
-with open(".skiptests") as f:
-    # Extra skips should be of the format <class_name>.<function_name>, as that
-    # is the format pytest reports by default in the failure report
-    extra_skips = {line.strip() for line in f.readlines()}
+if os.path.exists(".skiptests"):
+    with open(".skiptests") as f:
+        # Extra skips should be of the format <class_name>.<function_name>, as that
+        # is the format pytest reports by default in the failure report
+        extra_skips = {line.strip() for line in f.readlines()}
+else:
+    extra_skips = {}
 
 
 def pytest_configure(config):
