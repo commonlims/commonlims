@@ -17,7 +17,6 @@ from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
-from clims.utils import lazyprop
 
 
 class NotFound(Exception):
@@ -185,15 +184,13 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         return [self._app.substances.to_wrapper(parent)
                 for parent in self._archetype.parents.all()]
 
-    @lazyprop
+    @property
     def project(self):
-        if self._unsaved_project:
-            project_model = self._unsaved_project._archetype
-        elif self._archetype.project:
-            project_model = self._archetype.project
-        else:
-            return None
-        return self._app.projects.to_wrapper(project_model)
+        return self._app.projects.to_wrapper(self._archetype.project)
+
+    @project.setter
+    def project(self, project):
+        self._archetype.project = project._archetype
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
