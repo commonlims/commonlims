@@ -130,24 +130,9 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
-        self._check_parameters(kwargs)
         self._unsaved_parents = kwargs.pop('parents', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
-
-    def _check_parameters(self, kwargs):
-        wrapped_version = kwargs.get("_wrapped_version", None)
-        name = kwargs.get('name', None)
-        organization = kwargs.get('organization', None)
-        parents = kwargs.get("parents", None)
-        project = kwargs.get('project', None)
-        has_specific_parameteres = name or organization or project or parents
-        if has_specific_parameteres and wrapped_version:
-            raise AssertionError(
-                'A substance may either be instantiated from a wrapped version '
-                '(i.e. an already created object fetched from db), or '
-                'a new set of specific parameters, like name, project and so forth. '
-                'This call has both!')
 
     def _to_wrapper(self, model):
         """
