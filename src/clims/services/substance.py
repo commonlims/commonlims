@@ -130,21 +130,9 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
-        self._unsaved_parents = self._fetch_parents(kwargs)
+        self._unsaved_parents = kwargs.pop('parents', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
-
-    def _fetch_parents(self, kwargs):
-        wrapped_version = kwargs.get("_wrapped_version", None)
-        parents = kwargs.pop("parents", None)
-
-        if wrapped_version and parents:
-            raise AssertionError(
-                'A substance may either be instantiated from a wrapped version '
-                '(i.e. an already created object fetched from db), or '
-                'a new set of of parents. This call had both!')
-
-        return parents
 
     def _to_wrapper(self, model):
         """
@@ -179,6 +167,14 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         """
         return [self._app.substances.to_wrapper(parent)
                 for parent in self._archetype.parents.all()]
+
+    @property
+    def project(self):
+        return self._app.projects.to_wrapper(self._archetype.project)
+
+    @project.setter
+    def project(self, project):
+        self._archetype.project = project._archetype
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
