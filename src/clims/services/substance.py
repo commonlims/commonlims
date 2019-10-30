@@ -131,8 +131,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
 
     def __init__(self, **kwargs):
         self._check_parameters(kwargs)
-        self._unsaved_parents = kwargs.pop("parents", None)
-        self._unsaved_project = kwargs.pop('project', None)
+        self._unsaved_parents = kwargs.pop('parents', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
 
@@ -199,6 +198,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         parents = [substance_base._wrapped_version for substance_base in self._unsaved_parents]
         self._archetype.parents.add(*parents)
         self._archetype.depth = max([p.depth for p in self._unsaved_parents]) + 1
+        self._archetype.save()
 
     def _get_origins(self):
         origins = list()
@@ -214,11 +214,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         if creating:
             if self._unsaved_parents:
                 self._save_parents()
-
-            if self._unsaved_project:
-                self._archetype.project = self._unsaved_project._archetype
-
-            self._archetype.save()
 
             # We want the origin point(s) to always be populated, also for the origins themselves, in
             # which case it points to itself. This way we can find all related samples in one query.
