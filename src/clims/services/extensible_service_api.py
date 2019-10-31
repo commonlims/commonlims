@@ -33,12 +33,16 @@ class ExtensibleServiceAPIMixin(object):
 
     def filter(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
-        models = self._archetype_version_class.objects.prefetch_related('properties').filter(**get_args)
+        models = self._archetype_version_class.objects.\
+            prefetch_related('properties__extensible_property_type').\
+            filter(**get_args)
         return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
-        model = self._archetype_version_class.objects.prefetch_related('properties').get(**get_args)
+        model = self._archetype_version_class.objects.\
+            prefetch_related('properties__extensible_property_type').\
+            get(**get_args)
         return self.to_wrapper(model)
 
     def _get_filter_arguments(self, **kwargs):

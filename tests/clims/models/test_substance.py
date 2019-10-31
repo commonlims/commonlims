@@ -300,7 +300,6 @@ class TestSubstance(SubstanceTestCase):
         with pytest.raises(ExtensibleTypeValidationError):
             sample.has_something = 'True'
 
-    @pytest.mark.now
     def test_assigning_int_to_bool_field_fails(self):
         sample = self.create_gemstone(color='red')
         with pytest.raises(ExtensibleTypeValidationError):
@@ -318,3 +317,31 @@ class TestSubstance(SubstanceTestCase):
 
         versions = [(s.version, s.properties) for s in sample.iter_versions()]
         assert len(versions) == 2
+
+    def test_fetch_property_after_instansiation__no_db_calls(self):
+        # Arrange
+        from django.db import connection
+        from django.db import reset_queries
+        from django.conf import settings
+        old_debug = settings.DEBUG
+        settings.DEBUG = True
+        sample = self.create_gemstone()
+        sample.color = 'red'
+        sample.save()
+
+        fetched_sample = self.app.substances.get(name=sample.name)
+        reset_queries()
+
+        # Act
+        color = fetched_sample.color
+
+        # Assert
+        assert color == 'red'
+        assert len(connection.queries) == 0
+        settings.DEBUG = old_debug
+
+    @pytest.mark.now
+    def test_fetch_non_existent_property__attribute_error(self):
+        sample = self.create_gemstone(color='red')
+        with pytest.raises(AttributeError):
+            sample.blurr

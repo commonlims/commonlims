@@ -364,9 +364,13 @@ class PropertyBag(object):
             new_value = self.new_values.get(key, None)
             if new_value:
                 return new_value
-            persisted_value = self.extensible_wrapper._wrapped_version.properties.get(
-                extensible_property_type__name=key)
-            return persisted_value.value
+
+            # properties.all() is used to leverage the .prefetch_related() call
+            # that is used when fetching the extensible
+            properties = self.extensible_wrapper._wrapped_version.properties.all()
+            value = next(prop.value for prop in properties if prop.extensible_property_type.name == key)
+
+            return value
         except ExtensibleProperty.DoesNotExist:
             return None
 
