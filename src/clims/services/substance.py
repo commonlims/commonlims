@@ -359,3 +359,11 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
         size = handler.demo_file.tell()
         handler.demo_file.seek(0)
         return handler.demo_file, handler.demo_file_name, size
+
+    def filter_by_project(self, project_name):
+        # TODO: add organization to the filter parameters
+        return self.filter(project_name=project_name)
+
+    def get_by_name(self, name):
+        # TODO: add organization to the filter parameters
+        return self.get(name=name)

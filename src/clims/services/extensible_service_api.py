@@ -31,18 +31,25 @@ class ExtensibleServiceAPIMixin(object):
 
         return self._archetype_version_class.objects.filter(latest=True).prefetch_related('properties')
 
-    def filter(self, *args, **kwargs):
-        pass
+    def filter(self, **kwargs):
+        get_args = self._get_filter_arguments(**kwargs)
+        models = self._archetype_version_class.objects.prefetch_related('properties').filter(**get_args)
+        return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):
-        # TODO I'm not at all sure that this is a perfect method to handle this.
-        #      but for now it might be suff
+        get_args = self._get_filter_arguments(**kwargs)
+        model = self._archetype_version_class.objects.prefetch_related('properties').get(**get_args)
+        return self.to_wrapper(model)
+
+    def _get_filter_arguments(self, **kwargs):
         get_args = {}
         if 'latest' not in get_args.keys():
             get_args['latest'] = True
         for key, value in kwargs.items():
-            if not key == 'latest':
+            if key == 'project':
+                get_args['archetype__project__name'] = value.name
+            elif key == 'project_name':
+                get_args['archetype__project__name'] = value
+            elif not key == 'latest':
                 get_args['archetype__{}'.format(key)] = value
-
-        model = self._archetype_version_class.objects.prefetch_related('properties').get(**get_args)
-        return self.to_wrapper(model)
+        return get_args
