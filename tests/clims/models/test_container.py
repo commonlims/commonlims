@@ -39,8 +39,7 @@ class TestContainer(TestCase):
         container.comment = "test"
         container.save()
 
-        model = Container.objects.get(id=container.id)
-        container_fetched_again = self.app.containers.to_wrapper(model)
+        container_fetched_again = self.app.containers.get(id=container.id)
         assert container.comment == container_fetched_again.comment
 
     def test_can_add_sample(self):
@@ -110,7 +109,7 @@ class TestContainer(TestCase):
         container.save()
         assert container["A:1"].id == in_original_order[0].id
 
-        container_fresh = self.app.containers.get(container.name)
+        container_fresh = self.app.containers.get_by_name(container.name)
         assert container_fresh["A:1"].id == in_original_order[0].id
 
     def test_can_output_default_string_info(self):
@@ -125,7 +124,7 @@ class TestContainer(TestCase):
             container.append(sample)
         container.save()
 
-        container_fresh = self.app.containers.get(container.name)
+        container_fresh = self.app.containers.get_by_name(container.name)
         string_rep = container_fresh.to_string().split("\n")
         assert len(string_rep) == container.rows
 

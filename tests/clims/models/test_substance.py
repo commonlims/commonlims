@@ -229,8 +229,7 @@ class TestSubstance(SubstanceTestCase):
         original.payload = payload
         original.save()
 
-        fetched = Substance.objects.get(name=original.name)
-        fetched = self.app.substances.to_wrapper(fetched)
+        fetched = self.app.substances.get_by_name(original.name)
         assert fetched.payload == payload
 
     def test_can_get_all_substances(self):
@@ -318,6 +317,7 @@ class TestSubstance(SubstanceTestCase):
         versions = [(s.version, s.properties) for s in sample.iter_versions()]
         assert len(versions) == 2
 
+    @pytest.mark.now
     def test_fetch_property_after_instansiation__no_db_calls(self):
         # Arrange
         from django.db import connection
@@ -340,7 +340,6 @@ class TestSubstance(SubstanceTestCase):
         assert len(connection.queries) == 0
         settings.DEBUG = old_debug
 
-    @pytest.mark.now
     def test_fetch_non_existent_property__attribute_error(self):
         sample = self.create_gemstone(color='red')
         with pytest.raises(AttributeError):

@@ -5,6 +5,7 @@ import six
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
 from clims.services.wrapper import WrapperMixin
+from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
 
 class IndexOutOfBounds(Exception):
@@ -240,7 +241,7 @@ class PlateBase(ContainerBase):
         return "\n".join(map(six.text_type, rows))
 
 
-class ContainerService(WrapperMixin, object):
+class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     _archetype_version_class = ContainerVersion
     _archetype_class = Container
     _archetype_base_class = ContainerBase
@@ -248,6 +249,5 @@ class ContainerService(WrapperMixin, object):
     def __init__(self, app):
         self._app = app
 
-    def get(self, name):
-        model = Container.objects.get(name=name)
-        return self.to_wrapper(model)
+    def get_by_name(self, name):
+        return self.get(name=name)

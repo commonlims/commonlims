@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from django.db.models import Prefetch
 
 
 class ExtensibleServiceAPIMixin(object):
@@ -33,15 +34,17 @@ class ExtensibleServiceAPIMixin(object):
 
     def filter(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
-        models = self._archetype_version_class.objects.\
-            prefetch_related('properties__extensible_property_type').\
+        models = self._archetype_version_class.objects.prefetch_related(
+            Prefetch('properties', to_attr='all_properties'),
+            Prefetch('all_properties__extensible_property_type')).\
             filter(**get_args)
         return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
-        model = self._archetype_version_class.objects.\
-            prefetch_related('properties__extensible_property_type').\
+        model = self._archetype_version_class.objects.prefetch_related(
+            Prefetch('properties', to_attr='all_properties'),
+            Prefetch('all_properties__extensible_property_type')).\
             get(**get_args)
         return self.to_wrapper(model)
 
