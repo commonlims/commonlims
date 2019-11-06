@@ -50,13 +50,16 @@ class ExtensibleServiceAPIMixin(object):
 
     def _get_filter_arguments(self, **kwargs):
         get_args = {}
-        if 'latest' not in get_args.keys():
-            get_args['latest'] = True
+        if 'latest' not in kwargs.keys():
+            kwargs['latest'] = True
+
         for key, value in kwargs.items():
             if key == 'project':
                 get_args['archetype__project__name'] = value.name
             elif key == 'project_name':
                 get_args['archetype__project__name'] = value
-            elif not key == 'latest':
+            elif key == 'latest':
+                get_args['{}'.format(key)] = value
+            else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args
