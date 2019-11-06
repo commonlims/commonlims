@@ -8,8 +8,11 @@ import logging
 from tests.clims.models.test_substance import SubstanceTestCase
 from clims.models.substance import Substance
 from sentry.plugins import plugins
+from sentry.testutils import TestCase
 from clims.handlers import SubstancesSubmissionHandler
 from clims.services import Csv
+from clims.services.project import ProjectBase
+from clims.services.extensible import TextField
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
 
@@ -40,7 +43,6 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         # TODO: It would be cleaner to have the plugins instance in the ApplicationService
         plugins.load_handler_implementation(SubstancesSubmissionHandler, MyHandler)
 
-    @pytest.mark.now
     def test_run_gemstone_sample_submission_handler__with_csv__6_samples_found_in_db(self):
         # Arrange
         content = read_binary_file(csv_sample_submission_path())
@@ -80,6 +82,73 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
             'sample-Frink-1693_3',
         ]
         assert set(expected_sample_names).issubset(set(all_sample_names))
+
+
+class TestSubstanceService(TestCase):
+    def setUp(self):
+        self.register_extensible(GemstoneProject)
+        self.register_extensible(GemstoneSample)
+
+    def test_get_substances_by_project__with_2_samples_in_project_and_1_outside__2_hits(self):
+        # Arrange
+        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1.save()
+        project2 = GemstoneProject(name='project2', organization=self.organization)
+        project2.save()
+        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1.save()
+        sample2 = GemstoneSample(name='sample2', organization=self.organization, project=project1)
+        sample2.save()
+        sample3 = GemstoneSample(name='sample3', organization=self.organization, project=project2)
+        sample3.save()
+
+        # Act
+        fetched_samples = self.app.substances.filter(project=project1)
+
+        # Assert
+        assert len(fetched_samples) == 2
+        assert {'sample1', 'sample2'} == set([s.name for s in fetched_samples])
+
+    def test_filter_substances_by_project_name__with_2_samples_in_project_and_1_outside__2_hits(self):
+        # Arrange
+        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1.save()
+        project2 = GemstoneProject(name='project2', organization=self.organization)
+        project2.save()
+        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1.save()
+        sample2 = GemstoneSample(name='sample2', organization=self.organization, project=project1)
+        sample2.save()
+        sample3 = GemstoneSample(name='sample3', organization=self.organization, project=project2)
+        sample3.save()
+
+        # Act
+        fetched_samples = self.app.substances.filter_by_project(project_name=project1.name)
+
+        # Assert
+        assert len(fetched_samples) == 2
+        assert {'sample1', 'sample2'} == set([s.name for s in fetched_samples])
+
+    @pytest.mark.now
+    def test_filter_substance_by_project_name__with_only_1_sample__sample_property_works(self):
+        # Arrange
+        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1.save()
+        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1.color = 'red'
+        sample1.save()
+
+        # Act
+        fetched_samples = self.app.substances.filter_by_project(project_name=project1.name)
+
+        # Assert
+        assert len(fetched_samples) == 1
+        assert fetched_samples[0].color == 'red'
+
+
+class GemstoneProject(ProjectBase):
+    species = TextField("species")
+    country_of_sampling = TextField("country_of_sampling")
 
 
 class MyHandler(SubstancesSubmissionHandler):

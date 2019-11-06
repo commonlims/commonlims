@@ -131,6 +131,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
 
     def __init__(self, **kwargs):
         self._unsaved_parents = kwargs.pop('parents', None)
+        self._unsaved_project = kwargs.pop('project', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
 
@@ -170,6 +171,8 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
 
     @property
     def project(self):
+        if self._unsaved_project:
+            return self._unsaved_project
         return self._app.projects.to_wrapper(self._archetype.project)
 
     @project.setter
@@ -183,7 +186,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         parents = [substance_base._wrapped_version for substance_base in self._unsaved_parents]
         self._archetype.parents.add(*parents)
         self._archetype.depth = max([p.depth for p in self._unsaved_parents]) + 1
-        self._archetype.save()
 
     def _get_origins(self):
         origins = list()
@@ -199,6 +201,12 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         if creating:
             if self._unsaved_parents:
                 self._save_parents()
+
+            if self._unsaved_project:
+                self._archetype.project = self._unsaved_project._archetype
+                self._unsaved_project = None
+
+            self._archetype.save()
 
             # We want the origin point(s) to always be populated, also for the origins themselves, in
             # which case it points to itself. This way we can find all related samples in one query.
@@ -359,3 +367,11 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
         size = handler.demo_file.tell()
         handler.demo_file.seek(0)
         return handler.demo_file, handler.demo_file_name, size
+
+    def filter_by_project(self, project_name):
+        # TODO: add organization to the filter parameters
+        return self.filter(project_name=project_name)
+
+    def get_by_name(self, name):
+        # TODO: add organization to the filter parameters
+        return self.get(name=name)

@@ -357,16 +357,21 @@ class PropertyBag(object):
             except ExtensibleProperty.DoesNotExist:
                 create(key, value)
 
-        self.new_values.clear()
+        # Note, new_values retained after save. Alternative would be to fetch from db and
+        # re-initiate.
 
     def __getitem__(self, key):
         try:
             new_value = self.new_values.get(key, None)
             if new_value:
                 return new_value
-            persisted_value = self.extensible_wrapper._wrapped_version.properties.get(
-                extensible_property_type__name=key)
-            return persisted_value.value
+
+            # '.all_properties' is used to leverage the .prefetch_related() call
+            # that is used when fetching the extensible
+            properties = self.extensible_wrapper._wrapped_version.all_properties
+            value = next(prop.value for prop in properties if prop.extensible_property_type.name == key)
+
+            return value
         except ExtensibleProperty.DoesNotExist:
             return None
 
