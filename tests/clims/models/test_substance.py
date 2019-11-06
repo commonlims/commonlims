@@ -317,7 +317,6 @@ class TestSubstance(SubstanceTestCase):
         versions = [(s.version, s.properties) for s in sample.iter_versions()]
         assert len(versions) == 2
 
-    @pytest.mark.now
     def test_fetch_property_after_instansiation__no_db_calls(self):
         # Arrange
         from django.db import connection
@@ -344,3 +343,46 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         with pytest.raises(AttributeError):
             sample.blurr
+
+    @pytest.mark.now
+    def test_get_substance__with_two_versions_and_latest_version_true__latest_version_fetched(self):
+        # Arrange
+        sample = self.create_gemstone()
+        sample.color = 'red'
+        sample.save()
+
+        # Act
+        fetched_sample = self.app.substances.get(name=sample.name, latest=True)
+
+        # Assert
+        assert fetched_sample.name == sample.name
+        assert sample.version == 2
+        assert fetched_sample.version == sample.version
+
+    def test_get_substance__with_two_versions_and_latest_omitted__latest_version_fetched(self):
+        # Arrange
+        sample = self.create_gemstone()
+        sample.color = 'red'
+        sample.save()
+
+        # Act
+        fetched_sample = self.app.substances.get(name=sample.name)
+
+        # Assert
+        assert fetched_sample.name == sample.name
+        assert sample.version == 2
+        assert fetched_sample.version == sample.version
+
+    def test_filter_substance__with_3_versions_and_latest_version_false__2_instances_fetched(self):
+        # Arrange
+        sample = self.create_gemstone()
+        sample.color = 'red'
+        sample.save()
+        sample.color = 'yellow'
+        sample.save()
+
+        # Act
+        fetched_samples = self.app.substances.filter(name=sample.name, latest=False)
+
+        # Assert
+        assert len(fetched_samples) == 2
