@@ -131,7 +131,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
 
     def __init__(self, **kwargs):
         self._unsaved_parents = kwargs.pop('parents', None)
-        self._unsaved_project = kwargs.pop('project', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
 
@@ -171,8 +170,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
 
     @property
     def project(self):
-        if self._unsaved_project:
-            return self._unsaved_project
         return self._app.projects.to_wrapper(self._archetype.project)
 
     @project.setter
@@ -201,10 +198,6 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         if creating:
             if self._unsaved_parents:
                 self._save_parents()
-
-            if self._unsaved_project:
-                self._archetype.project = self._unsaved_project._archetype
-                self._unsaved_project = None
 
             self._archetype.save()
 
