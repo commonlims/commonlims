@@ -9,6 +9,7 @@ from .endpoints.work_batch import (WorkBatchEndpoint,
 from .endpoints.substance import SubstanceEndpoint
 from .endpoints.substance_details import SubstanceDetailsEndpoint
 
+from .endpoints.container import ContainerEndpoint
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
@@ -60,6 +61,9 @@ urlpatterns = patterns('',
 
     url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/$',
         SubstanceEndpoint.as_view(), name='clims-api-0-substances'),
+
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/$',
+        ContainerEndpoint.as_view(), name='clims-api-0-containers'),
 
     url(
         fmt(r'^organizations/{org}/substances/files/$'),

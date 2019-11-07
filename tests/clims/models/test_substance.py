@@ -11,8 +11,8 @@ from clims.services import ExtensibleTypeValidationError
 from clims.services.substance import SubstanceBase
 from clims.services.extensible import FloatField
 
-from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 from django.db import IntegrityError
+from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
 
 
 class SubstanceTestCase(TestCase):
@@ -386,3 +386,12 @@ class TestSubstance(SubstanceTestCase):
 
         # Assert
         assert len(fetched_samples) == 2
+
+    def test_get_current_position_from_substance(self):
+        container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
+        first = container["a1"]
+        # Now, we expect the position to point to the same container:
+        # TODO: location should be a ContainerIndex that makes sense for GemstoneContainer
+        #       Then it would be enough to check first.location == "a1" and we could return
+        #       this directly to the frontend
+        assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)

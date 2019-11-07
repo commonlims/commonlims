@@ -251,3 +251,23 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
     def get_by_name(self, name):
         return self.get(name=name)
+
+    def _search_qs(self, query):
+        # TODO: This is temporary. We will be using elastic for searching.
+        query = query.strip()
+        query = query.split(" ")
+        if len(query) > 1:
+            raise NotImplementedError("Complex queries are not yet supported")
+        elif len(query) == 0:
+            return self._all_qs()
+
+        query = query[0]
+        key, val = query.split(":")
+
+        if key == "container.name":
+            # TODO: the search parameter indicates we're looking for a substance that's a sample
+            # so add a category or similar so it doesn't find other things that are in a container.
+            return ContainerVersion.objects.filter(
+                latest=True, name__icontains=val).prefetch_related('properties')
+        else:
+            raise NotImplementedError("The key {} is not implemented".format(key))
