@@ -31,9 +31,9 @@ class ExtensibleVersion(Model):
     """
     __core__ = False
 
-    # This field is only populated if a user renames the extensible. In this case we record
-    # the name change here in the version model. This makes handling unique constraints simpler.
-    previous_name = models.TextField(null=True)
+    # Name of the entity at this version. This will almost always be the same, but we copy it
+    # to make querying simpler.
+    name = models.TextField(null=True)
 
     version = models.IntegerField(default=1)
 

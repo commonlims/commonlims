@@ -179,6 +179,7 @@ class ExtensibleBase(object):
         if creating:
             self._archetype.save()
             self._wrapped_version.archetype = self._archetype
+            self._wrapped_version.name = self._archetype.name
             self._wrapped_version.save()
             self._property_bag.save(self._wrapped_version)
         else:
@@ -192,7 +193,7 @@ class ExtensibleBase(object):
             new_version.pk = None
             new_version.version += 1
             new_version.latest = True
-            new_version.previous_name = self._name_before_change
+            new_version.name = self._archetype.name
             new_version.save()
 
             # Connect the new object with the properties on the old_version

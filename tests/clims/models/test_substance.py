@@ -92,15 +92,15 @@ class TestSubstance(SubstanceTestCase):
         substance.save()
         assert substance.version == 2
 
-    def test_update_name_saves_previous_name(self):
+    def test_update_name_saves_versioned_name(self):
         substance = self.create_gemstone()
         original_name = substance.name
         substance.name = substance.name + "-UPDATED"
         substance.save()
 
         model = Substance.objects.get(id=substance.id)
-        actual = {(entry.version, entry.previous_name) for entry in model.versions.all()}
-        expected = {(1, None), (2, original_name)}
+        actual = {(entry.version, entry.name) for entry in model.versions.all()}
+        expected = {(1, original_name), (2, substance.name)}
         assert actual == expected
 
     def test_names_are_unique(self):
