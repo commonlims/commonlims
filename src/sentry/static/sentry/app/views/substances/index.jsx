@@ -1,7 +1,9 @@
 import React from 'react';
-import withEnvironmentInQueryString from 'app/utils/withEnvironmentInQueryString'; // REMOVE ME
+import PropTypes from 'prop-types';
 import Substances from 'app/views/substances/substances';
 import {connect} from 'react-redux';
+import withOrganization from 'app/utils/withOrganization';
+import {getOrganizationState} from 'app/mixins/organizationState';
 
 class SubstancesContainer extends React.Component {
   constructor(props) {
@@ -12,16 +14,21 @@ class SubstancesContainer extends React.Component {
   componentDidMount() {}
 
   render() {
-    return <Substances />;
+    // TODO: Consider using react for all of this data
+    const access = getOrganizationState(this.props.organization).getAccess();
+
+    return <Substances organization={this.props.organization} access={access} />;
   }
 }
 
 const mapStateToProps = state => state.tag;
 const mapDispatchToProps = dispatch => ({});
 
-SubstancesContainer.propTypes = {};
+SubstancesContainer.propTypes = {
+  organization: PropTypes.object.isRequired,
+};
 SubstancesContainer.displayName = 'SubstancesContainer';
 
-export default withEnvironmentInQueryString(
+export default withOrganization(
   connect(mapStateToProps, mapDispatchToProps)(SubstancesContainer)
 );

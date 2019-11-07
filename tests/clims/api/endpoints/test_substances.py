@@ -16,6 +16,25 @@ class SubstancesTest(APITestCase):
     def create_gemstone(self, *args, **kwargs):
         return self.create_substance(GemstoneSample, *args, **kwargs)
 
+    def test_search_substances_find_single_by_name(self):
+        # NOTE: For now, the search is always using wildcards. This will be ported to using
+        # elastic in milestone 2.
+        sample = self.create_gemstone(color='red')
+        sample.color = 'blue'
+        sample.save()
+
+        another = self.create_gemstone()
+        another.save()
+
+        query = 'sample.name:' + sample.name
+
+        url = reverse('clims-api-0-substances', args=(sample.organization.name,))
+        self.login_as(self.user)
+        response = self.client.get(url + '?query=' + query)
+        assert response.status_code == 200, response.content
+        # The search is for a unique name, so this must be true:
+        assert len(response.data) == 1, len(response.data)
+
     def test_get_substances(self):
         first = self.create_gemstone(color='red')
         first.color = 'blue'
@@ -43,8 +62,6 @@ class SubstancesTest(APITestCase):
             assert response.pop('id') == sample.id
             assert response.pop('type_full_name') == sample.type_full_name
             response.pop('position')
-            response.pop('priority')
-            response.pop('days_waiting')
             assert len(response) == 0
 
         asserts(first, data_by_id[first.id])

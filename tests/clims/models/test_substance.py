@@ -344,7 +344,6 @@ class TestSubstance(SubstanceTestCase):
         with pytest.raises(AttributeError):
             sample.blurr
 
-    @pytest.mark.now
     def test_get_substance__with_two_versions_and_latest_version_true__latest_version_fetched(self):
         # Arrange
         sample = self.create_gemstone()
