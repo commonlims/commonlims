@@ -149,8 +149,8 @@ class AccountSecurityEnroll extends AsyncView {
     ];
   }
 
-  componentWillMount() {
-    super.componentWillMount();
+  UNSAFE_componentWillMount() {
+    super.UNSAFE_componentWillMount();
     // If 2FA is required, a pending organization invite
     // can be accepted once the user enrolls in 2FA
     let invite = Cookies.get(PENDING_INVITE);

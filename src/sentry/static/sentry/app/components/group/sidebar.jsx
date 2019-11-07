@@ -38,7 +38,7 @@ const GroupSidebar = createReactClass({
     return {participants: [], environment: this.props.environment};
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {group} = this.props;
     this.api.request(`/issues/${group.id}/participants/`, {
       success: data => {

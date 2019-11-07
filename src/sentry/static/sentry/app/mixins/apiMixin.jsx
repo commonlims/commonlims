@@ -1,7 +1,7 @@
 import {Client} from 'app/api';
 
 const ApiMixin = {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.api = new Client();
   },
 

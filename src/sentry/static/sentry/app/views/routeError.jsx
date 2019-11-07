@@ -21,7 +21,7 @@ class RouteError extends React.Component {
     project: PropTypes.object,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // eslint-disable-next-line prefer-const
     let {disableLogSentry, routes, error} = this.props;
     const {organization, project} = this.context;

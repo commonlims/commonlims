@@ -11,7 +11,7 @@ class NarrowLayout extends React.Component {
     showLogout: PropTypes.bool,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.api = new Client();
     document.body.classList.add('narrow');
   }

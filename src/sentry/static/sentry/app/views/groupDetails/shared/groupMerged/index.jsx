@@ -26,7 +26,7 @@ const GroupMergedView = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
   },
 

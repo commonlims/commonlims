@@ -12,7 +12,7 @@ const SamplesContainer = createReactClass({
     environment: SentryTypes.Environment,
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {orgId} = this.props.params;
     fetchTags(orgId);
   },

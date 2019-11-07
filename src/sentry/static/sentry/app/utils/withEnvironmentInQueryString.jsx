@@ -28,7 +28,7 @@ const withEnvironmentInQueryString = WrappedComponent =>
       };
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       const {environment} = this.state;
       const {query, pathname} = this.props.location;
       const isDefaultEnvironment = environment === EnvironmentStore.getDefault();

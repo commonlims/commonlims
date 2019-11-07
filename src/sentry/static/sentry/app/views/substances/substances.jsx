@@ -20,7 +20,7 @@ class Substances extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.getSubstances();
   }
 

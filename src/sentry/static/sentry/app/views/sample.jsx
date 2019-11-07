@@ -116,7 +116,7 @@ const Samples = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
     this.props.setProjectNavSection('samples');
   },

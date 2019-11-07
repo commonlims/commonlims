@@ -81,7 +81,7 @@ const WorkBatches = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // TODO(withrocks): Change to task manager
     // TODO: Why is there both a manager and a store?
     this._processesManager = new utils.ProcessesManager(ProcessStore);

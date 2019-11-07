@@ -30,7 +30,7 @@ const ProcessTaskSettings = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.loadPluginDetails(this.props.pluginId);
   },
 

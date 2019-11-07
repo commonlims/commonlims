@@ -54,7 +54,7 @@ const ProjectReleases = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.setProjectNavSection('releases');
     this.fetchData();
   },

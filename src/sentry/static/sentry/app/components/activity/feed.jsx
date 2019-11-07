@@ -40,7 +40,7 @@ const ActivityFeed = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
   },
 

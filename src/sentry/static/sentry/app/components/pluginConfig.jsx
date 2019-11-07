@@ -39,7 +39,7 @@ const PluginConfig = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.loadPlugin(this.props.data);
   },
 

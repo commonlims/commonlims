@@ -34,7 +34,7 @@ const ProjectSettings = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {setProjectNavSection} = this.props;
 
     setProjectNavSection('settings');
