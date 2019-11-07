@@ -38,6 +38,8 @@ from sentry.runner.decorators import log_options
 @click.option('--environment', default='development', help='The environment name.')
 @click.option('--vscode-debug/--no-vscodedebug', default=False,
               help='Enables debugging with VS code. Note that this turns of automatic reloading of Python files.')
+@click.option('--search-index/--no-search-index', default=True,
+              help='Enables debugging with VS code. Note that this turns of automatic reloading of Python files.')
 @click.argument(
     'bind',
     default='127.0.0.1:8000',
@@ -46,7 +48,7 @@ from sentry.runner.decorators import log_options
 )
 @log_options()
 def devserver(reload, watchers, workers, browser_reload,
-              styleguide, prefix, environment, bind, vscode_debug):
+              styleguide, prefix, environment, bind, vscode_debug, search_index):
     "Starts a lightweight web server for development."
 
     if ':' in bind:
@@ -139,8 +141,8 @@ def devserver(reload, watchers, workers, browser_reload,
             )
 
         daemons += [
-            ('worker', ['sentry', 'run', 'worker', '-c', '1', '--autoreload']),
-            ('cron', ['sentry', 'run', 'cron', '--autoreload']),
+            ('worker', ['lims', 'run', 'worker', '-c', '1', '--autoreload']),
+            ('cron', ['lims', 'run', 'cron', '--autoreload']),
         ]
 
     if needs_https and has_https:
@@ -191,11 +193,14 @@ def devserver(reload, watchers, workers, browser_reload,
     # This sets all the appropriate uwsgi env vars, etc
     server.prepare_environment()
     daemons += [
-        ('server', ['sentry', 'run', 'web']),
+        ('server', ['lims', 'run', 'web']),
     ]
 
     if styleguide:
         daemons += [('storybook', ['yarn', 'storybook'])]
+
+    if search_index and False:
+        daemons += [('search_index', ['lims', 'run', 'search_index'])]
 
     cwd = os.path.realpath(os.path.join(settings.PROJECT_ROOT, os.pardir, os.pardir))
 
