@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+import pytest
 
 from django.core.urlresolvers import reverse
 
@@ -8,6 +9,7 @@ from sentry.models import SavedSearch, SavedSearchUserDefault
 from sentry.testutils import APITestCase
 
 
+@pytest.mark.skip("TODO: Refactor saved search")
 class ProjectSearchDetailsTest(APITestCase):
     def test_simple(self):
         self.login_as(user=self.user)
@@ -33,6 +35,7 @@ class ProjectSearchDetailsTest(APITestCase):
         assert response.data['id'] == six.text_type(search.id)
 
 
+@pytest.mark.skip("TODO: Refactor saved search")
 class UpdateProjectSearchDetailsTest(APITestCase):
     def test_simple(self):
         self.login_as(user=self.user)
@@ -138,6 +141,7 @@ class UpdateProjectSearchDetailsTest(APITestCase):
         userdefault = SavedSearchUserDefault.objects.get(id=userdefault.id)
         assert userdefault.savedsearch == search2
 
+    @pytest.mark.skip("TODO: Refactor saved search")
     def test_member_can_override_their_default(self):
         project = self.create_project(name='foo')
 
@@ -196,6 +200,7 @@ class UpdateProjectSearchDetailsTest(APITestCase):
         ).exists()
 
 
+@pytest.mark.skip("TODO: Refactor saved search")
 class DeleteProjectSearchTest(APITestCase):
     def setUp(self):
         self.login_as(user=self.user)

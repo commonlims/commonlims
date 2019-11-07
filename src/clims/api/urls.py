@@ -36,6 +36,8 @@ from .endpoints.substance_file import SubstanceFileEndpoint
 from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
     SubstanceFileDemoDetailsEndpoint)
 
+from .endpoints.organization_searches import OrganizationSearchesEndpoint
+
 
 def fmt(s):
     """Formats rules with common patterns"""
@@ -84,6 +86,8 @@ urlpatterns = patterns('',
     ),
 
     # work-batches: user task activities that have been grouped together in 1..n sized batches
+
+
     url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-user-task'),
@@ -181,6 +185,13 @@ urlpatterns = patterns('',
         fmt('^projects/{org}/{project}/plugins/(?P<plugin_id>[^\/]+)/views/$'),
         PluginViewsEndpoint.as_view(),
         name='clims-api-0-plugin-views'
+    ),
+
+    # Saved searches
+    url(
+        r'^organizations/(?P<organization_slug>[^\/]+)/saved-searches/$',
+        OrganizationSearchesEndpoint.as_view(),
+        name='clims-api-0-organization-saved-searches'
     ),
 
 )
