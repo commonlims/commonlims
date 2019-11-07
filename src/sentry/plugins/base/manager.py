@@ -14,7 +14,10 @@ import os
 import six
 import logging
 import inspect
+import pkgutil
+import importlib
 
+from clims.handlers import Handler, MultipleHandlersNotAllowed
 from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
 from clims.workflow import WorkflowEngine, WorkflowEngineException
@@ -26,6 +29,8 @@ logger = logging.getLogger('clims.plugins')
 class PluginManager(InstanceManager):
     def __init__(self, class_list=None, instances=True):
         super(PluginManager, self).__init__(class_list, instances)
+        # TODO I guess work batches should be removed from here?
+        #      That is just a left over from earlier days of development?
         self.work_batches = list()
         self.handlers_mapped_by_work_batch_type = dict()  # TODO: clean up names!
 
@@ -39,11 +44,9 @@ class PluginManager(InstanceManager):
         return sum(1 for i in self.all())
 
     def register_handler_baseclasses(self):
-        from clims import handlers
-
-        for _name, cls in inspect.getmembers(handlers, inspect.isclass):
-            if cls != handlers.Handler and issubclass(cls, handlers.Handler):
-                self.handlers[cls] = set()
+        handler_subclasses = Handler.__subclasses__()
+        for subclass in handler_subclasses:
+            self.handlers[subclass] = set()
 
     def auto_register(self):
         """Registers all plugins that can be found in the Python environment"""
@@ -248,41 +251,36 @@ class PluginManager(InstanceManager):
 
         # Registers handlers. Handlers must be in a module directly below
         # the plugin's module:
-
         mod = self.get_plugin_module(cls, 'handlers')
+
         if not mod:
             return
 
-        for _name, impl in inspect.getmembers(mod, inspect.isclass):
-            baseclass = self.get_registered_base_handler(impl)
-            if baseclass and baseclass != impl:
-                # We've found an implementation of the baseclass. Before adding however, we'll
-                # need to make sure that if we already have a less concrete implementation in
-                # the set we should use the more concrete one:
+        def find_unique_deepest_impl(clz):
+            sub_classes = clz.__subclasses__()
+            nbr_of_subclasses = len(sub_classes)
+            if nbr_of_subclasses == 0:
+                return clz
+            elif nbr_of_subclasses > 1:
+                raise MultipleHandlersNotAllowed(
+                    "Trying to register the handler '{}' as the unique implementation "
+                    "of '{}' but already have '{}' registered".format(
+                        impl, baseclass, impl_already_reg))
+            else:
+                # We only had a single subclass, recurse to see if that hs any subclasses
+                return find_unique_deepest_impl(sub_classes[0])
 
-                if baseclass.unique_registration and len(self.handlers[baseclass]) > 1:
-                    # Invariant: There must be only one instance of this baseclass if we're here
-                    assert len(self.handlers[baseclass]) == 1
+        # Load all modules from the handlers module to make them visable in this context
+        for loader, name, ispkg in pkgutil.iter_modules(path=mod.__path__, prefix=mod.__name__ + "."):
+            importlib.import_module(name)
 
-                    impl_already_reg = self.handlers[baseclass]
-                    if issubclass(impl, impl_already_reg):
-                        # Current class is more concrete, let's replace it:
-                        self.clear_handler_implementations(baseclass)
-                        self.load_handler_implementation(baseclass, impl)
-                    elif issubclass(impl_already_reg, impl):
-                        # The implementation we've already registered is more concrete
-                        pass
-                    else:
-                        # We got two registrations of the same implementation
-                        # TODO: In this case the user should be able to add a config variable
-                        # to select the implementation to use
-                        from clims.handlers import MultipleHandlersNotAllowed
-                        raise MultipleHandlersNotAllowed(
-                            "Trying to register the handler '{}' as the unique implementation "
-                            "of '{}' but already have '{}' registered".format(
-                                impl, baseclass, impl_already_reg))
-                else:
-                    self.handlers[baseclass].add(impl)
+        for baseclass in self.handlers.keys():
+            subclasses = baseclass.__subclasses__()
+            if baseclass.unique_registration:
+                impl = find_unique_deepest_impl(baseclass)
+                self.load_handler_implementation(baseclass, impl)
+            else:
+                self.load_handler_implementation(baseclass, impl)
 
     def unregister(self, cls):
         self.remove('%s.%s' % (cls.__module__, cls.__name__))
