@@ -29,11 +29,6 @@ logger = logging.getLogger('clims.plugins')
 class PluginManager(InstanceManager):
     def __init__(self, class_list=None, instances=True):
         super(PluginManager, self).__init__(class_list, instances)
-        # TODO I guess work batches should be removed from here?
-        #      That is just a left over from earlier days of development?
-        self.work_batches = list()
-        self.handlers_mapped_by_work_batch_type = dict()  # TODO: clean up names!
-
         self.handlers = dict()
         self.register_handler_baseclasses()
 
@@ -147,16 +142,8 @@ class PluginManager(InstanceManager):
                 continue
             yield plugin
 
-    def _register_work_batches(self, class_path):
-        pass
-
-    def all_work_batches(self):
-        return self.work_batches
-
     def add(self, class_path):
         super(PluginManager, self).add(class_path)
-
-        self._register_work_batches(class_path)
 
     def configurable_for_project(self, project, version=1):
         for plugin in self.all(version=version):
@@ -322,7 +309,3 @@ class PluginManager(InstanceManager):
             ret.append(instance)
             instance.handle(*args)
         return ret
-
-
-class WorkBatchRegistrationException(Exception):
-    pass
