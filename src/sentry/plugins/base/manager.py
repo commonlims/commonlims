@@ -263,9 +263,8 @@ class PluginManager(InstanceManager):
                 return clz
             elif nbr_of_subclasses > 1:
                 raise MultipleHandlersNotAllowed(
-                    "Trying to register the handler '{}' as the unique implementation "
-                    "of '{}' but already have '{}' registered".format(
-                        impl, baseclass, impl_already_reg))
+                    "Found the implementations: {}, when trying " +
+                    "to register a unique handler.".format(",".join(sub_classes)))
             else:
                 # We only had a single subclass, recurse to see if that hs any subclasses
                 return find_unique_deepest_impl(sub_classes[0])
