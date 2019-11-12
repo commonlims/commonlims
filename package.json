@@ -34,7 +34,7 @@
     "create-react-class": "^15.6.3",
     "crypto-js": "3.1.5",
     "css-loader": "^2.0.1",
-    "diff": "^3.3.0",
+    "diff": "^3.5.0",
     "echarts": "^4.1.0",
     "echarts-for-react": "^2.0.13",
     "emotion": "9.1.2",
