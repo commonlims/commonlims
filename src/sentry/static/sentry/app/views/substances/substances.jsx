@@ -45,12 +45,12 @@ class Substances extends React.Component {
       {
         Header: 'Container',
         id: 'container',
-        accessor: d => d.position.container.name,
+        accessor: d => (d.location ? d.location.container.name : '<No location>'),
       },
       {
-        Header: 'Position',
-        id: 'position',
-        accessor: d => d.position.index,
+        Header: 'Index',
+        id: 'index',
+        accessor: d => (d.location ? d.location.index : '<No location>'),
         aggregate: vals => '',
       },
       {

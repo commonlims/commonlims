@@ -61,7 +61,7 @@ class SubstancesTest(APITestCase):
             assert response.pop('version') == sample.version
             assert response.pop('id') == sample.id
             assert response.pop('type_full_name') == sample.type_full_name
-            response.pop('position')
+            assert response.pop('location') is None
             assert len(response) == 0
 
         asserts(first, data_by_id[first.id])

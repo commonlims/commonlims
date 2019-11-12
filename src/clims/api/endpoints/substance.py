@@ -26,15 +26,9 @@ class SubstanceEndpoint(OrganizationEndpoint):
             ret = list()
             # NOTE: This could be simplified substantially if we had a queryset that returned
             # the wrapper object directly.
-            import random
             for entry in qs:
                 wrapper = self.app.substances.to_wrapper(entry)
                 json = SubstanceSerializer(wrapper).data
-                json['position'] = {'index': "A:1",
-                        'container':
-                            {'name': random.choice(["container 1", "container 2", "container 3"])
-                    }
-                }
                 ret.append(json)
             return ret
 
