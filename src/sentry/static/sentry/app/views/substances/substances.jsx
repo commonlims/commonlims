@@ -2,31 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {substancesGet} from 'app/redux/actions/substance';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import LoadingError from 'app/components/loadingError';
-import LoadingIndicator from 'app/components/loadingIndicator';
-import {Panel, PanelBody} from 'app/components/panels';
-import UploadSubstancesButton from 'app/views/substances/uploadSubstancesButton';
 import {t} from 'app/locale';
-import DropdownButton from 'app/components/dropdownButton';
-import DropdownAutoComplete from 'app/components/dropdownAutoComplete';
+import ListFilters from 'app/components/listFilters';
+import ListView from 'app/components/listView';
 
 class Substances extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupBy: {value: 'container', label: 'Container'},
+      groupBy: {value: 'sample'},
     };
+    this.onImported = this.onImported.bind(this);
+    this.onSavedSearchChange = this.onSavedSearchCreate.bind(this);
+    this.onGroup = this.onGroup.bind(this);
+    this.onSort = this.onSort.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
-  componentWillMount() {
-    this.props.getSubstances();
+  UNSAFE_componentWillMount() {
+    this.loadData('sample.name:sample-5*', this.state.groupBy.value);
+  }
+
+  loadData(query, groupBy) {
+    if (groupBy === 'sample') {
+      this.props.getSubstances(query);
+    } else {
+      throw new Error('Unsupported groupBy ' + groupBy);
+    }
+  }
+
+  onSavedSearchCreate() {
+    // TODO: Link with redux instead
   }
 
   getHeaders() {
-    // TODO: Headers will be specified by plugins and fetched from the API via a store,
-    // e.g. viewSettings.
     return [
       {
         Header: 'Sample name',
@@ -36,24 +45,24 @@ class Substances extends React.Component {
       {
         Header: 'Container',
         id: 'container',
-        accessor: d => d.properties.container,
+        accessor: d => (d.location ? d.location.container.name : '<No location>'),
       },
       {
-        Header: 'Position',
-        id: 'position',
-        accessor: d => d.position.index,
+        Header: 'Index',
+        id: 'index',
+        accessor: d => (d.location ? d.location.index : '<No location>'),
         aggregate: vals => '',
       },
       {
         Header: 'Volume',
         id: 'volume',
-        accessor: d => d.properties.volume,
+        accessor: d => (d.properties.volume ? d.properties.volume.value : null),
         aggregate: vals => '',
       },
       {
         Header: 'Sample Type',
         id: 'sample_type',
-        accessor: d => d.properties.sample_type,
+        accessor: d => (d.properties.sample_type ? d.properties.sample_type.value : null),
         aggregate: vals =>
           Array.from(new Set(vals))
             .sort()
@@ -69,54 +78,13 @@ class Substances extends React.Component {
         Header: 'Waiting',
         id: 'days_waiting',
         accessor: d => d.days_waiting,
-        Cell: row => <WaitingCell value={row.value} />,
+        Cell: row => <b>{1}</b>,
         aggregate: vals => '',
         Aggregated: row => {
           <span />;
         },
       },
     ];
-  }
-
-  selectGroupBy(selection) {
-    this.setState({groupBy: {value: selection.value, label: selection.label}});
-  }
-
-  renderDropdown() {
-    const groupedItems = [
-      {
-        value: 'Fields',
-        label: <div>Field</div>,
-        items: [
-          {
-            value: 'sample',
-            label: 'Sample',
-          },
-          {
-            value: 'container',
-            label: 'Container',
-          },
-          {
-            value: 'sample_type',
-            label: 'Sample Type',
-          },
-        ],
-      },
-    ];
-
-    return (
-      <DropdownAutoComplete
-        items={groupedItems}
-        alignMenu="left"
-        onSelect={this.selectGroupBy.bind(this)}
-      >
-        {({isOpen, selectedItem}) => (
-          <DropdownButton isOpen={isOpen}>
-            {'Group by: ' + this.state.groupBy.label}
-          </DropdownButton>
-        )}
-      </DropdownAutoComplete>
-    );
   }
 
   currentGrouping() {
@@ -128,29 +96,60 @@ class Substances extends React.Component {
     }
   }
 
+  onImported() {
+    this.props.getSubstances();
+  }
+
+  onGroup(e) {
+    this.setState({groupBy: {value: e}});
+  }
+
+  onSort(e) {}
+
+  onSearch(query, groupBy) {
+    this.props.getSubstances(query);
+  }
+
   render() {
-    if (this.props.loading) {
-      return <LoadingIndicator />;
-    } else if (this.props.errorMessage) {
-      return <LoadingError />;
-    }
+    // access={access}
+    // orgId={orgId}
+    // query={this.state.query}
+    // sort={this.state.sort}
+    // searchId={searchId}
+    // queryCount={this.state.queryCount}
+    // queryMaxCount={this.state.queryMaxCount}
+    // onSortChange={this.onSortChange}
+    // onSavedSearchCreate={this.onSavedSearchCreate}
+    // onSidebarToggle={this.onSidebarToggle}
+    // isSearchDisabled={this.state.isSidebarVisible}
+    // savedSearchList={this.state.savedSearchList}
+
+    // TODO: Rename css classes to something else than stream
+    const groupOptions = [
+      {key: 'sample', title: t('Sample')},
+      {key: 'container', title: t('Container')},
+      {key: 'sample_type', title: t('Sample type')},
+    ];
 
     return (
-      <Panel>
-        {this.renderDropdown()}
-        <UploadSubstancesButton disabled={false}>
-          {t('Import samples')}
-        </UploadSubstancesButton>
-        <PanelBody>
-          <ReactTable
-            data={this.props.substances}
-            columns={this.getHeaders()}
-            defaultPageSize={10}
-            className="-striped -highlight"
-            pivotBy={this.currentGrouping()}
+      <div className="stream-row">
+        <div className="stream-content">
+          <ListFilters
+            access={this.props.access}
+            onSavedSearchCreate={this.onSavedSearchCreate}
+            searchPlaceholder={t('Search for samples, containers, projects and steps')}
+            groupOptions={groupOptions}
+            grouping={this.state.groupBy.value}
+            onGroup={this.onGroup}
+            onSearch={this.onSearch}
           />
-        </PanelBody>
-      </Panel>
+          <ListView
+            columns={this.getHeaders()}
+            data={this.props.substances}
+            loading={this.props.loading}
+          />
+        </div>
+      </div>
     );
   }
 }
@@ -158,31 +157,16 @@ class Substances extends React.Component {
 Substances.propTypes = {
   getSubstances: PropTypes.func.isRequired,
   substances: PropTypes.arrayOf(PropTypes.shape({})),
-  errorMessage: PropTypes.string,
   loading: PropTypes.bool,
+  access: PropTypes.object,
 };
 
-// TODO: Colors from scheme
-const WaitingCell = props => (
-  <span>
-    <span
-      style={{
-        color: props.value > 50 ? '#ff2e00' : props.value > 10 ? '#ffbf00' : '#57d500',
-        transition: 'all .3s ease',
-      }}
-    >
-      &#x25cf;
-    </span>{' '}
-    {props.value}
-  </span>
-);
-
-WaitingCell.propTypes = {value: PropTypes.number};
-
-const mapStateToProps = state => state.substance;
+const mapStateToProps = state => {
+  return state.substance;
+};
 
 const mapDispatchToProps = dispatch => ({
-  getSubstances: () => dispatch(substancesGet()),
+  getSubstances: query => dispatch(substancesGet(query)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Substances);

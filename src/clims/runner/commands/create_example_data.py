@@ -17,6 +17,7 @@ def createexampledata():
     from clims.services.extensible import FloatField
     from clims.models.plugin_registration import PluginRegistration
     from sentry.models.organization import Organization
+    from clims.models import WorkBatch
 
     app = ApplicationService()
     ioc.set_application(app)
@@ -25,6 +26,10 @@ def createexampledata():
 
     example_plugin, _ = PluginRegistration.objects.get_or_create(
         name='clims.example.plugin', version='1.0.0', organization=org)
+
+    for name in ["Select second QC method", "Quant-IT", "Qubit 3", "Tapestation"]:
+        wb = WorkBatch(name=name, organization=org, plugin=example_plugin)
+        wb.save()
 
     class ExampleSample(SubstanceBase):
         moxy = FloatField("moxy")

@@ -11,8 +11,8 @@ from clims.services import ExtensibleTypeValidationError
 from clims.services.substance import SubstanceBase
 from clims.services.extensible import FloatField
 
-from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 from django.db import IntegrityError
+from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
 
 
 class SubstanceTestCase(TestCase):
@@ -92,15 +92,15 @@ class TestSubstance(SubstanceTestCase):
         substance.save()
         assert substance.version == 2
 
-    def test_update_name_saves_previous_name(self):
+    def test_update_name_saves_versioned_name(self):
         substance = self.create_gemstone()
         original_name = substance.name
         substance.name = substance.name + "-UPDATED"
         substance.save()
 
         model = Substance.objects.get(id=substance.id)
-        actual = {(entry.version, entry.previous_name) for entry in model.versions.all()}
-        expected = {(1, None), (2, original_name)}
+        actual = {(entry.version, entry.name) for entry in model.versions.all()}
+        expected = {(1, original_name), (2, substance.name)}
         assert actual == expected
 
     def test_names_are_unique(self):
@@ -344,7 +344,6 @@ class TestSubstance(SubstanceTestCase):
         with pytest.raises(AttributeError):
             sample.blurr
 
-    @pytest.mark.now
     def test_get_substance__with_two_versions_and_latest_version_true__latest_version_fetched(self):
         # Arrange
         sample = self.create_gemstone()
@@ -386,3 +385,12 @@ class TestSubstance(SubstanceTestCase):
 
         # Assert
         assert len(fetched_samples) == 2
+
+    def test_get_current_position_from_substance(self):
+        container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
+        first = container["a1"]
+        # Now, we expect the position to point to the same container:
+        # TODO: location should be a ContainerIndex that makes sense for GemstoneContainer
+        #       Then it would be enough to check first.location == "a1" and we could return
+        #       this directly to the frontend
+        assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)

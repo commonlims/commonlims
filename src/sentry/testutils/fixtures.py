@@ -759,6 +759,23 @@ class Fixtures(object):
         if not name:
             name = "sample-{}".format(uuid4())
         ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
-
-        assert ret.version == 1
         return ret
+
+    def create_container(self, klass, name=None, prefix="container", **kwargs):
+        properties = kwargs or dict()
+        # TODO: Explicitly register only if required?
+        ret = self.register_extensible(klass)
+
+        if not name:
+            name = "{}-{}".format(prefix, uuid4())
+        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        return ret
+
+    def create_container_with_samples(
+            self, container_class, substance_class, prefix="container", sample_count=10):
+        container = self.create_container(container_class, prefix=prefix)
+        for _ in range(sample_count):
+            sample = self.create_substance(substance_class, color='red')
+            container.append(sample)
+        container.save()
+        return container

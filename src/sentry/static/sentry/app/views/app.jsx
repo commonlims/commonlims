@@ -68,7 +68,7 @@ const App = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.api.request('/organizations/', {
       query: {
         member: '1',

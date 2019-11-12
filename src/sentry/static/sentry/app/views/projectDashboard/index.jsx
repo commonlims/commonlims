@@ -41,7 +41,7 @@ const ProjectDashboard = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.setProjectNavSection('dashboard');
   },
 

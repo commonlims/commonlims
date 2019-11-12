@@ -9,7 +9,7 @@ const OrganizationsLoader = createReactClass({
   displayName: 'OrganizationsLoader',
   mixins: [ApiMixin],
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.api.request('/organizations/', {
       query: {
         member: '1',

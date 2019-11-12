@@ -1,10 +1,22 @@
 from __future__ import absolute_import
 
-from clims.models.substance import Substance
 from clims.api.serializers.models.extensible_property import ExtensiblePropertySerializer
 
 from rest_framework import serializers
 from rest_framework.fields import DictField
+
+
+class LocationField(serializers.Field):
+    def to_representation(self, obj):
+        # TODO: We are currently returning the raw index, but the user should get the
+        # __repr__ version of the index which makes sense for the particular container, e.g.
+        # a1 for a regular plate.
+        return {
+            "index": "({}, {}, {})".format(obj.x, obj.y, obj.z),
+            "container": {
+                "name": obj.container.name
+            }
+        }
 
 
 class SubstanceSerializer(serializers.Serializer):
@@ -13,12 +25,4 @@ class SubstanceSerializer(serializers.Serializer):
     name = serializers.CharField()
     properties = DictField(child=ExtensiblePropertySerializer(read_only=True))
     type_full_name = serializers.CharField()
-
-    def create(self, validated_data):
-        return Substance.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-
-        return instance
+    location = LocationField(read_only=True)

@@ -15,10 +15,14 @@ class WrapperMixin(object):
     _archetype_base_class = None
 
     def to_wrapper(self, model):
+        if model is None:
+            return None
         if isinstance(model, self._archetype_version_class):
             return self._version_to_wrapper(model)
         elif isinstance(model, self._archetype_class):
             return self._archetype_to_wrapper(model)
+        else:
+            raise AssertionError("The model {} can't be wrapped".format(type(model)))
 
     def _version_to_wrapper(self, version):
         from clims.services.extensible import ExtensibleTypeNotRegistered

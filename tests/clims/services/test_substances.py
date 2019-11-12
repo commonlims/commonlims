@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import pytest
 import os
 import tests
 from six import BytesIO, binary_type
@@ -129,7 +128,6 @@ class TestSubstanceService(TestCase):
         assert len(fetched_samples) == 2
         assert {'sample1', 'sample2'} == set([s.name for s in fetched_samples])
 
-    @pytest.mark.now
     def test_filter_substance_by_project_name__with_only_1_sample__sample_property_works(self):
         # Arrange
         project1 = GemstoneProject(name='project1', organization=self.organization)

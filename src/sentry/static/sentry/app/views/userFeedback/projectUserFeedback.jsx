@@ -49,7 +49,7 @@ const ProjectUserFeedback = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.setProjectNavSection('user-feedback');
     this.fetchData();
   },

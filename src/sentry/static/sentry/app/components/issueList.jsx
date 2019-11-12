@@ -45,7 +45,7 @@ const IssueList = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
   },
 

@@ -9,6 +9,7 @@ from .endpoints.work_batch import (WorkBatchEndpoint,
 from .endpoints.substance import SubstanceEndpoint
 from .endpoints.substance_details import SubstanceDetailsEndpoint
 
+from .endpoints.container import ContainerEndpoint
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
@@ -34,6 +35,8 @@ from .endpoints.task import UserTaskAggregateEndpoint
 from .endpoints.substance_file import SubstanceFileEndpoint
 from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
     SubstanceFileDemoDetailsEndpoint)
+
+from .endpoints.organization_searches import OrganizationSearchesEndpoint
 
 
 def fmt(s):
@@ -61,6 +64,9 @@ urlpatterns = patterns('',
     url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/$',
         SubstanceEndpoint.as_view(), name='clims-api-0-substances'),
 
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/$',
+        ContainerEndpoint.as_view(), name='clims-api-0-containers'),
+
     url(
         fmt(r'^organizations/{org}/substances/files/$'),
         SubstanceFileEndpoint.as_view(),
@@ -80,6 +86,8 @@ urlpatterns = patterns('',
     ),
 
     # work-batches: user task activities that have been grouped together in 1..n sized batches
+
+
     url(r'^organizations/(?P<organization_slug>[^\/]+)/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-user-task'),
@@ -177,6 +185,13 @@ urlpatterns = patterns('',
         fmt('^projects/{org}/{project}/plugins/(?P<plugin_id>[^\/]+)/views/$'),
         PluginViewsEndpoint.as_view(),
         name='clims-api-0-plugin-views'
+    ),
+
+    # Saved searches
+    url(
+        r'^organizations/(?P<organization_slug>[^\/]+)/saved-searches/$',
+        OrganizationSearchesEndpoint.as_view(),
+        name='clims-api-0-organization-saved-searches'
     ),
 
 )

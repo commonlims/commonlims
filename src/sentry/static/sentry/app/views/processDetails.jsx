@@ -31,7 +31,7 @@ const SampleGroupDetails = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
   },
 

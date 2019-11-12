@@ -146,7 +146,7 @@ const TodoList = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // Map server task state (who finished what) to TodoList.TASK objects
     const org = this.getOrganization();
     const tasks = TodoList.TASKS.map(task => {

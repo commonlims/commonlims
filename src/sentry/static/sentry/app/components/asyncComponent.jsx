@@ -68,7 +68,7 @@ export default class AsyncComponent extends React.Component {
     this.state = this.getDefaultState();
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.api = new Client();
     this.fetchData();
 

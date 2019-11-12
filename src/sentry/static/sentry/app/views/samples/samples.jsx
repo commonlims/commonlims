@@ -88,7 +88,7 @@ const Samples = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this._samplesManager = new utils.SamplesManager(SampleStore);
     this._poller = new utils.CursorPoller({
       success: this.onRealtimePoll,

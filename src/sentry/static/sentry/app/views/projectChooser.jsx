@@ -25,7 +25,7 @@ const ProjectChooser = createReactClass({
 
   mixins: [OrganizationState],
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.redirectNoMultipleProjects();
   },
 

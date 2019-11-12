@@ -91,6 +91,7 @@ class UploadSubstancesButton extends React.Component {
               state: FormState.READY,
               errors: {},
             });
+            this.props.onImported();
           },
           error: err => {
             let errors = err.responseJSON || true;
@@ -182,6 +183,7 @@ UploadSubstancesButton.propTypes = {
   tooltip: PropTypes.string,
   buttonTitle: PropTypes.string,
   disabled: PropTypes.bool,
+  onImported: PropTypes.func,
 };
 
 export default UploadSubstancesButton;

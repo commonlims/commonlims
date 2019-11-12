@@ -27,7 +27,7 @@ const StreamContainer = createReactClass({
     };
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {orgId, projectId} = this.props.params;
     this.props.setProjectNavSection('stream');
     fetchTags(orgId, projectId);

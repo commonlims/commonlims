@@ -29,10 +29,10 @@ export const substancesGetFailure = err => ({
   message: err,
 });
 
-export const substancesGet = () => dispatch => {
+export const substancesGet = query => dispatch => {
   dispatch(substancesGetRequest());
   return axios
-    .get('/api/0/organizations/lab/substances/')
+    .get('/api/0/organizations/lab/substances/?query=' + query)
     .then(res => {
       dispatch(substancesGetSuccess(res.data));
     })

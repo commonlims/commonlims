@@ -12,7 +12,7 @@ export default createReactClass({
     onSubmitSuccess: PropTypes.func,
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     document.body.classList.add('auth');
   },
 

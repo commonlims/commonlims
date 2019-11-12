@@ -6,7 +6,6 @@ from django.db.models import Q
 from sentry.api.bases.organization import OrganizationEndpoint
 from sentry.api.serializers import serialize
 from sentry.models.savedsearch import (
-    DEFAULT_SAVED_SEARCH_QUERIES,
     SavedSearch,
 )
 
@@ -22,12 +21,10 @@ class OrganizationSearchesEndpoint(OrganizationEndpoint):
         For default searches, just return one of each search
 
         :auth: required
-
         """
+
         org_searches = Q(
             Q(owner=request.user) | Q(owner__isnull=True),
-            ~Q(query__in=DEFAULT_SAVED_SEARCH_QUERIES),
-            project__in=self.get_projects(request, organization),
         )
         global_searches = Q(is_global=True)
         saved_searches = SavedSearch.objects.filter(

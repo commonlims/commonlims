@@ -62,7 +62,7 @@ const GroupEvents = createReactClass({
     return initialState;
   },
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchData();
   },
 

@@ -7,6 +7,7 @@ from datetime import datetime
 
 from clims.models.substance import Substance, SubstanceVersion
 from clims.models.extensible import ExtensibleProperty
+from clims.models.location import SubstanceLocation
 from clims.services.extensible import (ExtensibleBase, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
@@ -130,6 +131,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     WrappedVersion = SubstanceVersion
 
     def __init__(self, **kwargs):
+        # TODO: Refactor so that super can come first
         self._unsaved_parents = kwargs.pop('parents', None)
         super(SubstanceBase, self).__init__(**kwargs)
         self._new_location = None
@@ -175,6 +177,17 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
     @project.setter
     def project(self, project):
         self._archetype.project = project._archetype
+
+    @property
+    def location(self):
+        # TODO: Prefetch the current position
+        # TODO: Wrap in a higher level object that makes sense (e.g. PlateIndex, which
+        # we might want to rename to PlateLocation at the same time, since it can have a pointer
+        # to the container)
+        try:
+            return self._archetype.locations.get(current=True)
+        except SubstanceLocation.DoesNotExist:
+            return None
 
     def to_ancestry(self):
         return SubstanceAncestry(self)
@@ -297,6 +310,38 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
     def __init__(self, app):
         self._app = app
+
+    def _search_qs(self, query):
+        # TODO: We'll have the same api for projects and containers, but for now we'll keep this
+        # here for simplicity
+
+        # TODO: We will offload all search (and sorting) of substances (as well as other things)
+        # to elastic. For now we throw an error if the search isn't just 'sample.name:' or
+        # 'container.name:'
+
+        # TODO: The api for searching will be elastic's, so we just have a super simple parsing
+        # for now:
+
+        if query is None:
+            return self._all_qs()
+
+        query = query.strip()
+        query = query.split(" ")
+        if len(query) > 1:
+            raise NotImplementedError("Complex queries are not yet supported")
+
+        query = query[0]
+        key, val = query.split(":")
+
+        if key == "sample.name":
+            # TODO: the search parameter indicates we're looking for a substance that's a sample
+            # so add a category or similar so it doesn't find other things that are in a container.
+            return SubstanceVersion.objects.filter(
+                latest=True, name__icontains=val).prefetch_related('properties')
+        elif key == "sample.type":
+            pass
+        else:
+            raise NotImplementedError("The key {} is not implemented".format(key))
 
     def all_submission_files(self, organization):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files

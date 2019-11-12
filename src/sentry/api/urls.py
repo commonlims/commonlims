@@ -95,7 +95,6 @@ from .endpoints.organization_config_integrations import OrganizationConfigIntegr
 from .endpoints.organization_config_repositories import OrganizationConfigRepositoriesEndpoint
 from .endpoints.organization_repository_commits import OrganizationRepositoryCommitsEndpoint
 from .endpoints.organization_repository_details import OrganizationRepositoryDetailsEndpoint
-from .endpoints.organization_searches import OrganizationSearchesEndpoint
 from .endpoints.organization_sentry_apps import OrganizationSentryAppsEndpoint
 from .endpoints.organization_tagkey_values import OrganizationTagKeyValuesEndpoint
 
@@ -145,8 +144,6 @@ from .endpoints.project_releases_token import ProjectReleasesTokenEndpoint
 from .endpoints.project_rules import ProjectRulesEndpoint
 from .endpoints.project_rules_configuration import ProjectRulesConfigurationEndpoint
 from .endpoints.project_rule_details import ProjectRuleDetailsEndpoint
-from .endpoints.project_searches import ProjectSearchesEndpoint
-from .endpoints.project_search_details import ProjectSearchDetailsEndpoint
 from .endpoints.project_stats import ProjectStatsEndpoint
 from .endpoints.project_tags import ProjectTagsEndpoint
 
@@ -559,11 +556,6 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-member-index'
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/searches/$',
-        OrganizationSearchesEndpoint.as_view(),
-        name='sentry-api-0-organization-searches'
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/users/issues/$',
         OrganizationUserIssuesSearchEndpoint.as_view(),
         name='sentry-api-0-organization-issue-search'
@@ -946,16 +938,6 @@ urlpatterns = patterns(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/rules/(?P<rule_id>[^\/]+)/$',
         ProjectRuleDetailsEndpoint.as_view(),
         name='sentry-api-0-project-rule-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/searches/$',
-        ProjectSearchesEndpoint.as_view(),
-        name='sentry-api-0-project-searches'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/searches/(?P<search_id>[^\/]+)/$',
-        ProjectSearchDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-search-details'
     ),
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/stats/$',
