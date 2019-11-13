@@ -75,6 +75,15 @@ class CsvLine:
     def __iter__(self):
         return iter(self.values)
 
+    def value_subset(self, exclude_columns=None):
+        excluded_indices = []
+        if exclude_columns:
+            excluded_indices = [self.index_for(col) for col in exclude_columns]
+        return [value for idx, value in enumerate(self.line) if idx not in excluded_indices]
+
+    def index_for(self, key):
+        return self.csv.key_to_index[key]
+
     @property
     def values(self):
         return self.line
