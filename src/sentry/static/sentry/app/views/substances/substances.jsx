@@ -5,6 +5,7 @@ import {substancesGet} from 'app/redux/actions/substance';
 import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
+import SentryTypes from 'app/sentryTypes';
 
 class Substances extends React.Component {
   constructor(props) {
@@ -142,8 +143,10 @@ class Substances extends React.Component {
             grouping={this.state.groupBy.value}
             onGroup={this.onGroup}
             onSearch={this.onSearch}
+            orgId={this.props.organization.id}
           />
           <ListView
+            orgId={this.props.organization.id}
             columns={this.getHeaders()}
             data={this.props.substances}
             loading={this.props.loading}
@@ -159,6 +162,7 @@ Substances.propTypes = {
   substances: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool,
   access: PropTypes.object,
+  organization: SentryTypes.Organization.isRequired,
 };
 
 const mapStateToProps = state => {

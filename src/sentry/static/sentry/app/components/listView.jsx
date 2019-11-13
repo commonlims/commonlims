@@ -94,10 +94,11 @@ function Table({columns, data}) {
 
 class ListView extends React.Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
-    columns: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     loading: PropTypes.bool.isRequired,
+    orgId: PropTypes.string.isRequired,
   };
 
   render() {
@@ -109,7 +110,7 @@ class ListView extends React.Component {
 
     return (
       <Panel>
-        <ListActionBar />
+        <ListActionBar realtimeActive={false} query="" orgId={this.props.orgId} />
         <PanelBody>
           <Styles>
             <Table columns={this.props.columns} data={this.props.data} />
