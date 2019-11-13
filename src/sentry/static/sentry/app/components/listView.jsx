@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
-import {useTable} from 'react-table';
+import {useTable, useRowSelect} from 'react-table';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import LoadingError from 'app/components/loadingError';
 import ListActionBar from 'app/components/listActionBar';
@@ -54,10 +54,23 @@ const Styles = styled.div`
 
 // eslint-disable-next-line react/prop-types
 function Table({columns, data}) {
-  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({
-    columns,
-    data,
-  });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    // eslint-disable-next-line no-unused-vars
+    selectedFlatRows,
+    // eslint-disable-next-line no-unused-vars
+    state: {selectedRowPaths},
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useRowSelect
+  );
 
   return (
     <table {...getTableProps()}>

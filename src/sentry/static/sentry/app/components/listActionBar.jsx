@@ -9,7 +9,6 @@ import styled from 'react-emotion';
 import {t, tct, tn} from 'app/locale';
 import ActionLink from 'app/components/actions/actionLink';
 import ApiMixin from 'app/mixins/apiMixin';
-import Checkbox from 'app/components/checkbox';
 import DropdownLink from 'app/components/dropdownLink';
 import ExternalLink from 'app/components/externalLink';
 import IgnoreActions from 'app/components/actions/ignore';
@@ -273,10 +272,6 @@ const ListActionBar = createReactClass({
     });
   },
 
-  onSelectAll() {
-    SelectedGroupStore.toggleSelectAll();
-  },
-
   onRealtimeChange(evt) {
     this.props.onRealtimeChange(!this.props.realtimeActive);
   },
@@ -314,9 +309,6 @@ const ListActionBar = createReactClass({
     return (
       <div>
         <StyledFlex py={1}>
-          <ActionsCheckbox pl={2}>
-            <Checkbox onChange={this.onSelectAll} checked={pageSelected} />
-          </ActionsCheckbox>
           <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
             <div className="btn-group">
               <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
@@ -508,13 +500,6 @@ const StyledFlex = styled(Flex)`
   background: ${p => p.theme.offWhite};
   border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
   margin-bottom: -1px;
-`;
-
-const ActionsCheckbox = styled(Box)`
-  & input[type='checkbox'] {
-    margin: 0;
-    display: block;
-  }
 `;
 
 const ActionSet = styled(Box)`

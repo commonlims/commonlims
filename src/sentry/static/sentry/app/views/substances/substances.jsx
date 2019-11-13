@@ -39,6 +39,19 @@ class Substances extends React.Component {
   getHeaders() {
     return [
       {
+        id: 'selection',
+        Header: ({getToggleAllRowsSelectedProps}) => (
+          <div>
+            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        Cell: ({row}) => (
+          <div>
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      {
         Header: 'Sample name',
         accessor: 'name',
         aggregate: vals => '',
