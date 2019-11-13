@@ -8,7 +8,7 @@ class SearchOptions extends React.PureComponent {
     selected: PropTypes.string,
     onSelect: PropTypes.func,
     title: PropTypes.string,
-    options: PropTypes.object,
+    options: PropTypes.array,
   };
 
   constructor(...args) {
@@ -23,6 +23,7 @@ class SearchOptions extends React.PureComponent {
       <MenuItem
         onSelect={this.onSelect}
         eventKey={item.key}
+        key={item.key}
         isActive={this.state.selected === item.key}
       >
         {item.title}

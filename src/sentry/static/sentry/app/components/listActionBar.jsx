@@ -15,7 +15,6 @@ import ExternalLink from 'app/components/externalLink';
 import IgnoreActions from 'app/components/actions/ignore';
 import IndicatorStore from 'app/stores/indicatorStore';
 import MenuItem from 'app/components/menuItem';
-import ResolveActions from 'app/components/actions/resolve';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
@@ -141,15 +140,13 @@ const ListActionBar = createReactClass({
     allResultsVisible: PropTypes.bool,
     orgId: PropTypes.string.isRequired,
     projectId: PropTypes.string,
-    groupIds: PropTypes.instanceOf(Array).isRequired,
-    onRealtimeChange: PropTypes.func.isRequired,
-    onSelectStatsPeriod: PropTypes.func.isRequired,
+    groupIds: PropTypes.instanceOf(Array),
+    onRealtimeChange: PropTypes.func,
+    onSelectStatsPeriod: PropTypes.func,
     realtimeActive: PropTypes.bool.isRequired,
     query: PropTypes.string.isRequired,
     environment: SentryTypes.Environment,
     queryCount: PropTypes.number,
-    hasReleases: PropTypes.bool,
-    latestRelease: PropTypes.object,
   },
 
   mixins: [ApiMixin, Reflux.listenTo(SelectedGroupStore, 'onSelectedGroupChange')],
@@ -303,16 +300,7 @@ const ListActionBar = createReactClass({
 
   render() {
     // TODO(mitsuhiko): very unclear how to translate this
-    const {
-      allResultsVisible,
-      hasReleases,
-      latestRelease,
-      orgId,
-      projectId,
-      queryCount,
-      query,
-      realtimeActive,
-    } = this.props;
+    const {allResultsVisible, projectId, queryCount, query, realtimeActive} = this.props;
     const issues = this.state.selectedIds;
     const numIssues = issues.size;
     const {allInQuerySelected, anySelected, multiSelected, pageSelected} = this.state;
@@ -321,7 +309,6 @@ const ListActionBar = createReactClass({
 
     // resolve and merge require a single project to be active
     // in an org context projectId is null when 0 or >1 projects are selected.
-    const resolveDisabled = !(anySelected && projectId);
     const mergeDisabled = !(multiSelected && projectId);
 
     return (
@@ -337,17 +324,6 @@ const ListActionBar = createReactClass({
               </UploadSamplesButton>
             </div>
 
-            <ResolveActions
-              hasRelease={hasReleases}
-              latestRelease={latestRelease}
-              orgId={orgId}
-              projectId={projectId}
-              onUpdate={this.onUpdate}
-              shouldConfirm={this.shouldConfirm('resolve')}
-              confirmMessage={confirm('resolve', true)}
-              confirmLabel={label('resolve')}
-              disabled={resolveDisabled}
-            />
             <IgnoreActions
               onUpdate={this.onUpdate}
               shouldConfirm={this.shouldConfirm('ignore')}

@@ -19,11 +19,12 @@ class ListFilters extends React.Component {
     onSearch: PropTypes.func,
     onSavedSearchCreate: PropTypes.func.isRequired,
     grouping: PropTypes.string,
-    groupOptions: PropTypes.object,
-    sortOptions: PropTypes.object,
+    groupOptions: PropTypes.array,
+    sortOptions: PropTypes.array,
     searchPlaceholder: PropTypes.string,
     savedSearch: PropTypes.object,
     getSavedSearches: PropTypes.func.isRequired,
+    orgId: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -68,6 +69,7 @@ class ListFilters extends React.Component {
               savedSearchList={this.props.savedSearch.savedSearches}
               access={this.props.access}
               onSavedSearchCreate={onSavedSearchCreate}
+              orgId={this.props.orgId}
               query="placeholder"
             />
           </div>
@@ -100,6 +102,7 @@ class ListFilters extends React.Component {
                 disabled={isSearchDisabled}
                 excludeEnvironment={true}
                 supportedTags={TagStore.getAllTags()}
+                orgId={this.props.orgId}
               />
             </div>
           </div>

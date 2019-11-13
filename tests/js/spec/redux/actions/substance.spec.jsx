@@ -94,7 +94,7 @@ describe('substance redux actions', function() {
       const substances = [mockSubstance];
       const store = mockStore({substances: []});
 
-      moxios.stubRequest('/api/0/organizations/lab/substances/', {
+      moxios.stubRequest('/api/0/organizations/lab/substances/?query=query', {
         status: 200,
         responseText: substances,
       });
@@ -104,10 +104,10 @@ describe('substance redux actions', function() {
         {type: SUBSTANCES_GET_SUCCESS, substances},
       ];
 
-      return store.dispatch(substancesGet()).then(() => {
+      return store.dispatch(substancesGet('query')).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         const request = moxios.requests.mostRecent();
-        expect(request.url).toBe('/api/0/organizations/lab/substances/');
+        expect(request.url).toBe('/api/0/organizations/lab/substances/?query=query');
       });
     });
   });
