@@ -73,7 +73,7 @@
     "react-bootstrap": "^0.32.0",
     "react-date-range": "^1.0.0-beta",
     "react-document-title": "2.0.3",
-    "react-dom": "^16.11.0",
+    "react-dom": "npm:@hot-loader/react-dom",
     "react-emotion": "9.1.2",
     "react-hot-loader": "^4.12.16",
     "react-keydown": "^1.9.7",
