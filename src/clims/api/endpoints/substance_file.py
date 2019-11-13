@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import StringIO
 import base64
+import six
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ from sentry.api.bases.organization import OrganizationEndpoint
 from clims.services import FileNameValidationError
 from clims.handlers import RequiredHandlerNotFound
 from clims.api.serializers.models.organization_file import OrganizationFileSerializer
+from clims.plugins import PluginError
 
 
 class SubstanceFileEndpoint(OrganizationEndpoint):
@@ -86,7 +88,11 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except FileNameValidationError as ex:
             return Response({'detail': ex.msg}, status=400)
-        except IntegrityError:
+        except IntegrityError as ex:
+            # TODO This error message is not always accurate. An IntegrityError will for example also be raised
+            #      when there is a problem with adding the same sample to the organization again.
             return Response(
                 {'detail': 'A file matching this one already exists in this organization'},
                 status=409)
+        except PluginError as e:
+            return Response({'detail': '{}'.format(six.binary_type(e))}, status=400)
