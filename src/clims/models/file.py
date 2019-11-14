@@ -27,7 +27,7 @@ class MultiFormatFile(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         os.remove(self._temp_file.name)
 
-    def as_excel(self, read_only=True):
+    def as_excel(self, read_only=True, data_only=False):
         if self._temp_file is None:
             raise AssertionError('MultiFormatFile must be initiated as a context manager '
                                  'in order to export excel files, e.g. '
@@ -36,7 +36,7 @@ class MultiFormatFile(object):
             for _, chunk in enumerate(self._organization_file.file.getfile()):
                 f.write(chunk)
 
-        workbook = load_workbook(self._temp_file.name, data_only=True, read_only=read_only)
+        workbook = load_workbook(self._temp_file.name, data_only=data_only, read_only=read_only)
 
         return workbook
 
