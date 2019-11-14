@@ -12,6 +12,7 @@ import ProcessTaskSettings from 'app/components/processTaskSettings';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 
+// TODO: Write tests for this component
 const AssignToWorkflowButton = createReactClass({
   displayName: 'AssignToWorkflowButton',
 
@@ -22,8 +23,6 @@ const AssignToWorkflowButton = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
-
-    // onAssign: PropTypes.func.isRequired,
   },
 
   mixins: [ApiMixin],

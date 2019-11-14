@@ -18,6 +18,7 @@ import SelectedGroupStore from 'app/stores/selectedGroupStore';
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
 import UploadSamplesButton from 'app/views/samples/uploadSamples';
+import AssignToWorkflowButton from 'app/components/substances/assignToWorkflow';
 
 const BULK_LIMIT = 1000;
 const BULK_LIMIT_STR = BULK_LIMIT.toLocaleString();
@@ -314,6 +315,12 @@ const ListActionBar = createReactClass({
               <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
                 {t('Import samples')}
               </UploadSamplesButton>
+            </div>
+
+            <div className="btn-group">
+              <AssignToWorkflowButton className="btn btn-sm btn-default" disabled={false}>
+                {t('Assign to workflow')}
+              </AssignToWorkflowButton>
             </div>
 
             <IgnoreActions
