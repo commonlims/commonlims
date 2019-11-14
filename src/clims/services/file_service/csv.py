@@ -1,5 +1,6 @@
 from __future__ import absolute_import, print_function
 import six
+from collections import namedtuple
 
 
 class Csv:
@@ -35,7 +36,7 @@ class Csv:
 
     def append(self, values, tag=None):
         """Appends a data line to the CSV, values is a list"""
-        csv_line = CsvLine(values, self, tag)
+        csv_line = CsvLine(values, self.key_to_index, tag)
         self.data.append(csv_line)
 
     def __iter__(self):
@@ -59,30 +60,50 @@ class CsvLine:
     like this were a dictionary
     """
 
-    def __init__(self, line, csv, tag=None):
+    def __init__(self, line, key_to_index, tag=None):
         self.line = line
-        self.csv = csv
         self.tag = tag
+        self.key_to_index = key_to_index
 
     def __getitem__(self, key):
-        index = self.csv.key_to_index[key]
+        index = self.key_to_index[key]
         return self.line[index]
 
     def __setitem__(self, key, value):
-        index = self.csv.key_to_index[key]
+        index = self.key_to_index[key]
         self.line[index] = value
 
     def __iter__(self):
         return iter(self.values)
 
-    def value_subset(self, exclude_columns=None):
-        excluded_indices = []
+    def get_bundled_values(self, exclude_columns=None):
+        """
+        Group values from this line with column names and indices
+        :param exclude_columns: A list of column names to be excluded
+        :return: A list of tuples containing value, column name and column index
+        """
+        excluded_indices = list()
         if exclude_columns:
             excluded_indices = [self.index_for(col) for col in exclude_columns]
-        return [value for idx, value in enumerate(self.line) if idx not in excluded_indices]
+
+        bundled_values = list()
+        for idx, value in enumerate(self.line):
+            if idx not in excluded_indices:
+                column_name = self.get_column_name_for(idx)
+                bundle = BundledValue(value=value, column_name=column_name, column_index=idx)
+                bundled_values.append(bundle)
+
+        return bundled_values
 
     def index_for(self, key):
-        return self.csv.key_to_index[key]
+        return self.key_to_index[key]
+
+    def get_column_name_for(self, idx):
+        for key in self.key_to_index:
+            if self.key_to_index[key] == idx:
+                return key
+
+        return None
 
     @property
     def values(self):
@@ -90,3 +111,7 @@ class CsvLine:
 
     def __repr__(self):
         return repr(self.values)
+
+
+class BundledValue(namedtuple('BundledValue', ['value', 'column_name', 'column_index'])):
+    pass
