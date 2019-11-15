@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import os
 import tests
+import pytest
 from six import BytesIO, binary_type
 import StringIO
 import logging
@@ -63,6 +64,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         all_sample_names = [sample.name for sample in all_samples]
         assert set(expected_sample_names).issubset(set(all_sample_names))
 
+    @pytest.mark.now
     def test_gemstone_submission_handler__with_xlsx__3_samples_found(self):
 
         # Arrange
@@ -178,8 +180,8 @@ class MyHandler(SubstancesSubmissionHandler):
         rows = []
         for row in sample_list_sheet.iter_rows(min_row=3):
             line_contents = [binary_type(cell.value) for cell in row]
-            line = ','.join(line_contents)
+            line = '\t'.join(line_contents)
             rows.append(line)
         contents = '\n'.join(rows)
         file_like = StringIO.StringIO(contents)
-        return Csv(file_like)
+        return Csv(file_like, delim='\t')
