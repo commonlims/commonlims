@@ -17,7 +17,7 @@ import MenuItem from 'app/components/menuItem';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
-import UploadSamplesButton from 'app/views/samples/uploadSamples';
+import UploadSamplesButton from 'app/components/substances/uploadSamples';
 import AssignToWorkflowButton from 'app/components/substances/assignToWorkflow';
 
 const BULK_LIMIT = 1000;
@@ -147,6 +147,7 @@ const ListActionBar = createReactClass({
     query: PropTypes.string.isRequired,
     environment: SentryTypes.Environment,
     queryCount: PropTypes.number,
+    canAssignToWorkflow: PropTypes.bool.isRequired,
   },
 
   mixins: [ApiMixin, Reflux.listenTo(SelectedGroupStore, 'onSelectedGroupChange')],
@@ -273,6 +274,10 @@ const ListActionBar = createReactClass({
     });
   },
 
+  onSelectAll() {
+    SelectedGroupStore.toggleSelectAll();
+  },
+
   onRealtimeChange(evt) {
     this.props.onRealtimeChange(!this.props.realtimeActive);
   },
@@ -295,7 +300,6 @@ const ListActionBar = createReactClass({
   },
 
   render() {
-    // TODO(mitsuhiko): very unclear how to translate this
     const {allResultsVisible, projectId, queryCount, query, realtimeActive} = this.props;
     const issues = this.state.selectedIds;
     const numIssues = issues.size;
@@ -318,7 +322,10 @@ const ListActionBar = createReactClass({
             </div>
 
             <div className="btn-group">
-              <AssignToWorkflowButton className="btn btn-sm btn-default" disabled={false}>
+              <AssignToWorkflowButton
+                className="btn btn-sm btn-default"
+                disabled={!this.props.canAssignToWorkflow}
+              >
                 {t('Assign to workflow')}
               </AssignToWorkflowButton>
             </div>

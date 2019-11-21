@@ -4,13 +4,13 @@ import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 
 import {t} from 'app/locale';
-import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {FormState} from 'app/components/forms';
-import WorkflowFilter from 'app/views/samples/workflowFilter';
+// import WorkflowFilter from 'app/components/substances/workflowFilter';
 import ProcessTaskSettings from 'app/components/processTaskSettings';
 import OrganizationStore from 'app/stores/organizationsStore';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
+import SelectControl from 'app/components/forms/selectControl';
 
 // TODO: Write tests for this component
 const AssignToWorkflowButton = createReactClass({
@@ -25,14 +25,9 @@ const AssignToWorkflowButton = createReactClass({
     buttonTitle: PropTypes.string,
   },
 
-  mixins: [ApiMixin],
-
   getInitialState() {
     const {orgId} = this.props;
-
-    // TODO(withrocks): Is this an acceptable pattern to get the org/project objects from ids?
     const organization = OrganizationStore.get(orgId);
-
     return {
       isModalOpen: false,
       formData: {
@@ -44,6 +39,7 @@ const AssignToWorkflowButton = createReactClass({
       workflowVars2: null,
       organization,
       setProcessVariables: {},
+      selectedWorkflow: null,
     };
   },
 
@@ -68,22 +64,6 @@ const AssignToWorkflowButton = createReactClass({
     });
   },
 
-  onFieldChange(name, value) {
-    const formData = this.state.formData;
-    formData[name] = value;
-    this.setState({
-      formData,
-    });
-  },
-
-  onDefaultChange(e) {
-    this.onFieldChange('isDefault', e.target.checked);
-  },
-
-  onUserDefaultChange(e) {
-    this.onFieldChange('isUserDefault', e.target.checked);
-  },
-
   onSubmit(e) {
     e.preventDefault();
 
@@ -99,9 +79,7 @@ const AssignToWorkflowButton = createReactClass({
         const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         const {orgId} = this.props;
 
-        // This endpoint should handle POSTs of single contracts as well as lists (batch). TODO(withrocks)
-        // discuss if we rather want a specific batch endpoint.
-        // TODO(withrocks): Validate if the user can access this org and if the samples are in the org
+        // TODO: Validate if the user can access this org and if the samples are in the org
         const endpoint = `/processes/${orgId}/sample-processes/`;
 
         const data = {
@@ -155,14 +133,27 @@ const AssignToWorkflowButton = createReactClass({
     this.setState(state => ({workflowVars: vars, value, process: value}));
   },
 
+  // TODO: Change to JS6 class
+  onWorkflowSelected(sel) {
+    this.setState({
+      selectedWorkflow: sel.value,
+    });
+  },
+
   render() {
     const isSaving = this.state.state === FormState.SAVING;
-    // TODO: This is all hardcoded to snpseq to test how the plugin model
-    // could work, but this needs to support any system and just send events to plugin handlers.
 
-    // TODO: Get that plugins node from the PluginsStore instead
+    const options = [
+      {
+        value: 'workflow-1',
+        label: 'Sequence',
+      },
+      {
+        value: 'workflow-2',
+        label: 'Something else',
+      },
+    ];
 
-    // TODO(withrocks):
     return (
       <React.Fragment>
         <a
@@ -185,31 +176,16 @@ const AssignToWorkflowButton = createReactClass({
                   {t(`Unable to save your changes. ${this.state.errors}`)}
                 </div>
               )}
-              <p>
-                {t(
-                  'Assigning the samples to a workflow will immediately start the workflow.'
-                )}
-              </p>
 
-              {/* TODO: fetch all workflows that are on per-sample level from the plugin definitions
-                  TODO: the value doesn't stick around (anymore)
-              */}
-              <WorkflowFilter
-                value={this.state.value}
-                key="is"
-                tag={{
-                  key: 'is',
-                  name: 'Status',
-                  values: [
-                    'clims_snpseq.core.workflows.sequence',
-                    'clims_snpseq.core.workflows.alt',
-                  ],
-                  predefined: true,
-                }}
-                onSelect={this.onSelectWorkflow}
-                orgId="sentry"
-              />
-
+              <div className="stream-tag-filter">
+                <h6 className="nav-header">Workflow</h6>
+                <SelectControl
+                  onChange={this.onWorkflowSelected}
+                  placeholder="Select workflow"
+                  options={options}
+                  value={this.state.selectedWorkflow}
+                />
+              </div>
               <br />
               {this.state.workflowVars && (
                 <ProcessTaskSettings

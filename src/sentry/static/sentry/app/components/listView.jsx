@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'react-emotion';
-import {useTable} from 'react-table';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import LoadingError from 'app/components/loadingError';
 import ListActionBar from 'app/components/listActionBar';
 import {Panel, PanelBody} from 'app/components/panels';
 import PropTypes from 'prop-types';
+import Checkbox from 'app/components/checkbox';
 
 const ColumnHeader = styled('div')`
   font-size: 14px;
@@ -52,66 +52,33 @@ const Styles = styled.div`
   }
 `;
 
-// eslint-disable-next-line react/prop-types
-function Table({columns, data}) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    // eslint-disable-next-line no-unused-vars
-    //selectedFlatRows,
-    // eslint-disable-next-line no-unused-vars
-    //state: {selectedRowPaths},
-  } = useTable({
-    columns,
-    data,
-    //state: {selectedRowPaths},
-    //initialState: {selectedRowPaths}
-  });
-
-  return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          // eslint-disable-next-line react/jsx-key
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              // eslint-disable-next-line react/jsx-key
-              <th {...column.getHeaderProps()}>
-                <ColumnHeader>{column.render('Header')}</ColumnHeader>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          return (
-            // eslint-disable-next-line react/jsx-key
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                // eslint-disable-next-line react/jsx-key
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
 class ListView extends React.Component {
   static propTypes = {
-    data: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     loading: PropTypes.bool.isRequired,
     orgId: PropTypes.string.isRequired,
+    canSelect: PropTypes.bool.isRequired,
+    allVisibleSelected: PropTypes.bool.isRequired,
+    toggleAll: PropTypes.func.isRequired,
+    toggleSingle: PropTypes.func.isRequired,
+    visibleIds: PropTypes.array.isRequired,
+    selectedIds: PropTypes.instanceOf(Set).isRequired,
+    dataById: PropTypes.object.isRequired,
   };
+
+  getDisplayCell(entryId, header) {
+    const row = this.props.dataById[entryId];
+
+    if (typeof header.accessor === 'function') {
+      return header.accessor(row);
+    }
+    return row[header.accessor];
+  }
+
+  isSelected(entryId) {
+    return this.props.selectedIds.has(entryId);
+  }
 
   render() {
     if (this.props.loading) {
@@ -120,12 +87,62 @@ class ListView extends React.Component {
       return <LoadingError />;
     }
 
+    const canAssignToWorkflow = this.props.selectedIds.size > 0;
+
     return (
       <Panel>
-        <ListActionBar realtimeActive={false} query="" orgId={this.props.orgId} />
+        <ListActionBar
+          realtimeActive={false}
+          query=""
+          orgId={this.props.orgId}
+          canAssignToWorkflow={canAssignToWorkflow}
+        />
         <PanelBody>
           <Styles>
-            <Table columns={this.props.columns} data={this.props.data} />
+            <table>
+              <thead>
+                <tr>
+                  {this.props.canSelect && (
+                    <th>
+                      <Checkbox
+                        checked={this.props.allVisibleSelected}
+                        onChange={this.props.toggleAll}
+                      />
+                    </th>
+                  )}
+                  {this.props.columns.map((x, index) => {
+                    return (
+                      <th key={'header-index-' + index}>
+                        <ColumnHeader>{x.Header}</ColumnHeader>
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.visibleIds.map(entryId => {
+                  return (
+                    <tr key={'parent-' + entryId}>
+                      {this.props.canSelect && (
+                        <td>
+                          <Checkbox
+                            checked={this.isSelected(entryId)}
+                            onChange={() => this.props.toggleSingle(entryId, null)}
+                          />
+                        </td>
+                      )}
+                      {this.props.columns.map((header, index) => {
+                        return (
+                          <td key={'parent-cell-' + entryId + '-' + index}>
+                            {this.getDisplayCell(entryId, header)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </Styles>
         </PanelBody>
       </Panel>

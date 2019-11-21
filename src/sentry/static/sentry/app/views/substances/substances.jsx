@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {substancesGet} from 'app/redux/actions/substance';
+//import {substancesGet} from 'app/redux/actions/substance';
+import {
+  substanceSearchEntriesGet,
+  substanceSearchEntriesToggleSelectAll,
+  substanceSearchEntryToggleSelect,
+} from 'app/redux/actions/substanceSearchEntry';
 import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
@@ -10,49 +15,33 @@ import SentryTypes from 'app/sentryTypes';
 class Substances extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      groupBy: {value: 'sample'},
-    };
     this.onImported = this.onImported.bind(this);
     this.onSavedSearchChange = this.onSavedSearchCreate.bind(this);
     this.onGroup = this.onGroup.bind(this);
     this.onSort = this.onSort.bind(this);
     this.onSearch = this.onSearch.bind(this);
-  }
-
-  UNSAFE_componentWillMount() {
-    this.loadData('sample.name:sample-5*', this.state.groupBy.value);
+    this.toggleAll = this.toggleAll.bind(this);
+    this.loadData('sample.name:sample-5');
   }
 
   loadData(query, groupBy) {
-    if (groupBy === 'sample') {
-      this.props.getSubstances(query);
-    } else {
-      throw new Error('Unsupported groupBy ' + groupBy);
-    }
+    this.props.substanceSearchEntriesGet(query);
   }
 
   onSavedSearchCreate() {
     // TODO: Link with redux instead
   }
 
+  toggleAll() {
+    this.props.substanceSearchEntriesToggleSelectAll(!this.props.allVisibleSelected);
+  }
+
   getHeaders() {
+    // TODO: This should be returned as a contract from the plugin that is registered for this.
     return [
       {
-        id: 'selection',
-        Header: ({getToggleAllRowsSelectedProps}) => (
-          <div>
-            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        Cell: ({row}) => (
-          <div>
-            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
-      {
         Header: 'Sample name',
+        id: 'name',
         accessor: 'name',
         aggregate: vals => '',
       },
@@ -77,10 +66,6 @@ class Substances extends React.Component {
         Header: 'Sample Type',
         id: 'sample_type',
         accessor: d => (d.properties.sample_type ? d.properties.sample_type.value : null),
-        aggregate: vals =>
-          Array.from(new Set(vals))
-            .sort()
-            .join(', '),
       },
       {
         Header: 'Priority',
@@ -92,26 +77,12 @@ class Substances extends React.Component {
         Header: 'Waiting',
         id: 'days_waiting',
         accessor: d => d.days_waiting,
-        Cell: row => <b>{1}</b>,
-        aggregate: vals => '',
-        Aggregated: row => {
-          <span />;
-        },
       },
     ];
   }
 
-  currentGrouping() {
-    if (this.state.groupBy.value == 'sample') {
-      // Grouping by sample is the same as not grouping at all
-      return [];
-    } else {
-      return [this.state.groupBy.value];
-    }
-  }
-
   onImported() {
-    this.props.getSubstances();
+    this.props.substanceSearchEntriesGet();
   }
 
   onGroup(e) {
@@ -121,7 +92,7 @@ class Substances extends React.Component {
   onSort(e) {}
 
   onSearch(query, groupBy) {
-    this.props.getSubstances(query);
+    this.props.substanceSearchEntriesGet(query);
   }
 
   render() {
@@ -140,7 +111,7 @@ class Substances extends React.Component {
 
     // TODO: Rename css classes to something else than stream
     const groupOptions = [
-      {key: 'sample', title: t('Sample')},
+      {key: 'substance', title: t('Substance')},
       {key: 'container', title: t('Container')},
       {key: 'sample_type', title: t('Sample type')},
     ];
@@ -153,7 +124,7 @@ class Substances extends React.Component {
             onSavedSearchCreate={this.onSavedSearchCreate}
             searchPlaceholder={t('Search for samples, containers, projects and steps')}
             groupOptions={groupOptions}
-            grouping={this.state.groupBy.value}
+            grouping={this.props.groupBy}
             onGroup={this.onGroup}
             onSearch={this.onSearch}
             orgId={this.props.organization.id}
@@ -161,8 +132,15 @@ class Substances extends React.Component {
           <ListView
             orgId={this.props.organization.id}
             columns={this.getHeaders()}
-            data={this.props.substances}
+            data={this.props.substanceSearchEntries}
+            dataById={this.props.byIds}
+            visibleIds={this.props.visibleIds}
+            selectedIds={this.props.selectedIds}
             loading={this.props.loading}
+            canSelect={true}
+            allVisibleSelected={this.props.allVisibleSelected}
+            toggleAll={this.toggleAll}
+            toggleSingle={this.props.substanceSearchEntryToggleSelect}
           />
         </div>
       </div>
@@ -171,19 +149,32 @@ class Substances extends React.Component {
 }
 
 Substances.propTypes = {
-  getSubstances: PropTypes.func.isRequired,
-  substances: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool,
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
+  allVisibleSelected: PropTypes.bool.isRequired,
+  substanceSearchEntries: PropTypes.arrayOf(PropTypes.shape({})),
+  groupBy: PropTypes.string.isRequired,
+  substanceSearchEntriesGet: PropTypes.func.isRequired,
+  substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
+  byIds: PropTypes.object,
+  visibleIds: PropTypes.array,
+  selectedIds: PropTypes.object,
+  substanceSearchEntryToggleSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
-  return state.substance;
+  return state.substanceSearchEntry;
 };
 
+// TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
+// creators name for consistency.
 const mapDispatchToProps = dispatch => ({
-  getSubstances: query => dispatch(substancesGet(query)),
+  substanceSearchEntriesGet: query => dispatch(substanceSearchEntriesGet(query)),
+  substanceSearchEntriesToggleSelectAll: doSelect =>
+    dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
+  substanceSearchEntryToggleSelect: (id, doSelect) =>
+    dispatch(substanceSearchEntryToggleSelect(id, doSelect)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Substances);
