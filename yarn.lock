@@ -6696,6 +6696,11 @@ immutable@^3.8.1:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
 
+immutable@^4.0.0-rc.12:
+  version "4.0.0-rc.12"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
+  integrity sha512-0M2XxkZLx/mi3t8NVwIm1g8nHoEmM9p9UBl/G9k4+hm0kBgOVdMV/B3CY5dQ8qG8qc80NN4gDV4HQv6FTJ5q7A==
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -10785,11 +10790,6 @@ react-syntax-highlighter@^10.0.0:
     lowlight "~1.9.1"
     prismjs "^1.8.4"
     refractor "^2.4.1"
-
-react-table@^7.0.0-beta.12:
-  version "7.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-beta.12.tgz#ae54b398fbdb527b9fad82e52c4d829c00fdd5dc"
-  integrity sha512-h1c0KNTBRPAMgZumaNixr3X0w7kFTuqk6pHwia12LsMgnTHNEEeqp7+tQ5fTPwwMArp1/OHXeOdSKEes1C83iw==
 
 react-test-renderer@16.5.0:
   version "16.5.0"

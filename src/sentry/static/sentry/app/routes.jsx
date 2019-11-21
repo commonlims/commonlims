@@ -737,7 +737,7 @@ function routes() {
 
       <Route path="/:orgId/" component={errorHandler(OrganizationDetails)}>
         <Route component={errorHandler(OrganizationRoot)}>
-          <IndexRoute component={errorHandler(WorkBatchList)} />
+          <IndexRoute component={errorHandler(SubstancesContainer)} />
 
           <Route path="tasks/" component={errorHandler(TaskList)} />
           <Route path="work-batches/" component={errorHandler(WorkBatchList)} />

@@ -98,7 +98,6 @@ export default class FieldFromConfig extends React.Component {
         // if (props.has_autocomplete) {
         // return <SelectAsyncField {...props} />;
         // }
-
         return <SelectField {...props} />;
       case 'choice_mapper':
         return <ChoiceMapper {...props} />;
