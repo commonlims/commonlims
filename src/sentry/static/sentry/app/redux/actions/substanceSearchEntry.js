@@ -21,9 +21,11 @@ export const SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL =
 export const SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT =
   'SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT';
 
-export const substanceSearchEntriesGetRequest = () => {
+export const substanceSearchEntriesGetRequest = (query, groupBy) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
+    query,
+    groupBy,
   };
 };
 
@@ -48,7 +50,7 @@ function setInitialViewState(groupBy, searchEntry) {
 }
 
 export const substanceSearchEntriesGet = (query, groupBy) => dispatch => {
-  dispatch(substanceSearchEntriesGetRequest());
+  dispatch(substanceSearchEntriesGetRequest(query, groupBy));
   return axios
     .get('/api/0/organizations/lab/substances/?query=' + query)
     .then(res => {

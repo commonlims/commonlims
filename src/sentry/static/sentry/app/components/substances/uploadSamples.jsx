@@ -149,7 +149,8 @@ const UploadSamplesButton = createReactClass({
               <h4>{t('Upload file')}</h4>
             </div>
 
-            {/* TODO: Make pretty! Look e.g. into avatar uploading which doesn't use the default file upload look */}
+            {/* TODO: Make pretty!
+                Look e.g. into avatar uploading which doesn't use the default file upload look */}
             <div className="modal-body">
               {this.state.state === FormState.ERROR && (
                 <div className="alert alert-error alert-block">

@@ -21,11 +21,14 @@ class Substances extends React.Component {
     this.onSort = this.onSort.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
-    this.loadData('sample.name:sample-5');
-  }
 
-  loadData(query, groupBy) {
-    this.props.substanceSearchEntriesGet(query);
+    let {query} = this.props.substanceSearchEntry;
+    const {groupBy} = this.props.substanceSearchEntry;
+
+    if (query === '') {
+      query = 'sample.name:sample'; // Add some default search for demo purposes
+    }
+    this.props.substanceSearchEntriesGet(query, groupBy);
   }
 
   onSavedSearchCreate() {
@@ -33,7 +36,7 @@ class Substances extends React.Component {
   }
 
   toggleAll() {
-    this.props.substanceSearchEntriesToggleSelectAll(!this.props.allVisibleSelected);
+    this.props.substanceSearchEntriesToggleSelectAll(null);
   }
 
   getHeaders() {
@@ -92,29 +95,28 @@ class Substances extends React.Component {
   onSort(e) {}
 
   onSearch(query, groupBy) {
-    this.props.substanceSearchEntriesGet(query);
+    // TODO
+    this.props.substanceSearchEntriesGet(query, groupBy);
   }
 
   render() {
-    // access={access}
-    // orgId={orgId}
-    // query={this.state.query}
-    // sort={this.state.sort}
-    // searchId={searchId}
-    // queryCount={this.state.queryCount}
-    // queryMaxCount={this.state.queryMaxCount}
-    // onSortChange={this.onSortChange}
-    // onSavedSearchCreate={this.onSavedSearchCreate}
-    // onSidebarToggle={this.onSidebarToggle}
-    // isSearchDisabled={this.state.isSidebarVisible}
-    // savedSearchList={this.state.savedSearchList}
-
     // TODO: Rename css classes to something else than stream
     const groupOptions = [
       {key: 'substance', title: t('Substance')},
       {key: 'container', title: t('Container')},
       {key: 'sample_type', title: t('Sample type')},
     ];
+
+    const {
+      groupBy,
+      query,
+      substanceSearchEntries,
+      byIds,
+      visibleIds,
+      selectedIds,
+      loading,
+      allVisibleSelected,
+    } = this.props.substanceSearchEntry;
 
     return (
       <div className="stream-row">
@@ -124,21 +126,22 @@ class Substances extends React.Component {
             onSavedSearchCreate={this.onSavedSearchCreate}
             searchPlaceholder={t('Search for samples, containers, projects and steps')}
             groupOptions={groupOptions}
-            grouping={this.props.groupBy}
+            grouping={groupBy}
             onGroup={this.onGroup}
             onSearch={this.onSearch}
             orgId={this.props.organization.id}
+            query={query}
           />
           <ListView
             orgId={this.props.organization.id}
             columns={this.getHeaders()}
-            data={this.props.substanceSearchEntries}
-            dataById={this.props.byIds}
-            visibleIds={this.props.visibleIds}
-            selectedIds={this.props.selectedIds}
-            loading={this.props.loading}
+            data={substanceSearchEntries}
+            dataById={byIds}
+            visibleIds={visibleIds}
+            selectedIds={selectedIds}
+            loading={loading}
             canSelect={true}
-            allVisibleSelected={this.props.allVisibleSelected}
+            allVisibleSelected={allVisibleSelected}
             toggleAll={this.toggleAll}
             toggleSingle={this.props.substanceSearchEntryToggleSelect}
           />
@@ -158,13 +161,14 @@ Substances.propTypes = {
   substanceSearchEntriesGet: PropTypes.func.isRequired,
   substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
   byIds: PropTypes.object,
-  visibleIds: PropTypes.array,
-  selectedIds: PropTypes.object,
   substanceSearchEntryToggleSelect: PropTypes.func.isRequired,
+  substanceSearchEntry: PropTypes.object,
 };
 
 const mapStateToProps = state => {
-  return state.substanceSearchEntry;
+  return {
+    substanceSearchEntry: state.substanceSearchEntry,
+  };
 };
 
 // TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action

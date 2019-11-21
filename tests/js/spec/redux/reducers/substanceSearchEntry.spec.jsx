@@ -24,12 +24,16 @@ describe('substance reducer', () => {
 
     const nextState = substanceSearchEntry(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST',
+      groupBy: null,
+      query: null,
     });
 
     expect(nextState).toEqual({
       ...prevState,
       loading: true,
       errorMessage: null,
+      groupBy: null,
+      query: null,
     });
   });
 

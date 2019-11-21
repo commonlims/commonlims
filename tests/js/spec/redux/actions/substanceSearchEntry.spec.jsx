@@ -67,13 +67,20 @@ describe('substance redux actions', function() {
         responseText: substanceSearchEntries,
       });
 
+      const query = 'query';
+      const groupBy = 'substances';
+
       const expectedActions = [
-        {type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST},
+        {
+          type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
+          query,
+          groupBy,
+        },
         {type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS, substanceSearchEntries},
       ];
 
       // TODO: return
-      return store.dispatch(substanceSearchEntriesGet('query')).then(() => {
+      return store.dispatch(substanceSearchEntriesGet(query, groupBy)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         const request = moxios.requests.mostRecent();
         expect(request.url).toBe('/api/0/organizations/lab/substances/?query=query');

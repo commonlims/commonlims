@@ -16,7 +16,7 @@ export const initialState = {
   substanceSearchEntries: [],
   allVisibleSelected: false,
   groupBy: 'substance',
-
+  query: '',
   byIds: {}, // The actual substance entries (TODO: have parentById and childById?)
   visibleIds: [], // Sorted list of items visible in the current page
   selectedIds: new Set(), // The set of items selected, allowed to be outside of the current page
@@ -37,6 +37,8 @@ const substanceSearchEntry = (state = initialState, action) => {
         ...state,
         errorMessage: null,
         loading: true,
+        query: action.query,
+        groupBy: action.groupBy,
       };
     case SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS: {
       // The action provides us with the raw data as a list, here we turn it into
@@ -63,15 +65,18 @@ const substanceSearchEntry = (state = initialState, action) => {
       };
     case SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL:
       // Selects or deselects all items on the current page
+      const doSelectAll =
+        action.doSelect === null ? !state.allVisibleSelected : action.doSelect;
+
       return {
         ...state,
-        allVisibleSelected: action.doSelect,
-        selectedIds: toggleSelectPage(state, action.doSelect),
+        allVisibleSelected: doSelectAll,
+        selectedIds: toggleSelectPage(state, doSelectAll),
       };
     case SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT:
-      const doSelect =
+      const doSelectSingle =
         action.doSelect === null ? !state.selectedIds.has(action.id) : action.doSelect;
-      const newSet = doSelect
+      const newSet = doSelectSingle
         ? state.selectedIds.add(action.id)
         : state.selectedIds.delete(action.id);
       return {
