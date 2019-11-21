@@ -11,6 +11,7 @@ import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
 import SentryTypes from 'app/sentryTypes';
+import ListActionBar from 'app/components/listActionBar';
 
 class Substances extends React.Component {
   constructor(props) {
@@ -99,6 +100,17 @@ class Substances extends React.Component {
     this.props.substanceSearchEntriesGet(query, groupBy);
   }
 
+  listActionBar(canAssignToWorkflow, orgId) {
+    return (
+      <ListActionBar
+        realtimeActive={false}
+        query=""
+        orgId={orgId}
+        canAssignToWorkflow={canAssignToWorkflow}
+      />
+    );
+  }
+
   render() {
     // TODO: Rename css classes to something else than stream
     const groupOptions = [
@@ -117,6 +129,11 @@ class Substances extends React.Component {
       loading,
       allVisibleSelected,
     } = this.props.substanceSearchEntry;
+
+    // TODO: The ListActionBar component currently has substance specific things, like
+    // these workflows to assign. Refactor so this component is truly generic.
+    const canAssignToWorkflow = selectedIds.size > 0;
+    const actionBar = this.listActionBar(canAssignToWorkflow, this.props.organization.id);
 
     return (
       <div className="stream-row">
@@ -144,6 +161,7 @@ class Substances extends React.Component {
             allVisibleSelected={allVisibleSelected}
             toggleAll={this.toggleAll}
             toggleSingle={this.props.substanceSearchEntryToggleSelect}
+            listActionBar={actionBar}
           />
         </div>
       </div>
