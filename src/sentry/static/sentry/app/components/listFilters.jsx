@@ -54,13 +54,6 @@ class ListFilters extends React.Component {
       onGroup,
     } = this.props;
 
-    // For saved search selector:
-    // access={access}
-    // searchId={searchId}
-    // queryCount={queryCount}
-    // queryMaxCount={queryMaxCount}
-    // query={query}
-    // savedSearchList={savedSearchList}
     return (
       <div className="stream-header">
         <div className="row">

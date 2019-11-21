@@ -2,80 +2,38 @@ import {Flex, Box} from 'grid-emotion';
 import {capitalize} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
 import styled from 'react-emotion';
 
-import {t, tct, tn} from 'app/locale';
+import {t, tn} from 'app/locale';
 import ActionLink from 'app/components/actions/actionLink';
-import ApiMixin from 'app/mixins/apiMixin';
-import DropdownLink from 'app/components/dropdownLink';
-import ExternalLink from 'app/components/externalLink';
-import IgnoreActions from 'app/components/actions/ignore';
-import IndicatorStore from 'app/stores/indicatorStore';
-import MenuItem from 'app/components/menuItem';
 import SelectedGroupStore from 'app/stores/selectedGroupStore';
-import SentryTypes from 'app/sentryTypes';
-import Tooltip from 'app/components/tooltip';
-import UploadSamplesButton from 'app/components/substances/uploadSamples';
+// TODO: Substances specific actions:
+import UploadSubstancesButton from 'app/views/substances/uploadSubstancesButton';
 import AssignToWorkflowButton from 'app/components/substances/assignToWorkflow';
 
-const BULK_LIMIT = 1000;
-const BULK_LIMIT_STR = BULK_LIMIT.toLocaleString();
-
-const getBulkConfirmMessage = (action, queryCount) => {
-  if (queryCount > BULK_LIMIT) {
-    return tct(
-      'Are you sure you want to [action] the first [bulkNumber] issues that match the search?',
-      {
-        action,
-        bulkNumber: BULK_LIMIT_STR,
-      }
-    );
-  }
-
-  return tct(
-    'Are you sure you want to [action] all [bulkNumber] issues that match the search?',
-    {
-      action,
-      bulkNumber: queryCount,
-    }
-  );
-};
-
+// TODO: In Sentry they had a way to apply an action to everything in a search, even outside
+// the current page. Consider doing the same.
 const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
   return function(action, canBeUndone, append = '') {
-    const question = allInQuerySelected
-      ? getBulkConfirmMessage(`${action}${append}`, queryCount)
-      : tn(
-          `Are you sure you want to ${action} this %s issue${append}?`,
-          `Are you sure you want to ${action} these %s issues${append}?`,
-          numIssues
-        );
+    const question = tn(
+      `Are you sure you want to ${action} this %s issue${append}?`,
+      `Are you sure you want to ${action} these %s issues${append}?`,
+      numIssues
+    );
 
-    const message =
-      action == 'delete'
-        ? tct(
-            'Bulk deletion is only recommended for junk data. To clear your stream, consider resolving or ignoring. [link:When should I delete events?]',
-            {
-              link: (
-                <ExternalLink href="https://help.sentry.io/hc/en-us/articles/360003443113-When-should-I-delete-events" />
-              ),
-            }
-          )
-        : t('This action cannot be undone.');
-
+    // TODO: The text referring to the current search query needs to change if the user
+    // can apply things to every page.
     return (
       <div>
         <p style={{marginBottom: '20px'}}>
           <strong>{question}</strong>
         </p>
-        <ExtraDescription
-          all={allInQuerySelected}
-          query={query}
-          queryCount={queryCount}
-        />
-        {!canBeUndone && <p>{message}</p>}
+        <div>
+          <p>{t('This will apply to the current search query') + ':'}</p>
+          <pre>{query}</pre>
+        </div>
+        {!canBeUndone && <p>{t('This action cannot be undone.')}</p>}
       </div>
     );
   };
@@ -96,61 +54,15 @@ const getLabel = (numIssues, allInQuerySelected) => {
   };
 };
 
-const ExtraDescription = ({all, query, queryCount}) => {
-  if (!all) {
-    return null;
-  }
-
-  if (query) {
-    return (
-      <div>
-        <p>{t('This will apply to the current search query') + ':'}</p>
-        <pre>{query}</pre>
-      </div>
-    );
-  }
-  return (
-    <p className="error">
-      <strong>
-        {queryCount > BULK_LIMIT
-          ? tct(
-              'This will apply to the first [bulkNumber] issues matched in this project!',
-              {
-                bulkNumber: BULK_LIMIT_STR,
-              }
-            )
-          : tct('This will apply to all [bulkNumber] issues matched in this project!', {
-              bulkNumber: queryCount,
-            })}
-      </strong>
-    </p>
-  );
-};
-
-ExtraDescription.propTypes = {
-  all: PropTypes.bool,
-  query: PropTypes.string,
-  queryCount: PropTypes.number,
-};
-
 const ListActionBar = createReactClass({
   displayName: 'ListActionBar',
 
   propTypes: {
-    allResultsVisible: PropTypes.bool,
-    orgId: PropTypes.string.isRequired,
-    projectId: PropTypes.string,
     groupIds: PropTypes.instanceOf(Array),
-    onRealtimeChange: PropTypes.func,
-    onSelectStatsPeriod: PropTypes.func,
-    realtimeActive: PropTypes.bool.isRequired,
     query: PropTypes.string.isRequired,
-    environment: SentryTypes.Environment,
     queryCount: PropTypes.number,
     canAssignToWorkflow: PropTypes.bool.isRequired,
   },
-
-  mixins: [ApiMixin, Reflux.listenTo(SelectedGroupStore, 'onSelectedGroupChange')],
 
   getDefaultProps() {
     return {
@@ -177,10 +89,6 @@ const ListActionBar = createReactClass({
     });
   },
 
-  selectStatsPeriod(period) {
-    return this.props.onSelectStatsPeriod(period);
-  },
-
   actionSelectedGroups(callback) {
     let selectedIds;
 
@@ -201,124 +109,30 @@ const ListActionBar = createReactClass({
     this.setState({allInQuerySelected: false});
   },
 
-  onUpdate(data) {
-    this.actionSelectedGroups(itemIds => {
-      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
-      this.api.bulkUpdate(
-        {
-          orgId: this.props.orgId,
-          projectId: this.props.projectId,
-          itemIds,
-          data,
-          query: this.props.query,
-          environment: this.props.environment && this.props.environment.name,
-        },
-        {
-          complete: () => {
-            IndicatorStore.remove(loadingIndicator);
-          },
-        }
-      );
-    });
-  },
-
-  onDelete(event) {
-    const loadingIndicator = IndicatorStore.add(t('Removing events..'));
-
-    this.actionSelectedGroups(itemIds => {
-      this.api.bulkDelete(
-        {
-          orgId: this.props.orgId,
-          projectId: this.props.projectId,
-          itemIds,
-          query: this.props.query,
-          environment: this.props.environment && this.props.environment.name,
-        },
-        {
-          complete: () => {
-            IndicatorStore.remove(loadingIndicator);
-          },
-        }
-      );
-    });
-  },
-
-  onMerge(event) {
-    const loadingIndicator = IndicatorStore.add(t('Merging events..'));
-
-    this.actionSelectedGroups(itemIds => {
-      this.api.merge(
-        {
-          orgId: this.props.orgId,
-          projectId: this.props.projectId,
-          itemIds,
-          query: this.props.query,
-          environment: this.props.environment && this.props.environment.name,
-        },
-        {
-          complete: () => {
-            IndicatorStore.remove(loadingIndicator);
-          },
-        }
-      );
-    });
-  },
-
-  onSelectedGroupChange() {
-    this.setState({
-      pageSelected: SelectedGroupStore.allSelected(),
-      multiSelected: SelectedGroupStore.multiSelected(),
-      anySelected: SelectedGroupStore.anySelected(),
-      allInQuerySelected: false, // any change resets
-      selectedIds: SelectedGroupStore.getSelectedIds(),
-    });
-  },
-
-  onSelectAll() {
-    SelectedGroupStore.toggleSelectAll();
-  },
-
-  onRealtimeChange(evt) {
-    this.props.onRealtimeChange(!this.props.realtimeActive);
-  },
-
   shouldConfirm(action) {
-    const selectedItems = SelectedGroupStore.getSelectedIds();
-    switch (action) {
-      case 'resolve':
-      case 'unresolve':
-      case 'ignore':
-      case 'unbookmark':
-        return this.state.pageSelected && selectedItems.size > 1;
-      case 'bookmark':
-        return selectedItems.size > 1;
-      case 'merge':
-      case 'delete':
-      default:
-        return true; // By default, should confirm ...
-    }
+    return true; // TODO: only if required
   },
 
   render() {
-    const {allResultsVisible, projectId, queryCount, query, realtimeActive} = this.props;
+    const {queryCount, query} = this.props;
     const issues = this.state.selectedIds;
     const numIssues = issues.size;
-    const {allInQuerySelected, anySelected, multiSelected, pageSelected} = this.state;
+    const {allInQuerySelected, anySelected} = this.state;
+
+    // TODO: This is not hooked up at the moment:
     const confirm = getConfirm(numIssues, allInQuerySelected, query, queryCount);
     const label = getLabel(numIssues, allInQuerySelected);
 
-    // resolve and merge require a single project to be active
-    // in an org context projectId is null when 0 or >1 projects are selected.
-    const mergeDisabled = !(multiSelected && projectId);
+    const showBookmark = false;
 
     return (
       <div>
         <StyledFlex py={1}>
           <ActionSet w={[8 / 12, 8 / 12, 6 / 12]} mx={1} flex="1">
             <div className="btn-group">
-              <UploadSamplesButton className="btn btn-sm btn-default" disabled={false}>
+              <UploadSubstancesButton className="btn btn-sm btn-default" disabled={false}>
                 {t('Import samples')}
-              </UploadSamplesButton>
+              </UploadSubstancesButton>
             </div>
 
             <div className="btn-group">
@@ -330,180 +144,23 @@ const ListActionBar = createReactClass({
               </AssignToWorkflowButton>
             </div>
 
-            <IgnoreActions
-              onUpdate={this.onUpdate}
-              shouldConfirm={this.shouldConfirm('ignore')}
-              confirmMessage={confirm('ignore', true)}
-              confirmLabel={label('ignore')}
-              disabled={!anySelected}
-            />
-            <div className="btn-group hidden-sm hidden-xs">
-              <ActionLink
-                className="btn btn-default btn-sm action-merge"
-                disabled={mergeDisabled}
-                onAction={this.onMerge}
-                shouldConfirm={this.shouldConfirm('merge')}
-                message={confirm('merge', false)}
-                confirmLabel={label('merge')}
-                title={t('Merge Selected Issues')}
-              >
-                {t('Merge')}
-              </ActionLink>
-            </div>
-            <div className="btn-group hidden-xs">
-              <ActionLink
-                className="btn btn-default btn-sm action-bookmark hidden-sm hidden-xs"
-                onAction={() => this.onUpdate({isBookmarked: true})}
-                shouldConfirm={this.shouldConfirm('bookmark')}
-                message={confirm('bookmark', false)}
-                confirmLabel={label('bookmark')}
-                title={t('Add to Bookmarks')}
-                disabled={!anySelected}
-              >
-                <i aria-hidden="true" className="icon-star-solid" />
-              </ActionLink>
-            </div>
-            <div className="btn-group">
-              <DropdownLink
-                key="actions"
-                btnGroup={true}
-                caret={false}
-                className="btn btn-sm btn-default action-more"
-                title={<span className="icon-ellipsis" />}
-              >
-                <MenuItem noAnchor={true}>
-                  <ActionLink
-                    className="action-merge hidden-md hidden-lg hidden-xl"
-                    disabled={mergeDisabled}
-                    onAction={this.onMerge}
-                    shouldConfirm={this.shouldConfirm('merge')}
-                    message={confirm('merge', false)}
-                    confirmLabel={label('merge')}
-                    title={t('Merge Selected Issues')}
-                  >
-                    {t('Merge')}
-                  </ActionLink>
-                </MenuItem>
-                <MenuItem divider={true} className="hidden-md hidden-lg hidden-xl" />
-                <MenuItem noAnchor={true}>
-                  <ActionLink
-                    className="action-bookmark hidden-md hidden-lg hidden-xl"
-                    disabled={!anySelected}
-                    onAction={() => this.onUpdate({isBookmarked: true})}
-                    shouldConfirm={this.shouldConfirm('bookmark')}
-                    message={confirm('bookmark', false)}
-                    confirmLabel={label('bookmark')}
-                    title={t('Add to Bookmarks')}
-                  >
-                    {t('Add to Bookmarks')}
-                  </ActionLink>
-                </MenuItem>
-                <MenuItem divider={true} className="hidden-md hidden-lg hidden-xl" />
-                <MenuItem noAnchor={true}>
-                  <ActionLink
-                    className="action-remove-bookmark"
-                    disabled={!anySelected}
-                    onAction={() => this.onUpdate({isBookmarked: false})}
-                    shouldConfirm={this.shouldConfirm('unbookmark')}
-                    message={confirm('remove', false, ' from your bookmarks')}
-                    confirmLabel={label('remove', ' from your bookmarks')}
-                  >
-                    {t('Remove from Bookmarks')}
-                  </ActionLink>
-                </MenuItem>
-                <MenuItem divider={true} />
-                <MenuItem noAnchor={true}>
-                  <ActionLink
-                    className="action-unresolve"
-                    disabled={!anySelected}
-                    onAction={() => this.onUpdate({status: 'unresolved'})}
-                    shouldConfirm={this.shouldConfirm('unresolve')}
-                    message={confirm('unresolve', true)}
-                    confirmLabel={label('unresolve')}
-                  >
-                    {t('Set status to: Unresolved')}
-                  </ActionLink>
-                </MenuItem>
-                <MenuItem divider={true} />
-                <MenuItem noAnchor={true}>
-                  <ActionLink
-                    className="action-delete"
-                    disabled={!anySelected}
-                    onAction={this.onDelete}
-                    shouldConfirm={this.shouldConfirm('delete')}
-                    message={confirm('delete', false)}
-                    confirmLabel={label('delete')}
-                    selectAllActive={pageSelected}
-                  >
-                    {t('Delete Issues')}
-                  </ActionLink>
-                </MenuItem>
-              </DropdownLink>
-            </div>
-            <div className="btn-group">
-              <Tooltip
-                title={t(
-                  '%s real-time updates',
-                  realtimeActive ? t('Pause') : t('Enable')
-                )}
-                tooltipOptions={{container: 'body'}}
-              >
-                <a
-                  className="btn btn-default btn-sm hidden-xs realtime-control"
-                  onClick={this.onRealtimeChange}
+            {showBookmark && (
+              <div className="btn-group hidden-xs">
+                <ActionLink
+                  className="btn btn-default btn-sm action-bookmark hidden-sm hidden-xs"
+                  onAction={undefined}
+                  shouldConfirm={this.shouldConfirm('bookmark')}
+                  message={confirm('bookmark', false)}
+                  confirmLabel={label('bookmark')}
+                  title={t('Add to Bookmarks')}
+                  disabled={!anySelected}
                 >
-                  {realtimeActive ? (
-                    <span className="icon icon-pause" />
-                  ) : (
-                    <span className="icon icon-play" />
-                  )}
-                </a>
-              </Tooltip>
-            </div>
+                  <i aria-hidden="true" className="icon-star-solid" />
+                </ActionLink>
+              </div>
+            )}
           </ActionSet>
         </StyledFlex>
-
-        {!allResultsVisible &&
-          pageSelected && (
-            <div className="row stream-select-all-notice">
-              <div className="col-md-12">
-                {allInQuerySelected ? (
-                  <strong>
-                    {queryCount >= BULK_LIMIT
-                      ? tct(
-                          'Selected up to the first [count] issues that match this search query.',
-                          {
-                            count: BULK_LIMIT_STR,
-                          }
-                        )
-                      : tct('Selected all [count] issues that match this search query.', {
-                          count: queryCount,
-                        })}
-                  </strong>
-                ) : (
-                  <span>
-                    {tn(
-                      '%s issue on this page selected.',
-                      '%s issues on this page selected.',
-                      numIssues
-                    )}
-                    <a onClick={this.selectAll}>
-                      {queryCount >= BULK_LIMIT
-                        ? tct(
-                            'Select the first [count] issues that match this search query.',
-                            {
-                              count: BULK_LIMIT_STR,
-                            }
-                          )
-                        : tct('Select all [count] issues that match this search query.', {
-                            count: queryCount,
-                          })}
-                    </a>
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
       </div>
     );
   },

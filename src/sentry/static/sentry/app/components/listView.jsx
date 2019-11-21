@@ -87,6 +87,8 @@ class ListView extends React.Component {
       return <LoadingError />;
     }
 
+    // TODO: The ListActionBar component currently has substance specific things, like
+    // these workflows to assign. Refactor so this component is truly generic.
     const canAssignToWorkflow = this.props.selectedIds.size > 0;
 
     return (
