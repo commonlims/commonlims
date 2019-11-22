@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'react-emotion';
+import * as icons from 'app/components/icons';
 
 import SentryTypes from 'app/sentryTypes';
 import {openHelpSearchModal} from 'app/actionCreators/modal';
 import {t} from 'app/locale';
 import DropdownMenu from 'app/components/dropdownMenu';
-import InlineSvg from 'app/components/inlineSvg';
 import SidebarItem from 'app/components/sidebar/sidebarItem';
 import HookStore from 'app/stores/hookStore';
 
@@ -65,7 +65,7 @@ class SidebarHelp extends React.Component {
                   orientation={this.props.orientation}
                   collapsed={this.props.collapsed}
                   hasPanel={false}
-                  icon={<InlineSvg src="icon-circle-question" />}
+                  icon={<icons.Help />}
                   label={t('Help')}
                 />
               </HelpActor>
