@@ -48,3 +48,14 @@ In the test, import the __named__ export by enclosing it in curly braces, like s
 `import { MyComponent } from 'app/views/myComponent';`
 
 You can then test the component like any other.
+
+## Icons
+
+Some icons are still being used from the Sentry codebase. All new ready-made icons are from the
+FontAwesome package using the solid style.
+
+To add a new FontAwesome icon, search for it on:
+
+    https://fontawesome.com/icons?d=gallery&s=solid&m=free
+
+Then add it as a new component in app/components/icons.jsx.

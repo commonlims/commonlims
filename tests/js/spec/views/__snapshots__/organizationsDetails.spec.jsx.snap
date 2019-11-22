@@ -88,13 +88,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder fa-w-16 "
+                data-icon="folder"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -119,13 +124,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder-open fa-w-18 "
+                data-icon="folder-open"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -150,13 +160,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-vial fa-w-15 "
+                data-icon="vial"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 480 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -181,13 +196,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-clipboard-list fa-w-12 "
+                data-icon="clipboard-list"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 384 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 424c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm96-192c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm128 368c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -205,9 +225,6 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      />
-      <div
-        class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
           class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
@@ -219,13 +236,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-user-cog fa-w-20 "
+                data-icon="user-cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -250,13 +272,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-star fa-w-18 "
+                data-icon="star"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -281,13 +308,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-history fa-w-16 "
+                data-icon="history"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 255.531c.253 136.64-111.18 248.372-247.82 248.468-59.015.042-113.223-20.53-155.822-54.911-11.077-8.94-11.905-25.541-1.839-35.607l11.267-11.267c8.609-8.609 22.353-9.551 31.891-1.984C173.062 425.135 212.781 440 256 440c101.705 0 184-82.311 184-184 0-101.705-82.311-184-184-184-48.814 0-93.149 18.969-126.068 49.932l50.754 50.754c10.08 10.08 2.941 27.314-11.313 27.314H24c-8.837 0-16-7.163-16-16V38.627c0-14.254 17.234-21.393 27.314-11.314l49.372 49.372C129.209 34.136 189.552 8 256 8c136.81 0 247.747 110.78 248 247.531zm-180.912 78.784l9.823-12.63c8.138-10.463 6.253-25.542-4.21-33.679L288 256.349V152c0-13.255-10.745-24-24-24h-16c-13.255 0-24 10.745-24 24v135.651l65.409 50.874c10.463 8.137 25.541 6.253 33.679-4.21z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -316,13 +348,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-exclamation-circle fa-w-16 "
+                data-icon="exclamation-circle"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -347,13 +384,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chart-bar fa-w-16 "
+                data-icon="chart-bar"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M332.8 320h38.4c6.4 0 12.8-6.4 12.8-12.8V172.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V76.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-288 0h38.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zM496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -382,13 +424,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-cog fa-w-16 "
+                data-icon="cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -429,13 +476,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
                   class="css-1murlm5-SidebarItemIcon e1qdnaq72"
                 >
                   <svg
-                    class="css-ryh69w-StyledSvg e2idor0"
-                    height="1em"
-                    viewBox="[object Object]"
-                    width="1em"
+                    aria-hidden="true"
+                    class="svg-inline--fa fa-question-circle fa-w-16 "
+                    data-icon="question-circle"
+                    data-prefix="fas"
+                    focusable="false"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <use
-                      href="#test"
+                    <path
+                      d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
+                      fill="currentColor"
                     />
                   </svg>
                 </span>
@@ -452,38 +504,6 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
             </a>
           </div>
         </div>
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-          data-test-id="sidebar-broadcasts"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="22px"
-                viewBox="[object Object]"
-                width="22px"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                What's new
-              </div>
-            </span>
-          </div>
-        </a>
       </div>
       <div
         class="css-1j3ay2q-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
@@ -492,7 +512,7 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
-          class="e1sgxx354 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
+          class="e1sgxx353 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
           data-test-id="sidebar-collapse"
         >
           <div
@@ -502,13 +522,18 @@ exports[`OrganizationDetails render() deletion in progress should render a delet
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="e1sgxx353 css-coblwz-StyledSvg-StyledInlineSvg-ExpandedIcon e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chevron-circle-left fa-w-16 "
+                data-icon="chevron-circle-left"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -660,13 +685,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder fa-w-16 "
+                data-icon="folder"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -691,13 +721,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder-open fa-w-18 "
+                data-icon="folder-open"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -722,13 +757,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-vial fa-w-15 "
+                data-icon="vial"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 480 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -753,13 +793,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-clipboard-list fa-w-12 "
+                data-icon="clipboard-list"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 384 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 424c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm96-192c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm128 368c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -777,9 +822,6 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      />
-      <div
-        class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
           class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
@@ -791,13 +833,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-user-cog fa-w-20 "
+                data-icon="user-cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -822,13 +869,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-star fa-w-18 "
+                data-icon="star"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -853,13 +905,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-history fa-w-16 "
+                data-icon="history"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 255.531c.253 136.64-111.18 248.372-247.82 248.468-59.015.042-113.223-20.53-155.822-54.911-11.077-8.94-11.905-25.541-1.839-35.607l11.267-11.267c8.609-8.609 22.353-9.551 31.891-1.984C173.062 425.135 212.781 440 256 440c101.705 0 184-82.311 184-184 0-101.705-82.311-184-184-184-48.814 0-93.149 18.969-126.068 49.932l50.754 50.754c10.08 10.08 2.941 27.314-11.313 27.314H24c-8.837 0-16-7.163-16-16V38.627c0-14.254 17.234-21.393 27.314-11.314l49.372 49.372C129.209 34.136 189.552 8 256 8c136.81 0 247.747 110.78 248 247.531zm-180.912 78.784l9.823-12.63c8.138-10.463 6.253-25.542-4.21-33.679L288 256.349V152c0-13.255-10.745-24-24-24h-16c-13.255 0-24 10.745-24 24v135.651l65.409 50.874c10.463 8.137 25.541 6.253 33.679-4.21z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -888,13 +945,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-exclamation-circle fa-w-16 "
+                data-icon="exclamation-circle"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -919,13 +981,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chart-bar fa-w-16 "
+                data-icon="chart-bar"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M332.8 320h38.4c6.4 0 12.8-6.4 12.8-12.8V172.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V76.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-288 0h38.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zM496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -954,13 +1021,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-cog fa-w-16 "
+                data-icon="cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1001,13 +1073,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
                   class="css-1murlm5-SidebarItemIcon e1qdnaq72"
                 >
                   <svg
-                    class="css-ryh69w-StyledSvg e2idor0"
-                    height="1em"
-                    viewBox="[object Object]"
-                    width="1em"
+                    aria-hidden="true"
+                    class="svg-inline--fa fa-question-circle fa-w-16 "
+                    data-icon="question-circle"
+                    data-prefix="fas"
+                    focusable="false"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <use
-                      href="#test"
+                    <path
+                      d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
+                      fill="currentColor"
                     />
                   </svg>
                 </span>
@@ -1024,38 +1101,6 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
             </a>
           </div>
         </div>
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-          data-test-id="sidebar-broadcasts"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="22px"
-                viewBox="[object Object]"
-                width="22px"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                What's new
-              </div>
-            </span>
-          </div>
-        </a>
       </div>
       <div
         class="css-1j3ay2q-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
@@ -1064,7 +1109,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
-          class="e1sgxx354 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
+          class="e1sgxx353 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
           data-test-id="sidebar-collapse"
         >
           <div
@@ -1074,13 +1119,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="e1sgxx353 css-coblwz-StyledSvg-StyledInlineSvg-ExpandedIcon e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chevron-circle-left fa-w-16 "
+                data-icon="chevron-circle-left"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1259,13 +1309,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder fa-w-16 "
+                data-icon="folder"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1290,13 +1345,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-folder-open fa-w-18 "
+                data-icon="folder-open"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1321,13 +1381,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-vial fa-w-15 "
+                data-icon="vial"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 480 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1352,13 +1417,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-clipboard-list fa-w-12 "
+                data-icon="clipboard-list"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 384 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 424c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm96-192c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm128 368c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1376,9 +1446,6 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
       </div>
       <div
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
-      />
-      <div
-        class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
           class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
@@ -1390,13 +1457,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-user-cog fa-w-20 "
+                data-icon="user-cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1421,13 +1493,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-star fa-w-18 "
+                data-icon="star"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 576 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1452,13 +1529,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-history fa-w-16 "
+                data-icon="history"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 255.531c.253 136.64-111.18 248.372-247.82 248.468-59.015.042-113.223-20.53-155.822-54.911-11.077-8.94-11.905-25.541-1.839-35.607l11.267-11.267c8.609-8.609 22.353-9.551 31.891-1.984C173.062 425.135 212.781 440 256 440c101.705 0 184-82.311 184-184 0-101.705-82.311-184-184-184-48.814 0-93.149 18.969-126.068 49.932l50.754 50.754c10.08 10.08 2.941 27.314-11.313 27.314H24c-8.837 0-16-7.163-16-16V38.627c0-14.254 17.234-21.393 27.314-11.314l49.372 49.372C129.209 34.136 189.552 8 256 8c136.81 0 247.747 110.78 248 247.531zm-180.912 78.784l9.823-12.63c8.138-10.463 6.253-25.542-4.21-33.679L288 256.349V152c0-13.255-10.745-24-24-24h-16c-13.255 0-24 10.745-24 24v135.651l65.409 50.874c10.463 8.137 25.541 6.253 33.679-4.21z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1487,13 +1569,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-exclamation-circle fa-w-16 "
+                data-icon="exclamation-circle"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1518,13 +1605,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chart-bar fa-w-16 "
+                data-icon="chart-bar"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M332.8 320h38.4c6.4 0 12.8-6.4 12.8-12.8V172.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V76.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-288 0h38.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h38.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-38.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zM496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1553,13 +1645,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-cog fa-w-16 "
+                data-icon="cog"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
@@ -1600,13 +1697,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
                   class="css-1murlm5-SidebarItemIcon e1qdnaq72"
                 >
                   <svg
-                    class="css-ryh69w-StyledSvg e2idor0"
-                    height="1em"
-                    viewBox="[object Object]"
-                    width="1em"
+                    aria-hidden="true"
+                    class="svg-inline--fa fa-question-circle fa-w-16 "
+                    data-icon="question-circle"
+                    data-prefix="fas"
+                    focusable="false"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <use
-                      href="#test"
+                    <path
+                      d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z"
+                      fill="currentColor"
                     />
                   </svg>
                 </span>
@@ -1623,38 +1725,6 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
             </a>
           </div>
         </div>
-        <a
-          class="css-u8cmbr-StyledSidebarItem e1qdnaq70"
-          data-test-id="sidebar-broadcasts"
-        >
-          <div
-            class="css-gn87gt-SidebarItemWrapper e1qdnaq71"
-          >
-            <span
-              class="css-1murlm5-SidebarItemIcon e1qdnaq72"
-            >
-              <svg
-                class="css-ryh69w-StyledSvg e2idor0"
-                height="22px"
-                viewBox="[object Object]"
-                width="22px"
-              >
-                <use
-                  href="#test"
-                />
-              </svg>
-            </span>
-            <span
-              class="css-1wgok4l-SidebarItemLabel e1qdnaq73"
-            >
-              <div
-                class="css-179hf69-TextOverflow e8qi82q0"
-              >
-                What's new
-              </div>
-            </span>
-          </div>
-        </a>
       </div>
       <div
         class="css-1j3ay2q-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
@@ -1663,7 +1733,7 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
         class="css-tlukoq-SidebarSectionGroup-responsiveFlex-SidebarSection e1sgxx352"
       >
         <a
-          class="e1sgxx354 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
+          class="e1sgxx353 css-ekfpov-StyledSidebarItem-SidebarCollapseItem e1qdnaq70"
           data-test-id="sidebar-collapse"
         >
           <div
@@ -1673,13 +1743,18 @@ exports[`OrganizationDetails render() pending deletion should render a restorati
               class="css-1murlm5-SidebarItemIcon e1qdnaq72"
             >
               <svg
-                class="e1sgxx353 css-coblwz-StyledSvg-StyledInlineSvg-ExpandedIcon e2idor0"
-                height="1em"
-                viewBox="[object Object]"
-                width="1em"
+                aria-hidden="true"
+                class="svg-inline--fa fa-chevron-circle-left fa-w-16 "
+                data-icon="chevron-circle-left"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <use
-                  href="#test"
+                <path
+                  d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"
+                  fill="currentColor"
                 />
               </svg>
             </span>
