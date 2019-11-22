@@ -1,12 +1,44 @@
 from __future__ import absolute_import
 import os
+from abc import abstractmethod
 from django.db import models
 from tempfile import NamedTemporaryFile
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
 
 
-class MultiFormatFile(object):
+class MultiFormatFileBase(object):
+
+    @abstractmethod
+    def as_excel(self, read_only):
+        pass
+
+    @abstractmethod
+    def as_xml(self):
+        pass
+
+    @abstractmethod
+    def as_csv(self):
+        pass
+
+
+class MultiFormatFileFromPath(MultiFormatFileBase):
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.name = os.path.basename(file_path)
+
+    def as_excel(self, read_only):
+        return load_workbook(self.file_path, data_only=False, read_only=read_only)
+
+    def as_xml(self):
+        raise NotImplementedError()
+
+    def as_csv(self):
+        from clims.services.file_service.csv import Csv
+        return Csv(self.file_path)
+
+
+class MultiFormatFile(MultiFormatFileBase):
     """
     Wraps an organization file in order to generate any file format from it.
     This functionality is wrapped in a separate class because excel handling
@@ -27,7 +59,7 @@ class MultiFormatFile(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         os.remove(self._temp_file.name)
 
-    def as_excel(self, read_only=True, data_only=False):
+    def as_excel(self, read_only=True):
         if self._temp_file is None:
             raise AssertionError('MultiFormatFile must be initiated as a context manager '
                                  'in order to export excel files, e.g. '
@@ -36,7 +68,7 @@ class MultiFormatFile(object):
             for _, chunk in enumerate(self._organization_file.file.getfile()):
                 f.write(chunk)
 
-        workbook = load_workbook(self._temp_file.name, data_only=data_only, read_only=read_only)
+        workbook = load_workbook(self._temp_file.name, data_only=False, read_only=read_only)
 
         return workbook
 
