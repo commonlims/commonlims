@@ -10,8 +10,8 @@ class TestFile(TestCase):
         org_file = FakeOrgFile()
 
         # Act
-        with MultiFormatFile(org_file) as wrapped:
-            temp_file_name = wrapped._temp_file_name
+        with MultiFormatFile.from_organization_file(org_file) as file:
+            temp_file_name = file.file_context._temp_file_name
             assert os.path.exists(temp_file_name)
 
         # Assert
@@ -22,13 +22,19 @@ class TestFile(TestCase):
         org_file = FakeOrgFile()
 
         # Act
-        wrapped = MultiFormatFile(org_file)
+        file = MultiFormatFile.from_organization_file(org_file)
 
         # Assert
-        assert wrapped._temp_file is None
-        assert wrapped._temp_file_name is None
+        assert file.file_context._temp_file is None
+        assert file.file_context._temp_file_name is None
 
 
 class FakeOrgFile:
     def __init__(self):
         self.name = None
+        self.file = FakeFile()
+
+
+class FakeFile:
+    def getfile(self):
+        return ' '
