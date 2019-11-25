@@ -60,8 +60,8 @@ class ListView extends React.Component {
     allVisibleSelected: PropTypes.bool.isRequired,
     toggleAll: PropTypes.func.isRequired,
     toggleSingle: PropTypes.func.isRequired,
-    visibleIds: PropTypes.array.isRequired,
-    selectedIds: PropTypes.instanceOf(Set).isRequired,
+    visibleIds: PropTypes.array,
+    selectedIds: PropTypes.instanceOf(Set),
     dataById: PropTypes.object.isRequired,
     listActionBar: PropTypes.object,
   };
@@ -77,6 +77,14 @@ class ListView extends React.Component {
 
   isSelected(entryId) {
     return this.props.selectedIds.has(entryId);
+  }
+
+  getVisable() {
+    const visible =
+      typeof this.props.visibleIds === 'undefined'
+        ? Object.keys(this.props.dataById)
+        : this.props.visibleIds;
+    return visible;
   }
 
   render() {
@@ -112,7 +120,7 @@ class ListView extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.visibleIds.map(entryId => {
+                {this.getVisable().map(entryId => {
                   return (
                     <tr key={'parent-' + entryId}>
                       {this.props.canSelect && (
