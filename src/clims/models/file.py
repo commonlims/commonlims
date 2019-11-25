@@ -91,13 +91,13 @@ class MultiFormatFile(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file_context.cleanup()
 
-    @classmethod
-    def from_path(cls, file_path):
+    @staticmethod
+    def from_path(file_path):
         file_context = HarddiskFileContext(file_path)
         return MultiFormatFile(file_context=file_context)
 
-    @classmethod
-    def from_organization_file(cls, organization_file):
+    @staticmethod
+    def from_organization_file(organization_file):
         file_context = OrganizationFileContext(organization_file)
         return MultiFormatFile(file_context=file_context)
 
