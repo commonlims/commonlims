@@ -122,7 +122,6 @@ class Substances extends React.Component {
     const {
       groupBy,
       query,
-      substanceSearchEntries,
       byIds,
       visibleIds,
       selectedIds,
@@ -130,8 +129,6 @@ class Substances extends React.Component {
       allVisibleSelected,
     } = this.props.substanceSearchEntry;
 
-    // TODO: The ListActionBar component currently has substance specific things, like
-    // these workflows to assign. Refactor so this component is truly generic.
     const canAssignToWorkflow = selectedIds.size > 0;
     const actionBar = this.listActionBar(canAssignToWorkflow, this.props.organization.id);
 
@@ -152,7 +149,6 @@ class Substances extends React.Component {
           <ListView
             orgId={this.props.organization.id}
             columns={this.getHeaders()}
-            data={substanceSearchEntries}
             dataById={byIds}
             visibleIds={visibleIds}
             selectedIds={selectedIds}
@@ -174,7 +170,6 @@ Substances.propTypes = {
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
   allVisibleSelected: PropTypes.bool.isRequired,
-  substanceSearchEntries: PropTypes.arrayOf(PropTypes.shape({})),
   groupBy: PropTypes.string.isRequired,
   substanceSearchEntriesGet: PropTypes.func.isRequired,
   substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
