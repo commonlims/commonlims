@@ -356,7 +356,7 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             raise NotFound("Can't find file with id '{}'".format(file_id))
 
     @transaction.atomic
-    def load_file(self, organization, full_path, fileobj, add_timestamp=False):
+    def load_file(self, organization, full_path, file_stream, add_timestamp=False):
         # TODO: Decide what we want to happen here. Should the user be able to load files
         # with an identical name or not? Makes more sense to me that we inspect if samples
         # with the same name have been uploaded or not. So for now we add this timestamp to the name
@@ -366,9 +366,21 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             full_path, ext = full_path.rsplit(".", 1)
             full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
 
+        context = HandlerContext(organization=organization)
         logger = logging.getLogger('clims.files')
         logger.info('substance_batch_import.start')
 
+        org_file = self._create_organization_file(file_stream, full_path, organization.id, logger)
+        # Call handler synchronously and in the same DB transaction
+        with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
+            plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
+
+        return org_file
+
+    def _create_organization_file(self, file_stream, full_path, organization_id, logger):
+        """
+        Uploads file to the server and wrap it in a organization file
+        """
         name = full_path.rsplit('/', 1)[-1]
         if FILENAME_RE.search(name):
             raise FileNameValidationError('File name must not contain special whitespace characters')
@@ -378,19 +390,13 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             type='substance-batch-file',
             headers=list(),
         )
-        file_model.putfile(fileobj, logger=logger)
+        file_model.putfile(file_stream, logger=logger)
 
         org_file = OrganizationFile.objects.create(
-            organization_id=organization.id,
+            organization_id=organization_id,
             file=file_model,
             name=full_path,
         )
-
-        # Call handler synchronously and in the same DB transaction
-        context = HandlerContext(organization=organization)
-        with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
-            plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
-
         return org_file
 
     def create_submission_demo(self, file_type):
