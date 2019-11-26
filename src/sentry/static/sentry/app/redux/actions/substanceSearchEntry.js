@@ -21,18 +21,20 @@ export const SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL =
 export const SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT =
   'SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT';
 
-export const substanceSearchEntriesGetRequest = (query, groupBy) => {
+export const substanceSearchEntriesGetRequest = (search, groupBy, cursor) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
-    query,
+    search,
     groupBy,
+    cursor,
   };
 };
 
-export const substanceSearchEntriesGetSuccess = substanceSearchEntries => {
+export const substanceSearchEntriesGetSuccess = (substanceSearchEntries, link) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
     substanceSearchEntries,
+    link,
   };
 };
 
@@ -41,24 +43,19 @@ export const substanceSearchEntriesGetFailure = err => ({
   message: err,
 });
 
-function setInitialViewState(groupBy, searchEntry) {
-  searchEntry.viewState = {
-    isSelected: false,
-    hasLoadedChildren: false,
-    canExpand: false,
-  };
-}
+export const substanceSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
+  dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
-export const substanceSearchEntriesGet = (query, groupBy) => dispatch => {
-  dispatch(substanceSearchEntriesGetRequest(query, groupBy));
+  const request = {
+    params: {
+      search,
+      cursor,
+    },
+  };
   return axios
-    .get('/api/0/organizations/lab/substances/?query=' + query)
+    .get('/api/0/organizations/lab/substances/', request)
     .then(res => {
-      // TODO: keep the state outside of these
-      for (const entry of res.data) {
-        setInitialViewState(groupBy, entry);
-      }
-      dispatch(substanceSearchEntriesGetSuccess(res.data));
+      dispatch(substanceSearchEntriesGetSuccess(res.data, res.headers.link));
     })
     .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
 };

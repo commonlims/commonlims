@@ -24,16 +24,18 @@ describe('substance reducer', () => {
 
     const nextState = substanceSearchEntry(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST',
-      groupBy: null,
-      query: null,
+      groupBy: 'aGroup',
+      search: 'aSearch',
+      cursor: 'aCursor',
     });
 
     expect(nextState).toEqual({
       ...prevState,
       loading: true,
       errorMessage: null,
-      groupBy: null,
-      query: null,
+      groupBy: 'aGroup',
+      search: 'aSearch',
+      cursor: 'aCursor',
     });
   });
 
@@ -47,6 +49,7 @@ describe('substance reducer', () => {
     const nextState = substanceSearchEntry(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: mockResponseNoGroup,
+      link: 'some-link',
     });
 
     expect(nextState).toEqual({
@@ -55,6 +58,7 @@ describe('substance reducer', () => {
       loading: false,
       visibleIds: [1, 2],
       byIds: mockResponseNoGroupById,
+      pageLinks: 'some-link',
     });
   });
 

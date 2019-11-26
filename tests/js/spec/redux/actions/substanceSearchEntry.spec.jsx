@@ -62,28 +62,29 @@ describe('substance redux actions', function() {
       const store = mockStore({substances: []});
 
       // TODO: New endpoint
-      moxios.stubRequest('/api/0/organizations/lab/substances/?query=query', {
+      moxios.stubRequest('/api/0/organizations/lab/substances/?search=search', {
         status: 200,
         responseText: substanceSearchEntries,
+        headers: [],
       });
 
-      const query = 'query';
+      const search = 'search';
       const groupBy = 'substances';
 
       const expectedActions = [
         {
           type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
-          query,
+          search,
           groupBy,
         },
         {type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS, substanceSearchEntries},
       ];
 
       // TODO: return
-      return store.dispatch(substanceSearchEntriesGet(query, groupBy)).then(() => {
+      return store.dispatch(substanceSearchEntriesGet(search, groupBy)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         const request = moxios.requests.mostRecent();
-        expect(request.url).toBe('/api/0/organizations/lab/substances/?query=query');
+        expect(request.url).toBe('/api/0/organizations/lab/substances/?search=search');
       });
     });
   });

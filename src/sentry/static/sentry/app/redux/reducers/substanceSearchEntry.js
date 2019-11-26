@@ -16,10 +16,14 @@ export const initialState = {
   substanceSearchEntries: [],
   allVisibleSelected: false,
   groupBy: 'substance',
-  query: '',
+  search: '',
   byIds: {}, // The actual substance entries (TODO: have parentById and childById?)
   visibleIds: [], // Sorted list of items visible in the current page
   selectedIds: new Set(), // The set of items selected, allowed to be outside of the current page
+
+  paginationEnabled: true,
+  pageLinks: null, // The links returned by the backend
+  cursor: '', // The cursor into the current dataset
 };
 
 function toggleSelectPage(state, doSelect) {
@@ -37,8 +41,9 @@ const substanceSearchEntry = (state = initialState, action) => {
         ...state,
         errorMessage: null,
         loading: true,
-        query: action.query,
+        search: action.search,
         groupBy: action.groupBy,
+        cursor: action.cursor,
       };
     case SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS: {
       // The action provides us with the raw data as a list, here we turn it into
@@ -55,6 +60,7 @@ const substanceSearchEntry = (state = initialState, action) => {
         loading: false,
         byIds: merge({}, state.byIds, byIds),
         visibleIds,
+        pageLinks: action.link,
       };
     }
     case SUBSTANCE_SEARCH_ENTRIES_GET_FAILURE:
