@@ -1,15 +1,11 @@
-//import axios from 'axios';
-
 export const PROCESS_DEFINITIONS_GET_REQUEST = 'PROCESS_DEFINITIONS_GET_REQUEST';
-export const PROCESS_DEFINITIONS_GET_SUCCESS = 'PROCESS_DEFINITIONS_GET_SUCCESS';
-export const PROCESS_DEFINITIONS_GET_FAILURE = 'PROCESS_DEFINITIONS_GET_FAILURE';
-
 export const processDefinitionsGetRequest = () => {
   return {
     type: PROCESS_DEFINITIONS_GET_REQUEST,
   };
 };
 
+export const PROCESS_DEFINITIONS_GET_SUCCESS = 'PROCESS_DEFINITIONS_GET_SUCCESS';
 export const processDefinitionsGetSuccess = processDefinitions => {
   return {
     type: PROCESS_DEFINITIONS_GET_SUCCESS,
@@ -17,6 +13,7 @@ export const processDefinitionsGetSuccess = processDefinitions => {
   };
 };
 
+export const PROCESS_DEFINITIONS_GET_FAILURE = 'PROCESS_DEFINITIONS_GET_FAILURE';
 export const processDefinitionsGetFailure = err => ({
   type: PROCESS_DEFINITIONS_GET_FAILURE,
   message: err,
@@ -24,18 +21,6 @@ export const processDefinitionsGetFailure = err => ({
 
 export const processDefinitionsGet = () => dispatch => {
   dispatch(processDefinitionsGetRequest());
-  // TODO: Use endpoint
-  // return axios
-  //   .get('/api/0/organizations/lab/processDefinitions/')
-  //   .then(res => {
-  //     // TODO: keep the state outside of these
-  //     for (const entry of res.data) {
-  //       setInitialViewState(groupBy, entry);
-  //     }
-  //     dispatch(processDefinitionsGetSuccess(res.data));
-  //   })
-  //   .catch(err => dispatch(processDefinitionsGetFailure(err)));
-
   const data = {
     processes: [
       {
