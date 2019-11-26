@@ -7,6 +7,7 @@ import substanceSearchEntry from './substanceSearchEntry';
 import tag from './tag';
 import task from './task';
 import workBatch from './workBatch';
+import projectSearchEntry from './projectSearchEntry';
 
 export default combineReducers({
   process,
@@ -16,4 +17,5 @@ export default combineReducers({
   tag,
   task,
   workBatch,
+  projectSearchEntry,
 });

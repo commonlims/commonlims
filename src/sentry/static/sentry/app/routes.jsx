@@ -30,7 +30,6 @@ import ProjectTags from 'app/views/projectTags';
 import ProjectChooser from 'app/views/projectChooser';
 import ProjectDataForwarding from 'app/views/projectDataForwarding';
 import ProjectDebugFiles from 'app/views/projectDebugFiles';
-import ProjectDetails from 'app/views/projectDetails';
 import ProjectDocsContext from 'app/views/projectInstall/docsContext';
 import ProjectGettingStarted from 'app/views/projectInstall/gettingStarted';
 import ProjectInstallOverview from 'app/views/projectInstall/overview';
@@ -38,6 +37,7 @@ import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 import ProjectSettings from 'app/views/projectSettings';
 import SubstancesContainer from 'app/views/substances/index';
+import ProjectsContainer from 'app/views/projects/index';
 import WorkBatchList from 'app/views/workBatchList/index';
 import TaskList from 'app/views/taskList/index';
 import SampleDetails from 'app/views/sampleDetails';
@@ -967,7 +967,7 @@ function routes() {
           <Route path=":platform/" component={errorHandler(ProjectInstallPlatform)} />
         </Route>
 
-        <Route path=":projectId/" component={errorHandler(ProjectDetails)}>
+        <Route path=":projectId/" component={errorHandler(ProjectsContainer)}>
           <Route
             path="samples/:sampleId/"
             component={errorHandler(SampleDetails)}

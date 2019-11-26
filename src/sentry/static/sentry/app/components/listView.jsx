@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'react-emotion';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import LoadingError from 'app/components/loadingError';
-import ListActionBar from 'app/components/listActionBar';
 import {Panel, PanelBody} from 'app/components/panels';
 import PropTypes from 'prop-types';
 import Checkbox from 'app/components/checkbox';
@@ -57,14 +56,14 @@ class ListView extends React.Component {
     columns: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     loading: PropTypes.bool.isRequired,
-    orgId: PropTypes.string.isRequired,
     canSelect: PropTypes.bool.isRequired,
     allVisibleSelected: PropTypes.bool.isRequired,
     toggleAll: PropTypes.func.isRequired,
     toggleSingle: PropTypes.func.isRequired,
-    visibleIds: PropTypes.array.isRequired,
-    selectedIds: PropTypes.instanceOf(Set).isRequired,
+    visibleIds: PropTypes.array,
+    selectedIds: PropTypes.instanceOf(Set),
     dataById: PropTypes.object.isRequired,
+    listActionBar: PropTypes.object,
   };
 
   getDisplayCell(entryId, header) {
@@ -80,6 +79,14 @@ class ListView extends React.Component {
     return this.props.selectedIds.has(entryId);
   }
 
+  getVisable() {
+    const visible =
+      typeof this.props.visibleIds === 'undefined'
+        ? Object.keys(this.props.dataById)
+        : this.props.visibleIds;
+    return visible;
+  }
+
   render() {
     if (this.props.loading) {
       return <LoadingIndicator />;
@@ -87,18 +94,9 @@ class ListView extends React.Component {
       return <LoadingError />;
     }
 
-    // TODO: The ListActionBar component currently has substance specific things, like
-    // these workflows to assign. Refactor so this component is truly generic.
-    const canAssignToWorkflow = this.props.selectedIds.size > 0;
-
     return (
       <Panel>
-        <ListActionBar
-          realtimeActive={false}
-          query=""
-          orgId={this.props.orgId}
-          canAssignToWorkflow={canAssignToWorkflow}
-        />
+        {this.props.listActionBar}
         <PanelBody>
           <Styles>
             <table>
@@ -122,7 +120,7 @@ class ListView extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.visibleIds.map(entryId => {
+                {this.getVisable().map(entryId => {
                   return (
                     <tr key={'parent-' + entryId}>
                       {this.props.canSelect && (
