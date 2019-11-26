@@ -16,8 +16,8 @@ class SubstanceEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        query = request.GET.get('query', None)
-        queryset = self.app.substances._search_qs(query)
+        search = request.GET.get('search', None)
+        queryset = self.app.substances._search_qs(search)
 
         # Temporarily sort by date
         queryset = queryset.order_by('-archetype__created_at')
@@ -36,7 +36,7 @@ class SubstanceEndpoint(OrganizationEndpoint):
             request=request,
             queryset=queryset,
             paginator_cls=OffsetPaginator,
-            default_per_page=25,
+            default_per_page=20,
             on_results=lambda data: handle_results(data))
 
     def post(self, request, organization):

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {browserHistory} from 'react-router';
 //import {substancesGet} from 'app/redux/actions/substance';
 import {
   substanceSearchEntriesGet,
@@ -12,6 +13,7 @@ import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
 import SentryTypes from 'app/sentryTypes';
 import ListActionBar from 'app/components/listActionBar';
+import Pagination from 'app/components/pagination';
 
 class Substances extends React.Component {
   constructor(props) {
@@ -22,14 +24,41 @@ class Substances extends React.Component {
     this.onSort = this.onSort.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
+    this.onCursor = this.onCursor.bind(this);
 
-    let {query} = this.props.substanceSearchEntry;
-    const {groupBy} = this.props.substanceSearchEntry;
+    let {search, cursor, groupBy} = this.props.substanceSearchEntry;
+    const query = this.props.location.query;
 
-    if (query === '') {
-      query = 'sample.name:sample'; // Add some default search for demo purposes
+    if (query) {
+      search = query.search ? query.search : search;
+      cursor = query.cursor ? query.cursor : cursor;
+      groupBy = query.groupBy ? query.groupBy : groupBy;
     }
-    this.props.substanceSearchEntriesGet(query, groupBy);
+
+    this.onSearch(search, groupBy, cursor);
+  }
+
+  onSearch(search, groupBy, cursor) {
+    this.props.substanceSearchEntriesGet(search, groupBy, cursor);
+
+    // Add search to history
+    const location = this.props.location;
+    const query = {
+      ...location.query,
+      search,
+      groupBy,
+      cursor,
+    };
+
+    browserHistory.push({
+      pathname: location.pathname,
+      query,
+    });
+  }
+
+  onCursor(cursor) {
+    const {search, groupBy} = this.props.substanceSearchEntry;
+    this.onSearch(search, groupBy, cursor);
   }
 
   onSavedSearchCreate() {
@@ -95,11 +124,6 @@ class Substances extends React.Component {
 
   onSort(e) {}
 
-  onSearch(query, groupBy) {
-    // TODO
-    this.props.substanceSearchEntriesGet(query, groupBy);
-  }
-
   listActionBar(canAssignToWorkflow, orgId) {
     return (
       <ListActionBar
@@ -159,6 +183,14 @@ class Substances extends React.Component {
             toggleSingle={this.props.substanceSearchEntryToggleSelect}
             listActionBar={actionBar}
           />
+
+          {this.props.substanceSearchEntry.paginationEnabled &&
+            this.props.substanceSearchEntry.pageLinks && (
+              <Pagination
+                pageLinks={this.props.substanceSearchEntry.pageLinks}
+                onCursor={this.onCursor}
+              />
+            )}
         </div>
       </div>
     );
@@ -169,13 +201,14 @@ Substances.propTypes = {
   loading: PropTypes.bool,
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
-  allVisibleSelected: PropTypes.bool.isRequired,
+  substanceSearchEntries: PropTypes.arrayOf(PropTypes.shape({})),
   groupBy: PropTypes.string.isRequired,
   substanceSearchEntriesGet: PropTypes.func.isRequired,
   substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
   byIds: PropTypes.object,
   substanceSearchEntryToggleSelect: PropTypes.func.isRequired,
   substanceSearchEntry: PropTypes.object,
+  location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -187,7 +220,8 @@ const mapStateToProps = state => {
 // TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
 // creators name for consistency.
 const mapDispatchToProps = dispatch => ({
-  substanceSearchEntriesGet: query => dispatch(substanceSearchEntriesGet(query)),
+  substanceSearchEntriesGet: (query, groupBy, cursor) =>
+    dispatch(substanceSearchEntriesGet(query, groupBy, cursor)),
   substanceSearchEntriesToggleSelectAll: doSelect =>
     dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
   substanceSearchEntryToggleSelect: (id, doSelect) =>

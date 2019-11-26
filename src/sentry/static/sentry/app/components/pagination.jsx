@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {browserHistory} from 'react-router';
-
 import utils from 'app/utils';
 import {t} from 'app/locale';
 
 export default class Pagination extends React.Component {
   static propTypes = {
     pageLinks: PropTypes.string,
-    to: PropTypes.string,
     onCursor: PropTypes.func,
     className: PropTypes.string,
   };
@@ -18,13 +15,6 @@ export default class Pagination extends React.Component {
   };
 
   static defaultProps = {
-    onCursor: (cursor, path, query) => {
-      query.cursor = cursor;
-      browserHistory.push({
-        pathname: path,
-        query,
-      });
-    },
     className: 'stream-pagination',
   };
 
@@ -33,10 +23,6 @@ export default class Pagination extends React.Component {
     if (!pageLinks) {
       return null;
     }
-
-    const location = this.context.location;
-    const path = this.props.to || location.pathname;
-    const query = location.query;
 
     const links = utils.parseLinkHeader(pageLinks);
 
@@ -55,7 +41,7 @@ export default class Pagination extends React.Component {
         <div className="btn-group pull-right">
           <a
             onClick={() => {
-              onCursor(links.previous.cursor, path, query);
+              onCursor(links.previous.cursor);
             }}
             className={previousPageClassName}
             disabled={links.previous.results === false}
@@ -64,7 +50,7 @@ export default class Pagination extends React.Component {
           </a>
           <a
             onClick={() => {
-              onCursor(links.next.cursor, path, query);
+              onCursor(links.next.cursor);
             }}
             className={nextPageClassName}
             disabled={links.next.results === false}
