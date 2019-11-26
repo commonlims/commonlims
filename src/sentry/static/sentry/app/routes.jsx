@@ -24,7 +24,6 @@ import ProjectEventRedirect from 'app/views/projectEventRedirect';
 import ProjectTags from 'app/views/projectTags';
 import ProjectChooser from 'app/views/projectChooser';
 import ProjectDataForwarding from 'app/views/projectDataForwarding';
-import ProjectDetails from 'app/views/projectDetails';
 import ProjectDocsContext from 'app/views/projectInstall/docsContext';
 import ProjectGettingStarted from 'app/views/projectInstall/gettingStarted';
 import ProjectInstallOverview from 'app/views/projectInstall/overview';
@@ -871,13 +870,6 @@ function routes() {
         </Route>
 
         <Route path=":projectId/" component={errorHandler(ProjectsContainer)}>
-          <Route
-            path="samples/:sampleId/"
-            component={errorHandler(SampleDetails)}
-            ignoreScrollBehavior
-          >
-            <Route path="processes/" component={errorHandler(SampleProcesses)} />
-          </Route>
           <Route path="issues/" component={errorHandler(Stream)} />
 
           <Route
