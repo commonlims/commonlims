@@ -8,6 +8,7 @@ from datetime import datetime
 from clims.models.substance import Substance, SubstanceVersion
 from clims.models.extensible import ExtensibleProperty
 from clims.models.location import SubstanceLocation
+from clims.models.file import MultiFormatFile
 from clims.services.extensible import (ExtensibleBase, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
@@ -365,8 +366,6 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             full_path, ext = full_path.rsplit(".", 1)
             full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
 
-        from sentry.plugins import plugins
-        plugins.require_handler(SubstancesSubmissionHandler)
         logger = logging.getLogger('clims.files')
         logger.info('substance_batch_import.start')
 
@@ -389,7 +388,6 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
         # Call handler synchronously and in the same DB transaction
         context = HandlerContext(organization=organization)
-        from clims.models.file import MultiFormatFile
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
             plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
 
