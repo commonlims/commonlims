@@ -31,12 +31,12 @@ export const projectSearchEntriesGet = (query, groupBy) => dispatch => {
     1: {
       id: 1,
       name: 'test project 1',
-      pi: 'A-C Syvänen',
+      pi: 'C. Darwin',
     },
     2: {
       id: 2,
       name: 'test project 2',
-      pi: 'J. Nordlund',
+      pi: 'R. Franklin',
     },
   };
   dispatch(projectSearchEntriesGetSuccess(data));
