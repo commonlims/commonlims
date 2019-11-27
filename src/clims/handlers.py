@@ -55,7 +55,7 @@ class SubstancesValidationHandler(Handler):
 
     unique_registration = True
 
-    def handle(self, file_stream):
+    def handle(self, multi_format_file):
         pass
 
 
@@ -67,7 +67,7 @@ class SubstancesSubmissionHandler(Handler):
 
     unique_registration = True
 
-    def handle(self, file_obj):
+    def handle(self, multi_format_file):
         pass
 
 

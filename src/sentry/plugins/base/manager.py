@@ -290,7 +290,7 @@ class PluginManager(InstanceManager):
         if count == 0:
             raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
 
-    def handle(self, cls, context, required, *args):
+    def handle(self, cls, context, required, *args, **kwargs):
         """
         Runs all handlers registered for cls in sequence. *args are sent to the handler as arguments.
 
@@ -307,5 +307,5 @@ class PluginManager(InstanceManager):
             from clims.services import ioc
             instance = handler(context, ioc.app)
             ret.append(instance)
-            instance.handle(*args)
+            instance.handle(*args, **kwargs)
         return ret

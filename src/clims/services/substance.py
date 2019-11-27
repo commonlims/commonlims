@@ -369,16 +369,19 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
         context = HandlerContext(organization=organization)
         with MultiFormatFile.from_file_stream(full_path, file_stream) as wrapped_stream:
-            plugins.handle(SubstancesValidationHandler, context, False, wrapped_stream)
+            plugins.handle(
+                SubstancesValidationHandler, context, required=False,
+                multi_format_file=wrapped_stream)
 
         logger = logging.getLogger('clims.files')
         logger.info('substance_batch_import.start')
 
         org_file = self._create_organization_file(file_stream, full_path, organization.id, logger)
 
-        # Call handler synchronously and in the same DB transaction
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
-            plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
+            plugins.handle(
+                SubstancesSubmissionHandler, context, required=True,
+                multi_format_file=wrapped_org_file)
 
         return org_file
 
