@@ -17,6 +17,7 @@ from sentry.models.file import File
 from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
+from clims.handlers import SubstancesValidationHandler
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
@@ -367,10 +368,14 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
 
         context = HandlerContext(organization=organization)
+        with MultiFormatFile.from_file_stream(full_path, file_stream) as wrapped_stream:
+            plugins.handle(SubstancesValidationHandler, context, False, wrapped_stream)
+
         logger = logging.getLogger('clims.files')
         logger.info('substance_batch_import.start')
 
         org_file = self._create_organization_file(file_stream, full_path, organization.id, logger)
+
         # Call handler synchronously and in the same DB transaction
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
             plugins.handle(SubstancesSubmissionHandler, context, True, wrapped_org_file)
@@ -390,6 +395,8 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
             type='substance-batch-file',
             headers=list(),
         )
+
+        file_stream.seek(0)
         file_model.putfile(file_stream, logger=logger)
 
         org_file = OrganizationFile.objects.create(
