@@ -10,6 +10,8 @@ export const initialState = {
   errorMessage: null,
   projectSearchEntries: [],
   allVisibleSelected: false,
+  visibleIds: [],
+  selectedIds: [],
   groupBy: 'name',
   query: 'name',
   byIds: {}, // The actual substance entries (TODO: have parentById and childById?)

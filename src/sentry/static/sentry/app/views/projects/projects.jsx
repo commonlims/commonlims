@@ -65,6 +65,7 @@ class Projects extends React.Component {
             columns={this.getHeaders()}
             dataById={this.props.projectSearchEntry.byIds}
             canSelect={false}
+            visibleIds={Object.keys(this.props.projectSearchEntry.byIds)}
           />
         </div>
       </div>
@@ -88,8 +89,6 @@ const mapStateToProps = state => {
   };
 };
 
-// TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
-// creators name for consistency.
 const mapDispatchToProps = dispatch => ({
   projectSearchEntriesGet: query => dispatch(projectSearchEntriesGet(query)),
 });
