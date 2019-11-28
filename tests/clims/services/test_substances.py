@@ -155,8 +155,8 @@ class MyHandler(SubstancesSubmissionHandler):
     def __init__(self, context, app):
         super(MyHandler, self).__init__(context, app)
 
-    def handle(self, file_obj):
-        csv = self._as_csv(file_obj)
+    def handle(self, multi_format_file):
+        csv = self._as_csv(multi_format_file)
         for line in csv:
             name = line['Sample ID']
             sample = GemstoneSample(name=name, organization=self.context.organization)

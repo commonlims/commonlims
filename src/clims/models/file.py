@@ -28,6 +28,10 @@ class FileContextBase(object):
 
 
 class OrganizationFileContext(FileContextBase):
+    """
+    In cases when referring to a file of which contents is stored in the database.
+    """
+
     def __init__(self, organization_file):
         self._organization_file = organization_file
         self._temp_file = None
@@ -46,14 +50,53 @@ class OrganizationFileContext(FileContextBase):
 
     @property
     def file_path(self):
-        return self._temp_file.name
+        if self._temp_file:
+            return self._temp_file.name
+        return None
 
     @property
     def file_name(self):
         return self._organization_file.name
 
 
+class FileStreamContext(FileContextBase):
+    """
+    In cases when the contents and client file path of a file
+    is provided from a http request
+    """
+
+    def __init__(self, file_name, file_stream):
+        self._file_stream = file_stream
+        self._file_name = file_name
+        self._temp_file = None
+
+    def initiate(self):
+        _, suffix = os.path.splitext(self._file_name)
+        self._temp_file = NamedTemporaryFile(suffix=suffix)
+
+        with open(self._temp_file.name, 'wb') as f:
+            f.write(self._file_stream.read())
+
+    def cleanup(self):
+        os.remove(self._temp_file.name)
+
+    @property
+    def file_path(self):
+        if self._temp_file:
+            return self._temp_file.name
+        return None
+
+    @property
+    def file_name(self):
+        return self._file_name
+
+
 class HarddiskFileContext(FileContextBase):
+    """
+    In cases when acting on a file that is already stored on the server file system,
+    e.g. provide a demo file.
+    """
+
     def __init__(self, file_path):
         self._file_path = file_path
 
@@ -74,7 +117,7 @@ class HarddiskFileContext(FileContextBase):
 
 class MultiFormatFile(object):
     """
-    Wraps an organization file in order to generate any file format from it.
+    Wraps a file like object in order to generate any file format from it.
     This functionality is wrapped in a separate class because excel handling
     needs a temporary file that needs to be removed after usage.
     """
@@ -94,6 +137,12 @@ class MultiFormatFile(object):
     @staticmethod
     def from_path(file_path):
         file_context = HarddiskFileContext(file_path)
+        return MultiFormatFile(file_context=file_context)
+
+    @staticmethod
+    def from_file_stream(file_path, file_stream):
+        file_name = os.path.basename(file_path)
+        file_context = FileStreamContext(file_name, file_stream)
         return MultiFormatFile(file_context=file_context)
 
     @staticmethod
@@ -128,7 +177,8 @@ class MultiFormatFile(object):
 
 class OrganizationFile(Model):
     """
-    Connection between a `File` and an `Organization`.
+    Organization file represent a file of which contents is stored in
+    the database. It also shows a connection between a `File` and an `Organization`.
     """
     __core__ = False
 

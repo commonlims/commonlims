@@ -47,6 +47,18 @@ class Handler(object):
         self.context = context
 
 
+class SubstancesValidationHandler(Handler):
+    """
+    Executed when a user submits a batch of substances, e.g. a list of samples
+    in a project.
+    """
+
+    unique_registration = True
+
+    def handle(self, multi_format_file):
+        pass
+
+
 class SubstancesSubmissionHandler(Handler):
     """
     Executed when a user submits a batch of substances, e.g. a list of samples
@@ -55,7 +67,7 @@ class SubstancesSubmissionHandler(Handler):
 
     unique_registration = True
 
-    def handle(self, file_obj):
+    def handle(self, multi_format_file):
         pass
 
 
