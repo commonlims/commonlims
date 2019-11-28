@@ -11,7 +11,7 @@ import {
   PROCESSES_POST_FAILURE,
 } from '../actions/process';
 
-const initialState = {
+export const initialState = {
   loading: false,
   saving: false,
   errorMessage: null,

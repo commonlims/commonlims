@@ -12,6 +12,12 @@ import {processesPost} from 'app/redux/actions/process';
 import JsonForm from 'app/views/settings/components/forms/jsonForm';
 import LoadingIndicator from 'app/components/loadingIndicator';
 
+import {
+  processAssignSelectPreset,
+  processAssignSelectProcess,
+  processAssignSetVariable,
+} from 'app/redux/actions/processAssign';
+
 // TODO: Write tests for this component
 // TODO: Change to JS6 class
 const AssignToWorkflowButton = createReactClass({
@@ -27,6 +33,9 @@ const AssignToWorkflowButton = createReactClass({
     substanceSearchEntry: PropTypes.object,
     processesPost: PropTypes.func,
     processDefinitionsGet: PropTypes.func,
+    processAssignSelectPreset: PropTypes.func.isRequired,
+    processAssignSelectProcess: PropTypes.func.isRequired,
+    processAssignSetVariable: PropTypes.func.isRequired,
   },
 
   getInitialState() {
@@ -77,66 +86,26 @@ const AssignToWorkflowButton = createReactClass({
     );
   },
 
-  onPresetSelected(sel) {
-    const presetId = sel.value;
-    const preset = this.props.processDefinition.presetsById[presetId];
-
-    const variables = {};
-    for (const [key, value] of Object.entries(preset.variables)) {
-      variables[key] = value;
-    }
-
-    this.setState({
-      selectedPreset: presetId,
-      selectedProcess: preset.process,
-      variables,
-    });
-  },
-
-  onFieldChange(fieldName, val) {
-    const variables = this.state.variables;
-    variables[fieldName] = val;
-    this.setState({
-      variables,
-      selectedPreset: null,
-    });
-  },
-
-  getFields(processDefinition) {
-    const fields = [];
-    for (const fieldConfig of processDefinition.fields) {
+  createFieldsFromDefinition(processDefinition) {
+    return processDefinition.fields.map(fieldConfig => {
       const field = Object.assign({}, fieldConfig);
-      field.onChange = val => this.onFieldChange(field.name, val);
-      fields.push(field);
-    }
-    return fields;
+      field.onChange = val => this.props.processAssignSetVariable(field.name, val);
+      return field;
+    });
   },
 
   renderSettings() {
     let fields = null;
-    if (this.state.selectedPreset) {
-      const preset = this.props.processDefinition.presetsById[this.state.selectedPreset];
-      const process = preset.process;
-      const processDefinition = this.props.processDefinition.processDefinitionsById[
-        process
-      ];
+    const {assignProcessDefinition, assignVariables} = this.props.processDefinition;
 
-      fields = this.getFields(processDefinition);
-      for (const field of fields) {
-        field.value = this.state.variables[field.name];
-      }
+    if (assignProcessDefinition) {
+      fields = this.createFieldsFromDefinition(assignProcessDefinition);
     } else {
-      // We have no preset, so we'll just fetch the fields for the currently selected
-      // process, if there is one.
-      const process = this.state.selectedProcess;
-      const processDefinition = this.props.processDefinition.processDefinitionsById[
-        process
-      ];
-      if (processDefinition) {
-        fields = this.getFields(processDefinition);
-      } else {
-        fields = [];
-      }
+      fields = [];
+    }
+
+    for (const field of fields) {
+      field.value = assignVariables[field.name];
     }
 
     return <JsonForm title={t('Settings')} fields={fields} />;
@@ -156,8 +125,10 @@ const AssignToWorkflowButton = createReactClass({
     const processDefinitions = Object.entries(
       this.props.processDefinition.processDefinitionsById
     ).map(entry => {
-      return {value: entry[0], label: entry[1].name};
+      return {value: entry[0], label: entry[1].id};
     });
+
+    const {assignPreset, assignProcessDefinition} = this.props.processDefinition;
 
     // TODO: Remove the <br/>s!
     return (
@@ -180,20 +151,20 @@ const AssignToWorkflowButton = createReactClass({
             <div className="stream-tag-filter">
               <h6 className="nav-header">Preset</h6>
               <SelectControl
-                onChange={this.onPresetSelected}
+                onChange={preset => this.props.processAssignSelectPreset(preset.value)}
                 placeholder="Select a preset of workflow and variables"
                 options={presets}
-                value={this.state.selectedPreset}
+                value={assignPreset}
               />
             </div>
             <br />
             <div className="stream-tag-filter">
               <h6 className="nav-header">Workflow</h6>
               <SelectControl
-                onChange={val => this.onFieldChange('process', val)}
+                onChange={sel => this.props.processAssignSelectProcess(sel.value)}
                 placeholder="Select a workflow or subprocess"
                 options={processDefinitions}
-                value={this.state.selectedProcess}
+                value={assignProcessDefinition ? assignProcessDefinition.id : null}
               />
             </div>
             <br />
@@ -235,6 +206,11 @@ const mapDispatchToProps = dispatch => ({
   processDefinitionsGet: () => dispatch(processDefinitionsGet()),
   processesPost: (definitionId, variables, instances) =>
     dispatch(processesPost(definitionId, variables, instances)),
+
+  processAssignSelectPreset: preset => dispatch(processAssignSelectPreset(preset)),
+  processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
+  processAssignSetVariable: (key, value) =>
+    dispatch(processAssignSetVariable(key, value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssignToWorkflowButton);

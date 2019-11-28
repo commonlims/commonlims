@@ -16,15 +16,15 @@ export const processDefinitionsGetSuccess = processDefinitions => {
 export const PROCESS_DEFINITIONS_GET_FAILURE = 'PROCESS_DEFINITIONS_GET_FAILURE';
 export const processDefinitionsGetFailure = err => ({
   type: PROCESS_DEFINITIONS_GET_FAILURE,
-  message: err,
+  errorMessage: err,
 });
 
 export const processDefinitionsGet = () => dispatch => {
   dispatch(processDefinitionsGetRequest());
   const data = {
-    processes: [
+    processDefinitions: [
       {
-        name: 'Sequence',
+        id: 'Sequence',
         fields: [
           {
             name: 'sequencer',
@@ -69,12 +69,22 @@ export const processDefinitionsGet = () => dispatch => {
         ],
       },
       {
-        name: 'SNP',
+        id: 'SNP',
+        fields: [
+          {
+            name: 'instrument',
+            type: 'select',
+            label: 'Instrument',
+            choices: ['Instrument A', 'Instrument B'],
+            help: 'Instrument where X will happen',
+            required: true,
+          },
+        ],
       },
     ],
     presets: [
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'Unknown',
           sample_prep: 'Ready-made libraries',
@@ -84,7 +94,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq Ready-made libraries',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'Unknown',
           sample_prep: 'Ready-made libraries',
@@ -94,7 +104,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'Hiseq Ready-made libraries',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'Unknown',
           sample_prep: 'Ready-made libraries',
@@ -104,7 +114,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'iSeq Ready-made libraries',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'Unknown',
           sample_prep: 'Ready-made libraries',
@@ -114,7 +124,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 Ready-made libraries',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'Unknown',
           sample_prep: 'Ready-made libraries',
@@ -124,7 +134,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'MiSeq Ready-made libraries',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'ThruPLEX',
           sample_prep: 'In-house libraries',
@@ -134,7 +144,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq ThruPLEX',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'ThruPLEX',
           sample_prep: 'In-house libraries',
@@ -144,7 +154,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 ThruPLEX',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'ThruPLEX',
           sample_prep: 'In-house libraries',
@@ -154,7 +164,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'Hiseq ThruPLEX',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'ThruPLEX',
           sample_prep: 'In-house libraries',
@@ -164,7 +174,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'MiSeq ThruPLEX',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Methylation',
           sample_prep: 'In-house libraries',
@@ -174,7 +184,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq TruSeq Methylation',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Methylation',
           sample_prep: 'In-house libraries',
@@ -184,7 +194,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'Hiseq TruSeq Methylation',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Methylation',
           sample_prep: 'In-house libraries',
@@ -194,7 +204,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 TruSeq Methylation',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Nano',
           sample_prep: 'In-house libraries',
@@ -204,7 +214,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq TruSeq Nano',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Nano',
           sample_prep: 'In-house libraries',
@@ -214,7 +224,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'Hiseq TruSeq Nano',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Nano',
           sample_prep: 'In-house libraries',
@@ -224,7 +234,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 TruSeq Nano',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Nano',
           sample_prep: 'In-house libraries',
@@ -234,7 +244,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'MiSeq TruSeq Nano',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq PCR-free',
           sample_prep: 'In-house libraries',
@@ -244,7 +254,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq TruSeq PCR-free',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq PCR-free',
           sample_prep: 'In-house libraries',
@@ -254,7 +264,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'Hiseq TruSeq PCR-free',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq PCR-free',
           sample_prep: 'In-house libraries',
@@ -264,7 +274,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 TruSeq PCR-free',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq PCR-free',
           sample_prep: 'In-house libraries',
@@ -274,7 +284,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'MiSeq TruSeq PCR-free',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded Total RNA',
           sample_prep: 'In-house libraries',
@@ -284,7 +294,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq TruSeq Stranded Total RNA',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded Total RNA',
           sample_prep: 'In-house libraries',
@@ -294,7 +304,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 TruSeq Stranded Total RNA',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded Total RNA',
           sample_prep: 'In-house libraries',
@@ -304,7 +314,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'MiSeq TruSeq Stranded Total RNA',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded mRNA',
           sample_prep: 'In-house libraries',
@@ -314,7 +324,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'NovaSeq TruSeq Stranded mRNA',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded mRNA',
           sample_prep: 'In-house libraries',
@@ -324,7 +334,7 @@ export const processDefinitionsGet = () => dispatch => {
         name: 'HiSeq 2500 TruSeq Stranded mRNA',
       },
       {
-        process: 'Sequence',
+        processDefinitionId: 'Sequence',
         variables: {
           prep_kit: 'TruSeq Stranded mRNA',
           sample_prep: 'In-house libraries',

@@ -1,4 +1,6 @@
-import axios from 'axios';
+// TODO: We've discussed using axios instead of the sentry Client. Then we'll need to set
+// things up (auth etc) in the same way for POST requests being authenticated.
+import {Client} from 'app/api';
 
 import {t} from 'app/locale';
 
@@ -60,18 +62,23 @@ export const processesPostFailure = err => ({
 });
 
 export const processesPost = (definitionId, variables, substances) => dispatch => {
+  dispatch(processesPostRequest());
+  const api = new Client();
+
   const data = {
     definitionId,
     variables,
     substances,
   };
 
-  dispatch(processesPostRequest());
-
-  return axios
-    .get('/api/0/organizations/lab/processes/', data)
-    .then(res => {
-      dispatch(processesPostSuccess(res.data));
-    })
-    .catch(err => dispatch(processesPostFailure(err)));
+  api.request('/api/0/organizations/lab/processes/', {
+    method: 'POST',
+    data,
+    success: res => {
+      dispatch(processesPostSuccess(res));
+    },
+    error: err => {
+      dispatch(processesPostFailure(err));
+    },
+  });
 };
