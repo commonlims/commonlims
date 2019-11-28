@@ -79,14 +79,6 @@ class ListView extends React.Component {
     return this.props.selectedIds.has(entryId);
   }
 
-  getVisable() {
-    const visible =
-      typeof this.props.visibleIds === 'undefined'
-        ? Object.keys(this.props.dataById)
-        : this.props.visibleIds;
-    return visible;
-  }
-
   render() {
     if (this.props.loading) {
       return <LoadingIndicator />;
@@ -120,7 +112,7 @@ class ListView extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.getVisable().map(entryId => {
+                {this.props.visibleIds.map(entryId => {
                   return (
                     <tr key={'parent-' + entryId}>
                       {this.props.canSelect && (
