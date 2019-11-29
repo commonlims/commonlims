@@ -26,11 +26,11 @@ class SubstancesTest(APITestCase):
         another = self.create_gemstone()
         another.save()
 
-        query = 'sample.name:' + sample.name
+        search = 'sample.name:' + sample.name
 
         url = reverse('clims-api-0-substances', args=(sample.organization.name,))
         self.login_as(self.user)
-        response = self.client.get(url + '?query=' + query)
+        response = self.client.get(url + '?search=' + search)
         assert response.status_code == 200, response.content
         # The search is for a unique name, so this must be true:
         assert len(response.data) == 1, len(response.data)
