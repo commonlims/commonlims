@@ -5,7 +5,7 @@ from django.db import models
 from tempfile import NamedTemporaryFile
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
-from six import binary_type
+from six import text_type
 from six import string_types
 
 
@@ -202,7 +202,7 @@ class ClimsExcelFile:
         elif isinstance(cell.value, string_types):
             return cell.value.encode('utf-8')
         else:
-            return binary_type(cell.value)
+            return text_type(cell.value)
 
 
 class OrganizationFile(Model):
