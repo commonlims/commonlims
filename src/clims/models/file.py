@@ -5,6 +5,8 @@ from django.db import models
 from tempfile import NamedTemporaryFile
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
 from openpyxl import load_workbook
+from six import text_type
+from six import string_types
 
 
 class FileContextBase(object):
@@ -152,9 +154,9 @@ class MultiFormatFile(object):
 
     def as_excel(self, read_only=True):
         self._validate_file_path()
-        workbook = load_workbook(self.file_path, data_only=False, read_only=read_only)
-
-        return workbook
+        wb = load_workbook(self.file_path, data_only=False, read_only=read_only)
+        wrapped_workbook = ClimsExcelFile(wb)
+        return wrapped_workbook
 
     @property
     def name(self):
@@ -173,6 +175,37 @@ class MultiFormatFile(object):
             raise AssertionError('MultiFormatFile must be initiated as a context manager '
                                  'in order to export excel files, e.g. '
                                  'with MultiFormatFile(org_file) as wrapped: ...')
+
+
+class ClimsExcelFile:
+    def __init__(self, workbook):
+        self._workbook = workbook
+
+    def __getitem__(self, sheet):
+        return self._workbook[sheet]
+
+    def read_cell(self, cell):
+        """
+        Converts the contents of an excel cell into string or None. Raise an exception
+        for calculated fields.
+        :param cell: openpyxl cell object
+        :return: string or None
+        """
+        # This means that the cell contains a formula, which we do not support.
+        if cell.data_type == 'f':
+            raise ValueError('Excel calculated values are not supported! openpyxl uses cached '
+                             'values for calculated fields, which are populated every last '
+                             'time the doc is opened by MicroSoft Excel software. There is '
+                             'currently no open-source software that evaluates Excel formulas')
+        elif cell.value is None:
+            return None
+        elif isinstance(cell.value, string_types):
+            return cell.value.encode('utf-8')
+        else:
+            return text_type(cell.value)
+
+    def save(self, filename):
+        self._workbook.save(filename)
 
 
 class OrganizationFile(Model):
