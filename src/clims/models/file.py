@@ -204,6 +204,9 @@ class ClimsExcelFile:
         else:
             return text_type(cell.value)
 
+    def save(self, filename):
+        self._workbook.save(filename)
+
 
 class OrganizationFile(Model):
     """
