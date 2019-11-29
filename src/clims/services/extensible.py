@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+from six import iteritems
 from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, ExtensibleProperty)
 from clims.models.location import SubstanceLocation
 from django.db import transaction
@@ -181,7 +182,18 @@ class ExtensibleBaseField(object):
         self._handle_validate(obj, value)
         obj._property_bag[self.prop_name] = value
 
+
+class PropertyInitiator(type):
+    def __new__(cls, clsname, superclasses, attributedict):
+        for k, v in iteritems(attributedict):
+            if issubclass(type(v), ExtensibleBaseField):
+                v.prop_name = k
+        return type.__new__(cls, clsname, superclasses, attributedict)
+
+
 class ExtensibleBase(object):
+    __metaclass__ = PropertyInitiator
+
     def __init__(self, **kwargs):
         from clims.services.application import ioc
         self._app = ioc.app
@@ -304,7 +316,6 @@ class ExtensibleBase(object):
 
 class FieldDoesNotExist(Exception):
     pass
-
 
 
 class ExtensibleTypeValidationError(Exception):
