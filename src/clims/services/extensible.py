@@ -136,10 +136,9 @@ class HasLocationMixin(object):
 
 
 class ExtensibleBaseField(object):
-    def __init__(self, prop_name=None, display_name=None, nullable=True):
-        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
-        self.prop_name = prop_name
-        self.display_name = display_name or prop_name
+    def __init__(self, display_name=None, nullable=True):
+        self.prop_name = None
+        self.display_name = display_name or None
         self.nullable = nullable
 
     def validate_with_casting(self, value, fn):
@@ -188,10 +187,13 @@ class PropertyInitiator(type):
         for k, v in iteritems(attributedict):
             if issubclass(type(v), ExtensibleBaseField):
                 v.prop_name = k
+                if v.display_name is None:
+                    v.display_name = k
         return type.__new__(cls, clsname, superclasses, attributedict)
 
 
 class ExtensibleBase(object):
+    # This syntax is changed in python 3!
     __metaclass__ = PropertyInitiator
 
     def __init__(self, **kwargs):
@@ -279,6 +281,13 @@ class ExtensibleBase(object):
         Returns the full name of this type
         """
         return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+
+    @classmethod
+    def type_full_name_cls(cls):
+        """
+        Returns the full name of this type
+        """
+        return "{}.{}".format(cls.__module__, cls.__name__)
 
     @property
     def version(self):
