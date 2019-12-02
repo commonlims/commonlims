@@ -761,6 +761,16 @@ class Fixtures(object):
         ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
         return ret
 
+    def create_clims_project(self, klass, name=None, **kwargs):
+        # TODO: This shouldn't be necessary as there should be only one app instance per test
+        properties = kwargs or dict()
+        ret = self.register_extensible(klass)
+
+        if not name:
+            name = "project-{}".format(uuid4())
+        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        return ret
+
     def create_container(self, klass, name=None, prefix="container", **kwargs):
         properties = kwargs or dict()
         # TODO: Explicitly register only if required?
