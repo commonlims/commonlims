@@ -7,17 +7,17 @@ from rest_framework import status
 from sentry.api.base import DEFAULT_AUTHENTICATION
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
-from clims.api.serializers.models.substance import SubstanceSerializer
+from clims.api.serializers.models.project import ProjectSerializer
 
 
-class SubstanceEndpoint(OrganizationEndpoint):
+class ProjectEndpoint(OrganizationEndpoint):
     authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, organization):
         # TODO: Filter by the organization
         search = request.GET.get('search', None)
-        queryset = self.app.substances._search_qs(search, search_key="sample.name")
+        queryset = self.app.projects._search_qs(search, search_key="project.name")
 
         # Temporarily sort by date
         queryset = queryset.order_by('-archetype__created_at')
@@ -27,8 +27,8 @@ class SubstanceEndpoint(OrganizationEndpoint):
             # NOTE: This could be simplified substantially if we had a queryset that returned
             # the wrapper object directly.
             for entry in qs:
-                wrapper = self.app.substances.to_wrapper(entry)
-                json = SubstanceSerializer(wrapper).data
+                wrapper = self.app.projects.to_wrapper(entry)
+                json = ProjectSerializer(wrapper).data
                 ret.append(json)
             return ret
 
@@ -41,16 +41,16 @@ class SubstanceEndpoint(OrganizationEndpoint):
 
     def post(self, request, organization):
         # TODO: Add user info to all actions
-        validator = SubstanceSerializer(data=request.data)
+        validator = ProjectSerializer(data=request.data)
         if not validator.is_valid():
             return self.respond(validator.errors, status=400)
 
         validated = validator.validated_data
-        substance = self.app.extensibles.create(
+        project = self.app.extensibles.create(
             validated['name'],
             validated['type_full_name'],
             organization,
             validated.get('properties', None))
-        ret = {"id": substance.id}
+        ret = {"id": project.id}
 
         return Response(ret, status=status.HTTP_201_CREATED)

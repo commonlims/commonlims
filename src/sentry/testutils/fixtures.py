@@ -752,12 +752,20 @@ class Fixtures(object):
         return ret
 
     def create_substance(self, klass, name=None, **kwargs):
-        # TODO: This shouldn't be necessary as there should be only one app instance per test
         properties = kwargs or dict()
         ret = self.register_extensible(klass)
 
         if not name:
             name = "sample-{}".format(uuid4())
+        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        return ret
+
+    def create_clims_project(self, klass, name=None, **kwargs):
+        properties = kwargs or dict()
+        ret = self.register_extensible(klass)
+
+        if not name:
+            name = "project-{}".format(uuid4())
         ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
         return ret
 

@@ -313,38 +313,6 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     def __init__(self, app):
         self._app = app
 
-    def _search_qs(self, query):
-        # TODO: We'll have the same api for projects and containers, but for now we'll keep this
-        # here for simplicity
-
-        # TODO: We will offload all search (and sorting) of substances (as well as other things)
-        # to elastic. For now we throw an error if the search isn't just 'sample.name:' or
-        # 'container.name:'
-
-        # TODO: The api for searching will be elastic's, so we just have a super simple parsing
-        # for now:
-
-        if query is None:
-            return self._all_qs()
-
-        query = query.strip()
-        query = query.split(" ")
-        if len(query) > 1:
-            raise NotImplementedError("Complex queries are not yet supported")
-
-        query = query[0]
-        key, val = query.split(":")
-
-        if key == "sample.name":
-            # TODO: the search parameter indicates we're looking for a substance that's a sample
-            # so add a category or similar so it doesn't find other things that are in a container.
-            return SubstanceVersion.objects.filter(
-                latest=True, name__icontains=val).prefetch_related('properties')
-        elif key == "sample.type":
-            pass
-        else:
-            raise NotImplementedError("The key {} is not implemented".format(key))
-
     def all_submission_files(self, organization):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
         #       So add a "type" to the file.
