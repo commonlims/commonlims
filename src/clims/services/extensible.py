@@ -183,18 +183,21 @@ class ExtensibleBaseField(object):
 
 
 class PropertyInitiator(type):
-    def __new__(cls, clsname, superclasses, attributedict):
-        for k, v in iteritems(attributedict):
-            if issubclass(type(v), ExtensibleBaseField):
+    def __new__(cls, name, bases, attrs):
+        # Creates an instance of the new extensible type
+        instance = super(PropertyInitiator, cls).__new__(cls, name, bases, attrs)
+        # Check all the fields of the instance, and add the name of the field
+        # as a default display name.
+        for k, v in iteritems(instance.__dict__):
+            if isinstance(v, ExtensibleBaseField):
                 v.prop_name = k
                 if v.display_name is None:
                     v.display_name = k
-        return type.__new__(cls, clsname, superclasses, attributedict)
+        return instance
 
 
+@six.add_metaclass(PropertyInitiator)
 class ExtensibleBase(object):
-    # This syntax is changed in python 3!
-    __metaclass__ = PropertyInitiator
 
     def __init__(self, **kwargs):
         from clims.services.application import ioc
