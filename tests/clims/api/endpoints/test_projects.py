@@ -14,8 +14,6 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneProject
 
 
 class ProjectTest(APITestCase):
-    def create_gemstone(self, *args, **kwargs):
-        return self.create_Project(GemstoneProject, *args, **kwargs)
 
     def test_search_project_find_single_by_name(self):
         # NOTE: For now, the search is always using wildcards. This will be ported to using
