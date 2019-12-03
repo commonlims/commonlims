@@ -1,16 +1,13 @@
 from __future__ import absolute_import
 
 import random
-
 import pytest
-
 from sentry.testutils import TestCase
-
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
 from clims.services.substance import SubstanceBase
 from clims.services.extensible import FloatField
-
+from clims.services.extensible import TextField
 from django.db import IntegrityError
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
 
@@ -394,3 +391,24 @@ class TestSubstance(SubstanceTestCase):
         #       Then it would be enough to check first.location == "a1" and we could return
         #       this directly to the frontend
         assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)
+
+    @pytest.mark.dev_edvard
+    def test_with_no_display_name__default_display_name_is_shown(self):
+        self.register_extensible(QuirkSample)
+        ext_type_name = QuirkSample.type_full_name_cls()
+        extensible_type = \
+            self.app.extensibles.get_extensible_type(self.organization, ext_type_name)
+        quirkyness = extensible_type.property_types.get(name='quirkyness')
+
+        assert quirkyness.display_name == 'quirkyness'
+
+    def test_with_explicitly_set_display_name__display_name_is_shown(self):
+        extensible_type = self.register_extensible(QuirkSample)
+        squirkyness = extensible_type.property_types.get(name='squirkyness')
+
+        assert squirkyness.display_name == 'The Squirkyness Display Value'
+
+
+class QuirkSample(SubstanceBase):
+    quirkyness = TextField()
+    squirkyness = TextField(display_name='The Squirkyness Display Value')

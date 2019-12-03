@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+from six import iteritems
 from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, ExtensibleProperty)
 from clims.models.location import SubstanceLocation
 from django.db import transaction
@@ -134,7 +135,70 @@ class HasLocationMixin(object):
             self._wrapped_version.archetype.save()
 
 
+class ExtensibleBaseField(object):
+    def __init__(self, display_name=None, nullable=True):
+        self.prop_name = None
+        self.display_name = display_name or None
+        self.nullable = nullable
+
+    def validate_with_casting(self, value, fn):
+        valid = True
+        try:
+            cast = fn(value)
+            if cast != value:
+                valid = False
+        except ValueError:
+            valid = False
+
+        if not valid:
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as '{}'".format(fn.__name__))
+
+    def validate(self, prop_type, value):
+        # Override this in subclasses
+        pass
+
+    def _handle_validate(self, obj, value):
+        try:
+            prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
+        except ExtensiblePropertyType.DoesNotExist:
+            raise FieldDoesNotExist(self.prop_name)
+
+        if value is None:
+            if self.nullable:
+                return
+            else:
+                raise ExtensibleTypeValidationError("None was not a valid value for Field: {}, if you want to "
+                                                    "be able to set value to None, set nullable=True on "
+                                                    "the Field.".format(self.prop_name))
+
+        self.validate(prop_type, value)
+
+    def __get__(self, obj, type=None):
+        return obj._property_bag[self.prop_name]
+
+    def __set__(self, obj, value):
+        self._handle_validate(obj, value)
+        obj._property_bag[self.prop_name] = value
+
+
+class PropertyInitiator(type):
+    def __new__(cls, name, bases, attrs):
+        # Creates an instance of the new extensible type
+        instance = super(PropertyInitiator, cls).__new__(cls, name, bases, attrs)
+        # Check all the fields of the instance, and add the name of the field
+        # as a default display name.
+        for k, v in iteritems(instance.__dict__):
+            if isinstance(v, ExtensibleBaseField):
+                v.prop_name = k
+                if v.display_name is None:
+                    v.display_name = k
+        return instance
+
+
+@six.add_metaclass(PropertyInitiator)
 class ExtensibleBase(object):
+
     def __init__(self, **kwargs):
         from clims.services.application import ioc
         self._app = ioc.app
@@ -221,6 +285,13 @@ class ExtensibleBase(object):
         """
         return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
 
+    @classmethod
+    def type_full_name_cls(cls):
+        """
+        Returns the full name of this type
+        """
+        return "{}.{}".format(cls.__module__, cls.__name__)
+
     @property
     def version(self):
         return self._wrapped_version.version
@@ -257,54 +328,6 @@ class ExtensibleBase(object):
 
 class FieldDoesNotExist(Exception):
     pass
-
-
-class ExtensibleBaseField(object):
-    def __init__(self, prop_name=None, display_name=None, nullable=True):
-        # TODO: Create a metaclass for SubstanceBase that ensures prop_name is always set
-        self.prop_name = prop_name
-        self.display_name = display_name or prop_name
-        self.nullable = nullable
-
-    def validate_with_casting(self, value, fn):
-        valid = True
-        try:
-            cast = fn(value)
-            if cast != value:
-                valid = False
-        except ValueError:
-            valid = False
-
-        if not valid:
-            raise ExtensibleTypeValidationError(
-                "Value can not be interpreted as '{}'".format(fn.__name__))
-
-    def validate(self, prop_type, value):
-        # Override this in subclasses
-        pass
-
-    def _handle_validate(self, obj, value):
-        try:
-            prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
-        except ExtensiblePropertyType.DoesNotExist:
-            raise FieldDoesNotExist(self.prop_name)
-
-        if value is None:
-            if self.nullable:
-                return
-            else:
-                raise ExtensibleTypeValidationError("None was not a valid value for Field: {}, if you want to "
-                                                    "be able to set value to None, set nullable=True on "
-                                                    "the Field.".format(self.prop_name))
-
-        self.validate(prop_type, value)
-
-    def __get__(self, obj, type=None):
-        return obj._property_bag[self.prop_name]
-
-    def __set__(self, obj, value):
-        self._handle_validate(obj, value)
-        obj._property_bag[self.prop_name] = value
 
 
 class ExtensibleTypeValidationError(Exception):

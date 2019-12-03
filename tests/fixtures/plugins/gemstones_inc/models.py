@@ -8,16 +8,16 @@ class GemstoneProject(ProjectBase):
 
 
 class GemstoneSample(SubstanceBase):
-    preciousness = TextField(prop_name="preciousness")  # TODO: Metaclass that sets prop_name
-    color = TextField(prop_name="color")
-    index = IntField(prop_name="index")
-    weight = IntField(prop_name="weight")
-    payload = JsonField(prop_name="payload")
-    has_something = BoolField(prop_name="has_something")
+    preciousness = TextField()
+    color = TextField()
+    index = IntField()
+    weight = IntField()
+    payload = JsonField()
+    has_something = BoolField()
 
 
 class GemstoneContainer(PlateBase):
     rows = 8
     columns = 12
 
-    comment = TextField("comment")
+    comment = TextField()
