@@ -17,7 +17,7 @@ class ProjectEndpoint(OrganizationEndpoint):
     def get(self, request, organization):
         # TODO: Filter by the organization
         search = request.GET.get('search', None)
-        queryset = self.app.projects._search_qs(search)
+        queryset = self.app.projects._search_qs(search, search_key="project.name")
 
         # Temporarily sort by date
         queryset = queryset.order_by('-archetype__created_at')
