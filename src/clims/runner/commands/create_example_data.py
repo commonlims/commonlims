@@ -61,4 +61,4 @@ def createexampledata():
         name = "demo-{}".format(uuid4().hex)
         project = ExampleProject(name=name, organization=org, project_code=name, pi=random.choice(pis))
         project.save()
-        click.echo("Created sample: {}".format(project.name))
+        click.echo("Created project: {}".format(project.name))
