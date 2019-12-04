@@ -17,7 +17,13 @@ class ProjectsContainer extends React.Component {
     // TODO: Consider using react for all of this data
     const access = getOrganizationState(this.props.organization).getAccess();
 
-    return <Projects organization={this.props.organization} access={access} />;
+    return (
+      <Projects
+        organization={this.props.organization}
+        access={access}
+        location={this.props.location}
+      />
+    );
   }
 }
 
