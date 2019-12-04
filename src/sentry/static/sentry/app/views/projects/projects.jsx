@@ -86,7 +86,7 @@ class Projects extends React.Component {
       {key: 'name', title: t('Project name')},
     ];
 
-    const {groupBy, query, byIds, loading} = this.props.projectSearchEntry;
+    const {groupBy, query, byIds, visibleIds, loading} = this.props.projectSearchEntry;
 
     return (
       <div className="stream-row">
@@ -107,7 +107,7 @@ class Projects extends React.Component {
             columns={this.getHeaders()}
             dataById={byIds}
             canSelect={false}
-            visibleIds={Object.keys(byIds)}
+            visibleIds={visibleIds}
             loading={loading}
           />
           {this.props.projectSearchEntry.paginationEnabled &&

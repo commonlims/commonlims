@@ -37,6 +37,7 @@ const projectSearchEntry = (state = initialState, action) => {
         errorMessage: null,
         loading: false,
         byIds: action.projectSearchEntries,
+        visibleSearchEntries: Object.keys(action.projectSearchEntries),
         pageLinks: action.link,
       };
     }
