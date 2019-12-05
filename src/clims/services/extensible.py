@@ -136,9 +136,9 @@ class HasLocationMixin(object):
 
 
 class ExtensibleBaseField(object):
-    def __init__(self, display_name=None, nullable=True):
-        self.prop_name = None
-        self.display_name = display_name or None
+    def __init__(self, display_name=None, nullable=True, prop_name=None):
+        self.prop_name = prop_name
+        self.display_name = display_name
         self.nullable = nullable
 
     def validate_with_casting(self, value, fn):
@@ -190,7 +190,8 @@ class PropertyInitiator(type):
         # as a default display name.
         for k, v in iteritems(instance.__dict__):
             if isinstance(v, ExtensibleBaseField):
-                v.prop_name = k
+                if v.prop_name is None:
+                    v.prop_name = k
                 if v.display_name is None:
                     v.display_name = k
         return instance

@@ -1,6 +1,8 @@
 
 from __future__ import absolute_import, print_function
 import random
+from uuid import uuid4
+
 
 import click
 from sentry.runner.decorators import configuration
@@ -14,7 +16,8 @@ def createexampledata():
     """
     from clims.services.application import ioc, ApplicationService
     from clims.services.substance import SubstanceBase
-    from clims.services.extensible import FloatField
+    from clims.services.project import ProjectBase
+    from clims.services.extensible import FloatField, TextField
     from clims.models.plugin_registration import PluginRegistration
     from sentry.models.organization import Organization
     from clims.models import WorkBatch
@@ -36,7 +39,12 @@ def createexampledata():
         cool = FloatField("cool")
         erudite = FloatField("erudite")
 
+    class ExampleProject(ProjectBase):
+        pi = TextField("pi")
+        project_code = TextField("project_code")
+
     app.extensibles.register(example_plugin, ExampleSample)
+    app.extensibles.register(example_plugin, ExampleProject)
 
     for _ in range(100):
         name = "sample-{}".format(random.randint(1, 1000000))
@@ -47,3 +55,10 @@ def createexampledata():
                                erudite=random.randint(1, 100))
         sample.save()
         click.echo("Created sample: {}".format(sample.name))
+
+    pis = ["Rosaline Franklin", "Charles Darwin", "Gregor Medel"]
+    for _ in range(100):
+        name = "demo-{}".format(uuid4().hex)
+        project = ExampleProject(name=name, organization=org, project_code=name, pi=random.choice(pis))
+        project.save()
+        click.echo("Created project: {}".format(project.name))

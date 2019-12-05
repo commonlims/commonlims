@@ -6,12 +6,28 @@ import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
 import SentryTypes from 'app/sentryTypes';
+import Pagination from 'app/components/pagination';
+import {browserHistory} from 'react-router';
 
 class Projects extends React.Component {
   constructor(props) {
     super(props);
-    const {query, groupBy} = this.props;
-    this.props.projectSearchEntriesGet(query, groupBy);
+
+    this.onGroup = this.onGroup.bind(this);
+    this.onSort = this.onSort.bind(this);
+    this.onSearch = this.onSearch.bind(this);
+    this.onCursor = this.onCursor.bind(this);
+
+    let {search, cursor, groupBy} = this.props.projectSearchEntry;
+    const query = this.props.location.query;
+
+    if (query) {
+      search = query.search ? query.search : search;
+      cursor = query.cursor ? query.cursor : cursor;
+      groupBy = query.groupBy ? query.groupBy : groupBy;
+    }
+
+    this.onSearch(search, groupBy, cursor);
   }
 
   getHeaders() {
@@ -34,8 +50,32 @@ class Projects extends React.Component {
     this.setState({groupBy: {value: e}});
   }
 
-  onSearch(query, groupBy) {
-    this.props.projectSearchEntriesGet(query, groupBy);
+  onSearch(search, groupBy, cursor) {
+    this.props.projectSearchEntriesGet(search, groupBy, cursor);
+
+    const location = this.props.location;
+    const query = {
+      ...location.query,
+      search,
+      groupBy,
+      cursor,
+    };
+
+    browserHistory.push({pathname: location.pathname, query});
+  }
+
+  onCursor(cursor) {
+    const {search, groupBy} = this.props.projectSearchEntry;
+    this.onSearch(search, groupBy, cursor);
+  }
+
+  onGroup(e) {
+    // TODO Fix this later (should be set through redux )
+    this.setState({groupBy: {value: e}});
+  }
+
+  onSort(e) {
+    // TODO Fix this later (should be set through redux )
   }
 
   render() {
@@ -46,6 +86,8 @@ class Projects extends React.Component {
       {key: 'name', title: t('Project name')},
     ];
 
+    const {groupBy, query, byIds, visibleIds, loading} = this.props.projectSearchEntry;
+
     return (
       <div className="stream-row">
         <div className="stream-content">
@@ -54,19 +96,27 @@ class Projects extends React.Component {
             onSavedSearchCreate={this.onSavedSearchCreate}
             searchPlaceholder={t('Search for projects')}
             groupOptions={groupOptions}
-            grouping={this.props.groupBy}
+            grouping={groupBy}
             onGroup={this.onGroup}
             onSearch={this.onSearch}
             orgId={this.props.organization.id}
-            query={this.props.query}
+            query={query}
           />
           <ListView
             orgId={this.props.organization.id}
             columns={this.getHeaders()}
-            dataById={this.props.projectSearchEntry.byIds}
+            dataById={byIds}
             canSelect={false}
-            visibleIds={Object.keys(this.props.projectSearchEntry.byIds)}
+            visibleIds={visibleIds}
+            loading={loading}
           />
+          {this.props.projectSearchEntry.paginationEnabled &&
+            this.props.projectSearchEntry.pageLinks && (
+              <Pagination
+                pageLinks={this.props.projectSearchEntry.pageLinks}
+                onCursor={this.onCursor}
+              />
+            )}
         </div>
       </div>
     );
@@ -76,11 +126,9 @@ class Projects extends React.Component {
 Projects.propTypes = {
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
-  groupBy: PropTypes.string.isRequired,
   projectSearchEntriesGet: PropTypes.func.isRequired,
   byIds: PropTypes.object,
   projectSearchEntry: PropTypes.object,
-  query: PropTypes.string,
 };
 
 const mapStateToProps = state => {
@@ -90,7 +138,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  projectSearchEntriesGet: query => dispatch(projectSearchEntriesGet(query)),
+  projectSearchEntriesGet: (query, groupBy, cursor) =>
+    dispatch(projectSearchEntriesGet(query, groupBy, cursor)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);

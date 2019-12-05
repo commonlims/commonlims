@@ -13,8 +13,10 @@ export const initialState = {
   visibleIds: [],
   selectedIds: [],
   groupBy: 'name',
-  query: 'name',
+  search: 'name',
   byIds: {}, // The actual substance entries (TODO: have parentById and childById?)
+  cursor: '', // The cursor into the current dataset
+  paginationEnabled: true,
 };
 
 const projectSearchEntry = (state = initialState, action) => {
@@ -24,8 +26,9 @@ const projectSearchEntry = (state = initialState, action) => {
         ...state,
         errorMessage: null,
         loading: true,
-        query: action.query,
+        search: action.search,
         groupBy: action.groupBy,
+        cursor: action.cursor,
       };
     }
     case PROJECT_SEARCH_ENTRIES_GET_SUCCESS: {
@@ -34,6 +37,8 @@ const projectSearchEntry = (state = initialState, action) => {
         errorMessage: null,
         loading: false,
         byIds: action.projectSearchEntries,
+        visibleIds: Object.keys(action.projectSearchEntries),
+        pageLinks: action.link,
       };
     }
     case PROJECT_SEARCH_ENTRIES_GET_FAILURE:
