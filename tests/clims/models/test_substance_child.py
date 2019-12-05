@@ -36,6 +36,13 @@ class TestSubstanceParentChild(SubstanceTestCase):
 
         assert original_prop_vals == child_prop_vals
 
+    def test_simple_child_gets_specific_prop(self):
+        props = dict(preciousness='*o*', color='red')
+        parent = self.create_gemstone(**props)
+        child = parent.create_child()
+        assert child.preciousness == '*o*'
+        assert child.color == 'red'
+
     def test_creating_child_can_override_props(self):
         props = dict(preciousness='*o*', color='red')
         parent = self.create_gemstone(**props)
