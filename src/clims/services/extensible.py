@@ -393,9 +393,11 @@ class PropertyBag(object):
 
             # '.all_properties' is used to leverage the .prefetch_related() call
             # that is used when fetching the extensible
-            properties = self.extensible_wrapper._wrapped_version.all_properties
-            value = next(prop.value for prop in properties if prop.extensible_property_type.name == key)
-
+            if hasattr(self.extensible_wrapper._wrapped_version, 'all_properties'):
+                properties = self.extensible_wrapper._wrapped_version.all_properties
+                value = next(prop.value for prop in properties if prop.extensible_property_type.name == key)
+            else:
+                value = self.extensible_wrapper._wrapped_version.properties.get(extensible_property_type__name=key).value
             return value
         except ExtensibleProperty.DoesNotExist:
             return None

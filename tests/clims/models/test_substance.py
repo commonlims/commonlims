@@ -48,6 +48,23 @@ class SubstancePropertiesTestCase(TestCase):
         assert fetched_sample.cool == cool
         assert fetched_sample.erudite == erudite
 
+    def test_can_set_and_get_properties_of_substance(self):
+        moxy = random.randint(1, 100)
+        cool = random.randint(1, 100)
+        erudite = random.randint(1, 100)
+
+        name = "sample-{}".format(random.randint(1, 1000000))
+        sample = self.ExampleSample(name=name,
+                                    organization=self.organization,
+                                    moxy=moxy,
+                                    cool=cool,
+                                    erudite=erudite)
+        sample.save()
+
+        assert sample.moxy == moxy
+        assert sample.erudite == erudite
+        assert sample.cool == cool
+
     def test_can_create_substance_with_property_set_to_none(self):
         name = "sample-{}".format(random.randint(1, 1000000))
         cool = random.randint(1, 100)
