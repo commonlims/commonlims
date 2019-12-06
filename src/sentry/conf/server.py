@@ -278,15 +278,8 @@ INSTALLED_APPS = (
     'sentry.analytics.events',
     'sentry.nodestore',
     'sentry.search',
-    'sentry.plugins.sentry_interface_types',
-    'sentry.plugins.sentry_mail',
-    'sentry.plugins.sentry_urls',
-    'sentry.plugins.sentry_useragents',
-    'sentry.plugins.sentry_webhooks',
     'social_auth',
     'sudo',
-    'sentry.tagstore',
-    'sentry.eventstream',
     'clims'
 )
 
@@ -1339,15 +1332,6 @@ SENTRY_ONPREMISE = True
 SENTRY_USE_X_FORWARDED_FOR = True
 
 SENTRY_DEFAULT_INTEGRATIONS = (
-    'sentry.integrations.bitbucket.BitbucketIntegrationProvider',
-    'sentry.integrations.slack.SlackIntegrationProvider',
-    'sentry.integrations.github.GitHubIntegrationProvider',
-    'sentry.integrations.github_enterprise.GitHubEnterpriseIntegrationProvider',
-    'sentry.integrations.gitlab.GitlabIntegrationProvider',
-    'sentry.integrations.jira.JiraIntegrationProvider',
-    'sentry.integrations.jira_server.JiraServerIntegrationProvider',
-    'sentry.integrations.vsts.VstsIntegrationProvider',
-    'sentry.integrations.vsts_extension.VstsExtensionIntegrationProvider',
 )
 
 

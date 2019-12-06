@@ -24,9 +24,6 @@ from sentry.web.frontend.auth_organization_login import \
 from sentry.web.frontend.auth_provider_login import AuthProviderLoginView
 from sentry.web.frontend.auth_close import AuthCloseView
 from sentry.web.frontend.error_page_embed import ErrorPageEmbedView
-from sentry.web.frontend.group_event_json import GroupEventJsonView
-from sentry.web.frontend.group_plugin_action import GroupPluginActionView
-from sentry.web.frontend.group_tag_export import GroupTagExportView
 from sentry.web.frontend.home import HomeView
 from sentry.web.frontend.pipeline_advancer import PipelineAdvancerView
 from sentry.web.frontend.mailgun_inbound_webhook import \
@@ -48,14 +45,11 @@ from sentry.web.frontend.restore_organization import RestoreOrganizationView
 from sentry.web.frontend.team_avatar import TeamAvatarPhotoView
 from sentry.web.frontend.account_identity import AccountIdentityAssociateView
 from sentry.web.frontend.sudo import SudoView
-from sentry.web.frontend.unsubscribe_issue_notifications import \
-    UnsubscribeIssueNotificationsView
 from sentry.web.frontend.user_avatar import UserAvatarPhotoView
 from sentry.web.frontend.setup_wizard import SetupWizardView
 from sentry.web.frontend.vsts_extension_configuration import \
     VstsExtensionConfigurationView
 from sentry.web.frontend.js_sdk_loader import JavaScriptSdkLoader
-from sentry.web.frontend.project_event import ProjectEventRedirect
 
 
 __all__ = ('urlpatterns', )
@@ -275,11 +269,6 @@ urlpatterns += patterns(
         accounts.email_unsubscribe_project,
         name='sentry-account-email-unsubscribe-project'
     ),
-    url(
-        r'^account/notifications/unsubscribe/issue/(?P<issue_id>\d+)/$',
-        UnsubscribeIssueNotificationsView.as_view(),
-        name='sentry-account-email-unsubscribe-issue'
-    ),
     url(r'^account/remove/$',
         RedirectView.as_view(pattern_name="sentry-remove-account", permanent=False),
         ),
@@ -341,7 +330,6 @@ urlpatterns += patterns(
         ),
     url(r'^out/$', OutView.as_view()),
 
-    url(r'^accept-transfer/$', react_page_view, name='sentry-accept-project-transfer'),
     # User settings use generic_react_page_view, while any view
     # acting on behalf of an organization should use react_page_view
     url(r'^settings/account/$', generic_react_page_view, name="sentry-account-settings"),
@@ -524,15 +512,6 @@ urlpatterns += patterns(
         PipelineAdvancerView.as_view(),
         name='sentry-extension-setup'
     ),
-    url(r'^extensions/cloudflare/', include('sentry.integrations.cloudflare.urls')),
-    url(r'^extensions/jira/', include('sentry.integrations.jira.urls')),
-    url(r'^extensions/jira-server/', include('sentry.integrations.jira_server.urls')),
-    url(r'^extensions/slack/', include('sentry.integrations.slack.urls')),
-    url(r'^extensions/github/', include('sentry.integrations.github.urls')),
-    url(r'^extensions/github-enterprise/', include('sentry.integrations.github_enterprise.urls')),
-    url(r'^extensions/gitlab/', include('sentry.integrations.gitlab.urls')),
-    url(r'^extensions/vsts/', include('sentry.integrations.vsts.urls')),
-    url(r'^extensions/bitbucket/', include('sentry.integrations.bitbucket.urls')),
 
     url(r'^plugins/', include('sentry.plugins.base.urls')),
 
@@ -564,28 +543,6 @@ urlpatterns += patterns(
         react_page_view,
         name='sentry-stream'
     ),
-    url(
-        r'^(?P<organization_slug>[\w_-]+)/(?P<project_slug>[\w_-]+)/(?:group|issues)/(?P<group_id>\d+)/events/(?P<event_id_or_latest>(\d+|latest))/json/$',
-        GroupEventJsonView.as_view(),
-        name='sentry-group-event-json'
-    ),
-    url(
-        r'^(?P<organization_slug>[\w_-]+)/(?P<project_slug>[\w_-]+)/issues/(?P<group_id>\d+)/tags/(?P<key>[^\/]+)/export/$',
-        GroupTagExportView.as_view(),
-        name='sentry-group-tag-export'
-    ),
-    url(
-        r'^(?P<organization_slug>[\w_-]+)/(?P<project_slug>[\w_-]+)/issues/(?P<group_id>\d+)/actions/(?P<slug>[\w_-]+)/',
-        GroupPluginActionView.as_view(),
-        name='sentry-group-plugin-action'
-    ),
-
-    url(
-        r'^(?P<organization_slug>[\w_-]+)/(?P<project_slug>[\w_-]+)/events/(?P<client_event_id>[\w_-]+)/$',
-        ProjectEventRedirect.as_view(),
-        name='sentry-project-event-redirect'
-    ),
-
     # Legacy
     url(r'$', react_page_view),
 )

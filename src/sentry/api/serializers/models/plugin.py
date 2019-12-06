@@ -5,7 +5,6 @@ import six
 from sentry.api.serializers import Serializer
 from sentry.utils.assets import get_asset_url
 from sentry.utils.http import absolute_uri
-from sentry.models import ProjectOption
 from django.utils.text import slugify
 
 
@@ -14,19 +13,7 @@ class PluginSerializer(Serializer):
         self.project = project
 
     def serialize(self, obj, attrs, user):
-        from sentry.api.endpoints.project_releases_token import _get_webhook_url
         doc = ''
-
-        if self.project is not None:
-            release_token = ProjectOption.objects.get_value(self.project, 'sentry:release-token')
-            if release_token is not None:
-                webhook_url = _get_webhook_url(self.project, obj.slug, release_token)
-
-                if hasattr(obj, 'get_release_doc_html'):
-                    try:
-                        doc = obj.get_release_doc_html(webhook_url)
-                    except NotImplementedError:
-                        pass
 
         contexts = []
         if hasattr(obj, 'get_custom_contexts'):

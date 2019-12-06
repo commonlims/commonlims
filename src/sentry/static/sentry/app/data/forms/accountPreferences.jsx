@@ -13,21 +13,6 @@ const formGroups = [
     title: 'Preferences',
     fields: [
       {
-        name: 'stacktraceOrder',
-        type: 'choice',
-        required: false,
-        choices: [
-          ['-1', 'Default (let Sentry decide)'],
-          ['1', 'Most recent call last'],
-          ['2', 'Most recent call first'],
-        ],
-
-        // additional data/props that is related to rendering of form field rather than data
-        label: 'Stacktrace Order',
-        help: 'Choose the default ordering of frames in stacktraces',
-        getData: transformOptions,
-      },
-      {
         name: 'language',
         type: 'choice',
         label: 'Language',

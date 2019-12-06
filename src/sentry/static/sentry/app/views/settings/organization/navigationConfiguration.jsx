@@ -13,11 +13,6 @@ const organizationNavigation = [
         description: t('Configure general settings for an organization'),
       },
       {
-        path: `${pathPrefix}/projects/`,
-        title: t('Projects'),
-        description: t("View and manage an organization's projects"),
-      },
-      {
         path: `${pathPrefix}/teams/`,
         title: t('Teams'),
         description: t("Manage an organization's teams"),
@@ -61,11 +56,6 @@ const organizationNavigation = [
         show: ({access, features}) =>
           features.has('legacy-rate-limits') && access.has('org:write'),
         description: t('Configure rate limits for all projects in the organization'),
-      },
-      {
-        path: `${pathPrefix}/repos/`,
-        title: t('Repositories'),
-        description: t('Manage repositories connected to the organization'),
       },
       {
         path: `${pathPrefix}/integrations/`,

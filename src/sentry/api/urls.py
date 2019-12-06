@@ -2,7 +2,6 @@ from __future__ import absolute_import, print_function
 
 from django.conf.urls import include, patterns, url
 
-from .endpoints.accept_project_transfer import AcceptProjectTransferEndpoint
 from .endpoints.organization_dashboards import OrganizationDashboardsEndpoint
 from .endpoints.relay_heartbeat import RelayHeartbeatEndpoint
 from .endpoints.relay_projectconfigs import RelayProjectConfigsEndpoint
@@ -22,26 +21,6 @@ from .endpoints.broadcast_details import BroadcastDetailsEndpoint
 from .endpoints.broadcast_index import BroadcastIndexEndpoint
 from .endpoints.catchall import CatchallEndpoint
 from .endpoints.chunk import ChunkUploadEndpoint
-from .endpoints.event_attachment_details import EventAttachmentDetailsEndpoint
-from .endpoints.event_attachments import EventAttachmentsEndpoint
-from .endpoints.event_details import EventDetailsEndpoint
-from .endpoints.event_owners import EventOwnersEndpoint
-from .endpoints.group_details import GroupDetailsEndpoint
-from .endpoints.group_events import GroupEventsEndpoint
-from .endpoints.group_events_latest import GroupEventsLatestEndpoint
-from .endpoints.group_events_oldest import GroupEventsOldestEndpoint
-from .endpoints.group_hashes import GroupHashesEndpoint
-from .endpoints.group_integration_details import GroupIntegrationDetailsEndpoint
-from .endpoints.group_integrations import GroupIntegrationsEndpoint
-from .endpoints.group_participants import GroupParticipantsEndpoint
-from .endpoints.group_similar_issues import GroupSimilarIssuesEndpoint
-from .endpoints.group_stats import GroupStatsEndpoint
-from .endpoints.group_tags import GroupTagsEndpoint
-from .endpoints.group_tagkey_details import GroupTagKeyDetailsEndpoint
-from .endpoints.group_tagkey_values import GroupTagKeyValuesEndpoint
-from .endpoints.group_tombstone_details import GroupTombstoneDetailsEndpoint
-from .endpoints.group_tombstone import GroupTombstoneEndpoint
-from .endpoints.group_user_reports import GroupUserReportsEndpoint
 from .endpoints.index import IndexEndpoint
 from .endpoints.internal_queue_tasks import InternalQueueTasksEndpoint
 from .endpoints.internal_quotas import InternalQuotasEndpoint
@@ -60,107 +39,22 @@ from .endpoints.organization_details import OrganizationDetailsEndpoint
 from .endpoints.organization_discover_query import OrganizationDiscoverQueryEndpoint
 from .endpoints.organization_discover_saved_queries import OrganizationDiscoverSavedQueriesEndpoint
 from .endpoints.organization_discover_saved_query_detail import OrganizationDiscoverSavedQueryDetailEndpoint
-from .endpoints.organization_events import OrganizationEventsEndpoint, OrganizationEventsMetaEndpoint, OrganizationEventsStatsEndpoint
-from .endpoints.organization_group_index import OrganizationGroupIndexEndpoint
 from .endpoints.organization_dashboard_details import OrganizationDashboardDetailsEndpoint
 from .endpoints.organization_health import OrganizationHealthTopEndpoint, OrganizationHealthGraphEndpoint
-from .endpoints.organization_shortid import ShortIdLookupEndpoint
-from .endpoints.organization_environments import OrganizationEnvironmentsEndpoint
-from .endpoints.organization_eventid import EventIdLookupEndpoint
-from .endpoints.organization_slugs import SlugsUpdateEndpoint
-from .endpoints.organization_issues_new import OrganizationIssuesNewEndpoint
-from .endpoints.organization_issues_resolved_in_release import OrganizationIssuesResolvedInReleaseEndpoint
 from .endpoints.organization_member_details import OrganizationMemberDetailsEndpoint
 from .endpoints.organization_member_index import OrganizationMemberIndexEndpoint
-from .endpoints.organization_member_issues_assigned import OrganizationMemberIssuesAssignedEndpoint
-from .endpoints.organization_member_issues_bookmarked import OrganizationMemberIssuesBookmarkedEndpoint
-from .endpoints.organization_member_issues_viewed import OrganizationMemberIssuesViewedEndpoint
-from .endpoints.organization_member_unreleased_commits import OrganizationMemberUnreleasedCommitsEndpoint
 from .endpoints.organization_member_team_details import OrganizationMemberTeamDetailsEndpoint
 from .endpoints.organization_onboarding_tasks import OrganizationOnboardingTaskEndpoint
 from .endpoints.organization_index import OrganizationIndexEndpoint
 from .endpoints.organization_plugins import OrganizationPluginsEndpoint
-from .endpoints.organization_processingissues import OrganizationProcessingIssuesEndpoint
-from .endpoints.organization_projects import OrganizationProjectsEndpoint
-from .endpoints.organization_releases import OrganizationReleasesEndpoint
-from .endpoints.organization_release_details import OrganizationReleaseDetailsEndpoint
-from .endpoints.organization_release_files import OrganizationReleaseFilesEndpoint
-from .endpoints.organization_release_file_details import OrganizationReleaseFileDetailsEndpoint
-from .endpoints.organization_release_commits import OrganizationReleaseCommitsEndpoint
-from .endpoints.organization_repositories import OrganizationRepositoriesEndpoint
-from .endpoints.organization_integration_details import OrganizationIntegrationDetailsEndpoint
-from .endpoints.organization_integration_repos import OrganizationIntegrationReposEndpoint
-from .endpoints.organization_integrations import OrganizationIntegrationsEndpoint
-from .endpoints.organization_config_integrations import OrganizationConfigIntegrationsEndpoint
-from .endpoints.organization_config_repositories import OrganizationConfigRepositoriesEndpoint
-from .endpoints.organization_repository_commits import OrganizationRepositoryCommitsEndpoint
-from .endpoints.organization_repository_details import OrganizationRepositoryDetailsEndpoint
 from .endpoints.organization_sentry_apps import OrganizationSentryAppsEndpoint
-from .endpoints.organization_tagkey_values import OrganizationTagKeyValuesEndpoint
 
-
-from .endpoints.organization_tags import OrganizationTagsEndpoint
-from .endpoints.organization_user_reports import OrganizationUserReportsEndpoint
 from .endpoints.organization_users import OrganizationUsersEndpoint
 from .endpoints.sentry_app_installations import SentryAppInstallationsEndpoint
 from .endpoints.sentry_app_installation_details import SentryAppInstallationDetailsEndpoint
 from .endpoints.organization_stats import OrganizationStatsEndpoint
 from .endpoints.organization_teams import OrganizationTeamsEndpoint
-from .endpoints.organization_user_issues import OrganizationUserIssuesEndpoint
-from .endpoints.organization_user_issues_search import OrganizationUserIssuesSearchEndpoint
-from .endpoints.project_avatar import ProjectAvatarEndpoint
-from .endpoints.project_details import ProjectDetailsEndpoint
-from .endpoints.project_transfer import ProjectTransferEndpoint
-from .endpoints.project_create_sample import ProjectCreateSampleEndpoint
-from .endpoints.project_docs import ProjectDocsEndpoint
-from .endpoints.project_docs_platform import ProjectDocsPlatformEndpoint
-from .endpoints.project_environments import ProjectEnvironmentsEndpoint
-from .endpoints.project_environment_details import ProjectEnvironmentDetailsEndpoint
-from .endpoints.project_platforms import ProjectPlatformsEndpoint
-from .endpoints.project_events import ProjectEventsEndpoint
-from .endpoints.project_event_details import ProjectEventDetailsEndpoint
-from .endpoints.project_filters import ProjectFiltersEndpoint
-from .endpoints.project_filter_details import ProjectFilterDetailsEndpoint
-from .endpoints.project_group_index import ProjectGroupIndexEndpoint
-from .endpoints.project_group_stats import ProjectGroupStatsEndpoint
-from .endpoints.project_index import ProjectIndexEndpoint
-from .endpoints.project_issues_resolved_in_release import ProjectIssuesResolvedInReleaseEndpoint
-from .endpoints.project_keys import ProjectKeysEndpoint
-from .endpoints.project_key_details import ProjectKeyDetailsEndpoint
-from .endpoints.project_key_stats import ProjectKeyStatsEndpoint
-from .endpoints.project_member_index import ProjectMemberIndexEndpoint
-from .endpoints.project_ownership import ProjectOwnershipEndpoint
 
-from .endpoints.project_plugins import ProjectPluginsEndpoint
-from .endpoints.project_plugin_details import ProjectPluginDetailsEndpoint
-
-from .endpoints.project_release_details import ProjectReleaseDetailsEndpoint
-from .endpoints.project_release_files import ProjectReleaseFilesEndpoint
-from .endpoints.project_release_file_details import ProjectReleaseFileDetailsEndpoint
-from .endpoints.project_release_commits import ProjectReleaseCommitsEndpoint
-from .endpoints.project_releases import ProjectReleasesEndpoint
-from .endpoints.project_release_setup import ProjectReleaseSetupCompletionEndpoint
-from .endpoints.project_releases_token import ProjectReleasesTokenEndpoint
-from .endpoints.project_rules import ProjectRulesEndpoint
-from .endpoints.project_rules_configuration import ProjectRulesConfigurationEndpoint
-from .endpoints.project_rule_details import ProjectRuleDetailsEndpoint
-from .endpoints.project_stats import ProjectStatsEndpoint
-from .endpoints.project_tags import ProjectTagsEndpoint
-
-from .endpoints.project_tagkey_details import ProjectTagKeyDetailsEndpoint
-from .endpoints.project_tagkey_values import ProjectTagKeyValuesEndpoint
-from .endpoints.project_team_details import ProjectTeamDetailsEndpoint
-from .endpoints.project_teams import ProjectTeamsEndpoint
-from .endpoints.project_processingissues import ProjectProcessingIssuesEndpoint, \
-    ProjectProcessingIssuesFixEndpoint, ProjectProcessingIssuesDiscardEndpoint
-from .endpoints.project_reprocessing import ProjectReprocessingEndpoint
-from .endpoints.project_servicehooks import ProjectServiceHooksEndpoint
-from .endpoints.project_servicehook_details import ProjectServiceHookDetailsEndpoint
-from .endpoints.project_servicehook_stats import ProjectServiceHookStatsEndpoint
-from .endpoints.project_user_details import ProjectUserDetailsEndpoint
-from .endpoints.project_user_reports import ProjectUserReportsEndpoint
-from .endpoints.project_user_stats import ProjectUserStatsEndpoint
-from .endpoints.project_users import ProjectUsersEndpoint
 from .endpoints.prompts_activity import PromptsActivityEndpoint
 from .endpoints.filechange import CommitFileChangeEndpoint
 from .endpoints.release_deploys import ReleaseDeploysEndpoint
@@ -175,7 +69,6 @@ from .endpoints.team_details import TeamDetailsEndpoint
 from .endpoints.team_groups_new import TeamGroupsNewEndpoint
 from .endpoints.team_groups_trending import TeamGroupsTrendingEndpoint
 from .endpoints.team_members import TeamMembersEndpoint
-from .endpoints.team_projects import TeamProjectsEndpoint
 from .endpoints.team_stats import TeamStatsEndpoint
 from .endpoints.useravatar import UserAvatarEndpoint
 from .endpoints.user_appearance import UserAppearanceEndpoint
@@ -292,10 +185,6 @@ urlpatterns = patterns(
     url(r'^broadcasts/$', BroadcastIndexEndpoint.as_view(),
         name='sentry-api-0-broadcast-index'),
     url(r'^broadcasts/(?P<broadcast_id>[^\/]+)/$', BroadcastDetailsEndpoint.as_view()),
-
-    # Project transfer
-    url(r'^accept-transfer/$', AcceptProjectTransferEndpoint.as_view(),
-        name='sentry-api-0-accept-project-transfer'),
 
     # Monitors
     url(r'^monitors/(?P<monitor_id>[^\/]+)/checkins/$', MonitorCheckInsEndpoint.as_view()),
@@ -444,21 +333,6 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-health-graph',
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/shortids/(?P<short_id>[^\/]+)/$',
-        ShortIdLookupEndpoint.as_view(),
-        name='sentry-api-0-short-id-lookup'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/eventids/(?P<event_id>[^\/]+)/$',
-        EventIdLookupEndpoint.as_view(),
-        name='sentry-api-0-event-id-lookup'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/slugs/$',
-        SlugsUpdateEndpoint.as_view(),
-        name='sentry-api-0-short-ids-update'
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/access-requests/$',
         OrganizationAccessRequestDetailsEndpoint.as_view(),
         name='sentry-api-0-organization-access-requests'
@@ -504,71 +378,9 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-avatar'
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/config/integrations/$',
-        OrganizationConfigIntegrationsEndpoint.as_view(),
-        name='sentry-api-0-organization-config-integrations'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/config/repos/$',
-        OrganizationConfigRepositoriesEndpoint.as_view(),
-        name='sentry-api-0-organization-config-repositories'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/events/$',
-        OrganizationEventsEndpoint.as_view(),
-        name='sentry-api-0-organization-events'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/events-stats/$',
-        OrganizationEventsStatsEndpoint.as_view(),
-        name='sentry-api-0-organization-events-stats'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/events-meta/$',
-        OrganizationEventsMetaEndpoint.as_view(),
-        name='sentry-api-0-organization-events-meta'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/issues/new/$',
-        OrganizationIssuesNewEndpoint.as_view(),
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/issues/$',
-        OrganizationGroupIndexEndpoint.as_view(),
-        name='sentry-api-0-organization-group-index'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/integrations/$',
-        OrganizationIntegrationsEndpoint.as_view(),
-        name='sentry-api-0-organization-integrations'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/integrations/(?P<integration_id>[^\/]+)/$',
-        OrganizationIntegrationDetailsEndpoint.as_view(),
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/integrations/(?P<integration_id>[^\/]+)/repos/$',
-        OrganizationIntegrationReposEndpoint.as_view(),
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/members/$',
         OrganizationMemberIndexEndpoint.as_view(),
         name='sentry-api-0-organization-member-index'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/users/issues/$',
-        OrganizationUserIssuesSearchEndpoint.as_view(),
-        name='sentry-api-0-organization-issue-search'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/users/(?P<user_id>[^\/]+)/issues/$',
-        OrganizationUserIssuesEndpoint.as_view(),
-        name='sentry-api-0-organization-user-issues'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/resolved/$',
-        OrganizationIssuesResolvedInReleaseEndpoint.as_view(),
-        name='sentry-api-0-organization-release-resolved'
     ),
     url(
         r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/$',
@@ -576,81 +388,16 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-member-details'
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/unreleased-commits/$',
-        OrganizationMemberUnreleasedCommitsEndpoint.as_view(),
-        name='sentry-api-0-organization-member-unreleased-commits'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/issues/assigned/$',
-        OrganizationMemberIssuesAssignedEndpoint.as_view(),
-        name='sentry-api-0-organization-member-issues-assigned'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/issues/bookmarked/$',
-        OrganizationMemberIssuesBookmarkedEndpoint.as_view(),
-        name='sentry-api-0-organization-member-issues-bookmarked'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/issues/viewed/$',
-        OrganizationMemberIssuesViewedEndpoint.as_view(),
-        name='sentry-api-0-organization-member-issues-viewed'
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/members/(?P<member_id>[^\/]+)/teams/(?P<team_slug>[^\/]+)/$',
         OrganizationMemberTeamDetailsEndpoint.as_view(),
         name='sentry-api-0-organization-member-team-details'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/processingissues/$',
-        OrganizationProcessingIssuesEndpoint.as_view(),
-        name='sentry-api-0-organization-processing-issues'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/projects/$',
-        OrganizationProjectsEndpoint.as_view(),
-        name='sentry-api-0-organization-projects'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/repos/$',
-        OrganizationRepositoriesEndpoint.as_view(),
-        name='sentry-api-0-organization-repositories'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/repos/(?P<repo_id>[^\/]+)/$',
-        OrganizationRepositoryDetailsEndpoint.as_view(),
-        name='sentry-api-0-organization-repository-details'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/repos/(?P<repo_id>[^\/]+)/commits/$',
-        OrganizationRepositoryCommitsEndpoint.as_view(),
-        name='sentry-api-0-organization-repository-commits'
     ),
     url(
         r'^organizations/(?P<organization_slug>[^\/]+)/plugins/$',
         OrganizationPluginsEndpoint.as_view(),
         name='sentry-api-0-organization-plugins'
     ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/$',
-        OrganizationReleasesEndpoint.as_view(),
-        name='sentry-api-0-organization-releases'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/$',
-        OrganizationReleaseDetailsEndpoint.as_view(),
-        name='sentry-api-0-organization-release-details'
-    ),
 
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/files/$',
-        OrganizationReleaseFilesEndpoint.as_view(),
-        name='sentry-api-0-organization-release-files'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/files/(?P<file_id>\d+)/$',
-        OrganizationReleaseFileDetailsEndpoint.as_view(),
-        name='sentry-api-0-organization-release-file-details'
-    ),
     url(
         r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/commitfiles/$',
         CommitFileChangeEndpoint.as_view(),
@@ -660,16 +407,6 @@ urlpatterns = patterns(
         r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/deploys/$',
         ReleaseDeploysEndpoint.as_view(),
         name='sentry-api-0-organization-release-deploys'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/releases/(?P<version>[^/]+)/commits/$',
-        OrganizationReleaseCommitsEndpoint.as_view(),
-        name='sentry-api-0-organization-release-commits'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/user-feedback/$',
-        OrganizationUserReportsEndpoint.as_view(),
-        name='sentry-api-0-organization-user-feedback'
     ),
     url(
         r'^organizations/(?P<organization_slug>[^\/]+)/users/$',
@@ -702,24 +439,9 @@ urlpatterns = patterns(
         name='sentry-api-0-organization-teams'
     ),
     url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/tags/$',
-        OrganizationTagsEndpoint.as_view(),
-        name='sentry-api-0-organization-tags'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/tags/(?P<key>[^/]+)/values/$',
-        OrganizationTagKeyValuesEndpoint.as_view(),
-        name='sentry-api-0-organization-tagkey-values'
-    ),
-    url(
         r'^organizations/(?P<organization_slug>[^\/]+)/onboarding-tasks/$',
         OrganizationOnboardingTaskEndpoint.as_view(),
         name='sentry-api-0-organization-onboardingtasks'
-    ),
-    url(
-        r'^organizations/(?P<organization_slug>[^\/]+)/environments/$',
-        OrganizationEnvironmentsEndpoint.as_view(),
-        name='sentry-api-0-organization-environments',
     ),
 
 
@@ -745,11 +467,6 @@ urlpatterns = patterns(
         name='sentry-api-0-team-members'
     ),
     url(
-        r'^teams/(?P<organization_slug>[^\/]+)/(?P<team_slug>[^\/]+)/projects/$',
-        TeamProjectsEndpoint.as_view(),
-        name='sentry-api-0-team-project-index'
-    ),
-    url(
         r'^teams/(?P<organization_slug>[^\/]+)/(?P<team_slug>[^\/]+)/stats/$',
         TeamStatsEndpoint.as_view(),
         name='sentry-api-0-team-stats'
@@ -761,354 +478,17 @@ urlpatterns = patterns(
     ),
 
     # Projects
-    url(r'^projects/$', ProjectIndexEndpoint.as_view(),
-        name='sentry-api-0-projects'),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/$',
-        ProjectDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/avatar/$',
-        ProjectAvatarEndpoint.as_view(),
-        name='sentry-api-0-project-avatar'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/create-sample/$',
-        ProjectCreateSampleEndpoint.as_view(),
-        name='sentry-api-0-project-create-sample'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/docs/$',
-        ProjectDocsEndpoint.as_view(),
-        name='sentry-api-0-project-docs'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/docs/(?P<platform>[\w-]+)/$',
-        ProjectDocsPlatformEndpoint.as_view(),
-        name='sentry-api-0-project-docs-platform'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/environments/$',
-        ProjectEnvironmentsEndpoint.as_view(),
-        name='sentry-api-0-project-environments'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/environments/(?P<environment>[^/]+)/$',
-        ProjectEnvironmentDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-environment-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/platforms/$',
-        ProjectPlatformsEndpoint.as_view(),
-        name='sentry-api-0-project-platform-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/$',
-        ProjectEventsEndpoint.as_view(),
-        name='sentry-api-0-project-events'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>(?:\d+|[A-Fa-f0-9]{32}))/$',
-        ProjectEventDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-event-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>[\w-]+)/attachments/$',
-        EventAttachmentsEndpoint.as_view(),
-        name='sentry-api-0-event-attachments'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>[\w-]+)/attachments/(?P<attachment_id>[\w-]+)/$',
-        EventAttachmentDetailsEndpoint.as_view(),
-        name='sentry-api-0-event-attachment-details'
-    ),
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>[\w-]+)/committers/$',
         EventFileCommittersEndpoint.as_view(),
         name='sentry-api-0-event-file-committers'
     ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/events/(?P<event_id>[\w-]+)/owners/$',
-        EventOwnersEndpoint.as_view(),
-        name='sentry-api-0-event-owners'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/filters/$',
-        ProjectFiltersEndpoint.as_view(),
-        name='sentry-api-0-project-filters'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/filters/(?P<filter_id>[\w-]+)/$',
-        ProjectFilterDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-filters'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/hooks/$',
-        ProjectServiceHooksEndpoint.as_view(),
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/hooks/(?P<hook_id>[^\/]+)/$',
-        ProjectServiceHookDetailsEndpoint.as_view(),
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/hooks/(?P<hook_id>[^\/]+)/stats/$',
-        ProjectServiceHookStatsEndpoint.as_view(),
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/(?:issues|groups)/$',
-        ProjectGroupIndexEndpoint.as_view(),
-        name='sentry-api-0-project-group-index'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/(?:issues|groups)/stats/$',
-        ProjectGroupStatsEndpoint.as_view(),
-        name='sentry-api-0-project-group-stats'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/keys/$',
-        ProjectKeysEndpoint.as_view(),
-        name='sentry-api-0-project-keys'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/keys/(?P<key_id>[^\/]+)/$',
-        ProjectKeyDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-key-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/keys/(?P<key_id>[^\/]+)/stats/$',
-        ProjectKeyStatsEndpoint.as_view()
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^/]+)/(?P<project_slug>[^/]+)/members/$',
-        ProjectMemberIndexEndpoint.as_view(),
-        name='sentry-api-0-project-member-index'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/$',
-        ProjectReleasesEndpoint.as_view(),
-        name='sentry-api-0-project-releases'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/token/$',
-        ProjectReleasesTokenEndpoint.as_view(),
-        name='sentry-api-0-project-releases-token'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/completion/$',
-        ProjectReleaseSetupCompletionEndpoint.as_view(),
-        name='sentry-api-0-project-releases-completion-status'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/(?P<version>[^/]+)/$',
-        ProjectReleaseDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-release-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/(?P<version>[^/]+)/commits/$',
-        ProjectReleaseCommitsEndpoint.as_view(),
-        name='sentry-api-0-project-release-commits'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/(?P<version>[^/]+)/resolved/$',
-        ProjectIssuesResolvedInReleaseEndpoint.as_view(),
-        name='sentry-api-0-project-release-resolved'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/(?P<version>[^/]+)/files/$',
-        ProjectReleaseFilesEndpoint.as_view(),
-        name='sentry-api-0-project-release-files'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/releases/(?P<version>[^/]+)/files/(?P<file_id>\d+)/$',
-        ProjectReleaseFileDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-release-file-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/rules/$',
-        ProjectRulesEndpoint.as_view(),
-        name='sentry-api-0-project-rules'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/rules/configuration/$',
-        ProjectRulesConfigurationEndpoint.as_view(),
-        name='sentry-api-0-project-rules-configuration'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/rules/(?P<rule_id>[^\/]+)/$',
-        ProjectRuleDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-rule-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/stats/$',
-        ProjectStatsEndpoint.as_view(),
-        name='sentry-api-0-project-stats'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/tags/$',
-        ProjectTagsEndpoint.as_view(),
-        name='sentry-api-0-project-tags'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/tags/(?P<key>[^/]+)/$',
-        ProjectTagKeyDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-tagkey-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/tags/(?P<key>[^/]+)/values/$',
-        ProjectTagKeyValuesEndpoint.as_view(),
-        name='sentry-api-0-project-tagkey-values'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/teams/$',
-        ProjectTeamsEndpoint.as_view(),
-        name='sentry-api-0-project-teams'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/teams/(?P<team_slug>[^\/]+)/$',
-        ProjectTeamDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-team-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/transfer/$',
-        ProjectTransferEndpoint.as_view(),
-        name='sentry-api-0-project-transfer'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/users/$',
-        ProjectUsersEndpoint.as_view(),
-        name='sentry-api-0-project-users'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/users/(?P<user_hash>[^/]+)/$',
-        ProjectUserDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-user-details'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/(?:user-feedback|user-reports)/$',
-        ProjectUserReportsEndpoint.as_view(),
-        name='sentry-api-0-project-user-reports'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/user-stats/$',
-        ProjectUserStatsEndpoint.as_view(),
-        name='sentry-api-0-project-userstats'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/processingissues/$',
-        ProjectProcessingIssuesEndpoint.as_view(),
-        name='sentry-api-0-project-processing-issues'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/processingissues/fix$',
-        ProjectProcessingIssuesFixEndpoint.as_view(),
-        name='sentry-api-0-project-fix-processing-issues'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/reprocessing/$',
-        ProjectReprocessingEndpoint.as_view(),
-        name='sentry-api-0-project-reprocessing'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/processingissues/discard/$',
-        ProjectProcessingIssuesDiscardEndpoint.as_view(),
-        name='sentry-api-0-project-discard-processing-issues'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/ownership/$',
-        ProjectOwnershipEndpoint.as_view(),
-        name='sentry-api-0-project-ownership'
-    ),
 
-    # Load plugin project urls
-    # TODO: Not project specific in clims (TODO: if we have orgs, we might
-    # want to have plugins per org)
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/$',
-        ProjectPluginsEndpoint.as_view(),
-        name='sentry-api-0-project-plugins'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins/(?P<plugin_id>[^\/]+)/$',
-        ProjectPluginDetailsEndpoint.as_view(),
-        name='sentry-api-0-project-plugin-details'
-    ),
     url(
         r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/plugins?/',
         include('sentry.plugins.base.project_api_urls')
     ),
 
-    # Groups
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/$',
-        GroupDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-details'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/events/$',
-        GroupEventsEndpoint.as_view(),
-        name='sentry-api-0-group-events'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/events/latest/$',
-        GroupEventsLatestEndpoint.as_view(),
-        name='sentry-api-0-group-events-latest'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/events/oldest/$',
-        GroupEventsOldestEndpoint.as_view(),
-        name='sentry-api-0-group-events-oldest'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/hashes/$',
-        GroupHashesEndpoint.as_view(),
-        name='sentry-api-0-group-events'
-    ),
-    url(
-        r'^issues/(?P<issue_id>\d+)/participants/$',
-        GroupParticipantsEndpoint.as_view(),
-        name='sentry-api-0-group-stats'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/stats/$',
-        GroupStatsEndpoint.as_view(),
-        name='sentry-api-0-group-stats'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/tags/$',
-        GroupTagsEndpoint.as_view(),
-        name='sentry-api-0-group-tags'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/tags/(?P<key>[^/]+)/$',
-        GroupTagKeyDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-tagkey-details'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/tags/(?P<key>[^/]+)/values/$',
-        GroupTagKeyValuesEndpoint.as_view(),
-        name='sentry-api-0-group-tagkey-values'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/(?:user-feedback|user-reports)/$',
-        GroupUserReportsEndpoint.as_view(),
-        name='sentry-api-0-group-user-reports'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/similar/$',
-        GroupSimilarIssuesEndpoint.as_view(),
-        name='sentry-api-0-group-similar-issues'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/integrations/$',
-        GroupIntegrationsEndpoint.as_view(),
-        name='sentry-api-0-group-integrations'
-    ),
-    url(
-        r'^(?:issues|groups)/(?P<issue_id>\d+)/integrations/(?P<integration_id>\d+)/$',
-        GroupIntegrationDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-integration-details'
-    ),
     # Load plugin group urls
     url(
         r'^(?:issues|groups)/(?P<issue_id>\d+)/plugins?/',
@@ -1118,25 +498,6 @@ urlpatterns = patterns(
         r'^shared/(?:issues|groups)/(?P<share_id>[^\/]+)/$',
         SharedGroupDetailsEndpoint.as_view(),
         name='sentry-api-0-shared-group-details'
-    ),
-
-    # Tombstone
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/tombstones/$',
-        GroupTombstoneEndpoint.as_view(),
-        name='sentry-api-0-group-tombstones'
-    ),
-    url(
-        r'^projects/(?P<organization_slug>[^\/]+)/(?P<project_slug>[^\/]+)/tombstones/(?P<tombstone_id>\d+)/$',
-        GroupTombstoneDetailsEndpoint.as_view(),
-        name='sentry-api-0-group-tombstone-details'
-    ),
-
-    # Events
-    url(
-        r'^events/(?P<event_id>\d+)/$',
-        EventDetailsEndpoint.as_view(),
-        name='sentry-api-0-event-details'
     ),
 
     # Sentry Apps

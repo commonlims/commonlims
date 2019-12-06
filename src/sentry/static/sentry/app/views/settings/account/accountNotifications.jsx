@@ -19,10 +19,6 @@ const FINE_TUNE_FOOTERS = {
     text: 'Fine tune alerts by project',
     path: 'alerts/',
   },
-  'Workflow Notifications': {
-    text: 'Fine tune workflow notifications by project',
-    path: 'workflow/',
-  },
   'Email Routing': {
     text: 'Fine tune email routing by project',
     path: 'email/',
@@ -30,10 +26,6 @@ const FINE_TUNE_FOOTERS = {
   'Weekly Reports': {
     text: 'Fine tune weekly reports by organization',
     path: 'reports/',
-  },
-  'Deploy Notifications': {
-    text: 'Fine tune deploy notifications by organization',
-    path: 'deploy/',
   },
 };
 
