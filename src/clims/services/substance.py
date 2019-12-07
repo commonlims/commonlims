@@ -22,6 +22,9 @@ from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
 
+logger = logging.getLogger(__name__)
+
+
 class NotFound(Exception):
     pass
 
@@ -326,6 +329,16 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
     @transaction.atomic
     def load_file(self, organization, full_path, file_stream, add_timestamp=False):
+        """
+        Loads the file into the system.
+
+        On a successful run, returns a tuple of the loaded file and any non-error validation issues
+        that may have occurred while processing.
+        """
+        logger.info("Loading file {}".format(full_path))
+
+        non_error_validation_issues = list()
+
         # TODO: Decide what we want to happen here. Should the user be able to load files
         # with an identical name or not? Makes more sense to me that we inspect if samples
         # with the same name have been uploaded or not. So for now we add this timestamp to the name
@@ -337,23 +350,27 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
 
         context = HandlerContext(organization=organization)
         with MultiFormatFile.from_file_stream(full_path, file_stream) as wrapped_stream:
-            plugins.handle(
+            handlers = plugins.handle(
                 SubstancesValidationHandler, context, required=False,
                 multi_format_file=wrapped_stream)
 
-        logger = logging.getLogger('clims.files')
+            # Since we're here, there were no exceptions during the run of the handler(s), but
+            # there might be other validation issues:
+            for handler in handlers:
+                non_error_validation_issues.extend(handler.validation_issues)
+
         logger.info('substance_batch_import.start')
 
-        org_file = self._create_organization_file(file_stream, full_path, organization.id, logger)
+        org_file = self._create_organization_file(file_stream, full_path, organization.id)
 
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
             plugins.handle(
                 SubstancesSubmissionHandler, context, required=True,
                 multi_format_file=wrapped_org_file)
 
-        return org_file
+        return org_file, non_error_validation_issues
 
-    def _create_organization_file(self, file_stream, full_path, organization_id, logger):
+    def _create_organization_file(self, file_stream, full_path, organization_id):
         """
         Uploads file to the server and wrap it in a organization file
         """

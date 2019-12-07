@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import StringIO
 import base64
-import six
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,6 +14,8 @@ from clims.services import FileNameValidationError
 from clims.handlers import RequiredHandlerNotFound
 from clims.api.serializers.models.organization_file import OrganizationFileSerializer
 from clims.plugins import PluginError
+from clims.api.serializers.models.plugin_error import PluginErrorSerializer
+from clims.api.serializers.models.validation_issue import ValidationIssueSerializer
 
 
 class SubstanceFileEndpoint(OrganizationEndpoint):
@@ -77,8 +78,9 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
             return Response({'detail': 'File name must be specified'}, status=400)
 
         try:
-            org_file = self.app.substances.load_file(organization, full_name, fileobj)
-            ret = dict(id=org_file.id)
+            org_file, issues = self.app.substances.load_file(organization, full_name, fileobj)
+            issues_json = ValidationIssueSerializer(issues, many=True).data
+            ret = dict(id=org_file.id, validationIssues=issues_json)
             return Response(ret, status=status.HTTP_201_CREATED)
 
         except RequiredHandlerNotFound:
@@ -95,4 +97,5 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
                 {'detail': 'A file matching this one already exists in this organization'},
                 status=409)
         except PluginError as e:
-            return Response({'detail': '{}'.format(six.binary_type(e))}, status=400)
+            serializer = PluginErrorSerializer(e)
+            return Response(serializer.data, status=400)

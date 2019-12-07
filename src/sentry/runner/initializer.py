@@ -304,6 +304,7 @@ def initialize_app(config, skip_service_validation=False):
         version=settings.ASSET_VERSION,
     )
 
+    print(settings.INSTALLED_APPS)
     import django
     if hasattr(django, 'setup'):
         # support for Django 1.7+

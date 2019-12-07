@@ -1,4 +1,6 @@
 import React from 'react';
+import theme from 'app/utils/theme';
+
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
   faVial,
@@ -14,7 +16,12 @@ import {
   faQuestionCircle,
   faChevronCircleRight,
   faChevronCircleLeft,
+  faExclamationTriangle,
+  faInfoCircle,
+  faBug,
 } from '@fortawesome/free-solid-svg-icons';
+
+// Find more fontawesome icons here: https://fontawesome.com/icons?d=gallery&s=solid&m=free
 
 export const Substance = () => <FontAwesomeIcon icon={faVial} />;
 export const Projects = () => <FontAwesomeIcon icon={faClipboardList} />;
@@ -29,3 +36,32 @@ export const Activity = () => <FontAwesomeIcon icon={faExclamationCircle} />;
 export const Help = () => <FontAwesomeIcon icon={faQuestionCircle} />;
 export const CollapseLeftSidebar = () => <FontAwesomeIcon icon={faChevronCircleLeft} />;
 export const ExpandLeftSidebar = () => <FontAwesomeIcon icon={faChevronCircleRight} />;
+export const Error = () => <FontAwesomeIcon icon={faExclamationCircle} />;
+export const Warning = () => <FontAwesomeIcon icon={faExclamationTriangle} />;
+export const Info = () => <FontAwesomeIcon icon={faInfoCircle} />;
+export const Debug = () => <FontAwesomeIcon icon={faBug} />;
+
+// Returns a colored icon for a particular issue
+export function getIssueIcon(type, hasDefaultColor) {
+  let icon;
+  let color = null;
+
+  if (type === 'error') {
+    icon = Error;
+    color = theme.alert.error.iconColor;
+  } else if (type === 'warning') {
+    icon = Warning;
+    color = theme.alert.warning.iconColor;
+  } else if (type === 'info') {
+    icon = Info;
+    color = theme.alert.info.iconColor;
+  } else if (type === 'debug') {
+    icon = Debug;
+    color = theme.alert.info.iconColor;
+  } else {
+    throw Error('Unsupported issue type: ' + type);
+  }
+  const style = hasDefaultColor ? {color} : null;
+
+  return <p style={style}>{icon()}</p>;
+}
