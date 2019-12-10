@@ -10,6 +10,7 @@ from __future__ import absolute_import, print_function
 import click
 import os
 import six
+import logging
 
 from django.conf import settings
 
@@ -18,12 +19,14 @@ from sentry.utils import warnings
 from sentry.utils.sdk import configure_sdk
 from sentry.utils.warnings import DeprecatedSettingWarning
 
+logger = logging.getLogger(__name__)
+
 
 def register_plugins(settings):
     from pkg_resources import iter_entry_points
     from sentry.plugins import plugins
-
-    groups = ['sentry.plugins', 'clims.plugins']
+    logger.info("register_plugins starts")
+    groups = ['clims.plugins']
     entry_points = [ep for group in groups for ep in iter_entry_points(group)]
 
     for ep in entry_points:
@@ -304,7 +307,6 @@ def initialize_app(config, skip_service_validation=False):
         version=settings.ASSET_VERSION,
     )
 
-    print(settings.INSTALLED_APPS)
     import django
     if hasattr(django, 'setup'):
         # support for Django 1.7+
