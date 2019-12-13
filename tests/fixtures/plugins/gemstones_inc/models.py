@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from clims.services import SubstanceBase, ProjectBase, TextField, IntField, FloatField, JsonField, BoolField
+from clims.services import (SubstanceBase, ProjectBase, TextField, IntField, JsonField, BoolField)
 from clims.services import PlateBase
 
 

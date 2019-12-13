@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-import pytest
-
 from django.core.urlresolvers import reverse
 
 from sentry import newsletter

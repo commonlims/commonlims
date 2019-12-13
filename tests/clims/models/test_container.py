@@ -9,8 +9,6 @@ from clims.services import SubstanceBase, PlateBase
 from clims.services import FloatField, TextField
 from clims.models import Container
 from django.db import IntegrityError
-from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
-from django.test.utils import override_settings
 
 
 class TestContainer(TestCase):
@@ -134,22 +132,6 @@ class TestContainer(TestCase):
 
         # Expecting a digit followed by some empty columns:
         assert re.match(r"^\d+[ |].+", first_line) is not None
-
-    @pytest.mark.skip("TODO: WIP")
-    @override_settings(DEBUG=True)
-    def test_get_content_incurs_no_extra_call(self):
-        # Getting the contents from a container incurs no extra calls to the DB if called correctly
-
-        from django.db import connection
-        q1 = len(connection.queries)
-        for ix in range(1):
-            container = self.create_container_with_samples(GemstoneContainer, GemstoneSample,
-                prefix="container-{}".format(ix), sample_count=1)
-            container.save()
-        q2 = len(connection.queries)
-        for q in connection.queries:
-            print(q)
-        print(q1, q2)
 
     # TODO: Test that ensures that all samples have the container, perhaps
     # reusing the container domain object if in the same context (e.g. in a handler)

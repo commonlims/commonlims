@@ -73,7 +73,6 @@ tests_require = get_requirements('test')
 optional_requires = get_requirements('optional')
 
 
-
 class SentrySDistCommand(SDistCommand):
     # If we are not a light build we want to also execute build_assets as
     # part of our source build pipeline.

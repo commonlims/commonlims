@@ -201,7 +201,6 @@ Substances.propTypes = {
   loading: PropTypes.bool,
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
-  substanceSearchEntries: PropTypes.arrayOf(PropTypes.shape({})),
   groupBy: PropTypes.string.isRequired,
   substanceSearchEntriesGet: PropTypes.func.isRequired,
   substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,

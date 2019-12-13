@@ -3,7 +3,6 @@
 from __future__ import absolute_import
 
 
-import pytest
 from sentry.api.serializers import serialize
 from sentry.models import (
     Activity, PullRequest, Commit, GroupStatus
