@@ -31,24 +31,10 @@ const accountNavigation = [
         ),
       },
       {
-        path: `${pathPrefix}/subscriptions/`,
-        title: t('Subscriptions'),
-        description: t(
-          'Change Sentry marketing subscriptions you are subscribed to (GDPR)'
-        ),
-      },
-      {
         path: `${pathPrefix}/authorizations/`,
         title: t('Authorized Applications'),
         description: t(
           'Manage third-party applications that have access to your Sentry account'
-        ),
-      },
-      {
-        path: `${pathPrefix}/identities/`,
-        title: t('Identities'),
-        description: t(
-          'Manage your third-party identities that are associated to Sentry'
         ),
       },
       {

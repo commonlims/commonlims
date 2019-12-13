@@ -1,18 +1,9 @@
-import {t, tct} from 'app/locale';
+import {t} from 'app/locale';
 
 // Export route to make these forms searchable by label/help
 export const route = '/settings/account/notifications/';
 
 export const fields = {
-  subscribeByDefault: {
-    name: 'subscribeByDefault',
-    type: 'boolean',
-    label: t('Send Me Project Alerts'),
-    // TODO(billy): Make this a real link
-    help: tct('Alerts are defined in [locationPath]', {
-      locationPath: '[Project] » Project Settings » Alerts » Rules.',
-    }),
-  },
   workflowNotifications: {
     name: 'workflowNotifications',
     type: 'radio',
@@ -27,13 +18,6 @@ export const fields = {
     label: t('Send Me Weekly Reports'),
     help: t("Reports contain a summary of what's happened within your organization."),
     disabled: true,
-  },
-  deployNotifications: {
-    name: 'deployNotifications',
-    type: 'radio',
-    label: t('Send Me Deploy Notifications'),
-    choices: [[2, 'Always'], [3, 'Only On Deploys With My Commits'], [4, 'Never']],
-    help: t('Deploy emails include release, environment and commit overviews.'),
   },
   personalActivityNotifications: {
     name: 'personalActivityNotifications',
@@ -51,18 +35,8 @@ export const fields = {
 
 const formGroups = [
   {
-    title: t('Alerts'),
-    fields: [fields.subscribeByDefault],
-  },
-
-  {
     title: t('Workflow Notifications'),
     fields: [fields.workflowNotifications],
-  },
-
-  {
-    title: t('Email Routing'),
-    fields: [],
   },
 
   {
@@ -71,13 +45,8 @@ const formGroups = [
   },
 
   {
-    title: t('Deploy Notifications'),
-    fields: [fields.deployNotifications],
-  },
-
-  {
     title: t('My Activity'),
-    fields: [fields.personalActivityNotifications, fields.selfAssignOnResolve],
+    fields: [fields.personalActivityNotifications],
   },
 ];
 

@@ -6,7 +6,6 @@ import classNames from 'classnames';
 
 import SentryTypes from 'app/sentryTypes';
 import ApiMixin from 'app/mixins/apiMixin';
-import SuggestedOwners from 'app/components/group/suggestedOwners';
 import GroupParticipants from 'app/components/group/participants';
 import GroupReleaseStats from 'app/components/group/releaseStats';
 import OrganizationState from 'app/mixins/organizationState';
@@ -23,7 +22,6 @@ const GroupSidebar = createReactClass({
   propTypes: {
     project: SentryTypes.Project,
     group: SentryTypes.Group,
-    event: SentryTypes.Event,
     // Currently only provided in the project version of the issue page
     environment: SentryTypes.Environment,
   },
@@ -242,7 +240,6 @@ const GroupSidebar = createReactClass({
 
     return (
       <div className="group-stats">
-        <SuggestedOwners project={project} group={group} event={this.props.event} />
         <GroupReleaseStats
           group={this.props.group}
           project={project}

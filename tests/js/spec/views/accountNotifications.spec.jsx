@@ -28,47 +28,14 @@ describe('AccountNotifications', function() {
   it('renders with values from API', function() {
     const wrapper = mount(<AccountNotifications />, TestStubs.routerContext());
 
-    // "Send Me Project Alerts"
-    expect(wrapper.find('Switch[name="subscribeByDefault"]').prop('isActive')).toBe(true);
-
     // "Workflow Notifications"
     expect(
       wrapper.find('Field[id="workflowNotifications"] RadioGroup').prop('value')
     ).toBe(1);
 
-    // "Deploy Notifications"
-    expect(wrapper.find('Field[id="deployNotifications"] RadioGroup').prop('value')).toBe(
-      3
-    );
-
     // "Notify Me About my Own Activity"
     expect(
       wrapper.find('Switch[name="personalActivityNotifications"]').prop('isActive')
     ).toBe(true);
-
-    // "Claim Unassigned Issues"
-    expect(wrapper.find('Switch[name="selfAssignOnResolve"]').prop('isActive')).toBe(
-      false
-    );
-  });
-
-  it('can change "Deploy Notifications"', function() {
-    const wrapper = mount(<AccountNotifications />, TestStubs.routerContext());
-    const mock = MockApiClient.addMockResponse({
-      url,
-      method: 'PUT',
-    });
-
-    wrapper
-      .find('Field[id="deployNotifications"] RadioLineItem')
-      .at(2)
-      .simulate('click');
-
-    expect(mock).toHaveBeenCalledWith(
-      url,
-      expect.objectContaining({
-        data: {deployNotifications: 4},
-      })
-    );
   });
 });
