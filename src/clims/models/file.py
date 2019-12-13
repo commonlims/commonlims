@@ -47,9 +47,6 @@ class OrganizationFileContext(FileContextBase):
             for _, chunk in enumerate(self._organization_file.file.getfile()):
                 f.write(chunk)
 
-    def cleanup(self):
-        os.remove(self._temp_file.name)
-
     @property
     def file_path(self):
         if self._temp_file:
@@ -78,9 +75,6 @@ class FileStreamContext(FileContextBase):
 
         with open(self._temp_file.name, 'wb') as f:
             f.write(self._file_stream.read())
-
-    def cleanup(self):
-        os.remove(self._temp_file.name)
 
     @property
     def file_path(self):

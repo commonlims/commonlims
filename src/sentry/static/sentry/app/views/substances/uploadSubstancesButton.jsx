@@ -4,18 +4,21 @@ import Modal from 'react-bootstrap/lib/Modal';
 
 import {t} from 'app/locale';
 import {FormState} from 'app/components/forms';
+import {ValidationIssues} from 'app/components/validationIssues';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {Client} from 'app/api';
 
 class UploadSubstancesButton extends React.Component {
+  // TODO-simple: lab is hardcoded as an org
   constructor(props) {
     super(props);
     this.state = {
       isModalOpen: false,
-      errors: {},
       value: null,
       selectedFile: null,
       loaded: 0,
+      validationIssues: [],
+      errorMsg: null,
     };
 
     this.onToggle = this.onToggle.bind(this);
@@ -28,9 +31,12 @@ class UploadSubstancesButton extends React.Component {
     if (this.props.disabled) {
       return;
     }
+
     this.setState({
       isModalOpen: !this.state.isModalOpen,
       state: FormState.READY,
+      errorMsg: null,
+      validationIssues: [],
     });
   }
 
@@ -68,51 +74,67 @@ class UploadSubstancesButton extends React.Component {
       return;
     }
 
-    this.setState({state: FormState.SAVING}, () => {
-      const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
+    this.setState(
+      {
+        state: FormState.SAVING,
+        errorMsg: null,
+        validationIssues: [],
+      },
+      () => {
+        const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
 
-      const endpoint = '/organizations/lab/substances/files/';
+        const endpoint = '/organizations/lab/substances/files/';
 
-      const reader = new FileReader();
-      reader.readAsBinaryString(this.state.selectedFile);
+        const reader = new FileReader();
+        reader.readAsBinaryString(this.state.selectedFile);
 
-      reader.onload = function() {
-        const data = {
-          content: btoa(reader.result),
-          filename: this.state.selectedFile.name,
+        reader.onload = function() {
+          const data = {
+            content: btoa(reader.result),
+            filename: this.state.selectedFile.name,
+          };
+
+          this.api.request(endpoint, {
+            method: 'POST',
+            data,
+            success: response => {
+              // Set validation issues if there were any:
+              if (response.validationIssues.length === 0) {
+                this.onToggle();
+              }
+
+              this.setState({
+                state: FormState.READY,
+                errorMsg: null,
+                validationIssues: response.validationIssues,
+              });
+              if (this.props.onImported) {
+                this.props.onImported();
+              }
+            },
+            error: err => {
+              const errors = err.responseJSON || true;
+              const errorMsg = errors.detail;
+
+              this.setState({
+                state: FormState.ERROR,
+                validationIssues: errors.validationIssues ? errors.validationIssues : [],
+                errorMsg,
+              });
+            },
+            complete: () => {
+              IndicatorStore.remove(loadingIndicator);
+            },
+          });
+        }.bind(this);
+
+        reader.onError = function() {
+          this.setState({
+            state: FormState.ERROR,
+          });
         };
-
-        this.api.request(endpoint, {
-          method: 'POST',
-          data,
-          success: response => {
-            this.onToggle();
-            this.setState({
-              state: FormState.READY,
-              errors: {},
-            });
-            this.props.onImported();
-          },
-          error: err => {
-            let errors = err.responseJSON || true;
-            errors = errors.detail || true;
-            this.setState({
-              state: FormState.ERROR,
-              errors,
-            });
-          },
-          complete: () => {
-            IndicatorStore.remove(loadingIndicator);
-          },
-        });
-      }.bind(this);
-
-      reader.onError = function() {
-        this.setState({
-          state: FormState.ERROR,
-        });
-      };
-    });
+      }
+    );
   }
 
   render() {
@@ -139,9 +161,10 @@ class UploadSubstancesButton extends React.Component {
             <div className="modal-body">
               {this.state.state === FormState.ERROR && (
                 <div className="alert alert-error alert-block">
-                  {t(`Unable to upload the file. ${this.state.errors}`)}
+                  {t(`Unable to upload the file: ${this.state.errorMsg}`)}
                 </div>
               )}
+              <ValidationIssues issues={this.state.validationIssues} />
               <input type="file" name="" id="" onChange={this.handleSelectedFile} />
             </div>
 
@@ -183,7 +206,7 @@ UploadSubstancesButton.propTypes = {
   tooltip: PropTypes.string,
   buttonTitle: PropTypes.string,
   disabled: PropTypes.bool,
-  onImported: PropTypes.func,
+  onImported: PropTypes.func.isRequired,
 };
 
 export default UploadSubstancesButton;

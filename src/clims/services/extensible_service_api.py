@@ -1,8 +1,14 @@
 from __future__ import absolute_import
+
+import six
 from django.db.models import Prefetch
+from django.core import exceptions as django_exceptions
+from clims.services.exceptions import DoesNotExist
 
 
 class ExtensibleServiceAPIMixin(object):
+
+    DoesNotExist = DoesNotExist
 
     def all(self):
         """
@@ -70,12 +76,17 @@ class ExtensibleServiceAPIMixin(object):
         return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):
-        get_args = self._get_filter_arguments(**kwargs)
-        model = self._archetype_version_class.objects.prefetch_related(
-            Prefetch('properties', to_attr='all_properties'),
-            Prefetch('all_properties__extensible_property_type')).\
-            get(**get_args)
-        return self.to_wrapper(model)
+        try:
+            get_args = self._get_filter_arguments(**kwargs)
+            model = self._archetype_version_class.objects.prefetch_related(
+                Prefetch('properties', to_attr='all_properties'),
+                Prefetch('all_properties__extensible_property_type')).\
+                get(**get_args)
+            return self.to_wrapper(model)
+        except django_exceptions.ObjectDoesNotExist as e:
+            # TODO-simple: Map to CLIMS exceptions in all service methods that use django, since
+            # we don't want users to have to import from django.
+            raise DoesNotExist(six.text_type(e))
 
     def _get_filter_arguments(self, **kwargs):
         get_args = {}

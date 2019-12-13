@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from clims.plugins import PluginValidationError
+
 
 class RequiredHandlerNotFound(Exception):
     pass
@@ -45,6 +47,54 @@ class Handler(object):
     def __init__(self, context, app):
         self.app = app
         self.context = context
+
+        # Warnings or info messages that should be shown to the user
+        self.validation_issues = list()
+
+    @property
+    def has_validation_errors(self):
+        return len([issue for issue in self.validation_issues if issue.type == "error"]) > 0
+
+    def _add_validation_issue(self, type, msg, **kwargs):
+        from clims.models import ValidationIssue
+        kwargs["msg"] = msg
+        self.validation_issues.append(ValidationIssue(type, **kwargs))
+
+    def validation_debug(self, msg, **kwargs):
+        self._add_validation_issue("debug", msg, **kwargs)
+
+    def validation_info(self, msg, **kwargs):
+        self._add_validation_issue("info", msg, **kwargs)
+
+    def validation_warning(self, msg, **kwargs):
+        """
+        Adding warnings will not lead to an error being thrown. Instead, the caller should
+        indicate to the user that these happened during processing.
+        """
+        self._add_validation_issue("warning", msg, **kwargs)
+
+    def validation_error(self, msg, **kwargs):
+        """
+        If there is one or more validation error, an error will be thrown when the handler has
+        run or when the user calls `raise_validation_error`
+        """
+        self._add_validation_issue("error", msg, **kwargs)
+
+    def raise_validation_error(self, msg=None):
+        """
+        A convenience method for raising a `PluginValidationError` which will include the errors
+        that have occurred during the execution of the handler.
+
+        Note that users can also raise a `PluginValidationError` themselves
+
+        This method is called automatically after running the handler, if there
+        are any errors in `validation_issues`
+
+        Note that warnings are never raised. They need to be treated specially by the caller.
+        """
+        if not msg:
+            msg = "Validation errors occurred"
+        raise PluginValidationError(msg, self.validation_issues)
 
 
 class SubstancesValidationHandler(Handler):

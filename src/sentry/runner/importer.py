@@ -76,7 +76,7 @@ class Importer(object):
         # install the custom settings for this app
         load_settings(self.config_path, settings=settings_mod, silent=True)
 
-        install_plugin_apps('sentry.apps', settings_mod)
+        install_plugin_apps('clims.apps', settings_mod)
 
         return settings_mod
 
