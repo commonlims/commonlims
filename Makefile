@@ -104,7 +104,6 @@ install-system-pkgs: node-version-check
 	@command -v brew 2>&1 > /dev/null && brew bundle || (echo 'WARNING: homebrew not found or brew bundle failed - skipping system dependencies.')
 
 	# Install dependencies with apt instead.
-	# TODO: see if anything else needs to be ported from Brewfile, then remove it
 	sudo apt install -y libxmlsec1-dev
 	sudo apt install -y redis
 	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
@@ -159,6 +158,9 @@ test-cli:
 	rm -rf test_cli
 	mkdir test_cli
 	cd test_cli && lims init test_conf > /dev/null
+	if [ "${CLIMS_DATABASE_USER}" != "" ]; then \
+		cd test_cli && sed -i "s/'USER': 'clims'/'USER': '${CLIMS_DATABASE_USER}'/" ./test_conf/clims.conf.py; \
+	fi
 	cd test_cli && lims --config=test_conf upgrade --traceback --noinput > /dev/null
 	cd test_cli && lims --config=test_conf help 2>&1 | grep start > /dev/null
 	rm -r test_cli
