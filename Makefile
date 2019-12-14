@@ -216,7 +216,7 @@ lint-python:
 
 lint-js:
 	@echo "--> Linting javascript"
-	bin/lint --js --parseable
+	bin/lint --js --cache
 	@echo ""
 
 publish:

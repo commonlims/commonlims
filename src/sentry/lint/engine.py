@@ -345,9 +345,11 @@ def run_formatter(cmd, file_list, prompt_on_changes=True):
 
 
 def run(file_list=None, format=True, lint=True, js=True, py=True,
-        less=True, yarn=True, test=False, parseable=False, cache=False):
+        less=True, yarn=True, test=False, cache=False):
     # pep8.py uses sys.argv to find setup.cfg
     old_sysargv = sys.argv
+
+    is_ci = os.environ.get('CI')
 
     try:
         sys.argv = [
@@ -382,11 +384,11 @@ def run(file_list=None, format=True, lint=True, js=True, py=True,
                 pass  # flake8 linting was moved to pre-commit
             if js:
                 # stylelint `--fix` doesn't work well
-                results.append(js_stylelint(file_list, parseable=parseable, format=format, cache=cache))
+                results.append(js_stylelint(file_list, parseable=is_ci, format=format, cache=cache))
 
                 if not format:
                     # these tasks are called when we need to format, so skip it here
-                    results.append(js_lint(file_list, parseable=parseable, format=format, cache=cache))
+                    results.append(js_lint(file_list, parseable=is_ci, format=format, cache=cache))
 
         if test:
             if js:
