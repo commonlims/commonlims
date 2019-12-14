@@ -3,12 +3,9 @@ from __future__ import absolute_import
 import six
 import pytest
 
-from django.core.urlresolvers import reverse
-
 from sentry.models import AuthIdentity, AuthProvider
 from sentry.testutils import AuthProviderTestCase
 from sentry.utils.auth import SSO_SESSION_KEY
-from sentry.utils.linksign import generate_signed_link
 
 
 class AuthenticationTest(AuthProviderTestCase):
@@ -70,52 +67,3 @@ class AuthenticationTest(AuthProviderTestCase):
             resp = self.client.get(path)
             assert resp.status_code == 200, (path,
                                              resp.status_code, resp.content)
-
-    def test_sso_auth_required_signed_link(self):
-        user = self.create_user('foo@example.com', is_superuser=False)
-        organization = self.create_organization(name='foo')
-        team = self.create_team(name='bar', organization=organization)
-        project = self.create_project(
-            name='baz', organization=organization, teams=[team])
-        member = self.create_member(
-            user=user, organization=organization, teams=[team])
-        setattr(member.flags, 'sso:linked', True)  # noqa
-        member.save()
-        group = self.create_group(project=project)
-        self.create_event(group=group)
-
-        auth_provider = AuthProvider.objects.create(
-            organization=organization,
-            provider='dummy',
-            flags=0,
-        )
-
-        AuthIdentity.objects.create(
-            auth_provider=auth_provider,
-            user=user,
-        )
-
-        self.login_as(user)
-
-        unsigned_link = reverse(
-            'sentry-api-0-project-fix-processing-issues',
-            kwargs={
-                'project_slug': project.slug,
-                'organization_slug': organization.slug,
-            }
-        )
-
-        resp = self.client.get(unsigned_link)
-        assert resp.status_code == 401, (resp.status_code, resp.content)
-
-        signed_link = generate_signed_link(
-            user,
-            'sentry-api-0-project-fix-processing-issues',
-            kwargs={
-                'project_slug': project.slug,
-                'organization_slug': organization.slug,
-            }
-        )
-
-        resp = self.client.get(signed_link)
-        assert resp.status_code == 200
