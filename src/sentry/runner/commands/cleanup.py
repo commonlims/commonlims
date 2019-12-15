@@ -156,7 +156,6 @@ def cleanup(days, project, concurrency, silent, model, router, timed):
     configure()
 
     from django.db import router as db_router
-    from sentry.app import nodestore
     from sentry.db.deletion import BulkDeleteQuery
     from sentry import models
 
@@ -228,16 +227,6 @@ def cleanup(days, project, concurrency, silent, model, router, timed):
         if project_id is None:
             click.echo('Error: Project not found', err=True)
             raise click.Abort()
-    else:
-        if not silent:
-            click.echo("Removing old NodeStore values")
-
-        cutoff = timezone.now() - timedelta(days=days)
-        try:
-            nodestore.cleanup(cutoff)
-        except NotImplementedError:
-            click.echo(
-                "NodeStore backend does not support cleanup operation", err=True)
 
     for bqd in BULK_QUERY_DELETES:
         if len(bqd) == 4:

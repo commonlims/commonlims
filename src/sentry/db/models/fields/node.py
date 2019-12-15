@@ -6,20 +6,21 @@ sentry.db.models.fields.node
 :license: BSD, see LICENSE for more details.
 """
 
+# TODO-easy: Remove
+
 from __future__ import absolute_import, print_function
 
 from base64 import b64encode
 import collections
 import logging
 import six
-import warnings
 from uuid import uuid4
 
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete
 
-from sentry import nodestore
+# from sentry import nodestore
 from sentry.utils.cache import memoize
 from sentry.utils.compat import pickle
 from sentry.utils.strings import decompress, compress
@@ -111,25 +112,9 @@ class NodeData(collections.MutableMapping):
 
     @memoize
     def data(self):
-        """
-        Get the current data object, fetching from nodestore if necessary.
-        """
-
-        if self._node_data is not None:
-            return self._node_data
-
-        elif self.id:
-            if settings.DEBUG:
-                raise NodeUnpopulated('You should populate node data before accessing it.')
-            else:
-                warnings.warn('You should populate node data before accessing it.')
-            self.bind_data(nodestore.get(self.id) or {})
-            return self._node_data
-
-        rv = {}
-        if self.field.wrapper is not None:
-            rv = self.field.wrapper(rv)
-        return rv
+        # Removing nodestore, marking as not implemented rather than removing the class
+        # right away
+        raise NotImplementedError()
 
     def bind_data(self, data, ref=None):
         self.ref = data.pop('_ref', ref)
@@ -149,22 +134,7 @@ class NodeData(collections.MutableMapping):
             self.data['_ref_version'] = self.field.ref_version
 
     def save(self):
-        """
-        Write current data back to nodestore.
-        """
-
-        # We never loaded any data for reading or writing, so there
-        # is nothing to save.
-        if self._node_data is None:
-            return
-
-        # We can't put our wrappers into the nodestore, so we need to
-        # ensure that the data is converted into a plain old dict
-        to_write = self._node_data
-        if isinstance(to_write, CANONICAL_TYPES):
-            to_write = dict(to_write.items())
-
-        nodestore.set(self.id, to_write)
+        raise NotImplementedError()
 
 
 class NodeField(GzippedDictField):
@@ -201,11 +171,7 @@ class NodeField(GzippedDictField):
         post_delete.connect(self.on_delete, sender=self.model, weak=False)
 
     def on_delete(self, instance, **kwargs):
-        value = getattr(instance, self.name)
-        if not value.id:
-            return
-
-        nodestore.delete(value.id)
+        raise NotImplementedError()
 
     def to_python(self, value):
         node_id = None

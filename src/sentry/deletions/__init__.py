@@ -44,7 +44,6 @@ def load_defaults():
     default_manager.register(models.DiscoverSavedQuery, BulkModelDeletionTask)
     default_manager.register(models.DiscoverSavedQueryProject, BulkModelDeletionTask)
     default_manager.register(models.EnvironmentProject, BulkModelDeletionTask)
-    default_manager.register(models.Event, defaults.EventDeletionTask)
     default_manager.register(models.EventMapping, BulkModelDeletionTask)
     default_manager.register(models.EventUser, BulkModelDeletionTask)
     default_manager.register(models.Group, defaults.GroupDeletionTask)

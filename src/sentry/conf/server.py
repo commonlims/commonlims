@@ -276,7 +276,6 @@ INSTALLED_APPS = (
     'sentry',
     'sentry.analytics',
     'sentry.analytics.events',
-    'sentry.nodestore',
     'sentry.search',
     'social_auth',
     'sudo',
@@ -1034,10 +1033,6 @@ SENTRY_DEFAULT_MAX_EVENTS_PER_MINUTE = '90%'
 
 # Snuba configuration
 SENTRY_SNUBA = os.environ.get('SNUBA', 'http://localhost:1218')
-
-# Node storage backend
-SENTRY_NODESTORE = 'sentry.nodestore.django.DjangoNodeStorage'
-SENTRY_NODESTORE_OPTIONS = {}
 
 # Tag storage backend
 _SENTRY_TAGSTORE_DEFAULT_MULTI_OPTIONS = {

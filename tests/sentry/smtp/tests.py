@@ -19,7 +19,6 @@ class SentrySMTPTest(TestCase):
         self.address = ('0.0.0.0', 0)
         self.server = SentrySMTPServer(*self.address)
         self.mailto = group_id_to_email(self.group.pk)
-        self.event  # side effect of generating an event
 
     def test_decode_email_address(self):
         self.assertEqual(email_to_group_id(self.mailto), self.group.pk)

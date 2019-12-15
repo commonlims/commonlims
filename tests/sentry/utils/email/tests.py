@@ -1,12 +1,9 @@
 from __future__ import absolute_import
 
-import functools
-
 import pytest
 from django.core import mail
 from mock import patch
 
-from sentry import options
 from sentry.models import GroupEmailThread, User, UserOption
 from sentry.testutils import TestCase
 from sentry.utils.email import (
@@ -32,12 +29,6 @@ class ListResolverTestCase(TestCase):
     def test_rejects_invalid_types(self):
         with pytest.raises(ListResolver.UnregisteredTypeError):
             self.resolver(object())
-
-    def test_generates_list_ids(self):
-        expected = u"{0.project.slug}.{0.organization.slug}.namespace".format(self.event)
-        assert self.resolver(self.event) == expected
-        assert self.resolver(self.event.group) == expected
-        assert self.resolver(self.event.project) == expected
 
     def test_rejects_invalid_objects(self):
         resolver = ListResolver('namespace', {
@@ -291,25 +282,6 @@ class MessageBuilderTest(TestCase):
         out = mail.outbox[0]
         assert out.to == ['foo@example.com']
         assert out.bcc == ['bar@example.com']
-
-    def test_generates_list_ids_for_registered_types(self):
-        build_message = functools.partial(
-            MessageBuilder,
-            subject='Test',
-            body='hello world',
-            html_body='<b>hello world</b>',
-        )
-
-        expected = u"{event.project.slug}.{event.organization.slug}.{namespace}".format(
-            event=self.event,
-            namespace=options.get('mail.list-namespace'),
-        )
-
-        references = (self.event, self.event.group, self.event.project, self.activity, )
-
-        for reference in references:
-            (message, ) = build_message(reference=reference).get_built_messages(['foo@example.com'])
-            assert message.message()['List-Id'] == expected
 
     def test_does_not_generates_list_ids_for_unregistered_types(self):
         message = MessageBuilder(

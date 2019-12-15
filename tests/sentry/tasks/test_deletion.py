@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 from datetime import datetime, timedelta
 from mock import patch
-from uuid import uuid4
 
 import pytest
 
@@ -12,13 +11,13 @@ from sentry.constants import ObjectStatus
 from sentry.exceptions import DeleteAborted
 from sentry.models import (
     ApiApplication, ApiApplicationStatus, ApiGrant, ApiToken, Commit, CommitAuthor, Environment,
-    EnvironmentProject, Event, EventMapping, Group, GroupAssignee, GroupHash, GroupMeta,
-    GroupRedirect, GroupResolution, GroupStatus, Organization, OrganizationStatus, Project,
+    EnvironmentProject, GroupAssignee, GroupMeta,
+    GroupResolution, Organization, OrganizationStatus, Project,
     ProjectStatus, Release, ReleaseCommit, ReleaseEnvironment, Repository, Team, TeamStatus
 )
 from sentry.plugins.providers.dummy.repository import DummyRepositoryProvider
 from sentry.tasks.deletion import (
-    delete_api_application, delete_groups, delete_organization, delete_project, delete_repository,
+    delete_api_application, delete_organization, delete_project, delete_repository,
     delete_team, generic_delete, revoke_api_tokens
 )
 from sentry.testutils import TestCase
@@ -286,63 +285,6 @@ class DeleteTagKeyTest(TestCase):
         assert tagstore.get_group_tag_value(
             group2.project_id, group2.id, env2.id, key, value) is not None
         assert EventTag.objects.filter(key_id=tk2.id).exists()
-
-
-class DeleteGroupTest(TestCase):
-    def test_simple(self):
-        project = self.create_project()
-        group = self.create_group(
-            project=project,
-            status=GroupStatus.PENDING_DELETION,
-        )
-        event = self.create_event(group=group)
-        EventMapping.objects.create(
-            project_id=project.id,
-            event_id='a' * 32,
-            group_id=group.id,
-        )
-        tv, _ = tagstore.get_or_create_tag_value(project.id, self.environment.id, 'key1', 'value1')
-        tagstore.create_event_tags(
-            event_id=event.id,
-            group_id=group.id,
-            project_id=project.id,
-            environment_id=self.environment.id,
-            tags=[
-                (tv.key, tv.value),
-            ],
-        )
-        GroupAssignee.objects.create(
-            group=group,
-            project=project,
-            user=self.user,
-        )
-        GroupHash.objects.create(
-            project=project,
-            group=group,
-            hash=uuid4().hex,
-        )
-        GroupMeta.objects.create(
-            group=group,
-            key='foo',
-            value='bar',
-        )
-        GroupRedirect.objects.create(
-            group_id=group.id,
-            previous_group_id=1,
-        )
-
-        with self.tasks():
-            delete_groups(object_ids=[group.id])
-
-        assert not Event.objects.filter(id=event.id).exists()
-        assert not EventMapping.objects.filter(
-            event_id='a' * 32,
-            group_id=group.id,
-        ).exists()
-        assert not EventTag.objects.filter(event_id=event.id).exists()
-        assert not GroupRedirect.objects.filter(group_id=group.id).exists()
-        assert not GroupHash.objects.filter(group_id=group.id).exists()
-        assert not Group.objects.filter(id=group.id).exists()
 
 
 class DeleteApplicationTest(TestCase):

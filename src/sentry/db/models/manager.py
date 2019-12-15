@@ -20,7 +20,6 @@ from django.db.models.manager import Manager, QuerySet
 from django.db.models.signals import (post_save, post_delete, post_init, class_prepared)
 from django.utils.encoding import smart_text
 
-from sentry import nodestore
 from sentry.utils.cache import cache
 from sentry.utils.hashlib import md5_text
 
@@ -268,7 +267,7 @@ class BaseManager(Manager):
             if key != pk_name:
                 return self.get_from_cache(**{pk_name: retval})
 
-            if type(retval) != self.model:
+            if not isinstance(retval, self.model):
                 if settings.DEBUG:
                     raise ValueError('Unexpected value type returned from cache')
                 logger.error('Cache response returned invalid value %r', retval)
@@ -290,21 +289,7 @@ class BaseManager(Manager):
         return create_or_update(self.model, **kwargs)
 
     def bind_nodes(self, object_list, *node_names):
-        object_node_list = []
-        for name in node_names:
-            object_node_list.extend(
-                ((i, getattr(i, name)) for i in object_list if getattr(i, name).id)
-            )
-
-        node_ids = [n.id for _, n in object_node_list]
-        if not node_ids:
-            return
-
-        node_results = nodestore.get_multi(node_ids)
-
-        for item, node in object_node_list:
-            data = node_results.get(node.id) or {}
-            node.bind_data(data, ref=node.get_ref(item))
+        raise NotImplementedError()
 
     def uncache_object(self, instance_id):
         pk_name = self.model._meta.pk.name

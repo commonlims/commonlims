@@ -3,10 +3,9 @@ from __future__ import absolute_import
 from django.utils import timezone
 
 from sentry.models import (
-    OnboardingTask, OnboardingTaskStatus, OrganizationOnboardingTask, OrganizationOption
+    OnboardingTask, OnboardingTaskStatus, OrganizationOnboardingTask
 )
 from sentry.signals import (
-    event_processed,
     project_created,
     first_event_pending,
     first_event_received,
@@ -74,35 +73,6 @@ class OrganizationOnboardingTaskTest(TestCase):
         task = OrganizationOnboardingTask.objects.get(id=task.id)
         assert task.status == OnboardingTaskStatus.COMPLETE
         assert not task.project_id
-
-    # Tests on the receivers
-    def test_event_processed(self):
-        # Drop microsecond value for MySQL
-        now = timezone.now().replace(microsecond=0)
-        project = self.create_project(first_event=now)
-        event = self.create_full_event()
-        event_processed.send(project=project, group=self.group, event=event, sender=type(project))
-
-        task = OrganizationOnboardingTask.objects.get(
-            organization=project.organization,
-            task=OnboardingTask.RELEASE_TRACKING,
-            status=OnboardingTaskStatus.COMPLETE,
-        )
-        assert task is not None
-
-        task = OrganizationOnboardingTask.objects.get(
-            organization=project.organization,
-            task=OnboardingTask.USER_CONTEXT,
-            status=OnboardingTaskStatus.COMPLETE,
-        )
-        assert task is not None
-
-        task = OrganizationOnboardingTask.objects.get(
-            organization=project.organization,
-            task=OnboardingTask.SOURCEMAPS,
-            status=OnboardingTaskStatus.COMPLETE,
-        )
-        assert task is not None
 
     def test_project_created(self):
         # Drop microsecond value for MySQL
@@ -249,47 +219,3 @@ class OrganizationOnboardingTaskTest(TestCase):
             status=OnboardingTaskStatus.COMPLETE,
         )
         assert task is not None
-
-    def test_onboarding_complete(self):
-        # Drop microsecond value for MySQL
-        now = timezone.now().replace(microsecond=0)
-        user = self.create_user(email='test@example.org')
-        project = self.create_project(first_event=now)
-        second_project = self.create_project(first_event=now)
-        second_group = self.create_group(
-            project=second_project, platform='python', message='python error message'
-        )
-        event = self.create_full_event()
-        member = self.create_member(organization=self.organization, teams=[self.team], user=user)
-
-        event_processed.send(project=project, group=self.group, event=event, sender=type(project))
-        project_created.send(project=project, user=user, sender=type(project))
-        project_created.send(project=second_project, user=user, sender=type(second_project))
-
-        first_event_received.send(project=project, group=self.group, sender=type(project))
-        first_event_received.send(
-            project=second_project, group=second_group, sender=type(second_project)
-        )
-        member_joined.send(member=member, organization=self.organization, sender=type(member))
-        plugin_enabled.send(
-            plugin=IssueTrackingPlugin(),
-            project=project,
-            user=user,
-            sender=type(IssueTrackingPlugin)
-        )
-        issue_tracker_used.send(
-            plugin=IssueTrackingPlugin(),
-            project=project,
-            user=user,
-            sender=type(IssueTrackingPlugin)
-        )
-        plugin_enabled.send(
-            plugin=NotificationPlugin(),
-            project=project,
-            user=user,
-            sender=type(NotificationPlugin)
-        )
-
-        assert OrganizationOption.objects.filter(
-            organization=self.organization, key="onboarding:complete"
-        ).count() == 1
