@@ -34,6 +34,7 @@ env:
     # node's version is pinned by .nvmrc and is autodetected by `nvm install`.
     - NODE_DIR="${HOME}/.nvm/versions/node/v$(< .nvmrc)"
     - YARN_VERSION="1.3.2"
+    - CLIMS_DATABASE_USER=travis
 script:
   - make travis-lint-$TEST_SUITE
   - make travis-test-$TEST_SUITE
