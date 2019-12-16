@@ -1,8 +1,9 @@
 # This file must be sourced
 
 if [ ! -d ~/.pyenv ]; then
-    echo "Please install pyenv: https://github.com/pyenv/pyenv"
-    exit 1
+    echo "Please install pyenv: https://github.com/pyenv/pyenv and pyenv-virtualenv:"
+    echo "  https://github.com/pyenv/pyenv-virtualenv.git"
+    return
 fi
 
 if [ ! -d ~/.pyenv/versions/2.7.15 ]; then
