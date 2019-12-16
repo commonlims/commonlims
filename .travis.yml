@@ -23,7 +23,6 @@ addons:
     update: true
     packages:
       - libxmlsec1-dev
-      - libgeoip-dev
   chrome: stable
 
 env:

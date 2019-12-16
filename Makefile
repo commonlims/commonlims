@@ -105,7 +105,7 @@ install-system-pkgs: node-version-check
 
 	# Install dependencies with apt instead.
 	# TODO: see if anything else needs to be ported from Brewfile, then remove it
-	sudo apt install -y libgeoip1 libgeoip-dev geoip-bin libxmlsec1-dev
+	sudo apt install -y libxmlsec1-dev
 	sudo apt install -y redis
 	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -

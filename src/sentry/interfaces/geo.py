@@ -5,7 +5,6 @@ __all__ = ('Geo', )
 import six
 
 from sentry.interfaces.base import Interface
-from sentry.utils.geo import geo_by_addr
 
 
 class Geo(Interface):
@@ -31,10 +30,7 @@ class Geo(Interface):
 
     @classmethod
     def from_ip_address(cls, ip_address):
-        try:
-            geo = geo_by_addr(ip_address)
-        except Exception:
-            geo = None
+        geo = None
 
         if not geo:
             return None

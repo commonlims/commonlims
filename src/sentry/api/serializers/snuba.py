@@ -9,7 +9,6 @@ from django.db.models import Q
 
 from sentry.models import Release, Project, ProjectStatus, EventUser
 from sentry.utils.dates import to_timestamp
-from sentry.utils.geo import geo_by_addr as _geo_by_addr
 
 HEALTH_ID_KEY = '_health_id'
 
@@ -38,10 +37,7 @@ def serialize_releases(organization, item_list, user, lookup):
 
 
 def geo_by_addr(ip):
-    try:
-        geo = _geo_by_addr(ip)
-    except Exception:
-        geo = None
+    geo = None
 
     if not geo:
         return
