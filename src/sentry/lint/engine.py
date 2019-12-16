@@ -128,7 +128,9 @@ def js_lint(file_list=None, parseable=False, format=False, cache=False):
             cmd.append('--fix')
         if parseable:
             cmd.append('--format=checkstyle')
-        if cache:
+        if cache and not os.environ.get('CI'):
+            # TODO: It would be possible to cache here to speed up the build, but it requires
+            # changing the wrapper script, so waiting with it for now
             cmd.append("--cache")
         status = execute_subprocess(cmd, js_file_list)
         has_errors = status != 0
