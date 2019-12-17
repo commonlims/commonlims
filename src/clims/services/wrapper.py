@@ -35,5 +35,14 @@ class WrapperMixin(object):
             return self._archetype_base_class(_wrapped_version=version, _unregistered=True)
 
     def _archetype_to_wrapper(self, archetype):
-        versioned = archetype.versions.get(latest=True)
+        try:
+            versions = archetype.prefetched_versions
+        except AttributeError:
+            raise AttributeError('Failed to wrap instance. The archetype class must have attribute '
+                                 '\'prefetched_versions\'. ')
+        if not len(versions) == 1:
+            raise AttributeError('Failed to wrap instance. The fetched number of versions has to be '
+                                 'exactly one in order for the instansiation to succeed. The desired '
+                                 'version has to be included in the original django search query.')
+        versioned = versions[0]
         return self._version_to_wrapper(versioned)

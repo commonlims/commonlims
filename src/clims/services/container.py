@@ -116,8 +116,14 @@ class ContainerBase(ExtensibleBase):
         if not self.is_dirty:
             # We are being updated with an instance from the DB, so we should map
             # all the items that are in it to this container
-            # TODO: Make sure callers are prefetching!
-            for location in self._wrapped_version.archetype.substance_locations.filter(current=True):
+            try:
+                locs = self._wrapped_version.archetype.prefetched_locations
+            except AttributeError:
+                raise AttributeError('Initialization of container failed. The underlying django models has '
+                                     'to be prefetched with substance_locations, which must have been given '
+                                     'attribute name \'prefetched_locations\'. This navigation property sits on '
+                                     'container_version.archetype.')
+            for location in locs:
                 self._locatables[location.raw] = self._app.substances.to_wrapper(location.substance)
 
     def append(self, value):
