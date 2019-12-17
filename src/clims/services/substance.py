@@ -255,6 +255,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         child.save()
         version = SubstanceVersion(archetype=child)
         version.save()
+        child.prefetched_versions = [version]
 
         # Origin points to the first ancestor(s) of this substance. If the substance being cloned
         # has origins, we'll get the same origins. Otherwise the substance being

@@ -246,6 +246,7 @@ class ExtensibleBase(object):
             self._wrapped_version.archetype = self._archetype
             self._wrapped_version.name = self._archetype.name
             self._wrapped_version.save()
+            self._archetype.prefetched_versions = [self._wrapped_version]
             self._property_bag.save(self._wrapped_version)
         else:
             # Updating
