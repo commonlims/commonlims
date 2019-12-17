@@ -9,6 +9,7 @@ from clims.services.substance import SubstanceBase
 from clims.services.extensible import FloatField
 from clims.services.extensible import TextField
 from django.db import IntegrityError
+from django.db.models import Prefetch
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
 
 
@@ -131,7 +132,9 @@ class TestSubstance(SubstanceTestCase):
         do_asserts(substance)
 
         # ... as well as on the object freshly fetched from the db
-        fresh_substance = Substance.objects.get(name=substance.name)
+        fresh_substance = Substance.objects.prefetch_related(
+            Prefetch('versions', to_attr='prefetched_versions')
+        ).get(name=substance.name)
         do_asserts(self.app.substances.to_wrapper(fresh_substance))
 
     def test_create_combined_sample__from_two_childs__origins_of_combined_are_original_samples(self):
@@ -235,7 +238,10 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         result1 = {s.name for s in self.app.substances.all()}
         assert sample.name in result1
-        result2 = {self.app.substances.to_wrapper(s).name for s in Substance.objects.all()}
+        all_substances = Substance.objects.all().prefetch_related(
+            Prefetch('versions', to_attr='prefetched_versions')
+        )
+        result2 = {self.app.substances.to_wrapper(s).name for s in all_substances}
         assert result1 == result2
 
     def test_can_get_substance_by_name(self):

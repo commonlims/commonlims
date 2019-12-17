@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 
 from clims.models import Substance
+from django.db.models import Prefetch
+from clims.models.substance import SubstanceVersion
 from tests.clims.models.test_substance import SubstanceTestCase
 
 
@@ -83,7 +85,11 @@ class TestSubstanceParentChild(SubstanceTestCase):
 
         do_asserts(child)
         # Assert the same is true if we fetch the child by name:
-        child = self.app.substances.to_wrapper(Substance.objects.get(name=child.name))
+        subquery = SubstanceVersion.objects.filter(latest=True)
+        child_model = Substance.objects.prefetch_related(
+            Prefetch('versions', queryset=subquery, to_attr='prefetched_versions')
+        ).get(name=child.name)
+        child = self.app.substances.to_wrapper(child_model)
         do_asserts(child)
 
     def test_can_get_ancestry_from_substance(self):

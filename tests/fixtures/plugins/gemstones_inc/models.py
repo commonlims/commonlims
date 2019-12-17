@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from clims.services import SubstanceBase, ProjectBase, TextField, IntField, FloatField, JsonField, BoolField
-from clims.services import PlateBase
+from clims.services.container import PlateBase
 
 
 class GemstoneProject(ProjectBase):
