@@ -2,8 +2,10 @@ from __future__ import absolute_import
 
 import re
 import six
+from django.db.models import Prefetch
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
+from clims.models.substance import SubstanceVersion
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
 
@@ -273,10 +275,17 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
         if key == "container.name":
             # TODO: the search parameter indicates we're looking for a substance that's a sample
             # so add a category or similar so it doesn't find other things that are in a container.
-            return ContainerVersion.objects.filter(
-                latest=True, name__icontains=val).prefetch_related('properties')
+            return self._expanded_search(name_search=val)
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
+
+    def _expanded_search(self, name_search):
+        prefetches = self._get_class_specific_prefetches()
+        return ContainerVersion.objects.filter(
+            latest=True, name__icontains=name_search).prefetch_related(
+            *prefetches
+        )
+
     def _get_class_specific_prefetches(self):
         substance_query = SubstanceVersion.objects.filter(latest=True)
         return [
