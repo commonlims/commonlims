@@ -2,4 +2,4 @@
 
 # Temporary because this library (which seems not active) doesn't have support for Django 1.9.
 # This is a quick fix, we might want to get rid of the dependency instead.
--e git+git@github.com:commonlims/django-templatetag-sugar.git@master#egg=django_templatetag_sugar
+-e git://github.com/commonlims/django-templatetag-sugar.git@master#egg=django_templatetag_sugar

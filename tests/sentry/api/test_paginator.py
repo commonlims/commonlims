@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-import pytest
 from datetime import timedelta
 from django.utils import timezone
 from unittest import TestCase as SimpleTestCase

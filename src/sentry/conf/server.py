@@ -276,7 +276,6 @@ INSTALLED_APPS = (
     'sentry',
     'sentry.analytics',
     'sentry.analytics.events',
-    'sentry.nodestore',
     'sentry.search',
     'social_auth',
     'sudo',
@@ -1035,10 +1034,6 @@ SENTRY_DEFAULT_MAX_EVENTS_PER_MINUTE = '90%'
 # Snuba configuration
 SENTRY_SNUBA = os.environ.get('SNUBA', 'http://localhost:1218')
 
-# Node storage backend
-SENTRY_NODESTORE = 'sentry.nodestore.django.DjangoNodeStorage'
-SENTRY_NODESTORE_OPTIONS = {}
-
 # Tag storage backend
 _SENTRY_TAGSTORE_DEFAULT_MULTI_OPTIONS = {
     'backends': [
@@ -1406,8 +1401,6 @@ DEPRECATED_SDKS = {
     'sentry-raven': 'raven-ruby',
 }
 
-SOUTH_TESTS_MIGRATE = os.environ.get('SOUTH_TESTS_MIGRATE', '0') == '1'
-
 TERMS_URL = None
 PRIVACY_URL = None
 
@@ -1424,14 +1417,6 @@ SENTRY_RELAY_WHITELIST_PK = []
 # When open registration is not permitted then only relays in the
 # whitelist can register.
 SENTRY_RELAY_OPEN_REGISTRATION = False
-
-# GeoIP
-# Used for looking up IP addresses.
-# For example /usr/local/share/GeoIP/GeoIPCity.dat
-GEOIP_PATH = None
-# Same file but in the newer format. Both are required.
-# For example /usr/local/share/GeoIP/GeoIPCity.mmdb
-GEOIP_PATH_MMDB = None
 
 # CDN
 # If this is an absolute url like e.g.: https://js.sentry-cdn.com/

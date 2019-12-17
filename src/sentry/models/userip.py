@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 
 from sentry.db.models import FlexibleForeignKey, Model, sane_repr
-from sentry.utils.geo import geo_by_addr
 
 
 class UserIP(Model):
@@ -27,20 +26,9 @@ class UserIP(Model):
 
     @classmethod
     def log(cls, user, ip_address):
-        try:
-            geo = geo_by_addr(ip_address)
-        except Exception:
-            geo = None
-
         values = {
             'last_seen': timezone.now(),
         }
-        if geo:
-            values.update({
-                'country_code': geo['country_code'],
-                'region_code': geo['region'],
-            })
-
         UserIP.objects.create_or_update(
             user=user,
             ip_address=ip_address,

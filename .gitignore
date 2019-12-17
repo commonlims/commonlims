@@ -46,3 +46,5 @@ package-lock.json
 dump.rdb
 .lasterrors
 .ipynb_checkpoints/
+.eslintcache
+.stylelintcache

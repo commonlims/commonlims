@@ -333,14 +333,14 @@ def initialize_app(config, skip_service_validation=False):
 
 def setup_services(validate=True):
     from sentry import (
-        analytics, buffer, digests, newsletter, nodestore, quotas,
+        analytics, buffer, digests, newsletter, quotas,
         ratelimits, search, tagstore, tsdb
     )
     from .importer import ConfigurationError
     from sentry.utils.settings import reraise_as
 
     service_list = (
-        analytics, buffer, digests, newsletter, nodestore, quotas,
+        analytics, buffer, digests, newsletter, quotas,
         ratelimits, search, tagstore, tsdb,
     )
 

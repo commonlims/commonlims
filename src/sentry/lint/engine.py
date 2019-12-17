@@ -11,14 +11,23 @@ from __future__ import absolute_import, print_function
 
 
 import os
+import logging
 import sys
 import subprocess
 import json
 
 from subprocess import check_output, Popen
+logger = logging.getLogger("lint")
 
 os.environ['PYFLAKES_NODOCTEST'] = '1'
 os.environ['SENTRY_PRECOMMIT'] = '1'
+
+
+def execute_subprocess(cmd, args):
+    logger.info("Begin subprocess {} with {} args".format(cmd, len(args)))
+    ret = Popen(cmd + args).wait()
+    logger.info("End subprocess")
+    return ret
 
 
 def get_project_root():
@@ -97,8 +106,7 @@ def get_python_files(file_list=None):
     ]
 
 
-def js_lint(file_list=None, parseable=False, format=False):
-
+def js_lint(file_list=None, parseable=False, format=False, cache=False):
     # We require eslint in path but we actually call an eslint wrapper
     eslint_path = get_node_modules_bin('eslint')
     eslint_wrapper_path = get_sentry_bin('eslint-travis-wrapper')
@@ -120,17 +128,23 @@ def js_lint(file_list=None, parseable=False, format=False):
             cmd.append('--fix')
         if parseable:
             cmd.append('--format=checkstyle')
-        status = Popen(cmd + js_file_list).wait()
+        if cache and not os.environ.get('CI'):
+            # TODO: It would be possible to cache here to speed up the build, but it requires
+            # changing the wrapper script, so waiting with it for now
+            cmd.append("--cache")
+        status = execute_subprocess(cmd, js_file_list)
         has_errors = status != 0
 
     return has_errors
 
 
-def js_stylelint(file_list=None, parseable=False, format=False):
+def js_stylelint(file_list=None, parseable=False, format=False, cache=False):
     """
     stylelint for styled-components
     """
 
+    # TODO-easy create a decorator for this logging pattern
+    logger.info("Begin js_stylelint")
     stylelint_path = get_node_modules_bin('stylelint')
 
     if not os.path.exists(stylelint_path):
@@ -142,10 +156,12 @@ def js_stylelint(file_list=None, parseable=False, format=False):
     has_errors = False
     if js_file_list:
         cmd = [stylelint_path]
-
-        status = Popen(cmd + js_file_list).wait()
+        if cache:
+            cmd.append("--cache")
+        status = execute_subprocess(cmd, js_file_list)
         has_errors = status != 0
 
+    logger.info("End js_stylelint")
     return has_errors
 
 
@@ -157,6 +173,7 @@ def yarn_check(file_list):
     This is a user prompt right now because there ARE cases where you can touch package.json
     without a Yarn lockfile change, e.g. Jest config changes, license changes, etc.
     """
+    logger.info("Begin yarn_check")
     if file_list is None or os.environ.get('SKIP_YARN_CHECK'):
         return False
 
@@ -167,8 +184,10 @@ def yarn_check(file_list):
 If you updated a dependency/devDependency in package.json, you must run `yarn install` to update the lockfile.
 
 To skip this check, run `SKIP_YARN_CHECK=1 git commit [options]`""" + '\033[0m')
+        logger.info("End yarn_check, issues found")
         return True
 
+    logger.info("End yarn_check, no issues found")
     return False
 
 
@@ -206,6 +225,7 @@ def js_lint_format(file_list=None):
     We only format JavaScript code as part of this pre-commit hook. It is not part
     of the lint engine. This uses eslint's `--fix` formatting feature.
     """
+    logger.info("Begin js_lint_format")
     eslint_path = get_node_modules_bin('eslint')
     project_root = get_project_root()
     prettier_path = get_prettier_path()
@@ -222,14 +242,17 @@ def js_lint_format(file_list=None):
     # manually exclude some bad files
     js_file_list = [x for x in js_file_list if '/javascript/example-project/' not in x]
 
-    return run_formatter([eslint_path, '--fix', ],
+    results = run_formatter([eslint_path, '--fix', ],
                          js_file_list)
+    logger.info("End js_lint_format")
+    return results
 
 
 def js_test(file_list=None):
     """
     Run JavaScript unit tests on relevant files ONLY as part of pre-commit hook
     """
+    logger.info("Begin js_test")
     jest_path = get_node_modules_bin('jest')
 
     if not os.path.exists(jest_path):
@@ -240,9 +263,10 @@ def js_test(file_list=None):
 
     has_errors = False
     if js_file_list:
-        status = Popen(['yarn', 'test-precommit'] + js_file_list).wait()
+        status = execute_subprocess(['yarn', 'test-precommit'], js_file_list)
         has_errors = status != 0
 
+    logger.info("End js_test")
     return has_errors
 
 
@@ -251,6 +275,7 @@ def less_format(file_list=None):
     We only format less code as part of this pre-commit hook. It is not part
     of the lint engine.
     """
+    logger.info("Begin less_format")
     project_root = get_project_root()
     prettier_path = get_prettier_path()
 
@@ -258,15 +283,19 @@ def less_format(file_list=None):
         return False
 
     less_file_list = get_less_files(file_list)
-    return run_formatter(
+    result = run_formatter(
         [
             prettier_path,
             '--write',
         ], less_file_list
     )
+    logger.info("End less_format")
+    return result
 
 
 def py_format(file_list=None):
+    logger.info("Begin py_format")
+
     try:
         __import__('autopep8')
     except ImportError:
@@ -275,22 +304,26 @@ def py_format(file_list=None):
 
     py_file_list = get_python_files(file_list)
 
-    return run_formatter([
+    result = run_formatter([
         'autopep8',
         '--in-place',
         '-j0',
     ], py_file_list)
+    logger.info("End py_format")
+    return result
 
 
 def run_formatter(cmd, file_list, prompt_on_changes=True):
+    logger.info("Start running formatter: {}".format(cmd))
     if not file_list:
         return False
 
     has_errors = False
 
-    status = subprocess.Popen(cmd + file_list).wait()
+    status = execute_subprocess(cmd, file_list)
     has_errors = status != 0
     if has_errors:
+        logger.info("End running formatter: {}".format(cmd))
         return True
 
     # this is not quite correct, but it at least represents what would be staged
@@ -308,16 +341,17 @@ def run_formatter(cmd, file_list, prompt_on_changes=True):
                         print('[sentry.lint] Aborted!', file=sys.stderr)  # noqa: B314
                         sys.exit(1)
                 else:
-                    status = subprocess.Popen(
-                        ['git', 'update-index', '--add'] + file_list).wait()
+                    status = execute_subprocess(['git', 'update-index', '--add'], file_list)
         has_errors = status != 0
     return has_errors
 
 
 def run(file_list=None, format=True, lint=True, js=True, py=True,
-        less=True, yarn=True, test=False, parseable=False):
+        less=True, yarn=True, test=False, cache=False):
     # pep8.py uses sys.argv to find setup.cfg
     old_sysargv = sys.argv
+
+    is_ci = os.environ.get('CI')
 
     try:
         sys.argv = [
@@ -352,11 +386,11 @@ def run(file_list=None, format=True, lint=True, js=True, py=True,
                 pass  # flake8 linting was moved to pre-commit
             if js:
                 # stylelint `--fix` doesn't work well
-                results.append(js_stylelint(file_list, parseable=parseable, format=format))
+                results.append(js_stylelint(file_list, parseable=is_ci, format=format, cache=cache))
 
                 if not format:
                     # these tasks are called when we need to format, so skip it here
-                    results.append(js_lint(file_list, parseable=parseable, format=format))
+                    results.append(js_lint(file_list, parseable=is_ci, format=format, cache=cache))
 
         if test:
             if js:

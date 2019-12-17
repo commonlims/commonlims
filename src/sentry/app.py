@@ -26,7 +26,6 @@ env = State()
 from sentry import search, tsdb  # NOQA
 from .buffer import backend as buffer  # NOQA
 from .digests import backend as digests  # NOQA
-from .nodestore import backend as nodestore  # NOQA
 from .quotas import backend as quotas  # NOQA
 from .ratelimits import backend as ratelimiter  # NOQA
 

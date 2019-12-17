@@ -1,7 +1,6 @@
 # coding: utf-8
 from __future__ import absolute_import
 
-import pytest
 from sentry.testutils import TestCase
 from sentry.constants import MAX_CULPRIT_LENGTH
 from django.utils.encoding import force_text

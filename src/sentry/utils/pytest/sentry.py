@@ -33,11 +33,12 @@ def pytest_configure(config):
     integrationdocs.DOC_FOLDER = os.environ['INTEGRATION_DOC_FOLDER']
 
     # Configure the test database
+    user = os.environ.get('CLIMS_DATABASE_USER', 'test_clims')
 
     settings.DATABASES['default'].update(
         {
             'ENGINE': 'sentry.db.postgres',
-            'USER': 'test_clims',
+            'USER': user,
             # This will actually be test_clims when connecting, since django adds this
             # automatically.
             'NAME': 'clims',
@@ -137,9 +138,6 @@ def pytest_configure(config):
     # networking isn't stable
     patcher = mock.patch('socket.getfqdn', return_value='localhost')
     patcher.start()
-
-    if not settings.SOUTH_TESTS_MIGRATE:
-        settings.INSTALLED_APPS = tuple(i for i in settings.INSTALLED_APPS if i != 'south')
 
     from sentry.runner.initializer import (
         bootstrap_options, configure_structlog, initialize_receivers, fix_south,
