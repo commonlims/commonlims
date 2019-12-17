@@ -54,7 +54,13 @@ class SubstanceAncestry(object):
         # from two original samples. There your pool's origin are the two original samples.
 
         # Now, to find all the nodes in the graph, we simply query for the origin nodes:
-        for entry in Substance.objects.filter(origins__in=self.substance.origins):
+        # TODO: I think this query don't belong here. It should be in SubstanceService.
+        subquery = SubstanceVersion.objects.filter(latest=True)
+        entries = Substance.objects.filter(
+            origins__in=self.substance.origins).prefetch_related(
+            Prefetch('versions', queryset=subquery, to_attr='prefetched_versions')
+        )
+        for entry in entries:
             yield self.substance._to_wrapper(entry)
 
     def to_graphviz_src(self, include_created=True):
