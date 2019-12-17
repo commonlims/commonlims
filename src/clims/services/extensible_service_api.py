@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from django.db.models import Prefetch
+from abc import abstractmethod
 
 
 class ExtensibleServiceAPIMixin(object):
@@ -63,19 +64,27 @@ class ExtensibleServiceAPIMixin(object):
 
     def filter(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
+        prefetches = self._get_prefetches()
         models = self._archetype_version_class.objects.prefetch_related(
-            Prefetch('properties', to_attr='all_properties'),
-            Prefetch('all_properties__extensible_property_type')).\
-            filter(**get_args)
+            *prefetches
+        ).filter(**get_args)
         return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
+        prefetches = self._get_prefetches()
         model = self._archetype_version_class.objects.prefetch_related(
-            Prefetch('properties', to_attr='all_properties'),
-            Prefetch('all_properties__extensible_property_type')).\
-            get(**get_args)
+            *prefetches
+        ).get(**get_args)
         return self.to_wrapper(model)
+
+    def _get_prefetches(self):
+        prefetches = [
+            Prefetch('properties', to_attr='all_properties'),
+            Prefetch('all_properties__extensible_property_type'),
+        ]
+        prefetches.extend(self._get_class_specific_prefetches())
+        return prefetches
 
     def _get_filter_arguments(self, **kwargs):
         get_args = {}
@@ -92,3 +101,7 @@ class ExtensibleServiceAPIMixin(object):
             else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args
+
+    @abstractmethod
+    def _get_class_specific_prefetches(self):
+        pass

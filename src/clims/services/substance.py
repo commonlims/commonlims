@@ -12,6 +12,7 @@ from clims.models.file import MultiFormatFile
 from clims.services.extensible import (ExtensibleBase, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
+from django.db.models import Prefetch
 from uuid import uuid4
 from sentry.models.file import File
 from sentry.plugins import plugins
@@ -395,3 +396,10 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     def get_by_name(self, name):
         # TODO: add organization to the filter parameters
         return self.get(name=name)
+
+    def _get_class_specific_prefetches(self):
+        from django.db.models import Prefetch
+        return [
+            Prefetch('archetype__project'),
+            Prefetch('archetype__project__versions', to_attr='prefetched_versions'),
+        ]

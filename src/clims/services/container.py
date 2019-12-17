@@ -271,3 +271,13 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
                 latest=True, name__icontains=val).prefetch_related('properties')
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
+    def _get_class_specific_prefetches(self):
+        substance_query = SubstanceVersion.objects.filter(latest=True)
+        return [
+            Prefetch('archetype__substance_locations', to_attr='prefetched_locations'),
+            Prefetch('archetype__prefetched_locations__substance'),
+            Prefetch('archetype__prefetched_locations__substance__extensible_type'),
+            Prefetch('archetype__prefetched_locations__substance__versions',
+                     queryset=substance_query, to_attr='prefetched_versions'),
+            Prefetch('archetype__extensible_type'),
+        ]

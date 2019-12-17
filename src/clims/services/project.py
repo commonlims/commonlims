@@ -46,5 +46,8 @@ class ProjectService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     _archetype_class = Project
     _archetype_base_class = ProjectBase
 
+    def _get_class_specific_prefetches(self):
+        return []
+
     def __init__(self, app):
         self._app = app
