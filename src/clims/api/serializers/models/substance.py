@@ -4,6 +4,14 @@ from clims.api.serializers.models.extensible_property import ExtensiblePropertyS
 
 from rest_framework import serializers
 from rest_framework.fields import DictField
+from six import text_type
+
+
+class ContainerIndexField(serializers.Field):
+    def to_representation(self, value):
+        return {
+            "index": text_type(value)
+        }
 
 
 class LocationField(serializers.Field):
@@ -26,3 +34,4 @@ class SubstanceSerializer(serializers.Serializer):
     properties = DictField(child=ExtensiblePropertySerializer(read_only=True))
     type_full_name = serializers.CharField()
     location = LocationField(read_only=True)
+    container_index = ContainerIndexField(read_only=True)

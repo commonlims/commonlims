@@ -11,7 +11,6 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, Gemstone
 
 
 class ContainerTest(APITestCase):
-    @pytest.mark.dev_edvard
     def test_find_single_container_by_container_name(self):
         # TODO: This takes too much time for 10 containers filled with samples
         container = self.create_container_with_samples(
@@ -28,6 +27,7 @@ class ContainerTest(APITestCase):
         assert serializer.is_valid()
         assert expanded_serializer.is_valid() is False
 
+    @pytest.mark.dev_edvard
     def test_can_expand_samples_when_searching(self):
         # Arrange
         container = self.create_container_with_samples(
@@ -48,5 +48,6 @@ class ContainerTest(APITestCase):
         type_full_name = response.data[0]['contents'][0]['type_full_name']
         assert type_full_name == 'tests.fixtures.plugins.gemstones_inc.models.GemstoneSample'
         assert response.data[0]['contents'][0]['location']['index'] == '(0, 1, 0)'
+        assert response.data[0]['contents'][0]['container_index']['index'] == 'B:1'
         serializer = ContainerExpandedSerializer(data=response.data[0])
         assert serializer.is_valid()
