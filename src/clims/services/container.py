@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import re
 import six
+from six import iteritems
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
 from clims.services.wrapper import WrapperMixin
@@ -157,6 +158,14 @@ class ContainerBase(ExtensibleBase):
         # Update the value. This will not actually move it in the backend until either
         # the container is saved
         self._locatables[ix.raw] = value
+
+    @property
+    def contents(self):
+        c = []
+        for loc_raw, substance in iteritems(self._locatables):
+            c.append(substance)
+
+        return c
 
     def __getitem__(self, key):
         ix = self.IndexType.from_any_type(key)
