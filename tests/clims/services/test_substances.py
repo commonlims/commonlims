@@ -14,6 +14,7 @@ from clims.services import Csv
 from clims.services.project import ProjectBase
 from clims.services.extensible import TextField
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
+from clims.services.exceptions import DoesNotExist
 import random
 
 
@@ -171,6 +172,12 @@ class TestSubstanceService(TestCase):
         actual = self.app.substances.get_values_of_property(property='color',
                                                             extensible_type=GemstoneSample)
         assert sorted(actual) == sorted(color_list)
+
+    def test_get_values_of_nonexistent_property(self):
+        self.create_a_bunch_of_sample()
+        with pytest.raises(DoesNotExist):
+            self.app.substances.get_values_of_property(property='date',
+                                                       extensible_type=GemstoneSample)
 
 
 class GemstoneProject(ProjectBase):
