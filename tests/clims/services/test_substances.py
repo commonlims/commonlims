@@ -14,6 +14,7 @@ from clims.services import Csv
 from clims.services.project import ProjectBase
 from clims.services.extensible import TextField
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
+import random
 
 
 def read_binary_file(path):
@@ -144,6 +145,32 @@ class TestSubstanceService(TestCase):
         # Assert
         assert len(fetched_samples) == 1
         assert fetched_samples[0].color == 'red'
+
+    def create_a_bunch_of_sample(self):
+        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1.save()
+
+        color_choices = set(['red', 'blue', 'green'])
+        color_list = []
+        for i in range(0, 100):
+            sample = GemstoneSample(name='sample{}'.format(i), organization=self.organization, project=project1)
+            color_pick = random.choice(list(color_choices))
+            color_list.append(color_pick)
+            sample.color = color_pick
+            sample.save()
+        return color_list
+
+    def test_get_unique_values_of_property(self):
+        color_choices = set(self.create_a_bunch_of_sample())
+        actual = self.app.substances.get_unique_values_of_property(property='color',
+                                                                   extensible_type=GemstoneSample)
+        assert actual == color_choices
+
+    def test_get_values_of_property(self):
+        color_list = self.create_a_bunch_of_sample()
+        actual = self.app.substances.get_values_of_property(property='color',
+                                                            extensible_type=GemstoneSample)
+        assert sorted(actual) == sorted(color_list)
 
 
 class GemstoneProject(ProjectBase):

@@ -4,6 +4,7 @@ import six
 from django.db.models import Prefetch
 from django.core import exceptions as django_exceptions
 from clims.services.exceptions import DoesNotExist
+from clims.models.extensible import ExtensibleProperty
 
 
 class ExtensibleServiceAPIMixin(object):
@@ -103,3 +104,25 @@ class ExtensibleServiceAPIMixin(object):
             else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args
+
+    def _get_values_qs(self, property, extensible_type):
+        extensible_type_name = extensible_type.type_full_name_cls()
+        property_query_set = ExtensibleProperty.objects.filter(
+            extensible_property_type__extensible_type__name=extensible_type_name,
+            extensible_property_type__name=property).select_related('extensible_property_type')
+        return property_query_set
+
+    def get_values_of_property(self, property, extensible_type):
+        property_query_set = self._get_values_qs(property, extensible_type)
+        extensible_type = property_query_set[0].extensible_property_type
+        extensible_type_value_field = extensible_type.get_value_field()
+        values = property_query_set.all().values(extensible_type_value_field)
+        return ([x[extensible_type_value_field] for x in values])
+
+    def get_unique_values_of_property(self, property, extensible_type):
+        # TODO: add organization to the filter parameters
+        property_query_set = self._get_values_qs(property, extensible_type)
+        extensible_type = property_query_set[0].extensible_property_type
+        extensible_type_value_field = extensible_type.get_value_field()
+        unique_values = property_query_set.order_by(extensible_type_value_field).distinct(extensible_type_value_field)
+        return set([x.value for x in unique_values])
