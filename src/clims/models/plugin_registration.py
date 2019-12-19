@@ -14,7 +14,16 @@ class PluginRegistration(Model):
     __core__ = True
 
     name = models.TextField(null=False)
+
     version = models.TextField(null=False)
+
+    @property
+    def name_and_version(self):
+        return "{}@{}".format(self.name, self.version)
+
+    @property
+    def sortable_version(self):
+        return tuple([int(num) for num in self.version.split(".")])
 
     class Meta:
         app_label = 'clims'

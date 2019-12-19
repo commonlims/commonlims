@@ -1,10 +1,15 @@
 from __future__ import absolute_import
 
+import logging
 import six
 from six import iteritems
 from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, ExtensibleProperty)
 from clims.models.location import SubstanceLocation
 from django.db import transaction
+from clims import utils
+
+
+logger = logging.getLogger(__name__)
 
 
 class ExtensibleTypeNotRegistered(Exception):
@@ -16,6 +21,7 @@ class ExtensibleService(object):
         self._app = app
         self._implementations = dict()
         self._model_cache = dict()
+        self._logger = logging.getLogger(self.__class__.__name__)
 
     def clear_cache(self):
         self._model_cache.clear()
@@ -55,7 +61,10 @@ class ExtensibleService(object):
                     name))
         return self._model_cache[name]
 
-    def register(self, plugin, extensible_base):
+    def register(self, plugin_reg, extensible_base):
+        logger.info("Installing '{}' from plugin '{}@{}'".format(
+            utils.class_full_name(extensible_base), plugin_reg.name, plugin_reg.version))
+
         property_types = list()
         for field in extensible_base.__dict__.values():
             if not isinstance(field, ExtensibleBaseField):
@@ -70,7 +79,7 @@ class ExtensibleService(object):
         name = "{}.{}".format(extensible_base.__module__, extensible_base.__name__)
         self._implementations[name] = extensible_base
         extensible_type = self._register_model(
-            name, 'default', plugin, property_types=property_types)
+            name, 'default', plugin_reg, property_types=property_types)
         return extensible_type
 
     @transaction.atomic

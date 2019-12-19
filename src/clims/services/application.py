@@ -4,6 +4,7 @@ from clims.services.extensible import ExtensibleService
 from clims.services.substance import SubstanceService
 from clims.services.container import ContainerService
 from clims.services.project import ProjectService
+from sentry.plugins import plugins
 
 
 class ApplicationService(object):
@@ -16,6 +17,9 @@ class ApplicationService(object):
         self.substances = SubstanceService(self)
         self.containers = ContainerService(self)
         self.projects = ProjectService(self)
+        # TODO: Stop using this global "singleton". Using it since some legacy code accesses
+        # the plugins via `from sentry.plugins import plugins` rather than via `app.plugins`
+        self.plugins = plugins
 
 
 class InversionOfControl(object):

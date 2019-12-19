@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clims', '0011_auto_20191106_1509'),
+        ('clims', '0012_remove_extensibletype_category'),
     ]
 
     operations = [

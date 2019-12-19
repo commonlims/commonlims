@@ -10,7 +10,7 @@ from __future__ import absolute_import
 
 __all__ = (
     'TestCase', 'TransactionTestCase', 'APITestCase', 'TwoFactorAPITestCase', 'AuthProviderTestCase', 'RuleTestCase',
-    'PermissionTestCase', 'PluginTestCase', 'CliTestCase', 'AcceptanceTestCase',
+    'PermissionTestCase', 'CliTestCase', 'AcceptanceTestCase',
     'IntegrationTestCase', 'UserReportEnvironmentTestCase', 'SnubaTestCase', 'IntegrationRepositoryTestCase',
     'ReleaseCommitPatchTest', 'SetRefsTestCase'
 )
@@ -22,7 +22,6 @@ import os.path
 import pytest
 import requests
 import six
-import types
 import logging
 
 from sentry_sdk import Hub
@@ -43,7 +42,6 @@ from django.utils import timezone
 from importlib import import_module
 from exam import before, after, fixture, Exam
 from mock import patch
-from pkg_resources import iter_entry_points
 from rest_framework.test import APITestCase as BaseAPITestCase
 from six.moves.urllib.parse import urlencode
 
@@ -58,7 +56,6 @@ from sentry.models import (
     GroupEnvironment, GroupHash, GroupMeta, ProjectOption, Repository, DeletedOrganization,
     Environment, GroupStatus, Organization, TotpInterface, UserReport,
 )
-from sentry.plugins import plugins
 from sentry.rules import EventState
 from sentry.utils import json
 from sentry.utils.auth import SSO_SESSION_KEY
@@ -90,7 +87,12 @@ class BaseTestCase(Fixtures, Exam):
         # Set up clean service classes. This should ensure that each test case has a clean cache
         # as caches should only be in services.
         ioc.set_application(ApplicationService())
+
+        # NOTE: We'll have to reset the plugin manager so we don't get the plugins
+        # that have been loaded in scope. It would be better to never load those plugins in the
+        # first place, but that will be fixed when we stop using the global `plugins` object.
         self.app = ioc.app
+        self.app.plugins.handlers.remove_implementations()
 
     @before
     def setup_dummy_auth_provider(self):
@@ -736,44 +738,6 @@ class PermissionTestCase(TestCase):
         )
 
         self.assert_cannot_access(user, path, **kwargs)
-
-
-class PluginTestCase(TestCase):
-    plugin = None
-
-    def setUp(self):
-        super(PluginTestCase, self).setUp()
-
-        # Old plugins, plugin is a class, new plugins, it's an instance
-        # New plugins don't need to be registered
-        if isinstance(self.plugin, (type, types.ClassType)):
-            plugins.register(self.plugin)
-            self.addCleanup(plugins.unregister, self.plugin)
-
-    def assertAppInstalled(self, name, path):
-        for ep in iter_entry_points('sentry.apps'):
-            if ep.name == name:
-                ep_path = ep.module_name
-                if ep_path == path:
-                    return
-                self.fail(
-                    'Found app in entry_points, but wrong class. Got %r, expected %r' %
-                    (ep_path, path)
-                )
-        self.fail('Missing app from entry_points: %r' % (name, ))
-
-    def assertPluginInstalled(self, name, plugin):
-        path = type(plugin).__module__ + ':' + type(plugin).__name__
-        for ep in iter_entry_points('sentry.plugins'):
-            if ep.name == name:
-                ep_path = ep.module_name + ':' + '.'.join(ep.attrs)
-                if ep_path == path:
-                    return
-                self.fail(
-                    'Found plugin in entry_points, but wrong class. Got %r, expected %r' %
-                    (ep_path, path)
-                )
-        self.fail('Missing plugin from entry_points: %r' % (name, ))
 
 
 class CliTestCase(TestCase):

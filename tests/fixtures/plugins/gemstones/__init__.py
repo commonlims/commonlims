@@ -7,4 +7,5 @@ class GemstonePlugin(Plugin2):
     """
     This plugin defines various defaults for working in a gemstone lab.
     """
-    pass
+
+    version = "1.0.0"

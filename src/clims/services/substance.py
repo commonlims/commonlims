@@ -5,6 +5,7 @@ import re
 import logging
 from datetime import datetime
 
+from clims import utils
 from clims.models.substance import Substance, SubstanceVersion
 from clims.models.extensible import ExtensibleProperty
 from clims.models.location import SubstanceLocation
@@ -14,7 +15,6 @@ from django.db import transaction
 from django.db.models import QuerySet
 from uuid import uuid4
 from sentry.models.file import File
-from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.handlers import SubstancesValidationHandler
@@ -356,7 +356,7 @@ class SubstanceService(BaseExtensibleService):
 
         context = HandlerContext(organization=organization)
         with MultiFormatFile.from_file_stream(full_path, file_stream) as wrapped_stream:
-            handlers = plugins.handle(
+            handlers = self._app.plugins.handlers.handle(
                 SubstancesValidationHandler, context, required=False,
                 multi_format_file=wrapped_stream)
 
@@ -370,7 +370,7 @@ class SubstanceService(BaseExtensibleService):
         org_file = self._create_organization_file(file_stream, full_path, organization.id)
 
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
-            plugins.handle(
+            self._app.plugins.handlers.handle(
                 SubstancesSubmissionHandler, context, required=True,
                 multi_format_file=wrapped_org_file)
 
@@ -403,12 +403,13 @@ class SubstanceService(BaseExtensibleService):
     def create_submission_demo(self, file_type):
         import os
         from clims.handlers import SubstancesSubmissionFileDemoHandler
-        plugins.require_single_handler(SubstancesSubmissionFileDemoHandler)
-        handlers = plugins.handle(SubstancesSubmissionFileDemoHandler, None, True, file_type)
-        handler = handlers[0]
+        self._app.plugins.handlers.require_single_handler(SubstancesSubmissionFileDemoHandler)
+        handlers = self._app.plugins.handlers.handle(SubstancesSubmissionFileDemoHandler, None, True, file_type)
+        handler = utils.single(handlers)
         handler.demo_file.seek(0, os.SEEK_END)
         size = handler.demo_file.tell()
         handler.demo_file.seek(0)
+        logger.debug("Created a sample submission demo file '{}', size={}".format(handler.demo_file_name, size))
         return handler.demo_file, handler.demo_file_name, size
 
     def filter_by_project(self, project_name):

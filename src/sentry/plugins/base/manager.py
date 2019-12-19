@@ -14,57 +14,73 @@ import os
 import six
 import logging
 import inspect
-import pkgutil
+import click
 import importlib
 
-from clims.handlers import Handler, MultipleHandlersNotAllowed
-from sentry.utils.managers import InstanceManager
+from clims import utils
+from clims.handlers import HandlerManager
 from sentry.utils.safe import safe_execute
 from clims.workflow import WorkflowEngine, WorkflowEngineException
-from clims.handlers import RequiredHandlerNotFound
+from django.conf import settings
+from django.db import transaction
+from django.db.utils import ProgrammingError
 
-logger = logging.getLogger('clims.plugins')
+logger = logging.getLogger(__name__)
 
 
-class PluginManager(InstanceManager):
-    def __init__(self, class_list=None, instances=True):
-        super(PluginManager, self).__init__(class_list, instances)
-        self.handlers = dict()
-        self.register_handler_baseclasses()
+class PluginManager(object):
+    """
+    Handles plugins.
 
-    def __iter__(self):
-        return iter(self.all())
+    Plugins need to be installed via a call to `lims upgrade`. This will install all plugins
+    that are found in the application at the time.
 
-    def __len__(self):
-        return sum(1 for i in self.all())
+    When a plugin is found in the environment, it's installed, i.e. added to the database.
+    After that, it needs to exist on load time from there on. It's currently not supported to
+    uninstall a plugin.
 
-    def register_handler_baseclasses(self):
-        handler_subclasses = Handler.__subclasses__()
-        for subclass in handler_subclasses:
-            self.handlers[subclass] = set()
+    When the application loads, it will load all plugins that exist in the database.
+    """
 
-    def auto_register(self):
-        """Registers all plugins that can be found in the Python environment"""
+    def __init__(self, instance_manager):
+        self.handlers = HandlerManager()
+        self.instance_manager = instance_manager
 
-        # TODO: The plugin mechanism is rather unclean at the moment. CLIMS introduced
-        # PluginRegistration which is required so that we can see which plugin+version made which
-        # change. Sentry's plugins are more liberal and don't require that.
-        # Because of this, we want plugins to be registered only during `lims upgrade` (or
-        # be configured) so that users don't accidentally make changes by just pip installing
-        # some package.
-        # So the workflow should be:
-        #   * regular startup: Make plugins available only if there exists a PluginRegistration
-        #   * upgrade: Add a PluginRegistration object (register a plugin) if it has been pip
-        #              installed
-        # TODO: Newer versions should take precedence over older.
-        for plugin in self.all(2):
-            # TODO: Do this in a transaction
-            self.register_model(plugin)
-            self.register_plugin_workflow(plugin)
-            self.register_extensible_types(plugin)
+    # Install (during upgrade)
 
-    def register_plugin_workflow(self, plugin):
-        definitions = list(plugin.workflow_definitions())
+    def auto_install(self):
+        """
+        Installs all plugins that can be found in the Python environment. An entry for the plugin
+        and version is created in the database.
+        """
+        logger.info("Auto installing plugins found in environment")
+        plugins = self.find_all_plugins_in_scope()
+        self.install_plugins(*plugins)
+
+    def install_plugins(self, *plugins):
+        """
+        Installs the plugins in the backend. Plugins can not be loaded before they have been
+        installed.
+        """
+        for plugin in plugins:
+            logger.info("Installing plugin class '{}'".format(plugin.get_name_and_version()))
+            with transaction.atomic():
+                self.install_plugin(plugin)
+                self.install_extensible_types(plugin)
+                self.install_workflows_in_plugin(plugin)
+
+    def install_workflows_in_plugin(self, plugin_cls):
+        """
+        Installs workflow definitions found in the plugin.
+
+        Currently only supports Camunda workflow definitions.
+        """
+        logger.info("Loading workflows for plugin class {}".format(plugin_cls))
+
+        definitions = list(plugin_cls.workflow_definitions())
+        logger.info("Found {} workflow definitions for plugin class {}".format(
+            len(definitions), plugin_cls))
+
         workflows = WorkflowEngine()
         # TODO: Validate that each workflow has a valid name, corresponding with
         # the name of the plugin
@@ -75,37 +91,53 @@ class PluginManager(InstanceManager):
                     workflows.deploy(definition)
                     logger.info(
                         "Uploaded workflow definition {} for plugin {}".format(
-                            file_name, plugin))
+                            file_name, plugin_cls))
                 except WorkflowEngineException as e:
                     # TODO: Disable the plugin in this case (if not in dev mode)
                     logger.error(
                         "Can't upload workflow definition {} for plugin {}".format(
-                            file_name, plugin))
+                            file_name, plugin_cls))
                     logger.error(e)
 
-    def register_model(self, plugin):
+    def validate_version(self, plugin_cls):
+        if not plugin_cls.version:
+            raise PluginMustHaveVersion()
+
+        # Ensure that we can parse the string as a sortable tuple:
+        try:
+            parsed = plugin_cls.get_sortable_version()
+            logger.debug("Plugin {} has a valid version {} => {}".format(
+                plugin_cls, plugin_cls.version, parsed))
+        except ValueError:
+            raise PluginIncorrectVersionFormat(
+                "Plugin versions must be a list of dot separated numbers, e.g. 1.0.0")
+
+    def install_plugin(self, plugin_cls):
         """
-        Registers the plugin in the database.
+        Installs the plugin in the database.
 
         This method should be called when upgrading the system, so the end-user is in control
         of when a new model is available.
         """
         # Make sure we have a plugin registration here:
         from clims.models import PluginRegistration
-        from sentry.models import Organization
-        try:
-            plugin_version = plugin.version
-        except AttributeError:
-            plugin_version = "NA"
+
+        self.validate_version(plugin_cls)
+
+        logger.debug("Recording plugin {} version={} in the database".format(
+            plugin_cls.get_full_name(), plugin_cls.version))
 
         PluginRegistration.objects.get_or_create(
             name=plugin_cls.get_full_name(), version=plugin_cls.version)
 
-    def register_extensible_types(self, plugin):
+    def install_extensible_types(self, plugin):
         """
-        Registers extensible types in the plugin if any are found
+        Installs all the extensible types found in the plugin. These are for example specific
+        Plates, Projects and Samples defined by the plugin developers.
         """
-        from clims.services import ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase
+        logger.info("Installing extensible types found in plugin class '{}'".format(
+            plugin.get_name_and_version()))
+        from clims.services import ExtensibleBase
         from clims.models import PluginRegistration
         from clims.services import ApplicationService
         app = ApplicationService()
@@ -113,39 +145,190 @@ class PluginManager(InstanceManager):
         # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
         # knowledge of which bases are not to be registered is elsewhere
         # flake8: noqa
+        from clims.services import ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase
         known_bases = [ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase]
 
         mod = self.get_plugin_module(plugin, 'models')
+
         if not mod:
+            logger.info(
+                "No extensible types found for plugin '{}'. Searched for submodule 'models'".format(
+                    plugin.get_full_name()))
             return
 
-        plugin_model = PluginRegistration.objects.get(name=plugin.full_name)
+        plugin_model = PluginRegistration.objects.get(name=plugin.get_full_name())
         for _name, class_to_register in inspect.getmembers(mod, inspect.isclass):
             if issubclass(class_to_register, ExtensibleBase) and \
                     class_to_register not in known_bases:
                 app.extensibles.register(plugin_model, class_to_register)
 
-    def all(self, version=1):
-        """
-        Returns all enabled plugins with the specified interface version.
+    # Find
 
-        :param version: The version of the plugin interface. None will return all enabled plugins.
-        :return: A generator that iterates over the plugins
+    def find_plugins_by_entry_points(self):
         """
-        for plugin in sorted(super(PluginManager, self).all(), key=lambda x: x.get_title()):
-            if not plugin.is_enabled():
-                continue
-            if version is not None and plugin.__version__ != version:
-                continue
+        Returns plugins that have been marked as such by adding an entry like:
+
+            entry_points={
+                'clims.plugins': [
+                    'org_plugins = org_plugins.plugins:YourPlugin',
+                ],
+            },
+
+        to the setup.py file in the plugin package.
+        """
+
+        # NOTE: Users must specify an entry_point in their setup.py so that plugins will
+        # be discovered.
+        # See e.g.: https://github.com/Molmed/commonlims-snpseq/blob/cd1c011a3/setup.py#L105
+        from pkg_resources import iter_entry_points
+        entry_points = [ep for ep in iter_entry_points('clims.plugins')]
+
+        for ep in entry_points:
+            try:
+                plugin = ep.load()
+                yield plugin
+            except Exception:  # Handling all exceptions since the code is unknown to us.
+                import traceback
+                click.echo(
+                    "Failed to load plugin %r:\n%s" % (ep.name, traceback.format_exc()),
+                    err=True)
+
+    def find_all_plugins_in_scope(self):
+        """
+        Yields all plugins that should be used, based on what can be found in the python environment.
+        """
+        for plugin in self.find_plugins_by_entry_points():
             yield plugin
 
-    def add(self, class_path):
-        super(PluginManager, self).add(class_path)
+    # Load (runtime)
 
-    def configurable_for_project(self, project, version=1):
-        for plugin in self.all(version=version):
-            if not safe_execute(plugin.can_configure_for_project,
-                                project, _with_transaction=False):
+    def load_installed(self):
+        """
+        Loads all plugins that have been installed.
+
+        Takes the latest PluginRegistration found for each plugin and loads it. If the plugin
+        isn't installed anymore, or has a different version, an error is raised.
+        """
+        logger.info("Loading all installed plugins")
+        from clims.models import PluginRegistration
+        try:
+            installed = list(PluginRegistration.objects.all())
+        except ProgrammingError:
+            # We might be loading the application before migrations have run, so the
+            # PluginRegistration type doesn't exist. In this case we silently pass and no plugins
+            # will be loaded
+            return
+
+        latest = dict()
+        for current in installed:
+            if current.name in latest \
+                    and latest[current.name].sortable_version > current.sortable_version:
+                logger.debug("Found registration for {} but newer already found".format(current.name_and_version))
+                continue
+            logger.debug("Found a registration for {}".format(current.name_and_version))
+            latest[current.name] = current
+
+        for plugin_registration in latest.values():
+            self.load(plugin_registration)
+
+        logger.info("Active handlers after loading all plugins:\n{}".format(self.handlers.to_handler_config()))
+
+    def load(self, plugin_registration):
+        """
+        Initializes the plugin class if it's found. It must match the name and version of the
+        PluginRegistration.
+        """
+
+        # NOTE: We currently require plugins to load (the True flag). This is because plugins
+        # define types that must exist after they've been created. It might be worthy to find
+        # a way to deal with plugins that should not load anymore.
+        logger.info("Loading plugin '{}@{}'".format(
+            plugin_registration.name, plugin_registration.version))
+
+        try:
+            plugin = self.instance_manager.add(
+                plugin_registration.name, plugin_registration.version, True)
+        except self.instance_manager.ImportException:
+            # NOTE: We need to find a smooth way of getting rid of the plugin but still have
+            # an acceptably functioning system. For now however, this error is raised
+
+            # Allow the user to ignore the plugin if an environment variable is set. This
+            # is mainly for debug purposes and to be able to run `lims shell` in this situation.
+            if not os.environ.get("CLIMS_IGNORE_UNAVAILABLE_PLUGINS", None) == "1":
+                six.reraise(RequiredPluginCannotLoad,
+                    "Can't import required plugin {}@{}. The plugin has been installed e.g. via "
+                    "`lims upgrade` but the implementation is not found in the python environment. "
+                    "environment variable CLIMS_IGNORE_UNAVAILABLE_PLUGINS=1".format(
+                        plugin_registration.name, plugin_registration.version))
+        except self.instance_manager.InitializeException:
+            six.reraise(RequiredPluginCannotLoad,
+                    "Can't initialize the plugin {}@{}. The stacktrace has more information on "
+                    "why the plugin can not load.".format(
+                        plugin_registration.name, plugin_registration.version))
+
+        # Registers handlers. Handlers must be in a module directly below
+        # the plugin's module:
+        mod = self.get_plugin_module(plugin, 'handlers')
+        if not mod:
+            logger.info("No handlers module found in plugin '{}'".format(plugin))
+        else:
+            logger.info("Loading all handlers in plugin '{}'".format(plugin.get_name_and_version()))
+            self.handlers.load_handlers(mod)
+
+        self.handlers.validate()
+
+    def init_plugin_instance(plugin):
+        # TODO: Call this when the plugin is run on load time
+        from sentry.plugins import bindings
+        plugin.setup(bindings)
+
+        # Register contexts from plugins if necessary
+        if hasattr(plugin, 'get_custom_contexts'):
+            from sentry.interfaces.contexts import contexttype
+            for cls in plugin.get_custom_contexts() or ():
+                contexttype(cls)
+
+        if (hasattr(plugin, 'get_cron_schedule') and plugin.is_enabled()):
+            schedules = plugin.get_cron_schedule()
+            if schedules:
+                settings.CELERYBEAT_SCHEDULE.update(schedules)
+
+        if (hasattr(plugin, 'get_worker_imports') and plugin.is_enabled()):
+            imports = plugin.get_worker_imports()
+            if imports:
+                settings.CELERY_IMPORTS += tuple(imports)
+
+        if (hasattr(plugin, 'get_worker_queues') and plugin.is_enabled()):
+            from kombu import Queue
+            for queue in plugin.get_worker_queues():
+                try:
+                    name, routing_key = queue
+                except ValueError:
+                    name = routing_key = queue
+                q = Queue(name, routing_key=routing_key)
+                q.durable = False
+                settings.CELERY_QUEUES.append(q)
+
+    # Query
+
+    def __iter__(self):
+        return iter(self.all())
+
+    def __len__(self):
+        return sum(1 for i in self.all())
+
+    def all(self, version=None, enabled=None):
+        """
+        :param version: The version of the plugin interface. None will return all enabled plugins.
+        :param enabled: Specifies if only enabled plugins should be returned (True). If None, both
+        enabled and disbabled plugins are returned
+        :return: A generator that iterates over the plugins
+        """
+
+        for plugin in sorted(self.instance_manager.all(), key=lambda x: x.get_title()):
+            if enabled is not None and not plugin.is_enabled():
+                continue
+            if version is not None and plugin.__version__ != version:
                 continue
             yield plugin
 
@@ -154,6 +337,23 @@ class PluginManager(InstanceManager):
             if plugin.slug == slug:
                 return True
         return False
+
+    def get(self, slug):
+        for plugin in self.all(version=None):
+            if plugin.slug == slug:
+                return plugin
+        raise KeyError(slug)
+
+    # Legacy
+
+    # These methods are pending deletion (from the sentry core)
+
+    def configurable_for_project(self, project, version=1):
+        for plugin in self.all(version=version):
+            if not safe_execute(plugin.can_configure_for_project,
+                                project, _with_transaction=False):
+                continue
+            yield plugin
 
     def for_project(self, project, version=1):
         for plugin in self.all(version=version):
@@ -166,37 +366,6 @@ class PluginManager(InstanceManager):
             if not plugin.has_site_conf():
                 continue
             yield plugin
-
-    def get(self, slug):
-        for plugin in self.all(version=None):
-            if plugin.slug == slug:
-                return plugin
-        raise KeyError(slug)
-
-    def first(self, func_name, *args, **kwargs):
-        version = kwargs.pop('version', 1)
-        for plugin in self.all(version=version):
-            try:
-                result = getattr(plugin, func_name)(*args, **kwargs)
-            except Exception as e:
-                logger = logging.getLogger('sentry.plugins.%s' % (type(plugin).slug, ))
-                logger.error(
-                    '%s.process_error',
-                    func_name,
-                    exc_info=True,
-                    extra={'exception': e},
-                )
-                continue
-
-            if result is not None:
-                return result
-
-    # TODO: This should be called e.g. load, as it's just the in-process loading. The registration
-    # is when we register in the database
-    def register(self, cls):
-        self.add('%s.%s' % (cls.__module__, cls.__name__))
-        self.load_handlers(cls)
-        return cls
 
     def get_registered_base_handler(self, cls):
         """
@@ -211,7 +380,6 @@ class PluginManager(InstanceManager):
         """
         Gets a module defined in the plugin. Returns None if it wasn't found
         """
-        import importlib
         module_name = "{}.{}".format(plugin_class.__module__, name)
 
         try:
@@ -228,81 +396,18 @@ class PluginManager(InstanceManager):
             for key in self.handlers:
                 self.handlers[key].clear()
 
-    def load_handler_implementation(self, baseclass, impl):
-        self.handlers[baseclass].add(impl)
-
-    def load_handlers(self, cls):
-
-        # Registers handlers. Handlers must be in a module directly below
-        # the plugin's module:
-        mod = self.get_plugin_module(cls, 'handlers')
-
-        if not mod:
-            return
-
-        def find_unique_deepest_impl(clz):
-            sub_classes = clz.__subclasses__()
-            nbr_of_subclasses = len(sub_classes)
-            if nbr_of_subclasses == 0:
-                return clz
-            elif nbr_of_subclasses > 1:
-                raise MultipleHandlersNotAllowed(
-                    "Found the implementations: {}, when trying " +
-                    "to register a unique handler.".format(",".join(sub_classes)))
-            else:
-                # We only had a single subclass, recurse to see if that hs any subclasses
-                return find_unique_deepest_impl(sub_classes[0])
-
-        # Load all modules from the handlers module to make them visable in this context
-        for loader, name, ispkg in pkgutil.iter_modules(path=mod.__path__, prefix=mod.__name__ + "."):
-            importlib.import_module(name)
-
-        for baseclass in self.handlers.keys():
-            subclasses = baseclass.__subclasses__()
-            if baseclass.unique_registration:
-                impl = find_unique_deepest_impl(baseclass)
-                self.load_handler_implementation(baseclass, impl)
-            else:
-                self.load_handler_implementation(baseclass, impl)
-
     def unregister(self, cls):
         self.remove('%s.%s' % (cls.__module__, cls.__name__))
         return cls
 
-    def handler_count(self, cls):
-        return len(self.handlers[cls])
 
-    def require_single_handler(self, cls):
-        handlers = self.handlers[cls]
-        count = len(handlers)
-        if count == 0:
-            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
-        elif count > 1:
-            # TODO: New type or change the type name
-            raise RequiredHandlerNotFound("Too many registered handlers found for '{}'".format(cls))
+class PluginMustHaveVersion(Exception):
+    pass
 
-    def require_handler(self, cls):
-        handlers = self.handlers[cls]
-        count = len(handlers)
-        if count == 0:
-            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
 
-    def handle(self, cls, context, required, *args, **kwargs):
-        """
-        Runs all handlers registered for cls in sequence. *args are sent to the handler as arguments.
+class PluginIncorrectVersionFormat(Exception):
+    pass
 
-        Returns a list of the handlers that were executed
-        """
 
-        ret = list()
-        if required:
-            self.require_handler(cls)
-        handlers = self.handlers[cls]
-        for handler in handlers:
-            # TODO: the plugins manager should have an instance of the app
-
-            from clims.services import ioc
-            instance = handler(context, ioc.app)
-            ret.append(instance)
-            instance.handle(*args, **kwargs)
-        return ret
+class RequiredPluginCannotLoad(Exception):
+    pass

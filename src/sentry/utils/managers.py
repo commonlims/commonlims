@@ -1,70 +1,112 @@
 """
-sentry.utils.db
-~~~~~~~~~~~~~~~
+Original copyright:
 
 :copyright: (c) 2010-2014 by the Sentry Team, see AUTHORS for more details.
 :license: BSD, see LICENSE for more details.
 """
-from __future__ import absolute_import, print_function
 
+from __future__ import absolute_import
+import six
 import logging
+
+logger = logging.getLogger(__name__)
+
+
+class LoadException(Exception):
+    pass
+
+
+class ImportException(LoadException):
+    pass
+
+
+class InitializeException(LoadException):
+    pass
+
+
+LAZY_MARKER = object()
 
 
 class InstanceManager(object):
-    def __init__(self, class_list=None, instances=True):
-        if class_list is None:
-            class_list = []
-        self.instances = instances
-        self.update(class_list)
+
+    ImportException = ImportException
+
+    InitializeException = InitializeException
+
+    def __init__(self):
+        self.instances = dict()
 
     def get_class_list(self):
-        return self.class_list
+        return list(self.cache.keys())
 
-    def add(self, class_path):
-        self.cache = None
-        self.class_list.append(class_path)
+    def add(self, class_path, required_version=None, must_load=False):
+        """
+        Adds the class_path to the list of instances. The instance
+        is not loaded directly unless either version is set or must_load is True
+        """
+        if must_load or required_version:
+            self.instances[class_path] = self._fetch(class_path, required_version, must_load)
+        else:
+            self.instances[class_path] = LAZY_MARKER
+        return self.instances[class_path]
 
     def remove(self, class_path):
-        self.cache = None
-        self.class_list.remove(class_path)
+        del self.instances[class_path]
 
-    def update(self, class_list):
+    def _fetch(self, class_path, required_version=None, must_load=False):
         """
-        Updates the class list and wipes the cache.
-        """
-        self.cache = None
-        self.class_list = class_list
+        # Fetches the entry, loading it if it's marked as lazy.
 
-    def _fetch(self, class_path, create):
-        module_name, class_name = class_path.rsplit('.', 1)
+        # The entry may be None, indicating that it was not found and that it wasn't required to load
+        # (see `add`).
+        """
         try:
-            module = __import__(module_name, {}, {}, class_name)
-            cls = getattr(module, class_name)
-            if create:
-                return cls()
+            ret = self._load(class_path)
+        except LoadException as ex:
+            if must_load:
+                raise ex
             else:
-                return cls
+                logger.warn(ex.msg)
+                ret = None
+
+        if ret and required_version and ret.version != required_version:
+            raise AssertionError("Found '{}' but it's not of the correct version {} != {}".format(
+                class_path, required_version, ret.version))
+
+        return ret
+
+    def _load(self, class_path):
+        """
+        Loads and initializes the instance.
+
+        Raises ImportError if the instance can't be imported and LoadException if it can't
+        be initialized.
+        """
+        module_name, class_name = class_path.rsplit('.', 1)
+
+        try:
+            module = __import__(six.binary_type(module_name), {}, {}, six.binary_type(class_name))
+            cls = getattr(module, class_name)
+        except ImportError:
+            six.reraise(ImportException, "Not able to import class '{}'".format(class_path))
+
+        try:
+            return cls()
         except Exception:
-            logger = logging.getLogger('sentry.errors')
-            logger.exception('Unable to import %s', class_path)
-            return None
+            # Reraise so we get the traceback from the original exception
+            six.reraise(InitializeException, "Not able to initialize class '{}'".format(class_path))
 
     def all(self):
         """
-        Returns a list of cached instances.
+        Returns all instances. This forces a load of all lazy objects.
         """
-        class_list = list(self.get_class_list())
-        if not class_list:
-            self.cache = []
-            return []
 
-        if self.cache is not None:
-            return self.cache
+        # TODO: Just have the class implement the iter protocol instead.
 
-        results = []
-        for cls_path in class_list:
-            instance = self._fetch(cls_path, self.instances)
-            results.append(instance)
-        self.cache = results
-
-        return results
+        for cls_path, value in self.instances.items():
+            if value == LAZY_MARKER:
+                # Instances that are lazy loaded do not require version checks and can fail
+                # while loading
+                instance = self._fetch(cls_path)
+                self.instances[cls_path] = instance
+                yield instance

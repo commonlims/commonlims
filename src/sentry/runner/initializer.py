@@ -12,88 +12,10 @@ import os
 import six
 import logging
 
-from django.conf import settings
-
-
 from sentry.utils import warnings
 from sentry.utils.warnings import DeprecatedSettingWarning
 
 logger = logging.getLogger(__name__)
-
-
-def register_plugins(settings):
-    from pkg_resources import iter_entry_points
-    from sentry.plugins import plugins
-    logger.info("register_plugins starts")
-    groups = ['clims.plugins']
-    entry_points = [ep for group in groups for ep in iter_entry_points(group)]
-
-    for ep in entry_points:
-        try:
-            plugin = ep.load()
-        except Exception:
-            import traceback
-            click.echo(
-                "Failed to load plugin %r:\n%s" % (ep.name, traceback.format_exc()),
-                err=True
-            )
-        else:
-            plugins.register(plugin)
-
-    for plugin in plugins.all(version=None):
-        init_plugin(plugin)
-
-    from sentry import integrations
-    from sentry.utils.imports import import_string
-    for integration_path in settings.SENTRY_DEFAULT_INTEGRATIONS:
-        try:
-            integration_cls = import_string(integration_path)
-        except Exception:
-            import traceback
-            click.echo(
-                "Failed to load integration %r:\n%s" % (integration_path, traceback.format_exc()),
-                err=True
-            )
-        else:
-            integrations.register(integration_cls)
-
-    for integration in integrations.all():
-        try:
-            integration.setup()
-        except AttributeError:
-            pass
-
-
-def init_plugin(plugin):
-    from sentry.plugins import bindings
-    plugin.setup(bindings)
-
-    # Register contexts from plugins if necessary
-    if hasattr(plugin, 'get_custom_contexts'):
-        from sentry.interfaces.contexts import contexttype
-        for cls in plugin.get_custom_contexts() or ():
-            contexttype(cls)
-
-    if (hasattr(plugin, 'get_cron_schedule') and plugin.is_enabled()):
-        schedules = plugin.get_cron_schedule()
-        if schedules:
-            settings.CELERYBEAT_SCHEDULE.update(schedules)
-
-    if (hasattr(plugin, 'get_worker_imports') and plugin.is_enabled()):
-        imports = plugin.get_worker_imports()
-        if imports:
-            settings.CELERY_IMPORTS += tuple(imports)
-
-    if (hasattr(plugin, 'get_worker_queues') and plugin.is_enabled()):
-        from kombu import Queue
-        for queue in plugin.get_worker_queues():
-            try:
-                name, routing_key = queue
-            except ValueError:
-                name = routing_key = queue
-            q = Queue(name, routing_key=routing_key)
-            q.durable = False
-            settings.CELERY_QUEUES.append(q)
 
 
 def initialize_receivers():
@@ -307,13 +229,12 @@ def initialize_app(config, skip_service_validation=False):
     )
 
     import django
-    if hasattr(django, 'setup'):
-        # support for Django 1.7+
-        django.setup()
+    django.setup()
 
     bind_cache_to_option_store()
 
-    register_plugins(settings)
+    from sentry.plugins import plugins
+    plugins.load_installed()
 
     initialize_receivers()
 

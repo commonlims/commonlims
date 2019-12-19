@@ -37,7 +37,7 @@ def _upgrade(interactive, traceback, verbosity, repair):
             'sentry.runner.commands.repair.repair',
         )
 
-    plugins.auto_register()
+    plugins.auto_install()
 
 
 @click.command()
