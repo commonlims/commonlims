@@ -262,41 +262,36 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
         return self.get(name=name)
 
     def filter_from(self, query_builder):
-        qs = self._search_qs(query_builder.query, query_builder.order_by)
-        containers = list()
-        for container_model in qs:
-            containers.append(self.to_wrapper(container_model))
+        query_params = query_builder.parse_query()
+        return self.filter(**query_params)
 
-        return containers
 
-    def _search_qs(self, query, order_by=None):
-        # TODO: This is temporary. We will be using elastic for searching.
-        query = query.strip()
+class ContainerQueryBuilder:
+    def __init__(self, query_from_url):
+        self.order_by = None
+        self.query_from_url = query_from_url
+
+    def order_by_created_date(self):
+        self.order_by = '-archetype__created_at'
+
+    def parse_query(self):
+        query_params = dict()
+        if self.order_by:
+            query_params['order_by'] = self.order_by
+        query = self.query_from_url.strip()
+        if len(query) == 0:
+            return query_params
         query = query.split(" ")
+
         if len(query) > 1:
             raise NotImplementedError("Complex queries are not yet supported")
-        elif len(query) == 0:
-            qs = self._all_qs()
 
         query = query[0]
         key, val = query.split(":")
 
         if key == "container.name":
-            # TODO: the search parameter indicates we're looking for a substance that's a sample
-            # so add a category or similar so it doesn't find other things that are in a container.
-            qs = ContainerVersion.objects.filter(
-                latest=True, name__icontains=val).prefetch_related('properties')
+            query_params['name__icontains'] = val
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
-        if order_by:
-            qs.order_by(order_by)
-        return qs
+        return query_params
 
-
-class ContainerQueryBuilder:
-    def __init__(self, query):
-        self.order_by = None
-        self.query = query
-
-    def order_by_created_date(self):
-        self.order_by = '-archetype__created_at'

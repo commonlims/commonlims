@@ -16,14 +16,14 @@ class ContainerEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        query = request.GET.get('query', '')
+        query_from_url = request.GET.get('query', '')
         expand = request.GET.get('expand', None) == 'true'
         if expand:
             serializer_class = ContainerExpandedSerializer
         else:
             serializer_class = ContainerSerializer
 
-        query_builder = ContainerQueryBuilder(query)
+        query_builder = ContainerQueryBuilder(query_from_url)
         query_builder.order_by_created_date()
         containers = self.app.containers.filter_from(query_builder)
 
