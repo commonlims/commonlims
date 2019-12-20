@@ -8,8 +8,6 @@ sentry.testutils.fixtures
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import copy
-import json
 import os
 import petname
 import random
@@ -24,16 +22,14 @@ from hashlib import sha1
 from loremipsum import Generator
 from uuid import uuid4
 
-from sentry.event_manager import EventManager
 from sentry.constants import SentryAppStatus
 from sentry.mediators import sentry_apps, sentry_app_installations, service_hooks
 from sentry.models import (
-    Activity, Environment, Event, EventError, EventMapping, Group, Organization, OrganizationMember,
+    Activity, Environment, Group, Organization, OrganizationMember,
     OrganizationMemberTeam, Project, ProjectBookmark, Team, User, UserEmail, Release, Commit, ReleaseCommit,
     CommitAuthor, Repository, CommitFileChange, File, UserPermission, EventAttachment,
     UserReport
 )
-from sentry.utils.canonical import CanonicalKeyDict
 from clims.models import PluginRegistration
 
 loremipsum = Generator()
@@ -49,127 +45,6 @@ def make_word(words=None):
     if words is None:
         words = int(random.weibullvariate(8, 3))
     return random.choice(loremipsum.words)
-
-
-DEFAULT_EVENT_DATA = {
-    'extra': {
-        'loadavg': [0.97607421875, 0.88330078125, 0.833984375],
-        'sys.argv': [
-            '/Users/dcramer/.virtualenvs/sentry/bin/raven', 'test',
-            'https://ebc35f33e151401f9deac549978bda11:f3403f81e12e4c24942d505f086b2cad@sentry.io/1'
-        ],
-        'user':
-        'dcramer'
-    },
-    'modules': {
-        'raven': '3.1.13'
-    },
-    'request': {
-        'cookies': {},
-        'data': {},
-        'env': {},
-        'headers': {},
-        'method': 'GET',
-        'query_string': '',
-        'url': 'http://example.com',
-    },
-    'stacktrace': {
-        'frames': [
-            {
-                'abs_path':
-                'www/src/sentry/models/foo.py',
-                'context_line':
-                '                        string_max_length=self.string_max_length)',
-                'filename':
-                'sentry/models/foo.py',
-                'function':
-                'build_msg',
-                'in_app':
-                True,
-                'lineno':
-                29,
-                'module':
-                'raven.base',
-                'post_context': [
-                    '                },', '            })', '',
-                    "        if 'stacktrace' in data:",
-                    '            if self.include_paths:'
-                ],
-                'pre_context': [
-                    '', '            data.update({',
-                    "                'stacktrace': {",
-                    "                    'frames': get_stack_info(frames,",
-                    '                        list_max_length=self.list_max_length,'
-                ],
-                'vars': {
-                    'culprit': 'raven.scripts.runner',
-                    'date': 'datetime.datetime(2013, 2, 14, 20, 6, 33, 479471)',
-                    'event_id': '598fb19363e745ec8be665e6ba88b1b2',
-                    'event_type': 'raven.events.Message',
-                    'frames': '<generator object iter_stack_frames at 0x103fef050>',
-                    'handler': '<raven.events.Message object at 0x103feb710>',
-                    'k': 'logentry',
-                    'public_key': None,
-                    'result': {
-                        'logentry':
-                        "{'message': 'This is a test message generated using ``raven test``', 'params': []}"
-                    },
-                    'self': '<raven.base.Client object at 0x104397f10>',
-                    'stack': True,
-                    'tags': None,
-                    'time_spent': None,
-                },
-            },
-            {
-                'abs_path':
-                '/Users/dcramer/.virtualenvs/sentry/lib/python2.7/site-packages/raven/base.py',
-                'context_line':
-                '                        string_max_length=self.string_max_length)',
-                'filename':
-                'raven/base.py',
-                'function':
-                'build_msg',
-                'in_app':
-                False,
-                'lineno':
-                290,
-                'module':
-                'raven.base',
-                'post_context': [
-                    '                },', '            })', '',
-                    "        if 'stacktrace' in data:",
-                    '            if self.include_paths:'
-                ],
-                'pre_context': [
-                    '', '            data.update({',
-                    "                'stacktrace': {",
-                    "                    'frames': get_stack_info(frames,",
-                    '                        list_max_length=self.list_max_length,'
-                ],
-                'vars': {
-                    'culprit': 'raven.scripts.runner',
-                    'date': 'datetime.datetime(2013, 2, 14, 20, 6, 33, 479471)',
-                    'event_id': '598fb19363e745ec8be665e6ba88b1b2',
-                    'event_type': 'raven.events.Message',
-                    'frames': '<generator object iter_stack_frames at 0x103fef050>',
-                    'handler': '<raven.events.Message object at 0x103feb710>',
-                    'k': 'logentry',
-                    'public_key': None,
-                    'result': {
-                        'logentry':
-                        "{'message': 'This is a test message generated using ``raven test``', 'params': []}"
-                    },
-                    'self': '<raven.base.Client object at 0x104397f10>',
-                    'stack': True,
-                    'tags': None,
-                    'time_spent': None,
-                },
-            },
-        ],
-    },
-    'tags': [],
-    'platform': 'python',
-}
 
 
 class Fixtures(object):
@@ -465,154 +340,6 @@ class Fixtures(object):
         useremail.save()
 
         return useremail
-
-    def create_event(self, event_id=None, normalize=True, **kwargs):
-        if event_id is None:
-            event_id = uuid4().hex
-        if 'group' not in kwargs:
-            kwargs['group'] = self.group
-        kwargs.setdefault('project', kwargs['group'].project)
-        kwargs.setdefault('data', copy.deepcopy(DEFAULT_EVENT_DATA))
-        kwargs.setdefault('platform', kwargs['data'].get('platform', 'python'))
-        kwargs.setdefault('message', kwargs['data'].get('message', 'message'))
-        if kwargs.get('tags'):
-            tags = kwargs.pop('tags')
-            if isinstance(tags, dict):
-                tags = list(tags.items())
-            kwargs['data']['tags'] = tags
-        if kwargs.get('stacktrace'):
-            stacktrace = kwargs.pop('stacktrace')
-            kwargs['data']['stacktrace'] = stacktrace
-
-        user = kwargs.pop('user', None)
-        if user is not None:
-            kwargs['data']['user'] = user
-
-        kwargs['data'].setdefault(
-            'errors', [{
-                'type': EventError.INVALID_DATA,
-                'name': 'foobar',
-            }]
-        )
-
-        # maintain simple event fixtures by supporting the legacy message
-        # parameter just like our API would
-        if 'logentry' not in kwargs['data']:
-            kwargs['data']['logentry'] = {
-                'message': kwargs.get('message') or '<unlabeled event>',
-            }
-
-        if normalize:
-            manager = EventManager(CanonicalKeyDict(kwargs['data']),
-                                   for_store=False)
-            manager.normalize()
-            kwargs['data'] = manager.get_data()
-            kwargs['message'] = manager.get_search_message()
-
-        else:
-            assert 'message' not in kwargs, 'do not pass message this way'
-
-        event = Event(event_id=event_id, **kwargs)
-        EventMapping.objects.create(
-            project_id=event.project.id,
-            event_id=event_id,
-            group=event.group,
-        )
-        # emulate EventManager refs
-        event.data.bind_ref(event)
-        event.save()
-        return event
-
-    def create_full_event(self, event_id='a', **kwargs):
-        payload = """
-            {
-                "id": "f5dd88e612bc406ba89dfebd09120769",
-                "project": 11276,
-                "release": "e1b5d1900526feaf20fe2bc9cad83d392136030a",
-                "platform": "javascript",
-                "culprit": "app/components/events/eventEntries in map",
-                "message": "TypeError: Cannot read property '1' of null",
-                "tags": [
-                    ["environment", "prod"],
-                    ["sentry_version", "e1b5d1900526feaf20fe2bc9cad83d392136030a"],
-                    ["level", "error"],
-                    ["logger", "javascript"],
-                    ["sentry:release", "e1b5d1900526feaf20fe2bc9cad83d392136030a"],
-                    ["browser", "Chrome 48.0"],
-                    ["device", "Other"],
-                    ["os", "Windows 10"],
-                    ["url", "https://sentry.io/katon-direct/localhost/issues/112734598/"],
-                    ["sentry:user", "id:41656"]
-                ],
-                "errors": [{
-                    "url": "<anonymous>",
-                    "type": "js_no_source"
-                }],
-                "extra": {
-                    "session:duration": 40364
-                },
-                "exception": {
-                    "exc_omitted": null,
-                    "values": [{
-                        "stacktrace": {
-                            "frames": [{
-                                "function": "batchedUpdates",
-                                "abs_path": "webpack:////usr/src/getsentry/src/sentry/~/react/lib/ReactUpdates.js",
-                                "pre_context": ["  // verify that that's the case. (This is called by each top-level update", "  // function, like setProps, setState, forceUpdate, etc.; creation and", "  // destruction of top-level components is guarded in ReactMount.)", "", "  if (!batchingStrategy.isBatchingUpdates) {"],
-                                "post_context": ["    return;", "  }", "", "  dirtyComponents.push(component);", "}"],
-                                "filename": "~/react/lib/ReactUpdates.js",
-                                "module": "react/lib/ReactUpdates",
-                                "colno": 0,
-                                "in_app": false,
-                                "data": {
-                                    "orig_filename": "/_static/29e365f8b0d923bc123e8afa38d890c3/sentry/dist/vendor.js",
-                                    "orig_abs_path": "https://media.sentry.io/_static/29e365f8b0d923bc123e8afa38d890c3/sentry/dist/vendor.js",
-                                    "sourcemap": "https://media.sentry.io/_static/29e365f8b0d923bc123e8afa38d890c3/sentry/dist/vendor.js.map",
-                                    "orig_lineno": 37,
-                                    "orig_function": "Object.s [as enqueueUpdate]",
-                                    "orig_colno": 16101
-                                },
-                                "context_line": "    batchingStrategy.batchedUpdates(enqueueUpdate, component);",
-                                "lineno": 176
-                            }],
-                            "frames_omitted": null
-                        },
-                        "type": "TypeError",
-                        "value": "Cannot read property '1' of null",
-                        "module": null
-                    }]
-                },
-                "request": {
-                    "url": "https://sentry.io/katon-direct/localhost/issues/112734598/",
-                    "headers": [
-                        ["Referer", "https://sentry.io/welcome/"],
-                        ["User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36"]
-                    ]
-                },
-                "user": {
-                    "ip_address": "0.0.0.0",
-                    "id": "41656",
-                    "email": "test@example.com"
-                },
-                "version": "7",
-                "breadcrumbs": {
-                    "values": [
-                        {
-                            "category": "xhr",
-                            "timestamp": 1496395011.63,
-                            "type": "http",
-                            "data": {
-                                "url": "/api/path/here",
-                                "status_code": "500",
-                                "method": "POST"
-                            }
-                        }
-                    ]
-                }
-            }"""
-
-        return self.create_event(event_id=event_id, platform='javascript',
-                                 data=json.loads(payload))
 
     def create_group(self, project=None, checksum=None, **kwargs):
         if checksum:
