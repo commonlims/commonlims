@@ -4,6 +4,7 @@ import six
 from django.db.models import Prefetch
 from django.core import exceptions as django_exceptions
 from clims.services.exceptions import DoesNotExist
+from clims.models.extensible import ExtensibleProperty
 
 
 class ExtensibleServiceAPIMixin(object):
@@ -103,3 +104,42 @@ class ExtensibleServiceAPIMixin(object):
             else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args
+
+    @staticmethod
+    def _get_values_qs(property, extensible_type):
+        extensible_type_name = extensible_type.type_full_name_cls()
+        property_query_set = ExtensibleProperty.objects.filter(
+            extensible_property_type__extensible_type__name=extensible_type_name,
+            extensible_property_type__name=property).select_related('extensible_property_type')
+        return property_query_set
+
+    @staticmethod
+    def get_values_of_property(property, extensible_type):
+        property_query_set = ExtensibleServiceAPIMixin._get_values_qs(property, extensible_type)
+        try:
+            # Note that this assumes that the property type is the same for all
+            # entities in the property_query_set
+            extensible_property_type = property_query_set[0].extensible_property_type
+            extensible_prop_type_value_field = extensible_property_type.get_value_field()
+            values = property_query_set.all().values(extensible_prop_type_value_field)
+            return ([x[extensible_prop_type_value_field] for x in values])
+        except IndexError:
+            raise DoesNotExist("No property with name: {} found on extensible type: {}".format(property,
+                                                                                               extensible_type))
+
+    @staticmethod
+    def get_unique_values_of_property(property, extensible_type):
+        # TODO: add organization to the filter parameters
+        property_query_set = ExtensibleServiceAPIMixin._get_values_qs(property, extensible_type)
+        try:
+            # Note that this assumes that the property type is the same for all
+            # entities in the property_query_set
+            extensible_prop_type = property_query_set[0].extensible_property_type
+            extensible_prop_type_value_field = extensible_prop_type.get_value_field()
+            unique_values = property_query_set\
+                .order_by(extensible_prop_type_value_field)\
+                .distinct(extensible_prop_type_value_field)
+            return {x.value for x in unique_values}
+        except IndexError:
+            raise DoesNotExist("No property with name: {} found on extensible type: {}".format(property,
+                                                                                               extensible_type))

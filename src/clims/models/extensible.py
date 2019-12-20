@@ -108,6 +108,19 @@ class ExtensiblePropertyType(Model):
         null=False,
     )
 
+    def get_value_field(self):
+        raw_type = self.raw_type
+        if raw_type == ExtensiblePropertyType.INT:
+            return "int_value"
+        elif raw_type == ExtensiblePropertyType.FLOAT:
+            return "float_value"
+        elif raw_type == ExtensiblePropertyType.STRING or raw_type == ExtensiblePropertyType.JSON:
+            return "string_value"
+        elif raw_type == ExtensiblePropertyType.BOOL:
+            return "bool_value"
+        else:
+            raise AssertionError("Unexpected raw type {}".format(raw_type))
+
     class Meta:
         app_label = 'clims'
         db_table = 'clims_extensiblepropertytype'
@@ -146,17 +159,7 @@ class ExtensibleProperty(Model):
         super(ExtensibleProperty, self).__init__(*args, **kwargs)
 
     def _get_field_from_type(self):
-        raw_type = self.extensible_property_type.raw_type
-        if raw_type == ExtensiblePropertyType.INT:
-            return "int_value"
-        elif raw_type == ExtensiblePropertyType.FLOAT:
-            return "float_value"
-        elif raw_type == ExtensiblePropertyType.STRING or raw_type == ExtensiblePropertyType.JSON:
-            return "string_value"
-        elif raw_type == ExtensiblePropertyType.BOOL:
-            return "bool_value"
-        else:
-            raise AssertionError("Unexpected raw type {}".format(raw_type))
+        return self.extensible_property_type.get_value_field()
 
     def _serialize(self, value):
         raw_type = self.extensible_property_type.raw_type
