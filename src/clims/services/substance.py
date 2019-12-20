@@ -309,8 +309,8 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     be strictly maintained.
     """
 
-    _archetype_version_class = SubstanceVersion
-    _archetype_class = Substance
+    _archetype_version_model_class = SubstanceVersion
+    _archetype_model_class = Substance
     _archetype_base_class = SubstanceBase
 
     def __init__(self, app):

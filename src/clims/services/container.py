@@ -242,8 +242,8 @@ class PlateBase(ContainerBase):
 
 
 class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
-    _archetype_version_class = ContainerVersion
-    _archetype_class = Container
+    _archetype_version_model_class = ContainerVersion
+    _archetype_model_class = Container
     _archetype_base_class = ContainerBase
 
     def __init__(self, app):

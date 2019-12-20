@@ -36,7 +36,7 @@ class ExtensibleServiceAPIMixin(object):
         # TODO: `all` should return a queryset that automatically wraps the Django object and
         # after that we can remove methods named `*_qs`.
 
-        return self._archetype_version_class.objects.filter(latest=True).prefetch_related('properties')
+        return self._archetype_version_model_class.objects.filter(latest=True).prefetch_related('properties')
 
     def _search_qs(self, query, search_key):
         # TODO: We'll have the same api for projects and containers, but for now we'll keep this
@@ -62,14 +62,14 @@ class ExtensibleServiceAPIMixin(object):
         if key == search_key:
             # TODO: the search parameter indicates we're looking for a substance that's a sample
             # so add a category or similar so it doesn't find other things that are in a container.
-            return self._archetype_version_class.objects.filter(
+            return self._archetype_version_model_class.objects.filter(
                 latest=True, name__icontains=val).prefetch_related('properties')
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
 
     def filter(self, **kwargs):
         get_args = self._get_filter_arguments(**kwargs)
-        models = self._archetype_version_class.objects.prefetch_related(
+        models = self._archetype_version_model_class.objects.prefetch_related(
             Prefetch('properties', to_attr='all_properties'),
             Prefetch('all_properties__extensible_property_type')).\
             filter(**get_args)
@@ -78,7 +78,7 @@ class ExtensibleServiceAPIMixin(object):
     def get(self, **kwargs):
         try:
             get_args = self._get_filter_arguments(**kwargs)
-            model = self._archetype_version_class.objects.prefetch_related(
+            model = self._archetype_version_model_class.objects.prefetch_related(
                 Prefetch('properties', to_attr='all_properties'),
                 Prefetch('all_properties__extensible_property_type')).\
                 get(**get_args)

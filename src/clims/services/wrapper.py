@@ -6,20 +6,20 @@ class WrapperMixin(object):
     This mixin can be used to provide wrapping methods to a service class which
     handles translating models of `ExtensibleModel` to their specific `ExtensibleBase`
     implementations.
-    The implementing class needs to provide `_archetype_version_class`, `_archetype_class`, and
-    `_archetype_base_class`.
+    The implementing class needs to provide `_archetype_version_model_class`,
+    `_archetype_model_class`, and `_archetype_base_class`.
     """
 
-    _archetype_version_class = None
-    _archetype_class = None
+    _archetype_version_model_class = None
+    _archetype_model_class = None
     _archetype_base_class = None
 
     def to_wrapper(self, model):
         if model is None:
             return None
-        if isinstance(model, self._archetype_version_class):
+        if isinstance(model, self._archetype_version_model_class):
             return self._version_to_wrapper(model)
-        elif isinstance(model, self._archetype_class):
+        elif isinstance(model, self._archetype_model_class):
             return self._archetype_to_wrapper(model)
         else:
             raise AssertionError("The model {} can't be wrapped".format(type(model)))
