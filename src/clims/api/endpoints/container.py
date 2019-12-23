@@ -14,23 +14,14 @@ class ContainerEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        query = request.GET.get('query', '')
+        search_string = request.GET.get('search', '')
         # expand = request.GET.get('expand', None) == 'true'
-        queryset = self.app.containers._search_qs(query)
+        queryset = self.app.containers.search(search_string)
         # Temporarily sort by date
-        queryset = queryset.order_by('-archetype__created_at')
-
-        def handle_results(qs):
-            ret = list()
-            for entry in qs:
-                wrapper = self.app.containers.to_wrapper(entry)
-                json = ContainerSerializer(wrapper).data
-                ret.append(json)
-            return ret
 
         return self.paginate(
             request=request,
             queryset=queryset,
             paginator_cls=OffsetPaginator,
             default_per_page=25,
-            on_results=lambda data: handle_results(data))
+            on_results=lambda data: ContainerSerializer(data, many=True).data)

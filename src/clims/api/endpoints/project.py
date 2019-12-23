@@ -16,28 +16,15 @@ class ProjectEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        search = request.GET.get('search', None)
-        queryset = self.app.projects._search_qs(search, search_key="project.name")
-
-        # Temporarily sort by date
-        queryset = queryset.order_by('-archetype__created_at')
-
-        def handle_results(qs):
-            ret = list()
-            # NOTE: This could be simplified substantially if we had a queryset that returned
-            # the wrapper object directly.
-            for entry in qs:
-                wrapper = self.app.projects.to_wrapper(entry)
-                json = ProjectSerializer(wrapper).data
-                ret.append(json)
-            return ret
+        search_string = request.GET.get('search', None)
+        result = self.app.projects.search(search_string)
 
         return self.paginate(
             request=request,
-            queryset=queryset,
+            queryset=result,
             paginator_cls=OffsetPaginator,
             default_per_page=20,
-            on_results=lambda data: handle_results(data))
+            on_results=lambda data: ProjectSerializer(data, many=True).data)
 
     def post(self, request, organization):
         # TODO: Add user info to all actions

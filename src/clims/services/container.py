@@ -252,6 +252,10 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     def get_by_name(self, name):
         return self.get(name=name)
 
+    # def search(self, query):
+    #     qs = self._search_qs(query)
+    #     return ResultIterator(qs,
+
     def _search_qs(self, query):
         # TODO: This is temporary. We will be using elastic for searching.
         query = query.strip()

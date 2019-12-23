@@ -20,7 +20,7 @@ from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.handlers import SubstancesValidationHandler
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
-
+from clims.models import ResultIterator
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +56,8 @@ class SubstanceAncestry(object):
         # from two original samples. There your pool's origin are the two original samples.
 
         # Now, to find all the nodes in the graph, we simply query for the origin nodes:
-        for entry in Substance.objects.filter(origins__in=self.substance.origins):
-            yield self.substance._to_wrapper(entry)
+        qs = Substance.objects.filter(origins__in=self.substance.origins)
+        return ResultIterator(qs, self.substance._to_wrapper)
 
     def to_graphviz_src(self, include_created=True):
         """Generates a graphviz graph for the ancestry of this substance."""
@@ -145,6 +145,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         """
         Wraps either a SubstanceVersion or Substance as a higher-level object
         """
+        # TODO-nomerge: Look into having the to_wrapper function only on the model objects themselves
         return self._app.substances.to_wrapper(model)
 
     @property
@@ -172,8 +173,8 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         """
         Returns the parents (of a particular version) of the substance, if there are any.
         """
-        return [self._app.substances.to_wrapper(parent)
-                for parent in self._archetype.parents.all()]
+        qs = self._archetype.parents.all()
+        return ResultIterator(qs, self._app.substances.to_wrapper)
 
     @property
     def project(self):
@@ -230,8 +231,8 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         """
         Iterate through all versions of this sample
         """
-        for version in self._archetype.versions.order_by('version'):
-            yield self._to_wrapper(version)
+        qs = self._archetype.versions.order_by('version')
+        return ResultIterator(qs, self._to_wrapper)
 
     @transaction.atomic
     def create_child(self, name=None, **kwargs):

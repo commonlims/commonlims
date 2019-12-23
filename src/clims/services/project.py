@@ -5,6 +5,7 @@ from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion
 from clims.services.wrapper import WrapperMixin
 from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
+from clims.models import ResultIterator
 
 
 class ProjectBase(ExtensibleBase):
@@ -32,12 +33,13 @@ class ProjectBase(ExtensibleBase):
     def extensible_type(self):
         return self._archetype.extensible_type
 
+    # TODO-nomerge: Move to base, but before that the base needs to have an abstract _to_wrapper and _archetype (perhaps set to none)
     def iter_versions(self):
         """
         Iterate through all versions of this project
         """
-        for version in self._archetype.versions.order_by('version'):
-            yield self._to_wrapper(version)
+        qs = self._archetype.versions.order_by('version')
+        return ResultIterator(qs, self._to_wrapper)
 
 
 class ProjectService(WrapperMixin, ExtensibleServiceAPIMixin, object):

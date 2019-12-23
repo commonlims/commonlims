@@ -1,4 +1,7 @@
 from __future__ import absolute_import
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class WrapperMixin(object):
@@ -32,6 +35,7 @@ class WrapperMixin(object):
                 version.archetype.extensible_type.name)
             return SpecificExtensibleType(_wrapped_version=version, _app=self._app)
         except ExtensibleTypeNotRegistered:
+            logger.warn("Extensible type not registered: {}. Returning core implementation instead.")
             return self._archetype_base_class(_wrapped_version=version, _unregistered=True)
 
     def _archetype_to_wrapper(self, archetype):
