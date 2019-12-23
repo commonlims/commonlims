@@ -31,13 +31,6 @@ class ProjectBase(ExtensibleBase):
     def extensible_type(self):
         return self._archetype.extensible_type
 
-    def iter_versions(self):
-        """
-        Iterate through all versions of this project
-        """
-        for version in self._archetype.versions.order_by('version'):
-            yield self._to_wrapper(version)
-
 
 class ProjectService(BaseExtensibleService):
     def __init__(self, app):

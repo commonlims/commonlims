@@ -248,7 +248,7 @@ class TestSubstance(SubstanceTestCase):
 
     def test_can_get_all_substances(self):
         # There are two ways to get the substance, either query Substance.objects.all()
-        # or use the substances service.
+        # or use the substances service. The latter should always be used except in core code.
         sample = self.create_gemstone(color='red')
         result1 = {s.name for s in self.app.substances.all()}
         assert sample.name in result1

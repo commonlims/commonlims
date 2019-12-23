@@ -16,28 +16,15 @@ class SubstanceEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        search = request.GET.get('search', None)
-        queryset = self.app.substances._search_qs(search, search_key="sample.name")
-
-        # Temporarily sort by date
-        queryset = queryset.order_by('-archetype__created_at')
-
-        def handle_results(qs):
-            ret = list()
-            # NOTE: This could be simplified substantially if we had a queryset that returned
-            # the wrapper object directly.
-            for entry in qs:
-                wrapper = self.app.substances.to_wrapper(entry)
-                json = SubstanceSerializer(wrapper).data
-                ret.append(json)
-            return ret
+        search_string = request.GET.get('search', None)
+        queryset = self.app.substances.search(search_string)
 
         return self.paginate(
             request=request,
             queryset=queryset,
             paginator_cls=OffsetPaginator,
             default_per_page=20,
-            on_results=lambda data: handle_results(data))
+            on_results=lambda data: SubstanceSerializer(data, many=True).data)
 
     def post(self, request, organization):
         # TODO: Add user info to all actions
