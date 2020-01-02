@@ -11,54 +11,24 @@ PIP = LDFLAGS="$(LDFLAGS)" pip
 WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
-develop-only: clean setup-camunda node-version-check update-submodules install-yarn-pkgs install-clims-dev
+develop-only: clean node-version-check update-submodules install-yarn-pkgs install-clims-dev
 test: lint test-js test-python test-cli
 
 build: locale
 
-drop-db:
-	@echo "--> Dropping existing 'clims' database"
-	dropdb clims || true
-	@echo "--> Dropping existing 'test_clims' database"
-	dropdb test_clims || true
+middleware:
+# Sets up all server middleware (postgresql, elasticsearch, redis etc.)
+	@./scripts/start-local-middleware.sh
 
-create-camunda-tables:
-	# Assumes that the database is clean
-	@echo "--> Creating database tables for camunda"
-	./middleware/camunda/db-install.sh
-	./middleware/camunda/restart.sh
-
-CLIMS_DB_PASSWORD := $(shell openssl rand -base64 32)
-CLIMS_TEST_DB_PASSWORD := $(shell openssl rand -base64 32)
-
-setup-db-user: create-db
-	@echo "--> Make sure we have user called 'clims'"
-	-psql -d postgres -c "CREATE ROLE clims WITH LOGIN" || true
-	-psql -d postgres -c "ALTER ROLE clims WITH SUPERUSER;"
-	-psql -d clims -c "ALTER ROLE clims WITH LOGIN ENCRYPTED PASSWORD '$(CLIMS_DB_PASSWORD)'"
-
-	@echo "--> Make sure we have user called 'test_clims'"
-	-psql -d postgres -c "CREATE ROLE test_clims WITH LOGIN" || true
-	-psql -d postgres -c "ALTER ROLE test_clims WITH SUPERUSER;"
-	-psql -d clims -c "ALTER ROLE test_clims WITH LOGIN ENCRYPTED PASSWORD '$(CLIMS_TEST_DB_PASSWORD)'"
-
-	@echo "Add the following lines to ~/.pgpass:"
-	@echo "localhost:*:clims:clims:$(CLIMS_DB_PASSWORD)"
-	@echo "localhost:*:test_clims:test_clims:$(CLIMS_TEST_DB_PASSWORD)"
-	@echo "Set the permissions of ~/.pgpass to 0600: chmod 0600 ~/.pgpass "
-
-create-db:
-	@echo "--> Creating 'clims' database"
-	createdb -E utf-8 clims || true
+middleware-teardown:
+	@./scripts/stop-local-middleware.sh
 
 create-example-data:
 	@echo "--> Add example data"
 	lims createexampledata
 
-
-# TODO Don't know if we should create the user here, since it is not super intuative to reset the
-#      db to create a user. /JD 2019-10-03
-reset-db: clean drop-db create-db create-camunda-tables
+fresh: clean middleware-teardown middleware
+# Resets all data (by tearing down the middleware) and then installs new test data
 	@echo "--> Applying migrations"
 	lims upgrade
 	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"
@@ -100,16 +70,9 @@ node-version-check:
 	@test "$$(node -v)" = v"$$(cat .nvmrc)" || (echo 'node version does not match .nvmrc. Recommended to use https://github.com/creationix/nvm or `source ./devboot`'; exit 1)
 
 install-system-pkgs: node-version-check
-	@echo "--> Installing system packages (from Brewfile)"
-	@command -v brew 2>&1 > /dev/null && brew bundle || (echo 'WARNING: homebrew not found or brew bundle failed - skipping system dependencies.')
-
-	# Install dependencies with apt instead.
+	@echo "--> Installing system packages"
+# TODO: Support mac
 	sudo apt install -y libxmlsec1-dev
-	sudo apt install -y redis
-	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-	sudo apt-get update
-	sudo apt install -y postgresql-9.6
 
 install-yarn-pkgs:
 	@echo "--> Installing yarn"
@@ -225,7 +188,7 @@ publish:
 	python setup.py sdist bdist_wheel upload
 
 
-.PHONY: develop develop-only test build test reset-db clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish
+.PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh
 
 
 ############################

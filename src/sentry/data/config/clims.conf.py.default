@@ -12,7 +12,7 @@ DATABASES = {
         'NAME': 'clims',
         'USER': 'clims',
         'PASSWORD': '',
-        'HOST': '',
+        'HOST': 'localhost',
         'PORT': '',
         'AUTOCOMMIT': True,
         'ATOMIC_REQUESTS': False,
