@@ -33,15 +33,13 @@ def pytest_configure(config):
     integrationdocs.DOC_FOLDER = os.environ['INTEGRATION_DOC_FOLDER']
 
     # Configure the test database
-    user = os.environ.get('CLIMS_DATABASE_USER', 'test_clims')
 
     settings.DATABASES['default'].update(
         {
             'ENGINE': 'sentry.db.postgres',
-            'USER': user,
-            # This will actually be test_clims when connecting, since django adds this
-            # automatically.
-            'NAME': 'clims',
+            'PORT': '5433',  # Docker image for the test database is exposed at 5433
+            'USER': 'test_clims',
+            'NAME': 'test_clims',
         }
     )
 

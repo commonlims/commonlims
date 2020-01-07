@@ -1,50 +1,44 @@
 # About
 
-Common LIMS is as an independent open source initiative with SNP&SEQ Uppsala University (part of SciLifeLab) being the first implmementing lab. SNP&SEQ is also the main sponsor of the project in that it has dedicated parts of their development team's efforts to work on this project.
+Common LIMS is as an independent open source initiative with SNP&SEQ Uppsala University (part of SciLifeLab) being the first implementing lab. SNP&SEQ is also the main sponsor of the project in that it has dedicated parts of their development team's efforts to work on this project.
 
 # Development
 
-Development happens on gitlab.org/commonlims and will be moved to github.com/commonlims and made open to the public after the first milestone.
+The project is being developed on http://github.com/commonlims/commonlims.
+
+During the first milestone, core devs use a ticket management system internal to SNP&SEQ, but github's issue system will be used after 1.0 has been released.
 
 ## Setup
 
 To set up your environment, do the following:
 
-- Install a virtualenv, e.g. Conda (https://conda.io/en/latest/miniconda.html)
-- Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq
-
-Start required services:
-
-- postgres server (specific to your installation)
-- redis server (specific to your installation)
-
-You may also need to create a postgres user that matches your Unix username:
-
-- `sudo -i -u postgres`
-- `psql template1 postgres -c 'CREATE USER "[your-unix-username]" SUPERUSER;'`
-- Go into `/etc/postgresql/9.6/main/pg_hba.conf` (replace your postgresql version as necessary) and add the following
-  line under the "local" section:
-
-```
-local   all             camunda                                 password
-local   all             clims                                   password
-local   all             test_clims                              password
-```
-
-- Restart postgres with `sudo service postgresql restart`
+- Install a virtualenv, e.g. Conda (https://conda.io/en/latest/miniconda.html) or pyenv
+- Download commonlims snpseq plugins from: https://github.com/Molmed/commonlims-snpseq if you want some plugins to test
+- Make sure you've got docker 19.3+ installed
 
 From the root of the 'commonlims' project, run:
 
 - `source devboot`
 - alt: `source devboot-conda` # If you want to use conda instead of pyenv
 
-Then run:
+Start required services:
 
-- `make setup-db-user`
-- Add the passwords for `clims` and `test_clims` to ~/.pgpassword (as in structed by the output from the above command)
+    `make fresh`
+
+This will setup a clean docker environment for all middleware required for local development:
+
+    * Postgresql
+    * Redis
+    * Elasticsearch
+    * Camunda (workflow management)
+
+It will also run migrations and create example data.
+
+You can run `make fresh` at any time to reset all data. Note that the docker images do not retain data after a reset.
+
+Now run:
+
 - `make develop`
-- `lims createuser --email admin@localhost --password changeit --superuser --no-input`
-- `lims upgrade`
 
 From the root of the 'commonlims' project, run: `lims devserver --browser-reload`
 

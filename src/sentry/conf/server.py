@@ -110,7 +110,7 @@ DATABASES = {
         'NAME': 'clims',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': '',
+        'HOST': 'localhost',
         'PORT': '',
         'AUTOCOMMIT': True,
         'ATOMIC_REQUESTS': False,

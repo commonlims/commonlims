@@ -1,0 +1,46 @@
+# NOTE: This stack is for development purposes only, do not use it in production.
+# NOTE: The stack uses the default port for postgres for convenience. If you run other projects
+#       that also require postgresql (e.g. the one locally running) you can turn off this stack
+#       with `make middleware-teardown`
+version: "3.1"
+services:
+  # A dev instance to run custom commands against the system
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.4.1
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+  db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "${CLIMS_POSTGRES_DB}"
+      POSTGRES_USER: "${CLIMS_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${CLIMS_POSTGRES_PASSWORD}"
+  # This database is for the part of the test suite that requires database access.
+  # The difference is only the port number
+  test_db:
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: "${TEST_CLIMS_POSTGRES_DB}"
+      POSTGRES_USER: "${TEST_CLIMS_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${TEST_CLIMS_POSTGRES_PASSWORD}"
+  # Admin interface for the databases, only for development purposes
+  adminer:
+    image: adminer
+    ports:
+      - 8432:8080
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  camunda:
+    ports:
+      - 8080:8080
+    image: camunda/camunda-bpm-platform:latest
