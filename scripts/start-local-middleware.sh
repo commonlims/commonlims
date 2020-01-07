@@ -13,8 +13,8 @@ cd ${DIR}/../middleware/local
 
 # Ensure that we have a strong password for the clims database(s) and then export those as
 # environment variables which will be picked up in stack.yml
-eval $(${DIR}/setup-db-user.py clims clims --print)
-eval $(${DIR}/setup-db-user.py test_clims test_clims --print)
+eval $(${DIR}/setup-db-user.py clims --print)
+eval $(${DIR}/setup-db-user.py test_clims --print)
 
 until docker stack deploy -c ./stack.yml clims
 do

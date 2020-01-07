@@ -42,16 +42,16 @@ def psql(command, database="postgres"):
     check_call(psql_cmd(command, database), stdout=devnull)
 
 
-def main(database, role, create_role, print_variables):
+def main(role, create_role, print_variables):
     """
     Creates the role in the database if it doesn't exist and synching it with the password
     in the password file.
     """
-    passw = add_entry("localhost", "*", database, role)
+    passw = add_entry("localhost", "*", "*", role)
     passw = passw.strip()
     if print_variables:
-        prefix = database.upper()
-        print("{0}_POSTGRES_DB={1}; export {0}_POSTGRES_DB".format(prefix, database))  # noqa
+        prefix = role.upper()
+        print("{0}_POSTGRES_DB={1}; export {0}_POSTGRES_DB".format(prefix, role))  # noqa
         print("{0}_POSTGRES_USER={1}; export {0}_POSTGRES_USER".format(prefix, role))  # noqa
         print("{0}_POSTGRES_PASSWORD={1}; export {0}_POSTGRES_PASSWORD".format(prefix, passw))  # noqa
 
@@ -67,7 +67,6 @@ def set_permissions():
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('database', help='the database the entry is for')
 parser.add_argument('role', help='the database role')
 parser.add_argument('--create-role', dest='create_role', action='store_true',
         help='if present, a role will be created in the database with the same password')
@@ -75,4 +74,4 @@ parser.add_argument('--print', dest='print_variables', action='store_true',
         help='print the variables to be set to stdout')
 
 args = parser.parse_args()
-main(args.database, args.role, args.create_role, args.print_variables)
+main(args.role, args.create_role, args.print_variables)
