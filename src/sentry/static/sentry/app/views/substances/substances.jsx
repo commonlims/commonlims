@@ -14,6 +14,7 @@ import ListView from 'app/components/listView';
 import SentryTypes from 'app/sentryTypes';
 import ListActionBar from 'app/components/listActionBar';
 import Pagination from 'app/components/pagination';
+import {showRounded} from 'app/utils/formatters';
 
 class Substances extends React.Component {
   constructor(props) {
@@ -92,7 +93,8 @@ class Substances extends React.Component {
       {
         Header: 'Volume',
         id: 'volume',
-        accessor: d => (d.properties.volume ? d.properties.volume.value : null),
+        accessor: d =>
+          d.properties.volume ? showRounded(d.properties.volume.value) : null,
         aggregate: vals => '',
       },
       {
@@ -142,7 +144,6 @@ class Substances extends React.Component {
       {key: 'container', title: t('Container')},
       {key: 'sample_type', title: t('Sample type')},
     ];
-
     const {
       groupBy,
       query,
