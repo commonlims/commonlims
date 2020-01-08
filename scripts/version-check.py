@@ -7,11 +7,6 @@ import six
 from subprocess import check_output
 
 
-def string_to_version(s):
-    numbers = s.split(".")
-    return tuple(int(part) for part in numbers)
-
-
 def to_string(ver):
     if not ver:
         return ""
@@ -30,9 +25,10 @@ def docker():
     """
     Checks if docker is of the expected version
     """
+    pattern = r"Docker version (\d+)\.(\d+)\.(\d+)"
     version_string = check_output(["docker", "--version"])
-    version_string = version_string.split(",")[0].split(" ")[2]
-    version = string_to_version(version_string)
+    m = re.match(pattern, version_string)
+    version = tuple(int(i) for i in m.groups())
     exit_if_not_within(version, (19, 3))
 
 
