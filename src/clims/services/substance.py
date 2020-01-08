@@ -20,7 +20,6 @@ from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.handlers import SubstancesValidationHandler
 from clims.services.base_extensible_service import BaseExtensibleService
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -419,3 +418,7 @@ class SubstanceService(BaseExtensibleService):
     def get_by_name(self, name):
         # TODO: add organization to the filter parameters
         return self.get(name=name)
+
+    @classmethod
+    def _filter_by_extensible_version(cls, query_set):
+        return query_set.filter(substanceversion__latest=True)

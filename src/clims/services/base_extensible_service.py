@@ -147,41 +147,35 @@ class BaseExtensibleService(object):
                 get_args['archetype__{}'.format(key)] = value
         return get_args
 
-    @staticmethod
-    def _get_values_qs(property, extensible_type):
-        extensible_type_name = extensible_type.type_full_name_cls()
-        property_query_set = ExtensibleProperty.objects.filter(
-            extensible_property_type__extensible_type__name=extensible_type_name,
-            extensible_property_type__name=property).select_related('extensible_property_type')
-        return property_query_set
+    @classmethod
+    def _filter_by_extensible_version(cls, query_set):
+        raise NotImplementedError("This method needs to be implemented by inheriting classes.")
 
     @classmethod
-    def get_values_of_property(cls, property, extensible_type):
-        property_query_set = cls._get_values_qs(property, extensible_type)
-        try:
-            # Note that this assumes that the property type is the same for all
-            # entities in the property_query_set
-            extensible_property_type = property_query_set[0].extensible_property_type
-            extensible_prop_type_value_field = extensible_property_type.get_value_field()
-            values = property_query_set.all().values(extensible_prop_type_value_field)
-            return ([x[extensible_prop_type_value_field] for x in values])
-        except IndexError:
-            raise DoesNotExist("No property with name: {} found on extensible type: {}".format(property,
-                                                                                               extensible_type))
+    def _property_query_set_and_property_value_field(cls, property):
+        inital_query_set = ExtensibleProperty.objects.\
+            filter(extensible_property_type__name=property)
+        filtered_queryset = cls._filter_by_extensible_version(inital_query_set)
+        prop_type = filtered_queryset.first()
+        if not prop_type:
+            raise DoesNotExist("No property of type: {} found".format(property))
+        extensible_prop_type_value_field = prop_type.extensible_property_type.get_value_field()
+        return (filtered_queryset, extensible_prop_type_value_field)
 
     @classmethod
-    def get_unique_values_of_property(cls, property, extensible_type):
-        # TODO: add organization to the filter parameters
-        property_query_set = cls._get_values_qs(property, extensible_type)
-        try:
-            # Note that this assumes that the property type is the same for all
-            # entities in the property_query_set
-            extensible_prop_type = property_query_set[0].extensible_property_type
-            extensible_prop_type_value_field = extensible_prop_type.get_value_field()
-            unique_values = property_query_set\
-                .order_by(extensible_prop_type_value_field)\
-                .distinct(extensible_prop_type_value_field)
-            return {x.value for x in unique_values}
-        except IndexError:
-            raise DoesNotExist("No property with name: {} found on extensible type: {}".format(property,
-                                                                                               extensible_type))
+    def get_values_of_property(cls, property):
+        property_query_set, extensible_prop_type_value_field = \
+            cls._property_query_set_and_property_value_field(property)
+        values = property_query_set.values(extensible_prop_type_value_field).all()
+        return [x[extensible_prop_type_value_field] for x in values]
+
+    @classmethod
+    def get_unique_values_of_property(cls, property):
+        property_query_set, extensible_prop_type_value_field = \
+            cls._property_query_set_and_property_value_field(property)
+
+        unique_values = property_query_set.\
+            order_by(extensible_prop_type_value_field).\
+            distinct(extensible_prop_type_value_field)
+
+        return {x.value for x in unique_values}

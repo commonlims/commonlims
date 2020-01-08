@@ -261,6 +261,10 @@ class ContainerService(BaseExtensibleService):
         query_params = query_builder.parse_query()
         return self.filter(**query_params)
 
+    @classmethod
+    def _filter_by_extensible_version(cls, query_set):
+        return query_set.filter(containerversion__latest=True)
+
 
 class ContainerQueryBuilder:
     def __init__(self, query_from_url):
