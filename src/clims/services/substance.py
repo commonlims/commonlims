@@ -184,6 +184,18 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         self._archetype.project = project._archetype
 
     @property
+    def container_index(self):
+        # TODO: the container should be in a local cache!
+        # when looping samples in a container, the very same container is fetched over and
+        # over again
+        loc = self.location
+        container = self._app.containers.to_wrapper(loc.container)
+        container_index_class = container.IndexType
+        # Can we assume that container index class has only row and column, not z?
+        ind = container_index_class(loc.y, loc.x)
+        return ind
+
+    @property
     def location(self):
         # TODO: Prefetch the current position
         # TODO: Wrap in a higher level object that makes sense (e.g. PlateIndex, which

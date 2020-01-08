@@ -5,7 +5,8 @@ import uuid
 import pytest
 from six import text_type
 from sentry.testutils import TestCase
-from clims.services import SubstanceBase, PlateBase
+from clims.services import SubstanceBase
+from clims.services.container import PlateBase
 from clims.services import FloatField, TextField
 from clims.models import Container
 from django.db import IntegrityError
@@ -62,6 +63,7 @@ class TestContainer(TestCase):
         location = model.locations.get(current=True)
         assert (location.x, location.y, location.z) == (0, 0, 0)
 
+    @pytest.mark.dev_edvard
     def test_can_traverse_plate(self):
         self.register_extensible(HairSampleContainer)
         self.register_extensible(HairSample)

@@ -6,6 +6,8 @@ from sentry.api.base import DEFAULT_AUTHENTICATION
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.container import ContainerSerializer
+from clims.api.serializers.models.container import ContainerExpandedSerializer
+from clims.services.container import ContainerQueryBuilder
 
 
 class ContainerEndpoint(OrganizationEndpoint):
@@ -14,23 +16,27 @@ class ContainerEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        query = request.GET.get('query', '')
-        # expand = request.GET.get('expand', None) == 'true'
-        queryset = self.app.containers._search_qs(query)
-        # Temporarily sort by date
-        queryset = queryset.order_by('-archetype__created_at')
+        query_from_url = request.GET.get('query', '')
+        expand = request.GET.get('expand', None) == 'true'
+        if expand:
+            serializer_class = ContainerExpandedSerializer
+        else:
+            serializer_class = ContainerSerializer
 
-        def handle_results(qs):
+        query_builder = ContainerQueryBuilder(query_from_url)
+        query_builder.order_by_created_date()
+        containers = self.app.containers.filter_from(query_builder)
+
+        def handle_results(containers):
             ret = list()
-            for entry in qs:
-                wrapper = self.app.containers.to_wrapper(entry)
-                json = ContainerSerializer(wrapper).data
+            for c in containers:
+                json = serializer_class(c).data
                 ret.append(json)
             return ret
 
         return self.paginate(
             request=request,
-            queryset=queryset,
+            queryset=containers,
             paginator_cls=OffsetPaginator,
             default_per_page=25,
             on_results=lambda data: handle_results(data))

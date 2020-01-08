@@ -69,11 +69,14 @@ class ExtensibleServiceAPIMixin(object):
             raise NotImplementedError("The key {} is not implemented".format(key))
 
     def filter(self, **kwargs):
+        order_by_arg = kwargs.pop('order_by', None)
         get_args = self._get_filter_arguments(**kwargs)
         models = self._archetype_version_class.objects.prefetch_related(
             Prefetch('properties', to_attr='all_properties'),
             Prefetch('all_properties__extensible_property_type')).\
             filter(**get_args)
+        if order_by_arg:
+            models = models.order_by(order_by_arg)
         return [self.to_wrapper(m) for m in models]
 
     def get(self, **kwargs):

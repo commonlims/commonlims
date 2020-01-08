@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import re
 import six
+from six import iteritems
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
 from clims.services.wrapper import WrapperMixin
@@ -158,6 +159,14 @@ class ContainerBase(ExtensibleBase):
         # the container is saved
         self._locatables[ix.raw] = value
 
+    @property
+    def contents(self):
+        c = []
+        for loc_raw, substance in iteritems(self._locatables):
+            c.append(substance)
+
+        return c
+
     def __getitem__(self, key):
         ix = self.IndexType.from_any_type(key)
         self._validate_boundaries(ix)
@@ -252,22 +261,37 @@ class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     def get_by_name(self, name):
         return self.get(name=name)
 
-    def _search_qs(self, query):
-        # TODO: This is temporary. We will be using elastic for searching.
-        query = query.strip()
+    def filter_from(self, query_builder):
+        query_params = query_builder.parse_query()
+        return self.filter(**query_params)
+
+
+class ContainerQueryBuilder:
+    def __init__(self, query_from_url):
+        self.order_by = None
+        self.query_from_url = query_from_url
+
+    def order_by_created_date(self):
+        self.order_by = '-archetype__created_at'
+
+    def parse_query(self):
+        query_params = dict()
+        if self.order_by:
+            query_params['order_by'] = self.order_by
+        query = self.query_from_url.strip()
+        if len(query) == 0:
+            return query_params
         query = query.split(" ")
+
         if len(query) > 1:
             raise NotImplementedError("Complex queries are not yet supported")
-        elif len(query) == 0:
-            return self._all_qs()
 
         query = query[0]
         key, val = query.split(":")
 
         if key == "container.name":
-            # TODO: the search parameter indicates we're looking for a substance that's a sample
-            # so add a category or similar so it doesn't find other things that are in a container.
-            return ContainerVersion.objects.filter(
-                latest=True, name__icontains=val).prefetch_related('properties')
+            query_params['name__icontains'] = val
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
+        return query_params
+
