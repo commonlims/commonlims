@@ -18,8 +18,7 @@ from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.handlers import SubstancesValidationHandler
-from clims.services.wrapper import WrapperMixin
-from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
+from clims.services.extensible_service_api import BaseExtensibleService
 
 
 logger = logging.getLogger(__name__)
@@ -123,7 +122,7 @@ class SubstanceAncestry(object):
         return s
 
 
-class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
+class SubstanceBase(HasLocationMixin, ExtensibleBase):
     """
     A base object for defining substances in the system, e.g. Sample, Aliquot or Pool.
 
@@ -307,7 +306,7 @@ class SubstanceBase(HasLocationMixin, WrapperMixin, ExtensibleBase):
         return self._app.substances.to_wrapper(child)
 
 
-class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
+class SubstanceService(BaseExtensibleService):
     """
     Provides an API for dealing with both substances (samples, aliquots etc.)
     and their associated containers.
@@ -321,12 +320,8 @@ class SubstanceService(WrapperMixin, ExtensibleServiceAPIMixin, object):
     be strictly maintained.
     """
 
-    _archetype_version_class = SubstanceVersion
-    _archetype_class = Substance
-    _archetype_base_class = SubstanceBase
-
     def __init__(self, app):
-        self._app = app
+        super(SubstanceService, self).__init__(app, SubstanceBase)
 
     def all_submission_files(self, organization):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files

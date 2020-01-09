@@ -5,8 +5,7 @@ import six
 from six import iteritems
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
-from clims.services.wrapper import WrapperMixin
-from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
+from clims.services.extensible_service_api import BaseExtensibleService
 
 
 class IndexOutOfBounds(Exception):
@@ -162,7 +161,7 @@ class ContainerBase(ExtensibleBase):
     @property
     def contents(self):
         c = []
-        for loc_raw, substance in iteritems(self._locatables):
+        for _, substance in iteritems(self._locatables):
             c.append(substance)
 
         return c
@@ -250,13 +249,10 @@ class PlateBase(ContainerBase):
         return "\n".join(map(six.text_type, rows))
 
 
-class ContainerService(WrapperMixin, ExtensibleServiceAPIMixin, object):
-    _archetype_version_class = ContainerVersion
-    _archetype_class = Container
-    _archetype_base_class = ContainerBase
+class ContainerService(BaseExtensibleService):
 
     def __init__(self, app):
-        self._app = app
+        super(ContainerService, self).__init__(app, ContainerBase)
 
     def get_by_name(self, name):
         return self.get(name=name)
@@ -294,4 +290,3 @@ class ContainerQueryBuilder:
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
         return query_params
-

@@ -5,11 +5,41 @@ from django.db.models import Prefetch
 from django.core import exceptions as django_exceptions
 from clims.services.exceptions import DoesNotExist
 from clims.models.extensible import ExtensibleProperty
+from clims.services.extensible import ExtensibleTypeNotRegistered
 
 
-class ExtensibleServiceAPIMixin(object):
+class BaseExtensibleService(object):
 
     DoesNotExist = DoesNotExist
+
+    def __init__(self, app, wrapper_class):
+        self._app = app
+
+        self._wrapper_class = wrapper_class
+        self._archetype_class = wrapper_class.WrappedArchetype
+        self._archetype_version_class = wrapper_class.WrappedVersion
+
+    def to_wrapper(self, model):
+        if model is None:
+            return None
+        if isinstance(model, self._archetype_version_class):
+            return self._version_to_wrapper(model)
+        elif isinstance(model, self._archetype_class):
+            return self._archetype_to_wrapper(model)
+        else:
+            raise AssertionError("The model {} can't be wrapped".format(type(model)))
+
+    def _version_to_wrapper(self, version):
+        try:
+            SpecificExtensibleType = self._app.extensibles.get_implementation(
+                version.archetype.extensible_type.name)
+            return SpecificExtensibleType(_wrapped_version=version, _app=self._app)
+        except ExtensibleTypeNotRegistered:
+            return self._archetype_base_class(_wrapped_version=version, _unregistered=True)
+
+    def _archetype_to_wrapper(self, archetype):
+        versioned = archetype.versions.get(latest=True)
+        return self._version_to_wrapper(versioned)
 
     def all(self):
         """
@@ -118,7 +148,7 @@ class ExtensibleServiceAPIMixin(object):
 
     @staticmethod
     def get_values_of_property(property, extensible_type):
-        property_query_set = ExtensibleServiceAPIMixin._get_values_qs(property, extensible_type)
+        property_query_set = BaseExtensibleService._get_values_qs(property, extensible_type)
         try:
             # Note that this assumes that the property type is the same for all
             # entities in the property_query_set
@@ -133,7 +163,7 @@ class ExtensibleServiceAPIMixin(object):
     @staticmethod
     def get_unique_values_of_property(property, extensible_type):
         # TODO: add organization to the filter parameters
-        property_query_set = ExtensibleServiceAPIMixin._get_values_qs(property, extensible_type)
+        property_query_set = BaseExtensibleService._get_values_qs(property, extensible_type)
         try:
             # Note that this assumes that the property type is the same for all
             # entities in the property_query_set
