@@ -62,8 +62,6 @@ class ExtensibleType(Model):
 
     name = models.TextField()
 
-    category = models.TextField()
-
     plugin = models.ForeignKey('clims.PluginRegistration')
 
     @property
