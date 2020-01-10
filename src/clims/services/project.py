@@ -3,8 +3,7 @@ from __future__ import absolute_import
 
 from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion
-from clims.services.wrapper import WrapperMixin
-from clims.services.extensible_service_api import ExtensibleServiceAPIMixin
+from clims.services.base_extensible_service import BaseExtensibleService
 
 
 class ProjectBase(ExtensibleBase):
@@ -40,11 +39,6 @@ class ProjectBase(ExtensibleBase):
             yield self._to_wrapper(version)
 
 
-class ProjectService(WrapperMixin, ExtensibleServiceAPIMixin, object):
-
-    _archetype_version_class = ProjectVersion
-    _archetype_class = Project
-    _archetype_base_class = ProjectBase
-
+class ProjectService(BaseExtensibleService):
     def __init__(self, app):
-        self._app = app
+        super(ProjectService, self).__init__(app, ProjectBase)
