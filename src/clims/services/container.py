@@ -5,7 +5,7 @@ import six
 from six import iteritems
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
-from clims.services.extensible_service_api import BaseExtensibleService
+from clims.services.base_extensible_service import BaseExtensibleService
 
 
 class IndexOutOfBounds(Exception):

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion
-from clims.services.extensible_service_api import BaseExtensibleService
+from clims.services.base_extensible_service import BaseExtensibleService
 
 
 class ProjectBase(ExtensibleBase):

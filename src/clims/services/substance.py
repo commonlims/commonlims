@@ -18,7 +18,7 @@ from sentry.plugins import plugins
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler, HandlerContext
 from clims.handlers import SubstancesValidationHandler
-from clims.services.extensible_service_api import BaseExtensibleService
+from clims.services.base_extensible_service import BaseExtensibleService
 
 
 logger = logging.getLogger(__name__)
