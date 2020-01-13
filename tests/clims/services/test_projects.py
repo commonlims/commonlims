@@ -25,14 +25,14 @@ class TestProjectService(TestCase):
 
     def test_get_unique_values_of_property(self):
         country_choices = set(self.create_a_bunch_of_projects())
-        actual = self.app.substances.get_unique_values_of_property(property='country_of_sampling',
-                                                                   extensible_type=GemstoneProject)
+        actual = self.app.projects.get_unique_values_of_property(property='country_of_sampling',
+                                                                 extensible_type=GemstoneProject)
         assert actual == country_choices
 
     def test_get_values_of_property(self):
         country_choices = self.create_a_bunch_of_projects()
-        actual = self.app.substances.get_values_of_property(property='country_of_sampling',
-                                                            extensible_type=GemstoneProject)
+        actual = self.app.projects.get_values_of_property(property='country_of_sampling',
+                                                          extensible_type=GemstoneProject)
         assert sorted(actual) == sorted(country_choices)
 
 
