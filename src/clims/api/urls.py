@@ -11,6 +11,7 @@ from .endpoints.substance_details import SubstanceDetailsEndpoint
 from .endpoints.substance_property import SubstancePropertyEndpoint
 
 from .endpoints.project import ProjectEndpoint
+from .endpoints.project_property import ProjectPropertyEndpoint
 
 from .endpoints.container import ContainerEndpoint
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
@@ -75,6 +76,9 @@ urlpatterns = patterns('',
 
     url(r'^organizations/(?P<organization_slug>[^\/]+)/projects/$',
         ProjectEndpoint.as_view(), name='clims-api-0-projects'),
+
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/projects/property/(?P<prop>[^\/]+)/$',
+        ProjectPropertyEndpoint.as_view(), name='clims-api-0-project-property'),
 
     url(
         fmt(r'^organizations/{org}/substances/files/$'),

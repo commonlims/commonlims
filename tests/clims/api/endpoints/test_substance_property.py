@@ -6,10 +6,7 @@ from sentry.testutils import APITestCase
 
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
-import pytest
 
-
-@pytest.mark.dev_johan
 class SubstancePropertyEndpointTest(APITestCase):
     def create_gemstone(self, *args, **kwargs):
         return self.create_substance(GemstoneSample, *args, **kwargs)
@@ -36,7 +33,7 @@ class SubstancePropertyEndpointTest(APITestCase):
 
         assert response.data == ['blue', 'red', 'red', 'teal']
 
-    def test_find_unqiue_substance_property(self):
+    def test_find_unique_substance_property(self):
 
         sample = self.create_gemstone(color='blue')
         sample.save()
