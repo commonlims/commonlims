@@ -14,6 +14,7 @@ from .endpoints.project import ProjectEndpoint
 from .endpoints.project_property import ProjectPropertyEndpoint
 
 from .endpoints.container import ContainerEndpoint
+from .endpoints.container_property import ContainerPropertyEndpoint
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
@@ -73,6 +74,9 @@ urlpatterns = patterns('',
 
     url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/$',
         ContainerEndpoint.as_view(), name='clims-api-0-containers'),
+
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/property/(?P<prop>[^\/]+)/$',
+        ContainerPropertyEndpoint.as_view(), name='clims-api-0-container-property'),
 
     url(r'^organizations/(?P<organization_slug>[^\/]+)/projects/$',
         ProjectEndpoint.as_view(), name='clims-api-0-projects'),
