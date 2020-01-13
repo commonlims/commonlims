@@ -12,8 +12,8 @@ export const initialState = {
   allVisibleSelected: false,
   visibleIds: [],
   selectedIds: [],
-  groupBy: 'name',
-  search: 'name',
+  groupBy: 'Project name',
+  search: 'project.name:',
   byIds: {}, // The actual substance entries (TODO: have parentById and childById?)
   cursor: '', // The cursor into the current dataset
   paginationEnabled: true,
