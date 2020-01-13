@@ -87,7 +87,6 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         assert set(expected_sample_names).issubset(set(all_sample_names))
 
 
-@pytest.mark.dev_johan
 class TestSubstanceService(TestCase):
     def setUp(self):
         self.register_extensible(GemstoneProject)
