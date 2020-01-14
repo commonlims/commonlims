@@ -37,6 +37,7 @@ def createexampledata():
         moxy = FloatField("moxy")
         cool = FloatField("cool")
         erudite = FloatField("erudite")
+        sample_type = TextField("sample type")
 
     class ExampleProject(ProjectBase):
         pi = TextField("pi")
@@ -45,17 +46,20 @@ def createexampledata():
     app.extensibles.register(example_plugin, ExampleSample)
     app.extensibles.register(example_plugin, ExampleProject)
 
+    available_sample_types = ["Vampire Fang", "Zombie Brain", "Hydra Claw"]
+
     for _ in range(100):
         name = "sample-{}".format(random.randint(1, 1000000))
         sample = ExampleSample(name=name,
                                organization=org,
                                moxy=random.randint(1, 100),
                                cool=random.randint(1, 100),
-                               erudite=random.randint(1, 100))
+                               erudite=random.randint(1, 100),
+                               sample_type=random.choice(available_sample_types))
         sample.save()
         click.echo("Created sample: {}".format(sample.name))
 
-    pis = ["Rosaline Franklin", "Charles Darwin", "Gregor Medel"]
+    pis = ["Rosaline Franklin", "Charles Darwin", "Gregor Mendel"]
     for _ in range(100):
         name = "demo-{}".format(uuid4().hex)
         project = ExampleProject(name=name, organization=org, project_code=name, pi=random.choice(pis))

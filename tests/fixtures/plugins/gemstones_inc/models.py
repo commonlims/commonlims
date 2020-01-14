@@ -21,3 +21,4 @@ class GemstoneContainer(PlateBase):
     columns = 12
 
     comment = TextField()
+    color = TextField()

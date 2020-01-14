@@ -42,3 +42,7 @@ class ProjectBase(ExtensibleBase):
 class ProjectService(BaseExtensibleService):
     def __init__(self, app):
         super(ProjectService, self).__init__(app, ProjectBase)
+
+    @classmethod
+    def _filter_by_extensible_version(cls, query_set):
+        return query_set.filter(projectversion__latest=True)

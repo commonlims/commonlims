@@ -74,7 +74,7 @@ class ExtensibleService(object):
         return extensible_type
 
     @transaction.atomic
-    def _register_model(self, name, org, plugin, category='default', property_types=None):
+    def _register_model(self, name, org, plugin, property_types=None):
         """
         Registers an extensible type in the database. One shouldn't have to call this method
         directly, but rather use `register`.
@@ -86,7 +86,6 @@ class ExtensibleService(object):
 
         extensible_type, created = ExtensibleType.objects.get_or_create(
             name=name,
-            category=category,
             plugin=plugin)
 
         existing_property_types = {item.name: item for item in extensible_type.property_types.all()}

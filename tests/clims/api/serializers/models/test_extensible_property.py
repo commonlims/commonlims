@@ -13,7 +13,7 @@ class ExtensiblePropertyTypeSerializerTestCase(TestCase):
     def setUp(self):
         example_plugin, _ = PluginRegistration.objects.get_or_create(
             name='clims.example.plugin', version='1.0.0', organization=self.organization)
-        self.extensible_type = ExtensibleType(name="test type", category="test category", plugin=example_plugin)
+        self.extensible_type = ExtensibleType(name="test type", plugin=example_plugin)
 
     def create_prop(self, prop_name, disp_name, prop_type, value):
         extensible_property_type = ExtensiblePropertyType(name=prop_name,

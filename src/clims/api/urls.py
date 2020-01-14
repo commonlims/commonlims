@@ -8,10 +8,13 @@ from .endpoints.work_batch import (WorkBatchEndpoint,
 
 from .endpoints.substance import SubstanceEndpoint
 from .endpoints.substance_details import SubstanceDetailsEndpoint
+from .endpoints.substance_property import SubstancePropertyEndpoint
 
 from .endpoints.project import ProjectEndpoint
+from .endpoints.project_property import ProjectPropertyEndpoint
 
 from .endpoints.container import ContainerEndpoint
+from .endpoints.container_property import ContainerPropertyEndpoint
 from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
@@ -66,11 +69,20 @@ urlpatterns = patterns('',
     url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/$',
         SubstanceEndpoint.as_view(), name='clims-api-0-substances'),
 
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/substances/property/(?P<prop>[^\/]+)/$',
+        SubstancePropertyEndpoint.as_view(), name='clims-api-0-substance-property'),
+
     url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/$',
         ContainerEndpoint.as_view(), name='clims-api-0-containers'),
 
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/containers/property/(?P<prop>[^\/]+)/$',
+        ContainerPropertyEndpoint.as_view(), name='clims-api-0-container-property'),
+
     url(r'^organizations/(?P<organization_slug>[^\/]+)/projects/$',
         ProjectEndpoint.as_view(), name='clims-api-0-projects'),
+
+    url(r'^organizations/(?P<organization_slug>[^\/]+)/projects/property/(?P<prop>[^\/]+)/$',
+        ProjectPropertyEndpoint.as_view(), name='clims-api-0-project-property'),
 
     url(
         fmt(r'^organizations/{org}/substances/files/$'),

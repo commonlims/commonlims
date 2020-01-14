@@ -163,21 +163,19 @@ class TestSubstanceService(TestCase):
 
     def test_get_unique_values_of_property(self):
         color_choices = set(self.create_a_bunch_of_sample())
-        actual = self.app.substances.get_unique_values_of_property(property='color',
-                                                                   extensible_type=GemstoneSample)
+        actual = self.app.substances.get_unique_values_of_property(property='color')
+
         assert actual == color_choices
 
     def test_get_values_of_property(self):
         color_list = self.create_a_bunch_of_sample()
-        actual = self.app.substances.get_values_of_property(property='color',
-                                                            extensible_type=GemstoneSample)
+        actual = self.app.substances.get_values_of_property(property='color')
         assert sorted(actual) == sorted(color_list)
 
     def test_get_values_of_nonexistent_property(self):
         self.create_a_bunch_of_sample()
         with pytest.raises(DoesNotExist):
-            self.app.substances.get_values_of_property(property='date',
-                                                       extensible_type=GemstoneSample)
+            self.app.substances.get_values_of_property(property='date')
 
 
 class GemstoneProject(ProjectBase):
