@@ -44,7 +44,7 @@ class BaseExtensibleService(object):
                 version.archetype.extensible_type.name)
             return SpecificExtensibleType(_wrapped_version=version, _app=self._app)
         except ExtensibleTypeNotRegistered:
-            return self._archetype_base_class(_wrapped_version=version, _unregistered=True)
+            return self._wrapper_class(_wrapped_version=version, _unregistered=True)
 
     def _archetype_to_wrapper(self, archetype):
         versioned = archetype.versions.get(latest=True)
