@@ -98,11 +98,8 @@ class PluginManager(InstanceManager):
         except AttributeError:
             plugin_version = "NA"
 
-        # NOTE: Registration currently happens for all organizations. We can limit that
-        # further in a future release.
-        for org in Organization.objects.all():
-            PluginRegistration.objects.get_or_create(
-                name=plugin.full_name, version=plugin_version, organization=org)
+        PluginRegistration.objects.get_or_create(
+            name=plugin_cls.get_full_name(), version=plugin_cls.version)
 
     def register_extensible_types(self, plugin):
         """

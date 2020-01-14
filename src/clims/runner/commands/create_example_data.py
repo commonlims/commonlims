@@ -27,7 +27,7 @@ def createexampledata():
     org = Organization.objects.get(name="lab")
 
     example_plugin, _ = PluginRegistration.objects.get_or_create(
-        name='clims.example.plugin', version='1.0.0', organization=org)
+        name='clims.example.plugin', version='1.0.0')
 
     for name in ["Select second QC method", "Quant-IT", "Qubit 3", "Tapestation"]:
         wb = WorkBatch(name=name, organization=org, plugin=example_plugin)

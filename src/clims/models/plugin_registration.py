@@ -16,8 +16,6 @@ class PluginRegistration(Model):
     name = models.TextField(null=False)
     version = models.TextField(null=False)
 
-    organization = models.ForeignKey('sentry.Organization')
-
     class Meta:
         app_label = 'clims'
         db_table = 'clims_pluginregistration'

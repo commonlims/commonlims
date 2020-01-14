@@ -41,19 +41,19 @@ class ExtensibleService(object):
         except KeyError:
             raise ExtensibleTypeNotRegistered(extensible_type_full_name)
 
-    def get_extensible_type(self, org, name):
+    def get_extensible_type(self, name):
         """
         Returns an extensible_type by name.
         """
-        if (org.id, name) not in self._model_cache:
+        if name not in self._model_cache:
             try:
                 substance_type = ExtensibleType.objects.prefetch_related(
-                    'property_types').get(plugin__organization=org, name=name)
-                self._model_cache[(org.id, name)] = substance_type
+                    'property_types').get(name=name)
+                self._model_cache[name] = substance_type
             except ExtensibleType.DoesNotExist:
-                raise ExtensibleTypeNotRegistered("The type '{}' is not registered in '{}'".format(
-                    name, org.slug))
-        return self._model_cache[(org.id, name)]
+                raise ExtensibleTypeNotRegistered("The type '{}' is not registered".format(
+                    name))
+        return self._model_cache[name]
 
     def register(self, plugin, extensible_base):
         property_types = list()
@@ -217,7 +217,7 @@ class ExtensibleBase(object):
         if not name or not org:
             raise AttributeError("You must supply name and organization")
 
-        extensible_type = self._app.extensibles.get_extensible_type(org, self.type_full_name)
+        extensible_type = self._app.extensibles.get_extensible_type(self.type_full_name)
         self._archetype = self.WrappedArchetype(name=name, extensible_type=extensible_type,
                 organization=org)
         self._wrapped_version = self.WrappedVersion()

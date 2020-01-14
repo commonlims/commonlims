@@ -743,7 +743,7 @@ class Fixtures(object):
     def create_plugin(self, org=None):
         org = org or self.organization
         plugin, _ = PluginRegistration.objects.get_or_create(
-            name='tests_utils.create_plugin', version='1.0.0', organization=org)
+            name='tests_utils.create_plugin', version='1.0.0')
         return plugin
 
     def register_extensible(self, klass, plugin=None):
