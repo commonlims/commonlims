@@ -20,7 +20,7 @@ from clims.handlers import SubstancesSubmissionHandler
 from clims.handlers import SubstancesValidationHandler
 from clims.services.base_extensible_service import BaseExtensibleService
 from clims.services.base_extensible_service import BaseQueryBuilder
-from clims.models import ResultIterator
+from clims.models.base import ResultIterator
 from clims.handlers import context_store
 
 logger = logging.getLogger(__name__)
@@ -189,29 +189,24 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         self._archetype.project = project._archetype
 
     @property
-    def container_index(self):
-        # TODO: the container should be in a local cache!
-        # when looping samples in a container, the very same container is fetched over and
-        # over again
-        loc = self.location
-        if loc is None:
-            return None
-        container = self._app.containers.to_wrapper(loc.container)
-        container_index_class = container.IndexType
-        # Can we assume that container index class has only row and column, not z?
-        ind = container_index_class(loc.y, loc.x)
-        return ind
-
-    @property
     def location(self):
+        """
+        Returns the location of the substance as a `ContainerIndex` object.
+        """
         # TODO: Prefetch the current position
         # TODO: Wrap in a higher level object that makes sense (e.g. PlateIndex, which
         # we might want to rename to PlateLocation at the same time, since it can have a pointer
         # to the container)
         try:
-            return self._archetype.locations.get(current=True)
+            loc = self._archetype.locations.get(current=True)
         except SubstanceLocation.DoesNotExist:
             return None
+
+        # TODO: the container should be in a local cache!
+        # when looping samples in a container, the very same container is fetched over and
+        # over again
+        container = self._app.containers.to_wrapper(loc.container)
+        return container.IndexType.from_internal_coordinates(container, loc.x, loc.y, loc.z)
 
     def to_ancestry(self):
         return SubstanceAncestry(self)

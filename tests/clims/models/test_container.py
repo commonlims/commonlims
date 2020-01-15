@@ -64,12 +64,10 @@ class TestContainer(TestCase):
         location = model.locations.get(current=True)
         assert (location.x, location.y, location.z) == (0, 0, 0)
 
-    @pytest.mark.dev_edvard
     def test_can_traverse_plate(self):
-        self.register_extensible(HairSampleContainer)
-        self.register_extensible(HairSample)
+        container = self.create_container_with_samples(HairSampleContainer, HairSample, sample_count=3)
 
-        container = HairSampleContainer(name="cont1")
+        # container = HairSampleContainer(name="cont1")
         by_row = list(container._traverse(HairSampleContainer.TRAVERSE_BY_ROW))
         by_col = list(container._traverse(HairSampleContainer.TRAVERSE_BY_COLUMN))
 

@@ -14,8 +14,19 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, Gemstone
 
 
 class SubstanceTestCase(TestCase):
+    # Expose these types to the testcase so imports are not required
+    GemstoneSample = GemstoneSample
+    GemstoneContainer = GemstoneContainer
+
+    def setUp(self):
+        self.register_extensible(GemstoneSample)
+        self.register_extensible(GemstoneContainer)
+
     def create_gemstone(self, *args, **kwargs):
         return self.create_substance(GemstoneSample, *args, **kwargs)
+
+    def create_gemstone_container(self, *args, **kwargs):
+        return self.create_container(GemstoneContainer, *args, **kwargs)
 
     def register_gemstone_type(self):
         return self.register_extensible(GemstoneSample)

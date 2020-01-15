@@ -2,11 +2,11 @@ from __future__ import absolute_import
 
 import six
 from abc import abstractmethod
+import logging
 from django.db.models import Prefetch
 from django.core import exceptions as django_exceptions
 from clims.services.exceptions import DoesNotExist
 from clims.models.extensible import ExtensibleProperty
-from clims.services.extensible import ExtensibleTypeNotRegistered
 from clims.models import ResultIterator
 
 
@@ -19,6 +19,7 @@ class BaseExtensibleService(object):
 
     def __init__(self, app, wrapper_class):
         self._app = app
+        self._logger = logging.getLogger(self.__class__.__name__)
 
         self._wrapper_class = wrapper_class
         self._archetype_class = wrapper_class.WrappedArchetype
@@ -41,12 +42,9 @@ class BaseExtensibleService(object):
         """
         Wraps the ORM model for a particular version to a higher level extensible class.
         """
-        try:
-            SpecificExtensibleType = self._app.extensibles.get_implementation(
-                version.archetype.extensible_type.name)
-            return SpecificExtensibleType(_wrapped_version=version, _app=self._app)
-        except ExtensibleTypeNotRegistered:
-            return self._wrapper_class(_wrapped_version=version, _unregistered=True)
+        name = version.archetype.extensible_type.name
+        SpecificExtensibleType = self._app.extensibles.get_implementation(name)
+        return SpecificExtensibleType(_wrapped_version=version, _app=self._app)
 
     def _archetype_to_wrapper(self, archetype):
         versioned = archetype.versions.get(latest=True)

@@ -760,7 +760,7 @@ class Fixtures(object):
 
     def create_substance(self, klass, name=None, **kwargs):
         properties = kwargs or dict()
-        ret = self.register_extensible(klass)
+        self.register_extensible(klass)
 
         if not name:
             name = "sample-{}".format(uuid4())
@@ -769,7 +769,7 @@ class Fixtures(object):
 
     def create_clims_project(self, klass, name=None, **kwargs):
         properties = kwargs or dict()
-        ret = self.register_extensible(klass)
+        self.register_extensible(klass)
 
         if not name:
             name = "project-{}".format(uuid4())
@@ -778,8 +778,7 @@ class Fixtures(object):
 
     def create_container(self, klass, name=None, prefix="container", **kwargs):
         properties = kwargs or dict()
-        # TODO: Explicitly register only if required?
-        ret = self.register_extensible(klass)
+        self.register_extensible(klass)
 
         if not name:
             name = "{}-{}".format(prefix, uuid4())
