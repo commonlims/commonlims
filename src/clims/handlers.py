@@ -291,3 +291,14 @@ class SubstancesSubmissionFileDemoHandler(Handler):
         # TODO: file_type should be a string identifier that the user can define
         # in the plugin
         pass
+
+
+@six.add_metaclass(abc.ABCMeta)
+class CreateExampleDataHandler(Handler):
+    """
+    Executes when a user runs `lims createexampledata`
+    """
+    unique_registration = False
+
+    def handle(self):
+        pass
