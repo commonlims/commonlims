@@ -176,12 +176,13 @@ const cacheGroups = {
 };
 
 /**
- * Main Webpack config for Sentry React SPA.
+ * Main Webpack config for Common LIMS React SPA.
  */
 let appConfig = {
   mode: WEBPACK_MODE,
   entry: {app: 'app'},
   context: staticPrefix,
+  stats: 'errors-only',
   module: {
     rules: [
       {
