@@ -204,6 +204,13 @@ class Handler(object):
         # Warnings or info messages that should be shown to the user
         self.validation_issues = list()
 
+        # Give simple access to the logging methods
+        self.logger = logging.getLogger(utils.class_full_name(self.__class__))
+        self.debug = self.logger.debug
+        self.info = self.logger.info
+        self.warning = self.logger.warning
+        self.error = self.logger.error
+
     @property
     def has_validation_errors(self):
         return len([issue for issue in self.validation_issues if issue.type == "error"]) > 0
