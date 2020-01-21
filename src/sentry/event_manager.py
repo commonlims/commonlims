@@ -40,7 +40,7 @@ from sentry.models import (
     Project, Release, ReleaseEnvironment, ReleaseProject,
     ReleaseProjectEnvironment, UserReport
 )
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.signals import event_discarded, event_saved, first_event_received
 from sentry.tasks.integrations import kick_off_status_syncs
 from sentry.utils import metrics
@@ -177,7 +177,7 @@ def generate_culprit(data, platform=None):
 
 def plugin_is_regression(group, event):
     project = event.project
-    for plugin in plugins.for_project(project):
+    for plugin in ioc.app.plugins.for_project(project):
         result = safe_execute(
             plugin.is_regression, group, event, version=1, _with_transaction=False
         )
@@ -700,7 +700,7 @@ class EventManager(object):
         # clients did not set this appropriately so far.
         normalize_in_app(data)
 
-        for plugin in plugins.for_project(project, version=None):
+        for plugin in ioc.app.plugins.for_project(project, version=None):
             added_tags = safe_execute(plugin.get_tags, event, _with_transaction=False)
             if added_tags:
                 # plugins should not override user provided tags

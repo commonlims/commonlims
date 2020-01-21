@@ -8,7 +8,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from sentry.testutils import APITestCase
 from clims.models import OrganizationFile
-from sentry.plugins import plugins
 
 
 logger = logging.getLogger(__name__)
@@ -33,8 +32,8 @@ class TestSampleSubmission(APITestCase):
         with open(get_fixture_path("samples/gemstones-samplesubmission.csv"), mode='rb') as f:
             content = f.read()
         # Register both plugins. Both have an implementation of
-        plugins.register(GemstonePlugin)
-        plugins.register(GemstoneIncPlugin)
+        self.app.plugins.register(GemstonePlugin)
+        self.app.plugins.register(GemstoneIncPlugin)
 
         url = reverse(
             'clims-api-0-organization-substances-files',

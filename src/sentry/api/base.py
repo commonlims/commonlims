@@ -18,6 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from simplejson import JSONDecodeError
 
+from clims.services.application import ioc
 from sentry import tsdb
 from sentry.utils.cursors import Cursor
 from sentry.utils.dates import to_datetime
@@ -65,10 +66,7 @@ class Endpoint(APIView):
 
     @property
     def app(self):
-        if not hasattr(self, "_app"):
-            from clims.services import ApplicationService
-            self._app = ApplicationService()
-        return self._app
+        return ioc.app
 
     def build_cursor_link(self, request, name, cursor):
         querystring = u'&'.join(

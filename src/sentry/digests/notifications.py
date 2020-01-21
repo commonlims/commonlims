@@ -15,6 +15,7 @@ from sentry.app import tsdb
 from sentry.digests import Record
 from sentry.utils.dates import to_timestamp
 from functools import reduce
+from clims.services import ioc
 
 logger = logging.getLogger('sentry.digests')
 
@@ -22,10 +23,9 @@ Notification = namedtuple('Notification', 'event rules')
 
 
 def split_key(key):
-    from sentry.plugins import plugins  # XXX
     from sentry.models import Project  # Django 1.9 setup issue
     plugin_slug, _, project_id = key.split(':', 2)
-    return plugins.get(plugin_slug), Project.objects.get(pk=project_id)
+    return ioc.app.plugins.get(plugin_slug), Project.objects.get(pk=project_id)
 
 
 def unsplit_key(plugin, project):

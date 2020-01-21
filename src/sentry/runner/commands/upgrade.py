@@ -8,19 +8,16 @@ sentry.runner.commands.upgrade
 from __future__ import absolute_import, print_function
 
 import click
-import django
 
 import logging
 from sentry.runner.decorators import configuration
 
 logger = logging.getLogger(__name__)
 
-DJANGO_17 = django.VERSION[0] > 1 or (django.VERSION[0] == 1 and django.VERSION[1] >= 7)
-
 
 def _upgrade(interactive, traceback, verbosity, repair):
     from django.core.management import call_command as dj_call_command
-    from sentry.plugins import plugins
+    from clims.services import ioc
     dj_call_command(
         'migrate',
         interactive=interactive,
@@ -37,7 +34,7 @@ def _upgrade(interactive, traceback, verbosity, repair):
             'sentry.runner.commands.repair.repair',
         )
 
-    plugins.auto_install()
+    ioc.app.plugins.auto_install()
 
 
 @click.command()

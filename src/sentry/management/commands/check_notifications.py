@@ -11,12 +11,12 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
+from clims.services import ioc
 from sentry.models import User
 
 
 def find_mail_plugin():
-    from sentry.plugins import plugins
-    for plugin in plugins.all():
+    for plugin in ioc.app.plugins.all():
         if type(plugin).__name__.endswith('MailPlugin'):
             return plugin
     assert False, 'MailPlugin cannot be found'

@@ -15,6 +15,7 @@ import six
 from time import time
 from django.utils import timezone
 
+from clims.services import ioc
 from sentry import features, reprocessing
 from sentry.attachments import attachment_cache
 from sentry.cache import default_cache
@@ -44,9 +45,8 @@ class RetryProcessing(Exception):
 
 def should_process(data):
     """Quick check if processing is needed at all."""
-    from sentry.plugins import plugins
 
-    for plugin in plugins.all(version=2):
+    for plugin in ioc.app.plugins.all(version=2):
         processors = safe_execute(
             plugin.get_event_preprocessors, data=data, _with_transaction=False
         )
@@ -113,7 +113,6 @@ def preprocess_event_from_reprocessing(
 
 
 def _do_process_event(cache_key, start_time, event_id, process_task):
-    from sentry.plugins import plugins
 
     data = default_cache.get(cache_key)
 
@@ -139,7 +138,7 @@ def _do_process_event(cache_key, start_time, event_id, process_task):
     reprocessing_rev = reprocessing.get_reprocessing_revision(project)
 
     # Event enhancers.  These run before anything else.
-    for plugin in plugins.all(version=2):
+    for plugin in ioc.app.plugins.all(version=2):
         enhancers = safe_execute(plugin.get_event_enhancers, data=data)
         for enhancer in (enhancers or ()):
             enhanced = safe_execute(enhancer, data)
@@ -155,7 +154,7 @@ def _do_process_event(cache_key, start_time, event_id, process_task):
 
     # TODO(dcramer): ideally we would know if data changed by default
     # Default event processors.
-    for plugin in plugins.all(version=2):
+    for plugin in ioc.app.plugins.all(version=2):
         processors = safe_execute(
             plugin.get_event_preprocessors, data=data, _with_transaction=False
         )

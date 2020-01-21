@@ -15,7 +15,7 @@ from django.utils.decorators import method_decorator
 from sentry.api import client
 from sentry.exceptions import HookValidationError
 from sentry.models import ApiKey, Project, ProjectOption
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.utils import json
 
 logger = logging.getLogger('sentry.webhooks')
@@ -113,7 +113,7 @@ class ReleaseWebhookView(View):
         if plugin_id == 'builtin':
             return self._handle_builtin(request, project)
 
-        plugin = plugins.get(plugin_id)
+        plugin = ioc.app.plugins.get(plugin_id)
         if not plugin.is_enabled(project):
             logger.warn('release-webhook.plugin-disabled', extra={
                 'project_id': project_id,

@@ -233,8 +233,10 @@ def initialize_app(config, skip_service_validation=False):
 
     bind_cache_to_option_store()
 
-    from sentry.plugins import plugins
-    plugins.load_installed()
+    from clims.services.application import ioc, ApplicationService
+    app = ApplicationService()
+    ioc.set_application(app)
+    app.plugins.load_installed()
 
     initialize_receivers()
 

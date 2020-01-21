@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
-from sentry.plugins import plugins, IssueTrackingPlugin2
+from clims.services import ioc
+from sentry.plugins import IssueTrackingPlugin2
 
 
 class VstsPlugin(IssueTrackingPlugin2):
@@ -22,12 +23,12 @@ class BitbucketPlugin(IssueTrackingPlugin2):
 
 
 def unregister_mock_plugins():
-    plugins.unregister(VstsPlugin)
-    plugins.unregister(GitHubPlugin)
-    plugins.unregister(BitbucketPlugin)
+    ioc.app.plugins.unregister(VstsPlugin)
+    ioc.app.plugins.unregister(GitHubPlugin)
+    ioc.app.plugins.unregister(BitbucketPlugin)
 
 
 def register_mock_plugins():
-    plugins.register(VstsPlugin)
-    plugins.register(GitHubPlugin)
-    plugins.register(BitbucketPlugin)
+    ioc.app.plugins.register(VstsPlugin)
+    ioc.app.plugins.register(GitHubPlugin)
+    ioc.app.plugins.register(BitbucketPlugin)
