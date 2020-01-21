@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import pytest
 from sentry.testutils import TestCase
-from sentry.plugins import plugins
 from mock import MagicMock
 from sentry.plugins import (PluginMustHaveVersion, PluginIncorrectVersionFormat, PluginManager,
         RequiredPluginCannotLoad)
@@ -18,23 +17,23 @@ class TestPlugins(TestCase):
         # Makes sure that the demo plugin shipped with the framework installs correctly
         # A similar call is made during `lims upgrade`, so all users have the demo plugin installed
         # by default.
-        plugins.auto_install()  # Only installs information about the plugins in the database
-        plugins.load_installed()  # Loads instances so they can be used
+        self.app.plugins.auto_install()  # Only installs information about the plugins in the database
+        self.app.plugins.load_installed()  # Loads instances so they can be used
         # Materialize the plugins:
-        list(plugins.all())
+        list(self.app.plugins.all())
 
     def test_plugin_must_have_version(self):
         SomePlugin = MagicMock()
         SomePlugin.version = None
         SomePlugin.__name__ = "test"
         with pytest.raises(PluginMustHaveVersion):
-            plugins.install_plugins(SomePlugin)
+            self.app.plugins.install_plugins(SomePlugin)
 
     def test_plugin_must_have_sortable_version(self):
         # Plugins must define a version string that can be parsed to a tuple of numbers
 
         with pytest.raises(PluginIncorrectVersionFormat):
-            plugins.install_plugins(self.PluginWithIncorrectVersionFixture)
+            self.app.plugins.install_plugins(self.PluginWithIncorrectVersionFixture)
 
 
 class TestPluginsVersionLoadChecks(TestCase):

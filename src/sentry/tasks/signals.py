@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.tasks.base import instrumented_task
 from sentry.utils.safe import safe_execute
 
@@ -14,8 +14,8 @@ def signal(name, payload, project_id=None, **kwargs):
     else:
         project = None
 
-    for plugin in plugins.for_project(project, version=1):
+    for plugin in ioc.app.plugins.for_project(project, version=1):
         safe_execute(plugin.handle_signal, name=name, payload=payload, project=project)
 
-    for plugin in plugins.for_project(project, version=2):
+    for plugin in ioc.app.plugins.for_project(project, version=2):
         safe_execute(plugin.handle_signal, name=name, payload=payload, project=project)

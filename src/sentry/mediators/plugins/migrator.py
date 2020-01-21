@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
+from clims.services import ioc
 from sentry.mediators import Mediator, Param
 from sentry.models import Repository
-from sentry.plugins import plugins
 from sentry.utils.cache import memoize
 
 
@@ -12,7 +12,7 @@ class Migrator(Mediator):
 
     def call(self):
         for project in self.projects:
-            for plugin in plugins.for_project(project):
+            for plugin in ioc.app.plugins.for_project(project):
                 if plugin.slug != self.integration.provider:
                     continue
 
@@ -54,7 +54,7 @@ class Migrator(Mediator):
     @property
     def plugins(self):
         return [
-            plugins.configurable_for_project(project)
+            ioc.app.plugins.configurable_for_project(project)
             for project in self.projects
         ]
 

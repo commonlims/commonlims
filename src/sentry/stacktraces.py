@@ -212,12 +212,12 @@ def normalize_in_app(data):
 
 
 def should_process_for_stacktraces(data):
-    from sentry.plugins import plugins
+    from clims.services import ioc
     infos = find_stacktraces_in_data(data)
     platforms = set()
     for info in infos:
         platforms.update(info.platforms or ())
-    for plugin in plugins.all(version=2):
+    for plugin in ioc.app.plugins.all(version=2):
         processors = safe_execute(
             plugin.get_stacktrace_processors,
             data=data,
@@ -231,14 +231,14 @@ def should_process_for_stacktraces(data):
 
 
 def get_processors_for_stacktraces(data, infos):
-    from sentry.plugins import plugins
+    from clims.services import ioc
 
     platforms = set()
     for info in infos:
         platforms.update(info.platforms or ())
 
     processors = []
-    for plugin in plugins.all(version=2):
+    for plugin in ioc.app.plugins.all(version=2):
         processors.extend(
             safe_execute(
                 plugin.get_stacktrace_processors,

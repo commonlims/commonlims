@@ -24,7 +24,7 @@ from django.views.decorators.csrf import csrf_protect
 from sentry import options
 from sentry.app import env
 from sentry.models import Project, User
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.utils.email import send_mail
 from sentry.utils.http import absolute_uri
 from sentry.utils.warnings import DeprecatedSettingWarning, UnsupportedBackend, seen_warnings
@@ -35,7 +35,7 @@ from sentry.web.helpers import render_to_response, render_to_string
 
 
 def configure_plugin(request, slug):
-    plugin = plugins.get(slug)
+    plugin = ioc.app.plugins.get(slug)
     if not plugin.has_site_conf():
         return HttpResponseRedirect(auth.get_login_url())
 
@@ -201,7 +201,7 @@ def status_packages(request):
             sorted([(p.project_name, p.version) for p in pkg_resources.working_set]),
             'extensions': [
                 (p.get_title(), '%s.%s' % (p.__module__, p.__class__.__name__))
-                for p in plugins.all(version=None)
+                for p in ioc.app.plugins.all(version=None)
             ],
         },
         request

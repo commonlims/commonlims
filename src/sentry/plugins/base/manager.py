@@ -139,8 +139,6 @@ class PluginManager(object):
             plugin.get_name_and_version()))
         from clims.services import ExtensibleBase
         from clims.models import PluginRegistration
-        from clims.services import ApplicationService
-        app = ApplicationService()
 
         # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
         # knowledge of which bases are not to be registered is elsewhere
@@ -160,7 +158,7 @@ class PluginManager(object):
         for _name, class_to_register in inspect.getmembers(mod, inspect.isclass):
             if issubclass(class_to_register, ExtensibleBase) and \
                     class_to_register not in known_bases:
-                app.extensibles.register(plugin_model, class_to_register)
+                self._app.extensibles.register(plugin_model, class_to_register)
 
     # Find
 

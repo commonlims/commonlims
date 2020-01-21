@@ -437,7 +437,7 @@ class DetailedProjectSerializer(ProjectWithTeamSerializer):
         return attrs
 
     def serialize(self, obj, attrs, user):
-        from sentry.plugins import plugins
+        from clims.services import ioc
 
         data = super(DetailedProjectSerializer,
                      self).serialize(obj, attrs, user)
@@ -506,7 +506,7 @@ class DetailedProjectSerializer(ProjectWithTeamSerializer):
                 'plugins':
                 serialize(
                     [
-                        plugin for plugin in plugins.configurable_for_project(obj, version=None)
+                        plugin for plugin in ioc.app.plugins.configurable_for_project(obj, version=None)
                         if plugin.has_project_conf()
                     ], user, PluginSerializer(obj)
                 ),

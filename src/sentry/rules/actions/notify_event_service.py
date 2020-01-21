@@ -11,7 +11,7 @@ from __future__ import absolute_import
 
 from django import forms
 
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.rules.actions.base import EventAction
 from sentry.rules.actions.services import PluginService, SentryAppService
 from sentry.models import SentryApp
@@ -64,7 +64,7 @@ class NotifyEventServiceAction(EventAction):
             metrics.incr('notifications.sent', instance=app.slug, skip_internal=False)
             yield self.future(notify_sentry_app, **kwargs)
         else:
-            plugin = plugins.get(service)
+            plugin = ioc.app.plugins.get(service)
             if not plugin.is_enabled(self.project):
                 extra['project_id'] = self.project.id
                 self.logger.info('rules.fail.is_enabled', extra=extra)
@@ -92,12 +92,12 @@ class NotifyEventServiceAction(EventAction):
         from sentry.plugins.bases.notify import NotificationPlugin
 
         results = []
-        for plugin in plugins.for_project(self.project, version=1):
+        for plugin in ioc.app.plugins.for_project(self.project, version=1):
             if not isinstance(plugin, NotificationPlugin):
                 continue
             results.append(PluginService(plugin))
 
-        for plugin in plugins.for_project(self.project, version=2):
+        for plugin in ioc.app.plugins.for_project(self.project, version=2):
             for notifier in (safe_execute(plugin.get_notifiers, _with_transaction=False) or ()):
                 results.append(PluginService(notifier))
 
