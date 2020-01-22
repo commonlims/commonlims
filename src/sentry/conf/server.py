@@ -636,11 +636,12 @@ CELERYBEAT_SCHEDULE = {
 BGTASKS = {
 }
 
-# Sentry logs to two major places: stdout, and it's internal project.
+# Common LIMS logs to two major places: stdout, and its internal project.
+# (NOTE: The internal project is a temporary remnant from Sentry)
 # To disable logging to the internal project, add a logger who's only
 # handler is 'console' and disable propagating upwards.
-# Additionally, Sentry has the ability to override logger levels by
-# providing the cli with -l/--loglevel or the SENTRY_LOG_LEVEL env var.
+# Additionally, Common LIMS has the ability to override logger levels by
+# providing the cli with -l/--loglevel or the CLIMS_LOG_LEVEL env var.
 # The loggers that it overrides are root and any in LOGGING.overridable.
 # Be very careful with this in a production system, because the celery
 # logger can be extremely verbose when given INFO or DEBUG.

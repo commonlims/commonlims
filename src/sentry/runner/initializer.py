@@ -168,7 +168,7 @@ def configure_structlog():
 
     structlog.configure(**kwargs)
 
-    lvl = os.environ.get('SENTRY_LOG_LEVEL')
+    lvl = os.environ.get('CLIMS_LOG_LEVEL')
 
     if lvl and lvl not in logging._levelNames:
         raise AttributeError('%s is not a valid logging level.' % lvl)
