@@ -43,7 +43,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         logger.setLevel(logging.CRITICAL)
 
         # TODO: It would be cleaner to have the plugins instance in the ApplicationService
-        plugins.load_handler_implementation(SubstancesSubmissionHandler, MyHandler)
+        plugins.handlers.add_handler_implementation(SubstancesSubmissionHandler, MyHandler)
 
     def test_run_gemstone_sample_submission_handler__with_csv__6_samples_found_in_db(self):
         # Arrange
@@ -66,7 +66,6 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         all_sample_names = [sample.name for sample in all_samples]
         assert set(expected_sample_names).issubset(set(all_sample_names))
 
-    @pytest.mark.now
     def test_gemstone_submission_handler__with_xlsx__3_samples_found(self):
 
         # Arrange

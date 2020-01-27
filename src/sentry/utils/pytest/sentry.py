@@ -154,7 +154,6 @@ def pytest_configure(config):
 
     initialize_receivers()
     setup_services()
-    register_extensions()
 
     from sentry.utils.redis import clusters
 
@@ -167,26 +166,6 @@ def pytest_configure(config):
     # disable DISALLOWED_IPS
     from sentry import http
     http.DISALLOWED_IPS = set()
-
-
-def register_extensions():
-    from sentry.plugins import plugins
-    from sentry.plugins.utils import TestIssuePlugin2
-
-    plugins.register(TestIssuePlugin2)
-
-    from sentry.integrations.example import (
-        ExampleRepositoryProvider
-    )
-
-    from sentry.plugins import bindings
-    from sentry.plugins.providers.dummy import DummyRepositoryProvider
-
-    bindings.add('repository.provider', DummyRepositoryProvider, id='dummy')
-    bindings.add(
-        'integration-repository.provider',
-        ExampleRepositoryProvider,
-        id='integrations:example')
 
 
 def pytest_runtest_teardown(item):

@@ -67,7 +67,7 @@ class ProjectTest(APITestCase):
         # Setup
         extensible_type = self.register_extensible(GemstoneProject)
 
-        url = reverse('clims-api-0-projects', args=(extensible_type.plugin.organization.slug,))
+        url = reverse('clims-api-0-projects', args=(self.organization.slug,))
 
         payload = {
             "name": "stuff:{}".format(random.random()),

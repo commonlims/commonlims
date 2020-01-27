@@ -414,7 +414,7 @@ class TestSubstance(SubstanceTestCase):
         self.register_extensible(QuirkSample)
         ext_type_name = QuirkSample.type_full_name_cls()
         extensible_type = \
-            self.app.extensibles.get_extensible_type(self.organization, ext_type_name)
+            self.app.extensibles.get_extensible_type(ext_type_name)
         quirkyness = extensible_type.property_types.get(name='quirkyness')
 
         assert quirkyness.display_name == 'quirkyness'

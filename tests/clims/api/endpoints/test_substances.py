@@ -71,7 +71,7 @@ class SubstancesTest(APITestCase):
         # Setup
         extensible_type = self.register_extensible(GemstoneSample)
 
-        url = reverse('clims-api-0-substances', args=(extensible_type.plugin.organization.slug,))
+        url = reverse('clims-api-0-substances', args=(self.organization.slug,))
 
         payload = {
             "name": "stuff:{}".format(random.random()),

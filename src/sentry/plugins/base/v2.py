@@ -11,10 +11,13 @@ __all__ = ('Plugin2', )
 
 import logging
 import six
+import inspect
+import os
 
 from django.http import HttpResponseRedirect
 from threading import local
 
+from clims import utils
 from sentry.plugins import HIDDEN_PLUGINS
 from sentry.plugins.config import PluginConfigMixin
 from sentry.plugins.status import PluginStatusMixin
@@ -23,9 +26,8 @@ from sentry.plugins.base.configuration import (
     default_plugin_config,
     default_plugin_options,
 )
-import inspect
-import os
 from sentry.utils.hashlib import md5_text
+
 logger = logging.getLogger(__name__)
 
 
@@ -477,9 +479,11 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
     def handle_signal(self, name, payload, **kwargs):
         pass
 
-    def workflow_definitions(self):
+    @classmethod
+    def workflow_definitions(cls):
         """Returns the path to all workflow definitions for this plugin"""
-        module_path = os.path.dirname(inspect.getfile(inspect.getmodule(self)))
+
+        module_path = os.path.dirname(inspect.getfile(inspect.getmodule(cls)))
         try:
             workflows_dir_path = os.path.join(module_path, "workflows")
             for file_path in os.listdir(workflows_dir_path):
@@ -488,10 +492,17 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         except OSError:
             pass
 
-    @property
-    def full_name(self):
-        plugin_type = type(self)
-        return "{}.{}".format(plugin_type.__module__, plugin_type.__name__)
+    @classmethod
+    def get_full_name(cls):
+        return utils.class_full_name(cls)
+
+    @classmethod
+    def get_name_and_version(cls):
+        return "{}@{}".format(cls.get_full_name(), cls.version)
+
+    @classmethod
+    def get_sortable_version(cls):
+        return tuple([int(num) for num in cls.version.split(".")])
 
 
 @six.add_metaclass(PluginMount)

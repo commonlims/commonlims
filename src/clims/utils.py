@@ -43,3 +43,7 @@ def single_or_default(seq):
         return None
     else:
         return seq[0]
+
+
+def class_full_name(cls):
+    return "{}.{}".format(cls.__module__, cls.__name__)

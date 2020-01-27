@@ -1,6 +1,17 @@
 from __future__ import absolute_import
 
+import inspect
+import abc
+import six
+import logging
+import importlib
+import pkgutil
+import yaml
+from clims import utils
 from clims.plugins import PluginValidationError
+
+
+logger = logging.getLogger(__name__)
 
 
 class RequiredHandlerNotFound(Exception):
@@ -21,10 +32,152 @@ class HandlerContext(object):
     organization is etc.
     """
 
-    def __init__(self, organization):
+    def __init__(self, organization=None):
         self.organization = organization
 
 
+class HandlerManager(object):
+    """
+    Manages plugin defined handlers.
+    """
+
+    def __init__(self):
+        # Initialize the handlers dictionary with the types of baseclasses we can find:
+        self.handlers = self.find_handler_baseclasses()
+        logger.debug("Handler dictionary initialized: '{}'".format(self.handlers.keys()))
+
+    def add_handler_implementation(self, handler_type, implementation):
+        self.handlers[handler_type].add(implementation)
+
+    def remove_implementations(self):
+        for key in self.handlers:
+            self.handlers[key] = set()
+
+    def find_handler_baseclasses(self):
+        """
+        Finds all baseclasses of `clims.handlers.Handler`.
+        """
+        handlers = dict()
+        handler_subclasses = Handler.__subclasses__()
+        for subclass in handler_subclasses:
+            logger.info("Found handler type {}".format(subclass))
+            handlers[subclass] = set()
+        return handlers
+
+    def handler_count(self, cls):
+        return len(self.handlers[cls])
+
+    def require_single_handler(self, cls):
+        handlers = self.handlers[cls]
+        count = len(handlers)
+        if count == 0:
+            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
+        elif count > 1:
+            raise RequiredHandlerNotFound("Too many registered handlers found for '{}'".format(cls))
+
+    def require_handler(self, cls):
+        handlers = self.handlers[cls]
+        count = len(handlers)
+        if count == 0:
+            raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
+
+    def handle(self, cls, context, required, *args, **kwargs):
+        """
+        Runs all handlers registered for cls in sequence. *args are sent to the handler as arguments.
+
+        Returns a list of the handlers that were executed
+        """
+        logger.info("Handling action {}".format(cls))
+
+        ret = list()
+        if required:
+            self.require_handler(cls)
+        handlers = self.handlers[cls]
+        logger.debug("Handlers found for '{}': '{}'".format(cls, handlers))
+
+        for handler in handlers:
+            # TODO: the plugins manager should have an instance of the app
+
+            from clims.services import ioc
+            instance = handler(context, ioc.app)
+            ret.append(instance)
+            logger.debug("Executing handle on '{}'".format(instance))
+            instance.handle(*args, **kwargs)
+        return ret
+
+    def load_handlers(self, mod):
+        """
+        Loads all handlers found in this module or submodules. This only searches for
+        implementations, but semantics about what may be used are applied after all handlers
+        have been loaded for the application and should be taken care of by the caller of this
+        method
+        """
+
+        def is_candidate(member, handler_type):
+            # Returns True if the class is a valid implementation of the handler_type
+            return (inspect.isclass(member) and
+                    (not inspect.isabstract(member)) and
+                    issubclass(member, handler_type) and
+                    member != handler_type)
+
+        def find_implementations_in(mod_name, handler_type):
+            mod = importlib.import_module(mod_name)
+            clsmembers = inspect.getmembers(mod, lambda member: is_candidate(member, handler_type))
+            clsmembers = set([member for name, member in clsmembers])
+            logger.debug("Subclasses of '{}' in '{}': {}".format(handler_type, mod_name, clsmembers))
+            return clsmembers
+
+        def find_all_implementations(handler_type):
+            # Finds all implementations of `handler_type` in `mod` or any submodule of `mod`
+            ret = set()
+            ret.update(find_implementations_in(mod.__name__, handler_type))
+            for _, mod_name, _ in pkgutil.iter_modules(path=mod.__path__, prefix=mod.__name__ + "."):
+                ret.update(find_implementations_in(mod_name, handler_type))
+            return ret
+
+        for handler_type in self.handlers.keys():
+            logger.debug("Searching for implementations of {}".format(handler_type))
+            self.handlers[handler_type].update(find_all_implementations(handler_type))
+
+    def to_handler_config(self):
+        """
+        Returns a YML view of the state of handlers
+        """
+        return yaml.dump(
+            {utils.class_full_name(handler): [utils.class_full_name(c)
+                for c in impls] for handler, impls in self.handlers.items()},
+            default_flow_style=False
+        )
+
+    def validate(self):
+        """
+        Should be called after all handlers that will be used have been loaded.
+        """
+
+        logger.info("Validating 'unique' role for handlers")
+
+        for handler_type, impls in self.handlers.items():
+            if handler_type.unique_registration and len(impls) > 1:
+                raise MultipleHandlersNotAllowed("Handler type '{}' requires there to be only "
+                        "one implementation but found: '{}'".format(handler_type, impls))
+
+        """
+        TODO: Add the rule that only leaf handlers can be used. So if we have the following
+        structure, as an example:
+            PluginA:
+                ImplOfX(X)
+                ImplOfY(Y)
+            PluginB:
+                ImplOfY2(ImplOfY)
+
+        ImplOfY2 from PluginB should be used but not ImplOfY from PluginA.
+
+        This would probably be more expected than if both handlers would be used, but
+        could also lead to unexpected situations, so it's still being discussed by the team.
+        """
+
+
+@six.add_metaclass(abc.ABCMeta)
 class Handler(object):
     """
     The base class for handlers that are defined by plugins.
@@ -50,6 +203,13 @@ class Handler(object):
 
         # Warnings or info messages that should be shown to the user
         self.validation_issues = list()
+
+        # Give simple access to the logging methods
+        self.logger = logging.getLogger(utils.class_full_name(self.__class__))
+        self.debug = self.logger.debug
+        self.info = self.logger.info
+        self.warning = self.logger.warning
+        self.error = self.logger.error
 
     @property
     def has_validation_errors(self):
@@ -97,6 +257,7 @@ class Handler(object):
         raise PluginValidationError(msg, self.validation_issues)
 
 
+@six.add_metaclass(abc.ABCMeta)
 class SubstancesValidationHandler(Handler):
     """
     Executed when a user submits a batch of substances, e.g. a list of samples
@@ -109,6 +270,7 @@ class SubstancesValidationHandler(Handler):
         pass
 
 
+@six.add_metaclass(abc.ABCMeta)
 class SubstancesSubmissionHandler(Handler):
     """
     Executed when a user submits a batch of substances, e.g. a list of samples
@@ -121,6 +283,7 @@ class SubstancesSubmissionHandler(Handler):
         pass
 
 
+@six.add_metaclass(abc.ABCMeta)
 class SubstancesSubmissionFileDemoHandler(Handler):
     """
     Executed when the user requests to create a demo file.
@@ -131,7 +294,18 @@ class SubstancesSubmissionFileDemoHandler(Handler):
 
     demo_file_name = None  # The name of the file
 
-    def handle(file_type):
+    def handle(self, file_type):
         # TODO: file_type should be a string identifier that the user can define
         # in the plugin
+        pass
+
+
+@six.add_metaclass(abc.ABCMeta)
+class CreateExampleDataHandler(Handler):
+    """
+    Executes when a user runs `lims createexampledata`
+    """
+    unique_registration = False
+
+    def handle(self):
         pass
