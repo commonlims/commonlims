@@ -5,3 +5,9 @@ export function userDisplayName(user) {
   }
   return displayName;
 }
+
+export function showRounded(value, decimals = 2) {
+  // locale=undefine shows the number format of browser
+  const x = new Intl.NumberFormat(undefined, {maximumFractionDigits: decimals});
+  return x.format(value);
+}
