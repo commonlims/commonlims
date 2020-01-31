@@ -140,12 +140,14 @@ def pytest_configure(config):
     patcher.start()
 
     from sentry.runner.initializer import (
-        bootstrap_options, configure_structlog, initialize_receivers, fix_south,
+        bootstrap_options, initialize_receivers, fix_south,
         bind_cache_to_option_store, setup_services
     )
 
+    from clims.logs import configure_logging
+
     bootstrap_options(settings)
-    configure_structlog()
+    configure_logging()
     fix_south(settings)
 
     import django
