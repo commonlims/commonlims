@@ -55,7 +55,7 @@ def log_options(default=None):
             '-l',
             default=default,
             help='Global logging level. Use wisely.',
-            envvar='SENTRY_LOG_LEVEL',
+            envvar='CLIMS_LOG_LEVEL',
             type=CaseInsensitiveChoice(LOG_LEVELS)
         )
         @click.option(
@@ -67,7 +67,7 @@ def log_options(default=None):
         )
         def inner(ctx, loglevel=None, logformat=None, *args, **kwargs):
             if loglevel:
-                os.environ['SENTRY_LOG_LEVEL'] = loglevel
+                os.environ['CLIMS_LOG_LEVEL'] = loglevel
             if logformat:
                 os.environ['SENTRY_LOG_FORMAT'] = logformat.lower()
             return ctx.invoke(f, *args, **kwargs)

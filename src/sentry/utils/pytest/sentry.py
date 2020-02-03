@@ -16,6 +16,8 @@ TEST_ROOT = os.path.normpath(
 
 
 def pytest_configure(config):
+    if config.option.log_level:
+        os.environ['CLIMS_LOG_LEVEL'] = config.option.log_level
     # HACK: Only needed for testing!
     os.environ.setdefault('_SENTRY_SKIP_CONFIGURATION', '1')
 
