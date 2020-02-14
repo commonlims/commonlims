@@ -43,4 +43,20 @@ services:
   camunda:
     ports:
       - 8080:8080
-    image: camunda/camunda-bpm-platform:latest
+    image: camunda/camunda-bpm-platform:${CAMUNDA_VERSION}
+    environment:
+      DB_DRIVER: org.postgresql.Driver
+      DB_URL: jdbc:postgresql://clims_db/clims
+      DB_USERNAME: "${CLIMS_POSTGRES_USER}"
+      DB_PASSWORD: "${CLIMS_POSTGRES_PASSWORD}"
+  # Instance for integration tests against Camunda, so we can delete test data before test runs
+  # without affecting the instance we develop against.
+  test_camunda:
+    ports:
+      - 8081:8080
+    image: camunda/camunda-bpm-platform:${CAMUNDA_VERSION}
+    environment:
+      DB_DRIVER: org.postgresql.Driver
+      DB_URL: jdbc:postgresql://clims_test_db/test_clims
+      DB_USERNAME: "${TEST_CLIMS_POSTGRES_USER}"
+      DB_PASSWORD: "${TEST_CLIMS_POSTGRES_PASSWORD}"
