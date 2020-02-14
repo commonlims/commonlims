@@ -51,14 +51,20 @@ def main(role, create_role, print_variables):
     passw = passw.strip()
     if print_variables:
         prefix = role.upper()
-        print("{0}_POSTGRES_DB={1}; export {0}_POSTGRES_DB".format(prefix, role))  # noqa
-        print("{0}_POSTGRES_USER={1}; export {0}_POSTGRES_USER".format(prefix, role))  # noqa
-        print("{0}_POSTGRES_PASSWORD={1}; export {0}_POSTGRES_PASSWORD".format(prefix, passw))  # noqa
+        print("{0}_POSTGRES_DB={1}; export {0}_POSTGRES_DB".format(  # noqa
+            prefix, role))
+        print("{0}_POSTGRES_USER={1}; export {0}_POSTGRES_USER".format(  # noqa
+            prefix, role))
+        print(  # noqa
+            "{0}_POSTGRES_PASSWORD={1}; export {0}_POSTGRES_PASSWORD".format(
+                prefix, passw))
 
     if create_role:
-        psql("DROP ROLE IF EXISTS {0}; CREATE ROLE {0} WITH LOGIN;".format(role))
+        psql("DROP ROLE IF EXISTS {0}; CREATE ROLE {0} WITH LOGIN;".format(
+            role))
         psql("ALTER ROLE {} WITH SUPERUSER;".format(role))
-        psql("ALTER ROLE {} WITH LOGIN ENCRYPTED PASSWORD '{}'".format(role, passw))
+        psql("ALTER ROLE {} WITH LOGIN ENCRYPTED PASSWORD '{}'".format(
+            role, passw))
     set_permissions()
 
 
@@ -68,10 +74,16 @@ def set_permissions():
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('role', help='the database role')
-parser.add_argument('--create-role', dest='create_role', action='store_true',
-        help='if present, a role will be created in the database with the same password')
-parser.add_argument('--print', dest='print_variables', action='store_true',
-        help='print the variables to be set to stdout')
+parser.add_argument(
+    '--create-role',
+    dest='create_role',
+    action='store_true',
+    help='if present, a role will be created in the database with the same password'
+)
+parser.add_argument('--print',
+                    dest='print_variables',
+                    action='store_true',
+                    help='print the variables to be set to stdout')
 
 args = parser.parse_args()
 main(args.role, args.create_role, args.print_variables)

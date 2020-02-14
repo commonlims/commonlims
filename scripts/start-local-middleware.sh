@@ -4,6 +4,8 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+export CAMUNDA_VERSION=7.12.0
+
 # Check if docker is installed and of the expected version
 ${DIR}/version-check.py docker
 
@@ -31,3 +33,6 @@ while ! nc -z localhost 5432 </dev/null; do sleep 1; done
 
 echo "Waiting for postgres (5433) to respond..."
 while ! nc -z localhost 5433 </dev/null; do sleep 1; done
+
+echo "--> Setting up Camunda"
+$DIR/.././middleware/camunda/setup.sh

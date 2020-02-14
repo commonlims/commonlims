@@ -83,6 +83,10 @@ NOTE: For the time being, Camunda's data is kept separately, but that's just for
 
 More info: https://www.postgresql.org/
 
+### Access
+
+The postgresql instance is set up when you run `make middleware`. Note that if you need to access the database with the `psql` tool, you must add `-h localhost` to your command. This is because you're accessing the database with TCP rather than inter process communication (Unix domain sockets).
+
 ## Redis
 
 Redis is used for caching and message broking.
