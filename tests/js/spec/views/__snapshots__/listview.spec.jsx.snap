@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`instantiate listview listView according to snapshot 1`] = `
+ListView {
+  "context": Object {},
+  "props": Object {
+    "allVisibleSelected": false,
+    "canSelect": false,
+    "columns": Array [
+      Object {
+        "Header": "Sample name",
+        "accessor": "name",
+        "aggregate": [Function],
+        "id": "name",
+      },
+      Object {
+        "Header": "Container",
+        "accessor": [Function],
+        "id": "container",
+      },
+      Object {
+        "Header": "Sample Type",
+        "accessor": [Function],
+        "id": "sample_type",
+      },
+    ],
+    "dataById": Object {
+      "1": Object {
+        "id": 1,
+        "isGroupHeader": true,
+        "name": "Zombie brain",
+      },
+    },
+    "errorMessage": "",
+    "listActionBar": Object {},
+    "loading": false,
+    "selectedIds": Immutable.Set [],
+    "toggleAll": [MockFunction],
+    "toggleSingle": [MockFunction],
+    "visibleIds": Array [
+      1,
+    ],
+  },
+  "refs": Object {},
+  "state": Object {
+    "expandedRows": Array [],
+  },
+  "updater": Updater {
+    "_callbacks": Array [],
+    "_renderer": ReactShallowRenderer {
+      "_context": Object {},
+      "_element": <ListView
+        allVisibleSelected={false}
+        canSelect={false}
+        columns={
+          Array [
+            Object {
+              "Header": "Sample name",
+              "accessor": "name",
+              "aggregate": [Function],
+              "id": "name",
+            },
+            Object {
+              "Header": "Container",
+              "accessor": [Function],
+              "id": "container",
+            },
+            Object {
+              "Header": "Sample Type",
+              "accessor": [Function],
+              "id": "sample_type",
+            },
+          ]
+        }
+        dataById={
+          Object {
+            "1": Object {
+              "id": 1,
+              "isGroupHeader": true,
+              "name": "Zombie brain",
+            },
+          }
+        }
+        errorMessage=""
+        listActionBar={Object {}}
+        loading={false}
+        selectedIds={Immutable.Set []}
+        toggleAll={[MockFunction]}
+        toggleSingle={[MockFunction]}
+        visibleIds={
+          Array [
+            1,
+          ]
+        }
+      />,
+      "_forcedUpdate": false,
+      "_instance": [Circular],
+      "_newState": null,
+      "_rendered": <Panel>
+        Object {}
+        <PanelBody
+          direction="column"
+          disablePadding={true}
+          flex={false}
+        >
+          <Styles>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <div />
+                  </th>
+                  <th>
+                    <ColumnHeader>
+                      Sample name
+                    </ColumnHeader>
+                  </th>
+                  <th>
+                    <ColumnHeader>
+                      Container
+                    </ColumnHeader>
+                  </th>
+                  <th>
+                    <ColumnHeader>
+                      Sample Type
+                    </ColumnHeader>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <CaretRight />
+                  </td>
+                  <td>
+                    Zombie brain
+                  </td>
+                  <td />
+                  <td />
+                </tr>
+              </tbody>
+            </table>
+          </Styles>
+        </PanelBody>
+      </Panel>,
+      "_rendering": false,
+      "_updater": [Circular],
+    },
+  },
+}
+`;

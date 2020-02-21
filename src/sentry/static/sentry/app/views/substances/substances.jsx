@@ -82,36 +82,49 @@ class Substances extends React.Component {
       {
         Header: 'Container',
         id: 'container',
-        accessor: d => (d.location ? d.location.container.name : '<No location>'),
+        accessor: d =>
+          d.isGroupHeader
+            ? null
+            : d.location ? d.location.container.name : '<No location>',
       },
       {
         Header: 'Index',
         id: 'index',
-        accessor: d => (d.location ? d.location.index : '<No location>'),
+        accessor: d =>
+          d.isGroupHeader ? null : d.location ? d.location.index : '<No location>',
         aggregate: vals => '',
       },
       {
         Header: 'Volume',
         id: 'volume',
         accessor: d =>
-          d.properties.volume ? showRounded(d.properties.volume.value) : null,
+          d.isGroupHeader
+            ? null
+            : d.properties && d.properties.volume
+              ? showRounded(d.properties.volume.value)
+              : null,
         aggregate: vals => '',
       },
       {
         Header: 'Sample Type',
         id: 'sample_type',
-        accessor: d => (d.properties.sample_type ? d.properties.sample_type.value : null),
+        accessor: d =>
+          d.isGroupHeader
+            ? null
+            : d.properties && d.properties.sample_type
+              ? d.properties.sample_type.value
+              : null,
       },
       {
         Header: 'Priority',
         id: 'priority',
-        accessor: d => d.priority,
+        accessor: d => (d.isGroupHeader ? null : d.priority),
         aggregate: vals => '',
       },
       {
         Header: 'Waiting',
         id: 'days_waiting',
-        accessor: d => d.days_waiting,
+        accessor: d => (d.isGroupHeader ? null : d.days_waiting),
       },
     ];
   }
