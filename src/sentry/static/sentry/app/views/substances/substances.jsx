@@ -40,7 +40,8 @@ class Substances extends React.Component {
   }
 
   onSearch(search, groupBy, cursor) {
-    this.props.substanceSearchEntriesGet(search, groupBy, cursor);
+    const isGroupHeader = groupBy !== 'substance';
+    this.props.substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader);
 
     // Add search to history
     const location = this.props.location;
@@ -235,8 +236,8 @@ const mapStateToProps = state => {
 // TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
 // creators name for consistency.
 const mapDispatchToProps = dispatch => ({
-  substanceSearchEntriesGet: (query, groupBy, cursor) =>
-    dispatch(substanceSearchEntriesGet(query, groupBy, cursor)),
+  substanceSearchEntriesGet: (query, groupBy, cursor, isGroupHeader) =>
+    dispatch(substanceSearchEntriesGet(query, groupBy, cursor, isGroupHeader)),
   substanceSearchEntriesToggleSelectAll: doSelect =>
     dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
   substanceSearchEntryToggleSelect: (id, doSelect) =>
