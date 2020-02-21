@@ -122,6 +122,8 @@ class Substances extends React.Component {
 
   onGroup(e) {
     this.setState({groupBy: {value: e}});
+    const {search, cursor} = this.props.substanceSearchEntry;
+    this.onSearch(search, e, cursor);
   }
 
   onSort(e) {}
