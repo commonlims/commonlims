@@ -56,10 +56,6 @@ setup-git:
 	pre-commit install
 	@echo ""
 
-setup-camunda:
-	@echo "--> Setting up Camunda"
-	./middleware/camunda/setup.sh
-
 update-submodules:
 	@echo "--> Updating git submodules"
 	git submodule init
