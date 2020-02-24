@@ -1,4 +1,3 @@
-import merge from 'lodash/merge';
 import {Set} from 'immutable';
 
 import {
@@ -49,16 +48,23 @@ const substanceSearchEntry = (state = initialState, action) => {
       // The action provides us with the raw data as a list, here we turn it into
       // a dictionary and then update the store's byIds as required.
       const byIds = {};
+      let i = 1;
       for (const entry of action.substanceSearchEntries) {
-        byIds[entry.id] = entry;
+        const groupedEntry = {
+          id: i++,
+          name: entry,
+        };
+        const adaptedEntry = action.isGroupHeader ? groupedEntry : entry;
+        adaptedEntry.isGroupHeader = action.isGroupHeader;
+        byIds[adaptedEntry.id] = adaptedEntry;
       }
-      const visibleIds = action.substanceSearchEntries.map(x => x.id);
+      const visibleIds = Object.keys(byIds).map(Number);
 
       return {
         ...state,
         errorMessage: null,
         loading: false,
-        byIds: merge({}, state.byIds, byIds),
+        byIds,
         visibleIds,
         pageLinks: action.link,
       };

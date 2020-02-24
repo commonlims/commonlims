@@ -43,6 +43,33 @@ export function SubstanceSearchEntry(groupBy, id) {
   throw Error('Unknown groupBy: ' + groupBy);
 }
 
+function GroupedEntryFromReducer(groupBy, id) {
+  return {
+    id,
+    name: groupBy + id,
+  };
+}
+
+function SubstanceEntryFromReducer(groupBy, id, isGroupHeader) {
+  let entry = null;
+  if (!isGroupHeader) {
+    entry = SubstanceSearchEntry(groupBy, id);
+  } else {
+    entry = GroupedEntryFromReducer(groupBy, id);
+  }
+  entry.isGroupHeader = isGroupHeader;
+  return entry;
+}
+
+export function SubstanceEntriesFromReducer(count, groupBy) {
+  const ret = [];
+  const isGroupHeader = groupBy !== 'sample';
+  for (let i = 0; i < count; i++) {
+    ret.push(SubstanceEntryFromReducer(groupBy, i + 1, isGroupHeader));
+  }
+  return ret;
+}
+
 export function SubstanceSearchEntries(count, groupBy) {
   const ret = [];
   for (let i = 0; i < count; i++) {

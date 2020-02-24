@@ -39,25 +39,75 @@ describe('substance reducer', () => {
     });
   });
 
-  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS', () => {
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for not-grouped', () => {
+    // Arrange
     const prevState = {
       ...initialState,
       loading: true,
       errorMessage: 'oops',
     };
 
-    const nextState = substanceSearchEntry(prevState, {
+    const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
-      substanceSearchEntries: mockResponseNoGroup,
+      substanceSearchEntries: JSON.parse(JSON.stringify(mockResponseNoGroup)),
+      isGroupHeader: false,
       link: 'some-link',
-    });
+    };
 
+    // Act
+    const nextState = substanceSearchEntry(prevState, action);
+
+    // Assert
+
+    const responseFromReducer = TestStubs.SubstanceEntriesFromReducer(2, 'sample');
+    const mockedByIds = keyBy(responseFromReducer, entry => entry.id);
     expect(nextState).toEqual({
       ...prevState,
       errorMessage: null,
       loading: false,
       visibleIds: [1, 2],
-      byIds: mockResponseNoGroupById,
+      byIds: mockedByIds,
+      pageLinks: 'some-link',
+    });
+  });
+
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for grouped', () => {
+    // Arrange
+    const mockResponseGrouped = ['my_sample_type'];
+
+    const action = {
+      type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
+      substanceSearchEntries: JSON.parse(JSON.stringify(mockResponseGrouped)),
+      link: 'some-link',
+      isGroupHeader: true,
+    };
+
+    const prevState = {
+      ...initialState,
+      loading: true,
+      errorMessage: 'oops',
+    };
+
+    // Act
+    const nextState = substanceSearchEntry(prevState, action);
+
+    // Assert
+    const mockedResponseFromReducer = [
+      {
+        id: 1,
+        name: 'my_sample_type',
+        isGroupHeader: true,
+      },
+    ];
+
+    const mockedByIds = keyBy(mockedResponseFromReducer, entry => entry.id);
+
+    expect(nextState).toEqual({
+      ...prevState,
+      errorMessage: null,
+      loading: false,
+      visibleIds: [1],
+      byIds: mockedByIds,
       pageLinks: 'some-link',
     });
   });
