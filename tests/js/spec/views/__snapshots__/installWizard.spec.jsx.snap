@@ -5,10 +5,10 @@ exports[`InstallWizard renders 1`] = `
   onConfigured={[MockFunction]}
 >
   <SideEffect(DocumentTitle)
-    title="Setup Sentry"
+    title="Setup Common LIMS"
   >
     <DocumentTitle
-      title="Setup Sentry"
+      title="Setup Common LIMS"
     >
       <div
         className="app"
@@ -115,7 +115,7 @@ exports[`InstallWizard renders 1`] = `
                     allowEmpty={false}
                     component={[Function]}
                     default="root@localhost"
-                    defaultValue="sentry@localhost"
+                    defaultValue="clims@localhost"
                     disabled={false}
                     disabledReason={null}
                     help="Email address to be used in From for all outbound email."
@@ -146,7 +146,7 @@ exports[`InstallWizard renders 1`] = `
                           onChange={[Function]}
                           required={true}
                           type="email"
-                          value="sentry@localhost"
+                          value="clims@localhost"
                         />
                         <p
                           className="help-block"
@@ -347,187 +347,6 @@ exports[`InstallWizard renders 1`] = `
                       </div>
                     </div>
                   </BooleanField>
-                </fieldset>
-                <fieldset
-                  key="auth"
-                >
-                  <legend>
-                    Authentication
-                  </legend>
-                  <BooleanField
-                    allowEmpty={true}
-                    component={[Function]}
-                    default={false}
-                    defaultValue={false}
-                    disabled={false}
-                    disabledReason={null}
-                    help="Allow anyone to create an account and access this Sentry installation."
-                    hideErrorMessage={false}
-                    isSet={true}
-                    key="auth.allow-registration"
-                    label="Allow Registration"
-                    name="auth.allow-registration"
-                    required={false}
-                  >
-                    <div
-                      className="control-group checkbox"
-                    >
-                      <div
-                        className="controls"
-                      >
-                        <label
-                          className="control-label"
-                        >
-                          <input
-                            checked={false}
-                            disabled={false}
-                            id="id-auth.allow-registration"
-                            onChange={[Function]}
-                            type="checkbox"
-                          />
-                          Allow Registration
-                        </label>
-                        <p
-                          className="help-block"
-                        >
-                          Allow anyone to create an account and access this Sentry installation.
-                        </p>
-                      </div>
-                    </div>
-                  </BooleanField>
-                </fieldset>
-                <fieldset
-                  key="beacon"
-                >
-                  <legend>
-                    Beacon
-                  </legend>
-                  <RadioBooleanField
-                    allowEmpty={true}
-                    component={[Function]}
-                    default={false}
-                    disabled={false}
-                    disabledReason={null}
-                    help={
-                      <span>
-                        <span>
-                          If enabled, any stats reported to sentry.io will exclude identifying information (such as your administrative email address). By anonymizing your installation the Sentry team will be unable to contact you about security updates. For more information on what data is sent to Sentry, see the 
-                        </span>
-                        <a
-                          href="https://docs.sentry.io/server/beacon/"
-                        >
-                          <span>
-                            documentation
-                          </span>
-                        </a>
-                        <span>
-                          .
-                        </span>
-                      </span>
-                    }
-                    hideErrorMessage={false}
-                    isSet={true}
-                    key="beacon.anonymous"
-                    label="Usage Statistics"
-                    name="beacon.anonymous"
-                    noLabel="Send my contact information along with usage statistics"
-                    required={false}
-                    yesFirst={false}
-                    yesLabel="Please keep my usage information anonymous"
-                  >
-                    <div
-                      className="control-group"
-                    >
-                      <div
-                        className="controls"
-                      >
-                        <label
-                          className="control-label"
-                          htmlFor="id-beacon.anonymous"
-                        >
-                          Usage Statistics
-                        </label>
-                        <p
-                          className="help-block"
-                        >
-                          <span
-                            key="5"
-                          >
-                            <span
-                              key="0"
-                            >
-                              If enabled, any stats reported to sentry.io will exclude identifying information (such as your administrative email address). By anonymizing your installation the Sentry team will be unable to contact you about security updates. For more information on what data is sent to Sentry, see the 
-                            </span>
-                            <a
-                              href="https://docs.sentry.io/server/beacon/"
-                              key="2"
-                            >
-                              <span
-                                key="1"
-                              >
-                                documentation
-                              </span>
-                            </a>
-                            <span
-                              key="3"
-                            >
-                              .
-                            </span>
-                          </span>
-                        </p>
-                        <div
-                          className="control-group radio-boolean"
-                        >
-                          <div
-                            className="radio"
-                            key="no"
-                          >
-                            <label
-                              style={
-                                Object {
-                                  "fontWeight": "normal",
-                                }
-                              }
-                            >
-                              <input
-                                checked={false}
-                                disabled={false}
-                                name="beacon.anonymous"
-                                onChange={[Function]}
-                                type="radio"
-                                value="false"
-                              />
-                               
-                              Send my contact information along with usage statistics
-                            </label>
-                          </div>
-                          <div
-                            className="radio"
-                            key="yes"
-                          >
-                            <label
-                              style={
-                                Object {
-                                  "fontWeight": "normal",
-                                }
-                              }
-                            >
-                              <input
-                                checked={false}
-                                disabled={false}
-                                name="beacon.anonymous"
-                                onChange={[Function]}
-                                type="radio"
-                                value="true"
-                              />
-                               
-                              Please keep my usage information anonymous
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </RadioBooleanField>
                 </fieldset>
                 <div
                   className="form-actions align-right"

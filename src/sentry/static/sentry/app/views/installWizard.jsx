@@ -69,7 +69,7 @@ export default class InstallWizard extends AsyncView {
   }
 
   getTitle() {
-    return t('Setup Sentry');
+    return t('Setup Common LIMS');
   }
 
   render() {
