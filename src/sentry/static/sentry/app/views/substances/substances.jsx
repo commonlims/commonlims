@@ -79,7 +79,6 @@ class Substances extends React.Component {
         id: 'name',
         accessor: 'name',
         fontstyle: d => (d.isGroupHeader ? 'italic' : 'normal'),
-        aggregate: vals => '',
       },
       {
         Header: 'Container',
@@ -94,7 +93,6 @@ class Substances extends React.Component {
         id: 'index',
         accessor: d =>
           d.isGroupHeader ? null : d.location ? d.location.index : '<No location>',
-        aggregate: vals => '',
       },
       {
         Header: 'Volume',
@@ -105,7 +103,6 @@ class Substances extends React.Component {
             : d.properties && d.properties.volume
               ? showRounded(d.properties.volume.value)
               : null,
-        aggregate: vals => '',
       },
       {
         Header: 'Sample Type',
@@ -121,7 +118,6 @@ class Substances extends React.Component {
         Header: 'Priority',
         id: 'priority',
         accessor: d => (d.isGroupHeader ? null : d.priority),
-        aggregate: vals => '',
       },
       {
         Header: 'Waiting',
