@@ -78,6 +78,7 @@ class Substances extends React.Component {
         Header: 'Sample name',
         id: 'name',
         accessor: 'name',
+        fontstyle: d => (d.isGroupHeader ? 'italic' : 'normal'),
         aggregate: vals => '',
       },
       {
