@@ -4,7 +4,9 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from clims.plugins.demo.models import ExampleSample, ExampleProject
+from clims.plugins.demo.models import ExampleSample, ExampleProject, Plate96
+from clims.plugins.demo import DemoPlugin
+from clims.models.plugin_registration import PluginRegistration
 
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,14 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         Any plugin that implements this handler will supply demo data
         """
 
+        # In case create example data is run on its own, (not within make fresh)
+        # the plugin registration is needed
+        demo_plugin_full_name = '{}.{}'.format(DemoPlugin.__module__, DemoPlugin.__name__)
+        demo_plugin, _ = PluginRegistration.objects.get_or_create(
+            name=demo_plugin_full_name,
+            version='1.0.0')
+        self.app.extensibles.register(demo_plugin, Plate96)
+
         logger.info("Creating example data for the builtin Demo plugin")
 
         created = True
@@ -30,9 +40,24 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             logger.info("Demo data has already been imported")
             return
 
+        available_containers = []
+        for ix in range(3):
+            id = ix + 1
+            # id = uuid4().hex
+            name = 'container-{}'.format(id)
+            try:
+                container = self.app.containers.get(name=name)
+            except self.app.containers.DoesNotExist:
+                container = Plate96(name=name, organization=self.context.organization)
+                container.save()
+                logger.info('Created container: {}'.format(container.name))
+            available_containers.append(container)
+
         available_sample_types = ["Vampire Fang", "Zombie Brain", "Hydra Claw"]
-        for ix in range(100):
-            name = "demoplugin-sample-{}".format(ix + 1)
+        for _ix in range(100):
+            # id = ix + 1
+            id = random.randint(1, 10000000)
+            name = "demoplugin-sample-{}".format(id)
             sample = ExampleSample(name=name,
                                    organization=self.context.organization,
                                    moxy=random.randint(1, 100),
@@ -41,6 +66,14 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                                    sample_type=random.choice(available_sample_types))
             sample.save()
             logger.info("Created sample: {}".format(sample.name))
+            plate = random.choice(available_containers)
+            if not sample.location:
+                plate.append(sample)
+                sample.save()
+                logger.info("Appended sample: {}".format(sample.name))
+
+        for plate in available_containers:
+            plate.save()
 
         pis = ["Rosalind Franklin", "Charles Darwin", "Gregor Mendel"]
         for _ in range(100):
