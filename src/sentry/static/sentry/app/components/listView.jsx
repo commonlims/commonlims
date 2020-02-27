@@ -126,11 +126,9 @@ class ListView extends React.Component {
             <table>
               <thead>
                 <tr>
-                  {
-                    <th>
-                      <div />
-                    </th>
-                  }
+                  <th>
+                    <div />
+                  </th>
                   {this.props.canSelect && (
                     <th>
                       <Checkbox
