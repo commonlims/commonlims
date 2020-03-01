@@ -1,0 +1,78 @@
+// Auto-generated with `lims django codegen --redux`
+
+import axios from 'axios';
+
+////// List of {{ resource }}
+export const GET_{{ resource_const }}_LIST_REQUEST = 'GET_{{ resource_const }}_LIST_REQUEST';
+export const get{{ resource }}ListRequest = () => {
+  return {
+    type: GET_{{ resource_const }}_LIST_REQUEST,
+  };
+};
+
+export const GET_{{ resource_const }}_LIST_SUCCESS = 'GET_{{ resource_const }}_LIST_SUCCESS';
+export const get{{ resource }}ListSuccess = page => {
+  return {
+    type: GET_{{ resource_const }}_LIST_SUCCESS,
+    page,
+  };
+};
+
+export const GET_{{ resource_const }}_LIST_FAILURE = 'GET_{{ resource_const }}_LIST_FAILURE';
+export const get{{ resource }}ListFailure = err => ({
+  type: GET_{{ resource_const }}_LIST_FAILURE,
+  message: err,
+});
+
+export const get{{ resource }}List = ({{ ", ".join(list_parameters) }}) => dispatch => {
+  dispatch(get{{ resource }}ListRequest());
+  return axios
+    .get(`{{ list_endpoint }}`)
+    .then(res => dispatch(get{{ resource }}ListSuccess(res.data)))
+    .catch(err => dispatch(get{{ resource }}ListFailure(err)));
+};
+
+
+////// Fetch a single {{ resource }}
+export const GET_{{ resource_const }}_REQUEST = 'GET_{{ resource_const }}_REQUEST';
+export const get{{ resource }}Request = () => {
+  return {
+    type: GET_{{ resource_const }}_REQUEST,
+  };
+};
+
+export const GET_{{ resource_const }}_SUCCESS = 'GET_{{ resource_const }}_SUCCESS';
+export const get{{ resource }}Success = entry => {
+  return {
+    type: GET_{{ resource_const }}_SUCCESS,
+    entry,
+  };
+};
+
+export const GET_{{ resource_const }}_FAILURE = 'GET_{{ resource_const }}_FAILURE';
+export const get{{ resource }}Failure = err => ({
+  type: GET_{{ resource_const }}_FAILURE,
+  message: err,
+});
+
+export const get{{ resource }} = ({{ ", ".join(single_parameters) }}) => dispatch => {
+  dispatch(get{{ resource }}Request());
+
+  const params = {
+    {% for parameter in filter_for_single %}
+    {{ parameter }},
+    {% endfor %}
+  };
+  return axios
+    .get(`{{ single_endpoint }}`, {params})
+    .then(res => dispatch(get{{ resource }}Success(res.data{{ "[0]" if filter_for_single else "" }})))
+    .catch(err => dispatch(get{{ resource }}Failure(err)));
+};
+
+// Default dispatchToProps mapping for all actions created here, 1-1 mapping for all params
+export const map{{ resource }}DispatchToProps = dispatch => ({
+  get{{ resource }}: ({{ ", ".join(single_parameters) }}) => dispatch(
+    get{{ resource }}({{ ", ".join(single_parameters) }})),
+  get{{ resource }}List: ({{ ", ".join(list_parameters) }}) => dispatch(
+    get{{ resource }}List({{ ", ".join(list_parameters) }})),
+});
