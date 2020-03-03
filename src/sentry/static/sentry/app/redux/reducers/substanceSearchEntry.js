@@ -54,7 +54,7 @@ const substanceSearchEntry = (state = initialState, action) => {
           id: i++,
           name: entry,
         };
-        const adaptedEntry = action.isGroupHeader ? groupedEntry : entry;
+        const adaptedEntry = action.isGroupHeader ? groupedEntry : {...entry};
         adaptedEntry.isGroupHeader = action.isGroupHeader;
         byIds[adaptedEntry.id] = adaptedEntry;
       }
