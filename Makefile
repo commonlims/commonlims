@@ -193,58 +193,10 @@ lint-js:
 publish:
 	python setup.py sdist bdist_wheel upload
 
-
-.PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh
-
-
-############################
-# Halt, Travis stuff below #
-############################
-
-.PHONY: travis-noop
-travis-noop:
-	@echo "nothing to do here."
-
-.PHONY: travis-lint-sqlite travis-lint-postgres travis-lint-mysql travis-lint-acceptance travis-lint-snuba travis-lint-js travis-lint-cli travis-lint-dist
-travis-lint-sqlite: lint-python
-travis-lint-postgres: lint-python
-travis-lint-mysql: lint-python
-travis-lint-acceptance: travis-noop
-travis-lint-snuba: lint-python
-travis-lint-js: lint-js
-travis-lint-cli: travis-noop
-travis-lint-dist: travis-noop
-
-.PHONY: travis-test-sqlite travis-test-postgres travis-test-mysql travis-test-acceptance travis-test-snuba travis-test-js travis-test-cli travis-test-dist
-travis-test-sqlite: test-python
-travis-test-postgres: test-python
-travis-test-mysql: test-python
-travis-test-acceptance: test-acceptance
-travis-test-snuba: test-snuba
-travis-test-js: test-js
-travis-test-cli: test-cli
-travis-test-dist:
-	# NOTE: We quiet down output here to workaround an issue in travis that
-	# causes the build to fail with a EAGAIN when writing a large amount of
-	# data to STDOUT.
-	# See: https://github.com/travis-ci/travis-ci/issues/4704
-	SENTRY_BUILD=$(TRAVIS_COMMIT) CLIMS_LIGHT_BUILD=0 python setup.py -q sdist bdist_wheel
-	@ls -lh dist/
-
-.PHONY: scan-python travis-scan-sqlite travis-scan-postgres travis-scan-mysql travis-scan-acceptance travis-scan-snuba travis-scan-js travis-scan-cli travis-scan-dist
 scan-python:
 	@echo "--> Running Python vulnerability scanner"
 	$(PIP) install safety
 	bin/scan
 	@echo ""
 
-travis-scan-sqlite: scan-python
-travis-scan-postgres: scan-python
-travis-scan-mysql: scan-python
-travis-scan-acceptance: travis-noop
-travis-scan-snuba: scan-python
-travis-scan-js: travis-noop
-travis-scan-cli: travis-noop
-travis-scan-dist: travis-noop
-
-.PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh scan-python test-python-integration test-python-unit
+.PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh scan-python

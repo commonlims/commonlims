@@ -1,3 +1,5 @@
+![Common LIMS](https://github.com/commonlims/commonlims/workflows/Common%20LIMS/badge.svg)
+
 # About
 
 Common LIMS is a framework for building custom LIMS systems for labs. It's built using Python and Django in the backend and Javascript (React) in the frontend. Workflows are defined using BPMN notation and executed through the Camunda workflow engine.
