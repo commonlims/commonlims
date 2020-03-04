@@ -41,8 +41,8 @@ def load_extra_data(backend, details, response, uid, user, social_user=None,
     """Load extra data from provider and store it on current UserSocialAuth
     extra_data field.
     """
-    social_user = (social_user or
-                   UserSocialAuth.get_social_auth(backend.name, uid, user))
+    social_user = (social_user
+                   or UserSocialAuth.get_social_auth(backend.name, uid, user))
     if social_user:
         extra_data = backend.extra_data(user, uid, response, details)
         if kwargs.get('original_email') and 'email' not in extra_data:

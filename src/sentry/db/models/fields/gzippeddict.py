@@ -11,7 +11,6 @@ from __future__ import absolute_import, print_function
 import logging
 import six
 
-from django.conf import settings
 from django.db import models
 
 from sentry.utils.compat import pickle
@@ -56,8 +55,3 @@ class GzippedDictField(models.TextField):
 
 if hasattr(models, 'SubfieldBase'):
     GzippedDictField = six.add_metaclass(models.SubfieldBase)(GzippedDictField)
-
-if 'south' in settings.INSTALLED_APPS:
-    from south.modelsinspector import add_introspection_rules
-
-    add_introspection_rules([], ["^sentry\.db\.models\.fields\.gzippeddict\.GzippedDictField"])

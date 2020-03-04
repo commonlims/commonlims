@@ -36,7 +36,7 @@ scenarios = {}
 def simplify_regex(pattern):
     """Clean up urlpattern regexes into something somewhat readable by
     Mere Humans: turns something like
-    "^(?P<sport_slug>\w+)/athletes/(?P<athlete_slug>\w+)/$" into
+    "^(?P<sport_slug>\\w+)/athletes/(?P<athlete_slug>\\w+)/$" into
     "{sport_slug}/athletes/{athlete_slug}/"
     """
     pattern = optional_group_matcher.sub(lambda m: '[%s]' % m.group(1), pattern)

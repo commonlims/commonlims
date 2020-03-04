@@ -427,8 +427,8 @@ class ConsumerBasedOAuth(BaseOAuth):
         for unauthed_token in unauthed_tokens:
             token = Token.from_string(unauthed_token)
             if token.key == self.data.get('oauth_token', 'no-token'):
-                unauthed_tokens = list(set(unauthed_tokens) -
-                                       set([unauthed_token]))
+                unauthed_tokens = list(set(unauthed_tokens)
+                                       - set([unauthed_token]))
                 self.request.session[name] = unauthed_tokens
                 self.request.session.modified = True
                 break
@@ -576,8 +576,8 @@ class BaseOAuth2(BaseOAuth):
             return None
         state = self.request.session.get(self.AUTH_BACKEND.name + '_state')
         if state:
-            request_state = (self.data.get('state') or
-                             self.data.get('redirect_state'))
+            request_state = (self.data.get('state')
+                             or self.data.get('redirect_state'))
             if not request_state:
                 raise AuthMissingParameter(self, 'state')
             elif not state:
