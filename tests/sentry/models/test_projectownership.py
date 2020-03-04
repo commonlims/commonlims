@@ -10,8 +10,8 @@ from sentry.ownership.grammar import Rule, Owner, Matcher, dump_schema
 class ProjectOwnershipTestCase(TestCase):
     def assert_ownership_equals(self, o1, o2):
         assert (
-            sorted(o1[0]) == sorted(o2[0]) and
-            sorted(o1[1]) == sorted(o2[1])
+            sorted(o1[0]) == sorted(o2[0])
+            and sorted(o1[1]) == sorted(o2[1])
         )
 
     def test_get_owners_default(self):

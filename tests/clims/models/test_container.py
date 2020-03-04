@@ -75,12 +75,12 @@ class TestContainer(TestCase):
         assert len(by_row) == 8 * 12
         assert len(by_col) == 8 * 12
 
-        assert ([text_type(x) for x in by_row[0:13]] ==
-            ['A:1', 'A:2', 'A:3', 'A:4', 'A:5', 'A:6', 'A:7', 'A:8', 'A:9', 'A:10', 'A:11', 'A:12',
-             'B:1'])
-        assert ([text_type(x) for x in by_col[0:13]] ==
-            ['A:1', 'B:1', 'C:1', 'D:1', 'E:1', 'F:1', 'G:1', 'H:1',
-             'A:2', 'B:2', 'C:2', 'D:2', 'E:2'])
+        assert ([text_type(x) for x in by_row[0:13]]
+                == ['A:1', 'A:2', 'A:3', 'A:4', 'A:5', 'A:6', 'A:7',
+                    'A:8', 'A:9', 'A:10', 'A:11', 'A:12', 'B:1'])
+        assert ([text_type(x) for x in by_col[0:13]]
+                == ['A:1', 'B:1', 'C:1', 'D:1', 'E:1', 'F:1', 'G:1', 'H:1',
+                    'A:2', 'B:2', 'C:2', 'D:2', 'E:2'])
 
     def test_can_address_plate_with_zero_based_row_col(self):
         self.register_extensible(HairSampleContainer)

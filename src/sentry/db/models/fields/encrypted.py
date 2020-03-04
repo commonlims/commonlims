@@ -6,7 +6,6 @@ __all__ = (
 
 import six
 
-from django.conf import settings
 from django.db import models
 from django.db.models import CharField, TextField
 from jsonfield import JSONField
@@ -95,13 +94,3 @@ class EncryptedTextField(TextField):
 if hasattr(models, 'SubfieldBase'):
     EncryptedCharField = six.add_metaclass(models.SubfieldBase)(EncryptedCharField)
     EncryptedTextField = six.add_metaclass(models.SubfieldBase)(EncryptedTextField)
-
-if 'south' in settings.INSTALLED_APPS:
-    from south.modelsinspector import add_introspection_rules
-
-    add_introspection_rules(
-        [], ["^sentry\.db\.models\.fields\.encrypted\.EncryptedPickledObjectField"]
-    )
-    add_introspection_rules([], ["^sentry\.db\.models\.fields\.encrypted\.EncryptedCharField"])
-    add_introspection_rules([], ["^sentry\.db\.models\.fields\.encrypted\.EncryptedJsonField"])
-    add_introspection_rules([], ["^sentry\.db\.models\.fields\.encrypted\.EncryptedTextField"])
