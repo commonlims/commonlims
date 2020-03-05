@@ -33,11 +33,11 @@ class ValidationResults(object):
 
     @property
     def warnings(self):
-        return filter(lambda result: result.type == ValidationType.WARNING, self.results)
+        return [result for result in self.results if result.type == ValidationType.WARNING]
 
     @property
     def errors(self):
-        return filter(lambda result: result.type == ValidationType.ERROR, self.results)
+        return [result for result in self.results if result.type == ValidationType.ERROR]
 
     def __len__(self):
         return len(self.results)

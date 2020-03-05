@@ -17,7 +17,7 @@ from sentry.utils.safe import safe_execute
 def split_urls(value):
     if not value:
         return ()
-    return filter(bool, (url.strip() for url in value.splitlines()))
+    return list(filter(bool, (url.strip() for url in value.splitlines())))
 
 
 def validate_urls(value, **kwargs):

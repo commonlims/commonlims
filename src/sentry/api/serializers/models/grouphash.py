@@ -24,7 +24,7 @@ def get_latest_events(group_hash_list):
             event.event_id: event
             for event in Event.objects.filter(
                 project_id=project_id,
-                event_id__in=filter(None, event_id_list),
+                event_id__in=[_f for _f in event_id_list if _f],
             )
         }
         for group_hash, event_id in zip(group_hash_list_chunk, event_id_list):

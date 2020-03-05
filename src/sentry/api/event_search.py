@@ -134,7 +134,7 @@ class SearchVisitor(NodeVisitor):
     def visit_search(self, node, children):
         # there is a list from search_term and one from raw_search, so flatten them
         children = [child for group in children for child in group]
-        return filter(None, children)
+        return [_f for _f in children if _f]
 
     def visit_search_term(self, node, children):
         _, search_term, _ = children

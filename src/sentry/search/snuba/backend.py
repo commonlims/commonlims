@@ -219,17 +219,17 @@ class SnubaSearchBackend(ds.DjangoSearchBackend):
         # apparently `retention_window_start` can be None(?), so we need a
         # fallback.
         retention_date = max(
-            filter(None, [
+            [_f for _f in [
                 retention_window_start,
                 now - timedelta(days=90)
-            ])
+            ] if _f]
         )
 
         start = max(
-            filter(None, [
+            [_f for _f in [
                 retention_date,
                 parameters.get('date_from'),
-            ])
+            ] if _f]
         )
 
         end = max([
@@ -267,10 +267,10 @@ class SnubaSearchBackend(ds.DjangoSearchBackend):
             if missed_projects:
                 missing_counts = snuba.query(
                     start=max(
-                        filter(None, [
+                        [_f for _f in [
                             retention_window_start,
                             now - timedelta(days=90)
-                        ])
+                        ] if _f]
                     ),
                     end=now,
                     groupby=['project_id'],

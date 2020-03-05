@@ -82,7 +82,7 @@ def attach_foreignkey(objects, field):
 
     # Ensure values are unique, do not contain already present values, and are not missing
     # values specified in select_related
-    values = set(filter(None, (getattr(o, column) for o in objects)))
+    values = set([_f for _f in (getattr(o, column) for o in objects) if _f])
     if values:
         qs = model.objects
         if database:

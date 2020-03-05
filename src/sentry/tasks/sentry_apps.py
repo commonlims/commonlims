@@ -132,10 +132,10 @@ def process_resource_change(action, sender, instance_id, *args, **kwargs):
     if isinstance(instance, Group):
         org = instance.organization
 
-    installations = filter(
+    installations = list(filter(
         lambda i: event in i.sentry_app.events,
         org.sentry_app_installations.select_related('sentry_app'),
-    )
+    ))
 
     for installation in installations:
         send_webhooks(installation, event, data=serialize(instance))
@@ -229,7 +229,7 @@ def send_webhooks(installation, event, **kwargs):
         project_id__in=project_ids,
     )
 
-    for servicehook in filter(lambda s: event in s.events, servicehooks):
+    for servicehook in [s for s in servicehooks if event in s.events]:
         if not servicehook.created_by_sentry_app:
             continue
 

@@ -260,7 +260,7 @@ class KafkaEventStream(EventStream):
         def commit(partitions):
             results = consumer.commit(offsets=partitions, asynchronous=False)
 
-            errors = filter(lambda i: i.error is not None, results)
+            errors = [i for i in results if i.error is not None]
             if errors:
                 raise Exception(
                     'Failed to commit %s/%s partitions: %r' %

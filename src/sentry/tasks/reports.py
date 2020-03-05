@@ -710,18 +710,15 @@ def deliver_organization_user_report(timestamp, duration, organization_id, user_
     ]
 
     reports = dict(
-        filter(
-            lambda item: all(predicate(interval, item) for predicate in inclusion_predicates),
-            zip(
+        [item for item in zip(
+            projects,
+            backend.fetch(
+                timestamp,
+                duration,
+                organization,
                 projects,
-                backend.fetch(
-                    timestamp,
-                    duration,
-                    organization,
-                    projects,
-                ),
-            )
-        )
+            ),
+        ) if all(predicate(interval, item) for predicate in inclusion_predicates)]
     )
 
     if not reports:

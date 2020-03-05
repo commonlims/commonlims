@@ -63,7 +63,7 @@ class ProjectOwnership(Model):
 
         owners = {o for rule in rules for o in rule.owners}
 
-        return filter(None, list(resolve_actors(owners, project_id).values())), rules
+        return [_f for _f in list(resolve_actors(owners, project_id).values()) if _f], rules
 
 
 def resolve_actors(owners, project_id):

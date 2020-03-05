@@ -456,7 +456,7 @@ class SnubaTagStorage(TagStorage):
             'project_id': project_ids,
         }
         conditions = [
-            ['tags[sentry:user]', 'IN', filter(None, [eu.tag_value for eu in event_users])],
+            ['tags[sentry:user]', 'IN', [_f for _f in [eu.tag_value for eu in event_users] if _f]],
         ]
         aggregations = [['max', SEEN_COLUMN, 'last_seen']]
 
@@ -471,7 +471,7 @@ class SnubaTagStorage(TagStorage):
             'project_id': [eu.project_id for eu in event_users]
         }
         conditions = [
-            ['tags[sentry:user]', 'IN', filter(None, [eu.tag_value for eu in event_users])]
+            ['tags[sentry:user]', 'IN', [_f for _f in [eu.tag_value for eu in event_users] if _f]]
         ]
         aggregations = [
             ['count()', '', 'times_seen'],

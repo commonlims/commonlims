@@ -5,7 +5,7 @@ class HamiltonReader(object):
 
     def __init__(self, filecontents):
         self._delimiter = "\t"
-        rows = filter(lambda rw: len(rw) > 0, filecontents.split("\n"))
+        rows = [rw for rw in filecontents.split("\n") if len(rw) > 0]
         self.matrix = [row.split(self._delimiter) for row in rows]
         entries = [(rw[0], rw) for rw in self.matrix]
         self.dict_matrix = dict(entries)
