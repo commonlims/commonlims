@@ -199,7 +199,7 @@ urlpatterns = patterns('',
         name='clims-api-0-plugin-actions'
     ),
     url(
-        fmt('^projects/{org}/{project}/plugins/(?P<plugin_id>[^\/]+)/views/$'),
+        fmt(r'^projects/{org}/{project}/plugins/(?P<plugin_id>[^\/]+)/views/$'),
         PluginViewsEndpoint.as_view(),
         name='clims-api-0-plugin-views'
     ),

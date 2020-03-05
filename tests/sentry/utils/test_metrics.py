@@ -11,9 +11,9 @@ def test_timer_success():
         with timer('key', tags={'foo': True}) as tags:
             tags['bar'] = False
 
-        assert timing.call_count is 1
+        assert timing.call_count == 1
         args, kwargs = timing.call_args
-        assert args[0] is 'key'
+        assert args[0] == 'key'
         assert args[3] == {
             'foo': True,
             'bar': False,
@@ -31,9 +31,9 @@ def test_timer_failure():
             with timer('key', tags={'foo': True}):
                 raise ExpectedError
 
-        assert timing.call_count is 1
+        assert timing.call_count == 1
         args, kwargs = timing.call_args
-        assert args[0] is 'key'
+        assert args[0] == 'key'
         assert args[3] == {
             'foo': True,
             'result': 'failure',

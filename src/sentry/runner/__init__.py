@@ -119,7 +119,7 @@ def configure():
 
     # TODO(mattrobenolt): Surface this also as a CLI option?
     skip_service_validation = (
-        'SENTRY_SKIP_BACKEND_VALIDATION' in os.environ or
+        'CLIMS_SKIP_BACKEND_VALIDATION' in os.environ or
         'SENTRY_SKIP_SERVICE_VALIDATION' in os.environ
     )
     configure(ctx, py, yaml, skip_service_validation)

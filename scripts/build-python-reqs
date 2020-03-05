@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Tools that are required to run the rest of the build cycle
+
+pip install six
