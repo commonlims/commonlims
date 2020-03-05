@@ -23,7 +23,7 @@ def _get_git_revision(path):
     if not os.path.exists(os.path.join(path, '.git')):
         return None
     try:
-        revision = check_output(['git', 'rev-parse', 'HEAD'], cwd=path, env=os.environ)
+        revision = check_output(['git', 'rev-parse', 'HEAD'], cwd=path, env=os.environ).decode('ascii')
     except Exception:
         # binary didn't exist, wasn't on path, etc
         return None

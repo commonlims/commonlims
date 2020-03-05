@@ -148,7 +148,7 @@ class BaseBuildCommand(Command):
     def _run_command(self, cmd, env=None):
         log.debug('running [%s]' % (' '.join(cmd), ))
         try:
-            return check_output(cmd, cwd=self.work_path, env=env)
+            return check_output(cmd, cwd=self.work_path, env=env).decode('ascii')
         except Exception:
             log.error('command failed [%s] via [%s]' % (' '.join(cmd), self.work_path, ))
             raise

@@ -30,7 +30,7 @@ def main(level, to_file):
     # NOTE: The executed command is added to the log. Ensure sensitive data is filtered out if added
     # to any of the commands
     logging.info("Executing: {}".format(sys.argv))
-    results = subprocess.check_output(["pip", "freeze"])
+    results = subprocess.check_output(["pip", "freeze"]).decode('ascii')
     for result in results.splitlines():
         if "git+" in result:
             logging.info(result)

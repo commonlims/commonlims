@@ -26,7 +26,7 @@ def docker():
     Checks if docker is of the expected version
     """
     pattern = r"Docker version (\d+)\.(\d+)\.(\d+)"
-    version_string = check_output(["docker", "--version"])
+    version_string = check_output(["docker", "--version"]).decode('ascii')
     m = re.match(pattern, version_string)
     version = tuple(int(i) for i in m.groups())
     exit_if_not_within(version, (19, 3))

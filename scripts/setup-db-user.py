@@ -7,7 +7,7 @@ from subprocess import check_output, check_call
 
 
 def create_password():
-    return check_output("openssl rand -base64 32".split(" "))
+    return check_output("openssl rand -base64 32".split(" ")).decode('ascii')
 
 
 def pass_file_path():

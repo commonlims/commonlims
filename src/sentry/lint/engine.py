@@ -56,11 +56,9 @@ def get_files(path):
 
 
 def get_modified_files(path):
-    return [
-        s
-        for s in check_output(['git', 'diff-index', '--cached', '--name-only', 'HEAD']).split('\n')
-        if s
-    ]
+    git_command = ['git', 'diff-index', '--cached', '--name-only', 'HEAD']
+    result = check_output(git_command).decode('ascii').split('\n')
+    return [s for s in result if s]
 
 
 def get_files_for_list(file_list):
@@ -208,7 +206,7 @@ def is_prettier_valid(project_root, prettier_path):
             return False
 
     prettier_version = subprocess.check_output(
-        [prettier_path, '--version']).rstrip()
+        [prettier_path, '--version']).decode('ascii').rstrip()
     if prettier_version != package_version:
         print(  # noqa: B314
             u'[sentry.lint] Prettier is out of date: {} (expected {}). Please run `yarn install`.'.format(
@@ -327,7 +325,7 @@ def run_formatter(cmd, file_list, prompt_on_changes=True):
         return True
 
     # this is not quite correct, but it at least represents what would be staged
-    output = subprocess.check_output(['git', 'diff', '--color'] + file_list)
+    output = subprocess.check_output(['git', 'diff', '--color'] + file_list).decode('ascii')
     if output:
         print('[sentry.lint] applied changes from autoformatting')  # noqa: B314
         print(output)  # noqa: B314
