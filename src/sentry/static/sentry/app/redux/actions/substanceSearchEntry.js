@@ -30,11 +30,16 @@ export const substanceSearchEntriesGetRequest = (search, groupBy, cursor) => {
   };
 };
 
-export const substanceSearchEntriesGetSuccess = (substanceSearchEntries, link) => {
+export const substanceSearchEntriesGetSuccess = (
+  substanceSearchEntries,
+  link,
+  isGroupHeader
+) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
     substanceSearchEntries,
     link,
+    isGroupHeader,
   };
 };
 
@@ -43,21 +48,46 @@ export const substanceSearchEntriesGetFailure = err => ({
   message: err,
 });
 
-export const substanceSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
+export const substanceSearchEntriesGet = (
+  search,
+  groupBy,
+  cursor,
+  isGroupHeader
+) => dispatch => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
-  const request = {
-    params: {
-      search,
-      cursor,
-    },
-  };
-  return axios
-    .get('/api/0/organizations/lab/substances/', request)
-    .then(res => {
-      dispatch(substanceSearchEntriesGetSuccess(res.data, res.headers.link));
-    })
-    .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
+  if (!isGroupHeader) {
+    const request = {
+      params: {
+        search,
+        cursor,
+      },
+    };
+    return axios
+      .get('/api/0/organizations/lab/substances/', request)
+      .then(res => {
+        dispatch(
+          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
+        );
+      })
+      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
+  } else {
+    // TODO: search and cursor should be implemented as well
+    const request = {
+      params: {
+        unique: true,
+      },
+    };
+    const url = '/api/0/organizations/lab/substances/property/' + groupBy + '/';
+    return axios
+      .get(url, request)
+      .then(res => {
+        dispatch(
+          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
+        );
+      })
+      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
+  }
 };
 
 export const substanceSearchEntriesToggleSelectAll = doSelect => {

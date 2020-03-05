@@ -69,7 +69,9 @@ describe('substance redux actions', function() {
       });
 
       const search = 'search';
-      const groupBy = 'substances';
+      const groupBy = 'substance';
+      const cursor = undefined;
+      const isGroupHeader = false;
 
       const expectedActions = [
         {
@@ -77,15 +79,64 @@ describe('substance redux actions', function() {
           search,
           groupBy,
         },
-        {type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS, substanceSearchEntries},
+        {
+          type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
+          substanceSearchEntries,
+          isGroupHeader,
+        },
       ];
 
       // TODO: return
-      return store.dispatch(substanceSearchEntriesGet(search, groupBy)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-        const request = moxios.requests.mostRecent();
-        expect(request.url).toBe('/api/0/organizations/lab/substances/?search=search');
-      });
+      return store
+        .dispatch(substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          const request = moxios.requests.mostRecent();
+          expect(request.url).toBe('/api/0/organizations/lab/substances/?search=search');
+        });
+    });
+
+    it('should create an action to GET grouped substances', () => {
+      const mockResponseGrouped = ['sample_type1'];
+
+      const substanceSearchEntries = mockResponseGrouped;
+      const store = mockStore({substances: []});
+
+      moxios.stubRequest(
+        '/api/0/organizations/lab/substances/property/sample_type/?unique=true',
+        {
+          status: 200,
+          responseText: substanceSearchEntries,
+          headers: [],
+        }
+      );
+
+      const search = 'search';
+      const groupBy = 'sample_type';
+      const cursor = undefined;
+      const isGroupHeader = true;
+
+      const expectedActions = [
+        {
+          type: SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
+          search,
+          groupBy,
+        },
+        {
+          type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
+          isGroupHeader,
+          substanceSearchEntries,
+        },
+      ];
+      return store
+        .dispatch(substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          const request = moxios.requests.mostRecent();
+          expect(request.url).toBe(
+            '/api/0/organizations/lab/substances/property/sample_type/?unique=true'
+          );
+        });
     });
   });
 
