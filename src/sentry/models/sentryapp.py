@@ -47,7 +47,7 @@ REQUIRED_EVENT_PERMISSIONS = {
 # EVENT_EXPANSION above. This list is likely a subset of all valid ServiceHook
 # events.
 VALID_EVENTS = tuple(itertools.chain(
-    *EVENT_EXPANSION.values()
+    *list(EVENT_EXPANSION.values())
 ))
 
 

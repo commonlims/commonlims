@@ -152,7 +152,7 @@ class RedisTSDB(BaseTSDB):
         results = defaultdict(list)
         for environment_id in environment_ids:
             results[self.get_cluster(environment_id)].append(environment_id)
-        return results.items()
+        return list(results.items())
 
     def add_environment_parameter(self, key, environment_id):
         if environment_id is not None:
@@ -538,9 +538,9 @@ class RedisTSDB(BaseTSDB):
             client = cluster.get_local_client(random.choice(values)[0])
             with client.pipeline(transaction=False) as pipeline:
                 pipeline.mset(aggregates)
-                pipeline.execute_command('PFMERGE', destination, *aggregates.keys())
+                pipeline.execute_command('PFMERGE', destination, *list(aggregates.keys()))
                 pipeline.execute_command('PFCOUNT', destination)
-                pipeline.delete(destination, *aggregates.keys())
+                pipeline.delete(destination, *list(aggregates.keys()))
                 return pipeline.execute()[2]
 
         # TODO: This could be optimized to skip the intermediate step for the
@@ -552,11 +552,11 @@ class RedisTSDB(BaseTSDB):
         return merge_aggregates(
             [
                 get_partition_aggregate(x)
-                for x in reduce(
+                for x in list(reduce(
                     map_key_to_host,
                     keys,
                     defaultdict(set),
-                ).items()
+                ).items())
             ]
         )
 
@@ -622,8 +622,8 @@ class RedisTSDB(BaseTSDB):
                                     environment_id,
                                 )
                                 c.mset(values)
-                                c.pfmerge(key, key, *values.keys())
-                                c.delete(*values.keys())
+                                c.pfmerge(key, key, *list(values.keys()))
+                                c.delete(*list(values.keys()))
                                 c.expireat(
                                     key,
                                     self.calculate_expiry(

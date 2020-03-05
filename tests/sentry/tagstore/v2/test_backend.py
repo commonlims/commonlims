@@ -445,7 +445,7 @@ class TagStorage(TestCase):
                 group_id=self.proj1group1.id,
                 environment_id=self.proj1env1.id,
                 event_id=event.id,
-                tags=tags.items(),
+                tags=list(tags.items()),
                 date_added=timezone.now() - timedelta(hours=i)
             )
 
@@ -461,7 +461,7 @@ class TagStorage(TestCase):
             group_id=self.proj1group1.id,
             environment_id=self.proj1env1.id,
             event_id=self.proj1group1event3.id,
-            tags=different_tags.items(),
+            tags=list(different_tags.items()),
         )
 
         assert self.ts.get_group_event_filter(
@@ -519,10 +519,10 @@ class TagStorage(TestCase):
         k2.save()
 
         assert dict(
-            self.ts.get_groups_user_counts(
+            list(self.ts.get_groups_user_counts(
                 [self.proj1.id],
                 [self.proj1group1.id, self.proj1group2.id],
-                [self.proj1env1.id]).items()) == {self.proj1group1.id: 7, self.proj1group2.id: 11}
+                [self.proj1env1.id]).items())) == {self.proj1group1.id: 7, self.proj1group2.id: 11}
 
     def test_get_group_tag_value_count(self):
         v1, _ = self.ts.get_or_create_group_tag_value(
@@ -686,7 +686,7 @@ class TagStorage(TestCase):
             'baz': 'quux',
         }
 
-        for k, v in tags.items():
+        for k, v in list(tags.items()):
             v1, _ = self.ts.get_or_create_group_tag_value(
                 self.proj1.id,
                 self.proj1group1.id,

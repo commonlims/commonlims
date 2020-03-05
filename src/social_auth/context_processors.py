@@ -67,7 +67,7 @@ def backends_data(user):
     If user is not authenticated, then first list is empty, and there's no
     difference between the second and third lists.
     """
-    available = get_backends().keys()
+    available = list(get_backends().keys())
     values = {'associated': [],
               'not_associated': available,
               'backends': available}

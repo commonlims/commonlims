@@ -416,7 +416,7 @@ class EventManager(object):
             raise APIError('Invalid security report: %s' % str(e).splitlines()[0])
 
         def clean(d):
-            return dict(filter(lambda x: x[1], d.items()))
+            return dict(filter(lambda x: x[1], list(d.items())))
 
         data.update(
             {

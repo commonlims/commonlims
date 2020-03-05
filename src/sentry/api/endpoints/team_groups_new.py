@@ -37,7 +37,7 @@ class TeamGroupsNewEndpoint(TeamEndpoint, EnvironmentMixin):
 
         group_list = list(
             Group.objects.filter(
-                project__in=project_dict.keys(),
+                project__in=list(project_dict.keys()),
                 status=GroupStatus.UNRESOLVED,
                 active_at__gte=cutoff_dt,
             ).extra(

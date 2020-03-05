@@ -43,7 +43,7 @@ def safe_urlencode(params, doseq=0):
     # Snippet originally from pysolr: https://github.com/toastdriven/pysolr
 
     if hasattr(params, "items"):
-        params = params.items()
+        params = list(params.items())
 
     new_params = list()
 

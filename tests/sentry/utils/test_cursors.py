@@ -9,7 +9,7 @@ from sentry.utils.cursors import build_cursor, Cursor
 
 def build_mock(**attrs):
     obj = Mock()
-    for key, value in attrs.items():
+    for key, value in list(attrs.items()):
         setattr(obj, key, value)
     obj.__repr__ = lambda x: repr(attrs)
     return obj

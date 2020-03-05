@@ -48,8 +48,8 @@ class TestSubstanceParentChild(SubstanceTestCase):
         parent = self.create_gemstone(**props)
         child = parent.create_child(preciousness=':(')
 
-        original_prop_vals = set(prop.value for prop in parent.properties.values())
-        child_prop_vals = set(prop.value for prop in child.properties.values())
+        original_prop_vals = set(prop.value for prop in list(parent.properties.values()))
+        child_prop_vals = set(prop.value for prop in list(child.properties.values()))
 
         assert original_prop_vals.symmetric_difference(child_prop_vals) == {u'*o*', u':('}
         assert original_prop_vals.intersection(child_prop_vals) == {u'red'}
@@ -104,7 +104,7 @@ class TestSubstanceParentChild(SubstanceTestCase):
         expected = {entry.id for entry in relatives}
 
         for member in relatives:
-            actual = {entry.id for entry in member.to_ancestry().items()}
+            actual = {entry.id for entry in list(member.to_ancestry().items())}
             assert expected == actual
 
     def test_children_retain_origin(self):

@@ -273,5 +273,5 @@ class FeatureSet(object):
     def flush(self, project):
         return self.index.flush(
             self.__get_scope(project),
-            self.aliases.values(),
+            list(self.aliases.values()),
         )

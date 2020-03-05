@@ -246,7 +246,7 @@ class MailPlugin(NotificationPlugin):
             'link': link,
             'rules': rules,
             'enhanced_privacy': enhanced_privacy,
-            'commits': sorted(commits.values(), key=lambda x: x['score'], reverse=True),
+            'commits': sorted(list(commits.values()), key=lambda x: x['score'], reverse=True),
             'environment': environment
         }
 

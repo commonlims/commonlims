@@ -133,10 +133,10 @@ class BaseExtensibleService(object):
 
     def _get_filter_arguments(self, **kwargs):
         get_args = {}
-        if 'latest' not in kwargs.keys():
+        if 'latest' not in list(kwargs.keys()):
             kwargs['latest'] = True
 
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             if key == 'project':
                 get_args['archetype__project__name'] = value.name
             elif key == 'project_name':

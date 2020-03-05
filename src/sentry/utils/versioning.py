@@ -23,7 +23,7 @@ def summarize(sequence, max=3):
 
 def make_upgrade_message(service, modality, version, hosts):
     return u'{service} {modality} be upgraded to {version} on {hosts}.'.format(
-        hosts=','.join(map(six.binary_type, summarize(hosts.keys(), 2))),
+        hosts=','.join(map(six.binary_type, summarize(list(hosts.keys()), 2))),
         modality=modality,
         service=service,
         version=version,
@@ -42,13 +42,13 @@ def check_versions(service, versions, required, recommended=None):
         requirement, a ``PendingDeprecationWarning`` is raised.
     """
     # x = (host, version)
-    must_upgrade = dict(filter(lambda x: required > x[1], versions.items()))
+    must_upgrade = dict(filter(lambda x: required > x[1], list(versions.items())))
     if must_upgrade:
         raise InvalidConfiguration(make_upgrade_message(service, 'must', required, must_upgrade))
 
     if recommended:
         # x = (host, version)
-        should_upgrade = dict(filter(lambda x: recommended > x[1], versions.items()))
+        should_upgrade = dict(filter(lambda x: recommended > x[1], list(versions.items())))
         if should_upgrade:
             warnings.warn(
                 make_upgrade_message(service, 'should', recommended, should_upgrade),

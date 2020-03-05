@@ -484,7 +484,7 @@ class DjangoSearchBackend(SearchBackend):
                     project_id=project.id,
                     environment_id=environment.id,
                     tags=tags,
-                    candidates=candidates.keys(),
+                    candidates=list(candidates.keys()),
                     limit=len(candidates),
                 )
                 for key in set(candidates) - set(matches or []):

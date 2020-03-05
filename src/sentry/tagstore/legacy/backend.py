@@ -17,7 +17,6 @@ from django.db import connections, router, IntegrityError, transaction
 from django.db.models import Q, Sum
 from django.utils import timezone
 from operator import or_
-from six.moves import reduce
 
 from sentry import buffer
 from sentry.tagstore import TagKeyStatus
@@ -26,6 +25,7 @@ from sentry.utils import db
 
 from . import models
 from sentry.tagstore.types import TagKey, TagValue, GroupTagKey, GroupTagValue
+from functools import reduce
 
 
 transformers = {
@@ -446,7 +446,7 @@ class LegacyTagStorage(TagStorage):
         tagkeys = dict(
             models.TagKey.objects.filter(
                 project_id=project_id,
-                key__in=tags.keys(),
+                key__in=list(tags.keys()),
                 status=TagKeyStatus.VISIBLE,
             ).values_list('key', 'id')
         )

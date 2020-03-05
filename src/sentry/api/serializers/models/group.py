@@ -77,7 +77,7 @@ class GroupSerializerBase(Serializer):
             option.project_id: option.value
             for option in
             UserOption.objects.filter(
-                Q(project__in=projects.keys()) | Q(project__isnull=True),
+                Q(project__in=list(projects.keys())) | Q(project__isnull=True),
                 user=user,
                 key='workflow:notifications',
             )
@@ -97,7 +97,7 @@ class GroupSerializerBase(Serializer):
                                 project__groups[0].id,
                                 options.get(None)
                             ) == UserOptionValue.no_conversations else [],
-                            projects.items(),
+                            list(projects.items()),
                         ),
                     )
                 ),
@@ -111,7 +111,7 @@ class GroupSerializerBase(Serializer):
         global_default_workflow_option = options.get(None, UserOptionValue.all_conversations)
 
         results = {}
-        for project, groups in projects.items():
+        for project, groups in list(projects.items()):
             project_default_workflow_option = options.get(
                 project.id, global_default_workflow_option)
             for group in groups:

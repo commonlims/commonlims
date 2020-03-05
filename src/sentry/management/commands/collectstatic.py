@@ -46,7 +46,7 @@ class Command(BaseCommand):
             pass
 
         collected = super(Command, self).collect()
-        paths = sorted(set(chain(*itemgetter(*collected.keys())(collected))))
+        paths = sorted(set(chain(*itemgetter(*list(collected.keys()))(collected))))
         abs_paths = list(map(self.storage.path, paths))
         version = get_bundle_version(list(zip(paths, abs_paths)))
         echo('-----------------')

@@ -88,7 +88,7 @@ def sync_group_assignee_inbound(integration, email, external_issue_key, assign=T
         ).values_list('user_id', flat=True),
     )}
 
-    projects_by_user = get_user_project_ids(users.values())
+    projects_by_user = get_user_project_ids(list(users.values()))
 
     groups_assigned = []
     for group in affected_groups:

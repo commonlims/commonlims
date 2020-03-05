@@ -18,7 +18,7 @@ class GroupTombstone(Model):
     previous_group_id = BoundedPositiveIntegerField(unique=True)
     project = FlexibleForeignKey('sentry.Project')
     level = BoundedPositiveIntegerField(
-        choices=LOG_LEVELS.items(), default=logging.ERROR, blank=True
+        choices=list(LOG_LEVELS.items()), default=logging.ERROR, blank=True
     )
     message = models.TextField()
     culprit = models.CharField(

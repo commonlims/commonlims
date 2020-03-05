@@ -91,7 +91,7 @@ def make_group_generator(random, project):
         last_seen = random.randint(first_seen, first_seen + (60 * 60 * 24 * 30))
 
         culprit = make_culprit(random)
-        level = random.choice(LOG_LEVELS.keys())
+        level = random.choice(list(LOG_LEVELS.keys()))
         message = make_message(random)
 
         group = Group(
@@ -159,7 +159,7 @@ class ActivityMailPreview(object):
     def get_context(self):
         context = self.email.get_base_context()
         context['reason'] = get_random(self.request
-                                       ).choice(GroupSubscriptionReason.descriptions.values())
+                                       ).choice(list(GroupSubscriptionReason.descriptions.values()))
         context.update(self.email.get_context())
         add_unsubscribe_link(context)
         return context

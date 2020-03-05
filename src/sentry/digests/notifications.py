@@ -68,10 +68,10 @@ def fetch_state(project, records):
         Rule.objects.
         in_bulk(itertools.chain.from_iterable(record.value.rules for record in records)),
         'event_counts':
-        tsdb.get_sums(tsdb.models.group, groups.keys(), start, end),
+        tsdb.get_sums(tsdb.models.group, list(groups.keys()), start, end),
         'user_counts':
         tsdb.get_distinct_counts_totals(
-            tsdb.models.users_affected_by_group, groups.keys(), start, end
+            tsdb.models.users_affected_by_group, list(groups.keys()), start, end
         ),
     }
 
@@ -179,7 +179,7 @@ def sort_group_contents(rules):
     for key, groups in six.iteritems(rules):
         rules[key] = OrderedDict(
             sorted(
-                groups.items(),
+                list(groups.items()),
                 # x = (group, records)
                 key=lambda x: (x[0].event_count, x[0].user_count),
                 reverse=True,
@@ -191,7 +191,7 @@ def sort_group_contents(rules):
 def sort_rule_groups(rules):
     return OrderedDict(
         sorted(
-            rules.items(),
+            list(rules.items()),
             # x = (rule, groups)
             key=lambda x: len(x[1]),
             reverse=True,

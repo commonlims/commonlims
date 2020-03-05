@@ -29,7 +29,7 @@ class EventFrequencyForm(forms.Form):
         choices=[
             (key, label)
             for key, (label, duration
-                      ) in sorted(intervals.items(), key=lambda key____label__duration: key____label__duration[1][1])
+                      ) in sorted(list(intervals.items()), key=lambda key____label__duration: key____label__duration[1][1])
         ]
     )
     value = forms.IntegerField(
@@ -44,7 +44,7 @@ class BaseEventFrequencyCondition(EventCondition):
         'interval': {
             'type': 'choice',
             'choices': [
-                (key, label) for key, (label, duration) in sorted(intervals.items(), key=lambda key____label__duration: key____label__duration[1][1])
+                (key, label) for key, (label, duration) in sorted(list(intervals.items()), key=lambda key____label__duration: key____label__duration[1][1])
             ]
         }
     }

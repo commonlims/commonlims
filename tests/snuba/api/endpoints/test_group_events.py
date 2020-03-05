@@ -213,7 +213,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         assert response.status_code == 200, response.content
         assert set(map(lambda x: x['eventID'], response.data)) == set([
             six.text_type(event.event_id)
-            for event in events.values()
+            for event in list(events.values())
         ])
 
         response = self.client.get(url + '?environment=invalid', format='json')

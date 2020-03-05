@@ -100,7 +100,7 @@ class TagKey(Model):
 
         # First attempt to hit from cache, which in theory is the hot case
         cache_key_to_key = {cls.get_cache_key(project_id, environment_id, key): key for key in keys}
-        cache_key_to_models = cache.get_many(cache_key_to_key.keys())
+        cache_key_to_models = cache.get_many(list(cache_key_to_key.keys()))
         for model in cache_key_to_models.values():
             key_to_model[model.key] = model
             remaining_keys.remove(model.key)

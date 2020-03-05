@@ -386,7 +386,7 @@ EVENT_SCHEMA = {
                 },
                 {
                     'type': 'string',
-                    'enum': LOG_LEVELS_MAP.keys(),
+                    'enum': list(LOG_LEVELS_MAP.keys()),
                 },
             ],
         },

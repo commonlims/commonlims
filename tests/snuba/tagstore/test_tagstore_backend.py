@@ -192,7 +192,7 @@ class TagStorageTest(SnubaTestCase):
             )
         }
         assert set(keys) == set(['baz', 'environment', 'foo', 'sentry:release', 'sentry:user'])
-        for k in keys.values():
+        for k in list(keys.values()):
             if k.key not in set(['sentry:release', 'sentry:user']):
                 assert k.values_seen == 1, u'expected {!r} to have 1 unique value'.format(k.key)
             else:

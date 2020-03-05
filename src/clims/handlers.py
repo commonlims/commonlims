@@ -44,7 +44,7 @@ class HandlerManager(object):
     def __init__(self):
         # Initialize the handlers dictionary with the types of baseclasses we can find:
         self.handlers = self.find_handler_baseclasses()
-        logger.debug("Handler dictionary initialized: '{}'".format(self.handlers.keys()))
+        logger.debug("Handler dictionary initialized: '{}'".format(list(self.handlers.keys())))
 
     def add_handler_implementation(self, handler_type, implementation):
         self.handlers[handler_type].add(implementation)

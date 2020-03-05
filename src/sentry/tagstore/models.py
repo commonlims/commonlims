@@ -16,7 +16,7 @@ backends = []
 if settings.SENTRY_TAGSTORE == 'sentry.utils.services.ServiceDelegator':
     backends = [
         backend['path'] for backend in
-        settings.SENTRY_TAGSTORE_OPTIONS.get('backends', {}).values()
+        list(settings.SENTRY_TAGSTORE_OPTIONS.get('backends', {}).values())
     ]
 elif settings.SENTRY_TAGSTORE.startswith('sentry.tagstore.multi'):
     backends = [

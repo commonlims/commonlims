@@ -23,7 +23,7 @@ from sentry.utils import json, redis
 from sentry.utils.dates import floor_to_utc_day, to_datetime, to_timestamp
 from sentry.utils.email import MessageBuilder
 from sentry.utils.math import mean
-from six.moves import reduce
+from functools import reduce
 
 date_format = functools.partial(
     dateformat.format,
@@ -164,7 +164,7 @@ def prepare_project_series(start__stop, project, rollup=60 * 60 * 24):
             merge_series,
             map(
                 clean,
-                tsdb.get_range(
+                list(tsdb.get_range(
                     tsdb.models.group,
                     list(
                         project.group_set.filter(
@@ -176,7 +176,7 @@ def prepare_project_series(start__stop, project, rollup=60 * 60 * 24):
                     start,
                     stop,
                     rollup=rollup,
-                ).values(),
+                ).values()),
             ),
             clean([(timestamp, 0) for timestamp in series]),
         ),
@@ -777,7 +777,7 @@ def build_project_breakdown_series(reports):
     instances = map(
         operator.itemgetter(0),
         sorted(
-            reports.items(),
+            list(reports.items()),
             key=lambda instance__report: sum(sum(values)
                                              for timestamp, values in instance__report[1][0]),
             reverse=True,
@@ -849,7 +849,7 @@ def build_project_breakdown_series(reports):
 
 
 def to_context(organization, interval, reports):
-    report = reduce(merge_reports, reports.values())
+    report = reduce(merge_reports, list(reports.values()))
     series = [(to_datetime(timestamp), Point(*values)) for timestamp, values in report.series]
     return {
         'series': {
@@ -918,7 +918,7 @@ def colorize(spectrum, values):
 
     find_index = functools.partial(
         bisect.bisect_left,
-        legend.values(),
+        list(legend.values()),
     )
 
     results = []

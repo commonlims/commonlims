@@ -139,7 +139,7 @@ class WorkBatchSubscriptionManager(BaseManager):
             for subscription in
             WorkBatchSubscription.objects.filter(
                 work_batch=work_batch,
-                user_id__in=users.keys(),
+                user_id__in=list(users.keys()),
             )
         }
 
@@ -149,7 +149,7 @@ class WorkBatchSubscriptionManager(BaseManager):
 
         options = get_user_options(
             'workflow:notifications',
-            users.keys(),
+            list(users.keys()),
             UserOptionValue.all_conversations,
         )
 

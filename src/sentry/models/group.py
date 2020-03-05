@@ -214,7 +214,7 @@ class Group(Model):
         default=DEFAULT_LOGGER_NAME,
         db_index=True)
     level = BoundedPositiveIntegerField(
-        choices=LOG_LEVELS.items(), default=logging.ERROR, blank=True, db_index=True
+        choices=list(LOG_LEVELS.items()), default=logging.ERROR, blank=True, db_index=True
     )
     message = models.TextField()
     culprit = models.CharField(

@@ -6,9 +6,10 @@ import sys
 from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError, make_option
 from django.db.models import Q
-from six.moves import input, reduce
+from six.moves import input
 
 from sentry.models import Organization, OrganizationMember, User
+from functools import reduce
 
 
 class Command(BaseCommand):
@@ -43,7 +44,7 @@ class Command(BaseCommand):
                 continue
             members_by_email[member.user.email].append(member.user)
 
-        return members_by_email.values()
+        return list(members_by_email.values())
 
     def _confirm_merge(self, primary_user, other_users):
         message = u"Merge {} into {}? [Yn] ".format(

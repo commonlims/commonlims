@@ -283,7 +283,7 @@ class SnubaSearchBackend(ds.DjangoSearchBackend):
 
                 cache.set_many({
                     self._get_project_count_cache_key(project_id): count
-                    for project_id, count in missing_counts.items()
+                    for project_id, count in list(missing_counts.items())
                 }, options.get('snuba.search.project-group-count-cache-time'))
 
                 counts_by_projects.update(missing_counts)
@@ -519,7 +519,7 @@ def snuba_search(start, end, project_ids, environment_ids, tags,
         limit=limit + 1,
         offset=offset,
     )
-    metrics.timing('snuba.search.num_result_groups', len(snuba_results.keys()))
+    metrics.timing('snuba.search.num_result_groups', len(list(snuba_results.keys())))
     more_results = len(snuba_results) == limit + 1
 
     # {group_id -> score,

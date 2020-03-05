@@ -165,7 +165,7 @@ class GroupSubscriptionManager(BaseManager):
             for subscription in
             GroupSubscription.objects.filter(
                 group=group,
-                user_id__in=users.keys(),
+                user_id__in=list(users.keys()),
             )
         }
 
@@ -175,7 +175,7 @@ class GroupSubscriptionManager(BaseManager):
 
         options = get_user_options(
             'workflow:notifications',
-            users.keys(),
+            list(users.keys()),
             group.project,
             UserOptionValue.all_conversations,
         )

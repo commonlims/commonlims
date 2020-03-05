@@ -50,7 +50,7 @@ class InMemoryTSDB(BaseTSDB):
         for environment_id in environment_ids:
             destination = self.data[model][(destination, environment_id)]
             for source in sources:
-                for bucket, count in self.data[model].pop((source, environment_id), {}).items():
+                for bucket, count in list(self.data[model].pop((source, environment_id), {}).items()):
                     destination[bucket] += count
 
     def delete(self, models, keys, start=None, end=None, timestamp=None, environment_ids=None):

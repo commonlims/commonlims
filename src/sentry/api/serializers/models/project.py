@@ -160,7 +160,7 @@ class ProjectSerializer(Serializer):
         from sentry.features.base import ProjectFeature
 
         # Retrieve all registered organization features
-        project_features = features.all(feature_type=ProjectFeature).keys()
+        project_features = list(features.all(feature_type=ProjectFeature).keys())
         feature_list = set()
 
         for feature_name in project_features:

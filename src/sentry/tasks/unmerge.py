@@ -127,15 +127,15 @@ def get_group_creation_attributes(caches, events):
 def get_group_backfill_attributes(caches, group, events):
     return {
         k: v for k, v in
-        reduce(
+        list(reduce(
             lambda data, event: merge_mappings([
                 data,
-                {name: f(caches, data, event) for name, f in backfill_fields.items()},
+                {name: f(caches, data, event) for name, f in list(backfill_fields.items())},
             ]),
             events,
             {name: getattr(group, name)
              for name in set(initial_fields.keys()) | set(backfill_fields.keys())},
-        ).items()
+        ).items())
         if k in backfill_fields
     }
 
@@ -404,7 +404,7 @@ def collect_release_data(caches, project, events):
 
 
 def repair_group_release_data(caches, project, events):
-    attributes = collect_release_data(caches, project, events).items()
+    attributes = list(collect_release_data(caches, project, events).items())
     for (group_id, environment, release_id), (first_seen, last_seen) in attributes:
         instance, created = GroupRelease.objects.get_or_create(
             project_id=project.id,
@@ -502,7 +502,7 @@ def repair_tsdb_data(caches, project, events):
                 tsdb.record(model, key, values, timestamp, environment_id=environment_id)
 
     for timestamp, data in frequencies.items():
-        tsdb.record_frequency_multi(data.items(), timestamp)
+        tsdb.record_frequency_multi(list(data.items()), timestamp)
 
 
 def repair_denormalizations(caches, project, events):

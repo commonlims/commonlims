@@ -230,10 +230,10 @@ class SensitiveDataFilterTest(TestCase):
         additional_sensitive_dict = {'fieldy_field': 'value', 'moar_other_field': 'another value'}
         data = {'extra': dict(list(VARS.items()) + list(additional_sensitive_dict.items()))}
 
-        proc = SensitiveDataFilter(additional_sensitive_dict.keys())
+        proc = SensitiveDataFilter(list(additional_sensitive_dict.keys()))
         proc.apply(data)
 
-        for field in additional_sensitive_dict.keys():
+        for field in list(additional_sensitive_dict.keys()):
             assert data['extra'][field] == FILTER_MASK
 
         self._check_vars_sanitized(data['extra'], proc)

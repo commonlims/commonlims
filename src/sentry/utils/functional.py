@@ -34,7 +34,7 @@ def apply_values(function, mapping):
     if not mapping:
         return {}
 
-    keys, values = zip(*mapping.items())
+    keys, values = zip(*list(mapping.items()))
     return dict(
         zip(
             keys,

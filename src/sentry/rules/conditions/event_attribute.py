@@ -77,7 +77,7 @@ class EventAttributeForm(forms.Form):
         )
     )
     match = forms.ChoiceField(
-        MATCH_CHOICES.items()
+        list(MATCH_CHOICES.items())
     )
     value = forms.CharField(
         widget=forms.TextInput(), required=False
@@ -111,7 +111,7 @@ class EventAttributeCondition(EventCondition):
         },
         'match': {
             'type': 'choice',
-            'choices': MATCH_CHOICES.items()
+            'choices': list(MATCH_CHOICES.items())
         },
         'value': {
             'type': 'string',

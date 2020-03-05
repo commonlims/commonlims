@@ -142,7 +142,7 @@ class TestSubstance(SubstanceTestCase):
         def do_asserts(substance):
             assert substance._archetype is not None
             assert substance.version == 1
-            assert {key: prop.value for key, prop in substance.properties.items()} == props
+            assert {key: prop.value for key, prop in list(substance.properties.items())} == props
 
         # Assert we get the expected results on the object
         do_asserts(substance)
@@ -215,7 +215,7 @@ class TestSubstance(SubstanceTestCase):
         def props_to_dict(props):
             # NOTE: We are often mapping back to dict for the props. Might be good to allow
             # equality checks against a dict, or just return a dict in extensible.properties
-            return {key: prop.value for key, prop in props.items()}
+            return {key: prop.value for key, prop in list(props.items())}
 
         assert substance.version == 1
         assert props_to_dict(substance.properties) == props
