@@ -109,7 +109,6 @@ class TestContainer(TestCase):
             in_original_order.append(sample)
             container.append(sample)
         container.save()
-        assert False
         assert container["A:1"].id == in_original_order[0].id
 
         container_fresh = self.app.containers.get_by_name(container.name)
