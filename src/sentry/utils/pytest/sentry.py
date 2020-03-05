@@ -157,10 +157,9 @@ def pytest_configure(config):
     initialize_receivers()
     setup_services()
 
-    from sentry.utils.redis import clusters
-
-    with clusters.get('default').all() as client:
-        client.flushdb()
+    for setup, _ in tasks:
+        if setup:
+            setup()
 
     # force celery registration
     from sentry.celery import app  # NOQA
@@ -171,19 +170,9 @@ def pytest_configure(config):
 
 
 def pytest_runtest_teardown(item):
-    from sentry import tsdb
-    # TODO(dcramer): this only works if this is the correct tsdb backend
-    tsdb.flush()
-
-    # XXX(dcramer): only works with DummyNewsletter
-    from sentry import newsletter
-    if hasattr(newsletter.backend, 'clear'):
-        newsletter.backend.clear()
-
-    from sentry.utils.redis import clusters
-
-    with clusters.get('default').all() as client:
-        client.flushdb()
+    for _, teardown in tasks:
+        if teardown:
+            teardown()
 
     from celery.task.control import discard_all
     discard_all()
@@ -191,3 +180,40 @@ def pytest_runtest_teardown(item):
     from sentry.models import OrganizationOption, ProjectOption, UserOption
     for model in (OrganizationOption, ProjectOption, UserOption):
         model.objects.clear_local_cache()
+
+
+def tsdb_teardown():
+    from sentry import tsdb
+    # TODO(dcramer): this only works if this is the correct tsdb backend
+    tsdb.flush()
+
+
+def newsletter_teardown():
+    # XXX(dcramer): only works with DummyNewsletter
+    from sentry import newsletter
+    if hasattr(newsletter.backend, 'clear'):
+        newsletter.backend.clear()
+
+
+def redis_setup():
+    from sentry.utils.redis import clusters
+    with clusters.get('default').all() as client:
+        client.flushdb()
+
+
+def redis_teardown():
+    from sentry.utils.redis import clusters
+    with clusters.get('default').all() as client:
+        client.flushdb()
+
+
+unit_tasks = []
+integration_tasks = [
+    (redis_setup, redis_teardown),
+    (None, tsdb_teardown),
+    (None, newsletter_teardown),
+]
+
+# This env variable means that we assume that the whole stack (redis, postgres etc.) is setup
+is_integration = os.environ.get('CLIMS_INTEGRATION_TEST', False) == "1"
+tasks = integration_tasks if is_integration else unit_tasks

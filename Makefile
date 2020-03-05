@@ -12,7 +12,7 @@ WEBPACK = NODE_ENV=production ./node_modules/.bin/webpack
 
 develop: setup-git develop-only
 develop-only: clean node-version-check update-submodules install-yarn-pkgs install-clims-dev
-test: lint test-js test-python test-cli
+test: lint test-js test-python-unit test-python-integration test-cli
 
 build: locale
 
@@ -156,6 +156,16 @@ test-python-failed:
 	py.test tests/integration tests/sentry tests/clims --last-failed || exit 1
 	@echo ""
 
+test-python-integration: clean
+	@echo "--> Running Python integration tests"
+	CLIMS_INTEGRATION_TEST=1 py.test -m "not unit_test" tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
+	@echo ""
+
+test-python-unit: clean
+	@echo "--> Running Python unit tests"
+	py.test -m unit_test tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
+	@echo ""
+
 test-snuba:
 	@echo "--> Running snuba tests"
 	py.test tests/snuba tests/sentry/eventstream/kafka -vv --cov . --cov-report="xml:.artifacts/snuba.coverage.xml" --junit-xml=".artifacts/snuba.junit.xml"
@@ -236,3 +246,5 @@ travis-scan-snuba: scan-python
 travis-scan-js: travis-noop
 travis-scan-cli: travis-noop
 travis-scan-dist: travis-noop
+
+.PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh scan-python test-python-integration test-python-unit

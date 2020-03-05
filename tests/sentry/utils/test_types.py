@@ -12,10 +12,10 @@ from sentry.utils.types import (
     Dict,
     Sequence,
 )
-from sentry.testutils import TestCase
+from clims.testutils import UnitTestCase
 
 
-class OptionsTypesTest(TestCase):
+class OptionsTypesTest(UnitTestCase):
     def test_any(self):
         assert Any('foo') == 'foo'
         assert Any(1) == 1
