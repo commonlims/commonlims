@@ -1,4 +1,4 @@
-BeautifulSoup>=3.2.1
+BeautifulSoup4>=4.8.2
 boto3>=1.4.1,<1.4.6
 botocore<1.5.71
 celery>=3.1.8,<3.1.19
@@ -16,8 +16,6 @@ djangorestframework>=3.6.4,<3.7.0
 email-reply-parser>=0.2.0,<0.3.0
 enum34>=1.1.6,<1.2.0
 exam>=0.5.1
-functools32>=3.2.3,<3.3
-futures>=3.2.0,<4.0.0
 # broken on python3
 hiredis>=0.1.0,<0.2.0
 honcho>=1.0.0,<1.1.0
