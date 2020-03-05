@@ -1,13 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import ConfigStore from 'app/stores/configStore';
-import {t, tct} from 'app/locale';
-import {
-  EmailField,
-  TextField,
-  BooleanField,
-  RadioBooleanField,
-} from 'app/components/forms';
+import {t} from 'app/locale';
+import {EmailField, TextField, BooleanField} from 'app/components/forms';
 
 // This are ordered based on their display order visually
 const sections = [
@@ -33,7 +28,7 @@ const definitions = [
   {
     key: 'system.url-prefix',
     label: t('Root URL'),
-    placeholder: 'https://sentry.example.com',
+    placeholder: 'https://clims.example.com',
     help: t('The root web address which is used to communicate with the Sentry backend.'),
     defaultValue: () => `${document.location.protocol}//${document.location.host}`,
   },
@@ -73,13 +68,6 @@ const definitions = [
     ),
   },
   {
-    key: 'auth.allow-registration',
-    label: t('Allow Registration'),
-    help: t('Allow anyone to create an account and access this Sentry installation.'),
-    component: BooleanField,
-    defaultValue: () => false,
-  },
-  {
     key: 'auth.ip-rate-limit',
     label: t('IP Rate Limit'),
     placeholder: 'e.g. 10',
@@ -104,25 +92,10 @@ const definitions = [
     ),
   },
   {
-    key: 'beacon.anonymous',
-    label: 'Usage Statistics',
-    component: RadioBooleanField,
-    // yes and no are inverted here due to the nature of this configuration
-    noLabel: 'Send my contact information along with usage statistics',
-    yesLabel: 'Please keep my usage information anonymous',
-    yesFirst: false,
-    help: tct(
-      'If enabled, any stats reported to sentry.io will exclude identifying information (such as your administrative email address). By anonymizing your installation the Sentry team will be unable to contact you about security updates. For more information on what data is sent to Sentry, see the [link:documentation].',
-      {
-        link: <a href="https://docs.sentry.io/server/beacon/" />,
-      }
-    ),
-  },
-  {
     key: 'mail.from',
     label: t('Email From'),
     component: EmailField,
-    defaultValue: () => `sentry@${document.location.hostname}`,
+    defaultValue: () => `clims@${document.location.hostname}`,
     help: t('Email address to be used in From for all outbound email.'),
   },
   {

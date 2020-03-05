@@ -222,7 +222,7 @@ const App = createReactClass({
   render() {
     if (this.state.loading) {
       return (
-        <LoadingIndicator triangle={true}>
+        <LoadingIndicator>
           {t('Getting a list of all of your organizations.')}
         </LoadingIndicator>
       );
