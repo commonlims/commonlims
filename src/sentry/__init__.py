@@ -35,8 +35,8 @@ def get_revision():
     :returns: Revision number of this branch/checkout, if available. None if
         no revision number can be determined.
     """
-    if 'SENTRY_BUILD' in os.environ:
-        return os.environ['SENTRY_BUILD']
+    if 'CLIMS_BUILD' in os.environ:
+        return os.environ['CLIMS_BUILD']
     package_dir = os.path.dirname(__file__)
     checkout_dir = os.path.normpath(os.path.join(package_dir, os.pardir, os.pardir))
     path = os.path.join(checkout_dir)
@@ -54,9 +54,9 @@ def get_version():
 def is_docker():
     # One of these environment variables are guaranteed to exist
     # from our official docker images.
-    # SENTRY_VERSION is from a tagged release, and SENTRY_BUILD is from a
+    # SENTRY_VERSION is from a tagged release, and CLIMS_BUILD is from a
     # a git based image.
-    return 'SENTRY_VERSION' in os.environ or 'SENTRY_BUILD' in os.environ
+    return 'SENTRY_VERSION' in os.environ or 'CLIMS_BUILD' in os.environ
 
 
 __version__ = VERSION
