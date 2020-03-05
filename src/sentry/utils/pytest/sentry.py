@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import mock
 import os
 
-from django.conf import settings
 
 TEST_ROOT = os.path.normpath(
     os.path.join(
@@ -14,14 +13,11 @@ TEST_ROOT = os.path.normpath(
         os.pardir,
         'tests'))
 
-
 def pytest_configure(config):
     if config.option.log_level:
         os.environ['CLIMS_LOG_LEVEL'] = config.option.log_level
     # HACK: Only needed for testing!
     os.environ.setdefault('_SENTRY_SKIP_CONFIGURATION', '1')
-
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sentry.conf.server')
 
     # override docs which are typically synchronized from an upstream server
     # to ensure tests are consistent
@@ -34,8 +30,34 @@ def pytest_configure(config):
     from sentry.utils import integrationdocs
     integrationdocs.DOC_FOLDER = os.environ['INTEGRATION_DOC_FOLDER']
 
-    # Configure the test database
+    for setup, _ in tasks:
+        if setup:
+            setup()
 
+
+def pytest_runtest_teardown(item):
+    for _, teardown in tasks:
+        if teardown:
+            teardown()
+
+
+def celery_setup():
+    # force celery registration
+    from sentry.celery import app  # NOQA
+
+
+def celery_teardown():
+    from celery.task.control import discard_all
+    discard_all()
+
+
+def django_setup():
+    # NOTE: Includes a few items that are not django related, but should be ignored in integration
+    # tests.
+    from django.conf import settings
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sentry.conf.server')
+
+    # Configure the test database
     settings.DATABASES['default'].update(
         {
             'ENGINE': 'sentry.db.postgres',
@@ -157,29 +179,16 @@ def pytest_configure(config):
     initialize_receivers()
     setup_services()
 
-    for setup, _ in tasks:
-        if setup:
-            setup()
-
-    # force celery registration
-    from sentry.celery import app  # NOQA
-
     # disable DISALLOWED_IPS
     from sentry import http
     http.DISALLOWED_IPS = set()
 
 
-def pytest_runtest_teardown(item):
-    for _, teardown in tasks:
-        if teardown:
-            teardown()
-
-    from celery.task.control import discard_all
-    discard_all()
-
+def django_teardown():
     from sentry.models import OrganizationOption, ProjectOption, UserOption
     for model in (OrganizationOption, ProjectOption, UserOption):
         model.objects.clear_local_cache()
+
 
 
 def tsdb_teardown():
@@ -209,9 +218,11 @@ def redis_teardown():
 
 unit_tasks = []
 integration_tasks = [
+    (django_setup, django_teardown),
     (redis_setup, redis_teardown),
     (None, tsdb_teardown),
     (None, newsletter_teardown),
+    (celery_setup, celery_teardown),
 ]
 
 # This env variable means that we assume that the whole stack (redis, postgres etc.) is setup
