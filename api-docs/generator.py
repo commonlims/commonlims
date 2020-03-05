@@ -14,7 +14,7 @@ from six.moves.urllib.parse import urlparse
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 CLIMS_CONFIG = os.environ['CLIMS_CONF'] = os.path.join(HERE, 'clims.conf.py')
-os.environ['SENTRY_SKIP_BACKEND_VALIDATION'] = '1'
+os.environ['CLIMS_SKIP_BACKEND_VALIDATION'] = '1'
 
 # No sentry or django imports before this point
 from sentry.runner import configure

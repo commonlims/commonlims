@@ -148,7 +148,7 @@ class SentryHTTPServer(Service):
         env['SENTRY_RUNNING_UWSGI'] = '1'
 
         # This has already been validated inside __init__
-        env['SENTRY_SKIP_BACKEND_VALIDATION'] = '1'
+        env['CLIMS_SKIP_BACKEND_VALIDATION'] = '1'
 
         # Look up the bin directory where `sentry` exists, which should be
         # sys.argv[0], then inject that to the front of our PATH so we can reliably
