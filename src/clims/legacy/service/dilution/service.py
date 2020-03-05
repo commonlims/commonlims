@@ -4,11 +4,10 @@ import abc
 import copy
 import logging
 from itertools import groupby
-from itertools import izip_longest
 import collections
 from collections import namedtuple
 from clims.legacy.service.file_service import Csv
-from clims.legacy.domain.validation import ValidationException, ValidationType, ValidationResults, UsageError
+from clims.legacy.domain.validation import ValidationException, ValidationType, ValidationResults
 from clims.legacy import utils
 from clims.legacy.domain import Container, Well
 
@@ -605,7 +604,7 @@ class DilutionSettings:
 
     @staticmethod
     def _parse_conc_ref(concentration_ref):
-        if isinstance(concentration_ref, basestring):
+        if isinstance(concentration_ref, str):
             for key, value in DilutionSettings.CONCENTRATION_REF_TO_STR.items():
                 if value.lower() == concentration_ref.lower():
                     return key

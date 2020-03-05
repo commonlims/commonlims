@@ -251,7 +251,7 @@ class FileService:
             self.logger.debug("Writing output to {}.".format(full_path))
             # Content should be either a string or something else we can
             # iterate over, in which case we need newline
-            if isinstance(content, basestring):
+            if isinstance(content, str):
                 try:
                     f.write(content)
                 except UnicodeEncodeError:
@@ -415,7 +415,7 @@ class Csv:
         self.header = list()
         self.data = list()
         if file_stream:
-            if isinstance(file_stream, basestring):
+            if isinstance(file_stream, str):
                 with open(file_stream, "r") as fs:
                     self._init_from_file_stream(fs, delim, None)
             else:
@@ -425,7 +425,6 @@ class Csv:
         self.newline = newline
 
     def _init_from_file_stream(self, file_stream, delim, header):
-        lines = list()
         if header is not None:
             self.set_header(header)
 
