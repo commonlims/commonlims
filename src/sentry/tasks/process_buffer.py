@@ -6,8 +6,6 @@ sentry.tasks.process_buffer
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 
 from sentry.tasks.base import instrumented_task

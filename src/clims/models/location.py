@@ -1,6 +1,3 @@
-
-
-
 from django.db import models
 from sentry.db.models import (Model, FlexibleForeignKey, sane_repr)
 

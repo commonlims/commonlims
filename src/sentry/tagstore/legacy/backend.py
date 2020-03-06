@@ -6,8 +6,6 @@ sentry.tagstore.legacy.backend
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import collections
 import six
 

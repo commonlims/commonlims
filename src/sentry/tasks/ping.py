@@ -6,8 +6,6 @@ sentry.tasks.ping
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import sentry
 
 from time import time

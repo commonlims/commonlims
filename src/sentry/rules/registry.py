@@ -6,8 +6,6 @@ sentry.rules.registry
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import six
 
 from collections import defaultdict

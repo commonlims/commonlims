@@ -6,10 +6,6 @@ sentry.db.models.fields.node
 :license: BSD, see LICENSE for more details.
 """
 
-# TODO-easy: Remove
-
-
-
 from base64 import b64encode
 import collections
 import logging

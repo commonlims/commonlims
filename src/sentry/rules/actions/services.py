@@ -1,6 +1,3 @@
-
-
-
 class PluginService(object):
     def __init__(self, obj):
         self.service = obj

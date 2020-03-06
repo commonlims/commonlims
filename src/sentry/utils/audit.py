@@ -1,6 +1,3 @@
-
-
-
 def create_audit_entry(request, transaction_id=None, logger=None, **kwargs):
     from sentry.models import ApiKey  # Django 1.9 setup issue
     from sentry.models import AuditLogEntry  # Django 1.9 setup issue

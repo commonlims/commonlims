@@ -6,8 +6,6 @@ sentry.db.utils
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import operator
 
 from django.db.models import F

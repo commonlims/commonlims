@@ -6,8 +6,6 @@ sentry.db.models.fields.gzippeddict
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 import six
 

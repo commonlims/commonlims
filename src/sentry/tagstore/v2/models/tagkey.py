@@ -6,8 +6,6 @@ sentry.tagstore.v2.models.tagkey
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.db import models, router, connections, transaction, IntegrityError
 from django.utils.translation import ugettext_lazy as _
 

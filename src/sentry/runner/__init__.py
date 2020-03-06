@@ -53,19 +53,18 @@ def cli(ctx, config):
 # TODO(mattrobenolt): Autodiscover commands?
 list(
     [cli.add_command(import_string(cmd)) for cmd in (
-            'sentry.runner.commands.backup.export', 'sentry.runner.commands.backup.import_',
-            'sentry.runner.commands.cleanup.cleanup', 'sentry.runner.commands.config.config',
-            'sentry.runner.commands.createuser.createuser',
-            'sentry.runner.commands.devserver.devserver', 'sentry.runner.commands.django.django',
-            'sentry.runner.commands.exec.exec_', 'sentry.runner.commands.files.files',
-            'sentry.runner.commands.help.help', 'sentry.runner.commands.init.init',
-            'sentry.runner.commands.plugins.plugins', 'sentry.runner.commands.queues.queues',
-            'sentry.runner.commands.repair.repair', 'sentry.runner.commands.run.run',
-            'sentry.runner.commands.start.start', 'sentry.runner.commands.tsdb.tsdb',
-            'sentry.runner.commands.upgrade.upgrade',
-            'sentry.runner.commands.permissions.permissions',
-            'clims.runner.commands.create_example_data.createexampledata'
-        )]
+        'sentry.runner.commands.backup.export', 'sentry.runner.commands.backup.import_',
+        'sentry.runner.commands.cleanup.cleanup', 'sentry.runner.commands.config.config',
+        'sentry.runner.commands.createuser.createuser',
+        'sentry.runner.commands.devserver.devserver', 'sentry.runner.commands.django.django',
+        'sentry.runner.commands.exec.exec_', 'sentry.runner.commands.files.files',
+        'sentry.runner.commands.help.help', 'sentry.runner.commands.init.init',
+        'sentry.runner.commands.plugins.plugins', 'sentry.runner.commands.queues.queues',
+        'sentry.runner.commands.repair.repair', 'sentry.runner.commands.run.run',
+        'sentry.runner.commands.start.start', 'sentry.runner.commands.tsdb.tsdb',
+        'sentry.runner.commands.upgrade.upgrade',
+        'sentry.runner.commands.permissions.permissions',
+        'clims.runner.commands.create_example_data.createexampledata')]
 )
 
 

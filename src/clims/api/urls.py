@@ -1,6 +1,3 @@
-
-
-
 from django.conf.urls import patterns, url
 
 from .endpoints.work_batch import (WorkBatchEndpoint,

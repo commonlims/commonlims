@@ -1,6 +1,3 @@
-
-
-
 def get_support_mail():
     """Returns the most appropriate support email address"""
     from sentry.options import get

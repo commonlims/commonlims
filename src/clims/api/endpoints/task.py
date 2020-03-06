@@ -1,6 +1,3 @@
-
-
-
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 

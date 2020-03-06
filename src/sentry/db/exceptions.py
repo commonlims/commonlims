@@ -7,7 +7,6 @@ sentry.db.exceptions
 """
 
 
-
 class QueryError(Exception):
     pass
 

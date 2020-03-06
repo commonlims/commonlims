@@ -13,6 +13,7 @@ TEST_ROOT = os.path.normpath(
         os.pardir,
         'tests'))
 
+
 def pytest_configure(config):
     if config.option.log_level:
         os.environ['CLIMS_LOG_LEVEL'] = config.option.log_level
@@ -188,7 +189,6 @@ def django_teardown():
     from sentry.models import OrganizationOption, ProjectOption, UserOption
     for model in (OrganizationOption, ProjectOption, UserOption):
         model.objects.clear_local_cache()
-
 
 
 def tsdb_teardown():

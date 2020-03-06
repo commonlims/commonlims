@@ -6,8 +6,6 @@ sentry.tagstore.snuba.backend
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import functools
 from collections import defaultdict
 from datetime import timedelta

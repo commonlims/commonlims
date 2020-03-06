@@ -6,8 +6,6 @@ sentry.models.file
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import os
 import six
 import mmap

@@ -6,8 +6,6 @@ sentry.rules.conditions.tagged_event
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import json
 import six
 

@@ -7,8 +7,6 @@ sentry.tagstore.exceptions
 """
 
 
-
-
 class TagKeyNotFound(Exception):
     pass
 

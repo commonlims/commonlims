@@ -1,6 +1,3 @@
-
-
-
 class LockBackend(object):
     """
     Interface for providing lock behavior that is used by the

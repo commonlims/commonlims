@@ -6,8 +6,6 @@ sentry.db.models
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from copy import copy
 import logging
 import six

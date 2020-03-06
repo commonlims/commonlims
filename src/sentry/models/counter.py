@@ -6,8 +6,6 @@ sentry.models.counter
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.db import connection, connections, models
 import django.db.utils
 from django.db.models.signals import post_migrate

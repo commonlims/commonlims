@@ -1,6 +1,3 @@
-
-
-
 class ChangesetError(Exception):
     pass
 

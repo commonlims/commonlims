@@ -6,8 +6,6 @@ sentry.tasks.activity
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 
 from sentry.utils.safe import safe_execute

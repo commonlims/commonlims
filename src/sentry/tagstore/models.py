@@ -6,8 +6,6 @@ sentry.tagstore.models
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 

@@ -6,8 +6,6 @@ sentry.db.models.fields.bounded
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _

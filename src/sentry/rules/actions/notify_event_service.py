@@ -7,8 +7,6 @@ Used for notifying a *specific* plugin
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django import forms
 
 from sentry.plugins import plugins

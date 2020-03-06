@@ -6,8 +6,6 @@ sentry.tagstore.v2.backend
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import collections
 import six
 
@@ -18,7 +16,6 @@ from django.db import connections, router, IntegrityError, transaction
 from django.db.models import F, Q, Sum
 from django.utils import timezone
 from operator import or_
-from six.moves import reduce
 
 from sentry import buffer
 from sentry.tagstore import TagKeyStatus

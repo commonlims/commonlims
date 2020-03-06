@@ -9,8 +9,6 @@ In Sentry a user must achieve the following to be treated as a superuser:
   standard auth. This session has a shorter lifespan.
 """
 
-
-
 import ipaddress
 import logging
 import six

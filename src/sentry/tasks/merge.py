@@ -6,8 +6,6 @@ sentry.tasks.merge
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 
 from django.db import DataError, IntegrityError, router, transaction

@@ -6,8 +6,6 @@ sentry.search.django.constants
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 SORT_CLAUSES = {
     'priority': 'sentry_groupedmessage.score',
     'date': 'EXTRACT(EPOCH FROM sentry_groupedmessage.last_seen)::int',

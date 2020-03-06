@@ -6,8 +6,6 @@ sentry.testutils.cases
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 __all__ = (
     'TestCase', 'TransactionTestCase', 'APITestCase', 'TwoFactorAPITestCase', 'AuthProviderTestCase', 'RuleTestCase',
     'PermissionTestCase', 'CliTestCase', 'AcceptanceTestCase',

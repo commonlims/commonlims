@@ -6,8 +6,6 @@ sentry.plugins.base.notifier
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 __all__ = ('Notifier', )
 
 from sentry import ratelimits

@@ -6,8 +6,6 @@ sentry.tasks.beacon
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import json
 import logging
 import sentry

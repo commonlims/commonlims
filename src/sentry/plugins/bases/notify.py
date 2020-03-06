@@ -9,7 +9,9 @@ sentry.plugins.bases.notify
 
 import logging
 import six
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 from six.moves.urllib.parse import (
     urlparse,
     urlencode,

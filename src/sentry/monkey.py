@@ -1,6 +1,3 @@
-
-
-
 def register_scheme(name):
     try:
         import urllib.parse  # NOQA

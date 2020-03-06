@@ -6,8 +6,6 @@ sentry.models.releasefile
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.db import models
 from six.moves.urllib.parse import urlsplit, urlunsplit
 

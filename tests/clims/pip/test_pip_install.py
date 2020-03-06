@@ -1,7 +1,8 @@
-# Basic tests written to handle failures from py2.7 => py3.5 
+# Basic tests written to handle failures from py2.7 => py3.5
 # Can be removed after we've completed the switch
 import pytest
 from unittest import TestCase
+
 
 class TestPipInstall(TestCase):
     """
@@ -22,9 +23,7 @@ class TestPipInstall(TestCase):
 
         cmd.work_path = "."
         cmd.build_lib = "src"
-        p = cmd.get_asset_json_path()
         cmd._run_command = MagicMock()
         m = mock_open()
         with patch('{}.open'.format(__name__), m, create=True):
             cmd._build()
-

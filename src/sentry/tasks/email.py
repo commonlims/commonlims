@@ -6,8 +6,6 @@ sentry.tasks.email
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 
 from sentry.auth import access

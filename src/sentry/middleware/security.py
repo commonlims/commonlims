@@ -1,6 +1,3 @@
-
-
-
 class SecurityHeadersMiddleware(object):
     """
     Ensure that we have proper security headers set

@@ -6,8 +6,6 @@ sentry.search.base
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.utils.services import Service
 
 ANY = object()

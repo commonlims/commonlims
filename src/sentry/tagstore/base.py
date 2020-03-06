@@ -6,8 +6,6 @@ sentry.tagstore.base
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import re
 
 from sentry.constants import TAG_LABELS

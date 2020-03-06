@@ -6,8 +6,6 @@ sentry.attachments.default
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.cache import default_cache
 
 from .base import BaseAttachmentCache

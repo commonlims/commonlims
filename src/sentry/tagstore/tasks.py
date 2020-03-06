@@ -6,8 +6,6 @@ sentry.tagstore.tasks
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from uuid import uuid4
 
 from sentry.exceptions import DeleteAborted

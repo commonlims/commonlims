@@ -6,8 +6,6 @@ sentry.tasks.store
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 from datetime import datetime
 import six

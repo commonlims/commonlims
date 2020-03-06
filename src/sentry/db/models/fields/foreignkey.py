@@ -6,8 +6,6 @@ sentry.db.models.fields.foreignkey
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.db.models import ForeignKey
 
 __all__ = ('FlexibleForeignKey', )

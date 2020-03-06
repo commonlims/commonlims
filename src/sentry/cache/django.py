@@ -6,8 +6,6 @@ sentry.cache.django
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.core.cache import cache
 
 from .base import BaseCache

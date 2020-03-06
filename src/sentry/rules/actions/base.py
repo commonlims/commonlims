@@ -6,8 +6,6 @@ sentry.rules.actions.base
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.rules.base import RuleBase
 
 

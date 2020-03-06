@@ -7,8 +7,6 @@ Used for notifying *all* enabled plugins
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.plugins import plugins
 from sentry.rules.actions.base import EventAction
 from sentry.rules.actions.services import LegacyPluginService

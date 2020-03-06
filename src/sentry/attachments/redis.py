@@ -6,8 +6,6 @@ sentry.attachments.redis
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 
 from django.conf import settings

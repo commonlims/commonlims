@@ -6,16 +6,12 @@ sentry.db.models.query
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import itertools
 import six
 
 from django.db import IntegrityError, router, transaction
 from django.db.models import Model, Q
 from django.db.models.signals import post_save
-from six.moves import reduce
-
 from .utils import ExpressionNode, resolve_expression_node
 from functools import reduce
 

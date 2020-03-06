@@ -1,8 +1,4 @@
-
-
 import six
-import pickle
-
 
 
 def _identity(x):

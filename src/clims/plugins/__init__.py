@@ -1,6 +1,3 @@
-
-
-
 class PluginError(Exception):
     # Base class for all errors thrown by a plugin
     pass

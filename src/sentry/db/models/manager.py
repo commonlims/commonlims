@@ -6,8 +6,6 @@ sentry.db.models.manager
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 import six
 import threading

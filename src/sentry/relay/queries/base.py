@@ -1,6 +1,3 @@
-
-
-
 class InvalidQuery(Exception):
     pass
 

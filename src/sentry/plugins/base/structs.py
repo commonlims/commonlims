@@ -6,8 +6,6 @@ sentry.plugins.base.structs
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 __all__ = ('Annotation', 'Notification')
 
 import warnings

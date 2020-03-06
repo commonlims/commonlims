@@ -6,8 +6,6 @@ sentry.utils.canonical
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.conf import settings
 
 import copy

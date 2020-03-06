@@ -6,8 +6,6 @@ sentry.tasks.check_alerts
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 import six
 

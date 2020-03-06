@@ -6,8 +6,6 @@ sentry.rules.conditions.every_event
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.rules.conditions.base import EventCondition
 
 

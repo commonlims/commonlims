@@ -6,8 +6,6 @@ sentry.middleware.locale
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import pytz
 
 from django.conf import settings

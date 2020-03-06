@@ -1,6 +1,3 @@
-
-
-
 from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion
 from clims.services.base_extensible_service import BaseExtensibleService

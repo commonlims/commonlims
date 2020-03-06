@@ -6,8 +6,6 @@ sentry.middleware.social_auth
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from social_auth.middleware import SocialAuthExceptionMiddleware
 
 from sentry.utils import auth

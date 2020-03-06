@@ -8,8 +8,6 @@ For the js only path, we should not depend on any packages outside the
 python stdlib to prevent the need to install the world just to run eslint.
 """
 
-
-
 import os
 import logging
 import sys

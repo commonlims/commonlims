@@ -6,8 +6,6 @@ sentry.attachments.base
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import zlib
 
 from sentry.utils import metrics

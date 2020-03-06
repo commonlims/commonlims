@@ -7,7 +7,6 @@ sentry.db.models.fields.citext
 """
 
 
-
 import six
 
 from django.db import connections, models

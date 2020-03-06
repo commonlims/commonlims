@@ -6,8 +6,6 @@ sentry.cache.base
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from django.conf import settings
 
 from threading import local

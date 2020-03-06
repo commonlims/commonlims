@@ -5,8 +5,6 @@ sentry.logging
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from structlog import get_logger
 
 

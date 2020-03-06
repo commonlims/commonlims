@@ -1,6 +1,3 @@
-
-
-
 from sentry.api.serializers import Serializer, register
 from sentry.models import SentryAppInstallation
 

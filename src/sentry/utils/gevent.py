@@ -24,8 +24,6 @@ Use `make_psycopg_green()` to enable gevent support in Psycopg.
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-
 import psycopg2
 from psycopg2 import extensions
 

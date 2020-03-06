@@ -7,7 +7,6 @@ sentry.models.usertaskfile
 """
 
 
-
 from django.db import models
 from six.moves.urllib.parse import urlsplit, urlunsplit
 

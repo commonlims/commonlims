@@ -1,6 +1,3 @@
-
-
-
 from clims.models.work_batch import WorkBatch
 
 from rest_framework import serializers as django_serializers

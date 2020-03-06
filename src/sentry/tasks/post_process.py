@@ -6,8 +6,6 @@ sentry.tasks.post_process
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 import logging
 import time
 

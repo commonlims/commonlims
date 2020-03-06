@@ -6,8 +6,6 @@ sentry.utils.javascript
 :license: BSD, see LICENSE for more details.
 """
 
-
-
 from sentry.utils.safe import get_path
 
 

@@ -7,7 +7,6 @@ sentry.services.base
 """
 
 
-
 class Service(object):
     name = ''
 
