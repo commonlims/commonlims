@@ -148,7 +148,7 @@ test-styleguide:
 
 test-python: clean
 	@echo "--> Running Python tests"
-	py.test tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
+	CLIMS_INTEGRATION_TEST=1 py.test tests/integration tests/sentry tests/clims --cov . --cov-report="xml:.artifacts/python.coverage.xml" --junit-xml=".artifacts/python.junit.xml" || exit 1
 	@echo ""
 
 test-python-failed:
