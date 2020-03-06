@@ -1,10 +1,7 @@
-
-
 import django
 import six
 
 from six import string_types
-from sentry.utils.compat import implements_to_string
 
 
 def cmp(a, b):
@@ -118,7 +115,6 @@ class Bit(object):
         return evaluator.prepare_node(self, query, allow_joins)
 
 
-@implements_to_string
 class BitHandler(object):
     """
     Represents an array of bits, each as a ``Bit`` object.

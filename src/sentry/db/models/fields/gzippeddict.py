@@ -8,10 +8,10 @@ sentry.db.models.fields.gzippeddict
 
 import logging
 import six
+import pickle
 
 from django.db import models
 
-from sentry.utils.compat import pickle
 from sentry.utils.strings import decompress, compress
 
 __all__ = ('GzippedDictField', )

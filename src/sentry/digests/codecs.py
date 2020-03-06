@@ -1,8 +1,5 @@
-
-
 import zlib
-
-from sentry.utils.compat import pickle
+import pickle
 
 
 class Codec(object):

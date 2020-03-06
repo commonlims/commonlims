@@ -10,14 +10,13 @@ from base64 import b64encode
 import collections
 import logging
 import six
+import pickle
 from uuid import uuid4
 
 from django.db import models
 from django.db.models.signals import post_delete
 
-# from sentry import nodestore
 from sentry.utils.cache import memoize
-from sentry.utils.compat import pickle
 from sentry.utils.strings import decompress, compress
 from sentry.utils.canonical import CANONICAL_TYPES, CanonicalKeyDict
 
