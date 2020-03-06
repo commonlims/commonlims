@@ -10,7 +10,7 @@ from sentry.utils import metrics
 
 from django.db.models import Q
 
-from itertools import izip
+
 from collections import defaultdict
 from functools import reduce
 

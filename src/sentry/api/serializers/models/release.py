@@ -4,7 +4,7 @@ import six
 
 from collections import defaultdict
 from django.db.models import Sum
-from itertools import izip
+
 
 from sentry import tagstore
 from sentry.api.serializers import Serializer, register, serialize

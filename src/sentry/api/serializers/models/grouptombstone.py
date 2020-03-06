@@ -1,6 +1,6 @@
 
 
-from itertools import izip
+
 import six
 
 from sentry.api.serializers import Serializer, register, serialize

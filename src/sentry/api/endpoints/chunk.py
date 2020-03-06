@@ -4,7 +4,7 @@ import logging
 import six
 from io import BytesIO
 from gzip import GzipFile
-from itertools import izip
+
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 from six.moves.urllib.parse import urljoin
