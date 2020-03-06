@@ -26,10 +26,10 @@ logger = logging.getLogger(__name__)
 
 
 def text_shingle(n, value):
-    return map(
+    return list(map(
         u''.join,
         shingle(n, value),
-    )
+    ))
 
 
 class FrameEncodingError(ValueError):

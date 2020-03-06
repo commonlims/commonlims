@@ -239,7 +239,7 @@ class PlateBase(ContainerBase):
         table = to_table()
         longest = 0
         for row in table:
-            rows.append(map(format_fn, row))
+            rows.append(list(map(format_fn, row)))
             longest = max(max(len(cell) for cell in rows[-1]), longest)
         for i in range(len(rows)):
             rows[i] = "|".join([cell.ljust(longest, " ") for cell in rows[i]])

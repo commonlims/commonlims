@@ -15,16 +15,13 @@ def get_application_chunks(exception):
     better align similar logical application paths. This returns a sequence of
     application code "chunks": blocks of contiguously called application code.
     """
-    return map(
-        lambda in_app__frames: list(in_app__frames[1]),
-        filter(
+    return [list(in_app__frames[1]) for in_app__frames in filter(
             lambda in_app__frames: in_app__frames[0],
             itertools.groupby(
                 exception.stacktrace.frames,
                 key=lambda frame: frame.in_app,
             )
-        )
-    )
+        )]
 
 
 class InterfaceDoesNotExist(KeyError):
@@ -118,7 +115,7 @@ class FeatureSet(object):
                     ) == key, 'all events must be associated with the same group'
 
                 try:
-                    features = map(self.encoder.dumps, features)
+                    features = list(map(self.encoder.dumps, features))
                 except Exception as error:
                     log = (
                         logger.debug if isinstance(error, self.expected_encoding_errors) else
@@ -162,7 +159,7 @@ class FeatureSet(object):
                     ) == scope, 'all events must be associated with the same project'
 
                 try:
-                    features = map(self.encoder.dumps, features)
+                    features = list(map(self.encoder.dumps, features))
                 except Exception as error:
                     log = (
                         logger.debug if isinstance(error, self.expected_encoding_errors) else
@@ -179,7 +176,7 @@ class FeatureSet(object):
                         items.append((self.aliases[label], thresholds.get(label, 0), features))
                         labels.append(label)
 
-        return map(
+        return list(map(
             lambda key__scores: (
                 int(key__scores[0]),
                 dict(zip(labels, key__scores[1])),
@@ -190,7 +187,7 @@ class FeatureSet(object):
                 limit=limit,
                 timestamp=int(to_timestamp(event.datetime)),
             ),
-        )
+        ))
 
     def compare(self, group, limit=None, thresholds=None):
         if thresholds is None:
@@ -200,7 +197,7 @@ class FeatureSet(object):
 
         items = [(self.aliases[label], thresholds.get(label, 0), ) for label in features]
 
-        return map(
+        return list(map(
             lambda key__scores: (
                 int(key__scores[0]),
                 dict(zip(features, key__scores[1])),
@@ -211,7 +208,7 @@ class FeatureSet(object):
                 items,
                 limit=limit,
             ),
-        )
+        ))
 
     def merge(self, destination, sources, allow_unsafe=False):
         def add_index_aliases_to_key(key):

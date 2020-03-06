@@ -1024,13 +1024,13 @@ class EventManager(object):
         return euser
 
     def _find_hashes(self, project, hash_list):
-        return map(
+        return list(map(
             lambda hash: GroupHash.objects.get_or_create(
                 project=project,
                 hash=hash,
             )[0],
             hash_list,
-        )
+        ))
 
     def _save_aggregate(self, event, hashes, release, **kwargs):
         project = event.project

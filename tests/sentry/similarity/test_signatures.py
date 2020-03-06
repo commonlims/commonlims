@@ -21,13 +21,13 @@ class MinHashSignatureBuilderTestCase(TestCase):
         b = set('the quick brown fox jumps over the lazy dog'.split())
 
         results = Counter(
-            map(
+            list(map(
                 lambda l__r: l__r[0] == l__r[1],
                 zip(
                     get_signature(a),
                     get_signature(b),
                 ),
-            ),
+            )),
         )
 
         similarity = len(a & b) / float(len(a | b))

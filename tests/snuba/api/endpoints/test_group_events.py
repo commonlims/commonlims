@@ -46,7 +46,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 2
-        assert sorted(map(lambda x: x['eventID'], response.data)) == sorted(
+        assert sorted([x['eventID'] for x in response.data]) == sorted(
             [
                 six.text_type(event_1.event_id),
                 six.text_type(event_2.event_id),
@@ -176,7 +176,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 2
-        assert sorted(map(lambda x: x['eventID'], response.data)) == sorted(
+        assert sorted([x['eventID'] for x in response.data]) == sorted(
             [
                 six.text_type(event_1.event_id),
                 six.text_type(event_2.event_id),
@@ -201,7 +201,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         response = self.client.get(url + '?environment=production', format='json')
 
         assert response.status_code == 200, response.content
-        assert set(map(lambda x: x['eventID'], response.data)) == set([
+        assert set([x['eventID'] for x in response.data]) == set([
             six.text_type(events['production'].event_id),
         ])
 
@@ -211,7 +211,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
             format='json',
         )
         assert response.status_code == 200, response.content
-        assert set(map(lambda x: x['eventID'], response.data)) == set([
+        assert set([x['eventID'] for x in response.data]) == set([
             six.text_type(event.event_id)
             for event in list(events.values())
         ])
@@ -249,7 +249,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 1
-        assert sorted(map(lambda x: x['eventID'], response.data)) == sorted(
+        assert sorted([x['eventID'] for x in response.data]) == sorted(
             [
                 six.text_type(event_2.event_id),
             ]
@@ -307,7 +307,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 2
-        assert sorted(map(lambda x: x['eventID'], response.data)) == sorted(
+        assert sorted([x['eventID'] for x in response.data]) == sorted(
             [
                 six.text_type(event_1.event_id),
                 six.text_type(event_2.event_id),

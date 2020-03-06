@@ -324,7 +324,7 @@ def show_big_error(message):
         lines = message.splitlines()
     else:
         lines = message
-    maxline = max(map(len, lines))
+    maxline = max(list(map(len, lines)))
     click.echo('', err=True)
     click.secho('!! %s !!' % ('!' * min(maxline, 80), ), err=True, fg='red')
     for line in lines:

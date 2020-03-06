@@ -34,10 +34,10 @@ class Encoder(object):
             ))
         elif isinstance(value, Sequence):
             return '\x01'.join(
-                map(
+                list(map(
                     self.dumps,
                     value,
-                ),
+                )),
             )
         elif isinstance(value, Mapping):
             return '\x02'.join(

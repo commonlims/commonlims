@@ -17,10 +17,10 @@ def shingle(n, iterator):
     [('foo', 'bar'), ('bar', 'baz')]
     """
     return zip(
-        *map(
+        *list(map(
             lambda i__iterator: advance(i__iterator[0], i__iterator[1]),
             enumerate(itertools.tee(iterator, n)),
-        )
+        ))
     )
 
 

@@ -281,10 +281,10 @@ def reverse_bisect_left(a, x, lo=0, hi=None):
 
 class SequencePaginator(object):
     def __init__(self, data, reverse=False, max_limit=MAX_LIMIT, on_results=None):
-        self.scores, self.values = map(
+        self.scores, self.values = list(map(
             list,
             zip(*sorted(data, reverse=reverse)),
-        ) if data else ([], [])
+        )) if data else ([], [])
         self.reverse = reverse
         self.search = functools.partial(
             reverse_bisect_left if reverse else bisect.bisect_left,

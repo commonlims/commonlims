@@ -102,4 +102,4 @@ class Command(BaseCommand):
         if args[0] == args[1]:
             raise CommandError('Specify different ids')
 
-        print_unified_diff(*map(get_group_event if options['group'] else get_event, args))
+        print_unified_diff(*list(map(get_group_event if options['group'] else get_event, args)))

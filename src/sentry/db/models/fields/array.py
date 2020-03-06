@@ -37,7 +37,7 @@ class ArrayField(models.Field):
             value = []
         if isinstance(value, six.text_type):
             value = json.loads(value)
-        return map(self.of.to_python, value)
+        return list(map(self.of.to_python, value))
 
     def get_db_prep_value(self, value, connection, prepared=False):
         if not prepared:

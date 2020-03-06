@@ -398,7 +398,7 @@ def raw_query(start, end, groupby=None, conditions=None, filter_keys=None,
         # Otherwise infer the project_ids from any related models
         with timer('get_related_project_ids'):
             ids = [get_related_project_ids(k, filter_keys[k]) for k in filter_keys]
-            project_ids = list(set.union(*map(set, ids)))
+            project_ids = list(set.union(*list(map(set, ids))))
     else:
         project_ids = []
 

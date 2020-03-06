@@ -100,7 +100,7 @@ class FileService:
                 file_name = file_name.split("_", 1)[1]
         elif file_prefix == FileService.FILE_PREFIX_RUNNING_NUMBER:
             # Prefix with the index of the shared file
-            artifact_ids = sorted([tuple(map(int, shared_file.id.split("-")) + [shared_file.id])
+            artifact_ids = sorted([tuple(list(map(int, shared_file.id.split("-"))) + [shared_file.id])
                                    for shared_file in self.artifact_service.shared_files()])
             running_numbers = {
                 artifact_id[2]: ix + 1 for ix,
@@ -396,7 +396,7 @@ class LocalSharedFileProvider:
             filtered_artifacts = by_handle
 
         if len(filtered_artifacts) != 1:
-            files = ", ".join(map(lambda x: x.name, shared_files))
+            files = ", ".join([x.name for x in shared_files])
             searched_filename = filename if filename is not None else file_handle
             raise SharedFileNotFound("Expected a shared file called '{}', got {}.\nFile handle: '{}'\nFiles: {}".format(
                 searched_filename, len(filtered_artifacts), file_handle, files))

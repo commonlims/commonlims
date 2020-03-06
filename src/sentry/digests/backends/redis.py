@@ -227,7 +227,7 @@ class RedisBackend(Backend):
                 else:
                     raise
 
-            records = map(
+            records = list(map(
                 lambda key__value__timestamp: Record(
                     key__value__timestamp[0],
                     self.codec.decode(
@@ -235,7 +235,7 @@ class RedisBackend(Backend):
                     float(key__value__timestamp[2]),
                 ),
                 response,
-            )
+            ))
 
             # If the record value is `None`, this means the record data was
             # missing (it was presumably evicted by Redis) so we don't need to

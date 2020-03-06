@@ -119,7 +119,7 @@ class RedisQuota(Quota):
             return int(result.value or 0) - int(refund_result.value or 0)
 
         with self.cluster.fanout() as client:
-            results = map(
+            results = list(map(
                 functools.partial(
                     get_usage_for_quota,
                     client.target_key(
@@ -127,7 +127,7 @@ class RedisQuota(Quota):
                     ),
                 ),
                 quotas,
-            )
+            ))
 
         return [
             get_value_for_result(*r) for r in results

@@ -39,7 +39,7 @@ def _make_key_value(val):
 
 def parse_auth_header(header):
     try:
-        return dict(map(_make_key_value, header.split(' ', 1)[1].split(',')))
+        return dict(list(map(_make_key_value, header.split(' ', 1)[1].split(','))))
     except Exception:
         return {}
 

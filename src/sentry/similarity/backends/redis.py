@@ -57,10 +57,10 @@ class RedisScriptMinHashIndexBackend(AbstractIndexBackend):
             key, scores = result
             return (
                 key,
-                map(
+                list(map(
                     lambda score: score_replacements.get(score, score),
-                    map(float, scores),
-                )
+                    list(map(float, scores)),
+                ))
             )
 
         def get_comparison_key(result):

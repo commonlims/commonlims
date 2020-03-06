@@ -162,7 +162,7 @@ def prepare_project_series(start__stop, project, rollup=60 * 60 * 24):
     return merge_series(
         reduce(
             merge_series,
-            map(
+            list(map(
                 clean,
                 list(tsdb.get_range(
                     tsdb.models.group,
@@ -177,7 +177,7 @@ def prepare_project_series(start__stop, project, rollup=60 * 60 * 24):
                     stop,
                     rollup=rollup,
                 ).values()),
-            ),
+            )),
             clean([(timestamp, 0) for timestamp in series]),
         ),
         clean(
@@ -340,7 +340,7 @@ def clean_calendar_data(project, series, start, stop, rollup, timestamp=None):
             value = None
         return (timestamp, value)
 
-    return map(
+    return list(map(
         remove_invalid_values,
         clean_series(
             start,
@@ -348,7 +348,7 @@ def clean_calendar_data(project, series, start, stop, rollup, timestamp=None):
             rollup,
             series,
         ),
-    )
+    ))
 
 
 def prepare_project_calendar_series(interval, project):
@@ -440,14 +440,14 @@ class DummyReportBackend(ReportBackend):
 
     def fetch(self, timestamp, duration, organization, projects):
         assert all(project.organization_id == organization.id for project in projects)
-        return map(
+        return list(map(
             functools.partial(
                 self.build,
                 timestamp,
                 duration,
             ),
             projects,
-        )
+        ))
 
 
 class RedisReportBackend(ReportBackend):
@@ -968,7 +968,7 @@ def to_calendar(interval, series):
         weeks = []
 
         for week in calendar.monthdatescalendar(year, month):
-            weeks.append(map(get_data_for_date, week))
+            weeks.append(list(map(get_data_for_date, week)))
 
         sheets.append((datetime(year, month, 1, tzinfo=pytz.utc), weeks, ))
 

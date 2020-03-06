@@ -174,7 +174,7 @@ class Container(DomainObjectWithUdfMixin):
             table = self.to_table()
             longest = 0
             for row in table:
-                rows.append(map(well_to_string, row))
+                rows.append(list(map(well_to_string, row)))
                 longest = max(max(len(cell) for cell in rows[-1]), longest)
             for i in range(len(rows)):
                 rows[i] = "|".join([cell.ljust(longest, " ") for cell in rows[i]])

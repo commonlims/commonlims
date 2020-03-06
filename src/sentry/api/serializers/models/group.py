@@ -92,13 +92,13 @@ class GroupSerializerBase(Serializer):
             GroupSubscription.objects.filter(
                 group__in=list(
                     itertools.chain.from_iterable(
-                        map(
+                        list(map(
                             lambda project__groups: project__groups[1] if not options.get(
                                 project__groups[0].id,
                                 options.get(None)
                             ) == UserOptionValue.no_conversations else [],
                             list(projects.items()),
-                        ),
+                        )),
                     )
                 ),
                 user=user,
