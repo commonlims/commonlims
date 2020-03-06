@@ -114,7 +114,7 @@ class SynchronizedPartitionStateManager(object):
             updated_state = self.get_state_from_offsets(updated_offsets)
             if previous_state is not updated_state and updated_state not in self.transitions[previous_state]:
                 raise InvalidStateTransition(
-                    u'Unexpected state transition for {}/{} from {} to {}'.format(
+                    'Unexpected state transition for {}/{} from {} to {}'.format(
                         topic, partition, previous_state, updated_state))
             self.partitions[(topic, partition)] = (updated_state, updated_offsets)
             if previous_state is not updated_state:
@@ -150,7 +150,7 @@ class SynchronizedPartitionStateManager(object):
             updated_state = self.get_state_from_offsets(updated_offsets)
             if previous_state is not updated_state and updated_state not in self.transitions[previous_state]:
                 raise InvalidStateTransition(
-                    u'Unexpected state transition for {}/{} from {} to {}'.format(
+                    'Unexpected state transition for {}/{} from {} to {}'.format(
                         topic, partition, previous_state, updated_state))
             self.partitions[(topic, partition)] = (updated_state, updated_offsets)
             if previous_state is not updated_state:

@@ -24,7 +24,7 @@ class OrganizationEventsTest(AcceptanceTestCase):
         )
 
         self.login_as(self.user)
-        self.path = u'/organizations/{}/events/'.format(self.org.slug)
+        self.path = '/organizations/{}/events/'.format(self.org.slug)
 
     def test_no_access(self):
         self.browser.get(self.path)

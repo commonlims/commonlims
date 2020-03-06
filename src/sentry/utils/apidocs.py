@@ -99,7 +99,7 @@ def parse_doc_string(doc):
     param_lines = []
     lines = []
     warning = []
-    iterable = iter((doc or u'').splitlines())
+    iterable = iter((doc or '').splitlines())
 
     for line in iterable:
         stripped = line.strip()

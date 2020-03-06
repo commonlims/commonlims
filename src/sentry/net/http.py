@@ -143,7 +143,7 @@ class TimeoutAdapter(HTTPAdapter):
         return HTTPAdapter.send(self, *args, **kwargs)
 
 
-USER_AGENT = u'sentry/{version} (https://sentry.io)'.format(
+USER_AGENT = 'sentry/{version} (https://sentry.io)'.format(
     version=SENTRY_VERSION,
 )
 

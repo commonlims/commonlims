@@ -46,7 +46,7 @@ class NewProcessingIssuesActivityEmail(ActivityEmail):
             self.activity.data['reprocessing_active'],
             'info_url':
             absolute_uri(
-                u'/{}/{}/settings/processing-issues/'.format(
+                '/{}/{}/settings/processing-issues/'.format(
                     self.organization.slug,
                     self.project.slug,
                 )
@@ -54,7 +54,7 @@ class NewProcessingIssuesActivityEmail(ActivityEmail):
         }
 
     def get_subject(self):
-        return u'Processing Issues on {}'.format(
+        return 'Processing Issues on {}'.format(
             self.project.slug
         )
 

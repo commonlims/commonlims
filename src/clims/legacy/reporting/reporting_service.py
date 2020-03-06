@@ -45,7 +45,7 @@ class ReportingService(object):
             if not obj:
                 return ""
             else:
-                return u"{}".format(obj)
+                return "{}".format(obj)
 
         # Print values
         for project in filter(keep_project, projects):
@@ -59,4 +59,4 @@ class ReportingService(object):
                     row.append(value)
                 else:
                     row.append(None)
-            print(u"\t".join(map(massage_value, row)))  # noqa: B314
+            print("\t".join(map(massage_value, row)))  # noqa: B314

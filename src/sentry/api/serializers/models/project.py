@@ -341,7 +341,7 @@ def bulk_fetch_project_latest_releases(projects):
     no release found, no entry will be returned for the given project.
     """
     return list(Release.objects.raw(
-        u"""
+        """
         SELECT lr.project_id as actual_project_id, r.*
         FROM (
             SELECT (
@@ -457,12 +457,12 @@ class DetailedProjectSerializer(ProjectWithTeamSerializer):
                     'filters:blacklisted_ips':
                     '\n'.join(attrs['options'].get(
                         'sentry:blacklisted_ips', [])),
-                    u'filters:{}'.format(FilterTypes.RELEASES):
+                    'filters:{}'.format(FilterTypes.RELEASES):
                     '\n'.join(attrs['options'].get(
-                        u'sentry:{}'.format(FilterTypes.RELEASES), [])),
-                    u'filters:{}'.format(FilterTypes.ERROR_MESSAGES):
+                        'sentry:{}'.format(FilterTypes.RELEASES), [])),
+                    'filters:{}'.format(FilterTypes.ERROR_MESSAGES):
                     '\n'.
-                    join(attrs['options'].get(u'sentry:{}'.format(
+                    join(attrs['options'].get('sentry:{}'.format(
                         FilterTypes.ERROR_MESSAGES), [])),
                     'feedback:branding':
                     attrs['options'].get('feedback:branding', '1') == '1',

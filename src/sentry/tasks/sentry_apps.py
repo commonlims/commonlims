@@ -202,7 +202,7 @@ def workflow_notification(installation_id, issue_id, type, user_id, *args, **kwa
 
     send_webhooks(
         installation=install,
-        event=u'issue.{}'.format(type),
+        event='issue.{}'.format(type),
         data=data,
         actor=user,
     )

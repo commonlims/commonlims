@@ -244,7 +244,7 @@ class IssueTrackingPlugin(Plugin):
                         request=request,
                     )
                 except forms.ValidationError as e:
-                    create_form.errors['__all__'] = [u'Error creating issue: %s' % e]
+                    create_form.errors['__all__'] = ['Error creating issue: %s' % e]
 
             if create_form.is_valid():
                 GroupMeta.objects.set_value(group, '%s:tid' % prefix, issue_id)
@@ -280,7 +280,7 @@ class IssueTrackingPlugin(Plugin):
                         request=request,
                     )
                 except forms.ValidationError as e:
-                    link_form.errors['__all__'] = [u'Error creating issue: %s' % e]
+                    link_form.errors['__all__'] = ['Error creating issue: %s' % e]
 
             if link_form.is_valid():
                 issue_id = int(link_form.cleaned_data['issue_id'])

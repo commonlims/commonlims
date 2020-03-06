@@ -19,7 +19,7 @@ class OrganizationReleasesTest(AcceptanceTestCase):
             name='Bengal',
         )
         self.login_as(self.user)
-        self.path = u'/organizations/{}/releases/'.format(
+        self.path = '/organizations/{}/releases/'.format(
             self.org.slug)
 
     def test_with_releases(self):

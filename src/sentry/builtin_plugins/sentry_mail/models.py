@@ -102,7 +102,7 @@ class MailPlugin(NotificationPlugin):
         return absolute_uri(reverse('sentry-account-settings-notifications'))
 
     def get_project_url(self, project):
-        return absolute_uri(u'/{}/{}/'.format(project.organization.slug, project.slug))
+        return absolute_uri('/{}/{}/'.format(project.organization.slug, project.slug))
 
     def is_configured(self, project, **kwargs):
         # Nothing to configure here
@@ -289,7 +289,7 @@ class MailPlugin(NotificationPlugin):
             )
 
     def get_digest_subject(self, group, counts, date):
-        return u'{short_id} - {count} new {noun} since {date}'.format(
+        return '{short_id} - {count} new {noun} since {date}'.format(
             short_id=group.qualified_short_id,
             count=len(counts),
             noun='alert' if len(counts) == 1 else 'alerts',
@@ -348,7 +348,7 @@ class MailPlugin(NotificationPlugin):
         email_cls = emails.get(activity.type)
         if not email_cls:
             logger.debug(
-                u'No email associated with activity type `{}`'.format(
+                'No email associated with activity type `{}`'.format(
                     activity.get_type_display(),
                 )
             )
@@ -369,17 +369,17 @@ class MailPlugin(NotificationPlugin):
 
         context = {
             'project': project,
-            'project_link': absolute_uri(u'/{}/{}/'.format(
+            'project_link': absolute_uri('/{}/{}/'.format(
                 project.organization.slug,
                 project.slug,
             )),
-            'issue_link': absolute_uri(u'/{}/{}/issues/{}/'.format(
+            'issue_link': absolute_uri('/{}/{}/issues/{}/'.format(
                 project.organization.slug,
                 project.slug,
                 payload['report']['issue']['id'],
             )),
             # TODO(dcramer): we dont have permalinks to feedback yet
-            'link': absolute_uri(u'/{}/{}/issues/{}/feedback/'.format(
+            'link': absolute_uri('/{}/{}/issues/{}/feedback/'.format(
                 project.organization.slug,
                 project.slug,
                 payload['report']['issue']['id'],
@@ -390,7 +390,7 @@ class MailPlugin(NotificationPlugin):
 
         subject_prefix = self.get_option('subject_prefix', project) or self._subject_prefix()
         subject_prefix = force_text(subject_prefix)
-        subject = force_text(u'{}{} - New Feedback from {}'.format(
+        subject = force_text('{}{} - New Feedback from {}'.format(
             subject_prefix,
             group.qualified_short_id,
             payload['report']['name'],

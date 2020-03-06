@@ -16,19 +16,19 @@ def get_payload_v0(event):
     group = event.group
     project = group.project
 
-    project_url_base = absolute_uri(u'/{}/{}'.format(
+    project_url_base = absolute_uri('/{}/{}'.format(
         project.organization.slug,
         project.slug,
     ))
 
     group_context = serialize(group)
-    group_context['url'] = u'{}/issues/{}/'.format(
+    group_context['url'] = '{}/issues/{}/'.format(
         project_url_base,
         group.id,
     )
 
     event_context = serialize(event)
-    event_context['url'] = u'{}/issues/{}/events/{}/'.format(
+    event_context['url'] = '{}/issues/{}/events/{}/'.format(
         project_url_base,
         group.id,
         event.id,

@@ -227,13 +227,13 @@ class Fixtures(object):
 
     @fixture
     def group(self):
-        return self.create_group(message=u'\u3053\u3093\u306b\u3061\u306f')
+        return self.create_group(message='\u3053\u3093\u306b\u3061\u306f')
 
     @fixture
     def event(self):
         return self.create_event(
             event_id='a' * 32,
-            message=u'\u3053\u3093\u306b\u3061\u306f',
+            message='\u3053\u3093\u306b\u3061\u306f',
         )
 
     @fixture

@@ -13,13 +13,13 @@ class ResolvedInReleaseActivityEmail(ActivityEmail):
     def get_description(self):
         data = self.activity.data
         if data.get('version'):
-            return u'{author} marked {an issue} as resolved in {version}', {
+            return '{author} marked {an issue} as resolved in {version}', {
                 'version': data['version'],
             }, {
                 'version':
-                u'<a href="{}">{}</a>'.format(
+                '<a href="{}">{}</a>'.format(
                     absolute_uri(
-                        u'/{}/{}/releases/{}/'.format(
+                        '/{}/{}/releases/{}/'.format(
                             self.organization.slug,
                             self.project.slug,
                             data['version'],
@@ -28,4 +28,4 @@ class ResolvedInReleaseActivityEmail(ActivityEmail):
                     escape(data['version']),
                 )
             }
-        return u'{author} marked {an issue} as resolved in an upcoming release'
+        return '{author} marked {an issue} as resolved in an upcoming release'

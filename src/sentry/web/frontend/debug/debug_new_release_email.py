@@ -55,7 +55,7 @@ class DebugNewReleaseEmailView(View):
         )
 
         release_links = [
-            absolute_uri(u'/{}/{}/releases/{}/'.format(
+            absolute_uri('/{}/{}/releases/{}/'.format(
                 org.slug,
                 p.slug,
                 release.version,

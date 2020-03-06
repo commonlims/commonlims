@@ -202,7 +202,7 @@ class OrganizationIndexEndpoint(Endpoint):
 
         limit = options.get('api.rate-limit.org-create')
         if limit and ratelimiter.is_limited(
-            u'org-create:{}'.format(request.user.id),
+            'org-create:{}'.format(request.user.id),
             limit=limit,
             window=3600,
         ):

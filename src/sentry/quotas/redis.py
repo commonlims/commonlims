@@ -53,7 +53,7 @@ class RedisQuota(Quota):
             raise InvalidConfiguration(six.text_type(e))
 
     def __get_redis_key(self, key, timestamp, interval, shift):
-        return u'{}:{}:{}'.format(
+        return '{}:{}:{}'.format(
             self.namespace,
             key,
             int((timestamp - shift) // interval),
@@ -73,13 +73,13 @@ class RedisQuota(Quota):
         oquota = self.get_organization_quota(project.organization)
         results = [
             BasicRedisQuota(
-                key=u'p:{}'.format(project.id),
+                key='p:{}'.format(project.id),
                 limit=pquota[0],
                 window=pquota[1],
                 reason_code='project_quota',
             ),
             BasicRedisQuota(
-                key=u'o:{}'.format(project.organization_id),
+                key='o:{}'.format(project.organization_id),
                 limit=oquota[0],
                 window=oquota[1],
                 reason_code='org_quota',
@@ -89,7 +89,7 @@ class RedisQuota(Quota):
             kquota = self.get_key_quota(key)
             results.append(
                 BasicRedisQuota(
-                    key=u'k:{}'.format(key.id),
+                    key='k:{}'.format(key.id),
                     limit=kquota[0],
                     window=kquota[1],
                     reason_code='key_quota',
@@ -134,7 +134,7 @@ class RedisQuota(Quota):
         ]
 
     def get_refunded_quota_key(self, key):
-        return u'r:{}'.format(key)
+        return 'r:{}'.format(key)
 
     def refund(self, project, key=None, timestamp=None):
         if timestamp is None:

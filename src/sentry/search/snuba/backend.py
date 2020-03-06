@@ -111,7 +111,7 @@ class ScalarCondition(Condition):
 
     def apply(self, name, parameters):
         inclusive = parameters.get(
-            u'{}_inclusive'.format(name),
+            '{}_inclusive'.format(name),
             self.default_inclusivity,
         )
 
@@ -165,11 +165,11 @@ class SnubaSearchBackend(ds.DjangoSearchBackend):
             }).build(
                 group_queryset.extra(
                     where=[
-                        u'{} = {}'.format(
+                        '{} = {}'.format(
                             ds.get_sql_column(Group, 'id'),
                             ds.get_sql_column(GroupEnvironment, 'group_id'),
                         ),
-                        u'{} IN ({})'.format(
+                        '{} IN ({})'.format(
                             ds.get_sql_column(GroupEnvironment, 'environment_id'),
                             ', '.join(['%s' for e in environments])
                         ),
@@ -480,7 +480,7 @@ def snuba_search(start, end, project_ids, environment_ids, tags,
 
     conditions = []
     for tag, val in six.iteritems(tags):
-        col = u'tags[{}]'.format(tag)
+        col = 'tags[{}]'.format(tag)
         if val == ANY:
             conditions.append((col, '!=', ''))
         else:

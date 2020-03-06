@@ -1091,7 +1091,7 @@ class Exception(Interface):
 
         output = []
         for exc in self.values:
-            output.append(u'{0}: {1}\n'.format(exc.type, exc.value))
+            output.append('{0}: {1}\n'.format(exc.type, exc.value))
             if exc.stacktrace:
                 output.append(
                     exc.stacktrace.

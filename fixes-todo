@@ -1,13 +1,3 @@
-reload
-renames
-repr
-set_literal
-standarderror
-sys_exc
-throw
-tuple_params
-types
-unicode
 urllib
 ws_comma
 xrange

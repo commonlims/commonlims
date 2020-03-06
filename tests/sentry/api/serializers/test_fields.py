@@ -48,7 +48,7 @@ class TestListField(TestCase):
         serializer = DummySerializer(data=data)
         assert not serializer.is_valid()
         assert serializer.errors == {
-            'a_field': [u'This field may not be null.'],
+            'a_field': ['This field may not be null.'],
         }
 
     def test_child_validates(self):
@@ -60,7 +60,7 @@ class TestListField(TestCase):
 
         serializer = DummySerializer(data=data)
         assert not serializer.is_valid()
-        assert serializer.errors == {'a_field': [u'd_field: This field is required.']}
+        assert serializer.errors == {'a_field': ['d_field: This field is required.']}
 
 
 class TestActorField(TestCase):
@@ -103,4 +103,4 @@ class TestActorField(TestCase):
 
         serializer = DummySerializer(data=data)
         assert not serializer.is_valid()
-        assert serializer.errors == {'actor_field': [u'Unknown actor input']}
+        assert serializer.errors == {'actor_field': ['Unknown actor input']}

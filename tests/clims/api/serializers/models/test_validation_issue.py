@@ -12,7 +12,7 @@ class ValidationIssueSerializerTest(TestCase):
         serialized = ValidationIssueSerializer(model).data
 
         assert serialized == {
-            'type': u'error',
+            'type': 'error',
             'column': None,
             'object_id': None,
             'file': None,
@@ -26,5 +26,5 @@ class ValidationIssueSerializerTest(TestCase):
         serialized = ValidationIssueSerializer(model).data
 
         assert serialized == {
-            'column': u'col',
-            'object_id': u'obj', 'file': u'file', 'msg': u'message', 'type': u'error', 'row': u'row'}
+            'column': 'col',
+            'object_id': 'obj', 'file': 'file', 'msg': 'message', 'type': 'error', 'row': 'row'}

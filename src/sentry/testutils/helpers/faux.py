@@ -61,7 +61,7 @@ class Faux(object):
             return True
 
         raise AssertionError(
-            u'Expected to be called with {}. Received {}.'.format(
+            'Expected to be called with {}. Received {}.'.format(
                 self._invocation_to_s(*args, **kwargs),
                 self._invocation_to_s(*self.args, **self.kwargs),
             )
@@ -72,7 +72,7 @@ class Faux(object):
             return True
 
         raise AssertionError(
-            u'Expected kwargs to contain key \'{}\'. Received ({}).'.format(
+            'Expected kwargs to contain key \'{}\'. Received ({}).'.format(
                 key,
                 self._kwargs_to_s(**self.kwargs),
             ),
@@ -85,7 +85,7 @@ class Faux(object):
             return True
 
         raise AssertionError(
-            u'Expected kwargs[{}] to equal {!r}. Received {!r}.'.format(
+            'Expected kwargs[{}] to equal {!r}. Received {!r}.'.format(
                 key,
                 expected,
                 actual,
@@ -97,7 +97,7 @@ class Faux(object):
             return True
 
         raise AssertionError(
-            u'Expected args to contain {!r}. Received ({}).'.format(
+            'Expected args to contain {!r}. Received ({}).'.format(
                 value,
                 self._args_to_s(*self.args),
             ),
@@ -108,7 +108,7 @@ class Faux(object):
             return True
 
         raise AssertionError(
-            u'Expected args to equal ({}). Received ({}).'.format(
+            'Expected args to equal ({}). Received ({}).'.format(
                 self._args_to_s(*args),
                 self._args_to_s(*self.args),
             )
@@ -156,7 +156,7 @@ class Faux(object):
         """
         Convert a function invocation into a pretty printable string.
         """
-        return u'({})'.format(
+        return '({})'.format(
             ', '.join(compact([
                 self._args_to_s(*args),
                 self._kwargs_to_s(**kwargs),
@@ -166,12 +166,12 @@ class Faux(object):
     def _args_to_s(self, *args):
         if not len(args):
             return None
-        return ', '.join(u'{!r}'.format(arg) for arg in args)
+        return ', '.join('{!r}'.format(arg) for arg in args)
 
     def _kwargs_to_s(self, **kwargs):
         if not len(kwargs):
             return None
-        return ', '.join(u'{}={!r}'.format(k, v) for k, v in six.iteritems(kwargs))
+        return ', '.join('{}={!r}'.format(k, v) for k, v in six.iteritems(kwargs))
 
 
 def faux(mock, call=None):

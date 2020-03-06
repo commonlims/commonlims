@@ -17,7 +17,7 @@ class AuthView(BaseView):
 
     def get_ident(self):
         cls = type(self)
-        return u'{module}.{name}'.format(
+        return '{module}.{name}'.format(
             module=cls.__module__,
             name=cls.__name__,
         )

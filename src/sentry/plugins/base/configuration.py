@@ -21,7 +21,7 @@ from sentry.utils import json
 def react_plugin_config(plugin, project, request):
     from sentry.api.serializers import serialize  # Django 1.9 setup issue
     response = client.get(
-        u'/projects/{}/{}/plugins/{}/'.format(
+        '/projects/{}/{}/plugins/{}/'.format(
             project.organization.slug,
             project.slug,
             plugin.slug,

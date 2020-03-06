@@ -11,7 +11,7 @@ from sentry.api.base import Endpoint
 class EndpointTest(TestCase):
     def test_simple(self):
         request = Mock()
-        request.GET = {u'member': [u'1']}
+        request.GET = {'member': ['1']}
         request.method = 'GET'
         request.path = '/api/0/organizations/'
         endpoint = Endpoint()
@@ -25,7 +25,7 @@ class EndpointTest(TestCase):
 
     def test_unicode_path(self):
         request = Mock()
-        request.GET = {u'member': [u'1']}
+        request.GET = {'member': ['1']}
         request.method = 'GET'
         request.path = '/api/0/organizations/üuuuu/'
         endpoint = Endpoint()

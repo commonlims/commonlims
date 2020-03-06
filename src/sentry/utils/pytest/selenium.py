@@ -43,7 +43,7 @@ class Browser(object):
         """
         Return the absolute URI for a given route in Sentry.
         """
-        return u"{}/{}".format(self.live_server_url, path.lstrip("/").format(*args, **kwargs))
+        return "{}/{}".format(self.live_server_url, path.lstrip("/").format(*args, **kwargs))
 
     def get(self, path, *args, **kwargs):
         self.driver.get(self.route(path), *args, **kwargs)
@@ -236,10 +236,10 @@ class Browser(object):
         # http://stackoverflow.com/questions/37103621/adding-cookies-working-with-firefox-webdriver-but-not-in-phantomjs
 
         # TODO(dcramer): this should be escaped, but idgaf
-        logger.info(u"selenium.set-cookie.{}".format(name), extra={"value": value})
+        logger.info("selenium.set-cookie.{}".format(name), extra={"value": value})
         if isinstance(self.driver, webdriver.PhantomJS):
             self.driver.execute_script(
-                u"document.cookie = '{name}={value}; path={path}; domain={domain}; expires={expires}'; max-age={max_age}\n".format(
+                "document.cookie = '{name}={value}; path={path}; domain={domain}; expires={expires}'; max-age={max_age}\n".format(
                     **cookie
                 )
             )
@@ -308,7 +308,7 @@ def browser(request, percy, live_server):
         options = webdriver.ChromeOptions()
         options.add_argument("no-sandbox")
         options.add_argument("disable-gpu")
-        options.add_argument(u"window-size={}".format(window_size))
+        options.add_argument("window-size={}".format(window_size))
         if headless:
             options.add_argument("headless")
         chrome_path = request.config.getoption("chrome_path")
@@ -381,20 +381,20 @@ def _gather_url(item, report, driver, summary, extra):
     try:
         url = driver.current_url
     except Exception as e:
-        summary.append(u"WARNING: Failed to gather URL: {0}".format(e))
+        summary.append("WARNING: Failed to gather URL: {0}".format(e))
         return
     pytest_html = item.config.pluginmanager.getplugin("html")
     if pytest_html is not None:
         # add url to the html report
         extra.append(pytest_html.extras.url(url))
-    summary.append(u"URL: {0}".format(url))
+    summary.append("URL: {0}".format(url))
 
 
 def _gather_screenshot(item, report, driver, summary, extra):
     try:
         screenshot = driver.get_screenshot_as_base64()
     except Exception as e:
-        summary.append(u"WARNING: Failed to gather screenshot: {0}".format(e))
+        summary.append("WARNING: Failed to gather screenshot: {0}".format(e))
         return
     pytest_html = item.config.pluginmanager.getplugin("html")
     if pytest_html is not None:
@@ -406,7 +406,7 @@ def _gather_html(item, report, driver, summary, extra):
     try:
         html = driver.page_source.encode("utf-8")
     except Exception as e:
-        summary.append(u"WARNING: Failed to gather HTML: {0}".format(e))
+        summary.append("WARNING: Failed to gather HTML: {0}".format(e))
         return
     pytest_html = item.config.pluginmanager.getplugin("html")
     if pytest_html is not None:
@@ -419,13 +419,13 @@ def _gather_logs(item, report, driver, summary, extra):
         types = driver.log_types
     except Exception as e:
         # note that some drivers may not implement log types
-        summary.append(u"WARNING: Failed to gather log types: {0}".format(e))
+        summary.append("WARNING: Failed to gather log types: {0}".format(e))
         return
     for name in types:
         try:
             log = driver.get_log(name)
         except Exception as e:
-            summary.append(u"WARNING: Failed to gather {0} log: {1}".format(name, e))
+            summary.append("WARNING: Failed to gather {0} log: {1}".format(name, e))
             return
         pytest_html = item.config.pluginmanager.getplugin("html")
         if pytest_html is not None:
@@ -435,7 +435,7 @@ def _gather_logs(item, report, driver, summary, extra):
 def format_log(log):
     timestamp_format = "%Y-%m-%d %H:%M:%S.%f"
     entries = [
-        u"{0} {1[level]} - {1[message]}".format(
+        "{0} {1[level]} - {1[message]}".format(
             datetime.utcfromtimestamp(entry["timestamp"] / 1000.0).strftime(timestamp_format), entry
         ).rstrip()
         for entry in log

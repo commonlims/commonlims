@@ -81,19 +81,19 @@ class RuleSerializer(serializers.Serializer):
                 environment,
             ).id
         except Environment.DoesNotExist:
-            raise serializers.ValidationError(u'This environment has not been created.')
+            raise serializers.ValidationError('This environment has not been created.')
 
         return environment
 
     def validate_conditions(self, name):
         if not name:
-            raise serializers.ValidationError(u'Must select a condition')
+            raise serializers.ValidationError('Must select a condition')
 
         return name
 
     def validate_actions(self, name):
         if not name:
-            raise serializers.ValidationError(u'Must select an action')
+            raise serializers.ValidationError('Must select an action')
 
         return name
 

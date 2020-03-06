@@ -25,5 +25,5 @@ class SubstanceSerializerTest(SubstanceTestCase):
         valid = serializer.is_valid()
 
         assert not valid
-        assert serializer.errors['name'] == [u'This field is required.']
-        assert serializer.errors['type_full_name'] == [u'This field is required.']
+        assert serializer.errors['name'] == ['This field is required.']
+        assert serializer.errors['type_full_name'] == ['This field is required.']

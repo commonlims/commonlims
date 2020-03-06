@@ -7,7 +7,7 @@ from collections import OrderedDict
 from django.conf import settings
 from django.utils.encoding import smart_bytes
 
-MARKER = u'\xef\xbb\xbf'
+MARKER = '\xef\xbb\xbf'
 
 _marker_length = len(MARKER)
 
@@ -17,11 +17,11 @@ class EncryptionManager(object):
         for key, value in schemes:
             if not isinstance(key, six.string_types):
                 raise ValueError(
-                    u'Encryption scheme type must be a string. Value was: {!r}'.format(value)
+                    'Encryption scheme type must be a string. Value was: {!r}'.format(value)
                 )
             if not hasattr(value, 'encrypt') or not hasattr(value, 'decrypt'):
                 raise ValueError(
-                    u'Encryption scheme value must have \'encrypt\' and \'decrypt\' callables. Value was: {!r}'.
+                    'Encryption scheme value must have \'encrypt\' and \'decrypt\' callables. Value was: {!r}'.
                     format(value)
                 )
         self.schemes = OrderedDict(schemes)
@@ -35,7 +35,7 @@ class EncryptionManager(object):
             return value
         value = smart_bytes(value)
         scheme = self.schemes[self.default_scheme]
-        return u'{}{}${}'.format(
+        return '{}{}${}'.format(
             MARKER,
             self.default_scheme,
             b64encode(scheme.encrypt(value)),
@@ -58,7 +58,7 @@ class EncryptionManager(object):
         try:
             scheme = self.schemes[enc_method]
         except KeyError:
-            raise ValueError(u'Unknown encryption scheme: {!r}'.format(enc_method))
+            raise ValueError('Unknown encryption scheme: {!r}'.format(enc_method))
         return scheme.decrypt(enc_data)
 
 

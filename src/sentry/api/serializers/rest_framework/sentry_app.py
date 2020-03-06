@@ -15,7 +15,7 @@ class ApiScopesField(serializers.Field):
 
         for scope in data:
             if scope not in valid_scopes:
-                raise ValidationError(u'{} not a valid scope'.format(scope))
+                raise ValidationError('{} not a valid scope'.format(scope))
 
     def to_internal_value(self, data):
         return data
@@ -27,7 +27,7 @@ class EventListField(serializers.Field):
 
     def validate(self, data):
         if not set(data).issubset(VALID_EVENT_RESOURCES):
-            raise ValidationError(u'Invalid event subscription: {}'.format(
+            raise ValidationError('Invalid event subscription: {}'.format(
                 ', '.join(set(data).difference(VALID_EVENT_RESOURCES))
             ))
 
@@ -50,7 +50,7 @@ class SentryAppSerializer(Serializer):
             needed_scope = REQUIRED_EVENT_PERMISSIONS[resource]
             if needed_scope not in attrs['scopes']:
                 raise ValidationError(
-                    u'{} webhooks require the {} permission.'.format(resource, needed_scope),
+                    '{} webhooks require the {} permission.'.format(resource, needed_scope),
                 )
 
         return attrs

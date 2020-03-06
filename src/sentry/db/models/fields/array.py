@@ -26,7 +26,7 @@ class ArrayField(models.Field):
     def db_type(self, connection):
         engine = connection.settings_dict['ENGINE']
         if 'postgres' in engine:
-            return u'{}[]'.format(self.of.db_type(connection))
+            return '{}[]'.format(self.of.db_type(connection))
         return super(ArrayField, self).db_type(connection)
 
     def get_internal_type(self):
@@ -49,7 +49,7 @@ class ArrayField(models.Field):
 
     def get_prep_lookup(self, lookup_type, value):
         raise NotImplementedError(
-            u'{!r} lookup type for {!r} is not supported'.format(
+            '{!r} lookup type for {!r} is not supported'.format(
                 lookup_type,
                 self,
             )
@@ -77,7 +77,7 @@ class ArrayField(models.Field):
                 # The ArrayField constructor understands how to resurrect
                 #   its internal field from this serialized state.
                 'of': (
-                    u'{module}.{class_name}'.format(
+                    '{module}.{class_name}'.format(
                         module=self.of.__class__.__module__,
                         class_name=self.of.__class__.__name__,
                     ), double[0], double[1],

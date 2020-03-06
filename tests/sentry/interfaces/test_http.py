@@ -162,7 +162,7 @@ class HttpTest(TestCase):
         result = Http.to_python(
             dict(
                 url='http://example.com',
-                query_string=u'foo\ufffd=bar\u2026',
+                query_string='foo\ufffd=bar\u2026',
                 fragment='fragment',
             )
         )
@@ -171,7 +171,7 @@ class HttpTest(TestCase):
 
     def test_query_string_and_fragment_in_url(self):
         result = Http.to_python(dict(
-            url=u'http://example.com?foo\ufffd=bar#fragment\u2026',
+            url='http://example.com?foo\ufffd=bar#fragment\u2026',
         ))
         assert result.url == 'http://example.com'
         assert result.full_url == 'http://example.com?foo%EF%BF%BD=bar#fragment...'

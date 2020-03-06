@@ -41,7 +41,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
             group=group
         )
 
-        url = u'/api/0/issues/{}/events/'.format(group.id)
+        url = '/api/0/issues/{}/events/'.format(group.id)
         response = self.client.get(url, format='json')
 
         assert response.status_code == 200, response.content
@@ -75,7 +75,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
             }
         )
 
-        url = u'/api/0/issues/{}/events/'.format(group.id)
+        url = '/api/0/issues/{}/events/'.format(group.id)
         response = self.client.get(url + '?query=foo:baz', format='json')
 
         assert response.status_code == 200, response.content
@@ -134,7 +134,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
             group=group
         )
 
-        url = u'/api/0/issues/{}/events/?query={}'.format(group.id, event_1.event_id)
+        url = '/api/0/issues/{}/events/?query={}'.format(group.id, event_1.event_id)
         response = self.client.get(url, format='json')
 
         assert response.status_code == 200, response.content
@@ -163,7 +163,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         query_2 = "hello+world"
 
         # Single Word Query
-        url = u'/api/0/issues/{}/events/?query={}'.format(group.id, query_1)
+        url = '/api/0/issues/{}/events/?query={}'.format(group.id, query_1)
         response = self.client.get(url, format='json')
 
         assert response.status_code == 200, response.content
@@ -171,7 +171,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         assert response.data[0]['eventID'] == event_1.event_id
 
         # Multiple Word Query
-        url = u'/api/0/issues/{}/events/?query={}'.format(group.id, query_2)
+        url = '/api/0/issues/{}/events/?query={}'.format(group.id, query_2)
         response = self.client.get(url, format='json')
 
         assert response.status_code == 200, response.content
@@ -197,7 +197,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
                 tags={'environment': name},
             )
 
-        url = u'/api/0/issues/{}/events/'.format(group.id)
+        url = '/api/0/issues/{}/events/'.format(group.id)
         response = self.client.get(url + '?environment=production', format='json')
 
         assert response.status_code == 200, response.content
@@ -245,7 +245,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         )
 
         with self.options({'system.event-retention-days': 1}):
-            response = self.client.get(u'/api/0/issues/{}/events/'.format(group.id))
+            response = self.client.get('/api/0/issues/{}/events/'.format(group.id))
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 1
@@ -269,7 +269,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
             }
         )
 
-        response = self.client.get(u'/api/0/issues/{}/events/'.format(group.id))
+        response = self.client.get('/api/0/issues/{}/events/'.format(group.id))
 
         assert response.status_code == 200, response.content
         assert len(response.data) == 1
@@ -299,7 +299,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         )
 
         response = self.client.get(
-            u'/api/0/issues/{}/events/'.format(group.id),
+            '/api/0/issues/{}/events/'.format(group.id),
             data={
                 'statsPeriod': '6d',
             },
@@ -315,7 +315,7 @@ class GroupEventsTest(APITestCase, SnubaTestCase):
         )
 
         response = self.client.get(
-            u'/api/0/issues/{}/events/'.format(group.id),
+            '/api/0/issues/{}/events/'.format(group.id),
             data={
                 'statsPeriod': '2d',
             },

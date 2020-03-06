@@ -99,7 +99,7 @@ class DefaultContextType(ContextType):
 class AppContextType(ContextType):
     type = 'app'
     indexed_fields = {
-        'device': u'{device_app_hash}',
+        'device': '{device_app_hash}',
     }
 
 
@@ -107,8 +107,8 @@ class AppContextType(ContextType):
 class DeviceContextType(ContextType):
     type = 'device'
     indexed_fields = {
-        '': u'{model}',
-        'family': u'{family}',
+        '': '{model}',
+        'family': '{family}',
     }
     # model_id, arch
 
@@ -117,8 +117,8 @@ class DeviceContextType(ContextType):
 class RuntimeContextType(ContextType):
     type = 'runtime'
     indexed_fields = {
-        '': u'{name} {version}',
-        'name': u'{name}',
+        '': '{name} {version}',
+        'name': '{name}',
     }
 
     def __init__(self, alias, data):
@@ -130,8 +130,8 @@ class RuntimeContextType(ContextType):
 class BrowserContextType(ContextType):
     type = 'browser'
     indexed_fields = {
-        '': u'{name} {version}',
-        'name': u'{name}',
+        '': '{name} {version}',
+        'name': '{name}',
     }
     # viewport
 
@@ -140,9 +140,9 @@ class BrowserContextType(ContextType):
 class OsContextType(ContextType):
     type = 'os'
     indexed_fields = {
-        '': u'{name} {version}',
-        'name': u'{name}',
-        'rooted': u'{rooted}',
+        '': '{name} {version}',
+        'name': '{name}',
+        'rooted': '{rooted}',
     }
     # build, rooted
 
@@ -155,8 +155,8 @@ class OsContextType(ContextType):
 class GpuContextType(ContextType):
     type = 'gpu'
     indexed_fields = {
-        'name': u'{name}',
-        'vendor': u'{vendor_name}',
+        'name': '{name}',
+        'vendor': '{vendor_name}',
     }
 
 
@@ -164,7 +164,7 @@ class GpuContextType(ContextType):
 class MonitorContextType(ContextType):
     type = 'monitor'
     indexed_fields = {
-        'id': u'{id}',
+        'id': '{id}',
     }
 
 

@@ -13,13 +13,13 @@ class RegressionActivityEmail(ActivityEmail):
     def get_description(self):
         data = self.activity.data
         if data.get('version'):
-            return u'{author} marked {an issue} as a regression in {version}', {
+            return '{author} marked {an issue} as a regression in {version}', {
                 'version': data['version']
             }, {
                 'version':
-                u'<a href="{}">{}</a>'.format(
+                '<a href="{}">{}</a>'.format(
                     absolute_uri(
-                        u'/{}/{}/releases/{}/'.format(
+                        '/{}/{}/releases/{}/'.format(
                             self.organization.slug,
                             self.project.slug,
                             data['version'],
@@ -29,4 +29,4 @@ class RegressionActivityEmail(ActivityEmail):
                 )
             }
 
-        return u'{author} marked {an issue} as a regression'
+        return '{author} marked {an issue} as a regression'

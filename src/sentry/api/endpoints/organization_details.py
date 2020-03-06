@@ -208,13 +208,13 @@ class OrganizationSerializer(serializers.Serializer):
                 )
 
                 if self.initial_data[key] != default_value:
-                    changed_data[key] = u'to {}'.format(self.initial_data[key])
+                    changed_data[key] = 'to {}'.format(self.initial_data[key])
             else:
                 option_inst.value = self.initial_data[key]
                 # check if ORG_OPTIONS changed
                 if option_inst.has_changed('value'):
                     old_val = option_inst.old_value('value')
-                    changed_data[key] = u'from {} to {}'.format(old_val, option_inst.value)
+                    changed_data[key] = 'from {} to {}'.format(old_val, option_inst.value)
                 option_inst.save()
 
         if 'openMembership' in self.initial_data:
@@ -250,12 +250,12 @@ class OrganizationSerializer(serializers.Serializer):
             if f != 'flag_field':
                 if org.has_changed(f):
                     old_val = org.old_value(f)
-                    changed_data[f] = u'from {} to {}'.format(old_val, v)
+                    changed_data[f] = 'from {} to {}'.format(old_val, v)
             else:
                 # check if flag fields changed
                 for f, v in six.iteritems(org_tracked_field['flag_field']):
                     if org.flag_has_changed(f):
-                        changed_data[f] = u'to {}'.format(v)
+                        changed_data[f] = 'to {}'.format(v)
 
         org.save()
 
@@ -264,7 +264,7 @@ class OrganizationSerializer(serializers.Serializer):
                 relation={'organization': org},
                 type=self.initial_data.get('avatarType', 'upload'),
                 avatar=self.initial_data.get('avatar'),
-                filename=u'{}.png'.format(org.slug),
+                filename='{}.png'.format(org.slug),
             )
         if 'require2FA' in self.initial_data and self.initial_data['require2FA'] is True:
             org.handle_2fa_required(self.context['request'])

@@ -96,11 +96,11 @@ class RedisBackend(Backend):
 
     def _get_connection(self, key):
         return self.cluster.get_local_client_for_key(
-            u'{}:t:{}'.format(self.namespace, key),
+            '{}:t:{}'.format(self.namespace, key),
         )
 
     def _get_timeline_lock(self, key, duration):
-        lock_key = u'{}:t:{}'.format(self.namespace, key)
+        lock_key = '{}:t:{}'.format(self.namespace, key)
         return self.locks.get(
             lock_key,
             duration=duration,

@@ -19,7 +19,7 @@ class ProjectUserFeedbackTest(AcceptanceTestCase):
             name='Bengal',
         )
         self.login_as(self.user)
-        self.path = u'/{}/{}/user-feedback/'.format(
+        self.path = '/{}/{}/user-feedback/'.format(
             self.org.slug, self.project.slug)
         self.project.update(first_event=timezone.now())
 

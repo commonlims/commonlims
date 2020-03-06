@@ -134,7 +134,7 @@ class Team(Model):
     __repr__ = sane_repr('name', 'slug')
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.slug)
+        return '%s (%s)' % (self.name, self.slug)
 
     def save(self, *args, **kwargs):
         if not self.slug:

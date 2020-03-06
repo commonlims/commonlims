@@ -8,4 +8,4 @@ class ResolvedActivityEmail(ActivityEmail):
         return 'Resolved Issue'
 
     def get_description(self):
-        return u'{author} marked {an issue} as resolved'
+        return '{author} marked {an issue} as resolved'

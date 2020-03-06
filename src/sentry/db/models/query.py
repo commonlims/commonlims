@@ -104,7 +104,7 @@ def create_or_update(model, using=None, **kwargs):
 def in_iexact(column, values):
     from operator import or_
 
-    query = u'{}__iexact'.format(column)
+    query = '{}__iexact'.format(column)
 
     return reduce(or_, [Q(**{query: v}) for v in values])
 
@@ -112,6 +112,6 @@ def in_iexact(column, values):
 def in_icontains(column, values):
     from operator import or_
 
-    query = u'{}__icontains'.format(column)
+    query = '{}__icontains'.format(column)
 
     return reduce(or_, [Q(**{query: v}) for v in values])

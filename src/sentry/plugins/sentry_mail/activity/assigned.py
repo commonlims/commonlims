@@ -19,32 +19,32 @@ class AssignedActivityEmail(ActivityEmail):
         if 'assigneeType' not in data or \
                 data['assigneeType'] == 'user':
             if activity.user_id and six.text_type(activity.user_id) == data['assignee']:
-                return u'{author} assigned {an issue} to themselves'
+                return '{author} assigned {an issue} to themselves'
 
             try:
                 assignee = User.objects.get_from_cache(id=data['assignee'])
             except User.DoesNotExist:
                 pass
             else:
-                return u'{author} assigned {an issue} to {assignee}', {
+                return '{author} assigned {an issue} to {assignee}', {
                     'assignee': assignee.get_display_name(),
                 }
 
             if data.get('assigneeEmail'):
-                return u'{author} assigned {an issue} to {assignee}', {
+                return '{author} assigned {an issue} to {assignee}', {
                     'assignee': data['assigneeEmail'],
                 }
 
-            return u'{author} assigned {an issue} to an unknown user'
+            return '{author} assigned {an issue} to an unknown user'
 
         if data['assigneeType'] == 'team':
             try:
                 assignee_team = Team.objects.get(
                     id=data['assignee'], organization=self.organization)
             except Team.DoesNotExist:
-                return u'{author} assigned {an issue} to an unknown team'
+                return '{author} assigned {an issue} to an unknown team'
             else:
-                return u'{author} assigned {an issue} to the {assignee} team', {
+                return '{author} assigned {an issue} to the {assignee} team', {
                     'assignee': assignee_team.slug,
                 }
 

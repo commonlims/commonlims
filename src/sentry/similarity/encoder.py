@@ -47,4 +47,4 @@ class Encoder(object):
                 )) for item in value.items()),
             )
         else:
-            raise TypeError(u'Unsupported type: {}'.format(type(value)))
+            raise TypeError('Unsupported type: {}'.format(type(value)))

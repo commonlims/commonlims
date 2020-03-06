@@ -51,8 +51,8 @@ class TestSubstanceParentChild(SubstanceTestCase):
         original_prop_vals = set(prop.value for prop in list(parent.properties.values()))
         child_prop_vals = set(prop.value for prop in list(child.properties.values()))
 
-        assert original_prop_vals.symmetric_difference(child_prop_vals) == {u'*o*', u':('}
-        assert original_prop_vals.intersection(child_prop_vals) == {u'red'}
+        assert original_prop_vals.symmetric_difference(child_prop_vals) == {'*o*', ':('}
+        assert original_prop_vals.intersection(child_prop_vals) == {'red'}
 
     def test_creating_child_overriding_with_none_removes_value(self):
         parent = self.create_gemstone(color='red')

@@ -25,7 +25,7 @@ class ChunkUploadTest(APITestCase):
     def test_chunk_parameters(self):
         response = self.client.get(
             self.url,
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='json'
         )
 
@@ -46,7 +46,7 @@ class ChunkUploadTest(APITestCase):
         options.set('system.upload-url-prefix', 'test')
         response = self.client.get(
             self.url,
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='json'
         )
 
@@ -56,7 +56,7 @@ class ChunkUploadTest(APITestCase):
         with self.feature('organizations:large-debug-files'):
             response = self.client.get(
                 self.url,
-                HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+                HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
                 format='json'
             )
 
@@ -69,7 +69,7 @@ class ChunkUploadTest(APITestCase):
         )
         response = self.client.get(
             self.url,
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(token.token),
         )
         assert response.status_code == 403, response.content
 
@@ -89,7 +89,7 @@ class ChunkUploadTest(APITestCase):
                     SimpleUploadedFile(checksum2, string2)
                 ]
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
 
@@ -113,7 +113,7 @@ class ChunkUploadTest(APITestCase):
             data={
                 'file': files
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
 
@@ -132,7 +132,7 @@ class ChunkUploadTest(APITestCase):
             data={
                 'file': files
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
 
@@ -145,7 +145,7 @@ class ChunkUploadTest(APITestCase):
             data={
                 'file': files
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
         assert response.status_code == 400, response.content
@@ -160,7 +160,7 @@ class ChunkUploadTest(APITestCase):
             data={
                 'file': files
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
 
@@ -176,7 +176,7 @@ class ChunkUploadTest(APITestCase):
             data={
                 'file': files
             },
-            HTTP_AUTHORIZATION=u'Bearer {}'.format(self.token.token),
+            HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
             format='multipart'
         )
 

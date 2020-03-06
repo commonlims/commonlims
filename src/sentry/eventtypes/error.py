@@ -49,7 +49,7 @@ class ErrorEvent(BaseEvent):
     def to_string(self, metadata):
         if not metadata['value']:
             return metadata['type']
-        return u'{}: {}'.format(
+        return '{}: {}'.format(
             metadata['type'],
             truncatechars(metadata['value'].splitlines()[0], 100),
         )

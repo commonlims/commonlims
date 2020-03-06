@@ -55,7 +55,7 @@ class EmailTestCase(AcceptanceTestCase):
         self.login_as(self.user)
 
     def build_url(self, path, format='html'):
-        return u'{}?{}'.format(
+        return '{}?{}'.format(
             path,
             urlencode({
                 'format': format,
@@ -70,7 +70,7 @@ class EmailTestCase(AcceptanceTestCase):
             # HTML output is captured as a snapshot
             self.browser.get(self.build_url(url, 'html'))
             self.browser.wait_until('#preview')
-            self.browser.snapshot(u'{} email html'.format(name))
+            self.browser.snapshot('{} email html'.format(name))
 
             # Text output is asserted against static fixture files
             self.browser.get(self.build_url(url, 'txt'))

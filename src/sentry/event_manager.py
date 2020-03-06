@@ -508,7 +508,7 @@ class EventManager(object):
             return (True, FilterStatKeys.ERROR_MESSAGE)
 
         for exc in get_path(self._data, 'exception', 'values', filter=True, default=[]):
-            message = u': '.join(
+            message = ': '.join(
                 [_f for _f in map(exc.get, ['type', 'value']) if _f]
             )
             if message and not is_valid_error_message(self._project, message):
@@ -579,11 +579,11 @@ class EventManager(object):
             for value in six.itervalues(event_metadata):
                 value_u = force_text(value, errors='replace')
                 if value_u not in message:
-                    message = u'{} {}'.format(message, value_u)
+                    message = '{} {}'.format(message, value_u)
 
         if culprit and culprit not in message:
             culprit_u = force_text(culprit, errors='replace')
-            message = u'{} {}'.format(message, culprit_u)
+            message = '{} {}'.format(message, culprit_u)
 
         return trim(message.strip(), settings.SENTRY_MAX_MESSAGE_LENGTH)
 
@@ -996,7 +996,7 @@ class EventManager(object):
         if not euser.hash:
             return
 
-        cache_key = u'euserid:1:{}:{}'.format(
+        cache_key = 'euserid:1:{}:{}'.format(
             project.id,
             euser.hash,
         )

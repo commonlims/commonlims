@@ -126,7 +126,7 @@ class Project(Model):
     __repr__ = sane_repr('team_id', 'name', 'slug')
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.slug)
+        return '%s (%s)' % (self.name, self.slug)
 
     def next_short_id(self):
         from sentry.models import Counter
@@ -147,7 +147,7 @@ class Project(Model):
         self.update_rev_for_option()
 
     def get_absolute_url(self):
-        return absolute_uri(u'/{}/{}/'.format(self.organization.slug, self.slug))
+        return absolute_uri('/{}/{}/'.format(self.organization.slug, self.slug))
 
     def is_internal_project(self):
         for value in (settings.SENTRY_FRONTEND_PROJECT, settings.SENTRY_PROJECT):

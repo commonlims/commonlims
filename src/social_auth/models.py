@@ -44,7 +44,7 @@ class UserSocialAuth(models.Model):
 
     def __unicode__(self):
         """Return associated user unicode representation"""
-        return u'%s - %s' % (six.text_type(self.user), self.provider.title())
+        return '%s - %s' % (six.text_type(self.user), self.provider.title())
 
     def get_backend(self):
         # Make import here to avoid recursive imports :-/

@@ -130,18 +130,18 @@ class BaseBuildCommand(Command):
                     node_version.append(None)
                 else:
                     log.fatal(
-                        u'Cannot find `{0}` executable. Please install {0}`'
+                        'Cannot find `{0}` executable. Please install {0}`'
                         ' and try again.'.format(app)
                     )
                     sys.exit(1)
 
         if node_version[2] is not None:
-            log.info(u'using node ({0}) and yarn ({2})'.format(*node_version))
+            log.info('using node ({0}) and yarn ({2})'.format(*node_version))
             self._run_command(
                 ['yarn', 'install', '--pure-lockfile']
             )
         else:
-            log.info(u'using node ({0}) and npm ({1})'.format(*node_version))
+            log.info('using node ({0}) and npm ({1})'.format(*node_version))
             # TODO: Production in production only
             self._run_command(['npm', 'install', '--quiet'])
 

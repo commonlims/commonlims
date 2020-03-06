@@ -174,7 +174,7 @@ def timer(name, prefix='snuba.client'):
     try:
         yield
     finally:
-        metrics.timing(u'{}.{}'.format(prefix, name), time.time() - t)
+        metrics.timing('{}.{}'.format(prefix, name), time.time() - t)
 
 
 @contextmanager
@@ -256,7 +256,7 @@ def get_snuba_column_name(name):
     """
     if not name:
         return name
-    return SENTRY_SNUBA_MAP.get(name, u'tags[{}]'.format(name))
+    return SENTRY_SNUBA_MAP.get(name, 'tags[{}]'.format(name))
 
 
 def get_arrayjoin(column):
@@ -320,7 +320,7 @@ def transform_aliases_and_query(**kwargs):
     kwargs['conditions'] = [handle_condition(condition) for condition in conditions]
 
     order_by_column = kwargs['orderby'].lstrip('-')
-    kwargs['orderby'] = u'{}{}'.format(
+    kwargs['orderby'] = '{}{}'.format(
         '-' if kwargs['orderby'].startswith('-') else '',
         order_by_column if order_by_column in derived_columns else get_snuba_column_name(
             order_by_column)
@@ -466,7 +466,7 @@ def raw_query(start, end, groupby=None, conditions=None, filter_keys=None,
     try:
         body = json.loads(response.data)
     except ValueError:
-        raise UnexpectedResponseError(u"Could not decode JSON response: {}".format(response.data))
+        raise UnexpectedResponseError("Could not decode JSON response: {}".format(response.data))
 
     if response.status != 200:
         if body.get('error'):
@@ -483,7 +483,7 @@ def raw_query(start, end, groupby=None, conditions=None, filter_keys=None,
             else:
                 raise SnubaError(error['message'])
         else:
-            raise SnubaError(u'HTTP {}'.format(response.status))
+            raise SnubaError('HTTP {}'.format(response.status))
 
     # Forward and reverse translation maps from model ids to snuba keys, per column
     body['data'] = [reverse(d) for d in body['data']]

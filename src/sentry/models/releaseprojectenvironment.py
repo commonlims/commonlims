@@ -28,7 +28,7 @@ class ReleaseProjectEnvironment(Model):
 
     @classmethod
     def get_cache_key(cls, release_id, project_id, environment_id):
-        return u'releaseprojectenv:{}:{}:{}'.format(
+        return 'releaseprojectenv:{}:{}:{}'.format(
             release_id,
             project_id,
             environment_id,

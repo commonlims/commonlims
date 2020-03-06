@@ -114,7 +114,7 @@ class TwoFactorAuthView(BaseView):
         interface = self.negotiate_interface(request, interfaces)
 
         if request.method == 'POST' and ratelimiter.is_limited(
-            u'auth-2fa:user:{}'.format(user.id),
+            'auth-2fa:user:{}'.format(user.id),
             limit=5,
             window=60,
         ):

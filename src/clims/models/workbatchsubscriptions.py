@@ -25,26 +25,26 @@ class WorkBatchSubscriptionReason(object):
 
     descriptions = {
         implicit:
-        u"have opted to receive updates for all issues within "
+        "have opted to receive updates for all issues within "
         "projects that you are a member of",
         committed:
-        u"were involved in a commit that is part of this release",
+        "were involved in a commit that is part of this release",
         processing_issue:
-        u"are subscribed to alerts for this project",
+        "are subscribed to alerts for this project",
         comment:
-        u"have commented on this issue",
+        "have commented on this issue",
         assigned:
-        u"have been assigned to this issue",
+        "have been assigned to this issue",
         bookmark:
-        u"have bookmarked this issue",
+        "have bookmarked this issue",
         status_change:
-        u"have changed the resolution status of this issue",
+        "have changed the resolution status of this issue",
         deploy_setting:
-        u"opted to receive all deploy notifications for this organization",
+        "opted to receive all deploy notifications for this organization",
         mentioned:
-        u"have been mentioned in this issue",
+        "have been mentioned in this issue",
         team_mentioned:
-        u"are a member of a team mentioned in this issue",
+        "are a member of a team mentioned in this issue",
     }
 
 

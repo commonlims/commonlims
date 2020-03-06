@@ -175,7 +175,7 @@ class Hpkp(SecurityReport):
         return ['hpkp', self.hostname]
 
     def get_message(self):
-        return u"Public key pinning validation failed for '{self.hostname}'".format(self=self)
+        return "Public key pinning validation failed for '{self.hostname}'".format(self=self)
 
     def get_tags(self):
         return [
@@ -239,7 +239,7 @@ class ExpectStaple(SecurityReport):
         return ['expect-staple', self.hostname]
 
     def get_message(self):
-        return u"Expect-Staple failed for '{self.hostname}'".format(self=self)
+        return "Expect-Staple failed for '{self.hostname}'".format(self=self)
 
     def get_tags(self):
         return (
@@ -301,7 +301,7 @@ class ExpectCT(SecurityReport):
         return ['expect-ct', self.hostname]
 
     def get_message(self):
-        return u"Expect-CT failed for '{self.hostname}'".format(self=self)
+        return "Expect-CT failed for '{self.hostname}'".format(self=self)
 
     def get_tags(self):
         return (
@@ -363,22 +363,22 @@ class Csp(SecurityReport):
 
     def get_message(self):
         templates = {
-            'child-src': (u"Blocked 'child' from '{uri}'", "Blocked inline 'child'"),
-            'connect-src': (u"Blocked 'connect' from '{uri}'", "Blocked inline 'connect'"),
-            'font-src': (u"Blocked 'font' from '{uri}'", "Blocked inline 'font'"),
-            'form-action': (u"Blocked 'form' action to '{uri}'", ),  # no inline option
-            'img-src': (u"Blocked 'image' from '{uri}'", "Blocked inline 'image'"),
-            'manifest-src': (u"Blocked 'manifest' from '{uri}'", "Blocked inline 'manifest'"),
-            'media-src': (u"Blocked 'media' from '{uri}'", "Blocked inline 'media'"),
-            'object-src': (u"Blocked 'object' from '{uri}'", "Blocked inline 'object'"),
-            'script-src': (u"Blocked 'script' from '{uri}'", "Blocked unsafe (eval() or inline) 'script'"),
-            'script-src-elem': (u"Blocked 'script' from '{uri}'", "Blocked unsafe 'script' element"),
-            'script-src-attr': (u"Blocked inline script attribute from '{uri}'", "Blocked inline script attribute"),
-            'style-src': (u"Blocked 'style' from '{uri}'", "Blocked inline 'style'"),
-            'style-src-elem': (u"Blocked 'style' from '{uri}'", "Blocked 'style' or 'link' element"),
-            'style-src-attr': (u"Blocked style attribute from '{uri}'", "Blocked style attribute"),
-            'unsafe-inline': (None, u"Blocked unsafe inline 'script'"),
-            'unsafe-eval': (None, u"Blocked unsafe eval() 'script'"),
+            'child-src': ("Blocked 'child' from '{uri}'", "Blocked inline 'child'"),
+            'connect-src': ("Blocked 'connect' from '{uri}'", "Blocked inline 'connect'"),
+            'font-src': ("Blocked 'font' from '{uri}'", "Blocked inline 'font'"),
+            'form-action': ("Blocked 'form' action to '{uri}'", ),  # no inline option
+            'img-src': ("Blocked 'image' from '{uri}'", "Blocked inline 'image'"),
+            'manifest-src': ("Blocked 'manifest' from '{uri}'", "Blocked inline 'manifest'"),
+            'media-src': ("Blocked 'media' from '{uri}'", "Blocked inline 'media'"),
+            'object-src': ("Blocked 'object' from '{uri}'", "Blocked inline 'object'"),
+            'script-src': ("Blocked 'script' from '{uri}'", "Blocked unsafe (eval() or inline) 'script'"),
+            'script-src-elem': ("Blocked 'script' from '{uri}'", "Blocked unsafe 'script' element"),
+            'script-src-attr': ("Blocked inline script attribute from '{uri}'", "Blocked inline script attribute"),
+            'style-src': ("Blocked 'style' from '{uri}'", "Blocked inline 'style'"),
+            'style-src-elem': ("Blocked 'style' from '{uri}'", "Blocked 'style' or 'link' element"),
+            'style-src-attr': ("Blocked style attribute from '{uri}'", "Blocked style attribute"),
+            'unsafe-inline': (None, "Blocked unsafe inline 'script'"),
+            'unsafe-eval': (None, "Blocked unsafe eval() 'script'"),
         }
         default_template = ('Blocked {directive!r} from {uri!r}', 'Blocked inline {directive!r}')
 

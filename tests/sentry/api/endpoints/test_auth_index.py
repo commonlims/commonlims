@@ -27,7 +27,7 @@ class AuthLoginEndpointTest(APITestCase):
     def test_valid_password(self):
         user = self.create_user('foo@example.com')
         response = self.client.post(self.path,
-                                    HTTP_AUTHORIZATION=u'Basic {}'.format(b64encode(u'{}:{}'.format(
+                                    HTTP_AUTHORIZATION='Basic {}'.format(b64encode('{}:{}'.format(
                                         user.username,
                                         'admin',
                                     ))),
@@ -38,7 +38,7 @@ class AuthLoginEndpointTest(APITestCase):
     def test_invalid_password(self):
         user = self.create_user('foo@example.com')
         response = self.client.post(self.path,
-                                    HTTP_AUTHORIZATION=u'Basic {}'.format(b64encode(u'{}:{}'.format(
+                                    HTTP_AUTHORIZATION='Basic {}'.format(b64encode('{}:{}'.format(
                                         user.username,
                                         'foobar',
                                     ))),

@@ -47,7 +47,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
         self.login_as(user=self.user)
 
         response = self.client.get(
-            u'{}?sort_by=date&query=is:unresolved'.format(self.path),
+            '{}?sort_by=date&query=is:unresolved'.format(self.path),
             format='json',
         )
         assert response.status_code == 200
@@ -63,7 +63,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
         self.login_as(user=self.user)
 
         response = self.client.get(
-            u'{}?sort_by=date&query=timesSeen:>1k'.format(self.path),
+            '{}?sort_by=date&query=timesSeen:>1k'.format(self.path),
             format='json',
         )
         assert response.status_code == 400
@@ -90,7 +90,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
         )
         self.login_as(user=self.user)
         response = self.client.get(
-            u'{}?sort_by=date&limit=1'.format(self.path),
+            '{}?sort_by=date&limit=1'.format(self.path),
             format='json',
         )
         assert response.status_code == 200
@@ -127,16 +127,16 @@ class GroupListTest(APITestCase, SnubaTestCase):
 
         self.login_as(user=self.user)
 
-        response = self.client.get(u'{}?groupStatsPeriod=24h'.format(self.path), format='json')
+        response = self.client.get('{}?groupStatsPeriod=24h'.format(self.path), format='json')
         assert response.status_code == 200
 
-        response = self.client.get(u'{}?groupStatsPeriod=14d'.format(self.path), format='json')
+        response = self.client.get('{}?groupStatsPeriod=14d'.format(self.path), format='json')
         assert response.status_code == 200
 
-        response = self.client.get(u'{}?groupStatsPeriod='.format(self.path), format='json')
+        response = self.client.get('{}?groupStatsPeriod='.format(self.path), format='json')
         assert response.status_code == 200
 
-        response = self.client.get(u'{}?groupStatsPeriod=48h'.format(self.path), format='json')
+        response = self.client.get('{}?groupStatsPeriod=48h'.format(self.path), format='json')
         assert response.status_code == 400
 
     def test_environment(self):
@@ -209,7 +209,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
 
         self.login_as(user=self.user)
 
-        response = self.client.get(u'{}?query={}'.format(self.path, 'c' * 32), format='json')
+        response = self.client.get('{}?query={}'.format(self.path, 'c' * 32), format='json')
         assert response.status_code == 200
         assert len(response.data) == 1
         assert response.data[0]['id'] == six.text_type(group.id)
@@ -227,7 +227,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
 
         self.login_as(user=self.user)
         response = self.client.get(
-            u'{}?query=%20%20{}%20%20'.format(self.path, 'c' * 32), format='json'
+            '{}?query=%20%20{}%20%20'.format(self.path, 'c' * 32), format='json'
         )
         assert response.status_code == 200
         assert len(response.data) == 1
@@ -240,7 +240,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
         self.create_group(checksum='b' * 32)
 
         self.login_as(user=self.user)
-        response = self.client.get(u'{}?query={}'.format(self.path, 'c' * 32), format='json')
+        response = self.client.get('{}?query={}'.format(self.path, 'c' * 32), format='json')
         assert response.status_code == 200
         assert len(response.data) == 0
 
@@ -250,7 +250,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
 
         self.login_as(user=self.user)
         response = self.client.get(
-            u'{}?query={}&shortIdLookup=1'.format(
+            '{}?query={}&shortIdLookup=1'.format(
                 self.path, short_id), format='json')
         assert response.status_code == 200
         assert len(response.data) == 1
@@ -274,7 +274,7 @@ class GroupListTest(APITestCase, SnubaTestCase):
             args=[organization.slug]
         )
         response = self.client.get(
-            u'{}?query={}&shortIdLookup=1'.format(
+            '{}?query={}&shortIdLookup=1'.format(
                 path, short_id), format='json')
         assert response.status_code == 200
         assert len(response.data) == 0

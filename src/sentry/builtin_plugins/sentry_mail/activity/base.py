@@ -58,7 +58,7 @@ class ActivityEmail(object):
         return 'sentry/emails/activity/generic.html'
 
     def get_project_link(self):
-        return absolute_uri(u'/{}/{}/'.format(
+        return absolute_uri('/{}/{}/'.format(
             self.organization.slug,
             self.project.slug,
         ))
@@ -94,19 +94,19 @@ class ActivityEmail(object):
         }
 
     def get_email_type(self):
-        return u'notify.activity.{}'.format(
+        return 'notify.activity.{}'.format(
             self.activity.get_type_display(),
         )
 
     def get_subject(self):
         group = self.group
 
-        return u'%s - %s' % (
+        return '%s - %s' % (
             group.qualified_short_id, group.title
         )
 
     def get_subject_with_prefix(self):
-        return u'{}{}'.format(
+        return '{}{}'.format(
             self._get_subject_prefix(),
             self.get_subject(),
         ).encode('utf-8')
@@ -157,12 +157,12 @@ class ActivityEmail(object):
     def avatar_as_html(self):
         user = self.activity.user
         if not user:
-            return u'<img class="avatar" src="{}" width="20px" height="20px" />'.format(
+            return '<img class="avatar" src="{}" width="20px" height="20px" />'.format(
                 escape(self._get_sentry_avatar_url())
             )
         avatar_type = user.get_avatar_type()
         if avatar_type == 'upload':
-            return u'<img class="avatar" src="{}" />'.format(
+            return '<img class="avatar" src="{}" />'.format(
                 escape(self._get_user_avatar_url(user)))
         elif avatar_type == 'letter_avatar':
             return get_email_avatar(user.get_display_name(), user.get_label(), 20, False)
@@ -181,7 +181,7 @@ class ActivityEmail(object):
 
         url = reverse('sentry-user-avatar-url', args=[avatar.ident])
         if size:
-            url = u'{}?s={}'.format(url, int(size))
+            url = '{}?s={}'.format(url, int(size))
         return absolute_uri(url)
 
     def description_as_text(self, description, params):
@@ -189,11 +189,11 @@ class ActivityEmail(object):
         if user:
             name = user.name or user.email
         else:
-            name = u'Sentry'
+            name = 'Sentry'
 
         context = {
             'author': name,
-            'an issue': u'an issue',
+            'an issue': 'an issue',
         }
         context.update(params)
 
@@ -206,14 +206,14 @@ class ActivityEmail(object):
         else:
             name = 'Sentry'
 
-        fmt = u'<span class="avatar-container">{}</span> <strong>{}</strong>'
+        fmt = '<span class="avatar-container">{}</span> <strong>{}</strong>'
 
         author = mark_safe(fmt.format(
             self.avatar_as_html(),
             escape(name),
         ))
 
-        an_issue = u'<a href="{}">an issue</a>'.format(
+        an_issue = '<a href="{}">an issue</a>'.format(
             escape(self.get_group_link()),
         )
 

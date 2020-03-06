@@ -182,7 +182,7 @@ class ReleaseActivityEmail(ActivityEmail):
             'environment':
             self.environment,
             'setup_repo_link':
-            absolute_uri(u'/organizations/{}/repos/'.format(
+            absolute_uri('/organizations/{}/repos/'.format(
                 self.organization.slug,
             )),
         }
@@ -200,7 +200,7 @@ class ReleaseActivityEmail(ActivityEmail):
             projects = [p for p in self.projects if p.id in team_projects]
         release_links = [
             absolute_uri(
-                u'/{}/{}/releases/{}/'.format(
+                '/{}/{}/releases/{}/'.format(
                     self.organization.slug,
                     p.slug,
                     self.release.version,
@@ -214,7 +214,7 @@ class ReleaseActivityEmail(ActivityEmail):
         }
 
     def get_subject(self):
-        return u'Deployed version {} to {}'.format(
+        return 'Deployed version {} to {}'.format(
             self.release.short_version,
             self.environment,
         )

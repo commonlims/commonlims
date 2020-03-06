@@ -65,7 +65,7 @@ class RedisBackedState(object):
         return self.request.session.get('auth_key')
 
     def regenerate(self, initial_state):
-        auth_key = u'auth:pipeline:{}'.format(uuid4().hex)
+        auth_key = 'auth:pipeline:{}'.format(uuid4().hex)
 
         self.request.session['auth_key'] = auth_key
         self.request.session.modified = True
@@ -677,7 +677,7 @@ class AuthHelper(object):
         user_id = identity['id']
 
         lock = locks.get(
-            u'sso:auth:{}:{}'.format(
+            'sso:auth:{}:{}'.format(
                 auth_provider.id,
                 md5_text(user_id).hexdigest(),
             ),
@@ -843,7 +843,7 @@ class AuthHelper(object):
         messages.add_message(
             self.request,
             messages.ERROR,
-            u'Authentication error: {}'.format(message),
+            'Authentication error: {}'.format(message),
         )
 
         return HttpResponseRedirect(redirect_uri)
@@ -879,6 +879,6 @@ class AuthHelper(object):
             target_object=self.organization.id,
             event=AuditLogEntryEvent.ORG_EDIT,
             data={
-                'require_2fa': u'to False when enabling SSO'
+                'require_2fa': 'to False when enabling SSO'
             },
         )

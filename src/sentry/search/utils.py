@@ -23,9 +23,9 @@ def get_user_tag(projects, key, value):
         euser = EventUser.objects.filter(
             project_id__in=[p.id for p in projects], **{lookup: value})[0]
     except (KeyError, IndexError):
-        return u'{}:{}'.format(key, value)
+        return '{}:{}'.format(key, value)
     except DataError:
-        raise InvalidQuery(u"malformed '{}:' query '{}'.".format(key, value))
+        raise InvalidQuery("malformed '{}:' query '{}'.".format(key, value))
     return euser.tag_value
 
 
@@ -33,10 +33,10 @@ def parse_datetime_range(value):
     try:
         flag, count, interval = value[0], int(value[1:-1]), value[-1]
     except (ValueError, TypeError, IndexError):
-        raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+        raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
     if flag not in ('+', '-'):
-        raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+        raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
     if interval == 'h':
         delta = timedelta(hours=count)
@@ -47,7 +47,7 @@ def parse_datetime_range(value):
     elif interval == 'm':
         delta = timedelta(minutes=count)
     else:
-        raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+        raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
     if flag == '-':
         return (
@@ -86,7 +86,7 @@ def parse_datetime_string(value):
     except ValueError:
         pass
 
-    raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+    raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
 
 def parse_datetime_comparison(value):
@@ -111,7 +111,7 @@ def parse_datetime_comparison(value):
             (parse_datetime_string(value[1:]), False),
         )
 
-    raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+    raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
 
 def parse_datetime_value(value):
@@ -148,7 +148,7 @@ def parse_datetime_value(value):
             pass
 
     if result is None:
-        raise InvalidQuery(u'{} is not a valid datetime query'.format(value))
+        raise InvalidQuery('{} is not a valid datetime query'.format(value))
 
     return (
         (result - timedelta(minutes=5), True),
@@ -172,13 +172,13 @@ def get_date_params(value, from_field, to_field):
         date_from_value, date_from_inclusive = date_from
         result.update({
             from_field: date_from_value,
-            u'{}_inclusive'.format(from_field): date_from_inclusive,
+            '{}_inclusive'.format(from_field): date_from_inclusive,
         })
     if date_to is not None:
         date_to_value, date_to_inclusive = date_to
         result.update({
             to_field: date_to_value,
-            u'{}_inclusive'.format(to_field): date_to_inclusive,
+            '{}_inclusive'.format(to_field): date_to_inclusive,
         })
     return result
 
@@ -214,23 +214,23 @@ def parse_user_value(value, user):
 numeric_modifiers = [
     (
         '>=', lambda field, value: {
-            u'{}_lower'.format(field): value,
-            u'{}_lower_inclusive'.format(field): True, }
+            '{}_lower'.format(field): value,
+            '{}_lower_inclusive'.format(field): True, }
     ),
     (
         '<=', lambda field, value: {
-            u'{}_upper'.format(field): value,
-            u'{}_upper_inclusive'.format(field): True, }
+            '{}_upper'.format(field): value,
+            '{}_upper_inclusive'.format(field): True, }
     ),
     (
         '>', lambda field, value: {
-            u'{}_lower'.format(field): value,
-            u'{}_lower_inclusive'.format(field): False, }
+            '{}_lower'.format(field): value,
+            '{}_lower_inclusive'.format(field): False, }
     ),
     (
         '<', lambda field, value: {
-            u'{}_upper'.format(field): value,
-            u'{}_upper_inclusive'.format(field): False, }
+            '{}_upper'.format(field): value,
+            '{}_upper_inclusive'.format(field): False, }
     ),
 ]
 
@@ -248,7 +248,7 @@ def get_numeric_field_value(field, raw_value, type=int):
                 field: type(raw_value),
             }
     except ValueError:
-        msg = u'"{}" could not be converted to a number.'.format(raw_value)
+        msg = '"{}" could not be converted to a number.'.format(raw_value)
         raise InvalidQuery(msg)
 
 
@@ -373,7 +373,7 @@ def parse_query(projects, query, user):
                     try:
                         results['status'] = STATUS_CHOICES[value]
                     except KeyError:
-                        raise InvalidQuery(u"'is:' had unknown status code '{}'.".format(value))
+                        raise InvalidQuery("'is:' had unknown status code '{}'.".format(value))
             elif key == 'assigned':
                 results['assigned_to'] = parse_actor_value(projects, value, user)
             elif key == 'bookmarks':

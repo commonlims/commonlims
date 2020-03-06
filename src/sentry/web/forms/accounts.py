@@ -117,7 +117,7 @@ class AuthenticationForm(forms.Form):
 
         ip_address = self.request.META['REMOTE_ADDR']
         return ratelimiter.is_limited(
-            u'auth:ip:{}'.format(ip_address),
+            'auth:ip:{}'.format(ip_address),
             limit,
         )
 
@@ -131,7 +131,7 @@ class AuthenticationForm(forms.Form):
             return False
 
         return ratelimiter.is_limited(
-            u'auth:username:{}'.format(username),
+            'auth:username:{}'.format(username),
             limit,
         )
 
@@ -192,7 +192,7 @@ class PasswordlessRegistrationForm(forms.ModelForm):
         required=True
     )
     subscribe = CustomTypedChoiceField(
-        coerce=lambda x: six.text_type(x) == u'1',
+        coerce=lambda x: six.text_type(x) == '1',
         label=_("Email updates"),
         choices=(
             (1, 'Yes, I would like to receive updates via email'),
@@ -618,7 +618,7 @@ class NotificationDeploySettingsForm(forms.Form):
         self.fields['notifications'].initial = deploy_setting
 
     def save(self):
-        value = self.data.get(u'{}-notifications'.format(self.prefix), None)
+        value = self.data.get('{}-notifications'.format(self.prefix), None)
         if value is not None:
             UserOption.objects.set_value(
                 user=self.user,

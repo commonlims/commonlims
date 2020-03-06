@@ -233,8 +233,8 @@ class TestSubstance(SubstanceTestCase):
                 for s in SubstanceVersion.objects.filter(archetype_id=substance.id)]
 
         actual = {v.version: props_to_dict(v.properties) for v in versions}
-        expected = {1: {u'color': u'red', u'preciousness': u'*o*'},
-                    2: {u'color': u'red', u'preciousness': u'*O*'}}
+        expected = {1: {'color': 'red', 'preciousness': '*o*'},
+                    2: {'color': 'red', 'preciousness': '*O*'}}
         assert actual == expected
 
     def test_can_create_json_value(self):

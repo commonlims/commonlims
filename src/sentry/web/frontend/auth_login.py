@@ -143,13 +143,13 @@ class AuthLoginView(BaseView):
                                                                ) and request.POST.get('password')
 
             if login_attempt and ratelimiter.is_limited(
-                u'auth:login:username:{}'.
+                'auth:login:username:{}'.
                 format(md5_text(request.POST['username'].lower()).hexdigest()),
                 limit=10,
                 window=60,  # 10 per minute should be enough for anyone
             ):
                 login_form.errors['__all__'] = [
-                    u'You have made too many login attempts. Please try again later.'
+                    'You have made too many login attempts. Please try again later.'
                 ]
             elif login_form.is_valid():
                 user = login_form.get_user()

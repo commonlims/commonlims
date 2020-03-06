@@ -105,7 +105,7 @@ class Release(Model):
 
     @classmethod
     def get_lock_key(cls, organization_id, release_id):
-        return u'releasecommits:{}:{}'.format(organization_id, release_id)
+        return 'releasecommits:{}:{}'.format(organization_id, release_id)
 
     @classmethod
     def get(cls, project, version):
@@ -383,7 +383,7 @@ class Release(Model):
                 latest_commit = None
                 for idx, data in enumerate(commit_list):
                     repo_name = data.get('repository'
-                                         ) or u'organization-{}'.format(self.organization_id)
+                                         ) or 'organization-{}'.format(self.organization_id)
                     if repo_name not in repos:
                         repos[repo_name] = repo = Repository.objects.get_or_create(
                             organization_id=self.organization_id,

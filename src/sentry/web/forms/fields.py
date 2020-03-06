@@ -52,7 +52,7 @@ class RadioFieldRenderer(RadioFieldRenderer):
 
     def render(self):
         return mark_safe(
-            u'\n<div class="inputs-list">%s</div>\n' % u'\n'.join([force_text(w) for w in self])
+            '\n<div class="inputs-list">%s</div>\n' % '\n'.join([force_text(w) for w in self])
         )
 
 

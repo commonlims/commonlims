@@ -71,7 +71,7 @@ def test_safely_load_json_string_unexpected_type():
 
 def test_valid_data():
     data = decode_data('foo')
-    assert data == u'foo'
+    assert data == 'foo'
     assert isinstance(data, six.text_type)
 
 

@@ -248,7 +248,7 @@ def get_snuba_query_args(query=None, params=None):
             parsed_filters = parse_search_query(query)
         except ParseError as e:
             raise InvalidSearchQuery(
-                u'Parse error: %r (column %d)' % (e.expr.name, e.column())
+                'Parse error: %r (column %d)' % (e.expr.name, e.column())
             )
 
     # Keys included as url params take precedent if same key is included in search

@@ -29,7 +29,7 @@ logger = logging.getLogger('sentry')
 
 def _get_service_hooks(project_id):
     from sentry.models import ServiceHook
-    cache_key = u'servicehooks:1:{}'.format(project_id)
+    cache_key = 'servicehooks:1:{}'.format(project_id)
     result = cache.get(cache_key)
     if result is None:
         result = [(h.id, h.events) for h in
@@ -51,7 +51,7 @@ def _capture_stats(event, is_new):
         metrics.incr('events.unique', tags=tags, skip_internal=False)
 
     metrics.incr('events.processed', tags=tags, skip_internal=False)
-    metrics.incr(u'events.processed.{platform}'.format(platform=platform), skip_internal=False)
+    metrics.incr('events.processed.{platform}'.format(platform=platform), skip_internal=False)
     metrics.timing('events.size.data', event.size, tags=tags)
 
 
@@ -62,8 +62,8 @@ def check_event_already_post_processed(event):
 
     client = redis_clusters.get(cluster_key)
     result = client.set(
-        u'pp:{}/{}'.format(event.project_id, event.event_id),
-        u'{:.0f}'.format(time.time()),
+        'pp:{}/{}'.format(event.project_id, event.event_id),
+        '{:.0f}'.format(time.time()),
         ex=60 * 60,
         nx=True,
     )

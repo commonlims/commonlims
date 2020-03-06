@@ -72,7 +72,7 @@ def build_query_params_from_request(request, projects):
             query_kwargs.update(parse_query(projects, query, request.user))
         except InvalidQuery as e:
             raise ValidationError(
-                u'Your search query could not be parsed: {}'.format(six.text_type(e))
+                'Your search query could not be parsed: {}'.format(six.text_type(e))
             )
 
     return query_kwargs

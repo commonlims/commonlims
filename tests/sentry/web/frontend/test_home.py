@@ -43,4 +43,4 @@ class HomeTest(TestCase):
             resp = self.client.get(self.path)
 
         assert resp.status_code == 302
-        assert resp['Location'] == u'/{}/'.format(org.slug)
+        assert resp['Location'] == '/{}/'.format(org.slug)

@@ -34,20 +34,20 @@ class RoutePanel(Panel):
 
     def _get_func_name(self, func):
         if hasattr(func, 'im_class'):
-            return u'{}.{}.{}'.format(
+            return '{}.{}.{}'.format(
                 func.__module__,
                 func.__self__.__class__.__name__,
                 func.__name__,
             )
-        return u'{}.{}'.format(func.__module__, func.__name__)
+        return '{}.{}'.format(func.__module__, func.__name__)
 
     def _get_func_argspec(self, args, kwargs):
         result = []
         for arg in args:
             result.append(arg)
         for pair in kwargs.items():
-            result.append(u'%s=%s' % tuple(pair))
-        return u', '.join(result)
+            result.append('%s=%s' % tuple(pair))
+        return ', '.join(result)
 
     def nav_subtitle(self):
         stats = self.get_stats()

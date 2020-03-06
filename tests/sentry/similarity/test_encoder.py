@@ -12,7 +12,7 @@ def test_builtin_types():
         1,
         1.1,
         b'\x00\x01\x02',
-        u'\N{SNOWMAN}',
+        '\N{SNOWMAN}',
         ('a', 'b', 'c'),
         ['a', 'b', 'c'],
         {
@@ -24,7 +24,7 @@ def test_builtin_types():
         frozenset(['a', 'b', 'c']),
         [{
             'a': 1
-        }, set('b'), ['c'], u'text'],
+        }, set('b'), ['c'], 'text'],
     ]
 
     try:

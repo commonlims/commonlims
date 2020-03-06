@@ -21,9 +21,9 @@ class OrganizationSearchesListTest(APITestCase):
 
         actual = sorted([(entry['name'], entry['query']) for entry in response.data])
         assert actual == [
-            (u'Assigned To Me', u'is:unresolved assigned:me'),
-            (u'My Bookmarks', u'is:unresolved bookmarks:me'),
-            (u'New Today', u'is:unresolved age:-24h'),
+            ('Assigned To Me', 'is:unresolved assigned:me'),
+            ('My Bookmarks', 'is:unresolved bookmarks:me'),
+            ('New Today', 'is:unresolved age:-24h'),
         ]
 
     @pytest.mark.skip("TODO: not implemented")

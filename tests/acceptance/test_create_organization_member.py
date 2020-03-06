@@ -31,7 +31,7 @@ class CreateOrganizationMemberTest(AcceptanceTestCase):
         Add by email
         """
         self.browser.get(
-            u'/organizations/{}/members/new/'.format(self.org.slug))
+            '/organizations/{}/members/new/'.format(self.org.slug))
         self.browser.wait_until_not('.loading')
         self.browser.element('.checkbox').click()
 

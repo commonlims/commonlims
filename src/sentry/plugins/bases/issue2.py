@@ -170,8 +170,8 @@ class IssueTrackingPlugin2(Plugin):
         e.g. GitHub represents issues as GH-XXX
         """
         if isinstance(issue, dict):
-            return u'#{}'.format(issue['id'])
-        return u'#{}'.format(issue)
+            return '#{}'.format(issue['id'])
+        return '#{}'.format(issue)
 
     def create_issue(self, request, group, form_data, **kwargs):
         """
@@ -203,7 +203,7 @@ class IssueTrackingPlugin2(Plugin):
             if field.get('required', True) and not field.get('readonly'):
                 value = form_data.get(field['name'])
                 if value is None or value == '':
-                    errors[field['name']] = u'%s is a required field.' % field['label']
+                    errors[field['name']] = '%s is a required field.' % field['label']
         return errors
 
     def get_issue_field_map(self):
@@ -211,10 +211,10 @@ class IssueTrackingPlugin2(Plugin):
         conf_key = self.get_conf_key()
         if self.issue_fields is None:
             return {
-                'id': u'{}:tid'.format(conf_key)
+                'id': '{}:tid'.format(conf_key)
             }
         return {
-            key: u'{}:issue_{}'.format(
+            key: '{}:issue_{}'.format(
                 conf_key,
                 key,
             )

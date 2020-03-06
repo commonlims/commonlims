@@ -196,8 +196,8 @@ class OrganizationUpdateTest(APITestCase):
             'enhancedPrivacy': True,
             'dataScrubber': True,
             'dataScrubberDefaults': True,
-            'sensitiveFields': [u'password'],
-            'safeFields': [u'email'],
+            'sensitiveFields': ['password'],
+            'safeFields': ['email'],
             'storeCrashReports': True,
             'scrubIPAddresses': True,
             'scrapeJavaScript': False,
@@ -238,19 +238,19 @@ class OrganizationUpdateTest(APITestCase):
         log = AuditLogEntry.objects.get(organization=org)
         assert log.get_event_display() == 'org.edit'
         # org fields & flags
-        assert u'to {}'.format(data['defaultRole']) in log.data['default_role']
-        assert u'to {}'.format(data['openMembership']) in log.data['allow_joinleave']
-        assert u'to {}'.format(data['isEarlyAdopter']) in log.data['early_adopter']
-        assert u'to {}'.format(data['enhancedPrivacy']) in log.data['enhanced_privacy']
-        assert u'to {}'.format(not data['allowSharedIssues']) in log.data['disable_shared_issues']
-        assert u'to {}'.format(data['require2FA']) in log.data['require_2fa']
+        assert 'to {}'.format(data['defaultRole']) in log.data['default_role']
+        assert 'to {}'.format(data['openMembership']) in log.data['allow_joinleave']
+        assert 'to {}'.format(data['isEarlyAdopter']) in log.data['early_adopter']
+        assert 'to {}'.format(data['enhancedPrivacy']) in log.data['enhanced_privacy']
+        assert 'to {}'.format(not data['allowSharedIssues']) in log.data['disable_shared_issues']
+        assert 'to {}'.format(data['require2FA']) in log.data['require_2fa']
         # org options
-        assert u'to {}'.format(data['dataScrubber']) in log.data['dataScrubber']
-        assert u'to {}'.format(data['dataScrubberDefaults']) in log.data['dataScrubberDefaults']
-        assert u'to {}'.format(data['sensitiveFields']) in log.data['sensitiveFields']
-        assert u'to {}'.format(data['safeFields']) in log.data['safeFields']
-        assert u'to {}'.format(data['scrubIPAddresses']) in log.data['scrubIPAddresses']
-        assert u'to {}'.format(data['scrapeJavaScript']) in log.data['scrapeJavaScript']
+        assert 'to {}'.format(data['dataScrubber']) in log.data['dataScrubber']
+        assert 'to {}'.format(data['dataScrubberDefaults']) in log.data['dataScrubberDefaults']
+        assert 'to {}'.format(data['sensitiveFields']) in log.data['sensitiveFields']
+        assert 'to {}'.format(data['safeFields']) in log.data['safeFields']
+        assert 'to {}'.format(data['scrubIPAddresses']) in log.data['scrubIPAddresses']
+        assert 'to {}'.format(data['scrapeJavaScript']) in log.data['scrapeJavaScript']
 
     def test_setting_trusted_relays_forbidden(self):
         org = self.create_organization(owner=self.user)
@@ -262,7 +262,7 @@ class OrganizationUpdateTest(APITestCase):
         )
 
         data = {
-            'trustedRelays': [u'key1', u'key2']
+            'trustedRelays': ['key1', 'key2']
         }
 
         response = self.client.put(url, data=data)
@@ -279,7 +279,7 @@ class OrganizationUpdateTest(APITestCase):
             }
         )
 
-        data = {'trustedRelays': [u'key1', u'key2']}
+        data = {'trustedRelays': ['key1', 'key2']}
 
         with self.feature("organizations:relay"):
             response = self.client.put(url, data=data)

@@ -60,15 +60,15 @@ class AcceptOrganizationInviteView(BaseView):
             'org_name': organization.name,
             'needs_authentication': not helper.user_authenticated,
             'needs_2fa': helper.needs_2fa,
-            'logout_url': u'{}?next={}'.format(
+            'logout_url': '{}?next={}'.format(
                 reverse('sentry-logout'),
                 request.path,
             ),
-            'login_url': u'{}?next={}'.format(
+            'login_url': '{}?next={}'.format(
                 reverse('sentry-login'),
                 request.path,
             ),
-            'register_url': u'{}?next={}'.format(
+            'register_url': '{}?next={}'.format(
                 reverse('sentry-register'),
                 request.path,
             ),
