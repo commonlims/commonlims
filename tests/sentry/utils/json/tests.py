@@ -14,19 +14,19 @@ from sentry.utils import json
 class JSONTest(TestCase):
     def test_uuid(self):
         res = uuid.uuid4()
-        self.assertEquals(json.dumps(res), '"%s"' % res.hex)
+        self.assertEqual(json.dumps(res), '"%s"' % res.hex)
 
     def test_datetime(self):
         res = datetime.datetime(day=1, month=1, year=2011, hour=1, minute=1, second=1)
-        self.assertEquals(json.dumps(res), '"2011-01-01T01:01:01.000000Z"')
+        self.assertEqual(json.dumps(res), '"2011-01-01T01:01:01.000000Z"')
 
     def test_set(self):
         res = set(['foo'])
-        self.assertEquals(json.dumps(res), '["foo"]')
+        self.assertEqual(json.dumps(res), '["foo"]')
 
     def test_frozenset(self):
         res = frozenset(['foo'])
-        self.assertEquals(json.dumps(res), '["foo"]')
+        self.assertEqual(json.dumps(res), '["foo"]')
 
     def test_escape(self):
         res = "<script>alert('&');</script>"
@@ -40,9 +40,9 @@ class JSONTest(TestCase):
 
     def test_inf(self):
         res = float('inf')
-        self.assertEquals(json.dumps(res), 'null')
+        self.assertEqual(json.dumps(res), 'null')
 
     def test_enum(self):
         enum = Enum('foo', 'a b c')
         res = enum.a
-        self.assertEquals(json.dumps(res), '1')
+        self.assertEqual(json.dumps(res), '1')

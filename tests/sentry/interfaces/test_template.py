@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
 
 from exam import fixture
@@ -25,9 +24,9 @@ class TemplateTest(TestCase):
 
     def test_serialize(self):
         result = self.interface.to_json()
-        self.assertEquals(result['filename'], 'foo.html')
-        self.assertEquals(result['context_line'], 'hello world')
-        self.assertEquals(result['lineno'], 1)
+        self.assertEqual(result['filename'], 'foo.html')
+        self.assertEqual(result['context_line'], 'hello world')
+        self.assertEqual(result['lineno'], 1)
 
     def test_required_attributes(self):
         with pytest.raises(InterfaceValidationError):
@@ -43,7 +42,7 @@ class TemplateTest(TestCase):
 
     def test_get_hash(self):
         result = self.interface.get_hash()
-        self.assertEquals(result, ['foo.html', 'hello world'])
+        self.assertEqual(result, ['foo.html', 'hello world'])
 
     @mock.patch('sentry.interfaces.template.get_context')
     @mock.patch('sentry.interfaces.template.Template.get_traceback')
@@ -52,7 +51,7 @@ class TemplateTest(TestCase):
         event = mock.Mock(spec=Event)
         result = self.interface.to_string(event)
         get_traceback.assert_called_once_with(event, get_context.return_value)
-        self.assertEquals(result, 'Stacktrace (most recent call last):\n\ntraceback')
+        self.assertEqual(result, 'Stacktrace (most recent call last):\n\ntraceback')
 
     def test_serialize_unserialize_behavior(self):
         result = type(self.interface).to_python(self.interface.to_json())

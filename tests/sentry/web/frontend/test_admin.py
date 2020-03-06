@@ -15,13 +15,13 @@ class EnvStatusTest(TestCase):
 
     def test_requires_auth(self):
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 302)
 
     def test_renders_template(self):
         self.login_as(self.user, superuser=True)
 
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'sentry/admin/status/env.html')
 
 
@@ -32,13 +32,13 @@ class PackageStatusTest(TestCase):
 
     def test_requires_auth(self):
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 302)
 
     def test_renders_template(self):
         self.login_as(self.user, superuser=True)
 
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'sentry/admin/status/packages.html')
 
 
@@ -49,11 +49,11 @@ class MailStatusTest(TestCase):
 
     def test_requires_auth(self):
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 302)
 
     def test_renders_template(self):
         self.login_as(self.user, superuser=True)
 
         resp = self.client.get(self.path)
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'sentry/admin/status/mail.html')
