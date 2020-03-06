@@ -17,7 +17,7 @@ def get_application_chunks(exception):
     """
     return map(
         lambda in_app__frames: list(in_app__frames[1]),
-        itertools.ifilter(
+        filter(
             lambda in_app__frames: in_app__frames[0],
             itertools.groupby(
                 exception.stacktrace.frames,

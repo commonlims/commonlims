@@ -147,7 +147,7 @@ def merge_series(target, other, function=operator.add):
     """
     missing = object()
     results = []
-    for x, y in itertools.izip_longest(target, other, fillvalue=missing):
+    for x, y in itertools.zip_longest(target, other, fillvalue=missing):
         assert x is not missing and y is not missing, 'series must be same length'
         assert x[0] == y[0], 'series timestamps must match'
         results.append((x[0], function(x[1], y[1])))

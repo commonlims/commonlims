@@ -1,35 +1,3 @@
-isinstance
-    RefactoringTool: Files that need to be modified:
-    RefactoringTool: ./src/bitfield/models.py: Seems to be a false positive
-    RefactoringTool: ./src/bitfield/query.py: fp
-    RefactoringTool: ./src/sentry/http.py: fp
-    RefactoringTool: ./src/sentry/api/event_search.py: fp
-    RefactoringTool: ./src/sentry/api/paginator.py: fp
-    RefactoringTool: ./src/sentry/api/serializers/base.py: fp
-    RefactoringTool: ./src/sentry/db/postgres/exceptions.py: fp
-    RefactoringTool: ./src/sentry/db/postgres/helpers.py: fp
-    RefactoringTool: ./src/sentry/debug/utils/packages.py: fp
-    RefactoringTool: ./src/sentry/integrations/client.py: fp
-    RefactoringTool: ./src/sentry/interfaces/http.py: fp
-    RefactoringTool: ./src/sentry/interfaces/message.py: fp
-    RefactoringTool: ./src/sentry/interfaces/stacktrace.py: fp
-    RefactoringTool: ./src/sentry/logging/handlers.py: fp
-    RefactoringTool: ./src/sentry/models/repository.py: fp
-    RefactoringTool: ./src/sentry/plugins/base/group_api_urls.py: fp
-    RefactoringTool: ./src/sentry/plugins/base/project_api_urls.py: fp
-    RefactoringTool: ./src/sentry/receivers/features.py: fp
-    RefactoringTool: ./src/sentry/rules/conditions/event_attribute.py: fp
-    RefactoringTool: ./src/sentry/runner/importer.py: fp
-    RefactoringTool: ./src/sentry/tasks/commits.py: fp
-    RefactoringTool: ./src/sentry/templatetags/sentry_helpers.py: fp
-    RefactoringTool: ./src/sentry/tsdb/snuba.py: fp
-    RefactoringTool: ./src/sentry/utils/data_scrubber.py: fp
-    RefactoringTool: ./src/sentry/utils/hashlib.py: fp
-    RefactoringTool: ./src/sentry/utils/http.py: fp
-    RefactoringTool: ./src/sentry/utils/json.py: fp
-    RefactoringTool: ./src/sentry/utils/safe.py: fp
-    RefactoringTool: ./src/sentry/utils/snuba.py: fp
-itertools
 itertools_imports
 long
 map

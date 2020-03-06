@@ -92,7 +92,7 @@ class GroupSerializerBase(Serializer):
             GroupSubscription.objects.filter(
                 group__in=list(
                     itertools.chain.from_iterable(
-                        itertools.imap(
+                        map(
                             lambda project__groups: project__groups[1] if not options.get(
                                 project__groups[0].id,
                                 options.get(None)
@@ -198,7 +198,7 @@ class GroupSerializerBase(Serializer):
                 ]
             ))
             commit_resolutions = {
-                i.group_id: d for i, d in itertools.izip(commit_results, serialize(commit_results, user))
+                i.group_id: d for i, d in zip(commit_results, serialize(commit_results, user))
             }
         else:
             release_resolutions = {}
@@ -211,7 +211,7 @@ class GroupSerializerBase(Serializer):
                 id__in=actor_ids,
                 is_active=True,
             ))
-            actors = {u.id: d for u, d in itertools.izip(users, serialize(users, user))}
+            actors = {u.id: d for u, d in zip(users, serialize(users, user))}
         else:
             actors = {}
 

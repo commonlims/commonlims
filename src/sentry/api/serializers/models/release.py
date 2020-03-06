@@ -109,7 +109,7 @@ class ReleaseSerializer(Serializer):
             commit_list = list(Commit.objects.filter(
                 id__in=commit_ids,
             ).select_related('author'))
-            commits = {c.id: d for c, d in izip(commit_list, serialize(commit_list, user))}
+            commits = {c.id: d for c, d in zip(commit_list, serialize(commit_list, user))}
         else:
             commits = {}
 
@@ -147,7 +147,7 @@ class ReleaseSerializer(Serializer):
             deploy_list = list(Deploy.objects.filter(
                 id__in=deploy_ids,
             ))
-            deploys = {d.id: c for d, c in izip(deploy_list, serialize(deploy_list, user))}
+            deploys = {d.id: c for d, c in zip(deploy_list, serialize(deploy_list, user))}
         else:
             deploys = {}
 

@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def text_shingle(n, value):
-    return itertools.imap(
+    return map(
         u''.join,
         shingle(n, value),
     )
