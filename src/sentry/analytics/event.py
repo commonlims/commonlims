@@ -72,8 +72,6 @@ class Map(Attribute):
 
 
 class Event(object):
-    __slots__ = ['uuid', 'attributes', 'data', 'datetime', 'type']
-
     type = None
 
     attributes = ()
