@@ -1,7 +1,7 @@
 
 
 """Methods specific for generating pycharm run configurations"""
-from integration import ConfigFromConventionProvider
+from .integration import ConfigFromConventionProvider
 
 
 def generate_pycharm_run_config(module):

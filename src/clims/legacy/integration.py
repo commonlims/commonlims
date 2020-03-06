@@ -4,7 +4,7 @@ import shutil
 import logging
 import importlib
 import pkgutil
-from driverfile import DriverFileIntegrationTests
+from .driverfile import DriverFileIntegrationTests
 from clims.legacy.extensions import NoTestsFoundException
 
 
