@@ -3,10 +3,10 @@
 
 def register_scheme(name):
     try:
-        import urlparse  # NOQA
+        import urllib.parse  # NOQA
     except ImportError:
         from urllib import parse as urlparse  # NOQA
-    uses = urlparse.uses_netloc, urlparse.uses_query, urlparse.uses_relative, urlparse.uses_fragment
+    uses = urllib.parse.uses_netloc, urllib.parse.uses_query, urllib.parse.uses_relative, urllib.parse.uses_fragment
     for use in uses:
         if name not in use:
             use.append(name)

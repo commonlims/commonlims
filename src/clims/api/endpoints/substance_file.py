@@ -1,6 +1,6 @@
 
 
-import StringIO
+import io
 import base64
 
 from rest_framework.permissions import IsAuthenticated
@@ -71,7 +71,7 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
 
         content = request.data['content']
         content = base64.b64decode(content)
-        fileobj = StringIO.StringIO(content)
+        fileobj = io.StringIO(content)
         full_name = request.data.get('filename')
 
         if not full_name or full_name == 'file':

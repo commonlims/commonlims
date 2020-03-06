@@ -3,8 +3,8 @@
 import mock
 import pytest
 import six
-import thread
-from Queue import Full
+import _thread
+from queue import Full
 from concurrent.futures import CancelledError, Future
 from contextlib import contextmanager
 from threading import Event
@@ -13,7 +13,7 @@ from sentry.utils.concurrent import FutureSet, SynchronousExecutor, ThreadedExec
 
 
 def test_execute():
-    assert execute(thread.get_ident).result() != thread.get_ident()
+    assert execute(_thread.get_ident).result() != _thread.get_ident()
 
     with pytest.raises(Exception):
         assert execute(mock.Mock(side_effect=Exception('Boom!'))).result()

@@ -3,7 +3,7 @@ import os
 import tests
 import pytest
 from six import BytesIO, binary_type
-import StringIO
+import io
 import logging
 from tests.clims.models.test_substance import SubstanceTestCase
 from clims.models.substance import Substance
@@ -48,7 +48,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
     def test_run_gemstone_sample_submission_handler__with_csv__6_samples_found_in_db(self):
         # Arrange
         content = read_binary_file(csv_sample_submission_path())
-        fileobj = StringIO.StringIO(content)
+        fileobj = io.StringIO(content)
 
         # Act
         self.app.substances.load_file(self.organization, "the_file.csv", fileobj)
@@ -214,5 +214,5 @@ class MyHandler(SubstancesSubmissionHandler):
             line = '\t'.join(line_contents)
             rows.append(line)
         contents = '\n'.join(rows)
-        file_like = StringIO.StringIO(contents)
+        file_like = io.StringIO(contents)
         return Csv(file_like, delim='\t')
