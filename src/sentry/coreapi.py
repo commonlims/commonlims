@@ -8,7 +8,7 @@ sentry.coreapi
 # TODO: We should make the API a class, and UDP/HTTP just inherit from it
 #       This will make it so we can more easily control logging with various
 #       metadata (rather than generic log messages which aren't useful).
-from __future__ import absolute_import, print_function
+
 
 import abc
 import base64

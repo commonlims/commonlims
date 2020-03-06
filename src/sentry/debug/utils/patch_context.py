@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from threading import Lock
 from sentry.utils.imports import import_string

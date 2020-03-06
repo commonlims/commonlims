@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 
 from django.db import models
 from django.db.models.signals import post_save

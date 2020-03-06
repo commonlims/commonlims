@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 
 VALIDATION_RESULT_TYPE_ERROR = "error"

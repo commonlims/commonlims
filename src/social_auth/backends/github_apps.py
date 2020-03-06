@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from social_auth.backends.github import GithubBackend, GithubAuth
 

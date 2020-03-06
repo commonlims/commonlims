@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from .base import DefaultEvent
 from .security import CspEvent, HpkpEvent, ExpectCTEvent, ExpectStapleEvent

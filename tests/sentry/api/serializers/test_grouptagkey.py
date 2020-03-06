@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.serializers import serialize
 from sentry.tagstore.types import GroupTagKey

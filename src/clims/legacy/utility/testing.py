@@ -1,7 +1,7 @@
 """
 Various helpers for mocking data quickly, in either unit tests or notebooks.
 """
-from __future__ import absolute_import
+
 
 from clims.legacy.domain import *
 from clims.legacy.service.dilution.service import *

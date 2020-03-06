@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.filters.web_crawlers import WebCrawlersFilter
 from sentry.testutils import TestCase

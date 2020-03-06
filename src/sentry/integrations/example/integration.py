@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django.http import HttpResponse
 from sentry.integrations import (

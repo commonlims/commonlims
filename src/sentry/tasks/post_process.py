@@ -6,7 +6,7 @@ sentry.tasks.post_process
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, print_function
+
 
 import logging
 import time

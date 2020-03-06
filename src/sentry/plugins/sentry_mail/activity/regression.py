@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.utils.html import escape
 from sentry.utils.http import absolute_uri

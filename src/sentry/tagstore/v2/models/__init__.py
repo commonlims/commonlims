@@ -6,7 +6,7 @@ sentry.tagstore.v2.models
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from sentry.utils.imports import import_submodules
 

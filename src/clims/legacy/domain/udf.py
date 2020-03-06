@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 import re
 from clims.legacy.domain.common import DomainObjectMixin
 import logging

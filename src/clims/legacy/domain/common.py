@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from __builtin__ import isinstance
 import copy
 import six

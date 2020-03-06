@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.interfaces.base import Interface, prune_empty_keys
 from sentry.interfaces.stacktrace import Stacktrace

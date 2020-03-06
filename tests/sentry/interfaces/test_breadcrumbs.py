@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
 
 from sentry.interfaces.breadcrumbs import Breadcrumbs
 from sentry.testutils import TestCase

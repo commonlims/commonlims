@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.similarity.backends.abstract import AbstractIndexBackend
 from sentry.utils.metrics import timer

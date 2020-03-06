@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
 
 import mock
 from sentry.plugins.helpers import set_option, unset_option, get_option

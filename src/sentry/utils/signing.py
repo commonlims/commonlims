@@ -1,7 +1,7 @@
 """
 Generic way to sign and unsign data for use in urls.
 """
-from __future__ import absolute_import
+
 
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from django.core.signing import TimestampSigner

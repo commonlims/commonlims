@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
 
 from sentry.utils.db import get_db_engine
 from sentry.testutils import TestCase

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry import tagstore
 from sentry.testutils import AcceptanceTestCase

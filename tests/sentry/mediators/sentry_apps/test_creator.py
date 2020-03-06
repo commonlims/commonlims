@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.mediators.sentry_apps import Creator
 from sentry.models import ApiApplication, SentryApp, User

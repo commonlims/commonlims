@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from clims.legacy.service.dilution.service import DilutionService
 from clims.legacy import UnitConversion
 from clims.legacy.repository import LegacyRepository, FileRepository

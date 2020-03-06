@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from clims.api.serializers.models.extensible_property import ExtensiblePropertySerializer
 from clims.api.serializers.models.substance import SubstanceSerializer

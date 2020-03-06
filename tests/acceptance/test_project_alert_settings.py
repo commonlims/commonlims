@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.models import Rule
 from sentry.testutils import AcceptanceTestCase

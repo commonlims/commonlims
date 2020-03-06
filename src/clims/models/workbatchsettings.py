@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 # NOTE: WorkBatchSettings and related objects are not Django models. They are created when the plugin
 # is registered and possibly cached in redis.

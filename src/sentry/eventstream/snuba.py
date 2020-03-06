@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.eventstream.base import EventStream
 from sentry.utils import snuba

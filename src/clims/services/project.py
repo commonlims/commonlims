@@ -1,5 +1,5 @@
 
-from __future__ import absolute_import
+
 
 from clims.services.extensible import ExtensibleBase
 from clims.models import Project, ProjectVersion

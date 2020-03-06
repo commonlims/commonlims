@@ -6,7 +6,7 @@ sentry.rules.conditions.event_frequency
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from datetime import timedelta
 from django import forms

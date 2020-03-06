@@ -7,7 +7,7 @@ sentry.utils.json
 """
 
 # Avoid shadowing the standard library json module
-from __future__ import absolute_import
+
 
 from enum import Enum
 from simplejson import JSONEncoder, _default_decoder

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django.shortcuts import render_to_response
 

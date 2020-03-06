@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.bases.project import ProjectPermission
 from sentry.models import ApiKey

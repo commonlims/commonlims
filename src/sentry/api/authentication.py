@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django.utils.crypto import constant_time_compare
 from rest_framework.authentication import (BasicAuthentication, get_authorization_header)

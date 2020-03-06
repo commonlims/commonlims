@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from sentry.utils.contexts_normalization import (
     normalize_os,
     normalize_runtime,

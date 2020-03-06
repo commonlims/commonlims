@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.coreapi import APIError
 from sentry.mediators.sentry_apps import Updater

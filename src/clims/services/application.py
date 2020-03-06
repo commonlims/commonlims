@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from clims.services.extensible import ExtensibleService
 from clims.services.substance import SubstanceService

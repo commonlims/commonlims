@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry import features as feature_flags
 from sentry.signals import event_processed

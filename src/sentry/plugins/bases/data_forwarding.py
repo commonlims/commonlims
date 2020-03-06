@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry import tsdb, ratelimits
 from sentry.api.serializers import serialize

@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 
 from django.core.urlresolvers import reverse
 from django.contrib import messages

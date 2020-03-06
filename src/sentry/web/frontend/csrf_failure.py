@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django.middleware.csrf import REASON_NO_REFERER
 from django.views.decorators.csrf import csrf_exempt

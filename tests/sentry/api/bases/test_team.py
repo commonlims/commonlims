@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.bases.team import TeamPermission
 from sentry.models import ApiKey

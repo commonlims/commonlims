@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from rest_framework.negotiation import DefaultContentNegotiation
 from rest_framework.parsers import FormParser, MultiPartParser

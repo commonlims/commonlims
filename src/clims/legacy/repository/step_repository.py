@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from clims.legacy.domain.artifact import Artifact
 from clims.legacy.domain.analyte import Analyte

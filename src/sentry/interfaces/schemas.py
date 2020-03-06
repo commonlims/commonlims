@@ -6,7 +6,7 @@ sentry.interfaces.schemas
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from functools32 import lru_cache
 from itertools import groupby

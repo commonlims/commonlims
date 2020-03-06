@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.eventtypes import ErrorEvent
 from sentry.testutils import TestCase

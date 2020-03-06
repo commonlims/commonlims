@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.bases.user import UserEndpoint
 from sentry.api.decorators import sudo_required

@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 
 from sentry.coreapi import Auth, ClientApiHelper
 from sentry.event_manager import EventManager

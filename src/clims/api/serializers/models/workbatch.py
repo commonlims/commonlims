@@ -1,5 +1,5 @@
 
-from __future__ import absolute_import
+
 
 from clims.models.work_batch import WorkBatch
 

@@ -6,7 +6,7 @@ sentry.search.django.backend
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 import functools
 from datetime import timedelta

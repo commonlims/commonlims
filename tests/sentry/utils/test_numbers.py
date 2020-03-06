@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.utils.numbers import base36_encode, base36_decode, \
     base32_encode, base32_decode, format_bytes

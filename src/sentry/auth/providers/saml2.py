@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 
 from django.contrib import messages
 from django.contrib.auth import logout

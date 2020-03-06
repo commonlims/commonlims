@@ -6,7 +6,7 @@ sentry.rules.conditions.minimum_level
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from collections import OrderedDict
 

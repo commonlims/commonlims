@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.fields.actor import Actor
 from sentry.digests.utilities import (

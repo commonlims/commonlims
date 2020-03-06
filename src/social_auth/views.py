@@ -5,7 +5,7 @@ Notes:
       on third party providers that (if using POST) won't be sending csrf
       token back.
 """
-from __future__ import absolute_import
+
 
 import six
 

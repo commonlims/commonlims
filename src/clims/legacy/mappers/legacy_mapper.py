@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from clims.legacy.domain.udf import UdfMapping
 from clims.legacy.domain.aliquot import Project, Sample

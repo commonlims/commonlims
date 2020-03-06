@@ -6,7 +6,7 @@ sentry.db.models.fields.citext
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, print_function
+
 
 import six
 

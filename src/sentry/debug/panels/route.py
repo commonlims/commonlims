@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django.template import Context, Template
 from debug_toolbar.panels import Panel

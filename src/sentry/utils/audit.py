@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 
 def create_audit_entry(request, transaction_id=None, logger=None, **kwargs):

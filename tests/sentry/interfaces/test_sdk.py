@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
 
 from sentry.interfaces.sdk import Sdk
 from sentry.testutils import TestCase

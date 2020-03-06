@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.constants import ObjectStatus
 from sentry.models import Repository

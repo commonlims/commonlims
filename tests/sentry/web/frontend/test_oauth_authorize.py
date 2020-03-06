@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from exam import fixture
 from six.moves.urllib.parse import parse_qs

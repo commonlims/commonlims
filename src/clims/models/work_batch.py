@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 from django.db import models
 from sentry.db.models import Model, FlexibleForeignKey, BoundedPositiveIntegerField
 from django.db.models.fields import TextField

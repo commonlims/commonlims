@@ -6,7 +6,7 @@ sentry.cache.base
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from django.conf import settings
 

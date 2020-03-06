@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.plugins import providers
 from sentry.models import Integration

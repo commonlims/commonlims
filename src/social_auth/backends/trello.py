@@ -12,7 +12,7 @@ TRELLO_AUTH_EXTRA_ARGUMENTS = {
 
 into settings.py
 """
-from __future__ import absolute_import
+
 
 import simplejson
 

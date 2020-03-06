@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from social.strategies.django_strategy import DjangoStrategy
 

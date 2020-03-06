@@ -7,7 +7,7 @@ Used for notifying *all* enabled plugins
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from sentry.plugins import plugins
 from sentry.rules.actions.base import EventAction

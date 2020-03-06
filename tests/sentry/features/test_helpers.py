@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from contextlib import contextmanager
 from django.http import HttpRequest

@@ -6,7 +6,7 @@ sentry.testutils.cases
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 __all__ = (
     'TestCase', 'TransactionTestCase', 'APITestCase', 'TwoFactorAPITestCase', 'AuthProviderTestCase', 'RuleTestCase',

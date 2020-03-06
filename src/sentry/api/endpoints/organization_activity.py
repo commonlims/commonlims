@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 # class OrganizationActivityEndpoint(OrganizationMemberEndpoint, EnvironmentMixin):
 #     def get(self, request, organization, member):

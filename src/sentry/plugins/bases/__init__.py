@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from .issue import IssueTrackingPlugin  # NOQA
 from .issue2 import IssueTrackingPlugin2  # NOQA

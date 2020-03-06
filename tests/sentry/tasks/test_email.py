@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.models import Activity
 from sentry.tasks.email import process_inbound_email

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.mediators.service_hooks import Creator
 from sentry.mediators.service_hooks.creator import expand_events, consolidate_events

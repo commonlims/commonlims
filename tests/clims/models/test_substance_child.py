@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from clims.models import Substance
 from tests.clims.models.test_substance import SubstanceTestCase

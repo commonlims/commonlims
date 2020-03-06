@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from BeautifulSoup import BeautifulStoneSoup
 from collections import OrderedDict

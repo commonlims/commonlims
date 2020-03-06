@@ -6,7 +6,7 @@ sentry.tagstore.snuba.backend
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 import functools
 from collections import defaultdict

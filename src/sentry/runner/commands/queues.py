@@ -5,7 +5,7 @@ sentry.runner.commands.queues
 :copyright: (c) 2016 by the Sentry Team, see AUTHORS for more details.
 :license: BSD, see LICENSE for more details.
 """
-from __future__ import absolute_import, print_function
+
 
 import click
 from sentry.runner.decorators import configuration

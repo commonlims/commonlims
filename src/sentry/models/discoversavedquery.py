@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from django.db import models, transaction
 from jsonfield import JSONField
 from sentry.db.models import (

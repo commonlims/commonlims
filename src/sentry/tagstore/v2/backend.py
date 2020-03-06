@@ -6,7 +6,7 @@ sentry.tagstore.v2.backend
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 import collections
 import six

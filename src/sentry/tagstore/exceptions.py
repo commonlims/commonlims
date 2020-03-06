@@ -6,7 +6,7 @@ sentry.tagstore.exceptions
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 
 class TagKeyNotFound(Exception):

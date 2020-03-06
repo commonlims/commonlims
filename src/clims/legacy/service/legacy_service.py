@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 import logging
 from clims.legacy.domain import Container, Artifact, Sample

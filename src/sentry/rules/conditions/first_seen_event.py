@@ -6,7 +6,7 @@ sentry.rules.conditions.first_seen_event
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from sentry.rules.conditions.base import EventCondition
 

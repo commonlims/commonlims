@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 import posixpath
 
 from rest_framework import serializers

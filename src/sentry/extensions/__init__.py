@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 # TODO: Decide if we want to keep the whole WorkBatch in the database too or if it should just
 # be fetched from the plugin and saved in redis (which is much simpler). In the latter case, we would

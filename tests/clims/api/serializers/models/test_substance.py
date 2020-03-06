@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
 
 from tests.clims.models.test_substance import SubstanceTestCase
 from clims.api.serializers.models.substance import SubstanceSerializer

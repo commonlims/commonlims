@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from collections import namedtuple
 from clims.legacy.utils import lazyprop
 from clims.legacy.domain.common import DomainObjectMixin

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sudo.views import SudoView as BaseSudoView
 

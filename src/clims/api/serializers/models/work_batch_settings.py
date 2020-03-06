@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.serializers import Serializer, register, serialize
 from clims.models.workbatchsettings import SubtaskSettings, WorkBatchSettings, WorkBatchAction, WorkBatchField

@@ -6,7 +6,7 @@ sentry.db.models.fields
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from .array import *  # NOQA
 from .bounded import *  # NOQA

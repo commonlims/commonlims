@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from debug_toolbar.panels import Panel
 from django.utils.translation import ungettext

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 """Methods specific for generating pycharm run configurations"""
 from integration import ConfigFromConventionProvider

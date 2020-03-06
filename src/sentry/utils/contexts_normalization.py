@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 import re
 
 from ua_parser.user_agent_parser import Parse

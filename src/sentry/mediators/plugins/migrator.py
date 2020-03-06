@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.mediators import Mediator, Param
 from sentry.models import Repository

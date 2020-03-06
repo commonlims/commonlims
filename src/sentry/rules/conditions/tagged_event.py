@@ -6,7 +6,7 @@ sentry.rules.conditions.tagged_event
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from collections import OrderedDict
 from django import forms

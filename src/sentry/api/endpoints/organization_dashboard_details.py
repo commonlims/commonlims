@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.api.base import DocSection
 from sentry.api.bases.dashboard import (

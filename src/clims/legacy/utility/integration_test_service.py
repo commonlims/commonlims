@@ -1,5 +1,5 @@
 """Help classes to manage integration tests"""
-from __future__ import absolute_import
+
 
 from itertools import chain
 

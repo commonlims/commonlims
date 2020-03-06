@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from oauth2 import (
     Consumer as OAuthConsumer, Token, Request as OAuthRequest,

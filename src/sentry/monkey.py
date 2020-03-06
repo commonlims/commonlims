@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 
 def register_scheme(name):

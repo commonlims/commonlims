@@ -5,7 +5,7 @@ sentry.management.commands.serve_normalize
 :copyright: (c) 2018 by the Sentry Team, see AUTHORS for more details.
 :license: BSD, see LICENSE for more details.
 """
-from __future__ import absolute_import, print_function
+
 
 import six
 import SocketServer

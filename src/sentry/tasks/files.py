@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from sentry.tasks.base import instrumented_task
 from sentry.tasks.deletion import MAX_RETRIES

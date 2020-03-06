@@ -1,5 +1,5 @@
 
-from __future__ import absolute_import
+
 from sentry.testutils import TestCase
 from clims.services.project import ProjectBase
 from clims.services.extensible import TextField

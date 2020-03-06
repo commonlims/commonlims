@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from clims.services import SubstanceBase
 from clims.services.project import ProjectBase
 from clims.services.extensible import FloatField, TextField
