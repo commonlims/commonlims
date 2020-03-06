@@ -1,9 +1,8 @@
-
 import requests
 import logging
 from six.moves.urllib.parse import urljoin
 import os
-from functools32 import lru_cache
+from functools import lru_cache
 from clims.camunda import CamundaApi, UnexpectedHttpResponse, ProcessDefinition
 
 
@@ -223,7 +222,7 @@ if __name__ == "__main__":
 
     exit()
     process_definition = ProcessDefinition(id="73f920c0-d6a3-11e8-a538-0a0027000002")
-    print process_definition.get()  # noqa
+    print(process_definition.get())  # noqa
     # print process_definition.activity_instances  #.get()
 
     # 0. Fetch all the process instances for a particular business key (e.g. a sample):

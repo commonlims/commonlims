@@ -1,11 +1,9 @@
-
-
 import os
 import re
 import logging
 import json
 
-from functools32 import lru_cache
+from functools import lru_cache
 
 import sentry
 
