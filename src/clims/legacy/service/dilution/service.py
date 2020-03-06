@@ -616,9 +616,7 @@ class DilutionSettings:
         return DilutionSettings.CONCENTRATION_REF_TO_STR[conc_ref]
 
 
-class RobotSettings(object):
-    __metaclass__ = abc.ABCMeta
-
+class RobotSettings(object, metaclass=abc.ABCMeta):
     def __init__(self):
         """
         Inherit from this file to supply new settings for a robot
@@ -873,9 +871,8 @@ class ContainerSlot(object):
             self.name, "source" if self.is_source else "target", self.container)
 
 
-class TransferHandlerBase(object):
+class TransferHandlerBase(object, metaclass=abc.ABCMeta):
     """Base class for all handlers"""
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, dilution_session, dilution_settings, robot_settings, virtual_batch):
         self.dilution_session = dilution_session
@@ -935,9 +932,8 @@ class TransferBatchHandlerBase(TransferHandlerBase):
         batch.validation_results.append(ValidationException(msg, ValidationType.WARNING))
 
 
-class TransferSplitHandlerBase(TransferHandlerBase):
+class TransferSplitHandlerBase(TransferHandlerBase, metaclass=abc.ABCMeta):
     """Base class for handlers that can split one transfer into more"""
-    __metaclass__ = abc.ABCMeta
 
     # TODO: Better naming so it's clear that this differs from the row-split
     def handle_split(self, transfer, temp_transfer, main_transfer):
