@@ -1,6 +1,4 @@
-
-
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulStoneSoup
 from collections import OrderedDict
 from simplejson.decoder import JSONDecodeError
 from six.moves.urllib.parse import urlparse

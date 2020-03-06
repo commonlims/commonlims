@@ -7,7 +7,7 @@ import requests
 from collections import OrderedDict
 from time import time
 
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulStoneSoup
 from django.utils.functional import cached_property
 from requests.exceptions import ConnectionError, HTTPError
 from sentry.exceptions import InvalidIdentity
