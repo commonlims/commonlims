@@ -34,7 +34,7 @@ class Cursor(object):
             type(self).__name__, self.value, self.offset, int(self.is_prev)
         )
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.has_results
 
     @classmethod
