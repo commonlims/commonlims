@@ -110,8 +110,7 @@ class OrganizationMemberWithProjectsSerializer(OrganizationMemberSerializer):
                     ):
                         projects.add(project_team.project.slug)
 
-            projects = list(projects)
-            projects.sort()
+            projects = sorted(projects)
             attrs[org_member]['projects'] = projects
 
         return attrs

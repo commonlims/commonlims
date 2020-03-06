@@ -57,7 +57,7 @@ class FileHandlersRegistry(object):
         raise NotImplementedError()
 
         for handler in self.handlers:
-            if type(handler) == type:
+            if isinstance(handler, type):
                 obj = handler()
                 if not hasattr(obj, "handle"):
                     raise HandlerNotDefinedException(

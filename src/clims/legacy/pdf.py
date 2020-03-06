@@ -17,7 +17,7 @@ class PdfSplitter(object):
         :param filename: The name of the new file
         :return: None
         """
-        if type(pages) is int:
+        if isinstance(pages, int):
             pages = [pages]
 
         output_writer = PdfFileWriter()

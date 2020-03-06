@@ -206,7 +206,7 @@ class TestExtensionContext(object):
                 for call in self.context.validation_service.handle_single_validation.call_args_list]
 
     def count_logged_validation_results_of_type(self, t):
-        return len([result for result in self.logged_validation_results() if type(result) == t])
+        return len([result for result in self.logged_validation_results() if isinstance(result, t)])
 
     def count_logged_validation_results_with_msg(self, msg):
         return len([result for result in self.logged_validation_results()

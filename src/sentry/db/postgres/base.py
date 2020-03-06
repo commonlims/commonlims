@@ -34,7 +34,7 @@ def remove_surrogates(value):
     # Another hack.  postgres does not accept lone surrogates
     # in utf-8 mode.  If we encounter any lone surrogates in
     # our string we need to remove it.
-    if type(value) is bytes:
+    if isinstance(value, bytes):
         try:
             return strip_lone_surrogates(value.decode('utf-8')).encode('utf-8')
         except UnicodeError:
