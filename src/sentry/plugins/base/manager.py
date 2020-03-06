@@ -387,7 +387,7 @@ class PluginManager(object):
         except ImportError as ex:
             if six.text_type(ex) != "No module named {}".format(name):
                 trace = sys.exc_info()[2]
-                raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
+                raise ImportError("Error while trying to load plugin {}".format(module_name)).with_traceback(trace)
 
     def clear_handler_implementations(self, baseclass=None):
         if baseclass is not None:
