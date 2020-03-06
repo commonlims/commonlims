@@ -411,7 +411,7 @@ class SnubaSearchTest(SnubaTestCase):
                 assert results.next.has_results
 
                 results = self.backend.query(
-                    [self.project], cursor=results.next, limit=1, sort_by='date')
+                    [self.project], cursor=results.__next__, limit=1, sort_by='date')
                 assert set(results) == set([self.group2])
                 assert results.prev.has_results
                 assert not results.next.has_results
@@ -431,19 +431,19 @@ class SnubaSearchTest(SnubaTestCase):
                 assert results.next.has_results
 
                 results = self.backend.query(
-                    [self.project], cursor=results.next, limit=1, sort_by='date')
+                    [self.project], cursor=results.__next__, limit=1, sort_by='date')
                 assert set(results) == set([self.group1])
                 assert results.prev.has_results
                 assert results.next.has_results
 
                 results = self.backend.query(
-                    [self.project], cursor=results.next, limit=1, sort_by='date')
+                    [self.project], cursor=results.__next__, limit=1, sort_by='date')
                 assert set(results) == set([self.group2])
                 assert results.prev.has_results
                 assert not results.next.has_results
 
                 results = self.backend.query(
-                    [self.project], cursor=results.next, limit=1, sort_by='date')
+                    [self.project], cursor=results.__next__, limit=1, sort_by='date')
                 assert set(results) == set([])
                 assert results.prev.has_results
                 assert not results.next.has_results
@@ -479,7 +479,7 @@ class SnubaSearchTest(SnubaTestCase):
             environments=[self.environments['production']],
             sort_by='date',
             limit=1,
-            cursor=results.next,
+            cursor=results.__next__,
             count_hits=True,
         )
         assert list(results) == [self.group1]
@@ -490,7 +490,7 @@ class SnubaSearchTest(SnubaTestCase):
             environments=[self.environments['production']],
             sort_by='date',
             limit=1,
-            cursor=results.next,
+            cursor=results.__next__,
             count_hits=True,
         )
         assert list(results) == []

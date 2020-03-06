@@ -221,7 +221,7 @@ class Endpoint(APIView):
             [
                 self.build_cursor_link(
                     request, 'previous', cursor_result.prev),
-                self.build_cursor_link(request, 'next', cursor_result.next),
+                self.build_cursor_link(request, 'next', cursor_result.__next__),
             ]
         )
 

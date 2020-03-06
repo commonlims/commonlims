@@ -164,6 +164,8 @@ class DateTimePaginatorTest(TestCase):
         assert result1[0] == res1
         assert result1[1] == res2
         assert result1.next
+        print(type(result1), type(result1.prev))
+
         assert not result1.prev
 
         result2 = paginator.get_result(limit=2, cursor=result1.next)

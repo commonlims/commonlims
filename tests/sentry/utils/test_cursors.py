@@ -31,22 +31,22 @@ def test_build_cursor():
     }
 
     cursor = build_cursor(results, **cursor_kwargs)
-    assert isinstance(cursor.next, Cursor)
-    assert cursor.next
+    assert isinstance(cursor.__next__, Cursor)
+    assert cursor.__next__
     assert isinstance(cursor.prev, Cursor)
     assert not cursor.prev
     assert list(cursor) == [event1]
 
-    cursor = build_cursor(results[1:], cursor=cursor.next, **cursor_kwargs)
-    assert isinstance(cursor.next, Cursor)
-    assert cursor.next
+    cursor = build_cursor(results[1:], cursor=cursor.__next__, **cursor_kwargs)
+    assert isinstance(cursor.__next__, Cursor)
+    assert cursor.__next__
     assert isinstance(cursor.prev, Cursor)
     assert cursor.prev
     assert list(cursor) == [event2]
 
-    cursor = build_cursor(results[2:], cursor=cursor.next, **cursor_kwargs)
-    assert isinstance(cursor.next, Cursor)
-    assert not cursor.next
+    cursor = build_cursor(results[2:], cursor=cursor.__next__, **cursor_kwargs)
+    assert isinstance(cursor.__next__, Cursor)
+    assert not cursor.__next__
     assert isinstance(cursor.prev, Cursor)
     assert cursor.prev
     assert list(cursor) == [event3]
