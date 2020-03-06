@@ -179,7 +179,7 @@ class FeatureSet(object):
         return list(map(
             lambda key__scores: (
                 int(key__scores[0]),
-                dict(zip(labels, key__scores[1])),
+                dict(list(zip(labels, key__scores[1]))),
             ),
             self.index.classify(
                 scope,
@@ -200,7 +200,7 @@ class FeatureSet(object):
         return list(map(
             lambda key__scores: (
                 int(key__scores[0]),
-                dict(zip(features, key__scores[1])),
+                dict(list(zip(features, key__scores[1]))),
             ),
             self.index.compare(
                 self.__get_scope(group.project),

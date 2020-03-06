@@ -19,7 +19,7 @@ VALID_STATUSES = frozenset(('viewed', 'dismissed'))
 class AssistantSerializer(serializers.Serializer):
     guide_id = serializers.IntegerField(required=True)
     status = serializers.ChoiceField(
-        choices=zip(VALID_STATUSES, VALID_STATUSES),
+        choices=list(zip(VALID_STATUSES, VALID_STATUSES)),
         required=True,
     )
     useful = serializers.BooleanField()

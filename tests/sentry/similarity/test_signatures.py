@@ -23,10 +23,10 @@ class MinHashSignatureBuilderTestCase(TestCase):
         results = Counter(
             list(map(
                 lambda l__r: l__r[0] == l__r[1],
-                zip(
+                list(zip(
                     get_signature(a),
                     get_signature(b),
-                ),
+                )),
             )),
         )
 

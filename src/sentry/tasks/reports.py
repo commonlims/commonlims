@@ -373,7 +373,7 @@ def prepare_project_calendar_series(interval, project):
 
 
 def build(name, fields):
-    names, prepare_fields, merge_fields = zip(*fields)
+    names, prepare_fields, merge_fields = list(zip(*fields))
 
     cls = namedtuple(name, names)
 
@@ -796,10 +796,10 @@ def build_project_breakdown_series(reports):
             ),
             reports[instance__color[0]],
         ),
-        zip(
+        list(zip(
             instances,
             colors,
-        ),
+        )),
     )[::-1]
 
     # Collect any reports that weren't in the selection set, merge them
@@ -858,7 +858,7 @@ def to_context(organization, interval, reports):
         'distribution': {
             'types':
             list(
-                zip(
+                list(zip(
                     (
                         DistributionType(
                             'New', '#8477e0'), DistributionType(
@@ -866,7 +866,7 @@ def to_context(organization, interval, reports):
                         DistributionType('Existing', '#534a92'),
                     ),
                     report.issue_summaries,
-                ),
+                )),
             ),
             'total':
             sum(report.issue_summaries),

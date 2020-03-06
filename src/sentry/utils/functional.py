@@ -34,12 +34,12 @@ def apply_values(function, mapping):
     if not mapping:
         return {}
 
-    keys, values = zip(*list(mapping.items()))
+    keys, values = list(zip(*list(mapping.items())))
     return dict(
-        zip(
+        list(zip(
             keys,
             function(values),
-        ),
+        )),
     )
 
 

@@ -283,7 +283,7 @@ class SequencePaginator(object):
     def __init__(self, data, reverse=False, max_limit=MAX_LIMIT, on_results=None):
         self.scores, self.values = list(map(
             list,
-            zip(*sorted(data, reverse=reverse)),
+            list(zip(*sorted(data, reverse=reverse))),
         )) if data else ([], [])
         self.reverse = reverse
         self.search = functools.partial(

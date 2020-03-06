@@ -170,7 +170,7 @@ class BulkDeleteQuery(object):
                                 [position],
                             ))
 
-                    conditions, parameters = zip(*where)
+                    conditions, parameters = list(zip(*where))
                     parameters = list(itertools.chain.from_iterable(parameters))
 
                     query = """

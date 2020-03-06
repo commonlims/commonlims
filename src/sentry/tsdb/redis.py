@@ -783,7 +783,7 @@ class RedisTSDB(BaseTSDB):
         results = {}
         cluster, _ = self.get_cluster(environment_id)
         for key, responses in cluster.execute_commands(commands).items():
-            results[key] = zip(series, list(map(unpack_response, responses)))
+            results[key] = list(zip(series, list(map(unpack_response, responses))))
 
         return results
 
@@ -826,7 +826,7 @@ class RedisTSDB(BaseTSDB):
 
             chunk = results[key] = []
             for timestamp, scores in zip(series, responses[0].value):
-                chunk.append((timestamp, dict(zip(members, list(map(float, scores))))))
+                chunk.append((timestamp, dict(list(zip(members, list(map(float, scores)))))))
 
         return results
 

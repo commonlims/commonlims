@@ -63,7 +63,7 @@ class SnubaTSDB(BaseTSDB):
             groupby.append(model_aggregate)
             model_aggregate = None
 
-        keys_map = dict(zip(model_columns, self.flatten_keys(keys)))
+        keys_map = dict(list(zip(model_columns, self.flatten_keys(keys))))
         keys_map = {k: v for k, v in six.iteritems(keys_map) if k is not None and v is not None}
         if environment_ids is not None:
             keys_map['environment'] = environment_ids

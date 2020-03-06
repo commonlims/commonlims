@@ -65,7 +65,7 @@ class SampleGroupDetailsEndpoint(Endpoint):
             obj = dict()
             for line in body:
                 values = line.split(";")
-                obj.update(zip(keys, values))
+                obj.update(list(zip(keys, values)))
             if result:
                 instance.update(**result)
             return Response(serialize(instance, request.user), status=200)
