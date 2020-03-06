@@ -7,7 +7,7 @@ import six
 
 class Encoder(object):
     try:
-        number_types = (int, long, float)  # noqa
+        number_types = (int, float)  # noqa
     except NameError:
         number_types = (int, float)
 
