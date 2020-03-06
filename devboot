@@ -6,28 +6,13 @@
 # It's not required to run this script if you want to specify node and python
 # versions in another way.
 
+# All tests are run (by default) with the setup required for integration tests:
+export CLIMS_INTEGRATION_TEST=1
+
 if [ ! -d ~/.pyenv ]; then
-    echo "Installing pyenv..."
-    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-
-    echo "pyenv has been setup"
-else
-    echo "pyenv is already installed"
-fi
-
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-echo "Manually add to .bash_profile or similar (optional):"
-echo "### pyenv settings"
-echo 'export PYENV_ROOT="$HOME/.pyenv"'
-echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
-echo "###"
-
-if [ ! -d $(pyenv root)/plugins/pyenv-virtualenv ]; then
-    echo "installing pyenv-virtualenv"
-    git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
-else
-    echo "pyenv-virtualenv already exists"
+    echo "Please install pyenv: https://github.com/pyenv/pyenv and pyenv-virtualenv:"
+    echo "  https://github.com/pyenv/pyenv-virtualenv.git"
+    return
 fi
 
 
