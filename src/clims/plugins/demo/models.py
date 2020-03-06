@@ -17,6 +17,6 @@ class ExampleProject(ProjectBase):
     project_code = TextField("project_code")
 
 
-class Plate96(PlateBase):
-    rows = 8
-    columns = 12
+class PandorasBox(PlateBase):
+    rows = 3
+    columns = 3

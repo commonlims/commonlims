@@ -4,7 +4,7 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from clims.plugins.demo.models import ExampleSample, ExampleProject, Plate96
+from clims.plugins.demo.models import ExampleSample, ExampleProject, PandorasBox
 from clims.plugins.demo import DemoPlugin
 from clims.models.plugin_registration import PluginRegistration
 
@@ -26,7 +26,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         demo_plugin, _ = PluginRegistration.objects.get_or_create(
             name=demo_plugin_full_name,
             version='1.0.0')
-        self.app.extensibles.register(demo_plugin, Plate96)
+        self.app.extensibles.register(demo_plugin, PandorasBox)
 
         logger.info("Creating example data for the builtin Demo plugin")
 
@@ -41,14 +41,14 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             return
 
         available_containers = []
-        for ix in range(3):
+        for ix in range(100):
             id = ix + 1
             # id = uuid4().hex
-            name = 'container-{}'.format(id)
+            name = 'pandora-{}'.format(id)
             try:
                 container = self.app.containers.get(name=name)
             except self.app.containers.DoesNotExist:
-                container = Plate96(name=name, organization=self.context.organization)
+                container = PandorasBox(name=name, organization=self.context.organization)
                 container.save()
                 logger.info('Created container: {}'.format(container.name))
             available_containers.append(container)
@@ -67,7 +67,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             sample.save()
             logger.info("Created sample: {}".format(sample.name))
             plate = random.choice(available_containers)
-            if not sample.location:
+            if not sample.location and len(plate.contents) < plate.rows * plate.columns:
                 plate.append(sample)
                 sample.save()
                 logger.info("Appended sample: {}".format(sample.name))
