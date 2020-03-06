@@ -14,7 +14,6 @@ from sentry.quotas.redis import (
 )
 from sentry.testutils import TestCase
 from sentry.utils.redis import clusters
-from six.moves import xrange
 
 
 def test_is_rate_limited_script():
@@ -161,7 +160,7 @@ class RedisQuotaTest(TestCase):
         self.get_organization_quota.return_value = (300, 60)
 
         n = 10
-        for _ in xrange(n):
+        for _ in range(n):
             self.quota.is_rate_limited(self.project, timestamp=timestamp)
 
         quotas = self.quota.get_quotas(self.project)
@@ -224,7 +223,7 @@ class RedisQuotaTest(TestCase):
         self.get_organization_quota.return_value = (300, 60)
 
         n = 10
-        for _ in xrange(n):
+        for _ in range(n):
             self.quota.is_rate_limited(self.project, timestamp=timestamp)
 
         self.quota.refund(self.project, timestamp=timestamp)

@@ -191,13 +191,13 @@ class Container(DomainObjectWithUdfMixin):
     @property
     def rows(self):
         # Enumerates the row indexes, returning e.g. (A,B,...,H) for a 96 well plate
-        for index in xrange(1, self.size.height + 1):
+        for index in range(1, self.size.height + 1):
             yield ContainerPosition.index_to_letter(index)
 
     @property
     def columns(self):
         # Enumerates the column indexes, returning e.g. (1,2,...12) for a 96 well plate
-        for index in xrange(1, self.size.width + 1):
+        for index in range(1, self.size.width + 1):
             yield index
 
     @staticmethod
@@ -246,8 +246,8 @@ class Container(DomainObjectWithUdfMixin):
         if not self.size:
             raise ValueError("Not able to traverse the container without a plate size")
 
-        rows = range(1, self.size.height + 1)
-        cols = range(1, self.size.width + 1)
+        rows = list(range(1, self.size.height + 1))
+        cols = list(range(1, self.size.width + 1))
         if order == self.RIGHT_FIRST:
             return ((row, col) for row in rows for col in cols)
         else:

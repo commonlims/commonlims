@@ -41,7 +41,7 @@ class TemplateGenerator(object):
         module = split[-1]
 
         root_path = os.getcwd()
-        for ix in xrange(len(packages)):
+        for ix in range(len(packages)):
             full_path = os.path.join(root_path, *packages[0:ix + 1])
             self._create_py_package(full_path)
 

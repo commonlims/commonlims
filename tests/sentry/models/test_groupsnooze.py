@@ -1,5 +1,3 @@
-
-
 import itertools
 import mock
 import pytest
@@ -9,7 +7,6 @@ from django.utils import timezone
 from sentry import tagstore, tsdb
 from sentry.testutils import TestCase
 from sentry.models import GroupSnooze
-from six.moves import xrange
 
 
 class GroupSnoozeTest(TestCase):
@@ -88,7 +85,7 @@ class GroupSnoozeTest(TestCase):
         tsdb.record(
             tsdb.models.users_affected_by_group,
             self.group.id,
-            [next(self.sequence) for _ in xrange(0, 101)],
+            [next(self.sequence) for _ in range(0, 101)],
         )
         assert not snooze.is_valid(test_rates=True)
 

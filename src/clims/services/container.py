@@ -207,8 +207,8 @@ class PlateBase(ContainerBase):
         """
         if order is None:
             order = self.traverse_by
-        rows = range(self.rows)
-        cols = range(self.columns)
+        rows = list(range(self.rows))
+        cols = list(range(self.columns))
 
         if order == self.TRAVERSE_BY_ROW:
             return (PlateIndex(column=col, row=row) for row in rows for col in cols)

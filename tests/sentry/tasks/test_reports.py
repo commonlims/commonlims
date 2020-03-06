@@ -1,5 +1,3 @@
-
-
 import functools
 from datetime import datetime, timedelta
 
@@ -18,7 +16,6 @@ from sentry.tasks.reports import (
 )
 from sentry.testutils.cases import TestCase
 from sentry.utils.dates import to_datetime, to_timestamp
-from six.moves import xrange
 
 
 @pytest.yield_fixture(scope="module")
@@ -101,65 +98,65 @@ def test_merge_mapping_different_keys():
 
 def test_merge_sequences():
     assert merge_sequences(
-        range(0, 4),
-        range(0, 4),
-    ) == [i * 2 for i in xrange(0, 4)]
+        list(range(0, 4)),
+        list(range(0, 4)),
+    ) == [i * 2 for i in range(0, 4)]
 
 
 def test_merge_sequences_custom_operator():
     assert merge_sequences(
         [{
             chr(65 + i): i
-        } for i in xrange(0, 26)],
+        } for i in range(0, 26)],
         [{
             chr(65 + i): i
-        } for i in xrange(0, 26)],
+        } for i in range(0, 26)],
         merge_mappings,
     ) == [{
         chr(65 + i): i * 2
-    } for i in xrange(0, 26)]
+    } for i in range(0, 26)]
 
 
 def test_merge_series():
     assert merge_series(
-        [(i, i) for i in xrange(0, 10)],
-        [(i, i) for i in xrange(0, 10)],
-    ) == [(i, i * 2) for i in xrange(0, 10)]
+        [(i, i) for i in range(0, 10)],
+        [(i, i) for i in range(0, 10)],
+    ) == [(i, i * 2) for i in range(0, 10)]
 
 
 def test_merge_series_custom_operator():
     assert merge_series(
         [(i, {
             chr(65 + i): i
-        }) for i in xrange(0, 26)],
+        }) for i in range(0, 26)],
         [(i, {
             chr(65 + i): i
-        }) for i in xrange(0, 26)],
+        }) for i in range(0, 26)],
         merge_mappings,
     ) == [(i, {
         chr(65 + i): i * 2
-    }) for i in xrange(0, 26)]
+    }) for i in range(0, 26)]
 
 
 def test_merge_series_offset_timestamps():
     with pytest.raises(AssertionError):
         merge_series(
-            [(i, i) for i in xrange(0, 10)],
-            [(i + 1, i) for i in xrange(0, 10)],
+            [(i, i) for i in range(0, 10)],
+            [(i + 1, i) for i in range(0, 10)],
         )
 
 
 def test_merge_series_different_lengths():
     with pytest.raises(AssertionError):
         merge_series(
-            [(i, i) for i in xrange(0, 1)],
-            [(i, i) for i in xrange(0, 10)],
+            [(i, i) for i in range(0, 1)],
+            [(i, i) for i in range(0, 10)],
         )
 
     with pytest.raises(AssertionError):
         merge_series(
-            [(i, i) for i in xrange(0, 10)],
-            [(i, i) for i in xrange(0, 1)],
+            [(i, i) for i in range(0, 10)],
+            [(i, i) for i in range(0, 1)],
         )
 
 
@@ -168,7 +165,7 @@ def test_clean_series():
     n = 5
     start = to_datetime(rollup * 0)
     stop = to_datetime(rollup * n)
-    series = [(rollup * i, i) for i in xrange(0, n)]
+    series = [(rollup * i, i) for i in range(0, n)]
     assert clean_series(
         start,
         stop,
@@ -182,7 +179,7 @@ def test_clean_series_trims_extra():
     n = 5
     start = to_datetime(rollup * 0)
     stop = to_datetime(rollup * n)
-    series = [(rollup * i, i) for i in xrange(0, n + 1)]
+    series = [(rollup * i, i) for i in range(0, n + 1)]
     assert clean_series(
         start,
         stop,
@@ -196,7 +193,7 @@ def test_clean_series_rejects_offset_timestamp():
     n = 5
     start = to_datetime(rollup * 0)
     stop = to_datetime(rollup * n)
-    series = [(rollup * (i * 1.1), i) for i in xrange(0, n)]
+    series = [(rollup * (i * 1.1), i) for i in range(0, n)]
     with pytest.raises(AssertionError):
         clean_series(
             start,

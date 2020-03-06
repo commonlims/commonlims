@@ -19,5 +19,5 @@ class MinHashSignatureBuilder(object):
                     features,
                 )),
             ),
-            range(self.columns),
+            list(range(self.columns)),
         ))
