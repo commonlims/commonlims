@@ -27,6 +27,7 @@ from sentry.utils import db
 
 from . import models
 from sentry.tagstore.types import TagKey, TagValue, GroupTagKey, GroupTagValue
+from functools import reduce
 
 
 logger = logging.getLogger('sentry.tagstore.v2')
