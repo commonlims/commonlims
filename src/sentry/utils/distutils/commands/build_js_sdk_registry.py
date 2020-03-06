@@ -26,7 +26,7 @@ else:
     def iteritems(d, **kw):
         return d.iteritems(**kw)  # NOQA
 
-    from urllib2 import urlopen
+    from urllib.request import urlopen
 
 
 def dump_registry(path, data):

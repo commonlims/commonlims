@@ -29,7 +29,7 @@ else:
     def iteritems(d, **kw):
         return d.iteritems(**kw)  # NOQA
 
-    from urllib2 import urlopen
+    from urllib.request import urlopen
 """
 Looking to add a new framework/language to /settings/install?
 
