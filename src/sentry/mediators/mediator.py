@@ -140,7 +140,10 @@ class Mediator(object):
             cls._prepare_params()
             cls._params_prepared = True
 
-        return super(Mediator, cls).__new__(cls, *args, **kwargs)
+        # TODO: Not sure about this fix. In Py3 I'm getting
+        # TypeError: object() takes no parameters if I forward the args and kwargs
+        # Why did this work in py2 but not py3?
+        return super().__new__(cls)
 
     @classmethod
     def _prepare_params(cls):
