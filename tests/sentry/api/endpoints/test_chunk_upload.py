@@ -77,16 +77,16 @@ class ChunkUploadTest(APITestCase):
         string1 = '1 this is my testString'
         string2 = '2 this is my testString'
 
-        checksum1 = sha1(string1).hexdigest()
-        checksum2 = sha1(string2).hexdigest()
+        checksum1 = sha1(string1.encode()).hexdigest()
+        checksum2 = sha1(string2.encode()).hexdigest()
 
         response = self.client.post(
             self.url,
             data={
                 'file':
                 [
-                    SimpleUploadedFile(checksum1, string1),
-                    SimpleUploadedFile(checksum2, string2)
+                    SimpleUploadedFile(checksum1, string1.encode()),
+                    SimpleUploadedFile(checksum2, string2.encode())
                 ]
             },
             HTTP_AUTHORIZATION='Bearer {}'.format(self.token.token),
@@ -106,7 +106,7 @@ class ChunkUploadTest(APITestCase):
         # Exactly the limit
         for _ in range(0, MAX_CHUNKS_PER_REQUEST + 1):
             content = "x"
-            files.append(SimpleUploadedFile(sha1(content).hexdigest(), content))
+            files.append(SimpleUploadedFile(sha1(content.encode()).hexdigest(), content.encode()))
 
         response = self.client.post(
             self.url,
@@ -125,7 +125,7 @@ class ChunkUploadTest(APITestCase):
         # Exactly the limit
         for _ in range(0, MAX_CHUNKS_PER_REQUEST):
             content = "x" * (MAX_REQUEST_SIZE / MAX_CHUNKS_PER_REQUEST)
-            files.append(SimpleUploadedFile(sha1(content).hexdigest(), content))
+            files.append(SimpleUploadedFile(sha1(content.encode()).hexdigest(), content.encode()))
 
         response = self.client.post(
             self.url,
@@ -139,7 +139,7 @@ class ChunkUploadTest(APITestCase):
         assert response.status_code == 200, response.content
 
         # We overflow the request here
-        files.append(SimpleUploadedFile(sha1('content').hexdigest(), 'content'))
+        files.append(SimpleUploadedFile(sha1(b'content').hexdigest(), b'content'))
         response = self.client.post(
             self.url,
             data={
@@ -153,7 +153,7 @@ class ChunkUploadTest(APITestCase):
     def test_too_large_chunk(self):
         files = []
         content = "x" * (CHUNK_UPLOAD_BLOB_SIZE + 1)
-        files.append(SimpleUploadedFile(sha1(content).hexdigest(), content))
+        files.append(SimpleUploadedFile(sha1(content.encode()).hexdigest(), content.encode()))
 
         response = self.client.post(
             self.url,
@@ -169,7 +169,7 @@ class ChunkUploadTest(APITestCase):
     def test_checksum_missmatch(self):
         files = []
         content = "x" * (CHUNK_UPLOAD_BLOB_SIZE + 1)
-        files.append(SimpleUploadedFile('wrong checksum', content))
+        files.append(SimpleUploadedFile('wrong checksum', content.encode()))
 
         response = self.client.post(
             self.url,

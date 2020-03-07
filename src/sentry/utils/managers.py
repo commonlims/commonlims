@@ -85,7 +85,7 @@ class InstanceManager(object):
         module_name, class_name = class_path.rsplit('.', 1)
 
         try:
-            module = __import__(six.binary_type(module_name), {}, {}, six.binary_type(class_name))
+            module = __import__(str(module_name), {}, {}, str(class_name))
             cls = getattr(module, class_name)
         except ImportError:
             six.reraise(ImportException, "Not able to import class '{}'".format(class_path))

@@ -1,4 +1,3 @@
-
 from sentry.testutils import TestCase
 import os
 from clims.models.file import MultiFormatFile
@@ -30,7 +29,7 @@ class TestFile(TestCase):
 
     def test_use_multi_format_file__with_file_stream_initiation__internal_temp_file_deleted(self):
         # Arrange
-        contents = 'abc'
+        contents = b'abc'
         from six import BytesIO
         file_stream = BytesIO(contents)
 
@@ -53,4 +52,5 @@ class FakeOrgFile:
 
 class FakeFile:
     def getfile(self):
-        return ' '
+        import io
+        return io.BytesIO()

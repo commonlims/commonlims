@@ -99,7 +99,7 @@ class ProjectKey(Model):
         urlparts = urlparse(dsn)
 
         public_key = urlparts.username
-        project_id = urlparts.path.rsplit('/', 1)[-1]
+        project_id = urlparts.path.rsplit(b'/', 1)[-1]
 
         try:
             return ProjectKey.objects.get(

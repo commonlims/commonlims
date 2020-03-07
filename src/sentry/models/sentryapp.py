@@ -1,6 +1,3 @@
-
-
-import six
 import uuid
 import hmac
 import itertools
@@ -52,7 +49,7 @@ VALID_EVENTS = tuple(itertools.chain(
 
 
 def default_uuid():
-    return six.binary_type(uuid.uuid4())
+    return str(uuid.uuid4())
 
 
 class SentryApp(ParanoidModel, HasApiScopes):

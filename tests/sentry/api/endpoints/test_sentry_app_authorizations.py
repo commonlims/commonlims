@@ -1,6 +1,3 @@
-
-
-import six
 import pytz
 
 from datetime import datetime, timedelta
@@ -133,7 +130,7 @@ class TestSentryAppAuthorizations(APITestCase):
         )
 
         assert response.status_code == 200
-        assert response.data['id'] == six.binary_type(self.org.id)
+        assert response.data['id'] == str(self.org.id)
 
     def test_state(self):
         response = self._run_request(state='abc123')

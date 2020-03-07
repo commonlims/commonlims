@@ -53,7 +53,7 @@ class EventTest(TestCase):
             },
             'type': 'example',
             'timestamp': 987552000,
-            'uuid': 'AAEC',
+            'uuid': b'AAEC',
         }
 
     def test_optional_is_optional(self):

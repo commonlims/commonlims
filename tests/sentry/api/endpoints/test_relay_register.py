@@ -21,10 +21,10 @@ class RelayRegisterTest(APITestCase):
         self.key_pair = generate_key_pair()
 
         self.public_key = self.key_pair[1]
-        settings.SENTRY_RELAY_WHITELIST_PK.append(six.binary_type(self.public_key))
+        settings.SENTRY_RELAY_WHITELIST_PK.append(str(self.public_key))
 
         self.private_key = self.key_pair[0]
-        self.relay_id = six.binary_type(uuid4())
+        self.relay_id = str(uuid4())
 
         self.path = reverse(
             'sentry-api-0-relay-register-challenge'
@@ -32,7 +32,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_valid_register(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -50,7 +50,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_register_missing_relay_id(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
         }
 
         raw_json, signature = self.private_key.pack(data)
@@ -94,7 +94,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_register_missing_header(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -111,7 +111,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_register_missing_header2(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -128,7 +128,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_register_wrong_sig(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -146,7 +146,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_valid_register_response(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -182,7 +182,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_forge_public_key(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -234,7 +234,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_expired_challenge(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -286,7 +286,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_forge_public_key_on_register(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -335,7 +335,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_invalid_json_response(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -368,7 +368,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_missing_token_response(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -403,7 +403,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_missing_sig_response(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 
@@ -435,7 +435,7 @@ class RelayRegisterTest(APITestCase):
 
     def test_relay_id_missmatch_response(self):
         data = {
-            'public_key': six.binary_type(self.public_key),
+            'public_key': str(self.public_key),
             'relay_id': self.relay_id,
         }
 

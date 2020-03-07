@@ -21,28 +21,25 @@ class AuthDetailsEndpointTest(APITestCase):
         assert response.status_code == 400
 
 
+def build_auth_header(username, passw):
+    token = b64encode('{}:{}'.format(username, passw).encode()).decode()
+    return 'Basic {}'.format(token)
+
+
 class AuthLoginEndpointTest(APITestCase):
     path = '/api/0/auth/'
 
     def test_valid_password(self):
         user = self.create_user('foo@example.com')
         response = self.client.post(self.path,
-                                    HTTP_AUTHORIZATION='Basic {}'.format(b64encode('{}:{}'.format(
-                                        user.username,
-                                        'admin',
-                                    ))),
-                                    )
+                HTTP_AUTHORIZATION=build_auth_header(user.username, "admin"))
         assert response.status_code == 200
         assert response.data['id'] == six.text_type(user.id)
 
     def test_invalid_password(self):
         user = self.create_user('foo@example.com')
         response = self.client.post(self.path,
-                                    HTTP_AUTHORIZATION='Basic {}'.format(b64encode('{}:{}'.format(
-                                        user.username,
-                                        'foobar',
-                                    ))),
-                                    )
+                HTTP_AUTHORIZATION=build_auth_header(user.username, "foobar"))
         assert response.status_code == 401
 
 

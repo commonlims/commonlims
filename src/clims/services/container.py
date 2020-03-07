@@ -34,7 +34,7 @@ class ContainerIndex(object):
     @classmethod
     def from_any_type(cls, key):
         # Creates an index for the input key if possible.
-        if isinstance(key, six.binary_type):
+        if isinstance(key, six.text_type):
             return cls.from_string(key)
         if isinstance(key, tuple):
             return cls(*key)

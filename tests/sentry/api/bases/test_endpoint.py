@@ -17,9 +17,11 @@ class EndpointTest(TestCase):
         endpoint = Endpoint()
         result = endpoint.build_cursor_link(request, 'next', '1492107369532:0:0')
 
+        # TODO-py3: the following failed in the py3 branch because of an extra "u" in the member
+        # string. Find out why this didn't fail in the py2 branch
         assert result == (
             '<http://testserver/api/0/organizations/?'
-            'member=%5Bu%271%27%5D&cursor=1492107369532:0:0>;'
+            'member=%5B%271%27%5D&cursor=1492107369532:0:0>;'
             ' rel="next"; results="true"; cursor="1492107369532:0:0\"'
         )
 
@@ -33,6 +35,6 @@ class EndpointTest(TestCase):
 
         assert result == (
             '<http://testserver/api/0/organizations/%C3%BCuuuu/?'
-            'member=%5Bu%271%27%5D&cursor=1492107369532:0:0>;'
+            'member=%5B%271%27%5D&cursor=1492107369532:0:0>;'
             ' rel="next"; results="true"; cursor="1492107369532:0:0\"'
         )

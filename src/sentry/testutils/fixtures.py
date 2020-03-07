@@ -336,7 +336,7 @@ class Fixtures(object):
     # TODO(maxbittker) make new fixtures less hardcoded
     def create_release(self, project, user=None, version=None, date_added=None):
         if version is None:
-            version = os.urandom(20).encode('hex')
+            version = os.urandom(20).hex()
 
         if date_added is None:
             date_added = timezone.now().replace(microsecond=0)
@@ -391,7 +391,7 @@ class Fixtures(object):
         commit = Commit.objects.get_or_create(
             organization_id=repo.organization_id,
             repository_id=repo.id,
-            key=key or sha1(uuid4().hex).hexdigest(),
+            key=key or sha1(uuid4().hex.encode()).hexdigest(),
             defaults={
                 'message': message or make_sentence(),
                 'author': author or self.create_commit_author(organization_id=repo.organization_id),

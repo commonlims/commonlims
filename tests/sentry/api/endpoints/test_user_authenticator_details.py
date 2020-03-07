@@ -342,7 +342,7 @@ class UserAuthenticatorDetailsTest(APITestCase):
 
         resp = self.client.delete(url, format='json')
         assert resp.status_code == 403, (resp.status_code, resp.content)
-        self.assertIn('requires 2FA', resp.content)
+        self.assertIn(b'requires 2FA', resp.content)
 
         assert Authenticator.objects.filter(
             id=auth.id,

@@ -1,6 +1,3 @@
-
-
-import six
 import uuid
 
 from django.db import models
@@ -10,7 +7,7 @@ from sentry.db.models import (FlexibleForeignKey, ParanoidModel)
 
 
 def default_uuid():
-    return six.binary_type(uuid.uuid4())
+    return str(uuid.uuid4())
 
 
 class SentryAppInstallation(ParanoidModel):

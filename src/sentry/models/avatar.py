@@ -73,7 +73,7 @@ class AvatarBase(Model):
                     type=cls.FILE_TYPE,
                 )
                 if isinstance(avatar, six.string_types):
-                    avatar = BytesIO(avatar)
+                    avatar = BytesIO(avatar.encode())
                 photo.putfile(avatar)
         else:
             photo = None
