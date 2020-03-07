@@ -1,8 +1,6 @@
-
-
 import re
 import six
-from functools32 import partial
+from functools import partial
 from copy import deepcopy
 
 from rest_framework import serializers
