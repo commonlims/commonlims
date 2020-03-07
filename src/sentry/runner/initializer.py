@@ -170,7 +170,7 @@ def configure_structlog():
 
     lvl = os.environ.get('CLIMS_LOG_LEVEL')
 
-    if lvl and lvl not in logging._levelNames:
+    if lvl and lvl.upper() not in logging._levelToName.values():
         raise AttributeError('%s is not a valid logging level.' % lvl)
 
     settings.LOGGING['root'].update({'level': lvl or settings.LOGGING['default_level']})
