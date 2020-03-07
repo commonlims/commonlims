@@ -101,6 +101,8 @@ class BuildAssetsCommand(BaseBuildCommand):
         return self._needs_static(version_info)
 
     def _build(self):
+        print("WARNING: Not building static assets")
+        return
         version_info = self._get_package_version()
         log.info(
             'building assets for {} v{} (build {})'.format(
