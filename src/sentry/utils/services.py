@@ -87,10 +87,21 @@ class LazyServiceWrapper(LazyObject):
     def expose(self, context):
         base = self._base
         for key in itertools.chain(base.__all__, ('validate', 'setup')):
-            if inspect.ismethod(getattr(base, key)):
+            # py3 hack: Unbound methods are now just regular functions, so they won't be reported
+            # as methods
+            # This is a temporary hack, it would make a lot of sense to revisit sentry services
+            # for clims and make them simpler
+            attr = getattr(base, key)
+            ismethod = False
+            if callable(attr):
+                argspec = inspect.getfullargspec(attr)
+                ismethod = inspect.ismethod(attr) or argspec.args[0] == 'self'
+            if ismethod:
                 context[key] = (lambda f: lambda *a, **k: getattr(self, f)(*a, **k))(key)
             else:
-                context[key] = getattr(base, key)
+                context[key] = attr
+
+        # raise R
 
 
 def resolve_callable(value):
