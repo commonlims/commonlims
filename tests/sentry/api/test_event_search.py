@@ -338,19 +338,21 @@ class EventSearchTest(TestCase):
         }
 
     def test_convert_endpoint_params(self):
-        assert convert_endpoint_params({
+        a = convert_endpoint_params({
             'project_id': [1, 2, 3],
             'start': datetime.datetime(2015, 5, 18, 10, 15, 1, tzinfo=timezone.utc),
             'end': datetime.datetime(2015, 5, 19, 10, 15, 1, tzinfo=timezone.utc),
-        }) == [
+        })
+        a = sorted(a, key=lambda x: x.key.name)
+        a == [
             SearchFilter(
-                key=SearchKey(name='start'),
+                key=SearchKey(name='end'),
                 operator='=',
                 value=SearchValue(
                     raw_value=datetime.datetime(
                         2015,
                         5,
-                        18,
+                        19,
                         10,
                         15,
                         1,
@@ -363,13 +365,13 @@ class EventSearchTest(TestCase):
                 value=SearchValue(raw_value=[1, 2, 3])
             ),
             SearchFilter(
-                key=SearchKey(name='end'),
+                key=SearchKey(name='start'),
                 operator='=',
                 value=SearchValue(
                     raw_value=datetime.datetime(
                         2015,
                         5,
-                        19,
+                        18,
                         10,
                         15,
                         1,
