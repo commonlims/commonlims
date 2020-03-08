@@ -205,8 +205,8 @@ class AuthenticatorInterface(object):
         """If the interface is able to validate OTP codes then this returns
         `True`.
         """
-        return self.validate_otp.__func__ is not \
-            AuthenticatorInterface.validate_otp.__func__
+        return self.validate_otp is not \
+            AuthenticatorInterface.validate_otp
 
     @property
     def config(self):
