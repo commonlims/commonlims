@@ -298,15 +298,13 @@ class RecoveryCodeInterface(AuthenticatorInterface):
                 digestmod=hashlib.sha1,
             )
             for x in range(10):
-                h.update('%s|' % x)
+                s = "{}|".format(x)
+                h.update(s.encode())
                 rv.append(base64.b32encode(h.digest())[:8])
         return rv
 
     def generate_new_config(self):
-        if six.PY3:
-            salt = int(os.urandom(16).decode('utf-8'), 16)
-        else:
-            salt = os.urandom(16).encode('hex')
+        salt = os.urandom(16).hex()
 
         return {
             'salt': salt,
@@ -337,7 +335,7 @@ class RecoveryCodeInterface(AuthenticatorInterface):
         rv = []
         for idx, code in enumerate(self.get_codes()):
             if not mask & (1 << idx):
-                rv.append(code[:4] + '-' + code[4:])
+                rv.append(code[:4] + b'-' + code[4:])
         return rv
 
 
