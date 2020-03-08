@@ -124,7 +124,7 @@ class ChunkUploadTest(APITestCase):
 
         # Exactly the limit
         for _ in range(0, MAX_CHUNKS_PER_REQUEST):
-            content = "x" * (MAX_REQUEST_SIZE / MAX_CHUNKS_PER_REQUEST)
+            content = "x" * int(MAX_REQUEST_SIZE / MAX_CHUNKS_PER_REQUEST)
             files.append(SimpleUploadedFile(sha1(content.encode()).hexdigest(), content.encode()))
 
         response = self.client.post(
