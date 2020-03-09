@@ -11,12 +11,19 @@ import {processesPost} from 'app/redux/actions/process';
 
 import JsonForm from 'app/views/settings/components/forms/jsonForm';
 import LoadingIndicator from 'app/components/loadingIndicator';
+import Link from 'app/components/link';
+import Bpmn from 'app/components/bpmn';
+import styled from 'react-emotion';
 
 import {
   processAssignSelectPreset,
   processAssignSelectProcess,
   processAssignSetVariable,
 } from 'app/redux/actions/processAssign';
+
+const StyledBpmn = styled(Bpmn)`
+  height: 500px;
+`;
 
 // TODO: Write tests for this component
 // TODO: Change to JS6 class
@@ -47,11 +54,31 @@ const AssignToWorkflowButton = createReactClass({
       selectedProcess: null,
       selectedPreset: null,
       variables: {},
+      diagramVisible: false,
     };
   },
 
   UNSAFE_componentWillMount() {
     this.props.processDefinitionsGet();
+  },
+
+  renderDiagram() {
+    const xml = '';
+    if (xml === '') {
+      return null;
+    }
+    if (this.state.diagramVisible) {
+      return (
+        <div>
+          <Link onClick={() => this.setState({diagramVisible: false})}>Hide diagram</Link>
+          <StyledBpmn xml={xml} />
+        </div>
+      );
+    } else {
+      return (
+        <Link onClick={() => this.setState({diagramVisible: true})}>Show diagram</Link>
+      );
+    }
   },
 
   onVariableChange(key, value) {
@@ -170,6 +197,7 @@ const AssignToWorkflowButton = createReactClass({
             <br />
             {this.renderSettings()}
 
+            {this.renderDiagram()}
             <div className="modal-footer">
               <button
                 type="button"
