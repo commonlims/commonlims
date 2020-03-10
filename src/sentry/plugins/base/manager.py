@@ -124,7 +124,6 @@ class PluginManager(object):
         """
         logger.info("Installing extensible types found in plugin class '{}'".format(
             plugin.get_name_and_version()))
-
         from clims.models import PluginRegistration
 
         plugin_model = PluginRegistration.objects.get(name=plugin.get_full_name(),
@@ -133,7 +132,21 @@ class PluginManager(object):
         for extensible_cls in plugin.get_extensible_objects():
             self._app.extensibles.register(plugin_model, extensible_cls)
 
-    # Find
+    def get_extensible_types_from_db(self):
+        """
+        :return: class objects of extensible types
+        """
+        from clims.models.extensible import ExtensibleType
+
+        extensible_types = ExtensibleType.objects.all()
+        type_names_in_db = [e.name for e in extensible_types]
+        for type_name in type_names_in_db:
+            splitted = type_name.split('.')
+            full_module_name = '.'.join(splitted[:-1])
+            extensible_class_name = splitted[-1]
+            module = self._import_module(full_module_name)
+            extensible_class = getattr(module, extensible_class_name, None)
+            yield extensible_class
 
     def find_plugins_by_entry_points(self):
         """
@@ -353,15 +366,20 @@ class PluginManager(object):
         """
         Gets a module defined in the plugin. Returns None if it wasn't found
         """
-        module_name = "{}.{}".format(plugin_class.__module__, name)
+        full_module_name = '{}.{}'.format(plugin_class.__module__, name)
+        return self._import_module(full_module_name)
 
+    def _import_module(self, full_module_name):
+        splitted = full_module_name.split('.')
+        name = splitted[-1]
         try:
-            return importlib.import_module(module_name)
+            return importlib.import_module(full_module_name)
         except ImportError as ex:
             if six.text_type(ex) != "No module named {}".format(name):
                 trace = sys.exc_info()[2]
-                raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
-            logger.debug("Can't find module {}".format(module_name))
+                raise ImportError("Error while trying to load plugin {}".format(full_module_name)), None, trace
+            logger.debug("Can't find module {}".format(full_module_name))
+            return None
 
     def clear_handler_implementations(self, baseclass=None):
         if baseclass is not None:
