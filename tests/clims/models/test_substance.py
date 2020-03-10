@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import random
 import pytest
+import uuid
 from sentry.testutils import TestCase
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
@@ -424,6 +425,18 @@ class TestSubstance(SubstanceTestCase):
         squirkyness = extensible_type.property_types.get(name='squirkyness')
 
         assert squirkyness.display_name == 'The Squirkyness Display Value'
+
+    def test__with_sample_has_no_container__container_index_returns_none(self):
+        # Arrange
+        self.register_extensible(QuirkSample)
+        sample = QuirkSample(
+            name='sample-{}'.format(uuid.uuid4()), organization=self.organization)
+
+        # Act
+        container_index = sample.container_index
+
+        # Assert
+        assert container_index is None
 
 
 class QuirkSample(SubstanceBase):

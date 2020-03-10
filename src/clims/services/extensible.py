@@ -87,6 +87,13 @@ class ExtensibleService(object):
                                                property_types=property_types)
         return extensible_type
 
+    def unregister_model(self, extensible_base, plugin):
+        """
+        This is for testing purposes only!
+        """
+        name = '{}.{}'.format(extensible_base.__module__, extensible_base.__name__)
+        del(self._implementations[name])
+
     @transaction.atomic
     def _register_model(self, name, org, plugin, property_types=None):
         """

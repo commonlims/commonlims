@@ -16,7 +16,7 @@ class ContainerIndex(object):
     Represent an index into a regular Container.
     """
 
-    def __init__(self, x, y, z):
+    def __init__(self, x=None, y=None, z=None):
         self.x = x
         self.y = y
         self.z = z

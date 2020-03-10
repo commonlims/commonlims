@@ -131,6 +131,27 @@ class TestContainer(TestCase):
         # Expecting a digit followed by some empty columns:
         assert re.match(r"^\d+[ |].+", first_line) is not None
 
+    def test_get_container_from_sample__when_container_is_unregisterred__container_reference_still_works(self):
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()),
+                                        organization=self.organization)
+
+        sample = HairSample(name="sample-{}-{}".format(container.name, uuid.uuid4()),
+                            organization=self.organization)
+        # container.append(sample)
+        container['B2'] = sample
+        container.save()
+        self.app.extensibles.unregister_model(HairSampleContainer, self.create_plugin())
+        fresh_sample = self.app.substances.get_by_name(sample.name)
+
+        # Act
+        container_index = fresh_sample.container_index
+
+        # Assert
+
+        assert container_index.x == 1
+        assert container_index.y == 1
+        assert container_index.z is None
+
     # TODO: Test that ensures that all samples have the container, perhaps
     # reusing the container domain object if in the same context (e.g. in a handler)
 
