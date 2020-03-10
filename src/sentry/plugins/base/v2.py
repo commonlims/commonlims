@@ -12,7 +12,9 @@ __all__ = ('Plugin2', )
 import logging
 import six
 import inspect
-import os
+import sys
+import importlib
+import pkgutil
 
 from django.http import HttpResponseRedirect
 from threading import local
@@ -27,6 +29,7 @@ from sentry.plugins.base.configuration import (
     default_plugin_options,
 )
 from sentry.utils.hashlib import md5_text
+from clims.services.extensible import ExtensibleBase
 
 logger = logging.getLogger(__name__)
 
@@ -480,17 +483,69 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         pass
 
     @classmethod
-    def workflow_definitions(cls):
-        """Returns the path to all workflow definitions for this plugin"""
+    def _get_submodule(cls, name):
+        """
+        Gets a module defined in the plugin. Returns None if it wasn't found, but raises an ImportError
+        if it can't load
+        """
+        module_name = "{}.{}".format(cls.__module__, name)
 
-        module_path = os.path.dirname(inspect.getfile(inspect.getmodule(cls)))
         try:
-            workflows_dir_path = os.path.join(module_path, "workflows")
-            for file_path in os.listdir(workflows_dir_path):
-                if file_path.endswith(".bpmn"):
-                    yield os.path.join(workflows_dir_path, file_path)
-        except OSError:
-            pass
+            import importlib
+            return importlib.import_module(module_name)
+        except ImportError as ex:
+            if six.text_type(ex) != "No module named {}".format(name):
+                trace = sys.exc_info()[2]
+                raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
+            logger.debug("Can't find module {}".format(module_name))
+
+    @classmethod
+    def _find_subclasses_of(cls, parent_cls, module):
+        """
+        Loads and finds all implementations of a particular subclass in a class module or any
+        of its submodules. Used to find workflows, handlers etc. defined in the plugin.
+        """
+
+        def is_disallowed_core_class(module_name):
+            # The only "core" classes that should ever be registered are those in the
+            # clims.plugins.demo:
+            return module_name.startswith("clims.") and \
+                not module_name.startswith("clims.plugins.demo.")
+
+        def is_candidate(member, parent_cls):
+            # Returns True if the class is a valid implementation of the parent_cls
+            return (member != parent_cls and
+                    inspect.isclass(member) and
+                    issubclass(member, parent_cls) and
+                    (not inspect.isabstract(member)) and
+                    (not is_disallowed_core_class(member.__module__))
+            )
+
+        def find_implementations_in(mod_name, parent_cls):
+            submodule = importlib.import_module(mod_name)
+            clsmembers = inspect.getmembers(submodule, lambda member: is_candidate(member, parent_cls))
+            clsmembers = set([member for name, member in clsmembers])
+            logger.debug("Subclasses of '{}' in '{}': {}".format(parent_cls, mod_name, clsmembers))
+            return clsmembers
+
+        ret = set()
+        # Search in the current module and all submodules
+        ret.update(find_implementations_in(module.__name__, parent_cls))
+        if hasattr(module, "__path__"):
+            # This is a package
+            for _, mod_name, _ in pkgutil.walk_packages(path=module.__path__, prefix=module.__name__ + "."):
+                ret.update(find_implementations_in(mod_name, parent_cls))
+        return ret
+
+    @classmethod
+    def get_extensible_objects(cls):
+        """
+        Returns all extensible classes for this plugin class. These can be defined
+        anywhere in the plugin classes module, or any submodule of it.
+        """
+        logger.debug("Searching for extensible objects in {}".format(cls))
+        root_module = importlib.import_module(cls.__module__)
+        return cls._find_subclasses_of(ExtensibleBase, root_module)
 
     @classmethod
     def get_full_name(cls):

@@ -13,14 +13,12 @@ import sys
 import os
 import six
 import logging
-import inspect
 import click
 import importlib
 
-from clims import utils
 from clims.handlers import HandlerManager
+from sentry.utils.managers import InstanceManager
 from sentry.utils.safe import safe_execute
-from clims.workflow import WorkflowEngine, WorkflowEngineException
 from django.conf import settings
 from django.db import transaction
 from django.db.utils import ProgrammingError
@@ -42,9 +40,10 @@ class PluginManager(object):
     When the application loads, it will load all plugins that exist in the database.
     """
 
-    def __init__(self, instance_manager):
-        self.handlers = HandlerManager()
-        self.instance_manager = instance_manager
+    def __init__(self, app, instance_manager=None):
+        self._app = app
+        self.handlers = HandlerManager(app)
+        self.instance_manager = instance_manager or InstanceManager()
 
     # Install (during upgrade)
 
@@ -67,37 +66,6 @@ class PluginManager(object):
             with transaction.atomic():
                 self.install_plugin(plugin)
                 self.install_extensible_types(plugin)
-                self.install_workflows_in_plugin(plugin)
-
-    def install_workflows_in_plugin(self, plugin_cls):
-        """
-        Installs workflow definitions found in the plugin.
-
-        Currently only supports Camunda workflow definitions.
-        """
-        logger.info("Loading workflows for plugin class {}".format(plugin_cls))
-
-        definitions = list(plugin_cls.workflow_definitions())
-        logger.info("Found {} workflow definitions for plugin class {}".format(
-            len(definitions), plugin_cls))
-
-        workflows = WorkflowEngine()
-        # TODO: Validate that each workflow has a valid name, corresponding with
-        # the name of the plugin
-        if definitions:
-            for definition in definitions:
-                file_name = os.path.basename(definition)
-                try:
-                    workflows.deploy(definition)
-                    logger.info(
-                        "Uploaded workflow definition {} for plugin {}".format(
-                            file_name, plugin_cls))
-                except WorkflowEngineException as e:
-                    # TODO: Disable the plugin in this case (if not in dev mode)
-                    logger.error(
-                        "Can't upload workflow definition {} for plugin {}".format(
-                            file_name, plugin_cls))
-                    logger.error(e)
 
     def validate_version(self, plugin_cls):
         if not plugin_cls.version:
@@ -118,6 +86,8 @@ class PluginManager(object):
 
         This method should be called when upgrading the system, so the end-user is in control
         of when a new model is available.
+
+        Returns a plugin registration model that represents the installation.
         """
         # Make sure we have a plugin registration here:
         from clims.models import PluginRegistration
@@ -127,8 +97,9 @@ class PluginManager(object):
         logger.debug("Recording plugin {} version={} in the database".format(
             plugin_cls.get_full_name(), plugin_cls.version))
 
-        PluginRegistration.objects.get_or_create(
+        reg, _ = PluginRegistration.objects.get_or_create(
             name=plugin_cls.get_full_name(), version=plugin_cls.version)
+        return reg
 
     def install_extensible_types(self, plugin):
         """
@@ -137,28 +108,14 @@ class PluginManager(object):
         """
         logger.info("Installing extensible types found in plugin class '{}'".format(
             plugin.get_name_and_version()))
-        from clims.services import ExtensibleBase
+
         from clims.models import PluginRegistration
 
-        # TODO: Mark ExtensibleBase and SubstanceBase so that they are not registered, so the
-        # knowledge of which bases are not to be registered is elsewhere
-        # flake8: noqa
-        from clims.services import ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase
-        known_bases = [ExtensibleBase, SubstanceBase, ContainerBase, ProjectBase]
+        plugin_model = PluginRegistration.objects.get(name=plugin.get_full_name(),
+                version=plugin.version)
 
-        mod = self.get_plugin_module(plugin, 'models')
-
-        if not mod:
-            logger.info(
-                "No extensible types found for plugin '{}'. Searched for submodule 'models'".format(
-                    plugin.get_full_name()))
-            return
-
-        plugin_model = PluginRegistration.objects.get(name=plugin.get_full_name())
-        for _name, class_to_register in inspect.getmembers(mod, inspect.isclass):
-            if issubclass(class_to_register, ExtensibleBase) and \
-                    class_to_register not in known_bases:
-                self._app.extensibles.register(plugin_model, class_to_register)
+        for extensible_cls in plugin.get_extensible_objects():
+            self._app.extensibles.register(plugin_model, extensible_cls)
 
     # Find
 
@@ -229,7 +186,9 @@ class PluginManager(object):
         for plugin_registration in latest.values():
             self.load(plugin_registration)
 
-        logger.info("Active handlers after loading all plugins:\n{}".format(self.handlers.to_handler_config()))
+        self.handlers.validate()
+        logger.info("Active handlers after loading and validating all plugins:\n{}".format(
+            self.handlers.to_handler_config()))
 
     def load(self, plugin_registration):
         """
@@ -253,11 +212,14 @@ class PluginManager(object):
             # Allow the user to ignore the plugin if an environment variable is set. This
             # is mainly for debug purposes and to be able to run `lims shell` in this situation.
             if not os.environ.get("CLIMS_IGNORE_UNAVAILABLE_PLUGINS", None) == "1":
+                ex_type, ex_value, ex_tb = sys.exc_info()
+
                 six.reraise(RequiredPluginCannotLoad,
                     "Can't import required plugin {}@{}. The plugin has been installed e.g. via "
                     "`lims upgrade` but the implementation is not found in the python environment. "
-                    "environment variable CLIMS_IGNORE_UNAVAILABLE_PLUGINS=1".format(
-                        plugin_registration.name, plugin_registration.version))
+                    "To override this check, you can set the "
+                    "environment variable CLIMS_IGNORE_UNAVAILABLE_PLUGINS=1\n\t{}".format(
+                        plugin_registration.name, plugin_registration.version, ex_value), ex_tb)
         except self.instance_manager.InitializeException:
             six.reraise(RequiredPluginCannotLoad,
                     "Can't initialize the plugin {}@{}. The stacktrace has more information on "
@@ -273,10 +235,8 @@ class PluginManager(object):
             logger.info("Loading all handlers in plugin '{}'".format(plugin.get_name_and_version()))
             self.handlers.load_handlers(mod)
 
-        self.handlers.validate()
-
     def init_plugin_instance(plugin):
-        # TODO: Call this when the plugin is run on load time
+        # TODO: Call this when the plugin is run on load time (review requirements first)
         from sentry.plugins import bindings
         plugin.setup(bindings)
 
@@ -322,7 +282,6 @@ class PluginManager(object):
         enabled and disbabled plugins are returned
         :return: A generator that iterates over the plugins
         """
-
         for plugin in sorted(self.instance_manager.all(), key=lambda x: x.get_title()):
             if enabled is not None and not plugin.is_enabled():
                 continue
@@ -386,6 +345,7 @@ class PluginManager(object):
             if six.text_type(ex) != "No module named {}".format(name):
                 trace = sys.exc_info()[2]
                 raise ImportError("Error while trying to load plugin {}".format(module_name)), None, trace
+            logger.debug("Can't find module {}".format(module_name))
 
     def clear_handler_implementations(self, baseclass=None):
         if baseclass is not None:

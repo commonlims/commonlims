@@ -4,8 +4,6 @@ from clims.services.extensible import ExtensibleService
 from clims.services.substance import SubstanceService
 from clims.services.container import ContainerService
 from clims.services.project import ProjectService
-from clims.services.workflow import WorkflowService
-from sentry.plugins import PluginManager
 
 
 class ApplicationService(object):
@@ -18,8 +16,8 @@ class ApplicationService(object):
         self.substances = SubstanceService(self)
         self.containers = ContainerService(self)
         self.projects = ProjectService(self)
+        from sentry.plugins import PluginManager
         self.plugins = PluginManager(self)
-        self.workflows = WorkflowService(self)
 
 
 class InversionOfControl(object):
