@@ -16,27 +16,28 @@ class TestContainer(TestCase):
     def setUp(self):
         self.register_extensible(HairSampleContainer)
         self.register_extensible(HairSample)
+        self.has_context()
 
     def test_can_register_container(self):
         self.register_extensible(HairSampleContainer)
 
     def test_can_create_container(self):
         self.register_extensible(HairSampleContainer)
-        container = HairSampleContainer(name="container1", organization=self.organization)
+        container = HairSampleContainer(name="container1")
         container.save()
         Container.objects.get(name=container.name)  # Raises DoesNotExist if it wasn't created
 
     def test_name_is_unique(self):
         self.register_extensible(HairSampleContainer)
-        container = HairSampleContainer(name="container1", organization=self.organization)
+        container = HairSampleContainer(name="container1")
         container.save()
-        container2 = HairSampleContainer(name=container.name, organization=self.organization)
+        container2 = HairSampleContainer(name=container.name)
         with pytest.raises(IntegrityError):
             container2.save()
 
     def test_can_add_custom_property(self):
         self.register_extensible(HairSampleContainer)
-        container = HairSampleContainer(name="container1", organization=self.organization)
+        container = HairSampleContainer(name="container1")
         container.comment = "test"
         container.save()
 
@@ -47,12 +48,12 @@ class TestContainer(TestCase):
         self.register_extensible(HairSampleContainer)
         self.register_extensible(HairSample)
 
-        sample = HairSample(name="sample1", organization=self.organization)
+        sample = HairSample(name="sample1")
         sample.length = 10
         sample.width = 20
 
         from clims.models import Substance
-        container = HairSampleContainer(name="container1", organization=self.organization)
+        container = HairSampleContainer(name="container1")
         container.comment = "This container is great and live is awesome"
         container["A1"] = sample
 
@@ -68,7 +69,7 @@ class TestContainer(TestCase):
         self.register_extensible(HairSampleContainer)
         self.register_extensible(HairSample)
 
-        container = HairSampleContainer(name="cont1", organization=self.organization)
+        container = HairSampleContainer(name="cont1")
         by_row = list(container._traverse(HairSampleContainer.TRAVERSE_BY_ROW))
         by_col = list(container._traverse(HairSampleContainer.TRAVERSE_BY_COLUMN))
 
@@ -86,11 +87,9 @@ class TestContainer(TestCase):
         self.register_extensible(HairSampleContainer)
         self.register_extensible(HairSample)
 
-        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()),
-                organization=self.organization)
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
 
-        container["A:1"] = HairSample(name="sample-{}".format(container.name),
-                organization=self.organization)
+        container["A:1"] = HairSample(name="sample-{}".format(container.name))
         container.save()
         assert container[(0, 0)] == container["A:1"]
 
@@ -100,12 +99,11 @@ class TestContainer(TestCase):
         # HairSampleContainer doesn't override the default, it uses TRAVERSE_BY_COLUMN, i.e. it
         # fills a column before it goes to the next column.
 
-        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()), organization=self.organization)
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
 
         in_original_order = list()
         for ix in range(2):
-            sample = HairSample(name="sample-{}-{}".format(container.name, ix),
-                    organization=self.organization)
+            sample = HairSample(name="sample-{}-{}".format(container.name, ix))
             in_original_order.append(sample)
             container.append(sample)
         container.save()
@@ -117,12 +115,10 @@ class TestContainer(TestCase):
     def test_can_output_default_string_info(self):
         # One should be able to get a detailed text version of the container for debugging
         # and demoing.
-        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()),
-                organization=self.organization)
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
 
         for ix in range(container.rows):
-            sample = HairSample(name="sample-{}-{}".format(container.name, ix),
-                    organization=self.organization)
+            sample = HairSample(name="sample-{}-{}".format(container.name, ix))
             container.append(sample)
         container.save()
 

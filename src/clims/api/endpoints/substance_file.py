@@ -78,7 +78,7 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
             return Response({'detail': 'File name must be specified'}, status=400)
 
         try:
-            org_file, issues = self.app.substances.load_file(organization, full_name, fileobj)
+            org_file, issues = self.app.substances.load_file(full_name, fileobj)
             issues_json = ValidationIssueSerializer(issues, many=True).data
             ret = dict(id=org_file.id, validationIssues=issues_json)
             return Response(ret, status=status.HTTP_201_CREATED)

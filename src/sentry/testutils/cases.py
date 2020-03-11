@@ -83,18 +83,6 @@ class BaseTestCase(Fixtures, Exam):
         Hub.main.bind_client(None)
 
     @before
-    def setup_services(self):
-        # Set up clean service classes. This should ensure that each test case has a clean cache
-        # as caches should only be in services.
-        ioc.set_application(ApplicationService())
-
-        # NOTE: We'll have to reset the plugin manager so we don't get the plugins
-        # that have been loaded in scope. It would be better to never load those plugins in the
-        # first place, but that will be fixed when we stop using the global `plugins` object.
-        self.app = ioc.app
-        self.app.plugins.handlers.remove_implementations()
-
-    @before
     def setup_dummy_auth_provider(self):
         auth.register('dummy', DummyProvider)
         self.addCleanup(auth.unregister, 'dummy', DummyProvider)
@@ -112,6 +100,18 @@ class BaseTestCase(Fixtures, Exam):
     def initialize_log_level_for_toggle(self):
         self.log_level_toggled = False
         self.log_level_at_start = logging.getLogger().level
+
+    @before
+    def setup_services(self):
+        # Set up clean service classes. This should ensure that each test case has a clean cache
+        # as caches should only be in services.
+        ioc.set_application(ApplicationService())
+
+        # NOTE: We'll have to reset the plugin manager so we don't get the plugins
+        # that have been loaded in scope. It would be better to never load those plugins in the
+        # first place, but that will be fixed when we stop using the global `plugins` object.
+        self.app = ioc.app
+        self.app.plugins.handlers.remove_implementations()
 
     def set_log_level(self, lvl):
         logging.getLogger().setLevel(lvl)

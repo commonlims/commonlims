@@ -43,6 +43,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
 
         # TODO: It would be cleaner to have the plugins instance in the ApplicationService
         self.app.plugins.handlers.add_handler_implementation(SubstancesSubmissionHandler, MyHandler)
+        self.has_context()
 
     def test_run_gemstone_sample_submission_handler__with_csv__6_samples_found_in_db(self):
         # Arrange
@@ -50,7 +51,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         fileobj = StringIO.StringIO(content)
 
         # Act
-        self.app.substances.load_file(self.organization, "the_file.csv", fileobj)
+        self.app.substances.load_file("the_file.csv", fileobj)
 
         # Assert
         all_samples = Substance.objects.all()
@@ -72,7 +73,7 @@ class TestGemstoneSampleSubmission(SubstanceTestCase):
         fileobj = BytesIO(contents)
 
         # Act
-        self.app.substances.load_file(self.organization, "the_file.xlsx", fileobj)
+        self.app.substances.load_file("the_file.xlsx", fileobj)
 
         # Assert
         all_samples = Substance.objects.all()
@@ -89,18 +90,19 @@ class TestSubstanceService(TestCase):
     def setUp(self):
         self.register_extensible(GemstoneProject)
         self.register_extensible(GemstoneSample)
+        self.has_context()
 
     def test_get_substances_by_project__with_2_samples_in_project_and_1_outside__2_hits(self):
         # Arrange
-        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1 = GemstoneProject(name='project1')
         project1.save()
-        project2 = GemstoneProject(name='project2', organization=self.organization)
+        project2 = GemstoneProject(name='project2')
         project2.save()
-        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1 = GemstoneSample(name='sample1', project=project1)
         sample1.save()
-        sample2 = GemstoneSample(name='sample2', organization=self.organization, project=project1)
+        sample2 = GemstoneSample(name='sample2', project=project1)
         sample2.save()
-        sample3 = GemstoneSample(name='sample3', organization=self.organization, project=project2)
+        sample3 = GemstoneSample(name='sample3', project=project2)
         sample3.save()
 
         # Act
@@ -112,15 +114,15 @@ class TestSubstanceService(TestCase):
 
     def test_filter_substances_by_project_name__with_2_samples_in_project_and_1_outside__2_hits(self):
         # Arrange
-        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1 = GemstoneProject(name='project1')
         project1.save()
-        project2 = GemstoneProject(name='project2', organization=self.organization)
+        project2 = GemstoneProject(name='project2')
         project2.save()
-        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1 = GemstoneSample(name='sample1', project=project1)
         sample1.save()
-        sample2 = GemstoneSample(name='sample2', organization=self.organization, project=project1)
+        sample2 = GemstoneSample(name='sample2', project=project1)
         sample2.save()
-        sample3 = GemstoneSample(name='sample3', organization=self.organization, project=project2)
+        sample3 = GemstoneSample(name='sample3', project=project2)
         sample3.save()
 
         # Act
@@ -132,9 +134,9 @@ class TestSubstanceService(TestCase):
 
     def test_filter_substance_by_project_name__with_only_1_sample__sample_property_works(self):
         # Arrange
-        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1 = GemstoneProject(name='project1')
         project1.save()
-        sample1 = GemstoneSample(name='sample1', organization=self.organization, project=project1)
+        sample1 = GemstoneSample(name='sample1', project=project1)
         sample1.color = 'red'
         sample1.save()
 
@@ -146,13 +148,13 @@ class TestSubstanceService(TestCase):
         assert fetched_samples[0].color == 'red'
 
     def create_a_bunch_of_sample(self):
-        project1 = GemstoneProject(name='project1', organization=self.organization)
+        project1 = GemstoneProject(name='project1')
         project1.save()
 
         color_choices = set(['red', 'blue', 'green'])
         color_list = []
         for i in range(0, 100):
-            sample = GemstoneSample(name='sample{}'.format(i), organization=self.organization, project=project1)
+            sample = GemstoneSample(name='sample{}'.format(i), project=project1)
             color_pick = random.choice(list(color_choices))
             color_list.append(color_pick)
             sample.color = color_pick
@@ -189,7 +191,7 @@ class MyHandler(SubstancesSubmissionHandler):
         csv = self._as_csv(multi_format_file)
         for line in csv:
             name = line['Sample ID']
-            sample = GemstoneSample(name=name, organization=self.context.organization)
+            sample = GemstoneSample(name=name)
             sample.preciousness = line['Preciousness']
             sample.color = line['Color']
             sample.save()

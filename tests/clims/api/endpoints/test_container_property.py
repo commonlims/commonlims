@@ -7,6 +7,8 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneContainer
 
 
 class ContainerPropertyEndpointTest(APITestCase):
+    def setUp(self):
+        self.has_context()
 
     def test_find_all_container_property(self):
         container = self.create_container(color='blue', klass=GemstoneContainer)

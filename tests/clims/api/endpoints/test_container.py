@@ -11,6 +11,9 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, Gemstone
 
 
 class ContainerTest(APITestCase):
+    def setUp(self):
+        self.has_context()
+
     def test_find_single_container_by_container_name(self):
         # TODO: This takes too much time for 10 containers filled with samples
         container = self.create_container_with_samples(

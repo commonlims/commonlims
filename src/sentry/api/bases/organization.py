@@ -248,6 +248,11 @@ class OrganizationEndpoint(Endpoint):
             request.session['activeorg'] = organization.slug
 
         kwargs['organization'] = organization
+
+        # For now we're only setting the context if in an OrganizationEndpoint, not Endpoint
+        from clims.handlers import context_store
+        context_store.set(app=self.app, organization=organization, user=request.user)
+
         return (args, kwargs)
 
 

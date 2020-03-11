@@ -4,6 +4,9 @@ from tests.clims.models.test_substance import SubstanceTestCase
 
 
 class TestSubstance(SubstanceTestCase):
+    def setUp(self):
+        self.has_context()
+
     def test_can_render_substance_graph(self):
         sample1 = self.create_gemstone()  # sample1.v1
         original_id = sample1.id

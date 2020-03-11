@@ -36,7 +36,6 @@ class ProjectEndpoint(OrganizationEndpoint):
         project = self.app.extensibles.create(
             validated['name'],
             validated['type_full_name'],
-            organization,
             validated.get('properties', None))
         ret = {"id": project.id}
 

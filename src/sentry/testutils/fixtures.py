@@ -35,6 +35,7 @@ from sentry.models import (
 )
 from sentry.utils.canonical import CanonicalKeyDict
 from clims.models import PluginRegistration
+from clims.handlers import CreateContext
 
 loremipsum = Generator()
 
@@ -757,7 +758,7 @@ class Fixtures(object):
 
         if not name:
             name = "sample-{}".format(uuid4())
-        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        ret = self.app.extensibles.create(name, klass, properties=properties)
         return ret
 
     def create_clims_project(self, klass, name=None, **kwargs):
@@ -766,7 +767,7 @@ class Fixtures(object):
 
         if not name:
             name = "project-{}".format(uuid4())
-        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        ret = self.app.extensibles.create(name, klass, properties=properties)
         return ret
 
     def create_container(self, klass, name=None, prefix="container", **kwargs):
@@ -776,7 +777,7 @@ class Fixtures(object):
 
         if not name:
             name = "{}-{}".format(prefix, uuid4())
-        ret = self.app.extensibles.create(name, klass, self.organization, properties=properties)
+        ret = self.app.extensibles.create(name, klass, properties=properties)
         return ret
 
     def create_container_with_samples(
@@ -787,3 +788,18 @@ class Fixtures(object):
             container.append(sample)
         container.save()
         return container
+
+    def has_context(self):
+        from clims.handlers import context_store
+        context_store.set(app=self.app, organization=self.organization, user=self.user)
+
+
+def has_context(func):
+    """
+    Specifies that the test method is run within a context based on the fixtures available
+    from the test class (via self)
+    """
+    def wrapper(test_case, *args, **kwargs):
+        with CreateContext(test_case.app, test_case.organization, test_case.user):
+            func(test_case, *args, **kwargs)
+    return wrapper

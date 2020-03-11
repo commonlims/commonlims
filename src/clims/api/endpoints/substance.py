@@ -36,7 +36,6 @@ class SubstanceEndpoint(OrganizationEndpoint):
         substance = self.app.extensibles.create(
             validated['name'],
             validated['type_full_name'],
-            organization,
             validated.get('properties', None))
         ret = {"id": substance.id}
 

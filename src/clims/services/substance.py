@@ -16,10 +16,11 @@ from django.db.models import QuerySet
 from uuid import uuid4
 from sentry.models.file import File
 from clims.models.file import OrganizationFile
-from clims.handlers import SubstancesSubmissionHandler, HandlerContext
+from clims.handlers import SubstancesSubmissionHandler
 from clims.handlers import SubstancesValidationHandler
 from clims.services.base_extensible_service import BaseExtensibleService
 from clims.models import ResultIterator
+from clims.handlers import context_store
 
 logger = logging.getLogger(__name__)
 
@@ -316,10 +317,10 @@ class SubstanceService(BaseExtensibleService):
     def __init__(self, app):
         super(SubstanceService, self).__init__(app, SubstanceBase)
 
-    def all_submission_files(self, organization):
+    def all_submission_files(self, context):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
         #       So add a "type" to the file.
-        return OrganizationFile.objects.filter(organization=organization)
+        return OrganizationFile.objects.filter(organization=context.organization)
 
     def get_submission_file(self, file_id):
         try:
@@ -328,13 +329,14 @@ class SubstanceService(BaseExtensibleService):
             raise NotFound("Can't find file with id '{}'".format(file_id))
 
     @transaction.atomic
-    def load_file(self, organization, full_path, file_stream, add_timestamp=False):
+    def load_file(self, full_path, file_stream, add_timestamp=False):
         """
         Loads the file into the system.
 
         On a successful run, returns a tuple of the loaded file and any non-error validation issues
         that may have occurred while processing.
         """
+
         logger.info("Loading file {}".format(full_path))
 
         non_error_validation_issues = list()
@@ -348,10 +350,9 @@ class SubstanceService(BaseExtensibleService):
             full_path, ext = full_path.rsplit(".", 1)
             full_path = full_path + datetime.now().strftime("%m_%d_%Y%_H_%M_%S") + "." + ext
 
-        context = HandlerContext(organization=organization)
         with MultiFormatFile.from_file_stream(full_path, file_stream) as wrapped_stream:
             handlers = self._app.plugins.handlers.handle(
-                SubstancesValidationHandler, context, required=False,
+                SubstancesValidationHandler, context_store.current, required=False,
                 multi_format_file=wrapped_stream)
 
             # Since we're here, there were no exceptions during the run of the handler(s), but
@@ -361,11 +362,12 @@ class SubstanceService(BaseExtensibleService):
 
         logger.info('substance_batch_import.start')
 
-        org_file = self._create_organization_file(file_stream, full_path, organization.id)
+        org_file = self._create_organization_file(file_stream, full_path,
+                context_store.current.organization.id)
 
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
             self._app.plugins.handlers.handle(
-                SubstancesSubmissionHandler, context, required=True,
+                SubstancesSubmissionHandler, context_store.current, required=True,
                 multi_format_file=wrapped_org_file)
 
         return org_file, non_error_validation_issues

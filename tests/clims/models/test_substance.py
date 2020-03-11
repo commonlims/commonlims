@@ -29,6 +29,7 @@ class SubstancePropertiesTestCase(TestCase):
 
     def setUp(self):
         self.register_extensible(self.ExampleSample)
+        self.has_context()
 
     def test_can_create_substance_with_properties(self):
         moxy = random.randint(1, 100)
@@ -37,7 +38,6 @@ class SubstancePropertiesTestCase(TestCase):
 
         name = "sample-{}".format(random.randint(1, 1000000))
         sample = self.ExampleSample(name=name,
-                                    organization=self.organization,
                                     moxy=moxy,
                                     cool=cool,
                                     erudite=erudite)
@@ -55,7 +55,6 @@ class SubstancePropertiesTestCase(TestCase):
 
         name = "sample-{}".format(random.randint(1, 1000000))
         sample = self.ExampleSample(name=name,
-                                    organization=self.organization,
                                     moxy=moxy,
                                     cool=cool,
                                     erudite=erudite)
@@ -71,7 +70,6 @@ class SubstancePropertiesTestCase(TestCase):
         erudite = random.randint(1, 100)
 
         sample = self.ExampleSample(name=name,
-                                    organization=self.organization,
                                     moxy=None,
                                     cool=cool,
                                     erudite=erudite)
@@ -88,13 +86,15 @@ class SubstancePropertiesTestCase(TestCase):
 
         with pytest.raises(ExtensibleTypeValidationError):
             self.ExampleSample(name=name,
-                               organization=self.organization,
                                moxy=None,
                                cool=cool,
                                erudite=None)
 
 
 class TestSubstance(SubstanceTestCase):
+    def setUp(self):
+        self.has_context()
+
     def test_can_create_substance(self):
         substance = self.create_gemstone()
         assert substance.version == 1
@@ -161,7 +161,7 @@ class TestSubstance(SubstanceTestCase):
 
         # Act
         combined = GemstoneSample(
-            name='combined1', organization=self.organization,
+            name='combined1',
             parents=[child1, child2])
         combined.save()
 
@@ -177,7 +177,7 @@ class TestSubstance(SubstanceTestCase):
 
         # Act
         combined = GemstoneSample(
-            name='combined1', organization=self.organization,
+            name='combined1',
             parents=[substance1, substance2])
         combined.preciousness = 'xxx'
         combined.save()
@@ -199,7 +199,7 @@ class TestSubstance(SubstanceTestCase):
 
         # Act
         combined = GemstoneSample(
-            name='combined1', organization=self.organization,
+            name='combined1',
             parents=[substance1, substance2])
         combined.save()
 
