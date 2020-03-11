@@ -21,7 +21,7 @@ class ExtensibleService(object):
     def __init__(self, app):
         self._app = app
         self._model_cache = dict()
-        self._implementations = dict()
+        self._implementations = None
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clear_cache(self):
@@ -97,6 +97,8 @@ class ExtensibleService(object):
         """
         This is for testing purposes only!
         """
+        # trigger initiation of the implementation array
+        self.implementations
         name = '{}.{}'.format(extensible_base.__module__, extensible_base.__name__)
         del(self._implementations[name])
 
