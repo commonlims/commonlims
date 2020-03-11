@@ -108,6 +108,22 @@ class BaseTestCase(Fixtures, Exam):
 
         self.session = session
 
+    @before
+    def initialize_log_level_for_toggle(self):
+        self.log_level_toggled = False
+        self.log_level_at_start = logging.getLogger().level
+
+    def set_log_level(self, lvl):
+        logging.getLogger().setLevel(lvl)
+
+    def toggle_log_level(self, lvl="DEBUG"):
+        # Increases log level to lvl (DEBUG by default) if not called earlier in the test
+        if self.log_level_toggled:
+            logging.getLogger().setLevel(self.log_level_at_start)
+        else:
+            logging.getLogger().setLevel(lvl)
+        self.log_level_toggled = not self.log_level_toggled
+
     def tasks(self):
         return TaskRunner()
 
