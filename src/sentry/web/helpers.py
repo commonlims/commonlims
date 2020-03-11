@@ -20,7 +20,7 @@ logger = logging.getLogger('sentry')
 
 def get_default_context(request, existing_context=None, team=None):
     from sentry import options
-    from sentry.plugins import plugins
+    from clims.services import ioc
     from django.contrib.auth.models import AnonymousUser  # Django 1.9 setup issue
     from sentry.api.serializers.base import serialize  # Django 1.9 setup issue
     from sentry.models import Team  # Django 1.9 setup issue
@@ -29,7 +29,7 @@ def get_default_context(request, existing_context=None, team=None):
         'CSRF_COOKIE_NAME': settings.CSRF_COOKIE_NAME,
         'URL_PREFIX': options.get('system.url-prefix'),
         'SINGLE_ORGANIZATION': settings.SENTRY_SINGLE_ORGANIZATION,
-        'PLUGINS': plugins,
+        'PLUGINS': ioc.app.plugins,
         'ALLOWED_HOSTS': list(settings.ALLOWED_HOSTS),
         'ONPREMISE': settings.SENTRY_ONPREMISE,
     }

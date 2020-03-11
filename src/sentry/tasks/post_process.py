@@ -13,10 +13,10 @@ import time
 
 from django.conf import settings
 
+from clims.services import ioc
 from sentry import features
 from sentry.utils import snuba
 from sentry.utils.cache import cache
-from sentry.plugins import plugins
 from sentry.signals import event_processed
 from sentry.tasks.base import instrumented_task
 from sentry.utils import metrics
@@ -135,7 +135,7 @@ def post_process_group(event, is_new, is_regression, is_sample, is_new_group_env
                             event=event,
                         )
 
-        for plugin in plugins.for_project(event.project):
+        for plugin in ioc.app.plugins.for_project(event.project):
             plugin_post_process_group(
                 plugin_slug=plugin.slug,
                 event=event,
@@ -186,7 +186,7 @@ def plugin_post_process_group(plugin_slug, event, **kwargs):
     with configure_scope() as scope:
         scope.set_tag("project", event.project_id)
 
-    plugin = plugins.get(plugin_slug)
+    plugin = ioc.app.plugins.get(plugin_slug)
     safe_execute(plugin.post_process, event=event, group=event.group, **kwargs)
 
 

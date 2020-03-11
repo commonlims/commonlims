@@ -41,8 +41,9 @@ class HandlerManager(object):
     Manages plugin defined handlers.
     """
 
-    def __init__(self):
+    def __init__(self, app):
         # Initialize the handlers dictionary with the types of baseclasses we can find:
+        self._app = app
         self.handlers = self.find_handler_baseclasses()
         logger.debug("Handler dictionary initialized: '{}'".format(self.handlers.keys()))
 
@@ -60,7 +61,7 @@ class HandlerManager(object):
         handlers = dict()
         handler_subclasses = Handler.__subclasses__()
         for subclass in handler_subclasses:
-            logger.info("Found handler type {}".format(subclass))
+            logger.debug("Found handler type {}".format(subclass))
             handlers[subclass] = set()
         return handlers
 
@@ -96,10 +97,7 @@ class HandlerManager(object):
         logger.debug("Handlers found for '{}': '{}'".format(cls, handlers))
 
         for handler in handlers:
-            # TODO: the plugins manager should have an instance of the app
-
-            from clims.services import ioc
-            instance = handler(context, ioc.app)
+            instance = handler(context, self._app)
             ret.append(instance)
             logger.debug("Executing handle on '{}'".format(instance))
             instance.handle(*args, **kwargs)
@@ -154,7 +152,7 @@ class HandlerManager(object):
         Should be called after all handlers that will be used have been loaded.
         """
 
-        logger.info("Validating 'unique' role for handlers")
+        logger.info("Validating 'unique' rule for handlers")
 
         for handler_type, impls in self.handlers.items():
             if handler_type.unique_registration and len(impls) > 1:

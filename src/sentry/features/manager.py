@@ -4,9 +4,6 @@ __all__ = ['FeatureManager']
 
 from django.conf import settings
 
-from sentry.plugins import plugins
-from sentry.utils.safe import safe_execute
-
 from .base import Feature
 from .exceptions import FeatureNotRegistered
 
@@ -49,31 +46,18 @@ class FeatureManager(object):
         """
         Determine if a feature is enabled.
 
-        Features are checked in the following order:
-
-        1. Execute Plugin feature handlers. Any plugin which returns a list of
-           instantiated ``feature.handler.FeatureHandler`` objects will have
-           each of their handlers executed in the order they are declared.
-
-           When each handler is executed should the handler return None instead
-           of True or False (feature enabled / disabled), the next registered
-           plugin feature handler will be executed.
-
-        2. The default configuration of the feature. This can be located in
-           sentry.conf.server.SENTRY_FEATURES.
+        Confiuguration of features is in sentry.conf.server.SENTRY_FEATURES.
 
         Depending on the Feature class, additional arguments may need to be
         provided to assign organiation or project context to the feature.
 
         >>> FeatureManager.has('organizations:feature', organization, actor=request.user)
         """
-        actor = kwargs.pop('actor', None)
+        kwargs.pop('actor', None)
         feature = self.get(name, *args, **kwargs)
 
-        # Check plugin feature handlers
-        rv = self._get_plugin_value(feature, actor)
-        if rv is not None:
-            return rv
+        # NOTE: Sentry allowed plugins to take part in the feature mechanism. For simplicity
+        # this is not implemented in Common LIMS for now.
 
         rv = settings.SENTRY_FEATURES.get(feature.name, False)
         if rv is not None:
@@ -81,12 +65,3 @@ class FeatureManager(object):
 
         # Features are by default disabled if no plugin or default enables them
         return False
-
-    def _get_plugin_value(self, feature, actor):
-        for plugin in plugins.all(version=2):
-            handlers = safe_execute(plugin.get_feature_hooks, _with_transaction=False)
-            for handler in handlers or ():
-                rv = handler(feature, actor)
-                if rv is not None:
-                    return rv
-        return None

@@ -9,7 +9,7 @@ Used for notifying *all* enabled plugins
 
 from __future__ import absolute_import
 
-from sentry.plugins import plugins
+from clims.services import ioc
 from sentry.rules.actions.base import EventAction
 from sentry.rules.actions.services import LegacyPluginService
 from sentry.utils import metrics
@@ -23,12 +23,12 @@ class NotifyEventAction(EventAction):
         from sentry.plugins.bases.notify import NotificationPlugin
 
         results = []
-        for plugin in plugins.for_project(self.project, version=1):
+        for plugin in ioc.app.plugins.for_project(self.project, version=1):
             if not isinstance(plugin, NotificationPlugin):
                 continue
             results.append(LegacyPluginService(plugin))
 
-        for plugin in plugins.for_project(self.project, version=2):
+        for plugin in ioc.app.plugins.for_project(self.project, version=2):
             for notifier in (safe_execute(plugin.get_notifiers, _with_transaction=False) or ()):
                 results.append(LegacyPluginService(notifier))
 

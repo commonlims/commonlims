@@ -4,8 +4,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from sudo.utils import is_safe_url
 
+from clims.services import ioc
 from sentry.models import Group, GroupMeta
-from sentry.plugins import plugins
 from sentry.web.frontend.base import ProjectView
 
 
@@ -16,7 +16,7 @@ class GroupPluginActionView(ProjectView):
         group = get_object_or_404(Group, pk=group_id, project=project)
 
         try:
-            plugin = plugins.get(slug)
+            plugin = ioc.app.plugins.get(slug)
         except KeyError:
             raise Http404('Plugin not found')
 

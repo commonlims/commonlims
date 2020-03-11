@@ -127,7 +127,7 @@ class GroupSerializerBase(Serializer):
         return results
 
     def get_attrs(self, item_list, user):
-        from sentry.plugins import plugins
+        from clims.services import ioc
 
         GroupMeta.objects.populate_cache(item_list)
 
@@ -227,9 +227,9 @@ class GroupSerializerBase(Serializer):
             active_date = item.active_at or item.first_seen
 
             annotations = []
-            for plugin in plugins.for_project(project=item.project, version=1):
+            for plugin in ioc.app.plugins.for_project(project=item.project, version=1):
                 safe_execute(plugin.tags, None, item, annotations, _with_transaction=False)
-            for plugin in plugins.for_project(project=item.project, version=2):
+            for plugin in ioc.app.plugins.for_project(project=item.project, version=2):
                 annotations.extend(
                     safe_execute(plugin.get_annotations, group=item, _with_transaction=False) or ()
                 )

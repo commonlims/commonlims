@@ -9,7 +9,8 @@ from __future__ import absolute_import
 
 from django import template
 
-from sentry.plugins import Annotation, plugins
+from clims.services.application import ioc
+from sentry.plugins import Annotation
 from sentry.utils.safe import safe_execute
 
 register = template.Library()
@@ -20,7 +21,7 @@ def get_actions(group, request):
     project = group.project
 
     action_list = []
-    for plugin in plugins.for_project(project, version=1):
+    for plugin in ioc.app.plugins.for_project(project, version=1):
         results = safe_execute(
             plugin.actions,
             request,
@@ -33,7 +34,7 @@ def get_actions(group, request):
 
         action_list = results
 
-    for plugin in plugins.for_project(project, version=2):
+    for plugin in ioc.app.plugins.for_project(project, version=2):
         for action in (
             safe_execute(plugin.get_actions, request, group, _with_transaction=False) or ()
         ):
@@ -47,7 +48,7 @@ def get_panels(group, request):
     project = group.project
 
     panel_list = []
-    for plugin in plugins.for_project(project):
+    for plugin in ioc.app.plugins.for_project(project):
         results = safe_execute(plugin.panels, request, group, panel_list, _with_transaction=False)
 
         if not results:
@@ -62,7 +63,7 @@ def get_panels(group, request):
 def get_widgets(group, request):
     project = group.project
 
-    for plugin in plugins.for_project(project):
+    for plugin in ioc.app.plugins.for_project(project):
         resp = safe_execute(plugin.widget, request, group, _with_transaction=False)
 
         if resp:
@@ -74,7 +75,7 @@ def get_annotations(group, request=None):
     project = group.project
 
     annotation_list = []
-    for plugin in plugins.for_project(project, version=2):
+    for plugin in ioc.app.plugins.for_project(project, version=2):
         for value in (
             safe_execute(plugin.get_annotations, group=group, _with_transaction=False) or ()
         ):
@@ -88,7 +89,7 @@ def get_annotations(group, request=None):
 @register.filter
 def get_plugins(project):
     results = []
-    for plugin in plugins.for_project(project, version=None):
+    for plugin in ioc.app.plugins.for_project(project, version=None):
         if plugin.has_project_conf():
             results.append(plugin)
     return results
@@ -98,5 +99,5 @@ def get_plugins(project):
 def get_plugins_with_status(project):
     return [
         (plugin, safe_execute(plugin.is_enabled, project, _with_transaction=False))
-        for plugin in plugins.configurable_for_project(project, version=None)
+        for plugin in ioc.app.plugins.configurable_for_project(project, version=None)
     ]

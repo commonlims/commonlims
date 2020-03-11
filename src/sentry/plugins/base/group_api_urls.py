@@ -5,8 +5,7 @@ import re
 
 from django.core.urlresolvers import RegexURLResolver, RegexURLPattern
 from django.conf.urls import patterns, include, url
-
-from sentry.plugins import plugins
+from clims.services import ioc
 
 logger = logging.getLogger('sentry.plugins')
 
@@ -41,4 +40,4 @@ def load_plugin_urls(plugins):
     return urlpatterns
 
 
-urlpatterns = load_plugin_urls(plugins.all())
+urlpatterns = load_plugin_urls(ioc.app.plugins.all())

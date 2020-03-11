@@ -37,7 +37,8 @@ class TestHandlerValidation(TestCase):
     def test_raises_if_unique_handler_implemented_twice(self):
         """If a handler is marked with `unique_registration = True`, it should only load once"""
 
-        handler_manager = HandlerManager()
+        app = MagicMock()
+        handler_manager = HandlerManager(app)
         Handler1 = type("Somewhere.Handler1", (SubstancesSubmissionHandler,), {})
         Handler1.version = "1.0.0"
         Handler1.unique_registration = True
