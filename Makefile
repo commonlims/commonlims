@@ -29,6 +29,8 @@ create-example-data:
 
 fresh: clean middleware-teardown middleware
 # Resets all data (by tearing down the middleware) and then installs new test data
+	@echo "--> Read cached migrations if they exist"
+	python ./middleware/postgres/dev-cache-data.py restore
 	@echo "--> Applying migrations"
 	lims upgrade
 	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"

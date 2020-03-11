@@ -9,6 +9,7 @@ from __future__ import absolute_import, print_function
 
 import click
 from sentry.runner.decorators import configuration
+from django.db import IntegrityError
 
 
 def _get_field(field_name):
@@ -84,7 +85,11 @@ def createuser(email, password, superuser, no_password, no_input):
     if password:
         user.set_password(password)
 
-    user.save()
+    try:
+        user.save()
+    except IntegrityError:
+        click.echo("A user with that email already exists")
+        exit()
 
     click.echo('User created: %s' % (email, ))
 

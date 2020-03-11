@@ -21,6 +21,8 @@ services:
       POSTGRES_DB: "${CLIMS_POSTGRES_DB}"
       POSTGRES_USER: "${CLIMS_POSTGRES_USER}"
       POSTGRES_PASSWORD: "${CLIMS_POSTGRES_PASSWORD}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
   # This database is for the part of the test suite that requires database access.
   # The difference is only the port number
   test_db:
@@ -31,6 +33,8 @@ services:
       POSTGRES_DB: "${TEST_CLIMS_POSTGRES_DB}"
       POSTGRES_USER: "${TEST_CLIMS_POSTGRES_USER}"
       POSTGRES_PASSWORD: "${TEST_CLIMS_POSTGRES_PASSWORD}"
+    volumes:
+      - pgdata:/var/lib/postgresql/testdata
   # Admin interface for the databases, only for development purposes
   adminer:
     image: adminer
@@ -62,3 +66,5 @@ services:
       DB_USERNAME: "${TEST_CLIMS_POSTGRES_USER}"
       DB_PASSWORD: "${TEST_CLIMS_POSTGRES_PASSWORD}"
       DB_VALIDATE_ON_BORROW: "true"
+volumes:
+  pgdata:

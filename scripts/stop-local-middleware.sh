@@ -9,3 +9,6 @@ ${DIR}/version-check.py docker
 
 docker swarm init 2> /dev/null || true
 docker stack rm clims 2> /dev/null || true
+
+# Remove volumes (they can be read in from cache afterwards)
+docker volume rm -f clims_pgdata
