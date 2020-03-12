@@ -17,8 +17,8 @@ class ContainerTest(APITestCase):
             GemstoneContainer, GemstoneSample, "find_single")
         url = reverse('clims-api-0-containers', args=(self.organization.name,))
         self.login_as(self.user)
-        query = 'container.name:' + container.name
-        response = self.client.get(url + '?query=' + query)
+        search = 'container.name:' + container.name
+        response = self.client.get(url + '?search=' + search)
         assert response.status_code == 200, response.content
         assert len(response.data) == 1, len(response.data)
         assert response.data[0]['name'] == container.name

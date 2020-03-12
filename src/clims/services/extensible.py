@@ -246,6 +246,19 @@ class ExtensibleBase(object):
         """
         pass
 
+    def _to_wrapper(self, model):
+        # NOTE: It would be prettier to use an abstract class, but then we need to
+        # ensure the abstract metaclass works with our metaclass.
+        raise NotImplementedError("This method must be implemented in a base class")
+
+    def iter_versions(self):
+        """
+        Iterate through all versions
+        """
+        from clims.models import ResultIterator
+        qs = self._archetype.versions.order_by('version')
+        return ResultIterator(qs, self._to_wrapper)
+
     @transaction.atomic
     def save(self):
         creating = self.id is None
