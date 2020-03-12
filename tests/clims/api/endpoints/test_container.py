@@ -46,8 +46,9 @@ class ContainerTest(APITestCase):
         assert sample_name.startswith('sample-')
         type_full_name = response.data[0]['contents'][0]['type_full_name']
         assert type_full_name == 'tests.fixtures.plugins.gemstones_inc.models.GemstoneSample'
-        assert response.data[0]['contents'][0]['location']['index'] == '(0, 1, 0)'
-        assert response.data[0]['contents'][0]['container_index']['index'] == 'B:1'
+        wells = [d['container_index']['index'] for d in response.data[0]['contents']]
+        assert wells == ['A:1', 'B:1']
+
         serializer = ContainerExpandedSerializer(data=response.data[0])
         assert serializer.is_valid()
 
@@ -70,7 +71,8 @@ class ContainerTest(APITestCase):
         assert sample_name.startswith('sample-')
         type_full_name = response.data[0]['contents'][0]['type_full_name']
         assert type_full_name == 'tests.fixtures.plugins.gemstones_inc.models.GemstoneSample'
-        assert response.data[0]['contents'][0]['location']['index'] == '(0, 1, 0)'
-        assert response.data[0]['contents'][0]['container_index']['index'] == 'B:1'
+        wells = [d['container_index']['index'] for d in response.data[0]['contents']]
+        assert wells == ['A:1', 'B:1']
+
         serializer = ContainerExpandedSerializer(data=response.data[0])
         assert serializer.is_valid()

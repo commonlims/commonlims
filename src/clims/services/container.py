@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import re
 import six
-from six import iteritems
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
 from clims.services.base_extensible_service import BaseExtensibleService
@@ -34,9 +33,11 @@ class ContainerIndex(object):
     @classmethod
     def from_any_type(cls, key):
         # Creates an index for the input key if possible.
-        if isinstance(key, six.binary_type):
+        if isinstance(key, ContainerIndex):
+            return key
+        elif isinstance(key, (six.text_type, six.binary_type)):
             return cls.from_string(key)
-        if isinstance(key, tuple):
+        elif isinstance(key, tuple):
             return cls(*key)
         else:
             raise NotImplementedError("Can't use {} as an index".format(type(key)))
@@ -140,6 +141,24 @@ class ContainerBase(ExtensibleBase):
         """
         raise NotImplementedError("Implement in a subclass")
 
+    @property
+    def contents(self):
+        """
+        Returns an iterator of the non-empty cells in the container.
+
+        Items are returned based on the default traverse order of this container (self.traverse_by)
+        """
+        return (content for ix, content in self if content)
+
+    def __iter__(self):
+        """
+        Iterates through the entire container, returning a tuple of the index object and the
+        item.
+
+        Uses the default traverse method of the container, specified by self.traverse_by
+        """
+        return ((ix, self[ix]) for ix in self._traverse(self.traverse_by))
+
     def _save_custom(self, creating):
         # Triggers a save for any substance that was added to this container.
         for position, locatable in self._locatables.items():
@@ -157,14 +176,6 @@ class ContainerBase(ExtensibleBase):
         # Update the value. This will not actually move it in the backend until either
         # the container is saved
         self._locatables[ix.raw] = value
-
-    @property
-    def contents(self):
-        c = []
-        for _, substance in iteritems(self._locatables):
-            c.append(substance)
-
-        return c
 
     def __getitem__(self, key):
         ix = self.IndexType.from_any_type(key)
@@ -186,15 +197,16 @@ class PlateBase(ContainerBase):
     IndexType = PlateIndex
 
     traverse_by = TRAVERSE_BY_COLUMN
-    rows = 1
-    columns = 1
+    rows = None
+    columns = None
 
     def __init__(self, *args, **kwargs):
         super(PlateBase, self).__init__(**kwargs)
 
         if (self.columns is None or self.columns <= 0 or
                 self.rows is None or self.rows <= 0):
-            raise AssertionError("Plate rows and columns must be set to a value larger than zero")
+            raise AssertionError(
+                "Plate rows and columns must be set to values larger than zero on the class {}".format(self.__class__))
 
     def _validate_boundaries(self, ix):
         if (not 0 <= ix.row < self.rows) or (not 0 <= ix.column < self.columns):
