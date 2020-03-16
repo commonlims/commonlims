@@ -99,7 +99,8 @@ export default class InstallWizard extends AsyncView {
       <div className="loading-error">
         <span className="icon-exclamation" />
         {t(
-          'We were unable to load the required configuration from the Sentry server. Please take a look at the service logs.'
+          'We were unable to load the required configuration from the Common LIMS server. ' +
+            'Please take a look at the service logs. (Clearing cookies may help if in devmode)'
         )}
       </div>
     );

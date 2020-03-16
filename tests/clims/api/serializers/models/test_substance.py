@@ -7,6 +7,10 @@ from clims.api.serializers.models.substance import SubstanceSerializer
 
 
 class SubstanceSerializerTest(SubstanceTestCase):
+    def setUp(self):
+        # TODO: It would be better if the serializer tests wouldn't require a context
+        self.has_context()
+
     def test_simple(self):
         sample = self.create_gemstone(color='red')
         serializer = SubstanceSerializer(sample)

@@ -10,6 +10,7 @@ class TestProjectService(TestCase):
 
     def setUp(self):
         self.register_extensible(GemstoneProject)
+        self.has_context()
 
     def create_a_bunch_of_projects(self):
         country_choices = ['Sweden', 'Norway', 'Denmark', 'Finland', 'Flat Iceland']
@@ -17,7 +18,6 @@ class TestProjectService(TestCase):
         for i in range(0, 100):
             pick = random.choice(country_choices)
             project = GemstoneProject(name='project{}'.format(i),
-                                      organization=self.organization,
                                       country_of_sampling=pick)
             project.save()
             country_list.append(pick)

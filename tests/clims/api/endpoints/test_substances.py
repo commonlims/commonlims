@@ -13,6 +13,9 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
 
 class SubstancesTest(APITestCase):
+    def setUp(self):
+        self.has_context()
+
     def create_gemstone(self, *args, **kwargs):
         return self.create_substance(GemstoneSample, *args, **kwargs)
 

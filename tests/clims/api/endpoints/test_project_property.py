@@ -8,6 +8,8 @@ from tests.fixtures.plugins.gemstones_inc.models import GemstoneProject
 
 
 class ProjectPropertyEndpointTest(APITestCase):
+    def setUp(self):
+        self.has_context()
 
     def test_find_all_substance_property(self):
 

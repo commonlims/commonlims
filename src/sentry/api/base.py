@@ -132,6 +132,7 @@ class Endpoint(APIView):
             return
 
     def initialize_request(self, request, *args, **kwargs):
+        logger.debug("Request initialized: {}, {}, {}".format(request, args, kwargs))
         rv = super(Endpoint, self).initialize_request(request, *args, **kwargs)
         # If our request is being made via our internal API client, we need to
         # stitch back on auth and user information

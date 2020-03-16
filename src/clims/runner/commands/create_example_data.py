@@ -24,7 +24,7 @@ def createexampledata():
     org = Organization.objects.get(name="lab")
 
     from clims.plugins.demo import DemoPlugin
-    from clims.handlers import HandlerContext, CreateExampleDataHandler
+    from clims.handlers import CreateContext, CreateExampleDataHandler
 
     app.plugins.install_plugins(DemoPlugin)
     app.plugins.load_installed()
@@ -32,5 +32,6 @@ def createexampledata():
     # Now we'll run the handlers for all plugins (one of them being the DemoPlugin) for
     # creating example data. All plugins can plug into this behaviour by implementing the
     # CreateExampleDataHandler:
-    context = HandlerContext(organization=org)
-    app.plugins.handlers.handle(CreateExampleDataHandler, context, required=False)
+
+    with CreateContext(app, org, None) as context:
+        app.plugins.handlers.handle(CreateExampleDataHandler, context, required=False)

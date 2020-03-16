@@ -7,9 +7,9 @@ import logging
 import importlib
 import pkgutil
 import yaml
+import threading
 from clims import utils
 from clims.plugins import PluginValidationError
-
 
 logger = logging.getLogger(__name__)
 
@@ -26,14 +26,61 @@ class MultipleHandlersNotAllowed(Exception):
     pass
 
 
-class HandlerContext(object):
+class ThreadContextStore(object):
+    def __init__(self):
+        self._store = threading.local()
+
+    def set(self, **kwargs):
+        """
+        Sets the context to the kwargs. Take a look at `clims.handlers.Context` to see which
+        arguments are supported
+
+        If the context has already been set on this thread, kwargs must equal
+        what's already in the context. This is to support tests, where one might have set the
+        context at the beginning of the test. Overriding later with a different context is likely
+        to lead to difficult to debug errors
+        """
+        logger.debug("[{}] Entering context".format(threading.current_thread().ident))
+        self._store.context = Context(**kwargs)
+        return self._store.context
+
+    def unset(self):
+        logger.debug("[{}] Leaving context".format(threading.current_thread().ident))
+        self._store.context = None
+
+    @property
+    def current(self):
+        return self._store.context
+
+
+context_store = ThreadContextStore()
+
+
+class Context(object):
     """
     Has information on in which context a handler was called, e.g. what the current
-    organization is etc.
+    organization is etc. This allows the application to get information from "smart" domain
+    objects (e.g. SubstanceBase) without the user having to initialize them.
     """
 
-    def __init__(self, organization=None):
+    def __init__(self, app=None, organization=None, user=None):
+        self.app = app
         self.organization = organization
+        self.user = user
+
+
+class CreateContext(object):
+    def __init__(self, app, organization, user):
+        self.app = app
+        self.organization = organization
+        self.user = user
+
+    def __enter__(self):
+        # Get a the thread local context:
+        return context_store.set(app=self.app, organization=self.organization, user=self.user)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        context_store.unset()
 
 
 class HandlerManager(object):

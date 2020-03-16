@@ -7,6 +7,7 @@ from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, Ext
 from clims.models.location import SubstanceLocation
 from django.db import transaction
 from clims import utils
+from clims.handlers import context_store
 
 
 logger = logging.getLogger(__name__)
@@ -26,13 +27,13 @@ class ExtensibleService(object):
     def clear_cache(self):
         self._model_cache.clear()
 
-    def create(self, name, klass, organization, properties=None):
+    def create(self, name, klass, properties=None):
         """
         Creates an extensible and saves it to the backend.
         """
         if isinstance(klass, six.string_types):
             klass = self.get_implementation(klass)
-        instance = klass(name=name, organization=organization, _app=self._app)
+        instance = klass(name=name)
 
         if properties:
             for key, val in properties.items():
@@ -208,9 +209,10 @@ class PropertyInitiator(type):
 @six.add_metaclass(PropertyInitiator)
 class ExtensibleBase(object):
 
-    def __init__(self, **kwargs):
-        from clims.services.application import ioc
-        self._app = ioc.app
+    def __init__(self, name=None, **kwargs):
+        if not context_store.current:
+            raise AssertionError("ExtensibleBase must be created within a context")
+        self._context = context_store.current
         self._property_bag = PropertyBag(self)
         self._name_before_change = None
         self._wrapped_version = kwargs.get("_wrapped_version", None)
@@ -220,24 +222,26 @@ class ExtensibleBase(object):
             # Stop here as we're wrapping a version that already exists
             return
 
-        name = kwargs.pop("name", None)
-        org = kwargs.pop("organization", None)
-
-        if not name or not org:
-            raise AttributeError("You must supply name and organization")
+        if not name:
+            raise AttributeError("You must supply a name")
 
         extensible_type = self._app.extensibles.get_extensible_type(self.type_full_name)
         self._archetype = self.WrappedArchetype(name=name, extensible_type=extensible_type,
-                organization=org)
+                organization=self._context.organization)
         self._wrapped_version = self.WrappedVersion()
 
         # Add any remaining properties in kwargs. This is necessary so that user
         # can instantiate objects using e.g. syntax like: Sample(my_value=1)
         for key, value in six.iteritems(kwargs):
+            assert key != "organization"
             setattr(self, key, value)
 
         # This is new, so we should set is_dirty to True:
         self.is_dirty = True
+
+    @property
+    def _app(self):
+        return self._context.app
 
     def _save_custom(self, creating):
         """

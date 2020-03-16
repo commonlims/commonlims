@@ -5,6 +5,9 @@ from tests.clims.models.test_substance import SubstanceTestCase
 
 
 class TestSubstanceParentChild(SubstanceTestCase):
+    def setUp(self):
+        self.has_context()
+
     def test_can_find_parent_from_child(self):
         sample = self.create_gemstone()
         child = sample.create_child()

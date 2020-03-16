@@ -239,14 +239,14 @@ class PlateBase(ContainerBase):
         table = to_table()
         longest = 0
         for row in table:
-            rows.append(map(format_fn, row))
+            rows.append([format_fn(r) if r else "" for r in row])
             longest = max(max(len(cell) for cell in rows[-1]), longest)
         for i in range(len(rows)):
             rows[i] = "|".join([cell.ljust(longest, " ") for cell in rows[i]])
 
         if header:
             rows.insert(0, self.name)
-        return "\n".join(map(six.text_type, rows))
+        return "\n".join([six.text_type(r) for r in rows])
 
 
 class ContainerService(BaseExtensibleService):

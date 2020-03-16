@@ -13,21 +13,22 @@ class TestProject(TestCase):
     def setUp(self):
         self.register_extensible(VampireFangStudyProject)
         self.register_extensible(VampireFangSample)
+        self.has_context()
 
     def test_can_create_project(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.save()
         self.app.projects.get(name=project.name)  # Raises DoesNotExist if it wasn't created
 
     def test_name_is_unique(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.save()
-        project2 = VampireFangStudyProject(name=project.name, organization=self.organization)
+        project2 = VampireFangStudyProject(name=project.name)
         with pytest.raises(IntegrityError):
             project2.save()
 
     def test_can_add_custom_property(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.comment = "test"
         project.save()
 
@@ -35,45 +36,45 @@ class TestProject(TestCase):
         assert project.comment == project_fetched_again.comment
 
     def test_can_add_sample(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.save()
-        sample = VampireFangSample(name="sample1", organization=self.organization, project=project)
+        sample = VampireFangSample(name="sample1", project=project)
         sample.pointiness = 10.0
         sample.save()
         assert sample.project.name == project.name
 
     def test_project_type(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.save()
-        sample = VampireFangSample(name="sample1", organization=self.organization, project=project)
+        sample = VampireFangSample(name="sample1", project=project)
         sample.pointiness = 10.0
         sample.save()
         assert isinstance(sample.project, VampireFangStudyProject)
 
     @pytest.mark.skip('not implemented')
     def test_save_two_samples__with_same_names_but_different_projects__ok(self):
-        project1 = VampireFangStudyProject(name="project1", organization=self.organization)
+        project1 = VampireFangStudyProject(name="project1")
         project1.save()
-        sample1 = VampireFangSample(name="sample1", organization=self.organization, project=project1)
+        sample1 = VampireFangSample(name="sample1", project=project1)
         sample1.pointiness = 10.0
         sample1.save()
 
-        project2 = VampireFangStudyProject(name="project2", organization=self.organization)
+        project2 = VampireFangStudyProject(name="project2")
         project2.save()
-        sample1b = VampireFangSample(name="sample1", organization=self.organization, project=project2)
+        sample1b = VampireFangSample(name="sample1", project=project2)
         sample1b.pointiness = 10.0
         sample1b.save()
 
     def test_sample_is_not_initalized_with_project__project_on_sample_is_none(self):
-        sample1 = VampireFangSample(name="sample1", organization=self.organization)
+        sample1 = VampireFangSample(name="sample1")
         sample1.pointiness = 10.0
         sample1.save()
         assert sample1.project is None
 
     def test_create_and_save_sample__with_project_set__fetched_sample_from_db_has_project(self):
-        project = VampireFangStudyProject(name="project1", organization=self.organization)
+        project = VampireFangStudyProject(name="project1")
         project.save()
-        sample = VampireFangSample(name="sample1", organization=self.organization, project=project)
+        sample = VampireFangSample(name="sample1", project=project)
         sample.pointiness = 10.0
         sample.save()
         fetched_sample = self.app.substances.get(name='sample1')

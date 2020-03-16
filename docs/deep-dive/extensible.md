@@ -1,8 +1,15 @@
 # Extensible types
 
-Common LIMS provides a way to extend any entity by a plugin. This is currently implemented only for `Substance` types, but support will be added for `Project` and `Container` too.
+Common LIMS provides a way to extend any entity by a plugin. The following core types are "Extensible":
 
-Data in extensible types is split into both the model for the actual business entity (e.g. `Substance`) as well as the `Extensible*` models:
+    Substance
+    Container
+    Project
+
+NOTE: Some of this is currently out-of-date
+NOTE: The name of extensible types might be changed in the future, since they are more than just extensible (they are also versioned and act in a context, see below).
+
+On the database level, Extensible types are split into both the model for the actual business entity (e.g. `Substance`) as well as the `Extensible*` models:
 
     * ExtensibleType
     * ExtensiblePropertyType
@@ -117,3 +124,14 @@ psql -d clims -c "select * from clims_extensibleproperty" \
 Notice how we got a new version in the property table where only the latest version is marked as latest.
 
 This design allows developers to easily write tools that show exactly what happened to a property. It's also simple to revert back to previous versions if required.
+
+## Context
+
+The extensible types are primarily written for use in plugins. The nature of plugins is that they are always executed in a certain `context`, which the plugin developer should not have to know too much about. The context provides access to the `ApplicationService`, which in turn gives access to every other service. It also knows about the organization it's being executed in and which user initated the action.
+
+This allows extensible types to provide a lot of logic without much setup. For example, creating this container in a handler will automatically set it in the correct context:
+
+    container = Container()
+    container.save()  # Organization is automatically added
+
+The context is implemented with thread local storage.
