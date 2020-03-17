@@ -3,12 +3,12 @@ from __future__ import absolute_import
 import logging
 import six
 from six import iteritems
-from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType, ExtensibleProperty)
+from clims.models.extensible import (ExtensibleType, ExtensiblePropertyType,
+                                     ExtensibleProperty)
 from clims.models.location import SubstanceLocation
 from django.db import transaction
 from clims import utils
 from clims.handlers import context_store
-
 
 logger = logging.getLogger(__name__)
 
@@ -58,13 +58,14 @@ class ExtensibleService(object):
                     'property_types').get(name=name)
                 self._model_cache[name] = substance_type
             except ExtensibleType.DoesNotExist:
-                raise ExtensibleTypeNotRegistered("The type '{}' is not registered".format(
-                    name))
+                raise ExtensibleTypeNotRegistered(
+                    "The type '{}' is not registered".format(name))
         return self._model_cache[name]
 
     def register(self, plugin_reg, extensible_base):
         logger.info("Installing '{}' from plugin '{}@{}'".format(
-            utils.class_full_name(extensible_base), plugin_reg.name, plugin_reg.version))
+            utils.class_full_name(extensible_base), plugin_reg.name,
+            plugin_reg.version))
 
         property_types = list()
         for field in extensible_base.__dict__.values():
@@ -77,10 +78,13 @@ class ExtensibleService(object):
                 display_name=field.display_name)
             property_types.append(prop_type)
 
-        name = "{}.{}".format(extensible_base.__module__, extensible_base.__name__)
+        name = "{}.{}".format(extensible_base.__module__,
+                              extensible_base.__name__)
         self._implementations[name] = extensible_base
-        extensible_type = self._register_model(
-            name, 'default', plugin_reg, property_types=property_types)
+        extensible_type = self._register_model(name,
+                                               'default',
+                                               plugin_reg,
+                                               property_types=property_types)
         return extensible_type
 
     @transaction.atomic
@@ -95,15 +99,19 @@ class ExtensibleService(object):
                 raise Exception('Property name not supplied')
 
         extensible_type, created = ExtensibleType.objects.get_or_create(
-            name=name,
-            plugin=plugin)
+            name=name, plugin=plugin)
 
-        existing_property_types = {item.name: item for item in extensible_type.property_types.all()}
+        existing_property_types = {
+            item.name: item
+            for item in extensible_type.property_types.all()
+        }
 
         for new_prop_type in property_types:
-            prop_type = existing_property_types.get(new_prop_type['name'], None)
+            prop_type = existing_property_types.get(new_prop_type['name'],
+                                                    None)
             if not prop_type:
-                prop_type = ExtensiblePropertyType(extensible_type=extensible_type)
+                prop_type = ExtensiblePropertyType(
+                    extensible_type=extensible_type)
             for key, val in new_prop_type.items():
                 setattr(prop_type, key, val)
             prop_type.save()
@@ -135,7 +143,9 @@ class HasLocationMixin(object):
             new_location = SubstanceLocation(
                 container=container._wrapped_version.archetype,
                 substance=self._wrapped_version.archetype,
-                x=x, y=y, z=z,
+                x=x,
+                y=y,
+                z=z,
                 container_version=container.version,
                 substance_version=self.version,
                 current=True)
@@ -145,15 +155,45 @@ class HasLocationMixin(object):
 
 
 class ExtensibleBaseField(object):
-    def __init__(self, display_name=None, nullable=True, prop_name=None):
+    def __init__(self,
+                 display_name=None,
+                 nullable=True,
+                 prop_name=None,
+                 choices=None,
+                 required=False,
+                 help=None,
+                 multiline=False):
         self.prop_name = prop_name
         self.display_name = display_name
         self.nullable = nullable
+        self.choices = choices or list()
+        self.required = required
+        self.help = help
+        self.multiline = multiline
+
+    # TODO: The name and values of 'type' fits with what Sentry already had for their
+    # dynamic forms. We should rename it if it causes confusion but then it might be better to
+    # also rename all of the code related to dynamic (json) forms that Sentry already has,
+    # e.g. app/data/forms/organizationGeneralSettings.jsx
+    @property
+    def type(self):
+        # TODO: handle all the raw types we currently support and handle this in subclasses
+        if len(self.choices) > 0:
+            return 'select'
+        elif self.multiline:
+            return 'textarea'
+        else:
+            return 'string'
+
+    @property
+    def name(self):
+        # TODO-simple: Rename prop_name to simply name
+        return self.prop_name
 
     def validate_with_casting(self, value, fn):
         valid = True
         try:
-            cast = fn(value)
+            cast = fn(value) if value else None
             if cast != value:
                 valid = False
         except ValueError:
@@ -168,20 +208,22 @@ class ExtensibleBaseField(object):
         pass
 
     def _handle_validate(self, obj, value):
-        try:
-            prop_type = obj._archetype.extensible_type.property_types.get(name=self.prop_name)
-        except ExtensiblePropertyType.DoesNotExist:
-            raise FieldDoesNotExist(self.prop_name)
+        if hasattr(obj, "_archetype"):
+            try:
+                prop_type = obj._archetype.extensible_type.property_types.get(
+                    name=self.prop_name)
+                self.validate(prop_type, value)
+            except ExtensiblePropertyType.DoesNotExist:
+                raise FieldDoesNotExist(self.prop_name)
 
         if value is None:
             if self.nullable:
                 return
             else:
-                raise ExtensibleTypeValidationError("None was not a valid value for Field: {}, if you want to "
-                                                    "be able to set value to None, set nullable=True on "
-                                                    "the Field.".format(self.prop_name))
-
-        self.validate(prop_type, value)
+                raise ExtensibleTypeValidationError(
+                    "None was not a valid value for Field: {}, if you want to "
+                    "be able to set value to None, set nullable=True on "
+                    "the Field.".format(self.prop_name))
 
     def __get__(self, obj, type=None):
         return obj._property_bag[self.prop_name]
@@ -191,39 +233,111 @@ class ExtensibleBaseField(object):
         obj._property_bag[self.prop_name] = value
 
 
-class PropertyInitiator(type):
+class HasExtensibleFieldsMeta(type):
+    """
+    A meta class for classes that have extensible fields. Classes that have this metaclass
+    can describe extensible statically on the object with this syntax:
+
+        comment = FloatField()
+
+    rather than:
+
+        comment = FloatField(prop_name="comment")
+
+    """
     def __new__(cls, name, bases, attrs):
-        # Creates an instance of the new extensible type
-        instance = super(PropertyInitiator, cls).__new__(cls, name, bases, attrs)
-        # Check all the fields of the instance, and add the name of the field
-        # as a default display name.
-        for k, v in iteritems(instance.__dict__):
+        # Creates an instance of the class of the new extensible type
+        cls_instance = super(HasExtensibleFieldsMeta,
+                             cls).__new__(cls, name, bases, attrs)
+
+        # Check all the fields of the new cls_instance, and add the name of the field
+        # as a default label.
+        for k, v in iteritems(cls_instance.__dict__):
             if isinstance(v, ExtensibleBaseField):
                 if v.prop_name is None:
                     v.prop_name = k
                 if v.display_name is None:
                     v.display_name = k
-        return instance
+        return cls_instance
 
 
-@six.add_metaclass(PropertyInitiator)
-class ExtensibleBase(object):
+# TODO: Better naming
+@six.add_metaclass(HasExtensibleFieldsMeta)
+class ExtensibleCore(object):
+    """
+    Classes extending this class can have ExtensibleFields and they are required to run in a thread
+    context created by clims.handlers.context_store.
+    """
+
+    def __init__(self, **kwargs):
+        self._property_bag = DjangoBackedObjectPropertyBag(self)
+
+    @property
+    def _context(self):
+        if not context_store.current:
+            raise ExtensibleNotRunInHandlerContext()
+        return context_store.current
+
+    @classmethod
+    def get_fields(cls):
+        ret = list()
+        for _, v in iteritems(cls.__dict__):
+            if isinstance(v, ExtensibleBaseField):
+                ret.append(v)
+        return ret
+
+
+class ExternalExtensibleBase(ExtensibleCore):
+    """Represents an object that has extensible fields, just like `ExtensibleBase` objects, but
+    which instances are not backed by the default database, but are kept in some external data
+    source.
+    """
+
+    def __init__(self, **kwargs):
+        super(ExternalExtensibleBase, self).__init__(**kwargs)
+        self._property_bag = InMemoryPropertyBag()
+
+
+class ExtensibleBase(ExtensibleCore):
+    WrappedArchetype = None
+    WrappedVersion = None
+    require_name = False
 
     def __init__(self, name=None, **kwargs):
-        if not context_store.current:
-            raise AssertionError("ExtensibleBase must be created within a context")
-        self._context = context_store.current
-        self._property_bag = PropertyBag(self)
+        """
+        Creates an extensible object. Fundamentally, these are objects that can be extended by
+        plugin developers, but they also have some other features that make them "smarter"
+        than the basic database models. Extensible objects:
+
+        * Can be extended easily by plugin developers, by only adding attributes to a class inheriting
+          from it.
+        * Have a full version history of any change that was made to the object
+        * Proxy business logic that's routed to services in the ApplicationService
+        * Have access to the context of the running thread, which means they already know which user
+          initiated the original request and which organization they are.
+        """
+
+        # TODO: This class is used for e.g. SubstanceBase and ContainerBase which are tracked in
+        # the database with the archetype and archetype_version models. But the Workflow class
+        # does not require that, because there is no archetype or archetype_version, because
+        # the workflow is tracked outside of our application's scope, in the workflow engine.
+        super(ExtensibleBase, self).__init__(**kwargs)
+
+        if self.WrappedArchetype is None:
+            raise AssertionError("Class must define a WrappedArchetype")
+        if self.WrappedVersion is None:
+            raise AssertionError("Class must define a WrappedVersion")
+
+        if not name and self.require_name:
+            raise AssertionError("You must supply a name")
         self._name_before_change = None
+
         self._wrapped_version = kwargs.get("_wrapped_version", None)
         if self._wrapped_version:
             self._archetype = self._wrapped_version.archetype
             self.is_dirty = False
             # Stop here as we're wrapping a version that already exists
             return
-
-        if not name:
-            raise AttributeError("You must supply a name")
 
         extensible_type = self._app.extensibles.get_extensible_type(self.type_full_name)
         self._archetype = self.WrappedArchetype(name=name, extensible_type=extensible_type,
@@ -262,6 +376,10 @@ class ExtensibleBase(object):
         from clims.models import ResultIterator
         qs = self._archetype.versions.order_by('version')
         return ResultIterator(qs, self._to_wrapper)
+
+    @property
+    def global_id(self):
+        return "{}-{}".format(self._archetype.__class__.__name__, self.id)
 
     @transaction.atomic
     def save(self):
@@ -309,7 +427,8 @@ class ExtensibleBase(object):
         """
         Returns the full name of this type
         """
-        return "{}.{}".format(self.__class__.__module__, self.__class__.__name__)
+        return "{}.{}".format(self.__class__.__module__,
+                              self.__class__.__name__)
 
     @classmethod
     def type_full_name_cls(cls):
@@ -349,7 +468,10 @@ class ExtensibleBase(object):
 
         >>>   sample.properties['color'].value
         """
-        return {prop.name: prop for prop in self._wrapped_version.properties.all()}
+        return {
+            prop.name: prop
+            for prop in self._wrapped_version.properties.all()
+        }
 
 
 class FieldDoesNotExist(Exception):
@@ -360,7 +482,22 @@ class ExtensibleTypeValidationError(Exception):
     pass
 
 
-class PropertyBag(object):
+class ExtensibleNotRunInHandlerContext(Exception):
+    pass
+
+
+class InMemoryPropertyBag(object):
+    def __init__(self):
+        self.store = dict()
+
+    def __getitem__(self, key):
+        return self.store.get(key, None)
+
+    def __setitem__(self, key, value):
+        self.store[key] = value
+
+
+class DjangoBackedObjectPropertyBag(object):
     """
     Handles properties on an extensible object.
     """
@@ -379,10 +516,12 @@ class PropertyBag(object):
         # TODO: Make sure we're not trying to save to a "latest" entry
         if not self.extensible_wrapper.id:
             raise AssertionError(
-                "Properties can't be saved before the extensible object has been saved")
+                "Properties can't be saved before the extensible object has been saved"
+            )
 
         def create(key, value):
-            prop_type = versioned_object.archetype.extensible_type.property_types.get(name=key)
+            prop_type = versioned_object.archetype.extensible_type.property_types.get(
+                name=key)
             prop = ExtensibleProperty(extensible_property_type=prop_type)
             prop.value = value
             prop.save()
@@ -391,7 +530,8 @@ class PropertyBag(object):
         def update(key, value, old_prop):
             # Then, create a new entry with the new value with the same version
             # as the current extensible object
-            prop_type = versioned_object.archetype.extensible_type.property_types.get(name=key)
+            prop_type = versioned_object.archetype.extensible_type.property_types.get(
+                name=key)
             prop = ExtensibleProperty(extensible_property_type=prop_type)
             prop.value = value
             prop.save()
@@ -400,7 +540,8 @@ class PropertyBag(object):
 
         for key, value in self.new_values.items():
             try:
-                prop = versioned_object.properties.get(extensible_property_type__name=key)
+                prop = versioned_object.properties.get(
+                    extensible_property_type__name=key)
                 if prop.value == value:
                     continue
                 update(key, value, prop)
@@ -418,11 +559,14 @@ class PropertyBag(object):
 
             # '.all_properties' is used to leverage the .prefetch_related() call
             # that is used when fetching the extensible
-            if hasattr(self.extensible_wrapper._wrapped_version, 'all_properties'):
+            if hasattr(self.extensible_wrapper._wrapped_version,
+                       'all_properties'):
                 properties = self.extensible_wrapper._wrapped_version.all_properties
-                value = next(prop.value for prop in properties if prop.extensible_property_type.name == key)
+                value = next(prop.value for prop in properties
+                             if prop.extensible_property_type.name == key)
             else:
-                value = self.extensible_wrapper._wrapped_version.properties.get(extensible_property_type__name=key).value
+                value = self.extensible_wrapper._wrapped_version.properties.get(
+                    extensible_property_type__name=key).value
             return value
         except ExtensibleProperty.DoesNotExist:
             return None
