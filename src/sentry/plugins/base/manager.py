@@ -64,8 +64,24 @@ class PluginManager(object):
         for plugin in plugins:
             logger.info("Installing plugin class '{}'".format(plugin.get_name_and_version()))
             with transaction.atomic():
-                self.install_plugin(plugin)
+                plugin_reg = self.install_plugin(plugin)
                 self.install_extensible_types(plugin)
+                self.install_workflows_in_plugin(plugin, plugin_reg)
+
+    def install_workflows_in_plugin(self, plugin_cls, plugin_reg):
+        """
+        Installs workflow definitions found in the plugin.
+        """
+
+        logger.info("Loading workflows for plugin class {}".format(plugin_cls))
+
+        definitions = list(plugin_cls.get_workflow_definitions())
+
+        logger.info("Found {} workflow definitions for plugin class {}".format(
+            len(definitions), plugin_cls))
+
+        for definition in definitions:
+            self._app.workflows.install(definition, plugin_reg)
 
     def validate_version(self, plugin_cls):
         if not plugin_cls.version:
