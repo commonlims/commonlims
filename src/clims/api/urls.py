@@ -31,7 +31,7 @@ from .endpoints.work_batch_notes_details import WorkBatchNotesDetailsEndpoint
 from .endpoints.plugin_actions import PluginActionsEndpoint
 
 from .endpoints.workflow import WorkflowEndpoint
-from .endpoints.task import UserTaskAggregateEndpoint
+from .endpoints.task_definition import TaskDefinitionEndpoint
 
 from .endpoints.substance_file import SubstanceFileEndpoint
 from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
@@ -56,9 +56,9 @@ def url(endpoint, *args, **kwargs):
 urlpatterns = patterns(
     '',
     # Workflow
-    url(r'^organizations/{org}/workflow/aggregate/task/$',
-        UserTaskAggregateEndpoint.as_view(),
-        name='clims-api-0-workflow-aggregate-task'),
+    url(r'^organizations/{org}/task-definition/$',
+        TaskDefinitionEndpoint.as_view(),
+        name='clims-api-0-task-definition'),
     url(r'^organizations/{org}/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
