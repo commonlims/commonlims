@@ -83,6 +83,7 @@ class ExtensiblePropertyType(Model):
 
     name = models.TextField(null=False)
 
+    # TODO: Consider renaming to label for compatibility with django
     display_name = models.TextField(null=True)
 
     STRING = 's'

@@ -10,9 +10,6 @@ class ProjectBase(ExtensibleBase):
     WrappedArchetype = Project
     WrappedVersion = ProjectVersion
 
-    def __init__(self, **kwargs):
-        super(ProjectBase, self).__init__(**kwargs)
-
     def _to_wrapper(self, model):
         """
         Wraps either a ProjectVersion or Project as a higher-level object

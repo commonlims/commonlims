@@ -14,7 +14,6 @@ from .endpoints.project_property import ProjectPropertyEndpoint
 
 from .endpoints.container import ContainerEndpoint
 from .endpoints.container_property import ContainerPropertyEndpoint
-from .endpoints.processes import ProcessesEndpoint, TaskGroupsEndpoint
 from .endpoints.process_definitions import ProcessDefinitionsEndpoint
 
 from .endpoints.user_files import UserFilesEndpoint
@@ -121,13 +120,6 @@ urlpatterns = patterns(
         name='clims-api-0-work-batch-settings-details'),
 
     # Processes and Tasks
-    url(r'^task-groups/$',
-        TaskGroupsEndpoint.as_view(),
-        name='clims-api-0-task-groups'),
-    url(r'^processes/(?P<organization_slug>[^\/]+)/$',
-        ProcessesEndpoint.as_view(),
-        name='clims-api-0-processes'
-    ),
     url(r'^organizations/{org}/process-definitions/$',
         ProcessDefinitionsEndpoint.as_view(),
         name='clims-api-0-process-definitions'),
