@@ -404,6 +404,11 @@ class BaseTestCase(Fixtures, Exam):
         with context:
             func(*args, **kwargs)
 
+    def clean_workflow_engine_state(self):
+        from clims.services.workflow.camunda import CamundaClient
+        client = CamundaClient(self.app.settings.CAMUNDA_API_URL)
+        client.unsafe_delete_all_deployments()
+
 
 class _AssertQueriesContext(CaptureQueriesContext):
     def __init__(self, test_case, queries, debug, connection):
