@@ -164,6 +164,10 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         return self._archetype.depth
 
     @property
+    def assignments(self):
+        return self._archetype.assignments
+
+    @property
     def origins(self):
         return [origin.id for origin in self._archetype.origins.all()]
 

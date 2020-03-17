@@ -3,8 +3,7 @@ from __future__ import absolute_import, print_function
 from django.conf.urls import patterns
 from django.conf import urls
 
-from .endpoints.work_batch import (WorkBatchEndpoint, WorkBatchDetailsEndpoint,
-                                   WorkBatchDetailsActivityEndpoint)
+from .endpoints.work_batch import WorkBatchEndpoint
 
 from .endpoints.substance import SubstanceEndpoint
 from .endpoints.substance_details import SubstanceDetailsEndpoint
@@ -41,6 +40,8 @@ from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
 
 from .endpoints.organization_searches import OrganizationSearchesEndpoint
 
+from .endpoints.process_assignments import ProcessAssignmentsEndpoint
+
 
 def fmt(s):
     """Formats rules with common patterns"""
@@ -61,6 +62,10 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
+    url(r'^organizations/{org}/process-assignments/$',
+        ProcessAssignmentsEndpoint.as_view(),
+        name='clims-api-0-process-assignments'),
+    # Substances
     url(r'^substances/(?P<substance_id>[^\/]+)/$',
         SubstanceDetailsEndpoint.as_view(),
         name='clims-api-0-substance-details'),
@@ -102,12 +107,6 @@ urlpatterns = patterns(
     url(r'^work-batches/(?P<work_batch_id>[^\/]+)/files/(?P<file_id>[^\/]+)/$',
         WorkBatchFileDetailsEndpoint.as_view(),
         name='clims-api-0-user-task-file-details'),
-    url(r'^work-batches/(?P<user_task_id>[^\/]+)/activity/$',
-        WorkBatchDetailsActivityEndpoint.as_view(),
-        name='clims-api-0-work-batches-details-activity'),
-    url(r'^work-batches/(?P<work_batch_id>[^\/]+)/$',
-        WorkBatchDetailsEndpoint.as_view(),
-        name='clims-api-0-work-batch-details'),
     url(r'^work-batches/(?P<work_batch_id>[^\/]+)/comments/$',
         WorkBatchNotesEndpoint.as_view(),
         name='clims-api-0-group-notes'),
