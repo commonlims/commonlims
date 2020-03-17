@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:process id="Process_1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0a0jfjh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0a0jfjh" sourceRef="StartEvent_1" targetRef="Task_089lvz4" />
+    <bpmn:userTask id="Task_089lvz4" name="Pre-evaluation">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_1geu5vu">
+            <camunda:list>
+              <camunda:value />
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:formData>
+          <camunda:formField id="FormField_2hhqies" type="enum">
+            <camunda:properties>
+              <camunda:property id="Property_3qhr280" value="test" />
+              <camunda:property id="Property_0trokjj" value="asdf" />
+            </camunda:properties>
+            <camunda:value id="Value_0so7h00" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0a0jfjh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1xh316a</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1vfd84u">
+      <bpmn:incoming>SequenceFlow_1xh316a</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1xh316a" sourceRef="Task_089lvz4" targetRef="EndEvent_1vfd84u" />
+    <bpmn:textAnnotation id="TextAnnotation_0zdnc99">
+      <bpmn:text>Pre-evaluation of the sample</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0wyut8s" sourceRef="Task_089lvz4" targetRef="TextAnnotation_0zdnc99" />
+    <bpmn:textAnnotation id="TextAnnotation_1njlk1j">
+      <bpmn:text>Start node: At this point a sample will be created in the database.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0cqv6pd" sourceRef="StartEvent_1" targetRef="TextAnnotation_1njlk1j" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0a0jfjh_di" bpmnElement="SequenceFlow_0a0jfjh">
+        <di:waypoint xsi:type="dc:Point" x="209" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="264" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="236.5" y="99" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1g7ofo5_di" bpmnElement="Task_089lvz4">
+        <dc:Bounds x="264" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1vfd84u_di" bpmnElement="EndEvent_1vfd84u">
+        <dc:Bounds x="605" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="623" y="142" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xh316a_di" bpmnElement="SequenceFlow_1xh316a">
+        <di:waypoint xsi:type="dc:Point" x="364" y="120" />
+        <di:waypoint xsi:type="dc:Point" x="605" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="484.5" y="99" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0zdnc99_di" bpmnElement="TextAnnotation_0zdnc99">
+        <dc:Bounds x="175" y="-96" width="224" height="57" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0wyut8s_di" bpmnElement="Association_0wyut8s">
+        <di:waypoint xsi:type="dc:Point" x="308" y="80" />
+        <di:waypoint xsi:type="dc:Point" x="292" y="-39" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1njlk1j_di" bpmnElement="TextAnnotation_1njlk1j">
+        <dc:Bounds x="125" y="272" width="205" height="42" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0cqv6pd_di" bpmnElement="Association_0cqv6pd">
+        <di:waypoint xsi:type="dc:Point" x="195" y="137" />
+        <di:waypoint xsi:type="dc:Point" x="224" y="272" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

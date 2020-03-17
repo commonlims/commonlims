@@ -104,6 +104,9 @@ def pytest_configure(config):
         }
     }
 
+    # Use a dedicated Camunda instance for integration tests:
+    settings.CAMUNDA_API_URL = "http://localhost:8081/engine-rest/"
+
     if not hasattr(settings, 'SENTRY_OPTIONS'):
         settings.SENTRY_OPTIONS = {}
 
