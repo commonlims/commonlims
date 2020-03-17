@@ -4,7 +4,7 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from clims.plugins.demo.models import ExampleSample, ExampleProject
+from ..models import ExampleSample, ExampleProject
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,6 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         for ix in range(100):
             name = "demoplugin-sample-{}".format(ix + 1)
             sample = ExampleSample(name=name,
-                                   organization=self.context.organization,
                                    moxy=random.randint(1, 100),
                                    cool=random.randint(1, 100),
                                    erudite=random.randint(1, 100),
@@ -46,7 +45,6 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         for _ in range(100):
             name = "demoplugin-project-{}".format(uuid4().hex)
             project = ExampleProject(name=name,
-                    organization=self.context.organization,
                     project_code=name,
                     pi=random.choice(pis))
             project.save()

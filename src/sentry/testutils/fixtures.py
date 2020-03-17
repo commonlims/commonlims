@@ -310,6 +310,12 @@ class Fixtures(object):
         env.add_project(project)
         return env
 
+    def install_main_demo_plugin(self):
+        # To use the demo plugin as a text fixture, call this method from setUp.
+        from clims.plugins.demo.dnaseq import DemoDnaSeqPlugin
+        self.app.plugins.install_plugins(DemoDnaSeqPlugin)
+        self.app.plugins.load_installed()
+
     def create_project(self, **kwargs):
         teams = kwargs.pop('teams', None)
 
