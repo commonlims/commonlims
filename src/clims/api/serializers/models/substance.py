@@ -35,3 +35,4 @@ class SubstanceSerializer(serializers.Serializer):
     type_full_name = serializers.CharField()
     location = LocationField(read_only=True)
     container_index = ContainerIndexField(read_only=True)
+    global_id = serializers.CharField(read_only=True)
