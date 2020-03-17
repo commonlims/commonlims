@@ -26,6 +26,13 @@ class MultipleHandlersNotAllowed(Exception):
     pass
 
 
+class NotInActiveContext(Exception):
+    """
+    Raised if code tries to use the thread local context and it's not active
+    """
+    pass
+
+
 class ThreadContextStore(object):
     def __init__(self):
         self._store = threading.local()
@@ -50,7 +57,10 @@ class ThreadContextStore(object):
 
     @property
     def current(self):
-        return self._store.context
+        try:
+            return self._store.context
+        except AttributeError:
+            raise NotInActiveContext()
 
 
 context_store = ThreadContextStore()
