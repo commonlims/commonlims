@@ -486,6 +486,16 @@ class APITestCase(BaseTestCase, BaseAPITestCase):
         assert resp.status_code == 200, resp.content
         return resp
 
+    def get_url(self, org=True):
+        """
+        Returns the url under test, using default fixtures. The test must provide `self.endpoint`
+        which is the name of the endpoint under test.
+        """
+        kwargs = dict()
+        if org:
+            kwargs["organization_slug"] = self.organization.slug
+        return reverse(self.endpoint, kwargs=kwargs)
+
 
 class TwoFactorAPITestCase(APITestCase):
     @fixture
