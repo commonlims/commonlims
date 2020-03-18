@@ -29,7 +29,9 @@ This configuration, together with an example Redux implementation, is illustrate
 
 Typically, each API resource should have its own action and reducer file in `app/redux`. The reducer file should also be added to the index `app/redux/reducers/index.js`.
 
-We use the following convention for naming actions: `[RESOURCE_NAME]_[ACTION]_[REQUEST|SUCCESS|FAILURE]`, where ACTION is usually (but not necessarily) an HTTP method. For example: 'USER_TASKS_GET_SUCCESS'. Each action should be wrapped in its own function, such as userTasksGetSuccess(). In addition, you will want to create a thunk wrapper for any asynchronous API calls, such as userTasksGet().
+We use the following convention for naming actions: `[ACTION]_[RESOURCE_NAME]_[REQUEST|SUCCESS|FAILURE]`, where ACTION often corresponds to the CRUD method being used. For example: 'GET_USER_TASK_DEFINITIONS_SUCCESS'. Each action should be wrapped in its own function, such as getUserTasksAggregateSuccess().
+
+In addition, you will want to create a thunk wrapper for any asynchronous API calls, such as getUserTasksAggregate(). This function does the actual side effect (such as getting or creating a resource), while the other actions are dispatched as a result of that side effect.
 
 Every action should be handled in the corresponding reducer file.
 
