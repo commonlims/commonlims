@@ -67,7 +67,7 @@ class SampleContainerStack extends React.Component {
     } = this.props;
 
     return (
-      <div style={{display: 'inline-block', minWidth: '540px'}}>
+      <div style={{display: 'inline-block'}}>
         <Panel>
           <SampleContainerStackActions
             canAdd={this.props.canAdd}
