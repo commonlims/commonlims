@@ -40,6 +40,7 @@ from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
 from .endpoints.organization_searches import OrganizationSearchesEndpoint
 
 from .endpoints.process_assignments import ProcessAssignmentsEndpoint
+from .endpoints.tasks import TasksEndpoint
 
 
 def fmt(s):
@@ -64,6 +65,9 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/process-assignments/$',
         ProcessAssignmentsEndpoint.as_view(),
         name='clims-api-0-process-assignments'),
+    url(r'^organizations/{org}/tasks/$',
+        TasksEndpoint.as_view(),
+        name='clims-api-0-tasks'),
     # Substances
     url(r'^substances/(?P<substance_id>[^\/]+)/$',
         SubstanceDetailsEndpoint.as_view(),
