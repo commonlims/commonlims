@@ -1,10 +1,15 @@
 /*global process*/
 import {createStore, applyMiddleware} from 'redux';
-import logger from 'redux-logger';
+import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import reducer from './reducers/index';
 
 const middleware = [thunk];
+
+const logger = createLogger({
+  diff: true,
+});
+
 if (process.env.NODE_ENV !== 'production') {
   middleware.push(logger);
 }
