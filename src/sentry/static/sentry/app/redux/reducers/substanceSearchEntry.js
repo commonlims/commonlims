@@ -12,11 +12,10 @@ import {
 export const initialState = {
   loading: false,
   errorMessage: null,
-  substanceSearchEntries: [],
   allVisibleSelected: false,
   groupBy: 'substance',
   search: 'sample.name:',
-  byIds: {}, // The actual substance entries (TODO: have parentById and childById?)
+  byIds: {},
   visibleIds: [], // Sorted list of items visible in the current page
   selectedIds: new Set(), // The set of items selected, allowed to be outside of the current page
 
