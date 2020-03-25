@@ -16,7 +16,7 @@ services:
   db:
     image: postgres:latest
     ports:
-      - 5432:5432
+      - "${POSTGRES_PORT}:5432"
     environment:
       POSTGRES_DB: "${CLIMS_POSTGRES_DB}"
       POSTGRES_USER: "${CLIMS_POSTGRES_USER}"
@@ -26,7 +26,7 @@ services:
   test_db:
     image: postgres:latest
     ports:
-      - 5433:5432
+      - "${POSTGRES_TESTS_PORT}:5432"
     environment:
       POSTGRES_DB: "${TEST_CLIMS_POSTGRES_DB}"
       POSTGRES_USER: "${TEST_CLIMS_POSTGRES_USER}"

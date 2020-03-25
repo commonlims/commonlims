@@ -111,7 +111,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '15432',
         'AUTOCOMMIT': True,
         'ATOMIC_REQUESTS': False,
     }

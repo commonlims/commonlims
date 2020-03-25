@@ -36,8 +36,8 @@ echo "Camunda modeler v${CAMUNDA_MODELER_VERSION} has been installed"
 # TODO: Implement an upgrade path between camunda versions
 CREATE_SCRIPT=~/.camunda/server/${CAMUNDA_VERSION}/sql/create/postgres_engine_${CAMUNDA_VERSION}.sql
 
-psql -h localhost -p 5432 -d clims -U clims -a -f $CREATE_SCRIPT > /dev/null 2>&1
+psql -h localhost -p ${POSTGRES_PORT} -d clims -U clims -a -f $CREATE_SCRIPT > /dev/null 2>&1
 echo "Camunda SQL v${CAMUNDA_VERSION} has been deployed to clims"
 
-psql -h localhost -p 5433 -d test_clims -U test_clims -a -f $CREATE_SCRIPT > /dev/null 2>&1
+psql -h localhost -p ${POSTGRES_TESTS_PORT} -d test_clims -U test_clims -a -f $CREATE_SCRIPT > /dev/null 2>&1
 echo "Camunda SQL v${CAMUNDA_VERSION} has been deployed to test_clims"
