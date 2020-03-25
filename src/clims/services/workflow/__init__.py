@@ -8,7 +8,7 @@ from django.db import transaction
 from clims.services.extensible import ExternalExtensibleBase
 from clims.services.substance import SubstanceBase
 from clims.services.container import ContainerBase
-from clims.db import require_no_transaction
+from clims.db import assert_no_transaction
 from sentry.db.models import sane_repr
 from itertools import product
 from collections import defaultdict
@@ -41,13 +41,6 @@ class WorkflowBase(ExternalExtensibleBase):
     @property
     def definition_id(self):
         return self.get_full_name()
-
-    def get_available_for_workbatch(self):
-        """
-        Returns all items that are available for workbatch of this type.
-        """
-        # print(self.get_full_name(), self.available_work)
-        # self._context.app.workflows.get_available_for_workbatch(self, self.available_work)
 
     def assign_item(self, item):
         """
@@ -90,6 +83,26 @@ class WorkflowBase(ExternalExtensibleBase):
     def preset(self, name, **kwargs):
         """
         Creates a preset with the name and kwargs and then adds it to the workflows presets
+
+        Presets allow the plugin developer to define a named set of variables for a workflow process
+        This can make it easier for users to start processes that have a complex set of variables.
+        They can either be defined with a dictionary on the class like this
+
+        presets = {
+           'NovaSeq Ready-made libraries': {
+               sample_prep: 'Ready-made libraries',
+               sequencer: 'NovaSeq',
+               sample_type: 'Unknown',
+        }
+
+        or, for flexibility, they can be defined as a method instead, which may make
+        complex presets easy to define. E.g.:
+
+        def presets(self):
+            self.preset('{sequencer}: {sample_type} prepared with {sample_prep}',
+                        sample_prep=['pa', 'pb'],
+                        sample_type=['sa', 'sb'],
+                        sequencer=['Android'])
         """
         new_preset = create_preset(name, **kwargs)
         self._presets.update(new_preset)
@@ -327,14 +340,12 @@ class WorkflowService(object):
         assignment = self.AssignmentModel(item, user)
 
         # Fetch the model we use to keep a history of the item
-        # logger.info("Assigning {} to {} with vars {}".format(
-        #     item, workflow_class, {}))
 
         # NOTE: We don't want the assignment to be saved in a transaction. The reason is that
         # we want an uncompleted item in the assignment table to be able to identify workflows
         # we might have started or not, of which we don't have any record. This is necessary
         # since the workflow engine is outside of our database transactions.
-        require_no_transaction()
+        assert_no_transaction()
         assignment.status = SubstanceAssignment.STATUS_REQUESTING
         assignment.save()
 
@@ -452,7 +463,7 @@ class WorkflowService(object):
         # Fetch the handler that takes care of creating the workflow in the external workflow engine
         handler = self.get_handler(process.__class__)
 
-        require_no_transaction()
+        assert_no_transaction()
         assignments = list()
 
         # TODO-auth: Here we should make sure that all these substances are in the user's org

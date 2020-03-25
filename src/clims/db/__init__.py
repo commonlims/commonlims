@@ -5,7 +5,7 @@ import os
 from django.db import transaction
 
 
-def require_no_transaction(allow_in_tests=True):
+def assert_no_transaction(allow_in_tests=True):
     # NOTE: This can not be tested for in the regular django tests, since they run in a transaction
     cxn = transaction.get_connection()
     if cxn.in_atomic_block:

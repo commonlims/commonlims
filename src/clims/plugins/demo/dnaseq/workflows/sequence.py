@@ -40,22 +40,6 @@ class SequenceSimple(CamundaWorkflow):
     # Add a sort parameter to the field and sort by it in the UI
     comment = TextField(display_name='Comment', multiline=True)
 
-    # Presets allow the plugin developer to define a named set of variables for a workflow process
-    # This can make it easier for users to start processes that have a complex set of variables.
-    # They can either be defined with a dictionary on the class like this
-
-    # presets = {
-    #    'NovaSeq Ready-made libraries': {
-    #        sample_prep: 'Ready-made libraries',
-    #        sequencer: 'NovaSeq',
-    #        sample_type: 'Unknown',
-    # }
-
-    # or, for flexibility, they can be defined as a method instead, which may make
-    # complex presets easy to define. Here we go for the latter approach. Check out the
-    # test in tests/clims/plugins/demo/dnaseq/workflows/test_sequence.py to see the equivalent
-    # dictionary.
-
     def presets(self):
         # The Android handles all samples and we can use all prep methods
         self.preset("{sequencer}: {sample_type} prepared with {sample_prep}",
