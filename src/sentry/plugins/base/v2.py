@@ -29,6 +29,7 @@ from sentry.plugins.base.configuration import (
     default_plugin_options,
 )
 from sentry.utils.hashlib import md5_text
+from clims.services.workflow import WorkflowBase
 from clims.services.extensible import ExtensibleBase
 
 logger = logging.getLogger(__name__)
@@ -532,10 +533,9 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         # Search in the current module and all submodules
         ret.update(find_implementations_in(module.__name__, parent_cls))
         if hasattr(module, "__path__"):
-            # This is a package
             for _, mod_name, _ in pkgutil.walk_packages(path=module.__path__, prefix=module.__name__ + "."):
                 ret.update(find_implementations_in(mod_name, parent_cls))
-        return ret
+            return ret
 
     @classmethod
     def get_extensible_objects(cls):
@@ -546,6 +546,16 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         logger.debug("Searching for extensible objects in {}".format(cls))
         root_module = importlib.import_module(cls.__module__)
         return cls._find_subclasses_of(ExtensibleBase, root_module)
+
+    @classmethod
+    def get_workflow_definitions(cls):
+        """
+        Returns all workflow definition classes for this plugin class. These can be defined
+        anywhere in the plugin classes module, or any submodule of it.
+        """
+        logger.debug("Searching for workflow definitions in {}".format(cls))
+        root_module = importlib.import_module(cls.__module__)
+        return cls._find_subclasses_of(WorkflowBase, root_module)
 
     @classmethod
     def get_full_name(cls):

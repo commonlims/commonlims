@@ -59,7 +59,6 @@ class SampleGroupDetailsEndpoint(Endpoint):
 
         if serializer.is_valid():
             result = serializer.object
-            print("HEREEEE", request.DATA, serializer.is_valid(), result)
             csv = result['csv'].split("\n")
             header = csv[0]
             body = csv[1:]

@@ -1,24 +1,29 @@
 from __future__ import absolute_import
 
+import logging
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
-from sentry.api.base import Endpoint, SessionAuthentication
-from clims.workflow import WorkflowEngine
+from clims.api.serializers.models.process_definition import ProcessDefinitionSerializer
+from sentry.api.base import SessionAuthentication
+from sentry.api.bases.organization import OrganizationEndpoint
+from sentry.api.paginator import OffsetPaginator
+
+logger = logging.getLogger(__name__)
 
 
-class ProcessDefinitionsEndpoint(Endpoint):
+class ProcessDefinitionsEndpoint(OrganizationEndpoint):
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsAuthenticated, )
 
-    # TODO: Interface with the workflow engine, via a proxy object, let's see if the paginator
-    # will work for that or not
-    # Look into how the SequencePaginator works
-    def get(self, request, organization_slug):
-        # TODO: Ignoring org for now (proto)
+    def get(self, request, organization):
+        # NOTE: At the moment, all workflow definitions are application-wide, not organization-wide
+        # Fetch all loaded workflows in the system:
+        # TODO: Paging by using the ResultIterator
+        workflows = list(self.app.workflows.get_workflows())
 
-        engine = WorkflowEngine()
-        definitions = engine.process_definitions()
-
-        # TODO: implement paging
-        return Response(sorted(definitions, key=lambda d: d["key"]), status=200)
+        return self.paginate(request=request,
+                             queryset=workflows,
+                             paginator_cls=OffsetPaginator,
+                             default_per_page=20,
+                             on_results=lambda data:
+                             ProcessDefinitionSerializer(data, many=True).data)

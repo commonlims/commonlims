@@ -1,9 +1,13 @@
 from __future__ import absolute_import
 import requests
+import logging
 from six.moves.urllib.parse import urljoin
+from string import Formatter
 
+logger = logging.getLogger(__name__)
 
 # Helper objects
+
 
 class UnexpectedHttpResponse(Exception):
     pass
@@ -24,7 +28,8 @@ class Builder(object):
         return Requestor(self.resource_type, self.url, self.many, **kwargs)
 
     def __str__(self):
-        return "<Builder {} at {}, many={}>".format(self.resource_type, self.url, self.many)
+        return "<Builder {} at {}, many={}>".format(self.resource_type,
+                                                    self.url, self.many)
 
 
 class Requestor(object):
@@ -43,26 +48,35 @@ class Requestor(object):
         return urljoin(self.base_url, resource)
 
     def validate_url(self):
-        from string import Formatter
         fmt = Formatter()
         if len(list(fmt.parse(self.url))) > 1:
-            raise Exception("Uninitialized format specifiers in url {}".format(self.url))
+            raise Exception("Uninitialized format specifiers in url {}".format(
+                self.url))
 
     def get(self, **params):
+        logger.debug("Fetching {} with params {}".format(self.url, params))
         response = requests.get(self.url, params=params)
         if response.status_code == 200:
             result = response.json()
 
             # TODO: Here we need to implement paging
             if not self.many:
-                return self.resource_type(self.url, result)
+                primary_key = result[self.resource_type.primary_key_field]
+                return self.resource_type(self.url, result, primary_key)
 
             ret = list()
             for entry in result:
                 primary_key = entry[self.resource_type.primary_key_field]
-                ret.append(self.resource_type(self.url + "/" + primary_key, entry))
+                ret.append(
+                    self.resource_type(self.url + "/" + primary_key, entry,
+                                       primary_key))
             return ret
         else:
+            raise UnexpectedHttpResponse(self.url, response.status_code)
+
+    def delete(self):
+        response = requests.delete(self.url, params={"cascade": "true"})
+        if response.status_code != 204:
             raise UnexpectedHttpResponse(self.url, response.status_code)
 
     def __str__(self):
@@ -89,7 +103,10 @@ class ResourcesOfType(ResourceOfType):
 class CamundaResource(object):
     """Represents a single resource endpoint in the Camunda rest api"""
 
-    def __init__(self, url, json):
+    primary_key_field = "id"
+
+    def __init__(self, url, json, id):
+        self.id = id
         self.url = url
         self.json = json
 
@@ -99,15 +116,16 @@ class CamundaResource(object):
     def __repr__(self):
         return self.url
 
+
 # Resources
 
 
 class ActivityInstance(CamundaResource):
-    primary_key_field = "id"
+    pass
 
 
 class ProcessInstance(CamundaResource):
-    primary_key_field = "id"
+    pass
 
     # NOTE: This is a single entry, even though it's plural (it contains several intries)
     activity_instances = ResourceOfType(ActivityInstance, "activity-instances")
@@ -117,15 +135,30 @@ class ProcessDefinition(CamundaResource):
     pass
 
 
-# API root
+class Deployment(CamundaResource):
+    pass
+
+
+class Task(CamundaResource):
+    pass
+
 
 class CamundaApi(object):
     """Describes the Camunda API"""
 
     def __init__(self, url):
+        if url.endswith("/"):
+            url = url[:-1]
         self.url = url
 
-    process_definition = ResourceOfType(ProcessDefinition, "process-definition/{id}")
+    process_definition = ResourceOfType(ProcessDefinition,
+                                        "process-definition/{id}")
 
     process_instance = ResourceOfType(ProcessInstance, "process-instance/{id}")
     process_instances = ResourcesOfType(ProcessInstance, "process-instance")
+
+    deployment = ResourceOfType(Deployment, "deployment/{id}")
+    deployments = ResourcesOfType(Deployment, "deployment")
+
+    task = ResourceOfType(Task, "task/{id}")
+    tasks = ResourcesOfType(Task, "task")

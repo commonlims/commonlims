@@ -404,6 +404,11 @@ class BaseTestCase(Fixtures, Exam):
         with context:
             func(*args, **kwargs)
 
+    def clean_workflow_engine_state(self):
+        from clims.services.workflow.camunda import CamundaClient
+        client = CamundaClient(self.app.settings.CAMUNDA_API_URL)
+        client.unsafe_delete_all_deployments()
+
 
 class _AssertQueriesContext(CaptureQueriesContext):
     def __init__(self, test_case, queries, debug, connection):
@@ -480,6 +485,16 @@ class APITestCase(BaseTestCase, BaseAPITestCase):
         resp = self.get_response(*args, **params)
         assert resp.status_code == 200, resp.content
         return resp
+
+    def get_url(self, org=True):
+        """
+        Returns the url under test, using default fixtures. The test must provide `self.endpoint`
+        which is the name of the endpoint under test.
+        """
+        kwargs = dict()
+        if org:
+            kwargs["organization_slug"] = self.organization.slug
+        return reverse(self.endpoint, kwargs=kwargs)
 
 
 class TwoFactorAPITestCase(APITestCase):

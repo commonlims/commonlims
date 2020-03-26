@@ -17,6 +17,12 @@ class PluginRegistration(Model):
 
     version = models.TextField(null=False)
 
+    # Explicitly disables this PluginRegistration. Note that if the plugin is not latest, it's
+    # not enabled regardless of this value
+    disabled = models.BooleanField(default=False)
+
+    latest = models.BooleanField(default=True)
+
     @property
     def name_and_version(self):
         return "{}@{}".format(self.name, self.version)

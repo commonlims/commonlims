@@ -1436,4 +1436,4 @@ SENTRY_USER_PERMISSIONS = (
     'broadcasts.admin',
 )
 
-CAMUNDA_API_URL = "http://localhost:8080/engine-rest"
+CAMUNDA_API_URL = "http://localhost:8080/engine-rest/"

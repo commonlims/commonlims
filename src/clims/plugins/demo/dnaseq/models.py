@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from clims.services import SubstanceBase
+from clims.services import SubstanceBase, PlateBase
 from clims.services.project import ProjectBase
 from clims.services.extensible import FloatField, TextField
 
@@ -9,6 +9,13 @@ class ExampleSample(SubstanceBase):
     cool = FloatField("cool")
     erudite = FloatField("erudite")
     sample_type = TextField("sample type")
+
+
+class ExamplePlate(PlateBase):
+    columns = 12
+    rows = 8
+
+    label_printer = TextField()
 
 
 class ExampleProject(ProjectBase):

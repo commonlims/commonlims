@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 
 
 import click
+from clims.handlers import CreateContext
 from sentry.runner.decorators import configuration
 
 
@@ -23,10 +24,10 @@ def createexampledata():
 
     org = Organization.objects.get(name="lab")
 
-    from clims.plugins.demo import DemoPlugin
-    from clims.handlers import CreateContext, CreateExampleDataHandler
+    from clims.plugins.demo.dnaseq import DemoDnaSeqPlugin
+    from clims.handlers import CreateExampleDataHandler
 
-    app.plugins.install_plugins(DemoPlugin)
+    app.plugins.install_plugins(DemoDnaSeqPlugin)
     app.plugins.load_installed()
 
     # Now we'll run the handlers for all plugins (one of them being the DemoPlugin) for

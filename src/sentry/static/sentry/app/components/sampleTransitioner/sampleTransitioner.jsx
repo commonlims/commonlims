@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SampleContainerStack from 'app/components/sampleTransitioner/sampleContainerStack';
-import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 import {SampleTransition} from 'app/components/sampleTransitioner/sampleTransition';
-import {Sample} from 'app/components/sampleTransitioner/sample';
+import {Flex, Box} from 'rebass';
 
 // TODO: Handle more than one by laying them down_first or right_first
 // TODO: Implement shift and ctrl select
@@ -19,57 +18,47 @@ import {Sample} from 'app/components/sampleTransitioner/sample';
 // TODO in transition:
 //   [x] Rename container after placing samples
 
+// TODO-nomerge: Rename to SubstanceTransitioner
 class SampleTransitioner extends React.Component {
   constructor(props) {
     super(props);
 
-    const {sampleBatch} = props;
-
-    // TODO: read transitions and target containers from workBatch sampleBatch
-    const sourceContainers = sampleBatch.containers;
-    const samples = sampleBatch.samples.map(s => {
-      const {containerId, row, col} = s.location;
-      const location = new SampleLocation(containerId, row, col);
-      return new Sample(s.id, s.name, location);
-    });
-
-    // Temporary hack: create a new target container
-    const targetContainer = {
-      id: -1,
-      name: 'HiSeqX-Thruplex_PL1_org_190322',
-      dimensions: sourceContainers[0].dimensions,
-      typeName: sourceContainers[0].typeName,
-    };
-
     this.state = {
-      loading: false,
-      error: false,
-      sourceSampleContainers: sampleBatch.containers, // this should be a prop
-      targetSampleContainers: [targetContainer],
-      sampleTransitions: [],
-      activeSampleTransition: null,
-      transitionTargetLocationsOfHoveredSample: [],
-      samples,
+      activeTransition: null,
+      transitionTargetLocationsOfHoveredSubstance: [],
     };
   }
+
+  // constructor2() {
+  //   this.state = {
+  //     loading: false,
+  //     error: false,
+  //     sourceSampleContainers: sampleBatch.containers, // this should be a prop
+  //     targetSampleContainers: [targetContainer],
+  //     sampleTransitions: [],
+  //     activeTransition: null,
+  //     transitionTargetLocationsOfHoveredSample: [],
+  //     samples,
+  //   };
+  // }
 
   setActiveSampleTransition(sampleTransition) {
-    this.setState({activeSampleTransition: sampleTransition});
+    this.setState({activeTransition: sampleTransition});
   }
 
-  getActiveSampleTransition() {
-    return this.state.activeSampleTransition;
+  getActiveTransition() {
+    return this.state.activeTransition;
   }
 
   completeActiveSampleTransition() {
     // TODO: should we de-dupe sample transitions here,
     // or leave that to the API?
     const {sampleTransitions} = this.state;
-    const activeSampleTransition = this.getActiveSampleTransition();
+    const activeTransition = this.getActiveTransition();
 
-    if (activeSampleTransition.isComplete()) {
+    if (activeTransition.isComplete()) {
       // This is a hack! TODO: We should invoke an action to update the state.
-      const updatedSampleTransitions = sampleTransitions.concat(activeSampleTransition);
+      const updatedSampleTransitions = sampleTransitions.concat(activeTransition);
       this.setState({sampleTransitions: updatedSampleTransitions});
       return true;
     } else {
@@ -92,15 +81,15 @@ class SampleTransitioner extends React.Component {
   }
 
   onTargetWellClicked(sampleLocation) {
-    const activeSampleTransition = this.getActiveSampleTransition();
+    const activeTransition = this.getActiveTransition();
 
-    if (!activeSampleTransition || !activeSampleTransition.hasValidSource()) {
+    if (!activeTransition || !activeTransition.hasValidSource()) {
       return;
     }
 
     // If there is a valid source, create the target,
     // save the transition and clear current transition object.
-    const targetSet = activeSampleTransition.setTarget(sampleLocation);
+    const targetSet = activeTransition.setTarget(sampleLocation);
     if (targetSet) {
       const ok = this.completeActiveSampleTransition();
       if (ok) {
@@ -132,64 +121,76 @@ class SampleTransitioner extends React.Component {
   // TODO: These could potentially be mapped to source OR target containers.
   // (Perhaps transitions have already been created and the result samples are in the target containers)
   render() {
-    // TODO: only pass the transitions that are relevant to each container.
-    const {
-      transitionTargetLocationsOfHoveredSample,
-      activeSampleTransition,
-      sampleTransitions,
-    } = this.state;
+    const {workBatch} = this.props;
 
-    let activeSampleTransitionSourceLocation;
-    if (activeSampleTransition) {
-      activeSampleTransitionSourceLocation = activeSampleTransition.getSource();
+    // Temporary hack: create a new target container
+    // TODO-nomerge: move to redux
+    //
+    // const targetContainer = {
+    //   id: -1,
+    //   name: 'HiSeqX-Thruplex_PL1_org_190322',
+    //   dimensions: sourceContainers[0].dimensions,
+    //   typeName: sourceContainers[0].typeName,
+    // };
+
+    // TODO: only pass the transitions that are relevant to each container.
+    const {transitionTargetLocationsOfHoveredSample, activeTransition} = this.state;
+
+    let activeTransitionSourceLocation;
+    if (activeTransition) {
+      activeTransitionSourceLocation = activeTransition.getSource();
     }
 
     // TODO: we should pass samples to the target container stack as well,
     // since we may be rendering this after fetching previously created transitions
     // from the api.
     return (
-      <div className="sample-transitioner">
-        <div className="row">
-          <div className="col-md-6">
+      <div>
+        <Flex className="sample-transitioner">
+          <Box p={1}>
             <SampleContainerStack
               title="Source containers"
               canAdd={false}
               canRemove={false}
-              containers={this.state.sourceSampleContainers}
+              containers={workBatch.source.containers}
               onWellClicked={this.onSourceWellClicked.bind(this)}
               onWellMouseOver={this.onSourceWellMouseOver.bind(this)}
               source={true}
-              samples={this.state.samples}
+              substances={workBatch.source.substances}
               onMouseOut={this.onMouseOut.bind(this)}
-              activeSampleTransitionSourceLocation={activeSampleTransitionSourceLocation}
-              transitionSourceLocations={sampleTransitions.map(st => st.sourceLocation)}
+              activeTransitionSourceLocation={activeTransitionSourceLocation}
+              transitionSourceLocations={workBatch.transitions.map(
+                st => st.sourceLocation
+              )}
             />
-          </div>
-          <div className="col-md-6">
+          </Box>
+          <Box p={1}>
             <SampleContainerStack
               title="Target containers"
               canAdd={true}
               canRemove={true}
-              containers={this.state.targetSampleContainers}
+              containers={workBatch.target.containers}
               onWellClicked={this.onTargetWellClicked.bind(this)}
               source={false}
               onMouseOut={this.onMouseOut.bind(this)}
               transitionTargetLocationsOfHoveredSample={
                 transitionTargetLocationsOfHoveredSample
               }
-              transitionTargetLocations={sampleTransitions.map(st => st.targetLocation)}
+              transitionTargetLocations={workBatch.transitions.map(
+                st => st.targetLocation
+              )}
             />
-          </div>
-        </div>
-        {JSON.stringify(sampleTransitions)}
+          </Box>
+        </Flex>
+        <Flex>{JSON.stringify(workBatch.transitions)}</Flex>
       </div>
     );
   }
 }
 
 SampleTransitioner.propTypes = {
-  // TODO: specify individual props instead of entire sampleBatch
-  sampleBatch: PropTypes.object,
+  // TODO: specify the shape of the workBatch in another file
+  workBatch: PropTypes.object,
 };
 
 export default SampleTransitioner;

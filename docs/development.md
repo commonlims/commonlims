@@ -72,6 +72,15 @@ You can get a fresh install of your database by running: `make reset-db`
 - Register the route to these endpoints in `sentry/api/urls.py`
 - Create serializers for the domain objects in `sentry/api/serializers/models/samples.py`
 
+# Adding framework tests
+
+Testing is currently almost only in form of integration tests, that at a minimum require postgres (and Django). The plan is to move these gradually to conform to the following:
+
+* Endpoint tests (tests/clims/api/endpoints) should be integration tests, requiring various middleware, e.g. postgres. These generally require no mocking but do require cleanup code or be run in transactions.
+* Serializer tests (tests/clims/api/serializers): Should be unit tests.
+* Service tests (tests/clims/services) are unit tests as we want to test the business logic within the service with mocked data. Queries to the db layer should be mocked, as well as any other calls to backends. Endpoint tests should cover accessing real data.
+* Thick objects (tests/clims/models) are unit tests. These test that objects such as those that inherit from SubstanceBase work correctly. These are strongly related to the service tests as they may expose service logic. Note that db models do not need to be tested.
+
 # Adding workflows
 
 (TODO: Add more details)

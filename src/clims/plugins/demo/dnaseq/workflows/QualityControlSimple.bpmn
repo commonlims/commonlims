@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:process id="QualityControlSimple" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_01ym2ch</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_01ym2ch" sourceRef="StartEvent_1" targetRef="data_entry" />
+    <bpmn:endEvent id="EndEvent_02693i6">
+      <bpmn:incoming>SequenceFlow_0jebu0p</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0jebu0p" sourceRef="data_entry" targetRef="EndEvent_02693i6" />
+    <bpmn:userTask id="data_entry" name="Run QC on external device">
+      <bpmn:incoming>SequenceFlow_01ym2ch</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jebu0p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_0wpeu6f">
+      <bpmn:text>A sample enters here when in need of quality control</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0a6sxpa" sourceRef="StartEvent_1" targetRef="TextAnnotation_0wpeu6f" />
+    <bpmn:textAnnotation id="TextAnnotation_063jvgv">
+      <bpmn:text><![CDATA[The user is presented with a view where they can run QC for one or more samples.
+
+Scripts (handlers) executing in this context can change the state of each sample.]]></bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_17hlncw" sourceRef="data_entry" targetRef="TextAnnotation_063jvgv" />
+    <bpmn:textAnnotation id="TextAnnotation_1feho5t">
+      <bpmn:text>Exit the subworkflow after the user has run QC and set variables accordingly (v8)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1nw1nxw" sourceRef="EndEvent_02693i6" targetRef="TextAnnotation_1feho5t" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="QualityControlSimple">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="157" y="70" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="130" y="106" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0wpeu6f_di" bpmnElement="TextAnnotation_0wpeu6f">
+        <dc:Bounds x="40" y="-38" width="203" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0a6sxpa_di" bpmnElement="Association_0a6sxpa">
+        <di:waypoint xsi:type="dc:Point" x="170" y="71" />
+        <di:waypoint xsi:type="dc:Point" x="148" y="2" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_01ym2ch_di" bpmnElement="SequenceFlow_01ym2ch">
+        <di:waypoint xsi:type="dc:Point" x="193" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="295" y="88" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="244" y="67" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_02693i6_di" bpmnElement="EndEvent_02693i6">
+        <dc:Bounds x="492" y="70" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="110" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jebu0p_di" bpmnElement="SequenceFlow_0jebu0p">
+        <di:waypoint xsi:type="dc:Point" x="395" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="492" y="88" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="443.5" y="67" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1t433d4_di" bpmnElement="data_entry">
+        <dc:Bounds x="295" y="48" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_063jvgv_di" bpmnElement="TextAnnotation_063jvgv">
+        <dc:Bounds x="128" y="-193" width="349" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_17hlncw_di" bpmnElement="Association_17hlncw">
+        <di:waypoint xsi:type="dc:Point" x="338" y="48" />
+        <di:waypoint xsi:type="dc:Point" x="310" y="-109" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1feho5t_di" bpmnElement="TextAnnotation_1feho5t">
+        <dc:Bounds x="382" y="-79" width="171" height="56" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1nw1nxw_di" bpmnElement="Association_1nw1nxw">
+        <di:waypoint xsi:type="dc:Point" x="505" y="71" />
+        <di:waypoint xsi:type="dc:Point" x="476" y="-23" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function
 from django.db import models
 from sentry.db.models import (FlexibleForeignKey, sane_repr)
 from clims.models.extensible import ExtensibleModel, ExtensibleVersion
+from clims.models.work_batch import WorkBatch
 
 
 class Substance(ExtensibleModel):
@@ -26,7 +27,8 @@ class Substance(ExtensibleModel):
 
     name = models.TextField()
 
-    organization = FlexibleForeignKey('sentry.Organization', related_name='substances')
+    organization = FlexibleForeignKey('sentry.Organization',
+                                      related_name='substances')
 
     project = FlexibleForeignKey('clims.Project', null=True)
 
@@ -34,12 +36,15 @@ class Substance(ExtensibleModel):
     # substance originates from
     origins = models.ManyToManyField('clims.Substance')
 
-    parents = models.ManyToManyField('clims.SubstanceVersion', related_name='children')
+    parents = models.ManyToManyField('clims.SubstanceVersion',
+                                     related_name='children')
 
     # The depth of the extensible in the ancestry graph
     depth = models.IntegerField(default=1)
 
-    __repr__ = sane_repr('name',)
+    work_batches = models.ManyToManyField(WorkBatch, related_name='substances')
+
+    __repr__ = sane_repr('name', )
 
     class Meta:
         app_label = 'clims'

@@ -6,6 +6,7 @@ Original copyright:
 """
 
 from __future__ import absolute_import
+import sys
 import six
 import logging
 
@@ -55,16 +56,16 @@ class InstanceManager(object):
 
     def _fetch(self, class_path, required_version=None, must_load=False):
         """
-        # Fetches the entry, loading it if it's marked as lazy.
+        Fetches the entry, loading it if it's marked as lazy.
 
-        # The entry may be None, indicating that it was not found and that it wasn't required to load
-        # (see `add`).
+        The entry may be None, indicating that it was not found and that it wasn't required to load
+        (see `add`).
         """
         try:
             ret = self._load(class_path)
         except LoadException as ex:
             if must_load:
-                raise ex
+                six.reraise(*sys.exc_info())
             else:
                 logger.warn(ex.msg)
                 ret = None
@@ -84,11 +85,22 @@ class InstanceManager(object):
         """
         module_name, class_name = class_path.rsplit('.', 1)
 
+        def reraise_as_import_error():
+            # Reraises the current ex as an ImportError, adding context about the class_path to
+            # the message
+            _, ex, tb = sys.exc_info()
+            ex = "Can't import {}: {}".format(class_path, ex)
+            six.reraise(ImportException, ex, tb)
+
         try:
             module = __import__(six.binary_type(module_name), {}, {}, six.binary_type(class_name))
-            cls = getattr(module, class_name)
         except ImportError:
-            six.reraise(ImportException, "Not able to import class '{}'".format(class_path))
+            reraise_as_import_error()
+
+        try:
+            cls = getattr(module, class_name)
+        except AttributeError:
+            reraise_as_import_error()
 
         try:
             return cls()
@@ -110,3 +122,5 @@ class InstanceManager(object):
                 instance = self._fetch(cls_path)
                 self.instances[cls_path] = instance
                 yield instance
+            else:
+                yield value
