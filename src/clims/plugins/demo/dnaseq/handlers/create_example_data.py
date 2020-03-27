@@ -37,7 +37,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                 container = self.app.containers.get(name=name)
                 logger.info('Container already exists, fetched from db: {}'.format(container.name))
             except self.app.containers.DoesNotExist:
-                container = PandorasBox(name=name, organization=self.context.organization)
+                container = PandorasBox(name=name)
                 container.save()
                 logger.info('Created container: {}'.format(container.name))
             available_containers.append(container)
@@ -55,7 +55,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             sample.save()
             logger.info("Created sample: {}".format(sample.name))
             plate = random.choice(available_containers)
-            if not sample.location and len(plate.contents) < plate.rows * plate.columns:
+            if not sample.location and len(list(plate.contents)) < plate.rows * plate.columns:
                 plate.append(sample)
                 sample.save()
                 logger.info("Appended sample: {}".format(sample.name))
