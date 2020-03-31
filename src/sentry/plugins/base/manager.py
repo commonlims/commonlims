@@ -141,9 +141,9 @@ class PluginManager(object):
         extensible_types = ExtensibleType.objects.all()
         type_names_in_db = [e.name for e in extensible_types]
         for type_name in type_names_in_db:
-            splitted = type_name.split('.')
-            full_module_name = '.'.join(splitted[:-1])
-            extensible_class_name = splitted[-1]
+            split_type_name = type_name.split('.')
+            full_module_name = '.'.join(split_type_name[:-1])
+            extensible_class_name = split_type_name[-1]
             module = self._import_module(full_module_name)
             extensible_class = getattr(module, extensible_class_name, None)
             yield extensible_class
@@ -370,8 +370,8 @@ class PluginManager(object):
         return self._import_module(full_module_name)
 
     def _import_module(self, full_module_name):
-        splitted = full_module_name.split('.')
-        name = splitted[-1]
+        split_name = full_module_name.split('.')
+        name = split_name[-1]
         try:
             return importlib.import_module(full_module_name)
         except ImportError as ex:
