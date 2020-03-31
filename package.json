@@ -97,6 +97,7 @@
     "redux-mock-store": "^1.5.3",
     "redux-thunk": "^2.3.0",
     "reflux": "0.4.1",
+    "reselect": "^4.0.0",
     "scroll-to-element": "^2.0.0",
     "sentry-dreamy-components": "^1.0.0",
     "sprintf-js": "1.0.3",
