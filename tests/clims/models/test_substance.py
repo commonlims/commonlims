@@ -424,7 +424,7 @@ class TestSubstance(SubstanceTestCase):
         # Arrange
         self.register_extensible(QuirkSample)
         sample = QuirkSample(
-            name='sample-{}'.format(uuid.uuid4()), organization=self.organization)
+            name='sample-{}'.format(uuid.uuid4()))
 
         # Act
         container_index = sample.container_index

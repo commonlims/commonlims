@@ -132,11 +132,9 @@ class TestContainer(TestCase):
         assert re.match(r"^\d+[ |].+", first_line) is not None
 
     def test_get_container_from_sample__when_container_is_unregisterred__container_reference_still_works(self):
-        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()),
-                                        organization=self.organization)
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
 
-        sample = HairSample(name="sample-{}-{}".format(container.name, uuid.uuid4()),
-                            organization=self.organization)
+        sample = HairSample(name="sample-{}-{}".format(container.name, uuid.uuid4()))
         # container.append(sample)
         container['B2'] = sample
         container.save()

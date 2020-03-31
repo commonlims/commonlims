@@ -60,12 +60,15 @@ class SubstancesTest(APITestCase):
             properties = response.pop('properties')
             if 'color' in properties:
                 assert properties['color']['value'] == sample.properties['color'].value
-            assert response == dict(name=sample.name,
-                    version=sample.version,
-                    id=sample.id,
-                    type_full_name=sample.type_full_name,
-                    location=None,
-                    global_id="Substance-{}".format(sample.id))
+            assert response == dict(
+                name=sample.name,
+                version=sample.version,
+                id=sample.id,
+                type_full_name=sample.type_full_name,
+                location=None,
+                global_id="Substance-{}".format(sample.id),
+                container_index=None,
+            )
 
         asserts(first, data_by_id[first.id])
         asserts(second, data_by_id[second.id])
