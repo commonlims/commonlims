@@ -193,11 +193,10 @@ lint-js:
 publish:
 	python setup.py sdist bdist_wheel upload
 
-# TODO: Temporarily disabled (clims-363)
-# scan-python:
-# 	@echo "--> Running Python vulnerability scanner"
-# 	$(PIP) install safety
-# 	bin/scan
-# 	@echo ""
+scan-python:
+	@echo "--> Running Python vulnerability scanner"
+	$(PIP) install safety
+	bin/scan
+	@echo ""
 
 .PHONY: develop develop-only test build test clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-clims-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish middleware middleware-teardown fresh scan-python test-python-integration test-python-unit

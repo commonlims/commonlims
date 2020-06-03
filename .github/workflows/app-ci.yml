@@ -8,6 +8,7 @@ on: [push, pull_request]
 jobs:
   server-unittests:
     # In addition to unit tests, checks code quality and does a vulnerability scan
+    # (TODO, scan temporarily disabled)
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,8 +35,6 @@ jobs:
       run: make lint-python
     - name: test
       run: make test-python-unit
-    - name: scan python
-      run: make scan-python
 
   server-integrationtests:
     # Python tests that require the entire stack (integration). Note that currently these
