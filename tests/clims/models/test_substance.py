@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import random
 import pytest
+import uuid
 from sentry.testutils import TestCase
 from clims.models import Substance, SubstanceVersion
 from clims.services import ExtensibleTypeValidationError
@@ -21,14 +22,8 @@ class SubstanceTestCase(TestCase):
 
 
 class SubstancePropertiesTestCase(TestCase):
-
-    class ExampleSample(SubstanceBase):
-        moxy = FloatField("moxy")
-        cool = FloatField("cool")
-        erudite = FloatField("erudite", nullable=False)
-
     def setUp(self):
-        self.register_extensible(self.ExampleSample)
+        self.register_extensible(ExampleSample)
         self.has_context()
 
     def test_can_create_substance_with_properties(self):
@@ -37,10 +32,10 @@ class SubstancePropertiesTestCase(TestCase):
         erudite = random.randint(1, 100)
 
         name = "sample-{}".format(random.randint(1, 1000000))
-        sample = self.ExampleSample(name=name,
-                                    moxy=moxy,
-                                    cool=cool,
-                                    erudite=erudite)
+        sample = ExampleSample(name=name,
+                               moxy=moxy,
+                               cool=cool,
+                               erudite=erudite)
         sample.save()
 
         fetched_sample = self.app.substances.get(name=sample.name)
@@ -54,10 +49,10 @@ class SubstancePropertiesTestCase(TestCase):
         erudite = random.randint(1, 100)
 
         name = "sample-{}".format(random.randint(1, 1000000))
-        sample = self.ExampleSample(name=name,
-                                    moxy=moxy,
-                                    cool=cool,
-                                    erudite=erudite)
+        sample = ExampleSample(name=name,
+                               moxy=moxy,
+                               cool=cool,
+                               erudite=erudite)
         sample.save()
 
         assert sample.moxy == moxy
@@ -69,10 +64,10 @@ class SubstancePropertiesTestCase(TestCase):
         cool = random.randint(1, 100)
         erudite = random.randint(1, 100)
 
-        sample = self.ExampleSample(name=name,
-                                    moxy=None,
-                                    cool=cool,
-                                    erudite=erudite)
+        sample = ExampleSample(name=name,
+                               moxy=None,
+                               cool=cool,
+                               erudite=erudite)
         sample.save()
 
         fetched_sample = self.app.substances.get(name=sample.name)
@@ -85,10 +80,10 @@ class SubstancePropertiesTestCase(TestCase):
         cool = random.randint(1, 100)
 
         with pytest.raises(ExtensibleTypeValidationError):
-            self.ExampleSample(name=name,
-                               moxy=None,
-                               cool=cool,
-                               erudite=None)
+            ExampleSample(name=name,
+                          moxy=None,
+                          cool=cool,
+                          erudite=None)
 
 
 class TestSubstance(SubstanceTestCase):
@@ -424,6 +419,24 @@ class TestSubstance(SubstanceTestCase):
         squirkyness = extensible_type.property_types.get(name='squirkyness')
 
         assert squirkyness.display_name == 'The Squirkyness Display Value'
+
+    def test__with_sample_has_no_container__container_index_returns_none(self):
+        # Arrange
+        self.register_extensible(QuirkSample)
+        sample = QuirkSample(
+            name='sample-{}'.format(uuid.uuid4()))
+
+        # Act
+        container_index = sample.container_index
+
+        # Assert
+        assert container_index is None
+
+
+class ExampleSample(SubstanceBase):
+    moxy = FloatField("moxy")
+    cool = FloatField("cool")
+    erudite = FloatField("erudite", nullable=False)
 
 
 class QuirkSample(SubstanceBase):

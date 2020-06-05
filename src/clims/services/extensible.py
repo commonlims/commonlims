@@ -20,8 +20,8 @@ class ExtensibleTypeNotRegistered(Exception):
 class ExtensibleService(object):
     def __init__(self, app):
         self._app = app
-        self._implementations = dict()
         self._model_cache = dict()
+        self._implementations = None
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def clear_cache(self):
@@ -44,7 +44,7 @@ class ExtensibleService(object):
 
     def get_implementation(self, extensible_type_full_name):
         try:
-            return self._implementations[extensible_type_full_name]
+            return self.implementations[extensible_type_full_name]
         except KeyError:
             raise ExtensibleTypeNotRegistered(extensible_type_full_name)
 
@@ -62,6 +62,16 @@ class ExtensibleService(object):
                     "The type '{}' is not registered".format(name))
         return self._model_cache[name]
 
+    @property
+    def implementations(self):
+        if not self._implementations:
+            extensible_types = self._app.plugins.get_extensible_types_from_db()
+            self._implementations = dict()
+            for ext_class in extensible_types:
+                full_name = '{}.{}'.format(ext_class.__module__, ext_class.__name__)
+                self._implementations[full_name] = ext_class
+        return self._implementations
+
     def register(self, plugin_reg, extensible_base):
         logger.info("Installing '{}' from plugin '{}@{}'".format(
             utils.class_full_name(extensible_base), plugin_reg.name,
@@ -78,14 +88,19 @@ class ExtensibleService(object):
                 display_name=field.display_name)
             property_types.append(prop_type)
 
-        name = "{}.{}".format(extensible_base.__module__,
-                              extensible_base.__name__)
-        self._implementations[name] = extensible_base
-        extensible_type = self._register_model(name,
-                                               'default',
-                                               plugin_reg,
-                                               property_types=property_types)
+        name = "{}.{}".format(extensible_base.__module__, extensible_base.__name__)
+        extensible_type = self._register_model(
+            name, 'default', plugin_reg, property_types=property_types)
         return extensible_type
+
+    def unregister_model(self, extensible_base, plugin):
+        """
+        This is for testing purposes only!
+        """
+        # trigger initiation of the implementation array
+        self.implementations
+        name = '{}.{}'.format(extensible_base.__module__, extensible_base.__name__)
+        del(self._implementations[name])
 
     @transaction.atomic
     def _register_model(self, name, org, plugin, property_types=None):

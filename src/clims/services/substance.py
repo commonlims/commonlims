@@ -193,6 +193,8 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         # when looping samples in a container, the very same container is fetched over and
         # over again
         loc = self.location
+        if loc is None:
+            return None
         container = self._app.containers.to_wrapper(loc.container)
         container_index_class = container.IndexType
         # Can we assume that container index class has only row and column, not z?

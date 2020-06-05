@@ -4,7 +4,7 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from ..models import ExampleSample, ExampleProject
+from ..models import ExampleSample, ExampleProject, PandorasBox
 
 
 logger = logging.getLogger(__name__)
@@ -17,9 +17,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
 
         Any plugin that implements this handler will supply demo data
         """
-
         logger.info("Creating example data for the builtin Demo plugin")
-
         created = True
         try:
             self.app.substances.get(name="demoplugin-sample-1")
@@ -30,9 +28,25 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             logger.info("Demo data has already been imported")
             return
 
-        available_sample_types = ["Vampire Fang", "Zombie Brain", "Hydra Claw"]
+        available_containers = []
         for ix in range(100):
-            name = "demoplugin-sample-{}".format(ix + 1)
+            id = ix + 1
+            # id = uuid4().hex
+            name = 'pandora-{}'.format(id)
+            try:
+                container = self.app.containers.get(name=name)
+                logger.info('Container already exists, fetched from db: {}'.format(container.name))
+            except self.app.containers.DoesNotExist:
+                container = PandorasBox(name=name)
+                container.save()
+                logger.info('Created container: {}'.format(container.name))
+            available_containers.append(container)
+
+        available_sample_types = ["Vampire Fang", "Zombie Brain", "Hydra Claw"]
+        for _ix in range(100):
+            # id = ix + 1
+            id = random.randint(1, 10000000)
+            name = "demoplugin-sample-{}".format(id)
             sample = ExampleSample(name=name,
                                    moxy=random.randint(1, 100),
                                    cool=random.randint(1, 100),
@@ -40,6 +54,14 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                                    sample_type=random.choice(available_sample_types))
             sample.save()
             logger.info("Created sample: {}".format(sample.name))
+            plate = random.choice(available_containers)
+            if not sample.location and len(list(plate.contents)) < plate.rows * plate.columns:
+                plate.append(sample)
+                sample.save()
+                logger.info("Appended sample: {}".format(sample.name))
+
+        for plate in available_containers:
+            plate.save()
 
         pis = ["Rosalind Franklin", "Charles Darwin", "Gregor Mendel"]
         for _ in range(100):
