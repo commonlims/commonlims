@@ -4,6 +4,7 @@ import SentryTypes from 'app/sentryTypes';
 import withOrganization from 'app/utils/withOrganization';
 import {PageContent} from 'app/styles/organization';
 
+// TODO: Simplify file structure and naming
 import WorkBatchDetails from '../shared/workBatchDetails';
 
 class OrganizationWorkBatchDetails extends React.Component {

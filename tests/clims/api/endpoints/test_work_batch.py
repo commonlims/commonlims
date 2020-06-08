@@ -50,17 +50,20 @@ class WorkBatchEndpointTest(APITestCase):
                 task_definition_key="data_entry",
                 process_definition_key=workflow.definition_id)
             tracked_objects_in_workflow_engine = [
+
                 t.tracked_object.id for t in tasks
             ]
             assert len(tracked_objects_in_workflow_engine) == sample_count
             return tasks
 
         tasks = get_tasks()
+
         tasks = [t.id for t in tasks]
 
         payload = {
             "tasks": tasks,
         }
+
 
         response = self.client.post(
             path=url,

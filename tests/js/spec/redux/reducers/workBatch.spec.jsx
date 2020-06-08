@@ -1,160 +1,151 @@
-import workBatch from 'app/redux/reducers/workBatch';
+import workBatch, {initialState} from 'app/redux/reducers/workBatch';
+import {Set} from 'immutable';
 
 describe('workBatch reducer', () => {
-  const mockWorkBatch = {
-    id: 4,
-    name: 'Test3',
-    organization: 1,
-    handler: 'somehandler2',
-    created: '2019-06-12T13:07:13.490Z',
-    extra_fields: '',
-    num_comments: 0,
-    status: 0,
-  };
-
   it('should handle initial state', () => {
-    expect(workBatch(undefined, {})).toEqual({
-      loading: false,
-      errorMessage: null,
-      workBatches: [],
-    });
+    expect(workBatch(undefined, {})).toEqual(initialState);
   });
 
   it('should handle WORK_BATCHES_GET_REQUEST', () => {
-    const initialState = {
-      loading: false,
-      errorMessage: 'oops',
-    };
-
     const state = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_REQUEST',
+      groupBy: '1',
+      cursor: '2',
+      search: '3',
     });
 
     expect(state).toEqual({
-      loading: true,
+      byIds: {},
+      creating: false,
       errorMessage: null,
+      listViewState: {
+        allVisibleSelected: false,
+        groupBy: '1',
+        pagination: {
+          cursor: '2',
+          pageLinks: null,
+        },
+        search: '3',
+        selectedIds: new Set(),
+        visibleIds: [],
+      },
+      loading: true,
     });
   });
 
   it('should handle WORK_BATCHES_GET_SUCCESS', () => {
-    const initialState = {
-      loading: true,
-      errorMessage: 'oops',
-    };
-
     const state = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_SUCCESS',
-      workBatches: [mockWorkBatch],
+      workBatches: [TestStubs.WorkBatch(1)],
     });
 
     expect(state).toEqual({
-      workBatches: [mockWorkBatch],
+      byIds: {
+        '1': {
+          created: '2019-06-12T13:07:13.490Z',
+          extra_fields: '',
+          handler: 'somehandler2',
+          id: 1,
+          name: 'Test1',
+          num_comments: 0,
+          organization: 1,
+          status: 0,
+        },
+      },
+      creating: false,
       errorMessage: null,
+      listViewState: {
+        allVisibleSelected: false,
+        groupBy: 'workbatch',
+        pagination: {pageLinks: undefined},
+        search: 'workbatch.name:',
+        selectedIds: new Set(),
+        visibleIds: [1],
+      },
       loading: false,
     });
   });
 
   it('should handle WORK_BATCHES_GET_FAILURE', () => {
-    const initialState = {
-      loading: true,
-    };
-
     const state = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_FAILURE',
       message: 'oopsiedoodle',
     });
 
     expect(state).toEqual({
-      loading: false,
+      byIds: {},
+      creating: false,
       errorMessage: 'oopsiedoodle',
+      listViewState: {
+        allVisibleSelected: false,
+        groupBy: 'workbatch',
+        pagination: {cursor: '', pageLinks: null},
+        search: 'workbatch.name:',
+        selectedIds: new Set(),
+        visibleIds: [],
+      },
+      loading: false,
     });
   });
 
   it('should handle WORK_BATCH_TOGGLE_SELECT to select a workBatch', () => {
-    const initialState = {
-      workBatches: [mockWorkBatch],
-    };
-
     const state = workBatch(initialState, {
       type: 'WORK_BATCH_TOGGLE_SELECT',
       id: 4,
     });
 
-    const updatedWorkBatch = Object.assign({}, mockWorkBatch);
-    updatedWorkBatch.selected = true;
-
     expect(state).toEqual({
-      workBatches: [updatedWorkBatch],
+      byIds: {},
+      creating: false,
+      errorMessage: null,
+      listViewState: {
+        allVisibleSelected: false,
+        groupBy: 'workbatch',
+        pagination: {cursor: '', pageLinks: null},
+        search: 'workbatch.name:',
+        selectedIds: Set([4]),
+        visibleIds: [],
+      },
+      loading: false,
     });
   });
 
   it('should handle WORK_BATCH_TOGGLE_SELECT to de-select a workBatch', () => {
-    const utSelected = Object.assign({}, mockWorkBatch);
-    utSelected.selected = true;
-
-    const initialState = {
-      workBatches: [utSelected],
-    };
-
-    const state = workBatch(initialState, {
+    // First select the item
+    const singleSelectedState = workBatch(initialState, {
       type: 'WORK_BATCH_TOGGLE_SELECT',
       id: 4,
     });
 
-    const utDeselected = Object.assign({}, mockWorkBatch);
-    utDeselected.selected = false;
-
-    expect(state).toEqual({
-      workBatches: [utDeselected],
+    const deselectedState = workBatch(singleSelectedState, {
+      type: 'WORK_BATCH_TOGGLE_SELECT',
+      id: 4,
     });
+    expect(deselectedState).toEqual(initialState);
   });
 
-  it('should handle WORK_BATCHES_TOGGLE_SELECT_ALL to select or de-select all workBatches', () => {
-    const initialState = {
-      workBatches: [
-        {
-          id: 1,
-        },
-        {
-          id: 2,
-        },
-      ],
-    };
-
-    let state = workBatch(initialState, {
+  it('should handle WORK_BATCHES_TOGGLE_SELECT_ALL to select a visible page', () => {
+    const afterGetState = workBatch(initialState, {
+      type: 'WORK_BATCHES_GET_SUCCESS',
+      workBatches: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
+    });
+    const pageSelectedState = workBatch(afterGetState, {
       type: 'WORK_BATCHES_TOGGLE_SELECT_ALL',
-      doSelect: true,
     });
+    expect(pageSelectedState.listViewState.selectedIds).toEqual(Set([1, 2]));
+  });
 
-    expect(state).toEqual({
-      workBatches: [
-        {
-          id: 1,
-          selected: true,
-        },
-        {
-          id: 2,
-          selected: true,
-        },
-      ],
+  it('should handle WORK_BATCHES_TOGGLE_SELECT_ALL to deselect a visible page', () => {
+    const afterGetState = workBatch(initialState, {
+      type: 'WORK_BATCHES_GET_SUCCESS',
+      workBatches: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
     });
-
-    state = workBatch(initialState, {
+    const pageSelectedState = workBatch(afterGetState, {
       type: 'WORK_BATCHES_TOGGLE_SELECT_ALL',
-      doSelect: false,
     });
-
-    expect(state).toEqual({
-      workBatches: [
-        {
-          id: 1,
-          selected: false,
-        },
-        {
-          id: 2,
-          selected: false,
-        },
-      ],
+    const pageDeselectedState = workBatch(pageSelectedState, {
+      type: 'WORK_BATCHES_TOGGLE_SELECT_ALL',
     });
+    expect(pageDeselectedState.listViewState.selectedIds).toEqual(Set([]));
   });
 });

@@ -4,9 +4,6 @@ import substanceSearchEntry, {
 import {Set} from 'immutable';
 import {keyBy} from 'lodash';
 
-// TODO: Should we rename the store to e.g. `SearchEntry`, as it's actually going to be able
-// to search for project, container and substances, but with child elements?
-
 describe('substance reducer', () => {
   const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(2, 'sample');
   const mockResponseNoGroupById = keyBy(mockResponseNoGroup, entry => entry.id);
