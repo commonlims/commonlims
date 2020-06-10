@@ -33,12 +33,14 @@ export const substanceSearchEntriesGetRequest = (search, groupBy, cursor) => {
 export const substanceSearchEntriesGetSuccess = (
   substanceSearchEntries,
   link,
+  groupBy,
   isGroupHeader
 ) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
     substanceSearchEntries,
     link,
+    groupBy,
     isGroupHeader,
   };
 };
@@ -56,38 +58,44 @@ export const substanceSearchEntriesGet = (
 ) => dispatch => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
-  if (!isGroupHeader) {
-    const request = {
+  let endpoint = null;
+  let request = null;
+  if (groupBy === 'sample_type') {
+    endpoint = '/api/0/organizations/lab/substances/property/' + groupBy + '/';
+    request = {
+      params: {
+        unique: true,
+      },
+    };
+  } else if (groupBy === 'container') {
+    endpoint = '/api/0/organizations/lab/containers/';
+    request = {
+      params: {
+        unique: true,
+      },
+    };
+  } else {
+    endpoint = '/api/0/organizations/lab/substances/';
+    request = {
       params: {
         search,
         cursor,
       },
     };
-    return axios
-      .get('/api/0/organizations/lab/substances/', request)
-      .then(res => {
-        dispatch(
-          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
-        );
-      })
-      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
-  } else {
-    // TODO: search and cursor should be implemented as well
-    const request = {
-      params: {
-        unique: true,
-      },
-    };
-    const url = '/api/0/organizations/lab/substances/property/' + groupBy + '/';
-    return axios
-      .get(url, request)
-      .then(res => {
-        dispatch(
-          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
-        );
-      })
-      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
   }
+  return axios
+    .get(endpoint, request)
+    .then(res => {
+      dispatch(
+        substanceSearchEntriesGetSuccess(
+          res.data,
+          res.headers.link,
+          groupBy,
+          isGroupHeader
+        )
+      );
+    })
+    .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
 };
 
 export const substanceSearchEntriesToggleSelectAll = doSelect => {

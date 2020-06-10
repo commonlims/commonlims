@@ -50,9 +50,15 @@ const substanceSearchEntry = (state = initialState, action) => {
       const byIds = {};
       let i = 1;
       for (const entry of action.substanceSearchEntries) {
+        const name = null;
+        if (action.groupBy === 'sample_type') {
+          name = entry;
+        } else if (action.groupBy === 'container') {
+          name = entry.name;
+        }
         const groupedEntry = {
           id: i++,
-          name: entry,
+          name,
         };
         const adaptedEntry = action.isGroupHeader ? groupedEntry : {...entry};
         adaptedEntry.isGroupHeader = action.isGroupHeader;

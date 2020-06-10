@@ -132,7 +132,7 @@ describe('substance reducer', () => {
     });
   });
 
-  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for grouped', () => {
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for sample type', () => {
     // Arrange
     const mockResponseGrouped = ['my_sample_type'];
 
@@ -140,6 +140,7 @@ describe('substance reducer', () => {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: mockResponseGrouped,
       link: 'some-link',
+      groupBy: 'sample_type',
       isGroupHeader: true,
     };
 
@@ -157,6 +158,48 @@ describe('substance reducer', () => {
       {
         id: 1,
         name: 'my_sample_type',
+        isGroupHeader: true,
+      },
+    ];
+
+    const mockedByIds = keyBy(mockedResponseFromReducer, entry => entry.id);
+
+    expect(nextState).toEqual({
+      ...prevState,
+      errorMessage: null,
+      loading: false,
+      visibleIds: [1],
+      byIds: mockedByIds,
+      pageLinks: 'some-link',
+    });
+  });
+
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for containers', () => {
+    // Arrange
+    const mockResponseGrouped = [{name: 'mycontainer'}];
+
+    const action = {
+      type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
+      substanceSearchEntries: mockResponseGrouped,
+      link: 'some-link',
+      groupBy: 'container',
+      isGroupHeader: true,
+    };
+
+    const prevState = {
+      ...initialState,
+      loading: true,
+      errorMessage: 'oops',
+    };
+
+    // Act
+    const nextState = substanceSearchEntry(prevState, action);
+
+    // Assert
+    const mockedResponseFromReducer = [
+      {
+        id: 1,
+        name: 'mycontainer',
         isGroupHeader: true,
       },
     ];

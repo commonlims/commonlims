@@ -82,6 +82,7 @@ describe('substance redux actions', function() {
         {
           type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
           substanceSearchEntries,
+          groupBy,
           isGroupHeader,
         },
       ];
@@ -124,6 +125,7 @@ describe('substance redux actions', function() {
         },
         {
           type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
+          groupBy,
           isGroupHeader,
           substanceSearchEntries,
         },
