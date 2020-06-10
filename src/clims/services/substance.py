@@ -323,7 +323,7 @@ class SubstanceService(BaseExtensibleService):
     def __init__(self, app):
         super(SubstanceService, self).__init__(app, SubstanceBase)
 
-    def all_submission_files(self, context):
+    def get_submission_files(self, context):
         # TODO: Currently returns OrganizationFile. Need to filter it down to only substance files
         #       So add a "type" to the file.
         return OrganizationFile.objects.filter(organization=context.organization)
@@ -403,6 +403,9 @@ class SubstanceService(BaseExtensibleService):
         return org_file
 
     def create_submission_demo(self, file_type):
+        """
+        Returns a demo submission file-like object
+        """
         import os
         from clims.handlers import SubstancesSubmissionFileDemoHandler
         self._app.plugins.handlers.require_single_handler(SubstancesSubmissionFileDemoHandler)
