@@ -32,6 +32,7 @@ from .authentication import ApiKeyAuthentication, TokenAuthentication
 from .paginator import Paginator
 from .permissions import NoPermission
 
+from clims.handlers import context_store
 
 __all__ = ['DocSection', 'Endpoint', 'EnvironmentMixin', 'StatsMixin']
 
@@ -67,6 +68,13 @@ class Endpoint(APIView):
     @property
     def app(self):
         return ioc.app
+
+    @property
+    def context(self):
+        """
+        Returns the current context that the application is in.
+        """
+        return context_store.current
 
     def build_cursor_link(self, request, name, cursor):
         querystring = u'&'.join(
