@@ -3,59 +3,85 @@
 import axios from 'axios';
 
 ////// List of {{ resource }}
-export const GET_{{ resource_const }}_LIST_REQUEST = 'GET_{{ resource_const }}_LIST_REQUEST';
+export const GET_{{ resource.const }}_LIST_REQUEST = 'GET_{{ resource.const }}_LIST_REQUEST';
 export const get{{ resource }}ListRequest = () => {
   return {
-    type: GET_{{ resource_const }}_LIST_REQUEST,
+    type: GET_{{ resource.const }}_LIST_REQUEST,
   };
 };
 
-export const GET_{{ resource_const }}_LIST_SUCCESS = 'GET_{{ resource_const }}_LIST_SUCCESS';
-export const get{{ resource }}ListSuccess = page => {
+export const GET_{{ resource.const }}_LIST_SUCCESS = 'GET_{{ resource.const }}_LIST_SUCCESS';
+export const get{{ resource }}ListSuccess = entries => {
   return {
-    type: GET_{{ resource_const }}_LIST_SUCCESS,
-    page,
+    type: GET_{{ resource.const }}_LIST_SUCCESS,
+    entries,
   };
 };
 
-export const GET_{{ resource_const }}_LIST_FAILURE = 'GET_{{ resource_const }}_LIST_FAILURE';
+export const GET_{{ resource.const }}_LIST_FAILURE = 'GET_{{ resource.const }}_LIST_FAILURE';
 export const get{{ resource }}ListFailure = err => ({
-  type: GET_{{ resource_const }}_LIST_FAILURE,
+  type: GET_{{ resource.const }}_LIST_FAILURE,
   message: err,
 });
 
 export const get{{ resource }}List = ({{ ", ".join(list_parameters) }}) => dispatch => {
   dispatch(get{{ resource }}ListRequest());
+
+  const config = {
+    params: {
+      {% for parameter in list_get_args %}
+      {{ parameter }},
+      {% endfor %}
+    }
+  };
+
   return axios
-    .get(`{{ list_endpoint }}`)
+    .get(`{{ list_endpoint }}`, config)
     .then(res => dispatch(get{{ resource }}ListSuccess(res.data)))
     .catch(err => dispatch(get{{ resource }}ListFailure(err)));
 };
 
-
-////// Fetch a single {{ resource }}
-export const GET_{{ resource_const }}_REQUEST = 'GET_{{ resource_const }}_REQUEST';
-export const get{{ resource }}Request = () => {
+////// Selection in a list of {{ resource }}
+export const TOGGLE_SELECT_{{ resource.const }} = 'TOGGLE_SELECT_{{ resource.const }}';
+export const toggleSelect{{ resource}} = id => {
   return {
-    type: GET_{{ resource_const }}_REQUEST,
+    type: TOGGLE_SELECT_{{ resource.const }},
+    id,
   };
 };
 
-export const GET_{{ resource_const }}_SUCCESS = 'GET_{{ resource_const }}_SUCCESS';
+export const TOGGLE_SELECT_PAGE_OF_{{ resource.const }} = 'TOGGLE_SELECT_PAGE_OF_{{ resource.const }}';
+export const toggleSelectPageOf{{ resource }} = doSelect => {
+  return {
+    type: TOGGLE_SELECT_PAGE_OF_{{ resource.const }},
+    doSelect,
+  };
+};
+
+
+////// Fetch a single {{ resource }}
+export const GET_{{ resource.const }}_REQUEST = 'GET_{{ resource.const }}_REQUEST';
+export const get{{ resource }}Request = () => {
+  return {
+    type: GET_{{ resource.const }}_REQUEST,
+  };
+};
+
+export const GET_{{ resource.const }}_SUCCESS = 'GET_{{ resource.const }}_SUCCESS';
 export const get{{ resource }}Success = entry => {
   return {
-    type: GET_{{ resource_const }}_SUCCESS,
+    type: GET_{{ resource.const }}_SUCCESS,
     entry,
   };
 };
 
-export const GET_{{ resource_const }}_FAILURE = 'GET_{{ resource_const }}_FAILURE';
+export const GET_{{ resource.const }}_FAILURE = 'GET_{{ resource.const }}_FAILURE';
 export const get{{ resource }}Failure = err => ({
-  type: GET_{{ resource_const }}_FAILURE,
+  type: GET_{{ resource.const }}_FAILURE,
   message: err,
 });
 
-export const get{{ resource }} = ({{ ", ".join(single_parameters) }}) => dispatch => {
+export const get{{ resource }} = {{ single_signature }} => dispatch => {
   dispatch(get{{ resource }}Request());
 
   const params = {
@@ -71,8 +97,8 @@ export const get{{ resource }} = ({{ ", ".join(single_parameters) }}) => dispatc
 
 // Default dispatchToProps mapping for all actions created here, 1-1 mapping for all params
 export const map{{ resource }}DispatchToProps = dispatch => ({
-  get{{ resource }}: ({{ ", ".join(single_parameters) }}) => dispatch(
-    get{{ resource }}({{ ", ".join(single_parameters) }})),
-  get{{ resource }}List: ({{ ", ".join(list_parameters) }}) => dispatch(
-    get{{ resource }}List({{ ", ".join(list_parameters) }})),
+  get{{ resource }}: {{ single_signature }} =>
+    dispatch(get{{ resource }}({{ ", ".join(single_parameters) }})),
+  get{{ resource }}List: ({{ ", ".join(list_parameters) }}) =>
+    dispatch(get{{ resource }}List({{ ", ".join(list_parameters) }})),
 });
