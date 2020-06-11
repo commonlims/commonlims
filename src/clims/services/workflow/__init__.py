@@ -423,16 +423,16 @@ class WorkflowService(object):
         """
         raise NotImplementedError()
 
-    def get_workflows(self):
+    def get_process_definitions(self):
         # TODO: During the load phase, we should create instances of these classes
         # and keep them in an instance manager (can be lazy loaded though)
         for plugin in self._app.plugins.all():
-            for definition in plugin.get_workflow_definitions():
+            for definition in plugin.get_process_definitions():
                 yield definition()
 
     def _get_workflow_process_by_name(self, process_name):
         # TODO-simple: memoize?
-        for definition in self.get_workflows():
+        for definition in self.get_process_definitions():
             if definition.get_full_name() == process_name:
                 # TODO: Ugly. Doing this because currently get_workflows returns objects rather than classes
                 return definition.__class__
