@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getRestcall} from 'app/redux/utils/substanceSearch';
 
 // SubstancesSearchEntry encapsulates a potentially grouped entry in the substance search UI
 // The store always has one page worth of data. The list contains a generic wrapper class
@@ -58,33 +59,9 @@ export const substanceSearchEntriesGet = (
 ) => dispatch => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
-  let endpoint = null;
-  let request = null;
-  if (groupBy === 'sample_type') {
-    endpoint = '/api/0/organizations/lab/substances/property/' + groupBy + '/';
-    request = {
-      params: {
-        unique: true,
-      },
-    };
-  } else if (groupBy === 'container') {
-    endpoint = '/api/0/organizations/lab/containers/';
-    request = {
-      params: {
-        unique: true,
-      },
-    };
-  } else {
-    endpoint = '/api/0/organizations/lab/substances/';
-    request = {
-      params: {
-        search,
-        cursor,
-      },
-    };
-  }
+  const restCall = getRestcall(search, groupBy, cursor);
   return axios
-    .get(endpoint, request)
+    .get(restCall.endpoint, restCall.request)
     .then(res => {
       dispatch(
         substanceSearchEntriesGetSuccess(

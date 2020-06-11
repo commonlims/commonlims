@@ -1,4 +1,5 @@
 import {Set} from 'immutable';
+import {ListViewEntryGenerator} from 'app/redux/utils/substanceSearch';
 
 import {
   SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST,
@@ -48,21 +49,10 @@ const substanceSearchEntry = (state = initialState, action) => {
       // The action provides us with the raw data as a list, here we turn it into
       // a dictionary and then update the store's byIds as required.
       const byIds = {};
-      let i = 1;
+      const entryGenerator = new ListViewEntryGenerator();
       for (const entry of action.substanceSearchEntries) {
-        const name = null;
-        if (action.groupBy === 'sample_type') {
-          name = entry;
-        } else if (action.groupBy === 'container') {
-          name = entry.name;
-        }
-        const groupedEntry = {
-          id: i++,
-          name,
-        };
-        const adaptedEntry = action.isGroupHeader ? groupedEntry : {...entry};
-        adaptedEntry.isGroupHeader = action.isGroupHeader;
-        byIds[adaptedEntry.id] = adaptedEntry;
+        const listViewEntry = entryGenerator.get(action.groupBy, entry);
+        byIds[listViewEntry.id] = listViewEntry;
       }
       const visibleIds = Object.keys(byIds).map(Number);
 

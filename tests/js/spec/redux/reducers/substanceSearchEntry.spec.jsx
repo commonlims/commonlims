@@ -111,6 +111,7 @@ describe('substance reducer', () => {
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: mockResponseNoGroup,
+      groupBy: 'substance',
       isGroupHeader: false,
       link: 'some-link',
     };
