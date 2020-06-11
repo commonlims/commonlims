@@ -39,7 +39,7 @@ class WorkflowBase(ExternalExtensibleBase):
         return utils.class_full_name(cls)
 
     @property
-    def definition_id(self):
+    def id(self):
         return self.get_full_name()
 
     def assign_item(self, item):

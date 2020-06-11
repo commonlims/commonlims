@@ -18,7 +18,7 @@ class ExtensibleBaseFieldSerializer(serializers.Serializer):
 
 
 class ProcessDefinitionSerializer(serializers.Serializer):
-    definition_id = serializers.CharField()
+    id = serializers.CharField()
     fields = serializers.SerializerMethodField(
         method_name="get_serialized_fields")
     presets = serializers.SerializerMethodField()
@@ -32,7 +32,7 @@ class ProcessDefinitionSerializer(serializers.Serializer):
         mapped_presets = list()
         for key, preset in obj.get_presets().items():
             mapped_preset = dict()
-            mapped_preset["processDefinitionId"] = obj.definition_id
+            mapped_preset["processDefinitionId"] = obj.id
             mapped_preset["name"] = key
             mapped_preset["variables"] = preset
             mapped_presets.append(mapped_preset)
