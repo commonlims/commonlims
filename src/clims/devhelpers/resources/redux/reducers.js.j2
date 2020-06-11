@@ -1,0 +1,42 @@
+import {
+  GET_{{ resource.const }}_REQUEST,
+  GET_{{ resource.const }}_SUCCESS,
+  GET_{{ resource.const }}_FAILURE,
+  TOGGLE_SELECT_{{ resource.const }},
+  TOGGLE_SELECT_PAGE_OF_{{ resource.const }},
+  GET_{{ resource.const }}_LIST_REQUEST,
+  GET_{{ resource.const }}_LIST_SUCCESS,
+  GET_{{ resource.const }}_LIST_FAILURE,
+} from '../actions/{{ resource.camel }}';
+
+import { list, entry } from './shared';
+
+export const initialState = {
+  ...list.initialState,
+  ...entry.initialState,
+};
+
+const {{ resource.camel }} = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_{{ resource.const }}_LIST_REQUEST:
+      return list.getListRequest(state, action);
+    case GET_{{ resource.const }}_LIST_SUCCESS:
+      return list.getListSuccess(state, action);
+    case GET_{{ resource.const }}_LIST_FAILURE:
+      return list.getListFailure(state, action);
+    case TOGGLE_SELECT_{{ resource.const }}:
+      return list.selectSingle(state, action);
+    case TOGGLE_SELECT_PAGE_OF_{{ resource.const }}:
+      return list.selectAll(state, action);
+    case GET_{{ resource.const }}_REQUEST:
+      return entry.getEntryRequest(state, action);
+    case GET_{{ resource.const }}_SUCCESS:
+      return entry.getEntrySuccess(state, action);
+    case GET_{{ resource.const }}_FAILURE:
+      return entry.getEntryFailure(state, action);
+    default:
+      return state;
+  }
+};
+
+export default {{ resource.camel }};
