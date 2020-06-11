@@ -40,8 +40,7 @@ class Substances extends React.Component {
   }
 
   onSearch(search, groupBy, cursor) {
-    const isGroupHeader = groupBy !== 'substance';
-    this.props.substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader);
+    this.props.substanceSearchEntriesGet(search, groupBy, cursor);
 
     // Add search to history
     const location = this.props.location;

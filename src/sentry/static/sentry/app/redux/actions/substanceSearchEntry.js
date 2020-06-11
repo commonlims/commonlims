@@ -34,15 +34,13 @@ export const substanceSearchEntriesGetRequest = (search, groupBy, cursor) => {
 export const substanceSearchEntriesGetSuccess = (
   substanceSearchEntries,
   link,
-  groupBy,
-  isGroupHeader
+  groupBy
 ) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
     substanceSearchEntries,
     link,
     groupBy,
-    isGroupHeader,
   };
 };
 
@@ -51,26 +49,14 @@ export const substanceSearchEntriesGetFailure = err => ({
   message: err,
 });
 
-export const substanceSearchEntriesGet = (
-  search,
-  groupBy,
-  cursor,
-  isGroupHeader
-) => dispatch => {
+export const substanceSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
   const restCall = getRestcall(search, groupBy, cursor);
   return axios
     .get(restCall.endpoint, restCall.request)
     .then(res => {
-      dispatch(
-        substanceSearchEntriesGetSuccess(
-          res.data,
-          res.headers.link,
-          groupBy,
-          isGroupHeader
-        )
-      );
+      dispatch(substanceSearchEntriesGetSuccess(res.data, res.headers.link, groupBy));
     })
     .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
 };
