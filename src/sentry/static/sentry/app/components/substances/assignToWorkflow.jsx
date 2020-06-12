@@ -13,14 +13,16 @@ import Link from 'app/components/link';
 import Bpmn from 'app/components/bpmn';
 import styled from 'react-emotion';
 import {sortBy} from 'lodash';
+import {getPresetsById} from 'app/redux/selectors/processDefinition';
 
 import {
-  processDefinitionsGet,
   processAssignSelectPreset,
   processAssignSelectProcess,
   processAssignSetVariable,
   processAssignmentsPost,
-} from 'app/redux/actions/process';
+} from 'app/redux/actions/processAssignment';
+
+import {getProcessDefinitionList} from 'app/redux/actions/processDefinition';
 
 const StyledBpmn = styled(Bpmn)`
   height: 500px;
@@ -40,10 +42,11 @@ const AssignToWorkflowButton = createReactClass({
     process: PropTypes.object,
     substanceSearchEntry: PropTypes.object,
     processAssignmentsPost: PropTypes.func,
-    processDefinitionsGet: PropTypes.func,
+    getProcessDefinitionList: PropTypes.func,
     processAssignSelectPreset: PropTypes.func.isRequired,
     processAssignSelectProcess: PropTypes.func.isRequired,
     processAssignSetVariable: PropTypes.func.isRequired,
+    presetsById: PropTypes.object,
   },
 
   getInitialState() {
@@ -60,7 +63,7 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   UNSAFE_componentWillMount() {
-    this.props.processDefinitionsGet();
+    this.props.getProcessDefinitionList();
   },
 
   renderDiagram() {
@@ -107,8 +110,9 @@ const AssignToWorkflowButton = createReactClass({
     }
 
     // TODO: substances already selected
+    // TODO-nomerge: This is totally wrong now
     this.props.processAssignmentsPost(
-      this.props.process.assignProcessDefinition.definition_id,
+      this.props.process.assignProcessDefinitionIdd,
       this.props.process.assignVariables,
       this.props.substanceSearchEntry.selectedIds.toArray(),
       [], // only if assigning containers
@@ -126,9 +130,10 @@ const AssignToWorkflowButton = createReactClass({
 
   renderSettings() {
     let fields = null;
-    const {assignProcessDefinition, assignVariables} = this.props.process;
+    const {assignVariables, assignProcessDefinitionId} = this.props.processAssignment;
 
-    if (assignProcessDefinition) {
+    if (assignProcessDefinitionId) {
+      const assignProcessDefinition = this.props.processDefinition.byIds[assignProcessDefinitionId];
       fields = this.createFieldsFromDefinition(assignProcessDefinition);
     } else {
       fields = [];
@@ -146,24 +151,23 @@ const AssignToWorkflowButton = createReactClass({
       return <LoadingIndicator />;
     }
 
-    const presets = Object.entries(this.props.process.presetsById).map(entry => {
-      return {value: entry[0], label: entry[1].name};
+    const presets = Object.entries(this.props.presetsById).map(entry => {
+      return {value: entry[1].id, label: entry[1].name};
     });
     const presetsSorted = sortBy(presets, 'label');
 
     // TODO: Here we should handle the case where two workflows have the same name (but different
     // namespaces), by showing the full name in that case
-
     const processDefinitions = Object.entries(
-      this.props.process.processDefinitionsById
+      this.props.processDefinition.byIds
     ).map(entry => {
-      const processId = entry[1].definition_id; // TODO: use javascript casing
+      const processId = entry[1].id;
       const elements = processId.split('.');
       const processName = elements[elements.length - 1];
       return {value: entry[0], label: processName};
     });
 
-    const {assignPreset, assignProcessDefinition} = this.props.process;
+    const {assignPreset, assignProcessDefinitionId} = this.props.processAssignment;
 
     // TODO: Remove the <br/>s!
     return (
@@ -186,10 +190,13 @@ const AssignToWorkflowButton = createReactClass({
             <div className="stream-tag-filter">
               <h6 className="nav-header">Preset</h6>
               <SelectControl
-                onChange={preset => this.props.processAssignSelectPreset(preset.value)}
+                onChange={item =>
+                  this.props.processAssignSelectPreset(
+                    this.props.presetsById[item.value]
+                  )}
                 placeholder="Select a preset of workflow and variables"
                 options={presetsSorted}
-                value={assignPreset}
+                value={assignPreset ? assignPreset.id : null}
               />
             </div>
             <br />
@@ -199,9 +206,7 @@ const AssignToWorkflowButton = createReactClass({
                 onChange={sel => this.props.processAssignSelectProcess(sel.value)}
                 placeholder="Select a workflow or subprocess"
                 options={processDefinitions}
-                value={
-                  assignProcessDefinition ? assignProcessDefinition.definition_id : null
-                } // TODO: use id instead of definition_id
+                value={assignProcessDefinitionId}
               />
             </div>
             <br />
@@ -237,12 +242,14 @@ const mapStateToProps = state => {
     processDefinition: state.processDefinition,
     substanceSearchEntry: state.substanceSearchEntry,
     process: state.process,
-    processAssign: state.processAssign,
+    processAssignment: state.processAssignment,
+
+    presetsById: getPresetsById(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  processDefinitionsGet: () => dispatch(processDefinitionsGet()),
+  getProcessDefinitionList: () => dispatch(getProcessDefinitionList()),
   processAssignSelectPreset: preset => dispatch(processAssignSelectPreset(preset)),
   processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
