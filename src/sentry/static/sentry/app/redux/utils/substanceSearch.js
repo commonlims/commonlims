@@ -40,13 +40,16 @@ export class ListViewEntryGenerator {
   get(groupBy, originalEntry) {
     const isGroupHeader = groupBy !== 'substance';
     let name = null;
+    let global_id = null;
     if (groupBy === 'sample_type') {
       name = originalEntry;
+      global_id = 'Parent-' + this.tempId++;
     } else if (groupBy === 'container') {
       name = originalEntry.name;
+      global_id = originalEntry.global_id;
     }
     const tempEntry = {
-      id: this.tempId++,
+      global_id,
       name,
     };
     const listViewEntry = isGroupHeader ? tempEntry : {...originalEntry};

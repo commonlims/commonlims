@@ -28,7 +28,7 @@ describe('substance redux actions', function() {
     moxios.uninstall();
   });
 
-  const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(5, 'sample');
+  const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(5, 'substance');
 
   describe('get', () => {
     it('should create an action to request substance search entries GET', () => {
