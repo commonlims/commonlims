@@ -15,37 +15,18 @@ export function makeActionCreator(type, ...argNames) {
 // Action creators for standard actions
 
 // List actions:
-export const acRequest = (resource) => {
-  return (search = null, groupBy = null, cursor = null) => {
-    return {
-      type: `GET_${resource}_LIST_REQUEST`,
-      search,
-      groupBy,
-      cursor,
-    };
-  };
-};
+export const acGetListRequest = (resource) =>
+  makeActionCreator(`GET_${resource}_LIST_REQUEST`, 'search', 'groupBy', 'cursor');
 
-export const acSuccess = (resource) => {
-  return (entries, link) => {
-    return {
-      type: `GET_${resource}_LIST_SUCCESS`,
-      entries,
-      link,
-    };
-  };
-};
+export const acGetListSuccess = (resource) =>
+  makeActionCreator(`GET_${resource}_LIST_SUCCESS`, 'entries', 'link');
 
-export const acFailure = (resource) => {
-  return (err) => ({
-    type: `GET_${resource}_LIST_FAILURE`,
-    message: err,
-  });
-};
+export const acGetListFailure = (resource) =>
+  makeActionCreator(`GET_${resource}_LIST_FAILURE`, 'message');
 
 export const acGetList = (resource, url) => {
   return (search, groupBy, cursor) => (dispatch) => {
-    dispatch(acRequest(resource)(search, groupBy, cursor));
+    dispatch(acGetListRequest(resource)(search, groupBy, cursor));
 
     const config = {
       params: {
@@ -56,34 +37,21 @@ export const acGetList = (resource, url) => {
 
     return axios
       .get(url, config)
-      .then((res) => dispatch(acSuccess(resource)(res.data, res.headers.link)))
-      .catch((err) => dispatch(acFailure(resource)(err)));
+      .then((res) => dispatch(acGetListSuccess(resource)(res.data, res.headers.link)))
+      .catch((err) => dispatch(acGetListFailure(resource)(err)));
   };
 };
 
-export const acSelectPage = (resource) => {
-  return (doSelect) => {
-    return {
-      type: `TOGGLE_SELECT_PAGE_OF_${resource}`,
-      doSelect,
-    };
-  };
-};
+export const acSelectPage = (resource) =>
+  makeActionCreator(`SELECT_PAGE_OF_${resource}`, 'doSelect');
 
-export const acSelect = (resource) => {
-  return (id, doSelect) => {
-    return {
-      type: `TOGGLE_SELECT_${resource}`,
-      id,
-      doSelect,
-    };
-  };
-};
+export const acSelect = (resource) =>
+  makeActionCreator(`SELECT_${resource}`, 'id', 'doSelect');
 
 export const resourceActionCreators = {
-  acRequest,
-  acSuccess,
-  acFailure,
+  acGetListRequest,
+  acGetListSuccess,
+  acGetListFailure,
   acGetList,
   acSelect,
   acSelectPage,
@@ -93,9 +61,9 @@ export const resourceActionCreators = {
 export const makeResourceActions = (resourceName, getListUrl) => {
   return {
     // Fetching a list
-    getListRequest: acRequest(resourceName),
-    getListSuccess: acSuccess(resourceName),
-    getListFailure: acFailure(resourceName),
+    getListRequest: acGetListRequest(resourceName),
+    getListSuccess: acGetListSuccess(resourceName),
+    getListFailure: acGetListFailure(resourceName),
     getList: acGetList(resourceName, getListUrl),
 
     // Select entries in the list or pages of it
