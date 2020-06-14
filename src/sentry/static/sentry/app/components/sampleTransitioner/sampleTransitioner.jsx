@@ -18,7 +18,7 @@ import {Flex, Box} from 'rebass';
 // TODO in transition:
 //   [x] Rename container after placing samples
 
-// TODO-nomerge: Rename to SubstanceTransitioner
+// TODO: Rename to SubstanceTransitioner
 class SampleTransitioner extends React.Component {
   constructor(props) {
     super(props);
@@ -124,7 +124,7 @@ class SampleTransitioner extends React.Component {
     const {workBatch} = this.props;
 
     // Temporary hack: create a new target container
-    // TODO-nomerge: move to redux
+    // TODO: move to redux
     //
     // const targetContainer = {
     //   id: -1,
