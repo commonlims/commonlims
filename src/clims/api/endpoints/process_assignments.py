@@ -21,6 +21,7 @@ class ProcessAssignmentsEndpoint(Endpoint):
         variables = request.data["variables"]
 
         assignments = list()
-        assignments += self.app.workflows.batch_assign_substances(substances, definition, request.user, variables)
+        assignments += self.app.workflows.batch_assign_substances(
+            substances, definition, request.user, variables)
 
         return Response({"assignments": len(assignments)}, status=201)

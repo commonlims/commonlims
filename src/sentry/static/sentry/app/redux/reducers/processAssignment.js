@@ -1,3 +1,4 @@
+import {t} from 'app/locale';
 import IndicatorStore from 'app/stores/indicatorStore';
 
 import {
@@ -7,6 +8,7 @@ import {
   PROCESS_ASSIGNMENTS_POST_REQUEST,
   PROCESS_ASSIGNMENTS_POST_SUCCESS,
   PROCESS_ASSIGNMENTS_POST_FAILURE,
+  PROCESS_ASSIGNMENTS_SET_EDITING,
 } from '../actions/processAssignment';
 
 export const initialState = {
@@ -18,6 +20,8 @@ export const initialState = {
   assignPresetId: null,
   assignProcessDefinitionId: null,
   assignVariables: {},
+
+  editing: false,
 };
 
 const processAssignment = (state = initialState, action) => {
@@ -39,6 +43,7 @@ const processAssignment = (state = initialState, action) => {
         assignPreset,
         assignVariables,
         assignProcessDefinitionId,
+        errorMessage: null,
       };
     case PROCESS_ASSIGN_SELECT_PROCESS_DEF:
       return {
@@ -46,12 +51,11 @@ const processAssignment = (state = initialState, action) => {
         assignProcessDefinitionId: action.processDefinitionId,
         assignVariables: {},
         assignPreset: null,
+        errorMessage: null,
       };
     case PROCESS_ASSIGN_SET_VARIABLE: {
       // NOTE: `new` prefix because of scoping issues with using the same name (the linter
       // complains even if this is in its own scope)
-      // TODO-nomerge: The action should also send the preset that this is. This it will
-      // get from a selector!
       const newAssignVariables = {
         ...state.assignVariables,
         [action.key]: action.value,
@@ -61,6 +65,7 @@ const processAssignment = (state = initialState, action) => {
         ...state,
         assignVariables: newAssignVariables,
         assignPreset: null,
+        errorMessage: null,
       };
     }
     case PROCESS_ASSIGNMENTS_POST_REQUEST: {
@@ -75,12 +80,19 @@ const processAssignment = (state = initialState, action) => {
     }
     case PROCESS_ASSIGNMENTS_POST_SUCCESS: {
       IndicatorStore.remove(state.indicatorToken);
+      const indicatorToken = IndicatorStore.addSuccess(
+        t('Successfully assigned to process.')
+      );
       return {
         ...state,
         errorMessage: null,
         loading: false,
         saving: false,
-        indicatorToken: null,
+        editing: false,
+        assignPreset: null,
+        assignVariables: {},
+        assignProcessDefinitionId: null,
+        indicatorToken,
       };
     }
     case PROCESS_ASSIGNMENTS_POST_FAILURE: {
@@ -91,6 +103,15 @@ const processAssignment = (state = initialState, action) => {
         loading: false,
         saving: false,
         indicatorToken: null,
+      };
+    }
+    case PROCESS_ASSIGNMENTS_SET_EDITING: {
+      return {
+        ...state,
+        editing:
+          action.editing === null || action.editing === undefined
+            ? !state.editing
+            : action.editing,
       };
     }
     default:

@@ -1,59 +1,40 @@
 import {t} from 'app/locale';
 import {Client} from 'app/api';
+import {substanceSearchEntriesToggleSelectAll} from 'app/redux/actions/substanceSearchEntry';
+import {ac} from 'app/redux/actions/shared';
 
 // Assigning substances to processes.
 // TODO-nomerge: Rename actions to processAssignments
 // TODO-nomerge: Use the wizard
-// TODO-nomerge: Wizard should use makeActionCreator
 export const PROCESS_ASSIGN_SELECT_PRESET = 'PROCESS_ASSIGN_SELECT_PRESET';
-export const processAssignSelectPreset = preset => {
-  return {
-    type: PROCESS_ASSIGN_SELECT_PRESET,
-    preset,
-  };
-};
+export const processAssignSelectPreset = ac(PROCESS_ASSIGN_SELECT_PRESET, 'preset');
 
 export const PROCESS_ASSIGN_SELECT_PROCESS_DEF = 'PROCESS_ASSIGN_SELECT_PROCESS_DEF';
-export const processAssignSelectProcess = processDefinitionId => {
-  return {
-    type: PROCESS_ASSIGN_SELECT_PROCESS_DEF,
-    processDefinitionId,
-  };
-};
+export const processAssignSelectProcess = ac(
+  PROCESS_ASSIGN_SELECT_PRESET,
+  'processDefinitionId'
+);
 
 export const PROCESS_ASSIGN_SET_VARIABLE = 'PROCESS_ASSIGN_SET_VARIABLE';
-export const processAssignSetVariable = (key, value) => {
-  return {
-    type: PROCESS_ASSIGN_SET_VARIABLE,
-    key,
-    value,
-  };
-};
+export const processAssignSetVariable = ac(PROCESS_ASSIGN_SET_VARIABLE, 'key', 'value');
 
 // Requested a POST TO `process-assignments`
 export const PROCESS_ASSIGNMENTS_POST_REQUEST = 'PROCESS_ASSIGNMENTS_POST_REQUEST';
-export const processAssignmentsPostRequest = () => {
-  return {
-    type: PROCESS_ASSIGNMENTS_POST_REQUEST,
-    msg: t('Assigning to process...'),
-  };
-};
+export const processAssignmentsPostRequest = ac(PROCESS_ASSIGNMENTS_POST_REQUEST, 'msg');
 
 // Successfully POSTed to `process-assignments`
 export const PROCESS_ASSIGNMENTS_POST_SUCCESS = 'PROCESS_ASSIGNMENTS_POST_SUCCESS';
-export const processAssignmentsPostSuccess = response => {
-  return {
-    type: PROCESS_ASSIGNMENTS_POST_SUCCESS,
-    response,
-  };
-};
+export const processAssignmentsPostSuccess = ac(
+  PROCESS_ASSIGNMENTS_POST_SUCCESS,
+  'response'
+);
 
 // Error while POSTing to `process-assignments`
 export const PROCESS_ASSIGNMENTS_POST_FAILURE = 'PROCESS_ASSIGNMENTS_POST_FAILURE';
-export const processAssignmentsPostFailure = err => ({
-  type: PROCESS_ASSIGNMENTS_POST_FAILURE,
-  message: err,
-});
+export const processAssignmentsPostFailure = ac(
+  PROCESS_ASSIGNMENTS_POST_FAILURE,
+  'message'
+);
 
 export const processAssignmentsPost = (
   definitionId,
@@ -62,7 +43,7 @@ export const processAssignmentsPost = (
   containers,
   org
 ) => dispatch => {
-  dispatch(processAssignmentsPostRequest());
+  dispatch(processAssignmentsPostRequest(t('Assigning to process...')));
   const api = new Client(); // TODO: use axios (must send same headers as Client does).
 
   const data = {
@@ -77,9 +58,13 @@ export const processAssignmentsPost = (
     data,
     success: res => {
       dispatch(processAssignmentsPostSuccess(res));
+      dispatch(substanceSearchEntriesToggleSelectAll(false));
     },
     error: err => {
-      dispatch(processAssignmentsPostFailure(err));
+      dispatch(processAssignmentsPostFailure(err.responseJSON.detail));
     },
   });
 };
+
+export const PROCESS_ASSIGNMENTS_SET_EDITING = 'PROCESS_ASSIGNMENTS_SET_EDITING';
+export const processAssignmentsSetEditing = ac(PROCESS_ASSIGNMENTS_SET_EDITING, 'value');
