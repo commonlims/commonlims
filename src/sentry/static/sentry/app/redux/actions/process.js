@@ -1,6 +1,7 @@
 // TODO: We've discussed using axios instead of the sentry Client. Then we'll need to set
 // things up (auth etc) in the same way for POST requests being authenticated.
 import {Client} from 'app/api';
+import axios from 'axios';
 
 import {t} from 'app/locale';
 

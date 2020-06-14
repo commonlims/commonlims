@@ -13,10 +13,10 @@ export const workBatchesGetRequest = (search, groupBy, cursor) => {
 };
 
 export const WORK_BATCHES_GET_SUCCESS = 'WORK_BATCHES_GET_SUCCESS';
-export const workBatchesGetSuccess = workBatches => {
+export const workBatchesGetSuccess = entries => {
   return {
     type: WORK_BATCHES_GET_SUCCESS,
-    workBatches,
+    entries,
   };
 };
 

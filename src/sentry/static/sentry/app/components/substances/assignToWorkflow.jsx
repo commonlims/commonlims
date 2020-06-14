@@ -3,6 +3,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Modal from 'react-bootstrap/lib/Modal';
 import {connect} from 'react-redux';
+import ClimsTypes from 'app/climsTypes';
 
 import {t} from 'app/locale';
 import SelectControl from 'app/components/forms/selectControl';
@@ -20,6 +21,7 @@ import {
   processAssignSelectProcess,
   processAssignSetVariable,
   processAssignmentsPost,
+  processAssignmentsSetEditing,
 } from 'app/redux/actions/processAssignment';
 
 import {getProcessDefinitionList} from 'app/redux/actions/processDefinition';
@@ -47,11 +49,14 @@ const AssignToWorkflowButton = createReactClass({
     processAssignSelectProcess: PropTypes.func.isRequired,
     processAssignSetVariable: PropTypes.func.isRequired,
     presetsById: PropTypes.object,
+
+    processDefinition: ClimsTypes.List.isRequired,
+    processAssignment: ClimsTypes.ProcessAssignmentStore.isRequired,
+    processAssignmentsSetEditing: PropTypes.func,
   },
 
   getInitialState() {
     return {
-      isModalOpen: false,
       errors: {},
       value: null,
       setProcessVariables: {},
@@ -97,9 +102,7 @@ const AssignToWorkflowButton = createReactClass({
     if (this.props.disabled) {
       return;
     }
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-    });
+    this.props.processAssignmentsSetEditing();
   },
 
   onSubmit(e) {
@@ -110,10 +113,9 @@ const AssignToWorkflowButton = createReactClass({
     }
 
     // TODO: substances already selected
-    // TODO-nomerge: This is totally wrong now
     this.props.processAssignmentsPost(
-      this.props.process.assignProcessDefinitionIdd,
-      this.props.process.assignVariables,
+      this.props.processAssignment.assignProcessDefinitionId,
+      this.props.processAssignment.assignVariables,
       this.props.substanceSearchEntry.selectedIds.toArray(),
       [], // only if assigning containers
       'lab' // TODO: Get from URL
@@ -133,7 +135,9 @@ const AssignToWorkflowButton = createReactClass({
     const {assignVariables, assignProcessDefinitionId} = this.props.processAssignment;
 
     if (assignProcessDefinitionId) {
-      const assignProcessDefinition = this.props.processDefinition.byIds[assignProcessDefinitionId];
+      const assignProcessDefinition = this.props.processDefinition.byIds[
+        assignProcessDefinitionId
+      ];
       fields = this.createFieldsFromDefinition(assignProcessDefinition);
     } else {
       fields = [];
@@ -167,7 +171,11 @@ const AssignToWorkflowButton = createReactClass({
       return {value: entry[0], label: processName};
     });
 
-    const {assignPreset, assignProcessDefinitionId} = this.props.processAssignment;
+    const {
+      assignPreset,
+      assignProcessDefinitionId,
+      errorMessage,
+    } = this.props.processAssignment;
 
     // TODO: Remove the <br/>s!
     return (
@@ -181,12 +189,21 @@ const AssignToWorkflowButton = createReactClass({
         >
           {this.props.children}
         </a>
-        <Modal show={this.state.isModalOpen} animation={false} onHide={this.onToggle}>
+        <Modal
+          show={this.props.processAssignment.editing}
+          animation={false}
+          onHide={this.onToggle}
+        >
           <form onSubmit={this.onSubmit}>
             <div className="modal-header">
               <h4>{t('Assign samples to a workflow')}</h4>
             </div>
 
+            {errorMessage !== null && (
+              <div className="alert alert-error alert-block">
+                {t(`Not able to assign to process: ${errorMessage}`)}
+              </div>
+            )}
             <div className="stream-tag-filter">
               <h6 className="nav-header">Preset</h6>
               <SelectControl
@@ -209,6 +226,7 @@ const AssignToWorkflowButton = createReactClass({
                 value={assignProcessDefinitionId}
               />
             </div>
+
             <br />
             {this.renderSettings()}
 
@@ -254,11 +272,11 @@ const mapDispatchToProps = dispatch => ({
   processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
     dispatch(processAssignSetVariable(key, value)),
-
   processAssignmentsPost: (definitionId, variables, substances, containers, org) =>
     dispatch(
       processAssignmentsPost(definitionId, variables, substances, containers, org)
     ),
+  processAssignmentsSetEditing: value => dispatch(processAssignmentsSetEditing(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssignToWorkflowButton);

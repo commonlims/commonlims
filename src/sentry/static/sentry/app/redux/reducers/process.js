@@ -1,5 +1,6 @@
-// TODO: Here we interact with the IndicatorStore directly. It would be nice to refactor
-// it to use redux, since it's used all over the place.
+// TODO-medium: Here we interact with the IndicatorStore directly. It would be nice to refactor
+// it to use redux.
+
 import IndicatorStore from 'app/stores/indicatorStore';
 
 import {
@@ -12,8 +13,6 @@ import {
 } from '../actions/process';
 
 export const initialState = {
-  loading: false,
-  saving: false,
   errorMessage: null,
   processById: {},
   indicatorToken: null,
@@ -36,14 +35,15 @@ const process = (state = initialState, action) => {
         saving: false,
       };
     }
-    case PROCESSES_GET_FAILURE:
+    case PROCESSES_GET_FAILURE: {
       return {
         ...state,
         errorMessage: action.message,
         loading: false,
         saving: false,
       };
-    case PROCESSES_POST_REQUEST:
+    }
+    case PROCESSES_POST_REQUEST: {
       const indicatorToken = IndicatorStore.add(action.msg);
       return {
         ...state,
@@ -52,7 +52,8 @@ const process = (state = initialState, action) => {
         saving: true,
         indicatorToken,
       };
-    case PROCESSES_POST_SUCCESS:
+    }
+    case PROCESSES_POST_SUCCESS: {
       IndicatorStore.remove(state.indicatorToken);
       return {
         ...state,
@@ -61,7 +62,8 @@ const process = (state = initialState, action) => {
         saving: false,
         indicatorToken: null,
       };
-    case PROCESSES_POST_FAILURE:
+    }
+    case PROCESSES_POST_FAILURE: {
       IndicatorStore.remove(state.indicatorToken);
       return {
         ...state,
@@ -70,6 +72,7 @@ const process = (state = initialState, action) => {
         saving: false,
         indicatorToken: null,
       };
+    }
     default:
       return state;
   }

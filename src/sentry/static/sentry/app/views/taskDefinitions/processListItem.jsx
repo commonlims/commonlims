@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'react-emotion';
 import {PanelBody} from 'app/components/panels';
-import TaskListItem from 'app/components/task/taskListItem';
+import TaskListItem from 'app/views/taskDefinitions/taskListItem';
 
 class ProcessListItem extends React.Component {
   constructor(props) {
@@ -26,12 +26,15 @@ class ProcessListItem extends React.Component {
   renderTasks() {
     const {tasks} = this.props;
     return tasks.map((task, i) => {
-      const {count, name, taskDefinitionKey} = task;
+      const {count, name, taskDefinitionKey, processDefinitionKey} = task;
       return (
         <TaskListItem
           name={name}
           count={count}
           taskDefinitionKey={taskDefinitionKey}
+          processDefinitionKey={processDefinitionKey}
+          task={task}
+          selectTaskDefinition={this.props.selectTaskDefinition}
           layout={this.layout}
           key={i}
         />
@@ -74,6 +77,7 @@ ProcessListItem.propTypes = {
   processDefinitionKey: PropTypes.string.isRequired,
   processDefinitionName: PropTypes.string,
   count: PropTypes.number.isRequired,
+  selectTaskDefinition: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

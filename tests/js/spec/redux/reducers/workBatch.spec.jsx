@@ -17,6 +17,7 @@ describe('workBatch reducer', () => {
     expect(state).toEqual({
       byIds: {},
       creating: false,
+      detailsId: null,
       errorMessage: null,
       listViewState: {
         allVisibleSelected: false,
@@ -30,23 +31,25 @@ describe('workBatch reducer', () => {
         visibleIds: [],
       },
       loading: true,
+      loadingDetails: false,
     });
   });
 
   it('should handle WORK_BATCHES_GET_SUCCESS', () => {
     const state = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_SUCCESS',
-      workBatches: [TestStubs.WorkBatch(1)],
+      entries: [TestStubs.WorkBatch(1)],
     });
 
     expect(state).toEqual({
       byIds: {
         '1': {
-          created: '2019-06-12T13:07:13.490Z',
+          created_at: '2020-03-18T21:55:21.255768Z',
+          updated_at: '2020-03-18T21:55:21.255788Z',
           extra_fields: '',
-          handler: 'somehandler2',
+          handler: '',
           id: 1,
-          name: 'Test1',
+          name: 'WorkBatch1',
           num_comments: 0,
           organization: 1,
           status: 0,
@@ -54,6 +57,7 @@ describe('workBatch reducer', () => {
       },
       creating: false,
       errorMessage: null,
+      detailsId: null,
       listViewState: {
         allVisibleSelected: false,
         groupBy: 'workbatch',
@@ -63,6 +67,7 @@ describe('workBatch reducer', () => {
         visibleIds: [1],
       },
       loading: false,
+      loadingDetails: false,
     });
   });
 
@@ -75,6 +80,7 @@ describe('workBatch reducer', () => {
     expect(state).toEqual({
       byIds: {},
       creating: false,
+      detailsId: null,
       errorMessage: 'oopsiedoodle',
       listViewState: {
         allVisibleSelected: false,
@@ -85,6 +91,7 @@ describe('workBatch reducer', () => {
         visibleIds: [],
       },
       loading: false,
+      loadingDetails: false,
     });
   });
 
@@ -107,6 +114,8 @@ describe('workBatch reducer', () => {
         visibleIds: [],
       },
       loading: false,
+      detailsId: null,
+      loadingDetails: false,
     });
   });
 
@@ -127,7 +136,7 @@ describe('workBatch reducer', () => {
   it('should handle WORK_BATCHES_TOGGLE_SELECT_ALL to select a visible page', () => {
     const afterGetState = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_SUCCESS',
-      workBatches: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
+      entries: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
     });
     const pageSelectedState = workBatch(afterGetState, {
       type: 'WORK_BATCHES_TOGGLE_SELECT_ALL',
@@ -138,7 +147,7 @@ describe('workBatch reducer', () => {
   it('should handle WORK_BATCHES_TOGGLE_SELECT_ALL to deselect a visible page', () => {
     const afterGetState = workBatch(initialState, {
       type: 'WORK_BATCHES_GET_SUCCESS',
-      workBatches: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
+      entries: [TestStubs.WorkBatch(1), TestStubs.WorkBatch(2)],
     });
     const pageSelectedState = workBatch(afterGetState, {
       type: 'WORK_BATCHES_TOGGLE_SELECT_ALL',

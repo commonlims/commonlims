@@ -1,13 +1,14 @@
-// Example: const workbatch = TestStubs.WorkBatch(5);
+// Example: const workBatch = TestStubs.TaskDefinition(5);
 export function WorkBatch(id) {
   return {
-    id: id ? id : 1,
-    name: 'Test' + (id ? id : 1),
-    organization: 1,
-    handler: 'somehandler2',
-    created: '2019-06-12T13:07:13.490Z',
+    id: id,
+    name: 'WorkBatch' + id,
+    handler: '',
+    created_at: '2020-03-18T21:55:21.255768Z',
+    updated_at: '2020-03-18T21:55:21.255788Z',
     extra_fields: '',
     num_comments: 0,
     status: 0,
+    organization: 1,
   };
 }

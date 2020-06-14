@@ -5,6 +5,7 @@ import {workBatchesGet, workBatchToggleSelect} from 'app/redux/actions/workBatch
 import ClimsTypes from 'app/climsTypes';
 import ListViewContainer from 'app/components/listViewContainer';
 import moment from 'moment';
+import Link from 'app/components/link';
 
 class WorkBatchListContainer extends React.Component {
   constructor(props) {
@@ -21,7 +22,11 @@ class WorkBatchListContainer extends React.Component {
       {
         Header: 'Task',
         id: 'name',
-        accessor: 'name',
+        accessor: row => (
+          <Link to={`/${this.props.organization.slug}/workbatches/${row.id}`}>
+            {row.name}
+          </Link>
+        ),
         detailsLink: true,
       },
       {
@@ -47,12 +52,14 @@ class WorkBatchListContainer extends React.Component {
         loading={this.props.loading}
         errorMessage={this.props.errorMessage}
         location={this.props.location}
-        columns={this.getColumns}
+        columns={this.getColumns.bind(this)}
         groupOptions={this.groupOptions}
         searchHelpText="Search for work in progress"
         listViewState={this.props.listViewState}
         byIds={this.props.byIds}
         getEntries={this.props.getWorkBatches}
+        toggleSingle={this.props.toggleSingle}
+        canSelect={false}
       />
     );
   }
@@ -66,7 +73,8 @@ const mapStateToProps = state => state.workBatch;
 
 const mapDispatchToProps = dispatch => ({
   getWorkBatches: () => dispatch(workBatchesGet()),
-  toggleWorkBatchSelect: id => dispatch(workBatchToggleSelect(id)),
+  toggleWorkBatchSelect: id => dispatch(workBatchToggleSelect(id)), // TODO: Rename!
+  toggleSingle: id => dispatch(workBatchToggleSelect(id)),
 });
 
 export default withOrganization(

@@ -22,9 +22,10 @@ import errorHandler from 'app/utils/errorHandler';
 // CLIMS
 import SubstancesContainer from 'app/views/substances/index';
 import ProjectsContainer from 'app/views/projects/index';
-import WorkBatchList from 'app/views/workBatchList/index';
-import TaskList from 'app/views/taskList/index';
-import WorkBatchDetails from 'app/views/workBatchDetails/organization/index';
+import WorkBatchListContainer from 'app/views/workBatchList/index';
+import TaskDefinitionsContainer from 'app/views/taskDefinitions/index';
+import TasksContainer from 'app/views/tasks/index';
+import WorkBatchDetailsContainer from 'app/views/workBatchDetails/organization/index';
 
 function appendTrailingSlash(nextState, replace) {
   const lastChar = nextState.location.pathname.slice(-1);
@@ -469,13 +470,17 @@ function routes() {
         <Route component={errorHandler(OrganizationRoot)}>
           <IndexRoute component={errorHandler(SubstancesContainer)} />
 
-          <Route path="tasks/" component={errorHandler(TaskList)} />
-          <Route path="work-batches/" component={errorHandler(WorkBatchList)} />
+          <Route path="tasks/" component={errorHandler(TaskDefinitionsContainer)} />
+          <Route
+            path="tasks/:processKey/:taskKey/"
+            component={errorHandler(TasksContainer)}
+          />
+          <Route path="workbatches/" component={errorHandler(WorkBatchListContainer)} />
           <Route path="substances/" component={errorHandler(SubstancesContainer)} />
 
           <Route
-            path="work-batches/:groupId/"
-            component={errorHandler(WorkBatchDetails)}
+            path="workbatches/:groupId/"
+            component={errorHandler(WorkBatchDetailsContainer)}
             ignoreScrollBehavior
           >
             <Route
