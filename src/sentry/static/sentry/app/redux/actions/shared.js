@@ -9,3 +9,18 @@ export function ac(type, ...argNames) {
     return action;
   };
 }
+
+// Action creators for standard actions
+
+// List actions:
+export const makeListRequest = type => {
+  return () => {
+    return {
+      type,
+    };
+  };
+};
+
+export const list = {
+  makeListRequest,
+};

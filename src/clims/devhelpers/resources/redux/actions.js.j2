@@ -36,7 +36,7 @@ export const get{{ resource }}List = ({{ ", ".join(list_parameters) }}) => dispa
   };
 
   return axios
-    .get(`{{ list_endpoint }}`, config)
+    .get('{{ list_endpoint }}', config)
     .then(res => dispatch(get{{ resource }}ListSuccess(res.data)))
     .catch(err => dispatch(get{{ resource }}ListFailure(err)));
 };

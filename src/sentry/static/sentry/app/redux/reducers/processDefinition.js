@@ -9,7 +9,7 @@ import {
   GET_PROCESS_DEFINITION_LIST_FAILURE,
 } from '../actions/processDefinition';
 
-import { list, entry } from './shared';
+import {list, entry} from './shared';
 
 export const initialState = {
   ...list.initialState,

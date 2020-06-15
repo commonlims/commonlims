@@ -139,24 +139,26 @@ export function getEntryFailure(state, action) {
 }
 
 export const list = {
+  // State we require for following a list protocol
   initialState: {
     loading: false,
     errorMessage: null,
     byIds: {},
     listViewState: {
       allVisibleSelected: false,
-      groupBy: 'workbatch',
-      search: 'workbatch.name:',
+      groupBy: null,
+      search: null,
       visibleIds: [], // Sorted list of items visible in the current page
       selectedIds: new Set(), // The set of items selected, allowed to be outside of the current page
       pagination: {
         pageLinks: null, // The links returned by the backend
-        cursor: '',
+        cursor: null,
       },
     },
     creating: false,
   },
 
+  // All reducers available for that list:
   selectSingle,
   selectAll,
   getListRequest,
@@ -165,10 +167,13 @@ export const list = {
 };
 
 export const entry = {
+  // Required state for following an entry protocol
   initialState: {
     loadingDetails: false,
     detailsId: null,
   },
+
+  // All reducers
   createEntryRequest,
   createEntrySuccess,
   createEntryFailure,

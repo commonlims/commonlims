@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 
 from django.core.management.base import BaseCommand
-from clims.devhelpers.generate import ReduxCodeGenerator
+from clims.devhelpers.generate import CodeGenerator
 
 
 class Command(BaseCommand):
@@ -16,5 +16,5 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         if options['redux']:
-            gen = ReduxCodeGenerator()
-            gen.generate()
+            gen = CodeGenerator()
+            gen.generate_all()
