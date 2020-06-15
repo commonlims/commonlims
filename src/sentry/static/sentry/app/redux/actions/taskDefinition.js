@@ -1,6 +1,15 @@
-// Auto-generated with `lims django codegen --redux`
-
 import axios from 'axios';
+import {makeResourceActions} from './shared';
+
+export const RESOURCE_NAME = 'TASK_DEFINITION';
+
+export const taskDefinitionActions = makeResourceActions(
+  RESOURCE_NAME,
+  '/api/0/process-definitions/',
+  {
+    params: {},
+  }
+);
 
 ////// List of TaskDefinition
 export const GET_TASK_DEFINITION_LIST_REQUEST = 'GET_TASK_DEFINITION_LIST_REQUEST';

@@ -1,5 +1,3 @@
-// Auto-generated with `lims django codegen --redux`
-
 import axios from 'axios';
 
 ////// List of Task
