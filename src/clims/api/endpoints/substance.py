@@ -8,6 +8,7 @@ from sentry.api.base import DEFAULT_AUTHENTICATION
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.substance import SubstanceSerializer
+from clims.services.substance import SubstanceQueryBuilder
 
 
 class SubstanceEndpoint(OrganizationEndpoint):
@@ -16,8 +17,9 @@ class SubstanceEndpoint(OrganizationEndpoint):
 
     def get(self, request, organization):
         # TODO: Filter by the organization
-        search_string = request.GET.get('search', None)
-        queryset = self.app.substances.search(search_string)
+        query_from_url = request.GET.get('search', None)
+        query_builder = SubstanceQueryBuilder(query_from_url)
+        queryset = self.app.substances.filter_from(query_builder)
 
         return self.paginate(
             request=request,

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+from abc import abstractmethod
 from django.db.models import Prefetch
 from django.core import exceptions as django_exceptions
 from clims.services.exceptions import DoesNotExist
@@ -108,6 +109,10 @@ class BaseExtensibleService(object):
         qs = qs.order_by('-archetype__created_at')
         return qs
 
+    def filter_from(self, query_builder):
+        query_params = query_builder.parse_query()
+        return self.filter(**query_params)
+
     def filter(self, **kwargs):
         order_by_arg = kwargs.pop('order_by', None)
         get_args = self._get_filter_arguments(**kwargs)
@@ -146,6 +151,8 @@ class BaseExtensibleService(object):
                 get_args['archetype__project__name'] = value
             elif key == 'latest':
                 get_args['{}'.format(key)] = value
+            elif key.startswith('properties'):
+                get_args[key] = value
             else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args
@@ -182,3 +189,39 @@ class BaseExtensibleService(object):
             distinct(extensible_prop_type_value_field)
 
         return {x.value for x in unique_values}
+
+
+class BaseQueryBuilder:
+    def __init__(self, query_from_url):
+        self.order_by = None
+        self.query_from_url = query_from_url
+
+    def order_by_created_date(self):
+        self.order_by = '-archetype__created_at'
+
+    def parse_query(self):
+        query_params = dict()
+        if self.order_by:
+            query_params['order_by'] = self.order_by
+
+        key, val = self._parse_query_from_url()
+        if key:
+            parsed_params = self.parse_params_for_class(key, val)
+            query_params = dict(query_params, **parsed_params)
+        return query_params
+
+    @abstractmethod
+    def parse_params_for_class(self, key, val):
+        pass
+
+    def _parse_query_from_url(self):
+        query = self.query_from_url.strip() if self.query_from_url else []
+        if len(query) == 0:
+            return None, None
+        query = query.split(" ")
+
+        if len(query) > 1:
+            raise NotImplementedError("Complex queries are not yet supported")
+        query = query[0]
+        key, val = query.split(":")
+        return key, val
