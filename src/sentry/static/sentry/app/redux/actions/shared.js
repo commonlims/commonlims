@@ -16,22 +16,24 @@ export function ac(type, ...argNames) {
 
 // List actions:
 export const acRequest = resource => {
-  return (search = null, groupBy = null, cursor = null) => {
+  return (search = null, groupBy = null, cursor = null, parent = null) => {
     return {
       type: `GET_${resource}_LIST_REQUEST`,
       search,
       groupBy,
       cursor,
+      parent,
     };
   };
 };
 
 export const acSuccess = resource => {
-  return (entries, link) => {
+  return (entries, link, parent) => {
     return {
       type: `GET_${resource}_LIST_SUCCESS`,
       entries,
       link,
+      parent,
     };
   };
 };
@@ -44,8 +46,8 @@ export const acFailure = resource => {
 };
 
 export const acGetList = (resource, url) => {
-  return (search, groupBy, cursor) => dispatch => {
-    dispatch(acRequest(resource)(search, groupBy, cursor));
+  return (search, groupBy, cursor, parent = null) => dispatch => {
+    dispatch(acRequest(resource)(search, groupBy, cursor, parent));
 
     const config = {
       params: {
@@ -56,7 +58,7 @@ export const acGetList = (resource, url) => {
 
     return axios
       .get(url, config)
-      .then(res => dispatch(acSuccess(resource)(res.data, res.headers.link)))
+      .then(res => dispatch(acSuccess(resource)(res.data, res.headers.link, parent)))
       .catch(err => dispatch(acFailure(resource)(err)));
   };
 };
