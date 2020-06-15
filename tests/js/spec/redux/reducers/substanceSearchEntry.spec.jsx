@@ -39,6 +39,67 @@ describe('substance reducer', () => {
     });
   });
 
+  it('state is not mutated when no grouping', () => {
+    // Arrange
+    const prevState = {
+      ...initialState,
+      loading: true,
+      errorMessage: 'oops',
+    };
+
+    const responseNoGroup = TestStubs.SubstanceSearchEntries(2, 'sample');
+
+    const action = {
+      type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
+      substanceSearchEntries: responseNoGroup,
+      isGroupHeader: false,
+      link: 'some-link',
+    };
+
+    const action_orig = JSON.parse(JSON.stringify(action));
+    const prevState_orig = JSON.parse(JSON.stringify(prevState));
+
+    // Act
+    substanceSearchEntry(prevState, action);
+
+    // Assert
+    // It has to be 'copied' in the same way as before. An empty Immutable.Set()
+    // is converted to []
+    const actionAfter = JSON.parse(JSON.stringify(action));
+    const stateAfter = JSON.parse(JSON.stringify(prevState));
+    expect(actionAfter).toEqual(action_orig);
+    expect(stateAfter).toEqual(prevState_orig);
+  });
+
+  it('state is not mutated when grouping', () => {
+    // Arrange
+    const responseGrouped = ['my_sample_type'];
+
+    const prevState = {
+      ...initialState,
+      loading: true,
+      errorMessage: 'oops',
+    };
+
+    const action = {
+      type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
+      substanceSearchEntries: responseGrouped,
+      isGroupHeader: true,
+      link: 'some-link',
+    };
+    const prevState_orig = JSON.parse(JSON.stringify(prevState));
+    const action_orig = JSON.parse(JSON.stringify(action));
+
+    // Act
+    substanceSearchEntry(prevState, action);
+
+    // Assert
+    const treatedAction = JSON.parse(JSON.stringify(action));
+    const treatedState = JSON.parse(JSON.stringify(prevState));
+    expect(treatedAction).toEqual(action_orig);
+    expect(treatedState).toEqual(prevState_orig);
+  });
+
   it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for not-grouped', () => {
     // Arrange
     const prevState = {
@@ -49,7 +110,8 @@ describe('substance reducer', () => {
 
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
-      substanceSearchEntries: JSON.parse(JSON.stringify(mockResponseNoGroup)),
+      substanceSearchEntries: mockResponseNoGroup,
+      groupBy: 'substance',
       isGroupHeader: false,
       link: 'some-link',
     };
@@ -71,14 +133,15 @@ describe('substance reducer', () => {
     });
   });
 
-  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for grouped', () => {
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for sample type', () => {
     // Arrange
     const mockResponseGrouped = ['my_sample_type'];
 
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
-      substanceSearchEntries: JSON.parse(JSON.stringify(mockResponseGrouped)),
+      substanceSearchEntries: mockResponseGrouped,
       link: 'some-link',
+      groupBy: 'sample_type',
       isGroupHeader: true,
     };
 
@@ -96,6 +159,48 @@ describe('substance reducer', () => {
       {
         id: 1,
         name: 'my_sample_type',
+        isGroupHeader: true,
+      },
+    ];
+
+    const mockedByIds = keyBy(mockedResponseFromReducer, entry => entry.id);
+
+    expect(nextState).toEqual({
+      ...prevState,
+      errorMessage: null,
+      loading: false,
+      visibleIds: [1],
+      byIds: mockedByIds,
+      pageLinks: 'some-link',
+    });
+  });
+
+  it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for containers', () => {
+    // Arrange
+    const mockResponseGrouped = [{name: 'mycontainer'}];
+
+    const action = {
+      type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
+      substanceSearchEntries: mockResponseGrouped,
+      link: 'some-link',
+      groupBy: 'container',
+      isGroupHeader: true,
+    };
+
+    const prevState = {
+      ...initialState,
+      loading: true,
+      errorMessage: 'oops',
+    };
+
+    // Act
+    const nextState = substanceSearchEntry(prevState, action);
+
+    // Assert
+    const mockedResponseFromReducer = [
+      {
+        id: 1,
+        name: 'mycontainer',
         isGroupHeader: true,
       },
     ];

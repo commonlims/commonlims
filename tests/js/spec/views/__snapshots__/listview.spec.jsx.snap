@@ -132,11 +132,29 @@ ListView {
                   <td>
                     <CaretRight />
                   </td>
-                  <td>
+                  <td
+                    style={
+                      Object {
+                        "fontStyle": "normal",
+                      }
+                    }
+                  >
                     Zombie brain
                   </td>
-                  <td />
-                  <td />
+                  <td
+                    style={
+                      Object {
+                        "fontStyle": "normal",
+                      }
+                    }
+                  />
+                  <td
+                    style={
+                      Object {
+                        "fontStyle": "normal",
+                      }
+                    }
+                  />
                 </tr>
               </tbody>
             </table>

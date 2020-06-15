@@ -71,7 +71,6 @@ describe('substance redux actions', function() {
       const search = 'search';
       const groupBy = 'substance';
       const cursor = undefined;
-      const isGroupHeader = false;
 
       const expectedActions = [
         {
@@ -82,13 +81,13 @@ describe('substance redux actions', function() {
         {
           type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
           substanceSearchEntries,
-          isGroupHeader,
+          groupBy,
         },
       ];
 
       // TODO: return
       return store
-        .dispatch(substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader))
+        .dispatch(substanceSearchEntriesGet(search, groupBy, cursor))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
           const request = moxios.requests.mostRecent();
@@ -124,7 +123,7 @@ describe('substance redux actions', function() {
         },
         {
           type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
-          isGroupHeader,
+          groupBy,
           substanceSearchEntries,
         },
       ];

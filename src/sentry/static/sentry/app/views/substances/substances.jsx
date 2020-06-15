@@ -40,8 +40,7 @@ class Substances extends React.Component {
   }
 
   onSearch(search, groupBy, cursor) {
-    const isGroupHeader = groupBy !== 'substance';
-    this.props.substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader);
+    this.props.substanceSearchEntriesGet(search, groupBy, cursor);
 
     // Add search to history
     const location = this.props.location;
@@ -78,7 +77,7 @@ class Substances extends React.Component {
         Header: 'Sample name',
         id: 'name',
         accessor: 'name',
-        aggregate: vals => '',
+        fontstyle: d => (d.isGroupHeader ? 'italic' : 'normal'),
       },
       {
         Header: 'Container',
@@ -93,7 +92,6 @@ class Substances extends React.Component {
         id: 'index',
         accessor: d =>
           d.isGroupHeader ? null : d.location ? d.location.index : '<No location>',
-        aggregate: vals => '',
       },
       {
         Header: 'Volume',
@@ -104,7 +102,6 @@ class Substances extends React.Component {
             : d.properties && d.properties.volume
               ? showRounded(d.properties.volume.value)
               : null,
-        aggregate: vals => '',
       },
       {
         Header: 'Sample Type',
@@ -120,7 +117,6 @@ class Substances extends React.Component {
         Header: 'Priority',
         id: 'priority',
         accessor: d => (d.isGroupHeader ? null : d.priority),
-        aggregate: vals => '',
       },
       {
         Header: 'Waiting',

@@ -99,6 +99,14 @@ class ListView extends React.Component {
     }
   }
 
+  getFontStyle(entryId, header) {
+    const row = this.props.dataById[entryId];
+    if (header.fontstyle !== undefined) {
+      return header.fontstyle(row);
+    }
+    return 'normal';
+  }
+
   getDisplayCell(entryId, header) {
     const row = this.props.dataById[entryId];
     if (typeof header.accessor === 'function') {
@@ -161,7 +169,10 @@ class ListView extends React.Component {
                       )}
                       {this.props.columns.map((header, index) => {
                         return (
-                          <td key={'parent-cell-' + entryId + '-' + index}>
+                          <td
+                            key={'parent-cell-' + entryId + '-' + index}
+                            style={{fontStyle: this.getFontStyle(entryId, header)}}
+                          >
                             {this.getDisplayCell(entryId, header)}
                           </td>
                         );

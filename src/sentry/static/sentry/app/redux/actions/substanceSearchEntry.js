@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getRestcall} from 'app/redux/utils/substanceSearch';
 
 // SubstancesSearchEntry encapsulates a potentially grouped entry in the substance search UI
 // The store always has one page worth of data. The list contains a generic wrapper class
@@ -33,13 +34,13 @@ export const substanceSearchEntriesGetRequest = (search, groupBy, cursor) => {
 export const substanceSearchEntriesGetSuccess = (
   substanceSearchEntries,
   link,
-  isGroupHeader
+  groupBy
 ) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS,
     substanceSearchEntries,
     link,
-    isGroupHeader,
+    groupBy,
   };
 };
 
@@ -48,46 +49,16 @@ export const substanceSearchEntriesGetFailure = err => ({
   message: err,
 });
 
-export const substanceSearchEntriesGet = (
-  search,
-  groupBy,
-  cursor,
-  isGroupHeader
-) => dispatch => {
+export const substanceSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
-  if (!isGroupHeader) {
-    const request = {
-      params: {
-        search,
-        cursor,
-      },
-    };
-    return axios
-      .get('/api/0/organizations/lab/substances/', request)
-      .then(res => {
-        dispatch(
-          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
-        );
-      })
-      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
-  } else {
-    // TODO: search and cursor should be implemented as well
-    const request = {
-      params: {
-        unique: true,
-      },
-    };
-    const url = '/api/0/organizations/lab/substances/property/' + groupBy + '/';
-    return axios
-      .get(url, request)
-      .then(res => {
-        dispatch(
-          substanceSearchEntriesGetSuccess(res.data, res.headers.link, isGroupHeader)
-        );
-      })
-      .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
-  }
+  const restCall = getRestcall(search, groupBy, cursor);
+  return axios
+    .get(restCall.endpoint, restCall.request)
+    .then(res => {
+      dispatch(substanceSearchEntriesGetSuccess(res.data, res.headers.link, groupBy));
+    })
+    .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
 };
 
 export const substanceSearchEntriesToggleSelectAll = doSelect => {
