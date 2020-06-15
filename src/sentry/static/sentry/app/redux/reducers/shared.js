@@ -138,6 +138,32 @@ export function getEntryFailure(state, action) {
   };
 }
 
+const createResourceReducer = (resource, initialState) => (
+  state = initialState,
+  action
+) => {
+  switch (action.type) {
+    case `GET_${resource}_LIST_REQUEST`:
+      return getListRequest(state, action);
+    case `GET_${resource}_LIST_SUCCESS`:
+      return getListSuccess(state, action);
+    case `GET_${resource}_LIST_FAILURE`:
+      return getListFailure(state, action);
+    case `TOGGLE_SELECT_${resource}`:
+      return selectSingle(state, action);
+    case `TOGGLE_SELECT_PAGE_OF_${resource}`:
+      return selectAll(state, action);
+    case `GET_${resource}_REQUEST`:
+      return getEntryRequest(state, action);
+    case `GET_${resource}_SUCCESS`:
+      return getEntrySuccess(state, action);
+    case `GET_${resource}_FAILURE`:
+      return getEntryFailure(state, action);
+    default:
+      return state;
+  }
+};
+
 export const list = {
   // State we require for following a list protocol
   initialState: {
@@ -180,4 +206,14 @@ export const entry = {
   getEntryRequest,
   getEntrySuccess,
   getEntryFailure,
+};
+
+// A resource follows both the list and entry protocols
+export const resource = {
+  initialState: {
+    ...entry.initialState,
+    ...list.initialState,
+  },
+
+  createReducer: createResourceReducer,
 };

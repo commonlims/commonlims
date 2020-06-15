@@ -1,11 +1,13 @@
 import {Set} from 'immutable';
-import processDefinition, {initialState} from 'app/redux/reducers/processDefinition';
-import {processDefinitionActions} from 'app/redux/actions/processDefinition';
+import taskDefinition, {initialState} from 'app/redux/reducers/taskDefinition';
+import {taskDefinitionActions} from 'app/redux/actions/taskDefinition';
 
-describe('processDefinition reducer, list protocol', () => {
-  it('switches to loading when request starts', () => {
-    const requested = processDefinition(initialState,
-      processDefinitionActions.getListRequest());
+describe('taskDefinition reducer, list protocol', () => {
+  it('has expected state after requesting getting a list', () => {
+    const requested = taskDefinition(
+      initialState,
+      taskDefinitionActions.getListRequest()
+    );
     const expected = {
       loading: true,
       errorMessage: null,
@@ -28,30 +30,33 @@ describe('processDefinition reducer, list protocol', () => {
     expect(requested).toEqual(expected);
   });
 
-  it.skip('expected state after ListSuccess', () => {
-    expect(initialState.loading).toEqual(false);
-    const requested = processDefinition(initialState, getProcessDefinitionListRequest());
-    const entries = [TestStubs.ProcessDefinition(1), TestStubs.ProcessDefinition(2)];
-    const succeeded = processDefinition(
+  it('expected state after ListSuccess', () => {
+    const requested = taskDefinition(
+      initialState,
+      taskDefinitionActions.getListRequest()
+    );
+    const entries = [TestStubs.TaskDefinition(1), TestStubs.TaskDefinition(2)];
+    const succeeded = taskDefinition(
       requested,
-      getProcessDefinitionListSuccess(entries)
+      taskDefinitionActions.getListSuccess(entries)
     );
 
     const expected = {
       loading: false,
       errorMessage: null,
       byIds: {
-        ProcessDefinition1: entries[0],
-        ProcessDefinition2: entries[1],
+        1: entries[0],
+        2: entries[1],
       },
       listViewState: {
         allVisibleSelected: false,
         visibleIds: [entries[0].id, entries[1].id],
         selectedIds: Set(),
-        search: undefined,
-        groupBy: undefined,
+        search: null,
+        groupBy: null,
         pagination: {
-          pageLinks: undefined,
+          pageLinks: null,
+          cursor: null,
         },
       },
       creating: false,

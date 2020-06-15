@@ -24,7 +24,7 @@ import {
   processAssignmentsSetEditing,
 } from 'app/redux/actions/processAssignment';
 
-import {getProcessDefinitionList} from 'app/redux/actions/processDefinition';
+import {processDefinitionActions} from 'app/redux/actions/processDefinition';
 
 const StyledBpmn = styled(Bpmn)`
   height: 500px;
@@ -267,7 +267,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getProcessDefinitionList: () => dispatch(getProcessDefinitionList()),
+  getProcessDefinitionList: () => dispatch(processDefinitionActions.getList()),
   processAssignSelectPreset: preset => dispatch(processAssignSelectPreset(preset)),
   processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
