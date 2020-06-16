@@ -1,7 +1,7 @@
 import React from 'react';
 import withOrganization from 'app/utils/withOrganization';
 import {connect} from 'react-redux';
-import {workBatchesGet, workBatchToggleSelect} from 'app/redux/actions/workBatch';
+import {workBatchActions} from 'app/redux/actions/workBatch';
 import ClimsTypes from 'app/climsTypes';
 import ListViewContainer from 'app/components/listViewContainer';
 import moment from 'moment';
@@ -72,9 +72,8 @@ WorkBatchListContainer.propTypes = {
 const mapStateToProps = state => state.workBatch;
 
 const mapDispatchToProps = dispatch => ({
-  getWorkBatches: () => dispatch(workBatchesGet()),
-  toggleWorkBatchSelect: id => dispatch(workBatchToggleSelect(id)), // TODO: Rename!
-  toggleSingle: id => dispatch(workBatchToggleSelect(id)),
+  getWorkBatches: () => dispatch(workBatchActions.getList()),
+  toggleSingle: id => dispatch(workBatchActions.select(id)),
 });
 
 export default withOrganization(
