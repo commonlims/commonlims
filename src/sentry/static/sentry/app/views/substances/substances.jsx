@@ -2,11 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
-import {
-  substanceSearchEntriesGet,
-  substanceSearchEntriesToggleSelectAll,
-  substanceSearchEntryToggleSelect,
-} from 'app/redux/actions/substanceSearchEntry';
+import {substanceActions} from 'app/redux/actions/substance';
 import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
 import ListView from 'app/components/listView';
@@ -28,7 +24,7 @@ class Substances extends React.Component {
     this.toggleAll = this.toggleAll.bind(this);
     this.onCursor = this.onCursor.bind(this);
 
-    let {search, cursor, groupBy} = this.props.substanceSearchEntry;
+    let {search, cursor, groupBy} = this.props.substance;
     const query = this.props.location.query;
 
     if (query) {
@@ -41,8 +37,8 @@ class Substances extends React.Component {
   }
 
   onSearch(search, groupBy, cursor) {
-    const isGroupHeader = groupBy !== 'substance';
-    this.props.substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader);
+    //const isGroupHeader = groupBy !== 'substance';
+    this.props.substanceGet(search, groupBy, cursor);
 
     // Add search to history
     const location = this.props.location;
@@ -60,7 +56,7 @@ class Substances extends React.Component {
   }
 
   onCursor(cursor) {
-    const {search, groupBy} = this.props.substanceSearchEntry;
+    const {search, groupBy} = this.props.substance;
     this.onSearch(search, groupBy, cursor);
   }
 
@@ -69,7 +65,7 @@ class Substances extends React.Component {
   }
 
   toggleAll() {
-    this.props.substanceSearchEntriesToggleSelectAll(null);
+    this.props.substanceToggleSelectAll(null);
   }
 
   getHeaders() {
@@ -132,12 +128,12 @@ class Substances extends React.Component {
   }
 
   onImported() {
-    this.props.substanceSearchEntriesGet();
+    this.props.substanceGet();
   }
 
   onGroup(e) {
     this.setState({groupBy: {value: e}});
-    const {search, cursor} = this.props.substanceSearchEntry;
+    const {search, cursor} = this.props.substance;
     this.onSearch(search, e, cursor);
   }
 
@@ -174,11 +170,11 @@ class Substances extends React.Component {
       groupBy,
       query,
       byIds,
-      visibleIds,
-      selectedIds,
       loading,
-      allVisibleSelected,
-    } = this.props.substanceSearchEntry;
+      listViewState,
+    } = this.props.substance;
+
+    const {selectedIds, visibleIds, pagination} = listViewState;
 
     const canAssignToWorkflow = selectedIds.size > 0;
     const actionBar = this.listActionBar(canAssignToWorkflow, this.props.organization.id);
@@ -205,19 +201,15 @@ class Substances extends React.Component {
             selectedIds={selectedIds}
             loading={loading}
             canSelect={true}
-            allVisibleSelected={allVisibleSelected}
+            allVisibleSelected={listViewState.allVisibleSelected}
             toggleAll={this.toggleAll}
-            toggleSingle={this.props.substanceSearchEntryToggleSelect}
+            toggleSingle={this.props.substanceToggleSelect}
             listActionBar={actionBar}
           />
 
-          {this.props.substanceSearchEntry.paginationEnabled &&
-            this.props.substanceSearchEntry.pageLinks && (
-              <Pagination
-                pageLinks={this.props.substanceSearchEntry.pageLinks}
-                onCursor={this.onCursor}
-              />
-            )}
+          {pagination.pageLinks && (
+            <Pagination pageLinks={pagination.pageLinks} onCursor={this.onCursor} />
+          )}
         </div>
       </div>
     );
@@ -229,29 +221,29 @@ Substances.propTypes = {
   access: PropTypes.object,
   organization: SentryTypes.Organization.isRequired,
   groupBy: PropTypes.string.isRequired,
-  substanceSearchEntriesGet: PropTypes.func.isRequired,
-  substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
+  substanceGet: PropTypes.func.isRequired,
+  substanceToggleSelectAll: PropTypes.func.isRequired,
   byIds: PropTypes.object,
-  substanceSearchEntryToggleSelect: PropTypes.func.isRequired,
-  substanceSearchEntry: PropTypes.object,
+  substanceToggleSelect: PropTypes.func.isRequired,
+  substance: PropTypes.object,
   location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
-    substanceSearchEntry: state.substanceSearchEntry,
+    substance: state.substance,
   };
 };
 
 // TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
 // creators name for consistency.
 const mapDispatchToProps = dispatch => ({
-  substanceSearchEntriesGet: (query, groupBy, cursor, isGroupHeader) =>
-    dispatch(substanceSearchEntriesGet(query, groupBy, cursor, isGroupHeader)),
-  substanceSearchEntriesToggleSelectAll: doSelect =>
-    dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
-  substanceSearchEntryToggleSelect: (id, doSelect) =>
-    dispatch(substanceSearchEntryToggleSelect(id, doSelect)),
+  substanceGet: (search, groupBy, cursor) => {
+    dispatch(substanceActions.getList(search, groupBy, cursor));
+  },
+  substanceToggleSelectAll: doSelect => dispatch(substanceActions.selectPage(doSelect)),
+  substanceToggleSelect: (id, doSelect) =>
+    dispatch(substanceActions.select(id, doSelect)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Substances);

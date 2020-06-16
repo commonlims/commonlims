@@ -42,7 +42,7 @@ const AssignToWorkflowButton = createReactClass({
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
     process: PropTypes.object,
-    substanceSearchEntry: PropTypes.object,
+    substance: PropTypes.object,
     processAssignmentsPost: PropTypes.func,
     getProcessDefinitionList: PropTypes.func,
     processAssignSelectPreset: PropTypes.func.isRequired,
@@ -116,7 +116,7 @@ const AssignToWorkflowButton = createReactClass({
     this.props.processAssignmentsPost(
       this.props.processAssignment.assignProcessDefinitionId,
       this.props.processAssignment.assignVariables,
-      this.props.substanceSearchEntry.selectedIds.toArray(),
+      this.props.substance.listViewState.selectedIds.toArray(),
       [], // only if assigning containers
       'lab' // TODO: Get from URL
     );
@@ -258,7 +258,7 @@ const AssignToWorkflowButton = createReactClass({
 const mapStateToProps = state => {
   return {
     processDefinition: state.processDefinition,
-    substanceSearchEntry: state.substanceSearchEntry,
+    substance: state.substance,
     process: state.process,
     processAssignment: state.processAssignment,
 

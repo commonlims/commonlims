@@ -4,7 +4,7 @@ import process from './process';
 import processAssignment from './processAssignment';
 import processDefinition from './processDefinition';
 import savedSearch from './savedSearch';
-import substanceSearchEntry from './substanceSearchEntry';
+import substance from './substance';
 import tag from './tag';
 import task from './task';
 import taskDefinition from './taskDefinition';
@@ -17,7 +17,7 @@ export default combineReducers({
   processAssignment,
   processDefinition,
   savedSearch,
-  substanceSearchEntry,
+  substance,
   tag,
   task,
   taskDefinition,

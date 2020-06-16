@@ -1,6 +1,6 @@
 import {t} from 'app/locale';
 import {Client} from 'app/api';
-import {substanceSearchEntriesToggleSelectAll} from 'app/redux/actions/substanceSearchEntry';
+import {substanceActions} from 'app/redux/actions/substance';
 import {ac} from 'app/redux/actions/shared';
 
 // Assigning substances to processes.
@@ -50,12 +50,15 @@ export const processAssignmentsPost = (
     containers,
   };
 
+  // TODO: It's currently correct to deselect a page of substance search entries, but that will
+  // not be correct if we later implement the possibility of selecting from different pages.
+  // The 100% correct way would be to be able to call `selectAll(false)` or similar
   api.request(`/api/0/organizations/${org}/process-assignments/`, {
     method: 'POST',
     data,
     success: res => {
       dispatch(processAssignmentsPostSuccess(res));
-      dispatch(substanceSearchEntriesToggleSelectAll(false));
+      dispatch(substanceActions.selectPage(false));
     },
     error: err => {
       dispatch(processAssignmentsPostFailure(err.responseJSON.detail));

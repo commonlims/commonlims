@@ -1,6 +1,4 @@
-import substanceSearchEntry, {
-  initialState,
-} from 'app/redux/reducers/substanceSearchEntry';
+import substance, {initialState} from 'app/redux/reducers/substance';
 
 export function SubstanceProperty(id) {
   return {
@@ -34,7 +32,7 @@ export function Substance(id, props) {
   return ret;
 }
 
-export function SubstanceSearchEntry(groupBy, id) {
+export function SubstanceDUNNO(groupBy, id) {
   if (groupBy === 'sample') {
     // This is the same as grouping by nothing, so we get a flat list of substances
     // (with an added view state)
@@ -53,7 +51,7 @@ function GroupedEntryFromReducer(groupBy, id) {
 function SubstanceEntryFromReducer(groupBy, id, isGroupHeader) {
   let entry = null;
   if (!isGroupHeader) {
-    entry = SubstanceSearchEntry(groupBy, id);
+    entry = Substance(groupBy, id);
   } else {
     entry = GroupedEntryFromReducer(groupBy, id);
   }
@@ -73,7 +71,7 @@ export function SubstanceEntriesFromReducer(count, groupBy) {
 export function SubstanceSearchEntries(count, groupBy) {
   const ret = [];
   for (let i = 0; i < count; i++) {
-    ret.push(SubstanceSearchEntry(groupBy, i + 1));
+    ret.push(Substance(groupBy, i + 1));
   }
   return ret;
 }
@@ -83,7 +81,7 @@ export function SubstanceSearchEntriesPageState(pageSize, groupBy) {
   // Returns the entire expected state a full page mocked objects after one fetches one page of data
   const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(2, groupBy);
 
-  const nextState = substanceSearchEntry(initialState, {
+  const nextState = substance(initialState, {
     type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
     substanceSearchEntries: mockResponseNoGroup,
   });

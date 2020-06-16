@@ -56,6 +56,8 @@ export function getListRequest(state, action) {
       search: action.search,
       groupBy: action.groupBy,
       pagination: {...state.listViewState.pagination, cursor: action.cursor},
+      allVisibleSelected: false,
+      selectedIds: Set(),
     },
   };
 }
@@ -63,7 +65,6 @@ export function getListRequest(state, action) {
 export function getListSuccess(state, action) {
   const byIds = {};
   for (const entry of action.entries) {
-    // nomerge-just workbatches => data
     byIds[entry.id] = entry;
   }
   const visibleIds = action.entries.map(x => x.id);
@@ -208,7 +209,7 @@ export const entry = {
   getEntryFailure,
 };
 
-// A resource follows both the list and entry protocols
+// A resource implements both the list and entry protocols
 export const resource = {
   initialState: {
     ...entry.initialState,

@@ -38,7 +38,6 @@ class ListViewContainer extends React.Component {
   onSearch(search, groupBy, cursor) {
     // Corresponding in substance search:
     // const isGroupHeader = groupBy !== 'substance';
-    // this.props.substanceSearchEntriesGet(search, groupBy, cursor, isGroupHeader);
 
     this.props.getEntries(search, groupBy, cursor); // TODO: not implemented for workbatch
 

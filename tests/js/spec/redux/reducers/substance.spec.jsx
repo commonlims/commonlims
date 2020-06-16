@@ -1,6 +1,6 @@
-import substanceSearchEntry, {
+import substance, {
   initialState,
-} from 'app/redux/reducers/substanceSearchEntry';
+} from 'app/redux/reducers/substance';
 import {Set} from 'immutable';
 import {keyBy} from 'lodash';
 
@@ -9,7 +9,7 @@ describe('substance reducer', () => {
   const mockResponseNoGroupById = keyBy(mockResponseNoGroup, entry => entry.id);
 
   it('should handle initial state', () => {
-    expect(substanceSearchEntry(undefined, {})).toEqual(initialState);
+    expect(substance(undefined, {})).toEqual(initialState);
   });
 
   it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST', () => {
@@ -19,7 +19,7 @@ describe('substance reducer', () => {
       errorMessage: 'oops',
     };
 
-    const nextState = substanceSearchEntry(prevState, {
+    const nextState = substance(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_REQUEST',
       groupBy: 'aGroup',
       search: 'aSearch',
@@ -52,7 +52,7 @@ describe('substance reducer', () => {
     };
 
     // Act
-    const nextState = substanceSearchEntry(prevState, action);
+    const nextState = substance(prevState, action);
 
     // Assert
 
@@ -86,7 +86,7 @@ describe('substance reducer', () => {
     };
 
     // Act
-    const nextState = substanceSearchEntry(prevState, action);
+    const nextState = substance(prevState, action);
 
     // Assert
     const mockedResponseFromReducer = [
@@ -115,7 +115,7 @@ describe('substance reducer', () => {
       loading: true,
     };
 
-    const nextState = substanceSearchEntry(prevState, {
+    const nextState = substance(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_FAILURE',
       message: 'oopsiedoodle',
     });
@@ -133,7 +133,7 @@ describe('substance reducer', () => {
       byIds: mockResponseNoGroupById,
     };
 
-    const nextState = substanceSearchEntry(prevState, {
+    const nextState = substance(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT',
       id: 1,
       doSelect: null, // null means toggle from previous state
@@ -152,7 +152,7 @@ describe('substance reducer', () => {
       selectedIds: initialState.selectedIds.add(1),
     };
 
-    const nextState = substanceSearchEntry(prevState, {
+    const nextState = substance(prevState, {
       type: 'SUBSTANCE_SEARCH_ENTRY_TOGGLE_SELECT',
       id: 1,
       doSelect: null,
@@ -174,14 +174,14 @@ describe('substance reducer', () => {
     const state1 = TestStubs.SubstanceSearchEntriesPageState(2, 'sample');
     expect(state1.selectedIds.isEmpty()).toBe(true);
 
-    const state2 = substanceSearchEntry(state1, {
+    const state2 = substance(state1, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL',
       doSelect: true,
     });
     expect(state2.selectedIds.isEmpty()).toBe(false);
     expect(state2.selectedIds).toEqual(new Set([1, 2]));
 
-    const state3 = substanceSearchEntry(state2, {
+    const state3 = substance(state2, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL',
       doSelect: false,
     });

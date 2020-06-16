@@ -14,7 +14,7 @@ import {
   substanceSearchEntriesGet,
   substanceSearchEntryToggleSelect,
   substanceSearchEntriesToggleSelectAll,
-} from 'app/redux/actions/substanceSearchEntry';
+} from 'app/redux/actions/substance';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
