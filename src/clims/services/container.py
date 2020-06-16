@@ -5,6 +5,7 @@ import six
 from clims.services.extensible import ExtensibleBase
 from clims.models import Container, ContainerVersion
 from clims.services.base_extensible_service import BaseExtensibleService
+from clims.services.base_extensible_service import BaseQueryBuilder
 
 
 class IndexOutOfBounds(Exception):
@@ -269,38 +270,14 @@ class ContainerService(BaseExtensibleService):
     def get_by_name(self, name):
         return self.get(name=name)
 
-    def filter_from(self, query_builder):
-        query_params = query_builder.parse_query()
-        return self.filter(**query_params)
-
     @classmethod
     def _filter_by_extensible_version(cls, query_set):
         return query_set.filter(containerversion__latest=True)
 
 
-class ContainerQueryBuilder:
-    def __init__(self, query_from_url):
-        self.order_by = None
-        self.query_from_url = query_from_url
-
-    def order_by_created_date(self):
-        self.order_by = '-archetype__created_at'
-
-    def parse_query(self):
-        query_params = dict()
-        if self.order_by:
-            query_params['order_by'] = self.order_by
-        query = self.query_from_url.strip()
-        if len(query) == 0:
-            return query_params
-        query = query.split(" ")
-
-        if len(query) > 1:
-            raise NotImplementedError("Complex queries are not yet supported")
-
-        query = query[0]
-        key, val = query.split(":")
-
+class ContainerQueryBuilder(BaseQueryBuilder):
+    def parse_params_for_class(self, key, val):
+        query_params = {}
         if key == "container.name":
             query_params['name__icontains'] = val
         else:

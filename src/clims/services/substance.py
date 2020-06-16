@@ -19,6 +19,7 @@ from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler
 from clims.handlers import SubstancesValidationHandler
 from clims.services.base_extensible_service import BaseExtensibleService
+from clims.services.base_extensible_service import BaseQueryBuilder
 from clims.models import ResultIterator
 from clims.handlers import context_store
 
@@ -425,3 +426,20 @@ class SubstanceService(BaseExtensibleService):
     @classmethod
     def _filter_by_extensible_version(cls, query_set):
         return query_set.filter(substanceversion__latest=True)
+
+
+class SubstanceQueryBuilder(BaseQueryBuilder):
+    def parse_params_for_class(self, key, val):
+        query_params = {}
+        # TODO: these fields shouldn't be hard coded
+        if key == "sample.name":
+            query_params['name__icontains'] = val
+        elif key == "substance.color":
+            query_params['properties__extensible_property_type__name'] = 'color'
+            query_params['properties__string_value'] = val
+        elif key == 'substance.sample_type':
+            query_params['properties__extensible_property_type__name'] = 'sample_type'
+            query_params['properties__string_value'] = val
+        else:
+            raise NotImplementedError("The key {} is not implemented".format(key))
+        return query_params
