@@ -52,9 +52,9 @@ const substanceSearchEntry = (state = initialState, action) => {
       const entryGenerator = new ListViewEntryGenerator();
       for (const entry of action.substanceSearchEntries) {
         const listViewEntry = entryGenerator.get(action.groupBy, entry);
-        byIds[listViewEntry.id] = listViewEntry;
+        byIds[listViewEntry.global_id] = listViewEntry;
       }
-      const visibleIds = Object.keys(byIds).map(Number);
+      const visibleIds = Object.keys(byIds).map(String);
 
       return {
         ...state,

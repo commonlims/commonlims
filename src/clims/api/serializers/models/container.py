@@ -13,6 +13,7 @@ class ContainerSerializer(serializers.Serializer):
     name = serializers.CharField()
     properties = DictField(child=ExtensiblePropertySerializer(read_only=True))
     type_full_name = serializers.CharField()
+    global_id = serializers.CharField(read_only=True)
 
 
 class ContainerExpandedSerializer(ContainerSerializer):

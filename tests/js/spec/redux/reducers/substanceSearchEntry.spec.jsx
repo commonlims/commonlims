@@ -8,8 +8,8 @@ import {keyBy} from 'lodash';
 // to search for project, container and substances, but with child elements?
 
 describe('substance reducer', () => {
-  const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(2, 'sample');
-  const mockResponseNoGroupById = keyBy(mockResponseNoGroup, entry => entry.id);
+  const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(2, 'substance');
+  const mockResponseNoGroupById = keyBy(mockResponseNoGroup, entry => entry.global_id);
 
   it('should handle initial state', () => {
     expect(substanceSearchEntry(undefined, {})).toEqual(initialState);
@@ -47,12 +47,12 @@ describe('substance reducer', () => {
       errorMessage: 'oops',
     };
 
-    const responseNoGroup = TestStubs.SubstanceSearchEntries(2, 'sample');
+    const responseNoGroup = TestStubs.SubstanceSearchEntries(2, 'substance');
 
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: responseNoGroup,
-      isGroupHeader: false,
+      groupBy: 'substance',
       link: 'some-link',
     };
 
@@ -84,7 +84,7 @@ describe('substance reducer', () => {
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: responseGrouped,
-      isGroupHeader: true,
+      groupBy: 'sample_type',
       link: 'some-link',
     };
     const prevState_orig = JSON.parse(JSON.stringify(prevState));
@@ -112,7 +112,6 @@ describe('substance reducer', () => {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: mockResponseNoGroup,
       groupBy: 'substance',
-      isGroupHeader: false,
       link: 'some-link',
     };
 
@@ -121,14 +120,14 @@ describe('substance reducer', () => {
 
     // Assert
 
-    const responseFromReducer = TestStubs.SubstanceEntriesFromReducer(2, 'sample');
-    const mockedByIds = keyBy(responseFromReducer, entry => entry.id);
+    const responseFromReducer = TestStubs.SubstanceEntriesFromReducer(2, 'substance');
+    const expectedByIds = keyBy(responseFromReducer, entry => entry.global_id);
     expect(nextState).toEqual({
       ...prevState,
       errorMessage: null,
       loading: false,
-      visibleIds: [1, 2],
-      byIds: mockedByIds,
+      visibleIds: ['Substance-1', 'Substance-2'],
+      byIds: expectedByIds,
       pageLinks: 'some-link',
     });
   });
@@ -142,7 +141,6 @@ describe('substance reducer', () => {
       substanceSearchEntries: mockResponseGrouped,
       link: 'some-link',
       groupBy: 'sample_type',
-      isGroupHeader: true,
     };
 
     const prevState = {
@@ -155,36 +153,35 @@ describe('substance reducer', () => {
     const nextState = substanceSearchEntry(prevState, action);
 
     // Assert
-    const mockedResponseFromReducer = [
+    const expectedEntryFromReducer = [
       {
-        id: 1,
+        global_id: 'Parent-1',
         name: 'my_sample_type',
         isGroupHeader: true,
       },
     ];
 
-    const mockedByIds = keyBy(mockedResponseFromReducer, entry => entry.id);
+    const expectedByIds = keyBy(expectedEntryFromReducer, entry => entry.global_id);
 
     expect(nextState).toEqual({
       ...prevState,
       errorMessage: null,
       loading: false,
-      visibleIds: [1],
-      byIds: mockedByIds,
+      visibleIds: ['Parent-1'],
+      byIds: expectedByIds,
       pageLinks: 'some-link',
     });
   });
 
   it('should handle SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS for containers', () => {
     // Arrange
-    const mockResponseGrouped = [{name: 'mycontainer'}];
+    const mockResponseGrouped = [{name: 'mycontainer', global_id: 'Container-1'}];
 
     const action = {
       type: 'SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS',
       substanceSearchEntries: mockResponseGrouped,
       link: 'some-link',
       groupBy: 'container',
-      isGroupHeader: true,
     };
 
     const prevState = {
@@ -197,22 +194,22 @@ describe('substance reducer', () => {
     const nextState = substanceSearchEntry(prevState, action);
 
     // Assert
-    const mockedResponseFromReducer = [
+    const expectedEntryFromReducer = [
       {
-        id: 1,
+        global_id: 'Container-1',
         name: 'mycontainer',
         isGroupHeader: true,
       },
     ];
 
-    const mockedByIds = keyBy(mockedResponseFromReducer, entry => entry.id);
+    const expectedByIds = keyBy(expectedEntryFromReducer, entry => entry.global_id);
 
     expect(nextState).toEqual({
       ...prevState,
       errorMessage: null,
       loading: false,
-      visibleIds: [1],
-      byIds: mockedByIds,
+      visibleIds: ['Container-1'],
+      byIds: expectedByIds,
       pageLinks: 'some-link',
     });
   });
@@ -273,13 +270,13 @@ describe('substance reducer', () => {
     // This test makes sure that our test stub returns the expected state, so we don't have
     // to in the tests that use it. Note that this duplicates the test for
     // SUBSTANCE_SEARCH_ENTRIES_GET_SUCCESS as the stub uses that action under the hood
-    const prevState = TestStubs.SubstanceSearchEntriesPageState(2, 'sample');
-    expect(prevState.visibleIds).toEqual([1, 2]);
+    const prevState = TestStubs.SubstanceSearchEntriesPageState(2, 'substance');
+    expect(prevState.visibleIds).toEqual(['Substance-1', 'Substance-2']);
     expect(prevState.selectedIds).toEqual(new Set());
   });
 
   it('should handle selecting and deselecting all search entries', () => {
-    const state1 = TestStubs.SubstanceSearchEntriesPageState(2, 'sample');
+    const state1 = TestStubs.SubstanceSearchEntriesPageState(2, 'substance');
     expect(state1.selectedIds.isEmpty()).toBe(true);
 
     const state2 = substanceSearchEntry(state1, {
@@ -287,7 +284,7 @@ describe('substance reducer', () => {
       doSelect: true,
     });
     expect(state2.selectedIds.isEmpty()).toBe(false);
-    expect(state2.selectedIds).toEqual(new Set([1, 2]));
+    expect(state2.selectedIds).toEqual(new Set(['Substance-1', 'Substance-2']));
 
     const state3 = substanceSearchEntry(state2, {
       type: 'SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL',
