@@ -1,14 +1,19 @@
 // Auto-generated with `lims django codegen --redux`
 
 import axios from 'axios';
+import {list} from './shared';
 
 ////// List of ProcessDefinition
 export const GET_PROCESS_DEFINITION_LIST_REQUEST = 'GET_PROCESS_DEFINITION_LIST_REQUEST';
-export const getProcessDefinitionListRequest = () => {
-  return {
-    type: GET_PROCESS_DEFINITION_LIST_REQUEST,
-  };
-};
+// export const getProcessDefinitionListRequest = () => {
+//   return {
+//     type: GET_PROCESS_DEFINITION_LIST_REQUEST,
+//   };
+// };
+
+export const getProcessDefinitionListRequest = list.makeListRequest(
+  GET_PROCESS_DEFINITION_LIST_REQUEST
+);
 
 export const GET_PROCESS_DEFINITION_LIST_SUCCESS = 'GET_PROCESS_DEFINITION_LIST_SUCCESS';
 export const getProcessDefinitionListSuccess = entries => {
@@ -28,12 +33,11 @@ export const getProcessDefinitionList = () => dispatch => {
   dispatch(getProcessDefinitionListRequest());
 
   const config = {
-    params: {
-    }
+    params: {},
   };
 
   return axios
-    .get(`/api/0/process-definitions/`, config)
+    .get('/api/0/process-definitions/', config)
     .then(res => dispatch(getProcessDefinitionListSuccess(res.data)))
     .catch(err => dispatch(getProcessDefinitionListFailure(err)));
 };
@@ -47,7 +51,8 @@ export const toggleSelectProcessDefinition = id => {
   };
 };
 
-export const TOGGLE_SELECT_PAGE_OF_PROCESS_DEFINITION = 'TOGGLE_SELECT_PAGE_OF_PROCESS_DEFINITION';
+export const TOGGLE_SELECT_PAGE_OF_PROCESS_DEFINITION =
+  'TOGGLE_SELECT_PAGE_OF_PROCESS_DEFINITION';
 export const toggleSelectPageOfProcessDefinition = doSelect => {
   return {
     type: TOGGLE_SELECT_PAGE_OF_PROCESS_DEFINITION,
@@ -80,8 +85,7 @@ export const getProcessDefinitionFailure = err => ({
 export const getProcessDefinition = id => dispatch => {
   dispatch(getProcessDefinitionRequest());
 
-  const params = {
-  };
+  const params = {};
   return axios
     .get(`/api/0/process-definitions/${id}`, {params})
     .then(res => dispatch(getProcessDefinitionSuccess(res.data)))
@@ -90,8 +94,6 @@ export const getProcessDefinition = id => dispatch => {
 
 // Default dispatchToProps mapping for all actions created here, 1-1 mapping for all params
 export const mapProcessDefinitionDispatchToProps = dispatch => ({
-  getProcessDefinition: id =>
-    dispatch(getProcessDefinition(id)),
-  getProcessDefinitionList: () =>
-    dispatch(getProcessDefinitionList()),
+  getProcessDefinition: id => dispatch(getProcessDefinition(id)),
+  getProcessDefinitionList: () => dispatch(getProcessDefinitionList()),
 });
