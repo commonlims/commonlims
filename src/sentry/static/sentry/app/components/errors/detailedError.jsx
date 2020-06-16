@@ -5,7 +5,6 @@ import * as Sentry from '@sentry/browser';
 
 import {t} from 'app/locale';
 import InlineSvg from 'app/components/inlineSvg';
-import Button from 'app/components/button';
 
 class DetailedError extends React.Component {
   static propTypes = {
@@ -60,19 +59,6 @@ class DetailedError extends React.Component {
                   </a>
                 )}
               </div>
-
-              {!hideSupportLinks && (
-                <div className="detailed-error-support-links">
-                  {Sentry.lastEventId() && (
-                    <Button priority="link" onClick={this.openFeedback}>
-                      {t('Fill out a report')}
-                    </Button>
-                  )}
-                  <a href="https://status.sentry.io/">{t('Service status')}</a>
-
-                  <a href="https://sentry.io/support/">{t('Contact support')}</a>
-                </div>
-              )}
             </div>
           )}
         </div>
