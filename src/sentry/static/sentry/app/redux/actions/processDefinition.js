@@ -6,10 +6,7 @@ export const RESOURCE_NAME = 'PROCESS_DEFINITION';
 ////// List of ProcessDefinition
 export const processDefinitionActions = makeResourceActions(
   RESOURCE_NAME,
-  '/api/0/process-definitions/',
-  {
-    params: {},
-  }
+  '/api/0/process-definitions/'
 );
 
 ////// Selection in a list of ProcessDefinition
