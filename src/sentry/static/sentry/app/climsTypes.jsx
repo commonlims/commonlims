@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import {Set} from 'immutable';
 
 // Export all auto generated resources:
 import {Resources} from 'app/propTypes/resources';
@@ -12,17 +13,17 @@ export const Pagination = PropTypes.shape({
 // The data itself is expected to by in a dictionary called byIds.
 export const ListViewState = PropTypes.shape({
   visibleIds: PropTypes.array.isRequired,
-  selectedIds: PropTypes.array.isRequired,
-  groupBy: PropTypes.string.isRequired,
+  selectedIds: PropTypes.instanceOf(Set).isRequired,
+  groupBy: PropTypes.string,
   search: PropTypes.string.isRequired,
   pagination: Pagination.isRequired,
 });
 
 // All lists require this data shape
-export const List = PropTypes.shape({
+export const List = {
   byIds: PropTypes.object.isRequired,
   listViewState: ListViewState.isRequired,
-});
+};
 
 export const Organization = PropTypes.shape({
   id: PropTypes.string.isRequired,
