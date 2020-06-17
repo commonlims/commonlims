@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Helper function that creates an action creator.
 // From: https://redux.js.org/recipes/reducing-boilerplate
-export function ac(type, ...argNames) {
+export function makeActionCreator(type, ...argNames) {
   return function(...args) {
     const action = {type};
     argNames.forEach((arg, index) => {
@@ -80,7 +80,7 @@ export const acSelect = resource => {
   };
 };
 
-export const list = {
+export const resourceActionCreators = {
   acRequest,
   acSuccess,
   acFailure,
@@ -93,13 +93,13 @@ export const list = {
 export const makeResourceActions = (resourceName, getListUrl) => {
   return {
     // Fetching a list
-    getListRequest: list.acRequest(resourceName),
-    getListSuccess: list.acSuccess(resourceName),
-    getListFailure: list.acFailure(resourceName),
-    getList: list.acGetList(resourceName, getListUrl),
+    getListRequest: acRequest(resourceName),
+    getListSuccess: acSuccess(resourceName),
+    getListFailure: acFailure(resourceName),
+    getList: acGetList(resourceName, getListUrl),
 
     // Select entries in the list or pages of it
-    select: list.acSelect(resourceName),
-    selectPage: list.acSelectPage(resourceName),
+    select: acSelect(resourceName),
+    selectPage: acSelectPage(resourceName),
   };
 };

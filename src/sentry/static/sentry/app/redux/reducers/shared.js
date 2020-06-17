@@ -13,7 +13,7 @@ export function selectSingle(state, action) {
 
   const shouldToggle = doSelect === null || doSelect === undefined;
   const shouldSelect = shouldToggle ? !listViewState.selectedIds.has(id) : doSelect;
-  const newSet = shouldSelect
+  const selectedIds = shouldSelect
     ? listViewState.selectedIds.add(id)
     : listViewState.selectedIds.delete(id);
 
@@ -21,7 +21,7 @@ export function selectSingle(state, action) {
     ...state,
     listViewState: {
       ...listViewState,
-      selectedIds: newSet,
+      selectedIds,
     },
   };
 }
