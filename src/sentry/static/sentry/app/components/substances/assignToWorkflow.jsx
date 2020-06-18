@@ -117,7 +117,6 @@ const AssignToWorkflowButton = createReactClass({
       this.props.processAssignment.assignProcessDefinitionId,
       this.props.processAssignment.assignVariables,
       this.props.substanceSearchEntry.selectedIds.toArray(),
-      [], // only if assigning containers
       'lab' // TODO: Get from URL
     );
   },
@@ -272,9 +271,9 @@ const mapDispatchToProps = dispatch => ({
   processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
     dispatch(processAssignSetVariable(key, value)),
-  processAssignmentsPost: (definitionId, variables, substances, containers, org) =>
+  processAssignmentsPost: (definitionId, variables, substances, org) =>
     dispatch(
-      processAssignmentsPost(definitionId, variables, substances, containers, org)
+      processAssignmentsPost(definitionId, variables, substances, org)
     ),
   processAssignmentsSetEditing: value => dispatch(processAssignmentsSetEditing(value)),
 });

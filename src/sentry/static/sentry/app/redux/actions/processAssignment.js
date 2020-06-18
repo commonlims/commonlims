@@ -39,8 +39,7 @@ export const processAssignmentsPostFailure = ac(
 export const processAssignmentsPost = (
   definitionId,
   variables,
-  substances,
-  containers,
+  entities,
   org
 ) => dispatch => {
   dispatch(processAssignmentsPostRequest(t('Assigning to process...')));
@@ -49,9 +48,9 @@ export const processAssignmentsPost = (
   const data = {
     definitionId,
     variables,
-    substances,
-    containers,
+    entities,
   };
+  console.log("Trying to assign here!", entities);
 
   api.request(`/api/0/organizations/${org}/process-assignments/`, {
     method: 'POST',
