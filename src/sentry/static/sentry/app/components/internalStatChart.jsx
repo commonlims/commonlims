@@ -1,4 +1,3 @@
-/*eslint getsentry/jsx-needs-il8n:0*/
 import PropTypes from 'prop-types';
 
 import React from 'react';
