@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
-import styled, {css} from 'react-emotion';
+import {css} from 'emotion';
+import styled from '@emotion/styled';
 import queryString from 'query-string';
 import * as icons from 'app/components/icons';
 

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {css} from 'react-emotion';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
 import InlineSvg from 'app/components/inlineSvg';
 import space from 'app/styles/space';
 import {capitalize} from 'lodash';

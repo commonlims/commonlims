@@ -6,7 +6,7 @@ import {t} from 'app/locale';
 import {Panel, PanelItem} from 'app/components/panels';
 import SentryTypes from 'app/sentryTypes';
 import space from 'app/styles/space';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import ConsolidatedScopes from 'app/utils/consolidatedScopes';
 
 class SentryAppPermissionsModal extends React.Component {

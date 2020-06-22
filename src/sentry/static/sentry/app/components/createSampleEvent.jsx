@@ -2,7 +2,7 @@ import {browserHistory} from 'react-router';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/browser';
 
 import {analytics} from 'app/utils/analytics';

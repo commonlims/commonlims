@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {Box} from 'grid-emotion';
 
 import SampleCheckBox from 'app/components/samples/sampleCheckBox';

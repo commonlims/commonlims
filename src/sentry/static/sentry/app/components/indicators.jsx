@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {ThemeProvider} from 'emotion-theming';
 import {cx} from 'emotion';
 

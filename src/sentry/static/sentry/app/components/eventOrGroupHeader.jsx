@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {withRouter, Link} from 'react-router';
-import styled, {css} from 'react-emotion';
-import classNames from 'classnames';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
+
 import {capitalize} from 'lodash';
 
 import ProjectLink from 'app/components/projectLink';

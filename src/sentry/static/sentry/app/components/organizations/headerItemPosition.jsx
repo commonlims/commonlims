@@ -1,4 +1,4 @@
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {AutoCompleteRoot} from 'app/components/dropdownAutoCompleteMenu';
 import {TimeRangeRoot} from 'app/components/organizations/timeRangeSelector/index';
 

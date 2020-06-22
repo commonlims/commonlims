@@ -2,7 +2,7 @@
 // We are porting only relevant functionality bit by bit.
 import Checkbox from 'app/components/checkbox';
 import {Flex, Box} from 'grid-emotion';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 

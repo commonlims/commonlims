@@ -2,7 +2,7 @@ import {Box} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {migrateRepository, addRepository} from 'app/actionCreators/integrations';
 import AsyncComponent from 'app/components/asyncComponent';

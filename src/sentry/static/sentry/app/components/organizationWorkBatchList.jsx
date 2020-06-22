@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Link} from 'react-router';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import GroupStore from 'app/stores/groupStore';
 import IssueList from 'app/components/issueList';

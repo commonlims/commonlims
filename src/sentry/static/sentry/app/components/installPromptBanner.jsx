@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {analytics} from 'app/utils/analytics';
 import Alert from 'app/components/alert';

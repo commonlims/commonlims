@@ -1,7 +1,7 @@
 import React from 'react';
 import {MultiGrid, AutoSizer} from 'react-virtualized';
 import PropTypes from 'prop-types';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {t} from 'app/locale';
 import SentryTypes from 'app/sentryTypes';
 import Link from 'app/components/link';

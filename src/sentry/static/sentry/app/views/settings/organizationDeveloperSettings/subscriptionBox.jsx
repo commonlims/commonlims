@@ -3,7 +3,7 @@ import React from 'react';
 
 import {t} from 'app/locale';
 import {DESCRIPTIONS} from 'app/views/settings/organizationDeveloperSettings/constants';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import Checkbox from 'app/components/checkbox';
 import Tooltip from 'app/components/tooltip';
 import {Flex} from 'grid-emotion';

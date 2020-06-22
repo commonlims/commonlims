@@ -4,7 +4,7 @@ import Reflux from 'reflux';
 import _ from 'lodash';
 import classNames from 'classnames';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {NEGATION_OPERATOR, SEARCH_WILDCARD} from 'app/constants';
 import {t} from 'app/locale';

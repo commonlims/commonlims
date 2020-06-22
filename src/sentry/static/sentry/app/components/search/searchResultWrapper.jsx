@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 const SearchResultWrapper = styled(({highlighted, ...props}) => <div {...props} />)`
   cursor: pointer;

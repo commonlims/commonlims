@@ -1,6 +1,6 @@
 /*eslint no-use-before-define: ["error", { "functions": false }]*/
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {orderBy} from 'lodash';
 import Papa from 'papaparse';
 

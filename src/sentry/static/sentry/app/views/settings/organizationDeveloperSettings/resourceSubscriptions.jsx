@@ -6,7 +6,7 @@ import {
   EVENT_CHOICES,
   PERMISSIONS_MAP,
 } from 'app/views/settings/organizationDeveloperSettings/constants';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 export default class Subscriptions extends React.Component {
   static contextTypes = {

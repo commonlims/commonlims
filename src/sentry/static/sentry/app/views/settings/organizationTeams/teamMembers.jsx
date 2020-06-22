@@ -1,7 +1,7 @@
 import {debounce} from 'lodash';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import IdBadge from 'app/components/idBadge';

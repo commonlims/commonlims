@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSelect, {Async, Creatable, AsyncCreatable} from 'react-select';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import convertFromSelect2Choices from 'app/utils/convertFromSelect2Choices';
 

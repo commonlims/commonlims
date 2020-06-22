@@ -1,6 +1,6 @@
 import React from 'react';
 import {Flex} from 'grid-emotion';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {t} from 'app/locale';
 import Button from 'app/components/button';

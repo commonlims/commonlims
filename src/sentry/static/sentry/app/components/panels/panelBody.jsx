@@ -1,6 +1,8 @@
 import {Flex} from 'grid-emotion';
-import {css, cx} from 'react-emotion';
-import PropTypes from 'prop-types';
+:wa
+import styled from '@emotion/styled';
+import {css} from 'emotion';
+
 import React from 'react';
 
 import space from 'app/styles/space';

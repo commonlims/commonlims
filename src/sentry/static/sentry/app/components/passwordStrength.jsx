@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import zxcvbn from 'zxcvbn';
-import styled, {css} from 'react-emotion';
-import {tct} from 'app/locale';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
 
 import theme from 'app/utils/theme';
 

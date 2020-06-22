@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import GuideDrawer from 'app/components/assistant/guideDrawer';
 
 /* AssistantHelper is responsible for rendering the guide and support drawers. */

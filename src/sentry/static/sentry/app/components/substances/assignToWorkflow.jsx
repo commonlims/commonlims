@@ -13,7 +13,7 @@ import JsonForm from 'app/views/settings/components/forms/jsonForm';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Link from 'app/components/link';
 import Bpmn from 'app/components/bpmn';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {
   processAssignSelectPreset,

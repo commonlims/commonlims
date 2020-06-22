@@ -2,7 +2,7 @@ import {Flex, Box} from 'rebass';
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import SelectedSampleStore from 'app/stores/selectedSampleStore';
 
 const SampleContainerStackActions = createReactClass({

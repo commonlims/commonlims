@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactBootstrapModal from 'react-bootstrap/lib/Modal';
 import ReactDOM from 'react-dom';
-import * as ReactEmotion from 'react-emotion';
+//import * as ReactEmotion from 'react-emotion';
 import Reflux from 'reflux';
 import * as Router from 'react-router';
 import * as Sentry from '@sentry/browser';
@@ -129,7 +129,7 @@ const globals = {
   JsCookie,
   Emotion,
   EmotionTheming,
-  ReactEmotion,
+  //ReactEmotion,
   GridEmotion,
 
   SentryRenderApp: () => render(Main),

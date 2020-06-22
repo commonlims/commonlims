@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {singleLineRenderer} from 'app/utils/marked';
 import {t, tct} from 'app/locale';

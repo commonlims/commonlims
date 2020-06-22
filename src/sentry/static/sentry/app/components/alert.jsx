@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {cx} from 'emotion';
 import {Flex} from 'grid-emotion';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import TextBlock from 'app/views/settings/components/text/textBlock';
 import InlineSvg from 'app/components/inlineSvg';
 import space from 'app/styles/space';

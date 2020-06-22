@@ -1,7 +1,7 @@
 import {Box, Flex} from 'grid-emotion';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import FieldControlState from 'app/views/settings/components/forms/field/fieldControlState';
 import InlineSvg from 'app/components/inlineSvg';

@@ -1,6 +1,6 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import OrganizationState from 'app/mixins/organizationState';
 import space from 'app/styles/space';

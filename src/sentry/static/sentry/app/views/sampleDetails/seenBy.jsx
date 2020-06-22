@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import moment from 'moment';
 import _ from 'lodash';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import ConfigStore from 'app/stores/configStore';
 import AvatarList from 'app/components/avatar/avatarList';

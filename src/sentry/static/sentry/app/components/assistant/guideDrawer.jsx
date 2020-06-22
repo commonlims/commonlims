@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import Reflux from 'reflux';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import Button from 'app/components/button';
 import GuideStore from 'app/stores/guideStore';
 import {t} from 'app/locale';

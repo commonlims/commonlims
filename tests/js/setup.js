@@ -1,5 +1,4 @@
 /* global __dirname */
-import {channel, createBroadcast} from 'emotion-theming';
 import jQuery from 'jquery';
 import sinon from 'sinon';
 import Adapter from 'enzyme-adapter-react-16';
@@ -8,7 +7,8 @@ import MockDate from 'mockdate';
 import PropTypes from 'prop-types';
 
 import ConfigStore from 'app/stores/configStore';
-import theme from 'app/utils/theme';
+// TODO: Testing emotion!
+//import theme from 'app/utils/theme';
 
 import {loadFixtures} from './helpers/loadFixtures';
 
@@ -29,7 +29,6 @@ MockDate.set(constantDate);
 /**
  * emotion setup for theme provider in context
  */
-const broadcast = createBroadcast(theme);
 
 /**
  * Load all files in `tests/js/fixtures/*` as a module.
@@ -172,10 +171,6 @@ window.TestStubs = {
 
   routerContext: ([context, childContextTypes] = []) => ({
     context: {
-      [channel]: {
-        subscribe: broadcast.subscribe,
-        unsubscribe: broadcast.unsubscribe,
-      },
       location: TestStubs.location(),
       router: TestStubs.router(),
       organization: fixtures.Organization(),
@@ -183,7 +178,6 @@ window.TestStubs = {
       ...context,
     },
     childContextTypes: {
-      [channel]: PropTypes.object,
       router: PropTypes.object,
       location: PropTypes.object,
       organization: PropTypes.object,

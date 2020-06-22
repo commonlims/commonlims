@@ -10,7 +10,7 @@ import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';
 import {PanelItem} from 'app/components/panels';
 import {t} from 'app/locale';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import space from 'app/styles/space';
 import {withTheme} from 'emotion-theming';
 import CircleIndicator from 'app/components/circleIndicator';

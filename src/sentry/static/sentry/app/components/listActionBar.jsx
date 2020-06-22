@@ -3,7 +3,7 @@ import {capitalize} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {t, tn} from 'app/locale';
 import ActionLink from 'app/components/actions/actionLink';

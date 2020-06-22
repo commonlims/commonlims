@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {css} from 'react-emotion';
-import classNames from 'classnames';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
 
 // TODO: Don't call it ProjectLink
 import ProjectLink from 'app/components/projectLink';

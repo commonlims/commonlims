@@ -1,5 +1,5 @@
 import {keyframes} from 'emotion';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 const spin = keyframes`
   0% {

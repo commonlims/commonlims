@@ -1,7 +1,7 @@
 import {Box} from 'grid-emotion';
 import {compact, groupBy, keyBy} from 'lodash';
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import {Panel, PanelBody, PanelHeader} from 'app/components/panels';
 import {addErrorMessage} from 'app/actionCreators/indicator';

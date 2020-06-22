@@ -1,4 +1,4 @@
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import {Flex} from 'grid-emotion';
 
 const Header = styled(Flex)`

@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 import SentryTypes from 'app/sentryTypes';
 import ConfigStore from 'app/stores/configStore';

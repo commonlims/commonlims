@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 const InlineSvg = ({src, size, width, height, ...props}) => {
   const {id, viewBox} = require(`../icons/${src}.svg`).default;
