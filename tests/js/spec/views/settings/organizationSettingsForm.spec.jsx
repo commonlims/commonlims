@@ -7,12 +7,12 @@ import OrganizationSettingsForm from 'app/views/settings/organizationGeneralSett
 jest.mock('jquery');
 jest.mock('app/actionCreators/indicator');
 
-describe('OrganizationSettingsForm', function() {
+describe('OrganizationSettingsForm', function () {
   const organization = TestStubs.Organization();
   let putMock;
   const onSave = jest.fn();
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     onSave.mockReset();
   });
@@ -20,7 +20,7 @@ describe('OrganizationSettingsForm', function() {
   // TODO-simple: This needs to be fixed, removed the legacy name. Change it so it uses e.g. slug
   // instead.
   // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('can change a form field', function(done) {
+  it.skip('can change a form field', function (done) {
     putMock = MockApiClient.addMockResponse({
       url: '/organizations/3/',
       method: 'PUT',
@@ -56,7 +56,7 @@ describe('OrganizationSettingsForm', function() {
       })
     );
 
-    saveOnBlurUndoMessage.mockImplementationOnce(async function(
+    saveOnBlurUndoMessage.mockImplementationOnce(async function (
       change,
       model,
       fieldName
@@ -88,7 +88,7 @@ describe('OrganizationSettingsForm', function() {
     });
   });
 
-  it('can change slug', function() {
+  it('can change slug', function () {
     putMock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/',
       method: 'PUT',

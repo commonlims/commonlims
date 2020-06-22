@@ -5,7 +5,7 @@ import Feature from 'app/components/acl/feature';
 import ConfigStore from 'app/stores/configStore';
 import HookStore from 'app/stores/hookStore';
 
-describe('Feature', function() {
+describe('Feature', function () {
   const organization = TestStubs.Organization({
     features: ['org-foo', 'org-bar', 'bar'],
   });
@@ -19,13 +19,13 @@ describe('Feature', function() {
     },
   ]);
 
-  describe('as render prop', function() {
+  describe('as render prop', function () {
     const childrenMock = jest.fn().mockReturnValue(null);
-    beforeEach(function() {
+    beforeEach(function () {
       childrenMock.mockClear();
     });
 
-    it('has features', function() {
+    it('has features', function () {
       const features = ['org-foo', 'project-foo'];
 
       mount(<Feature features={features}>{childrenMock}</Feature>, routerContext);
@@ -38,7 +38,7 @@ describe('Feature', function() {
       });
     });
 
-    it('has features when requireAll is false', function() {
+    it('has features when requireAll is false', function () {
       const features = ['org-foo', 'project-foo', 'apple'];
 
       mount(
@@ -56,7 +56,7 @@ describe('Feature', function() {
       });
     });
 
-    it('has no features', function() {
+    it('has no features', function () {
       mount(<Feature features={['org-baz']}>{childrenMock}</Feature>, routerContext);
 
       expect(childrenMock).toHaveBeenCalledWith({
@@ -67,7 +67,7 @@ describe('Feature', function() {
       });
     });
 
-    it('calls render function when no features', function() {
+    it('calls render function when no features', function () {
       const noFeatureRenderer = jest.fn(() => null);
       mount(
         <Feature features={['org-baz']} renderDisabled={noFeatureRenderer}>
@@ -86,7 +86,7 @@ describe('Feature', function() {
       });
     });
 
-    it('can specify org from props', function() {
+    it('can specify org from props', function () {
       const customOrg = TestStubs.Organization({features: ['org-bazar']});
       mount(
         <Feature organization={customOrg} features={['org-bazar']}>
@@ -103,7 +103,7 @@ describe('Feature', function() {
       });
     });
 
-    it('can specify project from props', function() {
+    it('can specify project from props', function () {
       const customProject = TestStubs.Project({features: ['project-baz']});
       mount(
         <Feature project={customProject} features={['project-baz']}>
@@ -120,7 +120,7 @@ describe('Feature', function() {
       });
     });
 
-    it('handles no org/project', function() {
+    it('handles no org/project', function () {
       const features = ['org-foo', 'project-foo'];
       mount(
         <Feature organization={null} project={null} features={features}>
@@ -137,7 +137,7 @@ describe('Feature', function() {
       });
     });
 
-    it('handles features prefixed with org/project', function() {
+    it('handles features prefixed with org/project', function () {
       mount(
         <Feature features={['organizations:org-bar']}>{childrenMock}</Feature>,
         routerContext
@@ -160,7 +160,7 @@ describe('Feature', function() {
       });
     });
 
-    it('checks ConfigStore.config.features (e.g. `organizations:create`)', function() {
+    it('checks ConfigStore.config.features (e.g. `organizations:create`)', function () {
       ConfigStore.config = {
         features: new Set(['organizations:create']),
       };
@@ -178,8 +178,8 @@ describe('Feature', function() {
     });
   });
 
-  describe('as React node', function() {
-    it('has features', function() {
+  describe('as React node', function () {
+    it('has features', function () {
       const wrapper = mount(
         <Feature features={['org-bar']}>
           <div>The Child</div>
@@ -190,7 +190,7 @@ describe('Feature', function() {
       expect(wrapper.find('Feature div').text()).toBe('The Child');
     });
 
-    it('has no features', function() {
+    it('has no features', function () {
       const wrapper = mount(
         <Feature features={['org-baz']}>
           <div>The Child</div>
@@ -201,7 +201,7 @@ describe('Feature', function() {
       expect(wrapper.find('Feature div')).toHaveLength(0);
     });
 
-    it('renders a default disabled component', function() {
+    it('renders a default disabled component', function () {
       const wrapper = mount(
         <Feature features={['org-baz']} renderDisabled>
           <div>The Child</div>
@@ -213,7 +213,7 @@ describe('Feature', function() {
       expect(wrapper.exists('Feature div[children="The Child"]')).not.toBe(true);
     });
 
-    it('calls renderDisabled function when no features', function() {
+    it('calls renderDisabled function when no features', function () {
       const noFeatureRenderer = jest.fn(() => null);
       const children = <div>The Child</div>;
       const wrapper = mount(
@@ -234,19 +234,19 @@ describe('Feature', function() {
     });
   });
 
-  describe('using HookStore for renderDisabled', function() {
+  describe('using HookStore for renderDisabled', function () {
     let hookFn;
 
-    beforeEach(function() {
+    beforeEach(function () {
       hookFn = jest.fn(() => null);
       HookStore.hooks['feature-disabled:org-baz'] = [hookFn];
     });
 
-    afterEach(function() {
+    afterEach(function () {
       delete HookStore.hooks['feature-disabled:org-baz'];
     });
 
-    it('calls renderDisabled function from HookStore when no features', function() {
+    it('calls renderDisabled function from HookStore when no features', function () {
       const noFeatureRenderer = jest.fn(() => null);
       const children = <div>The Child</div>;
       const wrapper = mount(
@@ -268,7 +268,7 @@ describe('Feature', function() {
       });
     });
 
-    it('does not check hook store for multiple features', function() {
+    it('does not check hook store for multiple features', function () {
       const noFeatureRenderer = jest.fn(() => null);
       const wrapper = mount(
         <Feature features={['org-baz', 'org-bazar']} renderDisabled={noFeatureRenderer}>

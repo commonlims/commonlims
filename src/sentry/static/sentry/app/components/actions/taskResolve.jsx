@@ -115,7 +115,7 @@ export default class ProcessActionsComponent extends React.Component {
       <div style={{display: 'inline-block'}}>
         <AssignProcessVarsModal
           show={this.state.modal}
-          onSelected={statusDetails => this.onCustomResolution(statusDetails)}
+          onSelected={(statusDetails) => this.onCustomResolution(statusDetails)}
           onCanceled={() => this.setState({modal: false})}
           orgId={orgId}
           projectId={projectId}

@@ -12,7 +12,7 @@ const ColumnHeader = styled('div')`
   font-size: 14px;
   text-transform: uppercase;
   font-weight: bold;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;
 
 // TODO: Make the headers sticky again
@@ -20,7 +20,7 @@ const Styles = styled.div`
   table {
     width: 100%;
     border-spacing: 0;
-    background: ${p => p.theme.offWhite};
+    background: ${(p) => p.theme.offWhite};
 
     th {
       /*position: sticky;
@@ -28,13 +28,13 @@ const Styles = styled.div`
       top: 0;
       z-index: 10;*/
       padding: 0.5rem;
-      border-bottom: 1px solid ${p => p.theme.borderDark};
+      border-bottom: 1px solid ${(p) => p.theme.borderDark};
     }
 
     td {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid ${p => p.theme.borderDark};
+      border-bottom: 1px solid ${(p) => p.theme.borderDark};
 
       position: relative;
 
@@ -79,7 +79,7 @@ class ListView extends React.Component {
     const currentlyExpandedRows = this.state.expandedRows;
     const isRowExpanded = currentlyExpandedRows.includes(rowId);
     const newExpandedRows = isRowExpanded
-      ? currentlyExpandedRows.filter(id => id !== rowId)
+      ? currentlyExpandedRows.filter((id) => id !== rowId)
       : currentlyExpandedRows.concat(rowId);
 
     this.setState({expandedRows: newExpandedRows});
@@ -155,7 +155,7 @@ class ListView extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.visibleIds.map(entryId => {
+                {this.props.visibleIds.map((entryId) => {
                   return (
                     <tr key={'parent-' + entryId}>
                       <td>{this.renderRowExpander(entryId)}</td>

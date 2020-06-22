@@ -35,7 +35,7 @@ const Action = styled(Box)`
 const Heading = styled.div`
   font-size: 13px;
   text-transform: uppercase;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   margin-bottom: 8px;
 `;
 

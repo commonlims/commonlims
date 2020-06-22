@@ -1,6 +1,6 @@
 import {getPeriod} from 'app/utils/getPeriod';
 
-const BASE_URL = org => `/organizations/${org.slug}/events-stats/`;
+const BASE_URL = (org) => `/organizations/${org.slug}/events-stats/`;
 
 /**
  * Make requests to `health` endpoint

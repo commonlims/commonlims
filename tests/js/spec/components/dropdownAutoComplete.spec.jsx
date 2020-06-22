@@ -3,10 +3,10 @@ import {mount} from 'enzyme';
 
 import DropdownAutoComplete from 'app/components/dropdownAutoComplete';
 
-describe('DropdownAutoComplete', function() {
+describe('DropdownAutoComplete', function () {
   const routerContext = TestStubs.routerContext();
 
-  it('has actor wrapper', function() {
+  it('has actor wrapper', function () {
     const wrapper = mount(
       <DropdownAutoComplete
         items={[
@@ -32,7 +32,7 @@ describe('DropdownAutoComplete', function() {
     expect(wrapper.find('div[role="button"]').text()).toBe('Click Me!');
   });
 
-  it('opens dropdown menu when actor is clicked', function() {
+  it('opens dropdown menu when actor is clicked', function () {
     const wrapper = mount(
       <DropdownAutoComplete
         items={[

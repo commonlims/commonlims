@@ -16,7 +16,7 @@ const Toasts = styled.div`
   position: fixed;
   right: 30px;
   bottom: 30px;
-  z-index: ${p => p.theme.zIndex.toast};
+  z-index: ${(p) => p.theme.zIndex.toast};
 `;
 
 class Indicators extends React.Component {
@@ -35,7 +35,7 @@ class Indicators extends React.Component {
     items: [],
   };
 
-  handleDismiss = indicator => {
+  handleDismiss = (indicator) => {
     removeIndicator(indicator);
   };
 

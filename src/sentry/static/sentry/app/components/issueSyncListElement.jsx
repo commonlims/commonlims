@@ -29,7 +29,7 @@ class IssueSyncElement extends React.Component {
     return this.props.externalIssueLink && this.props.externalIssueId;
   }
 
-  handleDelete = evt => {
+  handleDelete = (evt) => {
     return this.props.onClose(this.props.externalIssueId);
   };
 
@@ -107,14 +107,13 @@ class IssueSyncElement extends React.Component {
           {this.getIcon()}
           {this.getLink()}
         </Hovercard>
-        {this.props.onOpen &&
-          this.props.onClose && (
-            <OpenCloseIcon
-              src="icon-close"
-              onClick={this.isLinked() ? this.handleDelete : this.props.onOpen}
-              isLinked={this.isLinked()}
-            />
-          )}
+        {this.props.onOpen && this.props.onClose && (
+          <OpenCloseIcon
+            src="icon-close"
+            onClick={this.isLinked() ? this.handleDelete : this.props.onOpen}
+            isLinked={this.isLinked()}
+          />
+        )}
       </IssueSyncListElementContainer>
     );
   }
@@ -132,7 +131,7 @@ const IssueSyncListElementContainer = styled('div')`
 `;
 
 const IntegrationIcon = styled(InlineSvg)`
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   width: ${space(3)};
   height: ${space(3)};
   cursor: pointer;
@@ -143,8 +142,8 @@ const IntegrationLink = styled('a')`
   text-decoration: none;
   padding-bottom: ${space(0.25)};
   margin-left: ${space(1)};
-  color: ${p => p.theme.gray4};
-  border-bottom: 1px solid ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
+  border-bottom: 1px solid ${(p) => p.theme.gray4};
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
@@ -153,19 +152,19 @@ const IntegrationLink = styled('a')`
 
   &,
   &:hover {
-    border-bottom: 1px solid ${p => p.theme.linkColor};
+    border-bottom: 1px solid ${(p) => p.theme.linkColor};
   }
 `;
 
 const OpenCloseIcon = styled(InlineSvg)`
   height: ${space(1.5)};
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   transition: 0.2s transform;
   cursor: pointer;
   box-sizing: content-box;
   padding: ${space(1)};
   margin: -${space(1)};
-  ${p => (p.isLinked ? '' : 'transform: rotate(45deg) scale(0.9);')};
+  ${(p) => (p.isLinked ? '' : 'transform: rotate(45deg) scale(0.9);')};
 `;
 
 export default IssueSyncElement;

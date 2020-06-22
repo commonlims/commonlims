@@ -26,11 +26,11 @@ function mountComponent(isHidden) {
   );
 }
 
-describe('ProjectEnvironments', function() {
+describe('ProjectEnvironments', function () {
   let project;
   let updateDefaultMock;
 
-  beforeEach(function() {
+  beforeEach(function () {
     project = TestStubs.Project({
       defaultEnvironment: 'production',
     });
@@ -44,12 +44,12 @@ describe('ProjectEnvironments', function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  describe('render active', function() {
-    it('renders empty message', function() {
+  describe('render active', function () {
+    it('renders empty message', function () {
       EnvironmentStore.loadInitialData([]);
       const wrapper = mountComponent(false);
       const errorMessage = wrapper.find('div').first();
@@ -58,7 +58,7 @@ describe('ProjectEnvironments', function() {
       expect(wrapper.find('ProjectEnvironments')).toMatchSnapshot();
     });
 
-    it('renders environment list and sets staging as default env', async function() {
+    it('renders environment list and sets staging as default env', async function () {
       EnvironmentStore.loadInitialData(TestStubs.Environments(false));
       const wrapper = mountComponent(false);
 
@@ -72,18 +72,10 @@ describe('ProjectEnvironments', function() {
 
       expect(stagingRow.find('Tag')).toHaveLength(0);
 
-      expect(
-        stagingRow
-          .find('Button')
-          .first()
-          .text()
-      ).toBe('Set as default');
+      expect(stagingRow.find('Button').first().text()).toBe('Set as default');
 
       // Can set as default
-      stagingRow
-        .find('Button')
-        .first()
-        .simulate('click');
+      stagingRow.find('Button').first().simulate('click');
 
       expect(updateDefaultMock).toHaveBeenCalledWith(
         expect.anything(),
@@ -99,7 +91,7 @@ describe('ProjectEnvironments', function() {
       expect(wrapper.find('ProjectEnvironments')).toMatchSnapshot();
     });
 
-    it('can set "(No Environment)" as default', function() {
+    it('can set "(No Environment)" as default', function () {
       EnvironmentStore.loadInitialData([
         ...TestStubs.Environments(false),
         {
@@ -117,16 +109,8 @@ describe('ProjectEnvironments', function() {
 
       // Is able to hide
       expect(noEnvironmentsRow.find('Button')).toHaveLength(2);
-      expect(
-        noEnvironmentsRow
-          .find('Button')
-          .first()
-          .text()
-      ).toBe('Set as default');
-      noEnvironmentsRow
-        .find('Button')
-        .first()
-        .simulate('click');
+      expect(noEnvironmentsRow.find('Button').first().text()).toBe('Set as default');
+      noEnvironmentsRow.find('Button').first().simulate('click');
 
       expect(updateDefaultMock).toHaveBeenCalledWith(
         expect.anything(),
@@ -141,7 +125,7 @@ describe('ProjectEnvironments', function() {
       expect(wrapper.find('EnvironmentRow[name=""]').find('Tag')).toHaveLength(1);
     });
 
-    it('can set "All Environments" as default', function() {
+    it('can set "All Environments" as default', function () {
       EnvironmentStore.loadInitialData(TestStubs.Environments(false));
       const wrapper = mountComponent(false);
 
@@ -173,7 +157,7 @@ describe('ProjectEnvironments', function() {
       ).toHaveLength(1);
     });
 
-    it('displays invalid environment in list with no actions', function() {
+    it('displays invalid environment in list with no actions', function () {
       project = TestStubs.Project({
         defaultEnvironment: 'invalid-environment',
       });
@@ -196,8 +180,8 @@ describe('ProjectEnvironments', function() {
     });
   });
 
-  describe('render hidden', function() {
-    it('renders empty message', function() {
+  describe('render hidden', function () {
+    it('renders empty message', function () {
       EnvironmentStore.loadHiddenData([]);
 
       const wrapper = mountComponent(true);
@@ -208,7 +192,7 @@ describe('ProjectEnvironments', function() {
       expect(wrapper.find('ProjectEnvironments')).toMatchSnapshot();
     });
 
-    it('renders environment list', function() {
+    it('renders environment list', function () {
       EnvironmentStore.loadHiddenData(TestStubs.Environments(true));
       const wrapper = mountComponent(true);
 
@@ -218,10 +202,10 @@ describe('ProjectEnvironments', function() {
     });
   });
 
-  describe('toggle', function() {
+  describe('toggle', function () {
     let hideMock, showMock;
     const baseUrl = '/projects/org-slug/project-slug/environments/';
-    beforeEach(function() {
+    beforeEach(function () {
       hideMock = MockApiClient.addMockResponse({
         url: `${baseUrl}production/`,
         method: 'PUT',
@@ -235,7 +219,7 @@ describe('ProjectEnvironments', function() {
         url: baseUrl,
       });
     });
-    it('hides', function() {
+    it('hides', function () {
       EnvironmentStore.loadInitialData(TestStubs.Environments(false));
       const wrapper = mountComponent(false);
       wrapper.find('EnvironmentRow[name="production"] Button').simulate('click');
@@ -247,7 +231,7 @@ describe('ProjectEnvironments', function() {
       );
     });
 
-    it('shows', function() {
+    it('shows', function () {
       EnvironmentStore.loadHiddenData(TestStubs.Environments(true));
       const wrapper = mountComponent(true);
       wrapper.find('EnvironmentRow[name="zzz"] Button').simulate('click');
@@ -259,7 +243,7 @@ describe('ProjectEnvironments', function() {
       );
     });
 
-    it('does not have "All Enviroments" rows', function() {
+    it('does not have "All Enviroments" rows', function () {
       EnvironmentStore.loadHiddenData(TestStubs.Environments(true));
       const wrapper = mountComponent(true);
       expect(wrapper.find(`EnvironmentRow[name="${ALL_ENVIRONMENTS_KEY}"]`)).toHaveLength(

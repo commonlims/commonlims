@@ -135,20 +135,22 @@ class Feature extends React.Component {
     const allFeatures = this.getAllFeatures();
     const method = requireAll ? 'every' : 'some';
     const hasFeature =
-      !features || features[method](feat => this.hasFeature(feat, allFeatures));
+      !features || features[method]((feat) => this.hasFeature(feat, allFeatures));
 
     // Default renderDisabled to the ComingSoon component
     let customDisabledRender =
       renderDisabled === false
         ? false
-        : typeof renderDisabled === 'function' ? renderDisabled : () => <ComingSoon />;
+        : typeof renderDisabled === 'function'
+        ? renderDisabled
+        : () => <ComingSoon />;
 
     // Override the renderDisabled function with a hook store function if there
     // is one registered for the feature.
     if (renderDisabled !== false && features.length === 1) {
       HookStore.get(`feature-disabled:${descopeFeatureName(features[0])}`)
         .slice(0, 1)
-        .map(hookFn => (customDisabledRender = hookFn));
+        .map((hookFn) => (customDisabledRender = hookFn));
     }
 
     const renderProps = {

@@ -10,24 +10,24 @@ export const tasksGetRequest = () => {
   };
 };
 
-export const tasksGetSuccess = tasks => {
+export const tasksGetSuccess = (tasks) => {
   return {
     type: TASKS_GET_SUCCESS,
     tasks,
   };
 };
 
-export const tasksGetFailure = err => ({
+export const tasksGetFailure = (err) => ({
   type: TASKS_GET_FAILURE,
   message: err,
 });
 
-export const tasksGet = () => dispatch => {
+export const tasksGet = () => (dispatch) => {
   dispatch(tasksGetRequest());
   // TODO: create a new API client to replace api.jsx
   // and use axios instead of jquery there
   return axios
     .get('/api/0/organizations/lab/workflow/aggregate/task/')
-    .then(res => dispatch(tasksGetSuccess(res.data)))
-    .catch(err => dispatch(tasksGetFailure(err)));
+    .then((res) => dispatch(tasksGetSuccess(res.data)))
+    .catch((err) => dispatch(tasksGetFailure(err)));
 };

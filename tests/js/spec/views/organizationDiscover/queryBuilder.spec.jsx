@@ -3,13 +3,13 @@ import {openModal} from 'app/actionCreators/modal';
 
 jest.mock('app/actionCreators/modal');
 
-describe('Query Builder', function() {
-  afterEach(function() {
+describe('Query Builder', function () {
+  afterEach(function () {
     jest.clearAllMocks();
   });
 
-  describe('applyDefaults()', function() {
-    it('generates default query with all projects', function() {
+  describe('applyDefaults()', function () {
+    it('generates default query with all projects', function () {
       const queryBuilder = createQueryBuilder(
         {},
         TestStubs.Organization({projects: [TestStubs.Project()]})
@@ -26,17 +26,20 @@ describe('Query Builder', function() {
     });
   });
 
-  describe('loads()', function() {
-    afterEach(function() {
+  describe('loads()', function () {
+    afterEach(function () {
       MockApiClient.clearMockResponses();
     });
 
-    it('loads tags', async function() {
+    it('loads tags', async function () {
       const discoverMock = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/query/?per_page=1000&cursor=0:0:1',
         method: 'POST',
         body: {
-          data: [{tags_key: 'tag1', count: 5}, {tags_key: 'tag2', count: 1}],
+          data: [
+            {tags_key: 'tag1', count: 5},
+            {tags_key: 'tag2', count: 1},
+          ],
         },
       });
       const queryBuilder = createQueryBuilder(
@@ -75,7 +78,7 @@ describe('Query Builder', function() {
       });
     });
 
-    it('loads hardcoded tags when API request fails', async function() {
+    it('loads hardcoded tags when API request fails', async function () {
       const discoverMock = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/query/?per_page=1000&cursor=0:0:1',
         method: 'POST',
@@ -101,10 +104,10 @@ describe('Query Builder', function() {
     });
   });
 
-  describe('fetch()', function() {
+  describe('fetch()', function () {
     let queryBuilder, discoverMock;
 
-    beforeEach(function() {
+    beforeEach(function () {
       queryBuilder = createQueryBuilder(
         {},
         TestStubs.Organization({projects: [TestStubs.Project()]})
@@ -120,11 +123,11 @@ describe('Query Builder', function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       MockApiClient.clearMockResponses();
     });
 
-    it('makes request', async function() {
+    it('makes request', async function () {
       const data = {projects: [1], fields: ['id']};
       await queryBuilder.fetch(data);
       expect(discoverMock).toHaveBeenCalledWith(
@@ -135,7 +138,7 @@ describe('Query Builder', function() {
       );
     });
 
-    it('handles no projects', async function() {
+    it('handles no projects', async function () {
       const result = queryBuilder.fetch({projects: []});
       await expect(result).rejects.toMatchObject({
         message: 'No projects selected',
@@ -144,16 +147,16 @@ describe('Query Builder', function() {
     });
   });
 
-  describe('updateField()', function() {
+  describe('updateField()', function () {
     let queryBuilder;
-    beforeEach(function() {
+    beforeEach(function () {
       queryBuilder = createQueryBuilder(
         {},
         TestStubs.Organization({projects: [TestStubs.Project()]})
       );
     });
 
-    it('updates field', function() {
+    it('updates field', function () {
       queryBuilder.updateField('projects', [5]);
       queryBuilder.updateField('conditions', [['id', '=', 'event1']]);
 
@@ -161,7 +164,7 @@ describe('Query Builder', function() {
       expect(query.conditions).toEqual([['id', '=', 'event1']]);
     });
 
-    it('updates orderby if there is an aggregation and value is not a valid field', function() {
+    it('updates orderby if there is an aggregation and value is not a valid field', function () {
       queryBuilder.updateField('fields', ['id']);
       queryBuilder.updateField('aggregations', [['count()', null, 'count']]);
 
@@ -169,7 +172,7 @@ describe('Query Builder', function() {
       expect(query.orderby).toBe('-count');
     });
 
-    it('updates orderby if there is no aggregation and value is not a valid field', function() {
+    it('updates orderby if there is no aggregation and value is not a valid field', function () {
       queryBuilder.updateField('fields', ['id']);
       queryBuilder.updateField('aggregations', [['count()', null, 'count']]);
       expect(queryBuilder.getInternal().orderby).toBe('-count');
@@ -178,9 +181,9 @@ describe('Query Builder', function() {
     });
   });
 
-  describe('reset()', function() {
+  describe('reset()', function () {
     let queryBuilder;
-    beforeEach(function() {
+    beforeEach(function () {
       const project = TestStubs.Project({id: '1'});
       const projectWithoutMembership = TestStubs.Project({id: '2', isMember: false});
       queryBuilder = createQueryBuilder(
@@ -189,7 +192,7 @@ describe('Query Builder', function() {
       );
     });
 
-    it('displays warning if invalid project is provided', function() {
+    it('displays warning if invalid project is provided', function () {
       queryBuilder.reset({
         fields: ['id'],
         projects: [3],
@@ -197,7 +200,7 @@ describe('Query Builder', function() {
       expect(openModal).toHaveBeenCalled();
     });
 
-    it('displays warning if user does not have project access', function() {
+    it('displays warning if user does not have project access', function () {
       queryBuilder.reset({
         fields: ['id'],
         projects: [2],
@@ -205,7 +208,7 @@ describe('Query Builder', function() {
       expect(openModal).toHaveBeenCalled();
     });
 
-    it('does not display warning if user has access to all requested projects', function() {
+    it('does not display warning if user has access to all requested projects', function () {
       queryBuilder.reset({
         fields: ['id'],
         projects: [1],
@@ -214,9 +217,9 @@ describe('Query Builder', function() {
     });
   });
 
-  describe('getColumns()', function() {
+  describe('getColumns()', function () {
     let queryBuilder;
-    beforeEach(async function() {
+    beforeEach(async function () {
       queryBuilder = createQueryBuilder(
         {},
         TestStubs.Organization({projects: [TestStubs.Project()]})
@@ -224,7 +227,7 @@ describe('Query Builder', function() {
       await queryBuilder.load();
     });
 
-    it('returns columns and tags', function() {
+    it('returns columns and tags', function () {
       expect(queryBuilder.getColumns()).toContainEqual({
         name: 'id',
         type: 'string',

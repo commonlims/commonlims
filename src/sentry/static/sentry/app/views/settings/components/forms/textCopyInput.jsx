@@ -10,18 +10,18 @@ import Button from 'app/components/button';
 import Clipboard from 'app/components/clipboard';
 import InlineSvg from 'app/components/inlineSvg';
 
-const StyledInput = styled(props => {
+const StyledInput = styled((props) => {
   return <input {...props} />;
 })`
   ${inputStyles};
-  background-color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.offWhite};
   border-right-width: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 
   &:hover,
   &:focus {
-    background-color: ${p => p.theme.offWhite};
+    background-color: ${(p) => p.theme.offWhite};
     border-right-width: 0;
   }
 `;
@@ -60,7 +60,7 @@ class TextCopyInput extends React.Component {
   }
 
   // Select text when copy button is clicked
-  handleCopyClick = e => {
+  handleCopyClick = (e) => {
     if (!this.textRef.current) {
       return;
     }

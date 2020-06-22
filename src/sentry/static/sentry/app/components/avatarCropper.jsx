@@ -37,7 +37,7 @@ class AvatarCropper extends React.Component {
   MIN_DIMENSION = 256;
   MAX_DIMENSION = 1024;
 
-  onChange = ev => {
+  onChange = (ev) => {
     /*eslint consistent-return:0*/
     const file = ev.target.files[0];
 
@@ -65,7 +65,7 @@ class AvatarCropper extends React.Component {
     this.state.objectURL && window.URL.revokeObjectURL(this.state.objectURL);
   };
 
-  updateDimensions = ev => {
+  updateDimensions = (ev) => {
     if (!this.cropContainer) {
       return;
     }
@@ -107,7 +107,7 @@ class AvatarCropper extends React.Component {
     this.drawToCanvas();
   };
 
-  onMouseDown = ev => {
+  onMouseDown = (ev) => {
     ev.preventDefault();
     this.setState({
       mousePosition: {
@@ -118,7 +118,7 @@ class AvatarCropper extends React.Component {
     this.startMove();
   };
 
-  onMouseUp = ev => {
+  onMouseUp = (ev) => {
     ev.preventDefault();
     this.stopMove();
   };
@@ -137,7 +137,7 @@ class AvatarCropper extends React.Component {
     });
   };
 
-  stopResize = ev => {
+  stopResize = (ev) => {
     ev.stopPropagation();
     ev.preventDefault();
     $(document).off('mousemove', this.updateSize);
@@ -145,7 +145,7 @@ class AvatarCropper extends React.Component {
     this.drawToCanvas();
   };
 
-  updateSize = ev => {
+  updateSize = (ev) => {
     if (!this.cropContainer) {
       return;
     }
@@ -242,7 +242,7 @@ class AvatarCropper extends React.Component {
     return Object.assign({}, oldDimensions, newDimensions);
   };
 
-  handleError = msg => {
+  handleError = (msg) => {
     addErrorMessage(t(msg));
   };
 
@@ -271,7 +271,7 @@ class AvatarCropper extends React.Component {
     }
   };
 
-  onLoad = ev => {
+  onLoad = (ev) => {
     const error = this.validateImage();
     if (error) {
       window.URL.revokeObjectURL(this.state.objectURL);
@@ -339,7 +339,7 @@ class AvatarCropper extends React.Component {
     return savedDataUrl || this.state.objectURL || photoUrl;
   };
 
-  onImgDrag = ev => {
+  onImgDrag = (ev) => {
     ev.preventDefault();
   };
 
@@ -357,11 +357,11 @@ class AvatarCropper extends React.Component {
     };
     return (
       <div className="image-cropper">
-        <div className="crop-container" ref={ref => (this.cropContainer = ref)}>
+        <div className="crop-container" ref={(ref) => (this.cropContainer = ref)}>
           <div className="image-container">
             <img
               className="preview"
-              ref={ref => (this.image = ref)}
+              ref={(ref) => (this.image = ref)}
               src={src}
               onLoad={this.onLoad}
               onDragStart={this.onImgDrag}
@@ -378,7 +378,7 @@ class AvatarCropper extends React.Component {
     );
   };
 
-  uploadClick = ev => {
+  uploadClick = (ev) => {
     ev.preventDefault();
     if (!this.file) {
       return;
@@ -392,7 +392,7 @@ class AvatarCropper extends React.Component {
     }
     return (
       <div className="canvas-container">
-        <canvas ref={ref => (this.canvas = ref)} />
+        <canvas ref={(ref) => (this.canvas = ref)} />
       </div>
     );
   };
@@ -421,7 +421,7 @@ class AvatarCropper extends React.Component {
         <div className="form-group">
           {src && <a onClick={this.uploadClick}>{t('Change Photo')}</a>}
           <input
-            ref={ref => (this.file = ref)}
+            ref={(ref) => (this.file = ref)}
             type="file"
             accept="image/gif,image/jpeg,image/png"
             onChange={this.onChange}

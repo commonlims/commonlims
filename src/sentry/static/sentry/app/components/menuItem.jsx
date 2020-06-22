@@ -21,7 +21,7 @@ class MenuItem extends React.Component {
     onClick: PropTypes.func,
   };
 
-  handleClick = e => {
+  handleClick = (e) => {
     if (this.props.onSelect) {
       e.preventDefault();
       this.props.onSelect(this.props.eventKey);

@@ -36,12 +36,12 @@ class PieChart extends React.Component {
   }
 
   // echarts Legend does not have access to percentages (but tooltip does :/)
-  getSeriesPercentages = series => {
+  getSeriesPercentages = (series) => {
     const total = series.data.reduce((acc, {value}) => acc + value, 0);
     return series.data.reduce(
       (acc, {name, value}) => ({
         ...acc,
-        [name]: Math.round(value / total * 10000) / 100,
+        [name]: Math.round((value / total) * 10000) / 100,
       }),
       {}
     );
@@ -49,7 +49,7 @@ class PieChart extends React.Component {
 
   // Select a series to highlight (e.g. shows details of series)
   // This is the same event as when you hover over a series in the chart
-  highlight = dataIndex => {
+  highlight = (dataIndex) => {
     if (!this.chart.current) {
       return;
     }
@@ -62,7 +62,7 @@ class PieChart extends React.Component {
   };
 
   // Opposite of `highlight`
-  downplay = dataIndex => {
+  downplay = (dataIndex) => {
     if (!this.chart.current) {
       return;
     }
@@ -75,10 +75,10 @@ class PieChart extends React.Component {
   };
 
   // echarts Legend does not have access to percentages (but tooltip does :/)
-  getSeriesPercentages = series => {
+  getSeriesPercentages = (series) => {
     const total = series.data.reduce((acc, {value}) => acc + value, 0);
     return series.data
-      .map(({name, value}) => [name, Math.round(value / total * 10000) / 100])
+      .map(({name, value}) => [name, Math.round((value / total) * 10000) / 100])
       .reduce(
         (acc, [name, value]) => ({
           ...acc,
@@ -146,10 +146,12 @@ class PieChart extends React.Component {
             left: 10,
             top: 10,
             bottom: 10,
-            formatter: name => {
-              return `${name} ${typeof seriesPercentages[name] !== 'undefined'
-                ? `(${seriesPercentages[name]}%)`
-                : ''}`;
+            formatter: (name) => {
+              return `${name} ${
+                typeof seriesPercentages[name] !== 'undefined'
+                  ? `(${seriesPercentages[name]}%)`
+                  : ''
+              }`;
             },
           }),
         }}

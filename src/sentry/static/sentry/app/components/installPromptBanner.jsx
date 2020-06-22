@@ -40,7 +40,7 @@ const InstallPromptBanner = createReactClass({
 
   sentFirstEvent() {
     const {projects} = this.props.organization;
-    return !!projects.find(project => project.firstEvent);
+    return !!projects.find((project) => project.firstEvent);
   },
 
   recordAnalytics() {
@@ -79,10 +79,10 @@ const InstallPromptBanner = createReactClass({
 });
 
 const StyledAlert = styled(Alert)`
-  padding: ${p => p.theme.grid}px ${p => p.theme.grid * 2}px;
+  padding: ${(p) => p.theme.grid}px ${(p) => p.theme.grid * 2}px;
   position: relative;
   margin: 0;
-  padding-right: ${p => p.theme.grid * 4}px;
+  padding-right: ${(p) => p.theme.grid * 4}px;
   a {
     color: #2f2936;
     border-bottom: 1px dotted black;

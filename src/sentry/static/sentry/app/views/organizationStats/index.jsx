@@ -84,11 +84,11 @@ const OrganizationStatsContainer = createReactClass({
       query: this.props.location.query,
       success: (data, textStatus, jqxhr) => {
         const projectMap = {};
-        data.forEach(project => {
+        data.forEach((project) => {
           projectMap[project.id] = project;
         });
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
           return {
             pageLinks: jqxhr.getResponseHeader('Link'),
             projectMap,
@@ -116,7 +116,7 @@ const OrganizationStatsContainer = createReactClass({
 
     const statEndpoint = this.getOrganizationStatsEndpoint();
 
-    $.each(this.state.rawOrgData, statName => {
+    $.each(this.state.rawOrgData, (statName) => {
       this.api.request(statEndpoint, {
         query: {
           since: this.state.querySince,
@@ -124,8 +124,8 @@ const OrganizationStatsContainer = createReactClass({
           resolution: '1h',
           stat: statName,
         },
-        success: data => {
-          this.setState(prevState => {
+        success: (data) => {
+          this.setState((prevState) => {
             const rawOrgData = prevState.rawOrgData;
             rawOrgData[statName] = data;
 
@@ -143,7 +143,7 @@ const OrganizationStatsContainer = createReactClass({
       });
     });
 
-    $.each(this.state.rawProjectData, statName => {
+    $.each(this.state.rawProjectData, (statName) => {
       this.api.request(statEndpoint, {
         query: {
           since: this.state.querySince,
@@ -151,8 +151,8 @@ const OrganizationStatsContainer = createReactClass({
           stat: statName,
           group: 'project',
         },
-        success: data => {
-          this.setState(prevState => {
+        success: (data) => {
+          this.setState((prevState) => {
             const rawProjectData = prevState.rawProjectData;
             rawProjectData[statName] = data;
 
@@ -252,9 +252,10 @@ const OrganizationStatsContainer = createReactClass({
     return (
       <LazyLoad
         component={() =>
-          import(/* webpackChunkName: "organizationStats" */ './organizationStatsDetails').then(
-            mod => mod.default
-          )}
+          import(
+            /* webpackChunkName: "organizationStats" */ './organizationStatsDetails'
+          ).then((mod) => mod.default)
+        }
         organization={organization}
         {...this.state}
       />

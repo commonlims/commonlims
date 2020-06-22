@@ -152,6 +152,6 @@ export default EventsChartContainer;
 export {EventsChart};
 
 const TransparentLoadingMask = styled(LoadingMask)`
-  ${p => !p.visible && 'display: none;'} opacity: 0.4;
+  ${(p) => !p.visible && 'display: none;'} opacity: 0.4;
   z-index: 1;
 `;

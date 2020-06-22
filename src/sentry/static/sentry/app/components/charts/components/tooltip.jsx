@@ -20,7 +20,7 @@ function valueFormatter(value) {
 }
 
 function getFormatter({filter, isGroupedByDate, truncate, formatAxisLabel, utc}) {
-  const getFilter = seriesParam => {
+  const getFilter = (seriesParam) => {
     // Series do not necessarily have `data` defined, e.g. releases don't have `data`, but rather
     // has a series using strictly `markLine`s.
     // However, real series will have `data` as a tuple of (key, value)
@@ -32,7 +32,7 @@ function getFormatter({filter, isGroupedByDate, truncate, formatAxisLabel, utc})
     return true;
   };
 
-  return seriesParamsOrParam => {
+  return (seriesParamsOrParam) => {
     // If this is a tooltip for the axis, it will include all series for that axis item.
     // In this case seriesParamsOrParam will be of type `Object[]`
     //
@@ -52,7 +52,7 @@ function getFormatter({filter, isGroupedByDate, truncate, formatAxisLabel, utc})
       seriesParams
         .filter(getFilter)
         .map(
-          s =>
+          (s) =>
             `<div>${s.marker} ${truncationFormatter(
               s.seriesName,
               truncate
@@ -63,9 +63,15 @@ function getFormatter({filter, isGroupedByDate, truncate, formatAxisLabel, utc})
   };
 }
 
-export default function Tooltip(
-  {filter, isGroupedByDate, formatter, truncate, utc, formatAxisLabel, ...props} = {}
-) {
+export default function Tooltip({
+  filter,
+  isGroupedByDate,
+  formatter,
+  truncate,
+  utc,
+  formatAxisLabel,
+  ...props
+} = {}) {
   formatter =
     formatter || getFormatter({filter, isGroupedByDate, truncate, utc, formatAxisLabel});
 

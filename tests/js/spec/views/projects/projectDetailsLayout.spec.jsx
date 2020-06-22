@@ -10,8 +10,8 @@ jest.mock('app/actionCreators/navigation', () => ({
 
 jest.unmock('app/utils/recreateRoute');
 
-describe('ProjectLayout', function() {
-  it('calls `setLastRoute` when unmounting', function() {
+describe('ProjectLayout', function () {
+  it('calls `setLastRoute` when unmounting', function () {
     const wrapper = mount(
       <ProjectDetailsLayout location={{pathname: '/org-slug/dashboard/'}} />
     );

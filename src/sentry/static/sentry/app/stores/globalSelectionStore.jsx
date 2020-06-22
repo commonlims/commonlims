@@ -30,11 +30,13 @@ const getDefaultSelection = () => {
 
 const isValidSelection = (selection, organization) => {
   const allowedProjects = new Set(
-    organization.projects.filter(project => project.isMember).map(p => parseInt(p.id, 10))
+    organization.projects
+      .filter((project) => project.isMember)
+      .map((p) => parseInt(p.id, 10))
   );
   if (
     Array.isArray(selection.projects) &&
-    selection.projects.some(project => !allowedProjects.has(project))
+    selection.projects.some((project) => !allowedProjects.has(project))
   ) {
     return false;
   }
@@ -57,7 +59,7 @@ const GlobalSelectionStore = Reflux.createStore({
   /**
    * Initializes the global selection store
    * If there are query params apply these, otherwise check local storage
-  */
+   */
   loadInitialData(organization, queryParams) {
     this.organization = organization;
     const query = pick(queryParams, Object.values(URL_PARAM));

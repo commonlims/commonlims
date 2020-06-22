@@ -82,7 +82,7 @@ class OrganizationAuthList extends React.Component {
               />
               <input type="hidden" name="init" value="1" />
 
-              {providerList.map(provider => (
+              {providerList.map((provider) => (
                 <ProviderItem
                   key={provider.key}
                   provider={provider}

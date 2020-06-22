@@ -21,7 +21,7 @@ export class MetaProxy {
   get(obj, prop, receiver) {
     // trap calls to `getMeta` to return meta object
     if (prop === GET_META) {
-      return key => {
+      return (key) => {
         if (this.local && this.local[key] && this.local[key]['']) {
           // TODO: Error checks
           const meta = this.local[key][''];

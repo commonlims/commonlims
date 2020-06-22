@@ -5,7 +5,7 @@ import languages from 'app/data/languages';
 export const route = '/settings/account/details/';
 
 // Called before sending API request, these fields need to be sent as an `options` object
-const transformOptions = data => ({options: data});
+const transformOptions = (data) => ({options: data});
 
 const formGroups = [
   {

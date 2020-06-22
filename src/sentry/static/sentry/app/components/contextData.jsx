@@ -25,7 +25,7 @@ function looksLikeMultiLineString(value) {
 }
 
 function padNumbersInString(string) {
-  return string.replace(/(\d+)/g, function(num) {
+  return string.replace(/(\d+)/g, function (num) {
     let isNegative = false;
     num = parseInt(num, 10);
     if (num < 0) {
@@ -79,11 +79,9 @@ class ContextData extends React.Component {
     data: null,
   };
 
-  renderValue = value => {
+  renderValue = (value) => {
     function toggle(evt) {
-      $(evt.target)
-        .parent()
-        .toggleClass('val-toggle-open');
+      $(evt.target).parent().toggleClass('val-toggle-open');
       evt.preventDefault();
     }
 
@@ -197,7 +195,7 @@ class ContextData extends React.Component {
     return walk(value, 0);
   };
 
-  renderKeyPosValue = value => {
+  renderKeyPosValue = (value) => {
     if (_.isString(value)) {
       return <span className="val-string">{value}</span>;
     }

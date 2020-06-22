@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import {setActiveOrganization} from 'app/actionCreators/organizations';
 import MultipleEnvironmentSelector from 'app/components/organizations/multipleEnvironmentSelector';
 
-describe('MultipleEnvironmentSelector', function() {
+describe('MultipleEnvironmentSelector', function () {
   let getMock;
   let wrapper;
   const onChange = jest.fn();
@@ -17,7 +17,7 @@ describe('MultipleEnvironmentSelector', function() {
     },
   ]);
 
-  beforeAll(async function() {
+  beforeAll(async function () {
     getMock = MockApiClient.addMockResponse({
       url: `/organizations/${organization.slug}/environments/`,
       body: envs,
@@ -26,7 +26,7 @@ describe('MultipleEnvironmentSelector', function() {
     await tick();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     onChange.mockReset();
     onUpdate.mockReset();
     wrapper = mount(
@@ -39,7 +39,7 @@ describe('MultipleEnvironmentSelector', function() {
     );
   });
 
-  it('fetches environments when mounting', async function() {
+  it('fetches environments when mounting', async function () {
     expect(getMock).toHaveBeenCalled();
     await wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
     wrapper.update();
@@ -53,7 +53,7 @@ describe('MultipleEnvironmentSelector', function() {
     expect(getMock).toHaveBeenCalledTimes(1);
   });
 
-  it('can select and change environments', async function() {
+  it('can select and change environments', async function () {
     wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
 
     // Select all envs
@@ -72,14 +72,11 @@ describe('MultipleEnvironmentSelector', function() {
 
     wrapper.setProps({value: envs.map(({name}) => name)});
     wrapper.update();
-    wrapper
-      .find('MultipleEnvironmentSelector')
-      .instance()
-      .doUpdate();
+    wrapper.find('MultipleEnvironmentSelector').instance().doUpdate();
     expect(onUpdate).toHaveBeenCalledWith();
   });
 
-  it('selects multiple environments and uses chevron to update', async function() {
+  it('selects multiple environments and uses chevron to update', async function () {
     await wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
 
     await wrapper
@@ -102,7 +99,7 @@ describe('MultipleEnvironmentSelector', function() {
     expect(onUpdate).toHaveBeenCalledWith();
   });
 
-  it('does not update when there are no changes', async function() {
+  it('does not update when there are no changes', async function () {
     await wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
     wrapper.find('MultipleEnvironmentSelector StyledChevron').simulate('click');
     expect(onUpdate).not.toHaveBeenCalled();

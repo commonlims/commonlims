@@ -83,7 +83,7 @@ export const fields = {
     help: t(
       "Automatically resolve an issue if it hasn't been seen for this amount of time"
     ),
-    formatLabel: val => {
+    formatLabel: (val) => {
       val = parseInt(val, 10);
       if (val === 0) {
         return t('Disabled');
@@ -160,8 +160,8 @@ export const fields = {
     help: t(
       'Additional field names to match against when scrubbing data. Separate multiple entries with a newline'
     ),
-    getValue: val => extractMultilineFields(val),
-    setValue: val => (val && typeof val.join === 'function' && val.join('\n')) || '',
+    getValue: (val) => extractMultilineFields(val),
+    setValue: (val) => (val && typeof val.join === 'function' && val.join('\n')) || '',
   },
   safeFields: {
     name: 'safeFields',
@@ -174,8 +174,8 @@ export const fields = {
     help: t(
       'Field names which data scrubbers should ignore. Separate multiple entries with a newline'
     ),
-    getValue: val => extractMultilineFields(val),
-    setValue: val => (val && typeof val.join === 'function' && val.join('\n')) || '',
+    getValue: (val) => extractMultilineFields(val),
+    setValue: (val) => (val && typeof val.join === 'function' && val.join('\n')) || '',
   },
   storeCrashReports: {
     name: 'storeCrashReports',
@@ -222,8 +222,8 @@ export const fields = {
     placeholder: t('https://example.com or example.com'),
     label: t('Allowed Domains'),
     help: t('Separate multiple entries with a newline'),
-    getValue: val => extractMultilineFields(val),
-    setValue: val => (val && typeof val.join === 'function' && val.join('\n')) || '',
+    getValue: (val) => extractMultilineFields(val),
+    setValue: (val) => (val && typeof val.join === 'function' && val.join('\n')) || '',
   },
   scrapeJavaScript: {
     name: 'scrapeJavaScript',
@@ -243,7 +243,7 @@ export const fields = {
     help: t(
       'Outbound requests matching Allowed Domains will have the header "{token_header}: {token}" appended'
     ),
-    setValue: value => getDynamicText({value, fixed: '__SECURITY_TOKEN__'}),
+    setValue: (value) => getDynamicText({value, fixed: '__SECURITY_TOKEN__'}),
   },
   securityTokenHeader: {
     name: 'securityTokenHeader',

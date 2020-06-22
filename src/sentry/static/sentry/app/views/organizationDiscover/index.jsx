@@ -50,7 +50,7 @@ class OrganizationDiscoverContainer extends React.Component {
       query.projects = props.selection.projects;
     }
 
-    if (['range', 'start', 'end'].some(key => query.hasOwnProperty(key))) {
+    if (['range', 'start', 'end'].some((key) => query.hasOwnProperty(key))) {
       // Update global store with datetime from querystring
       updateDateTime({
         start: query.start || null,
@@ -110,11 +110,11 @@ class OrganizationDiscoverContainer extends React.Component {
     });
   };
 
-  fetchSavedQuery = savedQueryId => {
+  fetchSavedQuery = (savedQueryId) => {
     const {organization} = this.context;
 
     return fetchSavedQuery(organization, savedQueryId)
-      .then(resp => {
+      .then((resp) => {
         if (this.queryBuilder) {
           this.queryBuilder.reset(parseSavedQuery(resp));
         } else {
@@ -132,7 +132,7 @@ class OrganizationDiscoverContainer extends React.Component {
       });
   };
 
-  updateSavedQuery = savedQuery => {
+  updateSavedQuery = (savedQuery) => {
     this.setState({savedQuery});
   };
 

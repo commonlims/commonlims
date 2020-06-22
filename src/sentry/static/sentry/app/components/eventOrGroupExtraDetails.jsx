@@ -64,8 +64,9 @@ class EventOrGroupExtraDetails extends React.Component {
                 <TimeSince date={lastSeen} suffix={t('ago')} />
               </React.Fragment>
             )}
-            {firstSeen &&
-              lastSeen && <span className="hidden-xs hidden-sm">&nbsp;—&nbsp;</span>}
+            {firstSeen && lastSeen && (
+              <span className="hidden-xs hidden-sm">&nbsp;—&nbsp;</span>
+            )}
             {firstSeen && (
               <TimeSince
                 date={firstSeen}
@@ -117,15 +118,16 @@ class EventOrGroupExtraDetails extends React.Component {
             );
           })}
 
-        {showAssignee &&
-          assignedTo && <div>{tct('Assigned to [name]', {name: assignedTo.name})}</div>}
+        {showAssignee && assignedTo && (
+          <div>{tct('Assigned to [name]', {name: assignedTo.name})}</div>
+        )}
       </GroupExtra>
     );
   }
 }
 
 const GroupExtra = styled(Flex)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   font-size: 12px;
   position: relative;
 
@@ -135,7 +137,7 @@ const GroupExtra = styled(Flex)`
 `;
 
 const GroupExtraCommentsAndLogger = styled(Flex)`
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
 `;
 
 const CommentsLink = styled(Link)`
@@ -154,11 +156,11 @@ const GroupShortId = styled(ShortId)`
   margin-right: ${space(2)};
   flex-shrink: 0;
   font-size: 12px;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;
 
 const GroupExtraIcon = styled(InlineSvg)`
-  color: ${p => (p.isMentioned ? p.theme.green : null)};
+  color: ${(p) => (p.isMentioned ? p.theme.green : null)};
   font-size: 11px;
   margin-right: 4px;
 `;

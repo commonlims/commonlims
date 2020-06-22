@@ -40,7 +40,7 @@ class RouteError extends React.Component {
     // TODO(dcramer): show something in addition to embed (that contains it?)
     // throw this in a timeout so if it errors we dont fall over
     this._timeout = window.setTimeout(() => {
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setFingerprint(['route-error', ...(route ? [route] : [])]);
         scope.setExtra('route', route);
         scope.setExtra('orgFeatures', (organization && organization.features) || []);
@@ -73,13 +73,12 @@ class RouteError extends React.Component {
         </p>
         <p>If you're daring, you may want to try the following:</p>
         <ul>
-          {window &&
-            window.adblockSuspected && (
-              <li>
-                We detected something AdBlock-like. Try disabling it, as it's known to
-                cause issues.
-              </li>
-            )}
+          {window && window.adblockSuspected && (
+            <li>
+              We detected something AdBlock-like. Try disabling it, as it's known to cause
+              issues.
+            </li>
+          )}
           <li>
             Give it a few seconds and{' '}
             <a
@@ -88,7 +87,8 @@ class RouteError extends React.Component {
               }}
             >
               reload the page
-            </a>.
+            </a>
+            .
           </li>
           <li>
             If all else fails,{' '}

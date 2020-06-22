@@ -27,8 +27,8 @@ class ProjectsContainer extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.tag;
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = (state) => state.tag;
+const mapDispatchToProps = (dispatch) => ({});
 
 ProjectsContainer.propTypes = {
   organization: PropTypes.object.isRequired,

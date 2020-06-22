@@ -13,7 +13,7 @@ class SearchBar extends React.PureComponent {
   static defaultProps = {
     defaultQuery: '',
     query: '',
-    onSearch: function() {},
+    onSearch: function () {},
   };
 
   constructor(...args) {
@@ -36,7 +36,7 @@ class SearchBar extends React.PureComponent {
     this.searchInputRef.current.blur();
   };
 
-  onSubmit = evt => {
+  onSubmit = (evt) => {
     evt.preventDefault();
     this.blur();
     this.props.onSearch(this.state.query);
@@ -58,7 +58,7 @@ class SearchBar extends React.PureComponent {
     this.setState({dropdownVisible: false});
   };
 
-  onQueryChange = evt => {
+  onQueryChange = (evt) => {
     this.setState({query: evt.target.value});
   };
 

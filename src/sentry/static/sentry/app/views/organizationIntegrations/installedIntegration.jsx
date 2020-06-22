@@ -36,11 +36,11 @@ export default class InstalledIntegration extends React.Component {
 
     return (
       integration.configOrganization.length > 0 ||
-      provider.features.filter(f => CONFIGURABLE_FEATURES.includes(f)).length > 0
+      provider.features.filter((f) => CONFIGURABLE_FEATURES.includes(f)).length > 0
     );
   }
 
-  reinstallIntegration = integration => {
+  reinstallIntegration = (integration) => {
     const activeIntegration = Object.assign({}, this.props.integration, {
       status: 'active',
     });
@@ -161,5 +161,5 @@ export default class InstalledIntegration extends React.Component {
 }
 
 const StyledButton = styled(Button)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;

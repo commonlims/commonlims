@@ -6,7 +6,7 @@ import SampleWell from 'app/components/sampleTransitioner/sampleWell';
 import SampleLocation from 'app/components/sampleTransitioner/sampleLocation';
 import Sample from 'app/components/sampleTransitioner/sample';
 
-describe('SampleContainer', function() {
+describe('SampleContainer', function () {
   let mockProps;
   let containerId;
   let containerDirectionality;
@@ -63,9 +63,9 @@ describe('SampleContainer', function() {
   });
 
   it('creates unique keys for all rows and columns', () => {
-    const ensureUniqueKeys = items => {
+    const ensureUniqueKeys = (items) => {
       const keys = {};
-      items.forEach(i => {
+      items.forEach((i) => {
         expect(keys[i.key()]).toBeFalsy();
         keys[i.key()] = 1;
       });

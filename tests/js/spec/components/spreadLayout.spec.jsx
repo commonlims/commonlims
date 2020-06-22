@@ -3,8 +3,8 @@ import {shallow} from 'enzyme';
 import toJson from 'enzyme-to-json';
 import SpreadLayout from 'app/components/spreadLayout';
 
-describe('SpreadLayout', function() {
-  it('renders with one child', function() {
+describe('SpreadLayout', function () {
+  it('renders with one child', function () {
     const component = shallow(
       <SpreadLayout>
         <div>child</div>
@@ -14,7 +14,7 @@ describe('SpreadLayout', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with multiple children', function() {
+  it('renders with multiple children', function () {
     const component = shallow(
       <SpreadLayout>
         <div>child #1</div>

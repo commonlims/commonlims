@@ -40,7 +40,11 @@ export default class IgnoreActions extends React.Component {
   }
 
   getIgnoreWindows() {
-    return [[60, 'per hour'], [24 * 60, 'per day'], [24 * 7 * 60, 'per week']];
+    return [
+      [60, 'per hour'],
+      [24 * 60, 'per day'],
+      [24 * 7 * 60, 'per week'],
+    ];
   }
 
   onCustomIgnore(statusDetails) {
@@ -95,12 +99,12 @@ export default class IgnoreActions extends React.Component {
       <div style={{display: 'inline-block'}}>
         <CustomIgnoreDurationModal
           show={this.state.modal === 'duration'}
-          onSelected={details => this.onCustomIgnore(details)}
+          onSelected={(details) => this.onCustomIgnore(details)}
           onCanceled={() => this.setState({modal: null})}
         />
         <CustomIgnoreCountModal
           show={this.state.modal === 'count'}
-          onSelected={details => this.onCustomIgnore(details)}
+          onSelected={(details) => this.onCustomIgnore(details)}
           onCanceled={() => this.setState({modal: null})}
           label={t('Ignore this issue until it occurs again\u2026')}
           countLabel={t('Number of times')}
@@ -110,7 +114,7 @@ export default class IgnoreActions extends React.Component {
         />
         <CustomIgnoreCountModal
           show={this.state.modal === 'users'}
-          onSelected={details => this.onCustomIgnore(details)}
+          onSelected={(details) => this.onCustomIgnore(details)}
           onCanceled={() => this.setState({modal: null})}
           label={t('Ignore this issue until it affects an additional\u2026')}
           countLabel={t('Numbers of users')}
@@ -144,7 +148,7 @@ export default class IgnoreActions extends React.Component {
                 isNestedDropdown={true}
                 alwaysRenderMenu
               >
-                {this.getIgnoreDurations().map(duration => {
+                {this.getIgnoreDurations().map((duration) => {
                   return (
                     <MenuItem noAnchor={true} key={duration}>
                       <ActionLink
@@ -169,7 +173,7 @@ export default class IgnoreActions extends React.Component {
                 isNestedDropdown={true}
                 alwaysRenderMenu
               >
-                {this.getIgnoreCounts().map(count => {
+                {this.getIgnoreCounts().map((count) => {
                   return (
                     <li className="dropdown-submenu" key={count}>
                       <DropdownLink
@@ -195,7 +199,8 @@ export default class IgnoreActions extends React.Component {
                                   this.onIgnore({
                                     ignoreCount: count,
                                     ignoreWindow: hours,
-                                  })}
+                                  })
+                                }
                               >
                                 {label}
                               </ActionLink>
@@ -219,7 +224,7 @@ export default class IgnoreActions extends React.Component {
                 isNestedDropdown={true}
                 alwaysRenderMenu
               >
-                {this.getIgnoreCounts().map(count => {
+                {this.getIgnoreCounts().map((count) => {
                   return (
                     <li className="dropdown-submenu" key={count}>
                       <DropdownLink
@@ -245,7 +250,8 @@ export default class IgnoreActions extends React.Component {
                                   this.onIgnore({
                                     ignoreUserCount: count,
                                     ignoreUserWindow: hours,
-                                  })}
+                                  })
+                                }
                               >
                                 {label}
                               </ActionLink>

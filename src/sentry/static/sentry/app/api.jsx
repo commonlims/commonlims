@@ -34,8 +34,8 @@ export function paramsToQueryArgs(params) {
   const p = params.itemIds
     ? {id: params.itemIds} // items matching array of itemids
     : params.query
-      ? {query: params.query} // items matching search query
-      : undefined; // all items
+    ? {query: params.query} // items matching search query
+    : undefined; // all items
 
   // only include environment if it is not null/undefined
   if (params.query && !isNil(params.environment)) {
@@ -153,7 +153,7 @@ export class Client {
     try {
       query = $.param(options.query || '', true);
     } catch (err) {
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('path', path);
         scope.setExtra('query', options.query);
         Sentry.captureException(err);
@@ -247,9 +247,9 @@ export class Client {
   }
 
   _chain(...funcs) {
-    funcs = funcs.filter(f => !isUndefined(f) && f);
+    funcs = funcs.filter((f) => !isUndefined(f) && f);
     return (...args) => {
-      funcs.forEach(func => {
+      funcs.forEach((func) => {
         func.apply(funcs, args);
       });
     };
@@ -282,10 +282,10 @@ export class Client {
       {
         query,
         method: 'DELETE',
-        success: response => {
+        success: (response) => {
           GroupActions.deleteSuccess(id, params.itemIds, response);
         },
-        error: error => {
+        error: (error) => {
           GroupActions.deleteError(id, params.itemIds, error);
         },
       },
@@ -309,10 +309,10 @@ export class Client {
         query,
         method: 'PUT',
         data: params.data,
-        success: response => {
+        success: (response) => {
           GroupActions.updateSuccess(id, params.itemIds, response);
         },
-        error: error => {
+        error: (error) => {
           GroupActions.updateError(id, params.itemIds, error, params.failSilently);
         },
       },
@@ -333,10 +333,10 @@ export class Client {
         query,
         method: 'PUT',
         data: {merge: 1},
-        success: response => {
+        success: (response) => {
           GroupActions.mergeSuccess(id, params.itemIds, response);
         },
-        error: error => {
+        error: (error) => {
           GroupActions.mergeError(id, params.itemIds, error);
         },
       },

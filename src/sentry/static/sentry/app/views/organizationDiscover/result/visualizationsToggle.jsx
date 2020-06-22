@@ -25,7 +25,7 @@ class VisualizationsToggle extends React.Component {
     visualization: PropTypes.string.isRequired,
   };
 
-  getMenuItem = opt => {
+  getMenuItem = (opt) => {
     return (
       <MenuItem
         key={opt.id}
@@ -38,7 +38,7 @@ class VisualizationsToggle extends React.Component {
     );
   };
 
-  getButtonItems = opt => {
+  getButtonItems = (opt) => {
     const active = opt.id === this.props.visualization;
     return (
       <li key={opt.id} className={classNames({active})}>
@@ -58,19 +58,19 @@ class VisualizationsToggle extends React.Component {
 
   render() {
     const {options, visualization} = this.props;
-    const name = options.find(opt => opt.id === visualization).name;
+    const name = options.find((opt) => opt.id === visualization).name;
     const dropdownTitle = t(`View: ${name}`);
 
     return (
       <ResultViewActions>
         <ResultViewButtons>
-          {options.map(opt => {
+          {options.map((opt) => {
             return this.getButtonItems(opt);
           })}
         </ResultViewButtons>
         <ResultViewDropdownButtons>
           <DropdownLink title={dropdownTitle} className="btn btn-default btn-sm">
-            {options.map(opt => {
+            {options.map((opt) => {
               return this.getMenuItem(opt);
             })}
           </DropdownLink>

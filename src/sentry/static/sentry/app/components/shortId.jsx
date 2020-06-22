@@ -28,5 +28,5 @@ export default class ShortId extends React.Component {
 }
 
 const StyledShortId = styled.div`
-  font-family: ${p => p.theme.text.familyMono};
+  font-family: ${(p) => p.theme.text.familyMono};
 `;

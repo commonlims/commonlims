@@ -57,7 +57,7 @@ export default class Resources extends React.Component {
 }
 
 const ResourcesWrapper = styled('div')`
-  border-top: 1px solid ${p => p.theme.borderLight};
+  border-top: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 const RobotPanel = styled(Panel)`

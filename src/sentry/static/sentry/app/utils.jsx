@@ -11,7 +11,7 @@ import ProcessesManager from 'app/utils/processesManager';
 
 /*eslint no-use-before-define:0*/
 
-const arrayIsEqual = function(arr, other, deep) {
+const arrayIsEqual = function (arr, other, deep) {
   // if the other array is a falsy value, return
   if (!arr && !other) {
     return true;
@@ -29,7 +29,7 @@ const arrayIsEqual = function(arr, other, deep) {
   return arr.every((val, idx) => valueIsEqual(val, other[idx], deep));
 };
 
-export const valueIsEqual = function(value, other, deep) {
+export const valueIsEqual = function (value, other, deep) {
   if (value === other) {
     return true;
   } else if (_.isArray(value) || _.isArray(other)) {
@@ -44,7 +44,7 @@ export const valueIsEqual = function(value, other, deep) {
   return false;
 };
 
-const objectMatchesSubset = function(obj, other, deep) {
+const objectMatchesSubset = function (obj, other, deep) {
   let k;
 
   if (obj === other) {
@@ -74,7 +74,7 @@ const objectMatchesSubset = function(obj, other, deep) {
 
 // XXX(dcramer): the previous mechanism of using _.map here failed
 // miserably if a param was named 'length'
-export const objectToArray = function(obj) {
+export const objectToArray = function (obj) {
   const result = [];
   for (const key in obj) {
     result.push([key, obj[key]]);
@@ -82,7 +82,7 @@ export const objectToArray = function(obj) {
   return result;
 };
 
-export const intcomma = function(x) {
+export const intcomma = function (x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
@@ -143,18 +143,15 @@ export function isUrl(str) {
 }
 
 export function escape(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 export function percent(value, totalValue, precise) {
-  return value / totalValue * 100;
+  return (value / totalValue) * 100;
 }
 
 export function toTitleCase(str) {
-  return str.replace(/\w\S*/g, txt => {
+  return str.replace(/\w\S*/g, (txt) => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
@@ -209,8 +206,8 @@ export function parseRepo(repo) {
 export function extractMultilineFields(value) {
   return value
     .split('\n')
-    .map(f => trim(f))
-    .filter(f => f !== '');
+    .map((f) => trim(f))
+    .filter((f) => f !== '');
 }
 
 function projectDisplayCompare(a, b) {
@@ -226,8 +223,8 @@ export function sortProjects(projects) {
 }
 
 //build actorIds
-export const buildUserId = id => `user:${id}`;
-export const buildTeamId = id => `team:${id}`;
+export const buildUserId = (id) => `user:${id}`;
+export const buildTeamId = (id) => `team:${id}`;
 
 /**
  * Removes the organization / project scope prefix on feature names.

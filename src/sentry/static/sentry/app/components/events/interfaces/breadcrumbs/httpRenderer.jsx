@@ -9,7 +9,7 @@ class HttpRenderer extends React.Component {
     crumb: PropTypes.object.isRequired,
   };
 
-  renderUrl = url => {
+  renderUrl = (url) => {
     return url.match(/^https?:\/\//) ? <a href={url}>{url}</a> : <em>{url}</em>;
   };
 

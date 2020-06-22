@@ -11,16 +11,16 @@ import {t} from 'app/locale';
 import withLatestContext from 'app/utils/withLatestContext';
 
 // event ids must have string length of 32
-const shouldSearchEventIds = query => typeof query === 'string' && query.length === 32;
+const shouldSearchEventIds = (query) => typeof query === 'string' && query.length === 32;
 
 // STRING-HEXVAL
-const shouldSearchShortIds = query => /[\w\d]+-[\w\d]+/.test(query);
+const shouldSearchShortIds = (query) => /[\w\d]+-[\w\d]+/.test(query);
 
 // Helper functions to create result objects
 async function createOrganizationResults(organizationsPromise) {
   const organizations = (await organizationsPromise) || [];
   return flatten(
-    organizations.map(org => [
+    organizations.map((org) => [
       {
         title: t('%s Dashboard', org.slug),
         description: t('Organization Dashboard'),
@@ -43,7 +43,7 @@ async function createOrganizationResults(organizationsPromise) {
 async function createProjectResults(projectsPromise, orgId) {
   const projects = (await projectsPromise) || [];
   return flatten(
-    projects.map(project => [
+    projects.map((project) => [
       {
         title: `${project.slug} Dashboard`,
         description: 'Project Dashboard',
@@ -65,7 +65,7 @@ async function createProjectResults(projectsPromise, orgId) {
 }
 async function createTeamResults(teamsPromise, orgId) {
   const teams = (await teamsPromise) || [];
-  return teams.map(team => ({
+  return teams.map((team) => ({
     title: `#${team.slug}`,
     description: 'Team Settings',
     model: team,
@@ -77,7 +77,7 @@ async function createTeamResults(teamsPromise, orgId) {
 
 async function createMemberResults(membersPromise, orgId) {
   const members = (await membersPromise) || [];
-  return members.map(member => ({
+  return members.map((member) => ({
     title: member.name,
     description: member.email,
     model: member,
@@ -89,7 +89,7 @@ async function createMemberResults(membersPromise, orgId) {
 
 async function createLegacyIntegrationResults(pluginsPromise, orgId) {
   const plugins = (await pluginsPromise) || [];
-  return plugins.map(plugin => ({
+  return plugins.map((plugin) => ({
     title: `${plugin.name} (Legacy)`,
     description: plugin.description,
     model: plugin,
@@ -103,7 +103,7 @@ async function createIntegrationResults(integrationsPromise, orgId) {
   const {providers} = (await integrationsPromise) || {};
   return (
     (providers &&
-      providers.map(provider => ({
+      providers.map((provider) => ({
         title: provider.name,
         description: (
           <span
@@ -130,8 +130,9 @@ async function createShortIdLookupResult(shortIdLookupPromise) {
   const issue = shortIdLookup && shortIdLookup.group;
   return {
     item: {
-      title: `${(issue && issue.metadata && issue.metadata.type) ||
-        shortIdLookup.shortId}`,
+      title: `${
+        (issue && issue.metadata && issue.metadata.type) || shortIdLookup.shortId
+      }`,
       description: `${(issue && issue.metadata && issue.metadata.value) || t('Issue')}`,
       model: shortIdLookup.group,
       sourceType: 'issue',
@@ -207,7 +208,8 @@ class ApiSource extends React.Component {
       (nextProps.query.length <= 2 &&
         nextProps.query.substr(0, 2) !== this.props.query.substr(0, 2)) ||
       // Also trigger a search if next query value satisfies an eventid/shortid query
-      (shouldSearchShortIds(nextProps.query) || shouldSearchEventIds(nextProps.query))
+      shouldSearchShortIds(nextProps.query) ||
+      shouldSearchEventIds(nextProps.query)
     ) {
       this.setState({loading: true});
       this.doSearch(nextProps.query);
@@ -215,7 +217,7 @@ class ApiSource extends React.Component {
   }
 
   // Debounced method to handle querying all API endpoints (when necessary)
-  doSearch = debounce(async query => {
+  doSearch = debounce(async (query) => {
     const {params, organization} = this.props;
     const orgId = (params && params.orgId) || (organization && organization.slug);
     let searchUrls = ['/organizations/'];
@@ -238,7 +240,7 @@ class ApiSource extends React.Component {
       ];
     }
 
-    const searchRequests = searchUrls.map(url =>
+    const searchRequests = searchUrls.map((url) =>
       this.api
         .requestPromise(url, {
           query: {
@@ -246,22 +248,22 @@ class ApiSource extends React.Component {
           },
         })
         .then(
-          resp => resp,
-          err => {
+          (resp) => resp,
+          (err) => {
             this.handleRequestError(err, {orgId, url});
             return null;
           }
         )
     );
 
-    const directRequests = directUrls.map(url => {
+    const directRequests = directUrls.map((url) => {
       if (!url) {
         return Promise.resolve(null);
       }
 
       return this.api.requestPromise(url).then(
-        resp => resp,
-        err => {
+        (resp) => resp,
+        (err) => {
           // No need to log 404 errors
           if (err && err.status === 404) {
             return null;
@@ -276,7 +278,7 @@ class ApiSource extends React.Component {
   }, 150);
 
   handleRequestError = (err, {url, orgId}) => {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra(
         'url',
         url.replace(`/organizations/${orgId}/`, '/organizations/:orgId/')
@@ -357,10 +359,12 @@ class ApiSource extends React.Component {
   async getDirectResults(requests, query) {
     const [shortIdLookup, eventIdLookup] = requests;
 
-    const directResults = (await Promise.all([
-      createShortIdLookupResult(shortIdLookup),
-      createEventIdLookupResult(eventIdLookup),
-    ])).filter(result => !!result);
+    const directResults = (
+      await Promise.all([
+        createShortIdLookupResult(shortIdLookup),
+        createEventIdLookupResult(eventIdLookup),
+      ])
+    ).filter((result) => !!result);
 
     if (!directResults.length) {
       return [];
@@ -377,7 +381,7 @@ class ApiSource extends React.Component {
     return children({
       isLoading: this.state.loading,
       allResults: this.state.allResults,
-      results: flatten([results, directResults].filter(arr => !!arr)) || null,
+      results: flatten([results, directResults].filter((arr) => !!arr)) || null,
     });
   }
 }

@@ -31,14 +31,13 @@ class SessionRow extends React.Component {
             <div style={{marginBottom: 5}}>
               <strong>{ipAddress}</strong>
             </div>
-            {countryCode &&
-              regionCode && (
-                <div>
-                  <small>
-                    {countryCode} ({regionCode})
-                  </small>
-                </div>
-              )}
+            {countryCode && regionCode && (
+              <div>
+                <small>
+                  {countryCode} ({regionCode})
+                </small>
+              </div>
+            )}
           </Box>
         </Flex>
         <Flex align="center" w={140} mx={2}>
@@ -100,7 +99,7 @@ class AccountSecuritySessionHistory extends AsyncView {
             </Flex>
           </PanelHeader>
           <PanelBody>
-            {ipList.map(ipObj => {
+            {ipList.map((ipObj) => {
               return <SessionRow key={ipObj.id} {...ipObj} />;
             })}
           </PanelBody>

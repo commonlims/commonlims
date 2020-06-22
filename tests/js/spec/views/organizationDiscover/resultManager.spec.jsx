@@ -1,9 +1,9 @@
 import createResultManager from 'app/views/organizationDiscover/resultManager';
 import createQueryBuilder from 'app/views/organizationDiscover/queryBuilder';
 
-describe('Result manager', function() {
+describe('Result manager', function () {
   let resultManager, queryBuilder, discoverMock;
-  beforeEach(function() {
+  beforeEach(function () {
     queryBuilder = createQueryBuilder(
       {},
       TestStubs.Organization({projects: [TestStubs.Project()]})
@@ -20,8 +20,8 @@ describe('Result manager', function() {
     });
   });
 
-  describe('getAll()', function() {
-    it('returns defaults', function() {
+  describe('getAll()', function () {
+    it('returns defaults', function () {
       const data = resultManager.getAll();
       expect(data.baseQuery.query).toBeNull();
       expect(data.baseQuery.data).toBeNull();
@@ -30,8 +30,8 @@ describe('Result manager', function() {
     });
   });
 
-  describe('fetchAll()', function() {
-    it('handles raw data', async function() {
+  describe('fetchAll()', function () {
+    it('handles raw data', async function () {
       queryBuilder.updateField('fields', ['id', 'project.id', 'message']);
       await resultManager.fetchAll();
       expect(discoverMock).toHaveBeenCalledTimes(1);
@@ -45,7 +45,7 @@ describe('Result manager', function() {
       );
     });
 
-    it('handles aggregations', async function() {
+    it('handles aggregations', async function () {
       queryBuilder.updateField('aggregations', [['count()', null, 'count']]);
       await resultManager.fetchAll();
       expect(discoverMock).toHaveBeenCalledTimes(2);
@@ -60,8 +60,8 @@ describe('Result manager', function() {
     });
   });
 
-  describe('reset()', function() {
-    it('resets', async function() {
+  describe('reset()', function () {
+    it('resets', async function () {
       await resultManager.fetchAll();
       expect(resultManager.getAll().baseQuery.data).not.toBeNull();
       resultManager.reset();
@@ -69,12 +69,12 @@ describe('Result manager', function() {
     });
   });
 
-  describe('shouldDisplayResult()', function() {
-    it('is initially false', function() {
+  describe('shouldDisplayResult()', function () {
+    it('is initially false', function () {
       expect(resultManager.shouldDisplayResult()).toBe(false);
     });
 
-    it('is true after data is fetched', async function() {
+    it('is true after data is fetched', async function () {
       await resultManager.fetchAll();
       expect(resultManager.shouldDisplayResult()).toBe(true);
     });

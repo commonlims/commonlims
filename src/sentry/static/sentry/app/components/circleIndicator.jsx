@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'react-emotion';
 
-const getBackgroundColor = p => {
+const getBackgroundColor = (p) => {
   if (p.color) {
     return `background: ${p.color};`;
   }
@@ -10,7 +10,7 @@ const getBackgroundColor = p => {
   return `background: ${p.enabled ? p.theme.success : p.theme.error};`;
 };
 
-const getSize = p => `
+const getSize = (p) => `
   height: ${p.size}px;
   width: ${p.size}px;
 `;

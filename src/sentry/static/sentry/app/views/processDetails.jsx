@@ -100,7 +100,7 @@ const SampleGroupDetails = createReactClass({
           data: {
             ...formData,
           },
-          success: data => {
+          success: (data) => {
             IndicatorStore.remove(loadingIndicator);
             this.setState({
               state: FormState.READY,
@@ -109,7 +109,7 @@ const SampleGroupDetails = createReactClass({
             });
             //this.context.router.push('/api/applications/');
           },
-          error: error => {
+          error: (error) => {
             IndicatorStore.remove(loadingIndicator);
             this.setState({
               state: FormState.ERROR,

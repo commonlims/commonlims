@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const defaults = {
   limit: null,
-  key: function(item) {
+  key: function (item) {
     return item.id;
   },
 };
@@ -48,7 +48,7 @@ Collection.prototype.push = function push(items) {
   }
 
   items.forEach(
-    function(item) {
+    function (item) {
       const existing = this.pop(item);
       if (existing) {
         $.extend(true, existing, item);
@@ -66,7 +66,7 @@ Collection.prototype.unshift = function unshift(items) {
     items = [items];
   }
   items.reverse().forEach(
-    function(item) {
+    function (item) {
       const existing = this.pop(item);
       if (existing) {
         $.extend(true, existing, item);

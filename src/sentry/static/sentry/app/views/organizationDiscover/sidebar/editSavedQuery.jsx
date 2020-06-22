@@ -65,7 +65,7 @@ export default class EditSavedQuery extends React.Component {
         isLoading={isLoading}
         savedQuery={savedQuery}
         savedQueryName={this.state.savedQueryName}
-        onUpdateName={name => this.handleUpdateName(name)}
+        onUpdateName={(name) => this.handleUpdateName(name)}
         actions={
           <Flex justify="space-between">
             <Flex>

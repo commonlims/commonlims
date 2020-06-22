@@ -10,7 +10,7 @@ jest.mock('app/actionCreators/modal', () => ({
   openSentryAppPermissionModal: jest.fn(),
 }));
 
-describe('Sentry App Installations', function() {
+describe('Sentry App Installations', function () {
   const org = TestStubs.Organization();
   const sentryApp = TestStubs.SentryApp();
   const install = TestStubs.SentryAppInstallation({
@@ -203,14 +203,8 @@ describe('Sentry App Installations', function() {
           routerContext
         );
 
-        wrapper
-          .find('[data-test-id="sentry-app-uninstall"]')
-          .first()
-          .simulate('click');
-        wrapper
-          .find('[data-test-id="confirm-modal"]')
-          .first()
-          .simulate('click');
+        wrapper.find('[data-test-id="sentry-app-uninstall"]').first().simulate('click');
+        wrapper.find('[data-test-id="confirm-modal"]').first().simulate('click');
         expect(response).toHaveBeenCalledWith(
           `/sentry-app-installations/${install.uuid}/`,
           expect.objectContaining({method: 'DELETE'})

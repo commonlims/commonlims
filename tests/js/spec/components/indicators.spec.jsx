@@ -13,27 +13,27 @@ import {
 // Make sure we use `duration: null` to test add/remove
 jest.useFakeTimers();
 
-describe('Indicators', function() {
+describe('Indicators', function () {
   let wrapper;
-  beforeEach(function() {
+  beforeEach(function () {
     wrapper = mount(<Indicators />, TestStubs.routerContext());
 
     clearIndicators();
     jest.runAllTimers();
   });
 
-  it('renders nothing by default', function() {
+  it('renders nothing by default', function () {
     expect(wrapper.find('ToastIndicator')).toHaveLength(0);
   });
 
-  it('has a loading indicator by default', function() {
+  it('has a loading indicator by default', function () {
     // when "type" is empty, we should treat it as loading state
     IndicatorStore.add('Loading');
     wrapper.update();
     expect(wrapper.find('ToastIndicator')).toHaveLength(1);
   });
 
-  it('adds and removes a toast by calling IndicatorStore directly', function() {
+  it('adds and removes a toast by calling IndicatorStore directly', function () {
     // when "type" is empty, we should treat it as loading state
     const indicator = IndicatorStore.add('Loading');
     wrapper.update();
@@ -52,7 +52,7 @@ describe('Indicators', function() {
   });
 
   // This is a common pattern used throughout the code for API calls
-  it('adds and replaces toast by calling IndicatorStore directly', function() {
+  it('adds and replaces toast by calling IndicatorStore directly', function () {
     IndicatorStore.add('Loading');
     wrapper.update();
     expect(wrapper.find('ToastIndicator')).toHaveLength(1);
@@ -66,21 +66,21 @@ describe('Indicators', function() {
     expect(wrapper.find('Message').text()).toBe('success');
   });
 
-  it('does not have loading indicator when "type" is empty (default)', function() {
+  it('does not have loading indicator when "type" is empty (default)', function () {
     addMessage('Loading', '', {duration: null});
     jest.runAllTimers();
     wrapper.update();
     expect(wrapper.find('LoadingIndicator')).toHaveLength(0);
   });
 
-  it('has a loading indicator when type is "loading"', function() {
+  it('has a loading indicator when type is "loading"', function () {
     addMessage('Loading', 'loading', {duration: null});
     jest.runAllTimers();
     wrapper.update();
     expect(wrapper.find('LoadingIndicator')).toHaveLength(1);
   });
 
-  it('adds and removes toast by calling action creators', function() {
+  it('adds and removes toast by calling action creators', function () {
     // action creators don't return anything
     addMessage('Loading', '', {duration: null});
     jest.runAllTimers();
@@ -95,7 +95,7 @@ describe('Indicators', function() {
     expect(wrapper.find('ToastIndicator')).toHaveLength(0);
   });
 
-  it('adds and replaces toast by calling action creators', function() {
+  it('adds and replaces toast by calling action creators', function () {
     addMessage('Loading', '', {duration: null});
     jest.runAllTimers();
     wrapper.update();
@@ -110,7 +110,7 @@ describe('Indicators', function() {
     expect(wrapper.find('Message').text()).toBe('success');
   });
 
-  it('adds and replaces toasts by calling action creators helpers', function() {
+  it('adds and replaces toasts by calling action creators helpers', function () {
     // Old indicator gets replaced when a new one is added
     addSuccessMessage('success', null);
     jest.runAllTimers();
@@ -126,7 +126,7 @@ describe('Indicators', function() {
     expect(wrapper.find('Message').text()).toBe('error');
   });
 
-  it('appends toasts', function() {
+  it('appends toasts', function () {
     addMessage('Loading', '', {append: true, duration: null});
     jest.runAllTimers();
     wrapper.update();
@@ -138,24 +138,14 @@ describe('Indicators', function() {
     wrapper.update();
     expect(wrapper.find('ToastIndicator')).toHaveLength(2);
     // Toasts get appended to the end
-    expect(
-      wrapper
-        .find('Message')
-        .at(1)
-        .text()
-    ).toBe('Success');
+    expect(wrapper.find('Message').at(1).text()).toBe('Success');
 
     addMessage('Error', 'error', {append: true, duration: null});
     jest.runAllTimers();
     wrapper.update();
     expect(wrapper.find('ToastIndicator')).toHaveLength(3);
     // Toasts get appended to the end
-    expect(
-      wrapper
-        .find('Message')
-        .at(2)
-        .text()
-    ).toBe('Error');
+    expect(wrapper.find('Message').at(2).text()).toBe('Error');
 
     // clears all toasts
     clearIndicators();
@@ -164,7 +154,7 @@ describe('Indicators', function() {
     expect(wrapper.find('ToastIndicator')).toHaveLength(0);
   });
 
-  it('dismisses on click', function() {
+  it('dismisses on click', function () {
     addMessage('Loading', '', {append: true, duration: null});
     jest.runAllTimers();
     wrapper.update();
@@ -177,7 +167,7 @@ describe('Indicators', function() {
     expect(wrapper.find('ToastIndicator')).toHaveLength(0);
   });
 
-  it('hides after 10s', function() {
+  it('hides after 10s', function () {
     addMessage('Duration', '', {append: true, duration: 10000});
     jest.advanceTimersByTime(9000);
     wrapper.update();

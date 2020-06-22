@@ -15,7 +15,7 @@ export function fetchTags(orgId, projectId = null) {
     : `/organizations/${orgId}/tags/`;
 
   api.request(url, {
-    success: tags => {
+    success: (tags) => {
       const trimmedTags = tags.slice(0, MAX_TAGS);
 
       if (tags.length > MAX_TAGS) {

@@ -53,7 +53,7 @@ const ApiApplicationRow = createReactClass({
         const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         this.api.request(`/api-applications/${app.id}/`, {
           method: 'DELETE',
-          success: data => {
+          success: (data) => {
             IndicatorStore.remove(loadingIndicator);
             this.props.onRemove(app);
           },
@@ -126,21 +126,21 @@ class ApiApplications extends AsyncView {
     const indicator = addLoadingMessage();
     this.api.request('/api-applications/', {
       method: 'POST',
-      success: app => {
+      success: (app) => {
         addSuccessMessage(t('Created a new API Application'));
         removeIndicator(indicator);
         this.context.router.push(`${ROUTE_PREFIX}applications/${app.id}/`);
       },
-      error: error => {
+      error: (error) => {
         removeIndicator(indicator);
         addErrorMessage(t('Unable to remove application. Please try again.'));
       },
     });
   };
 
-  handleRemoveApplication = app => {
+  handleRemoveApplication = (app) => {
     this.setState({
-      appList: this.state.appList.filter(a => a.id !== app.id),
+      appList: this.state.appList.filter((a) => a.id !== app.id),
     });
   };
 
@@ -174,7 +174,7 @@ class ApiApplications extends AsyncView {
 
           <PanelBody>
             {!isEmpty ? (
-              this.state.appList.map(app => {
+              this.state.appList.map((app) => {
                 return (
                   <ApiApplicationRow
                     key={app.id}

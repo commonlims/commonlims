@@ -4,13 +4,13 @@ import {mount} from 'enzyme';
 import {initializeOrg} from 'app-test/helpers/initializeOrg';
 import ReleaseSeries from 'app/components/charts/releaseSeries';
 
-describe('ReleaseSeries', function() {
+describe('ReleaseSeries', function () {
   const renderFunc = jest.fn(() => null);
   const {routerContext, organization} = initializeOrg();
   const releases = [TestStubs.Release()];
   let releasesMock;
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     releasesMock = MockApiClient.addMockResponse({
       url: `/organizations/${organization.slug}/releases/`,
@@ -18,7 +18,7 @@ describe('ReleaseSeries', function() {
     });
   });
 
-  it('does not fetch releases if releases is truthy', function() {
+  it('does not fetch releases if releases is truthy', function () {
     mount(
       <ReleaseSeries organization={organization} releases={[]}>
         {renderFunc}
@@ -29,7 +29,7 @@ describe('ReleaseSeries', function() {
     expect(releasesMock).not.toHaveBeenCalled();
   });
 
-  it('fetches releases if no releases passed through props', async function() {
+  it('fetches releases if no releases passed through props', async function () {
     const wrapper = mount(<ReleaseSeries>{renderFunc}</ReleaseSeries>, routerContext);
 
     await tick();
@@ -44,7 +44,7 @@ describe('ReleaseSeries', function() {
     );
   });
 
-  it('generates an eCharts `markLine` series from releases', async function() {
+  it('generates an eCharts `markLine` series from releases', async function () {
     const wrapper = mount(<ReleaseSeries>{renderFunc}</ReleaseSeries>, routerContext);
 
     await tick();

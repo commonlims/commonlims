@@ -11,7 +11,7 @@ import ProjectsStatsStore from 'app/stores/projectsStatsStore';
 
 export function fetchProject(api, orgId, slug) {
   const promise = api.requestPromise(`/projects/${orgId}/${slug}/`, {method: 'GET'});
-  promise.then(project => {
+  promise.then((project) => {
     ProjectActions.fetchSuccess(project);
   });
 
@@ -28,11 +28,11 @@ export function update(api, params) {
       data: params.data,
     })
     .then(
-      data => {
+      (data) => {
         ProjectActions.updateSuccess(data);
         return data;
       },
-      err => {
+      (err) => {
         ProjectActions.updateError(err, params.projectId);
         throw err;
       }
@@ -45,10 +45,10 @@ export function loadStats(api, params) {
   const endpoint = `/organizations/${params.orgId}/stats/`;
   api.request(endpoint, {
     query: params.query,
-    success: data => {
+    success: (data) => {
       ProjectActions.loadStatsSuccess(data);
     },
-    error: data => {
+    error: (data) => {
       ProjectActions.loadStatsError(data);
     },
   });
@@ -63,7 +63,7 @@ const _projectStatsToFetch = new Set();
 const MAX_PROJECTS_TO_FETCH = 10;
 
 const _queryForStats = (api, projects, orgId) => {
-  const idQueryParams = projects.map(project => `id:${project}`).join(' ');
+  const idQueryParams = projects.map((project) => `id:${project}`).join(' ');
   const endpoint = `/organizations/${orgId}/projects/`;
 
   return api.requestPromise(endpoint, {
@@ -79,7 +79,7 @@ export const _debouncedLoadStats = debounce((api, projectSet, params) => {
     ({id}) => id
   );
   const projects = Array.from(projectSet).filter(
-    project => !existingProjectStats.includes(project)
+    (project) => !existingProjectStats.includes(project)
   );
 
   if (!projects.length) {
@@ -89,17 +89,17 @@ export const _debouncedLoadStats = debounce((api, projectSet, params) => {
 
   // Split projects into more manageable chunks to query, otherwise we can
   // potentially face server timeouts
-  const queries = chunk(projects, MAX_PROJECTS_TO_FETCH).map(chunkedProjects =>
+  const queries = chunk(projects, MAX_PROJECTS_TO_FETCH).map((chunkedProjects) =>
     _queryForStats(api, chunkedProjects, params.orgId)
   );
 
   Promise.all(queries)
-    .then(results => {
+    .then((results) => {
       ProjectActions.loadStatsForProjectSuccess(
         results.reduce((acc, result) => acc.concat(result), [])
       );
     })
-    .catch(err => {
+    .catch((err) => {
       addErrorMessage(t('Unable to fetch all project stats'));
     });
 
@@ -133,7 +133,7 @@ export function removeProject(api, orgId, project) {
           tct('[project] was successfully removed', {project: project.slug})
         );
       },
-      err => {
+      (err) => {
         ProjectActions.removeProjectError(project);
         addErrorMessage(tct('Error removing [project]', {project: project.slug}));
         throw err;
@@ -159,7 +159,7 @@ export function transferProject(api, orgId, project, email) {
           })
         );
       },
-      err => {
+      (err) => {
         addErrorMessage(tct('Error transferring [project]', {project: project.slug}));
         throw err;
       }
@@ -189,7 +189,7 @@ export function addTeamToProject(api, orgSlug, projectSlug, team) {
       method: 'POST',
     })
     .then(
-      project => {
+      (project) => {
         addSuccessMessage(
           tct('[team] has been added to the [project] project', {
             team: `#${team.slug}`,
@@ -199,7 +199,7 @@ export function addTeamToProject(api, orgSlug, projectSlug, team) {
         ProjectActions.addTeamSuccess(team, projectSlug);
         ProjectActions.updateSuccess(project);
       },
-      err => {
+      (err) => {
         addErrorMessage(
           tct('Unable to add [team] to the [project] project', {
             team: `#${team.slug}`,
@@ -231,7 +231,7 @@ export function removeTeamFromProject(api, orgSlug, projectSlug, teamSlug) {
       method: 'DELETE',
     })
     .then(
-      project => {
+      (project) => {
         addSuccessMessage(
           tct('[team] has been removed from the [project] project', {
             team: `#${teamSlug}`,
@@ -241,7 +241,7 @@ export function removeTeamFromProject(api, orgSlug, projectSlug, teamSlug) {
         ProjectActions.removeTeamSuccess(teamSlug, projectSlug);
         ProjectActions.updateSuccess(project);
       },
-      err => {
+      (err) => {
         addErrorMessage(
           tct('Unable to remove [team] from the [project] project', {
             team: `#${teamSlug}`,

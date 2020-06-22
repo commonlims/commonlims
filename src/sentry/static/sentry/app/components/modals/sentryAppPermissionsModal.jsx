@@ -103,11 +103,11 @@ const StyledButton = styled(Button)`
 `;
 
 const Title = styled('p')`
-  color: ${p => p.theme.gray5};
+  color: ${(p) => p.theme.gray5};
 `;
 
 const RedirectionInfo = styled('div')`
   padding-right: 5px;
   font-size: 12px;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;

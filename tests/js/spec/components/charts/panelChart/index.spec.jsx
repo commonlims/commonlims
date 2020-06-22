@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 
 import PanelChart from 'app/components/charts/panelChart';
 
-describe('PanelChart', function() {
+describe('PanelChart', function () {
   const SERIES = [
     {
       seriesName: 'Foo',
@@ -35,9 +35,9 @@ describe('PanelChart', function() {
     ],
   };
 
-  describe('renders', function() {
+  describe('renders', function () {
     let wrapper;
-    beforeAll(function() {
+    beforeAll(function () {
       wrapper = mount(
         <PanelChart title="Panel Chart" series={SERIES} previousPeriod={PREVIOUS}>
           <div />
@@ -46,41 +46,26 @@ describe('PanelChart', function() {
       );
     });
 
-    it('has title', function() {
+    it('has title', function () {
       expect(wrapper.find('PanelHeader').contains('Panel Chart')).toBe(true);
     });
 
-    it('has right legend items', function() {
+    it('has right legend items', function () {
       // Currently only support 1 line
       expect(wrapper.find('DottedLineIndicator')).toHaveLength(1);
-      expect(
-        wrapper
-          .find('SeriesName')
-          .at(0)
-          .prop('children')
-      ).toBe('Previous');
+      expect(wrapper.find('SeriesName').at(0).prop('children')).toBe('Previous');
 
       expect(wrapper.find('CircleIndicator')).toHaveLength(2);
-      expect(
-        wrapper
-          .find('SeriesName')
-          .at(1)
-          .prop('children')
-      ).toBe('Foo');
-      expect(
-        wrapper
-          .find('SeriesName')
-          .at(2)
-          .prop('children')
-      ).toBe('Bar');
+      expect(wrapper.find('SeriesName').at(1).prop('children')).toBe('Foo');
+      expect(wrapper.find('SeriesName').at(2).prop('children')).toBe('Bar');
     });
 
-    it('renders child', function() {
+    it('renders child', function () {
       expect(wrapper.find('ChartWrapper')).toHaveLength(1);
     });
   });
 
-  it('shows legend without a title', function() {
+  it('shows legend without a title', function () {
     const wrapper = mount(
       <PanelChart series={SERIES} previousPeriod={PREVIOUS}>
         <div />

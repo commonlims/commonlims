@@ -94,7 +94,7 @@ export default class QueryFields extends React.Component {
                 name="name"
                 value={savedQueryName}
                 placeholder={t('Saved search name')}
-                onChange={val => onUpdateName(val)}
+                onChange={(val) => onUpdateName(val)}
               />
             </React.Fragment>
           </Fieldset>
@@ -110,7 +110,12 @@ export default class QueryFields extends React.Component {
             options={fieldOptions}
             optionRenderer={this.optionRenderer}
             value={currentQuery.fields}
-            onChange={val => onUpdateField('fields', val.map(({value}) => value))}
+            onChange={(val) =>
+              onUpdateField(
+                'fields',
+                val.map(({value}) => value)
+              )
+            }
             clearable={true}
             disabled={isLoading}
           />
@@ -119,7 +124,7 @@ export default class QueryFields extends React.Component {
           <Aggregations
             value={currentQuery.aggregations}
             columns={columns}
-            onChange={val => onUpdateField('aggregations', val)}
+            onChange={(val) => onUpdateField('aggregations', val)}
             disabled={isLoading}
           />
         </Fieldset>
@@ -127,7 +132,7 @@ export default class QueryFields extends React.Component {
           <Conditions
             value={currentQuery.conditions}
             columns={columnsForConditions}
-            onChange={val => onUpdateField('conditions', val)}
+            onChange={(val) => onUpdateField('conditions', val)}
             disabled={isLoading}
           />
         </Fieldset>
@@ -135,7 +140,7 @@ export default class QueryFields extends React.Component {
           <Orderby
             value={currentQuery.orderby}
             columns={getOrderbyFields(queryBuilder)}
-            onChange={val => onUpdateField('orderby', val)}
+            onChange={(val) => onUpdateField('orderby', val)}
             disabled={isLoading}
           />
         </Fieldset>
@@ -145,7 +150,9 @@ export default class QueryFields extends React.Component {
             label={<SidebarLabel>{t('Limit')}</SidebarLabel>}
             placeholder="#"
             value={currentQuery.limit}
-            onChange={val => onUpdateField('limit', typeof val === 'number' ? val : null)}
+            onChange={(val) =>
+              onUpdateField('limit', typeof val === 'number' ? val : null)
+            }
             disabled={isLoading}
           />
         </Fieldset>

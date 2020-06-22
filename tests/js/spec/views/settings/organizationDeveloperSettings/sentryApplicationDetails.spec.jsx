@@ -7,7 +7,7 @@ import {mount} from 'enzyme';
 import SentryApplicationDetails from 'app/views/settings/organizationDeveloperSettings/sentryApplicationDetails';
 import {selectByValue} from '../../../../helpers/select';
 
-describe('Sentry Application Details', function() {
+describe('Sentry Application Details', function () {
   let org;
   let orgId;
   let sentryApp;
@@ -37,18 +37,18 @@ describe('Sentry Application Details', function() {
     });
 
     describe('renders()', () => {
-      it('it shows empty scopes and no credentials', function() {
+      it('it shows empty scopes and no credentials', function () {
         expect(wrapper).toMatchSnapshot();
         // new app starts off with no scopes selected
         expect(wrapper.find('PermissionsObserver').prop('scopes')).toEqual([]);
         expect(
-          wrapper.find('PanelHeader').findWhere(h => h.text() == 'Permissions')
+          wrapper.find('PanelHeader').findWhere((h) => h.text() == 'Permissions')
         ).toBeDefined();
       });
     });
 
     describe('saving new app', () => {
-      it('updates a SentryApp', function() {
+      it('updates a SentryApp', function () {
         wrapper
           .find('Input[name="name"]')
           .simulate('change', {target: {value: 'Test App'}});
@@ -110,7 +110,7 @@ describe('Sentry Application Details', function() {
     });
 
     describe('renders()', () => {
-      it('it shows application data and credentials', function() {
+      it('it shows application data and credentials', function () {
         expect(wrapper).toMatchSnapshot();
 
         // data should be filled out
@@ -119,12 +119,7 @@ describe('Sentry Application Details', function() {
         ]);
 
         // 'Credentials' should be last PanelHeader when editing an application.
-        expect(
-          wrapper
-            .find('PanelHeader')
-            .last()
-            .text()
-        ).toBe('Credentials');
+        expect(wrapper.find('PanelHeader').last().text()).toBe('Credentials');
       });
     });
 
@@ -138,7 +133,7 @@ describe('Sentry Application Details', function() {
         });
       });
 
-      it('it updates app with correct data', function() {
+      it('it updates app with correct data', function () {
         wrapper
           .find('Input[name="redirectUrl"]')
           .simulate('change', {target: {value: 'https://hello.com/'}});

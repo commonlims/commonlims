@@ -27,14 +27,20 @@ const EARLY_ADOPTER_INTEGRATIONS = [];
  * features as a normal list.
  */
 const defaultFeatureGateComponents = {
-  IntegrationFeatures: p =>
+  IntegrationFeatures: (p) =>
     p.children({
       disabled: false,
       disabledReason: null,
       ungatedFeatures: p.features,
       gatedFeatureGroups: [],
     }),
-  FeatureList: p => <ul>{p.features.map((f, i) => <li key={i}>{f.description}</li>)}</ul>,
+  FeatureList: (p) => (
+    <ul>
+      {p.features.map((f, i) => (
+        <li key={i}>{f.description}</li>
+      ))}
+    </ul>
+  ),
 };
 
 class IntegrationDetailsModal extends React.Component {
@@ -52,13 +58,13 @@ class IntegrationDetailsModal extends React.Component {
     });
   }
 
-  onAddIntegration = integration => {
+  onAddIntegration = (integration) => {
     this.props.closeModal();
     this.props.onAddIntegration(integration);
   };
 
   featureTags(features) {
-    return features.map(feature => (
+    return features.map((feature) => (
       <StyledTag key={feature}>{feature.replace(/-/g, ' ')}</StyledTag>
     ));
   }
@@ -90,7 +96,7 @@ class IntegrationDetailsModal extends React.Component {
       priority: 'primary',
     };
 
-    const AddButton = p =>
+    const AddButton = (p) =>
       (provider.canAdd && (
         <AddIntegrationButton
           provider={provider}
@@ -99,22 +105,21 @@ class IntegrationDetailsModal extends React.Component {
           {...p}
         />
       )) ||
-      (!provider.canAdd &&
-        metadata.aspects.externalInstall && (
-          <Button
-            icon="icon-exit"
-            href={metadata.aspects.externalInstall.url}
-            onClick={closeModal}
-            external
-            {...buttonProps}
-            {...p}
-          >
-            {metadata.aspects.externalInstall.buttonText}
-          </Button>
-        ));
+      (!provider.canAdd && metadata.aspects.externalInstall && (
+        <Button
+          icon="icon-exit"
+          href={metadata.aspects.externalInstall.url}
+          onClick={closeModal}
+          external
+          {...buttonProps}
+          {...p}
+        >
+          {metadata.aspects.externalInstall.buttonText}
+        </Button>
+      ));
 
     // Prepare the features list
-    const features = metadata.features.map(f => ({
+    const features = metadata.features.map((f) => ({
       featureGate: f.featureGate,
       description: (
         <span dangerouslySetInnerHTML={{__html: singleLineRenderer(f.description)}} />
@@ -189,11 +194,11 @@ const DisabledNotice = styled(({reason, ...p}) => (
     <Box ml={1}>{reason}</Box>
   </Flex>
 ))`
-  color: ${p => p.theme.red};
+  color: ${(p) => p.theme.red};
   font-size: 0.9em;
 `;
 
-const ProviderName = styled(p => <Box {...p} />)`
+const ProviderName = styled((p) => <Box {...p} />)`
   font-weight: bold;
   font-size: 1.4em;
   margin-bottom: ${space(1)};
@@ -219,7 +224,7 @@ const Metadata = styled(Flex)`
 `;
 
 const AuthorName = styled(Box)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;
 
 const StyledTag = styled(Tag)`

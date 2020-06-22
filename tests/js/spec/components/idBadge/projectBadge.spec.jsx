@@ -2,8 +2,8 @@ import React from 'react';
 import {mount} from 'enzyme';
 import ProjectBadge from 'app/components/idBadge/projectBadge';
 
-describe('ProjectBadge', function() {
-  it('renders with Avatar and team name', function() {
+describe('ProjectBadge', function () {
+  it('renders with Avatar and team name', function () {
     const wrapper = mount(
       <ProjectBadge project={TestStubs.Project()} />,
       TestStubs.routerContext()

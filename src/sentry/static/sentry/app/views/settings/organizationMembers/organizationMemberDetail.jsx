@@ -90,7 +90,7 @@ class OrganizationMemberDetail extends AsyncView {
       });
   };
 
-  handleInvite = regenerate => {
+  handleInvite = (regenerate) => {
     const {slug} = this.getOrganization();
     const {params} = this.props;
 
@@ -102,10 +102,10 @@ class OrganizationMemberDetail extends AsyncView {
       memberId: params.memberId,
       regenerate,
     })
-      .then(data => {
+      .then((data) => {
         IndicatorStore.add('Sent invite!', 'success', {duration: 5000});
         if (regenerate) {
-          this.setState(state => ({member: {...state.member, ...data}}));
+          this.setState((state) => ({member: {...state.member, ...data}}));
         }
       })
       .catch(() => IndicatorStore.add('Could not send invite', 'error', {duration: 5000}))
@@ -115,7 +115,7 @@ class OrganizationMemberDetail extends AsyncView {
       });
   };
 
-  handleToggleTeam = slug => {
+  handleToggleTeam = (slug) => {
     const {member} = this.state;
     const selectedTeams = new Set(member.teams);
     if (selectedTeams.has(slug)) {
@@ -161,7 +161,7 @@ class OrganizationMemberDetail extends AsyncView {
     const {user} = this.state.member;
     const {slug} = this.getOrganization();
 
-    const requests = user.authenticators.map(auth =>
+    const requests = user.authenticators.map((auth) =>
       removeAuthenticator(this.api, user.id, auth.id)
     );
 
@@ -170,7 +170,7 @@ class OrganizationMemberDetail extends AsyncView {
         this.props.router.push(`/settings/${slug}/members/`);
         addSuccessMessage(t('All authenticators have been removed'));
       })
-      .catch(err => {
+      .catch((err) => {
         addErrorMessage(t('Error removing authenticators'));
         Sentry.captureException(err);
       });
@@ -364,7 +364,7 @@ class OrganizationMemberDetail extends AsyncView {
           disabled={!canEdit}
           roleList={member.roles}
           selectedRole={member.role}
-          setRole={slug => this.setState({member: {...member, role: slug}})}
+          setRole={(slug) => this.setState({member: {...member, role: slug}})}
         />
 
         <TeamSelect

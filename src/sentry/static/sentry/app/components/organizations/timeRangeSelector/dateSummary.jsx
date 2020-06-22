@@ -80,7 +80,7 @@ class DateSummary extends React.Component {
 const DateGroupWrapper = styled('div')`
   display: flex;
   align-items: center;
-  transform: translateY(${p => (p.hasTime ? '-5px' : '0')});
+  transform: translateY(${(p) => (p.hasTime ? '-5px' : '0')});
 `;
 
 const DateGroup = styled('div')`
@@ -91,7 +91,7 @@ const DateGroup = styled('div')`
 `;
 
 const Date = styled('div')`
-  ${p => p.hasTime && 'margin-top: 9px'};
+  ${(p) => p.hasTime && 'margin-top: 9px'};
   display: flex;
   flex-direction: column;
   align-items: flex-end;

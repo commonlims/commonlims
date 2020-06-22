@@ -6,10 +6,10 @@ import {RouteError} from 'app/views/routeError';
 
 jest.mock('jquery');
 
-describe('RouteError', function() {
-  beforeEach(function() {});
+describe('RouteError', function () {
+  beforeEach(function () {});
 
-  it('captures errors with raven', async function() {
+  it('captures errors with raven', async function () {
     const error = new Error('Big Bad Error');
     const routes = TestStubs.routes();
     mount(<RouteError routes={routes} error={error} />, TestStubs.routerContext());

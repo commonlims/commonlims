@@ -35,16 +35,16 @@ export default class AlertLink extends React.Component {
 const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
-  background-color: ${p => p.theme.alert[p.priority].backgroundLight};
-  color: ${p => p.theme.gray4};
-  border: 1px dashed ${p => p.theme.alert[p.priority].border};
-  padding: ${p => (p.size == 'small' ? `${space(1)} ${space(1.5)}` : space(2))};
+  background-color: ${(p) => p.theme.alert[p.priority].backgroundLight};
+  color: ${(p) => p.theme.gray4};
+  border: 1px dashed ${(p) => p.theme.alert[p.priority].border};
+  padding: ${(p) => (p.size == 'small' ? `${space(1)} ${space(1.5)}` : space(2))};
   margin-bottom: ${space(3)};
   border-radius: 0.25em;
   transition: 0.2s border-color;
 
   &:hover {
-    border-color: ${p => p.theme.blueLight};
+    border-color: ${(p) => p.theme.blueLight};
   }
 `;
 
@@ -53,5 +53,5 @@ const AlertLinkText = styled('div')`
 `;
 
 const StyledInlineSvg = styled(InlineSvg)`
-  margin-right: ${p => (p.spacingSize == 'small' ? space(1) : space(1.5))};
+  margin-right: ${(p) => (p.spacingSize == 'small' ? space(1) : space(1.5))};
 `;

@@ -3,14 +3,14 @@ import {shallow} from 'enzyme';
 
 import {TextField} from 'app/components/forms';
 
-describe('TextField', function() {
-  describe('render()', function() {
-    it('renders without form context', function() {
+describe('TextField', function () {
+  describe('render()', function () {
+    it('renders without form context', function () {
       const wrapper = shallow(<TextField name="fieldName" />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with form context', function() {
+    it('renders with form context', function () {
       const wrapper = shallow(<TextField name="fieldName" />, {
         context: {
           form: {

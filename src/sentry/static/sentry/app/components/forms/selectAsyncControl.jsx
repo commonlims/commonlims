@@ -54,7 +54,7 @@ class SelectAsyncControl extends React.Component {
     this.api = null;
   }
 
-  doQuery = debounce(cb => {
+  doQuery = debounce((cb) => {
     const {url, onQuery} = this.props;
     const {query} = this.state;
 
@@ -66,7 +66,10 @@ class SelectAsyncControl extends React.Component {
       .requestPromise(url, {
         query: typeof onQuery === 'function' ? onQuery(query) : {query},
       })
-      .then(data => cb(null, data), err => cb(err));
+      .then(
+        (data) => cb(null, data),
+        (err) => cb(err)
+      );
   }, 250);
 
   handleLoadOptions = () => {
@@ -79,7 +82,7 @@ class SelectAsyncControl extends React.Component {
         }
       });
     }).then(
-      resp => {
+      (resp) => {
         const {onResults} = this.props;
 
         // Note `SelectControl` expects this data type:
@@ -90,7 +93,7 @@ class SelectAsyncControl extends React.Component {
           options: typeof onResults === 'function' ? onResults(resp) : resp,
         };
       },
-      err => {
+      (err) => {
         addErrorMessage(t('There was a problem with the request.'));
         handleXhrErrorResponse('SelectAsync failed')(err);
         // eslint-disable-next-line no-console
@@ -99,7 +102,7 @@ class SelectAsyncControl extends React.Component {
     );
   };
 
-  handleInputChange = query => {
+  handleInputChange = (query) => {
     this.setState({query});
   };
 

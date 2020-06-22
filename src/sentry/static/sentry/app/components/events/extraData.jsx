@@ -24,7 +24,7 @@ class EventExtraData extends React.Component {
     return this.props.event.id !== nextProps.event.id || this.state.raw !== nextState.raw;
   }
 
-  toggleRaw = shouldBeRaw => {
+  toggleRaw = (shouldBeRaw) => {
     this.setState({
       raw: shouldBeRaw,
     });

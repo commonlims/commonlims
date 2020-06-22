@@ -17,7 +17,7 @@ import XAxis from './components/xAxis';
 import YAxis from './components/yAxis';
 
 // If dimension is a number conver it to pixels, otherwise use dimension without transform
-const getDimensionValue = dimension => {
+const getDimensionValue = (dimension) => {
   if (typeof dimension === 'number') {
     return `${dimension}px`;
   }
@@ -214,8 +214,12 @@ class BaseChart extends React.Component {
     } = this.props;
 
     const yAxisOrCustom = !yAxes
-      ? yAxis !== null ? YAxis(yAxis) : null
-      : Array.isArray(yAxes) ? yAxes.slice(0, 2).map(YAxis) : [YAxis(), YAxis()];
+      ? yAxis !== null
+        ? YAxis(yAxis)
+        : null
+      : Array.isArray(yAxes)
+      ? yAxes.slice(0, 2).map(YAxis)
+      : [YAxis(), YAxis()];
 
     return (
       <ReactEchartsCore
@@ -262,7 +266,7 @@ class BaseChart extends React.Component {
             ? series
             : [
                 ...series,
-                ...previousPeriod.map(previous =>
+                ...previousPeriod.map((previous) =>
                   LineSeries({
                     name: previous.seriesName,
                     data: previous.data.map(({name, value}) => [name, value]),

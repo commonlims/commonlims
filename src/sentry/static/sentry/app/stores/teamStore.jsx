@@ -19,7 +19,7 @@ const TeamStore = Reflux.createStore({
   loadInitialData(items) {
     this.initialized = true;
     this.items = items;
-    this.trigger(new Set(items.map(item => item.id)));
+    this.trigger(new Set(items.map((item) => item.id)));
   },
 
   onUpdateSuccess(itemId, response) {
@@ -51,7 +51,7 @@ const TeamStore = Reflux.createStore({
   },
 
   onRemoveSuccess(slug) {
-    this.loadInitialData(this.items.filter(team => team.slug !== slug));
+    this.loadInitialData(this.items.filter((team) => team.slug !== slug));
   },
 
   onCreateSuccess(team) {
@@ -59,15 +59,15 @@ const TeamStore = Reflux.createStore({
   },
 
   getById(id) {
-    return this.items.find(item => item.id.toString() === id.toString()) || null;
+    return this.items.find((item) => item.id.toString() === id.toString()) || null;
   },
 
   getBySlug(slug) {
-    return this.items.find(item => item.slug === slug) || null;
+    return this.items.find((item) => item.slug === slug) || null;
   },
 
   getActive() {
-    return this.items.filter(item => item.isMember);
+    return this.items.filter((item) => item.isMember);
   },
 
   getAll() {

@@ -22,7 +22,11 @@ const ACCOUNT_NOTIFICATION_FIELDS = {
     title: 'Project Alerts',
     description: t('Control alerts that you receive per project.'),
     type: 'select',
-    choices: [[-1, t('Default')], [1, t('On')], [0, t('Off')]],
+    choices: [
+      [-1, t('Default')],
+      [1, t('On')],
+      [0, t('Off')],
+    ],
     defaultValue: -1,
     defaultFieldName: 'subscribeByDefault',
   },
@@ -64,7 +68,10 @@ const ACCOUNT_NOTIFICATION_FIELDS = {
     type: 'select',
     // API only saves organizations that have this disabled, so we should default to "On"
     defaultValue: 1,
-    choices: [[1, t('On')], [0, t('Off')]],
+    choices: [
+      [1, t('On')],
+      [0, t('Off')],
+    ],
     defaultFieldName: 'weeklyReports',
   },
 
@@ -81,11 +88,11 @@ const ACCOUNT_NOTIFICATION_FIELDS = {
 
 const PanelBodyLineItem = styled(PanelBody)`
   font-size: 1.4rem;
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 // Which fine tuning parts are grouped by project
-const isGroupedByProject = type => ['alerts', 'workflow', 'email'].indexOf(type) > -1;
+const isGroupedByProject = (type) => ['alerts', 'workflow', 'email'].indexOf(type) > -1;
 
 class AccountNotificationsByProject extends React.Component {
   static propTypes = {
@@ -103,10 +110,10 @@ class AccountNotificationsByProject extends React.Component {
     const {title, description, ...fieldConfig} = field;
 
     // Display as select box in this view regardless of the type specified in the config
-    return Object.values(projectsByOrg).map(org => {
+    return Object.values(projectsByOrg).map((org) => {
       return {
         name: org.organization.name,
-        projects: org.projects.map(project => {
+        projects: org.projects.map((project) => {
           return {
             ...fieldConfig,
             // `name` key refers to field name
@@ -126,7 +133,7 @@ class AccountNotificationsByProject extends React.Component {
       return (
         <div key={name}>
           <PanelHeader>{name}</PanelHeader>
-          {projectFields.map(field => {
+          {projectFields.map((field) => {
             return (
               <PanelBodyLineItem key={field.name}>
                 <SelectField
@@ -156,7 +163,7 @@ class AccountNotificationsByOrganization extends React.Component {
     const {title, description, ...fieldConfig} = field;
 
     // Display as select box in this view regardless of the type specified in the config
-    return organizations.map(org => {
+    return organizations.map((org) => {
       return {
         ...fieldConfig,
         // `name` key refers to field name
@@ -172,7 +179,7 @@ class AccountNotificationsByOrganization extends React.Component {
 
     return (
       <React.Fragment>
-        {orgFields.map(field => {
+        {orgFields.map((field) => {
           return (
             <PanelBodyLineItem key={field.name}>
               <SelectField
@@ -220,16 +227,18 @@ export default class AccountNotificationFineTuning extends AsyncView {
       return [];
     }
 
-    return emails.filter(({isVerified}) => isVerified).sort((a, b) => {
-      // Sort by primary -> email
-      if (a.isPrimary) {
-        return -1;
-      } else if (b.isPrimary) {
-        return 1;
-      }
+    return emails
+      .filter(({isVerified}) => isVerified)
+      .sort((a, b) => {
+        // Sort by primary -> email
+        if (a.isPrimary) {
+          return -1;
+        } else if (b.isPrimary) {
+          return 1;
+        }
 
-      return a.email < b.email ? -1 : 1;
-    });
+        return a.email < b.email ? -1 : 1;
+      });
   }
 
   renderBody() {
@@ -286,16 +295,16 @@ export default class AccountNotificationFineTuning extends AsyncView {
                 </Box>
               </PanelHeader>
 
-              {isProject &&
-                hasProjects && (
-                  <AccountNotificationsByProject
-                    projects={this.state.projects}
-                    field={field}
-                  />
-                )}
+              {isProject && hasProjects && (
+                <AccountNotificationsByProject
+                  projects={this.state.projects}
+                  field={field}
+                />
+              )}
 
-              {isProject &&
-                !hasProjects && <EmptyMessage>{t('No projects found')}</EmptyMessage>}
+              {isProject && !hasProjects && (
+                <EmptyMessage>{t('No projects found')}</EmptyMessage>
+              )}
 
               {!isProject && (
                 <AccountNotificationsByOrganizationContainer field={field} />

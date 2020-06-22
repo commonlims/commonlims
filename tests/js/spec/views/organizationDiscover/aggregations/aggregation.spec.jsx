@@ -3,9 +3,9 @@ import {mount} from 'enzyme';
 
 import Aggregation from 'app/views/organizationDiscover/aggregations/aggregation';
 
-describe('Aggregation', function() {
-  describe('render()', function() {
-    it('renders empty, count, uniq and avg', async function() {
+describe('Aggregation', function () {
+  describe('render()', function () {
+    it('renders empty, count, uniq and avg', async function () {
       const data = [
         {value: [null, null, null], expectedTextValue: 'Add aggregation function...'},
         {value: ['count()', null, 'count'], expectedTextValue: 'count'},
@@ -23,7 +23,7 @@ describe('Aggregation', function() {
         },
       ];
 
-      data.forEach(async function(item) {
+      data.forEach(async function (item) {
         const wrapper = mount(
           <Aggregation value={item.value} onChange={jest.fn()} columns={[]} />
         );
@@ -32,9 +32,9 @@ describe('Aggregation', function() {
     });
   });
 
-  describe('filterOptions()', function() {
+  describe('filterOptions()', function () {
     let wrapper;
-    beforeEach(function() {
+    beforeEach(function () {
       const cols = [
         {name: 'col1', type: 'string'},
         {name: 'col2', type: 'number'},
@@ -45,7 +45,7 @@ describe('Aggregation', function() {
       );
     });
 
-    it('displays top level options with no input', function() {
+    it('displays top level options with no input', function () {
       wrapper.setState({inputValue: ''});
       const options = wrapper.instance().filterOptions();
 
@@ -53,7 +53,7 @@ describe('Aggregation', function() {
       expect(options.map(({value}) => value)).toEqual(['count', 'uniq', 'avg']);
     });
 
-    it('displays uniq options for non-array fields only', function() {
+    it('displays uniq options for non-array fields only', function () {
       wrapper.setState({inputValue: 'uniq'});
       const options = wrapper.instance().filterOptions();
       expect(options).toHaveLength(2);
@@ -61,7 +61,7 @@ describe('Aggregation', function() {
       expect(options[1]).toEqual({value: 'uniq(col2)', label: 'uniq(col2)'});
     });
 
-    it('displays number value options on input `avg`', function() {
+    it('displays number value options on input `avg`', function () {
       wrapper.setState({inputValue: 'avg'});
       const options = wrapper.instance().filterOptions();
       expect(options).toHaveLength(1);
@@ -69,10 +69,13 @@ describe('Aggregation', function() {
     });
   });
 
-  describe('handleChange()', function() {
+  describe('handleChange()', function () {
     let wrapper, focusSpy;
-    beforeEach(function() {
-      const cols = [{name: 'col1', type: 'string'}, {name: 'col2', type: 'number'}];
+    beforeEach(function () {
+      const cols = [
+        {name: 'col1', type: 'string'},
+        {name: 'col2', type: 'number'},
+      ];
       focusSpy = jest.spyOn(Aggregation.prototype, 'focus');
 
       wrapper = mount(
@@ -80,29 +83,29 @@ describe('Aggregation', function() {
       );
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jest.clearAllMocks();
     });
 
-    describe('handles intermediate selections', function() {
-      it('uniq', function() {
+    describe('handles intermediate selections', function () {
+      it('uniq', function () {
         wrapper.instance().handleChange({value: 'uniq'});
         expect(wrapper.instance().state.inputValue).toBe('uniq');
         expect(focusSpy).toHaveBeenCalled();
       });
 
-      it('avg', function() {
+      it('avg', function () {
         wrapper.instance().handleChange({value: 'avg'});
         expect(wrapper.instance().state.inputValue).toBe('avg');
         expect(focusSpy).toHaveBeenCalled();
       });
     });
 
-    describe('handles final selections', function() {
+    describe('handles final selections', function () {
       const validFinalSelections = ['count', 'avg(col2)', 'uniq(col1)'];
 
-      it('handles count, avg, uniq', function() {
-        validFinalSelections.forEach(function(value) {
+      it('handles count, avg, uniq', function () {
+        validFinalSelections.forEach(function (value) {
           wrapper.instance().handleChange({value});
           expect(wrapper.instance().state.inputValue).toBe(value);
           expect(focusSpy).not.toHaveBeenCalled();

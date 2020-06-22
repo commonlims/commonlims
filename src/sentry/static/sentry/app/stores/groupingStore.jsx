@@ -11,9 +11,9 @@ const api = new Client();
 const MIN_SCORE = 0.6;
 
 // @param score: {[key: string]: number}
-const checkBelowThreshold = scores => {
+const checkBelowThreshold = (scores) => {
   const scoreKeys = (scores && Object.keys(scores)) || [];
-  return !scoreKeys.map(key => scores[key]).find(score => score >= MIN_SCORE);
+  return !scoreKeys.map((key) => scores[key]).find((score) => score >= MIN_SCORE);
 };
 
 const GroupingStore = Reflux.createStore({
@@ -57,7 +57,7 @@ const GroupingStore = Reflux.createStore({
   setStateForId(map, idOrIds, newState) {
     const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
 
-    return ids.map(id => {
+    return ids.map((id) => {
       const state = (map.has(id) && map.get(id)) || {};
       const mergedState = Object.assign({}, state, newState);
       map.set(id, mergedState);
@@ -95,7 +95,7 @@ const GroupingStore = Reflux.createStore({
               links: jqXHR.getResponseHeader('Link'),
             });
           },
-          error: err => {
+          error: (err) => {
             const error = (err.responseJSON && err.responseJSON.detail) || true;
             reject(error);
           },
@@ -104,7 +104,7 @@ const GroupingStore = Reflux.createStore({
     });
 
     const responseProcessors = {
-      merged: item => {
+      merged: (item) => {
         // Check for locked items
         this.setStateForId(this.unmergeState, item.id, {
           busy: item.state === 'locked',
@@ -117,7 +117,7 @@ const GroupingStore = Reflux.createStore({
 
         // List of scores indexed by interface (i.e., exception and message)
         const scoresByInterface = Object.keys(scoreMap)
-          .map(scoreKey => [scoreKey, scoreMap[scoreKey]])
+          .map((scoreKey) => [scoreKey, scoreMap[scoreKey]])
           .reduce((acc, [scoreKey, score]) => {
             // tokenize scorekey, first token is the interface name
             const [interfaceName] = scoreKey.split(':');
@@ -131,7 +131,7 @@ const GroupingStore = Reflux.createStore({
 
         // Aggregate score by interface
         const aggregate = Object.keys(scoresByInterface)
-          .map(interfaceName => [interfaceName, scoresByInterface[interfaceName]])
+          .map((interfaceName) => [interfaceName, scoresByInterface[interfaceName]])
           .reduce((acc, [interfaceName, allScores]) => {
             // `null` scores means feature was not present in both issues, do not
             // include in aggregate
@@ -156,7 +156,7 @@ const GroupingStore = Reflux.createStore({
     }
 
     return Promise.all(promises).then(
-      resultsArray => {
+      (resultsArray) => {
         resultsArray.forEach(({dataKey, data, links}) => {
           const items = data.map(responseProcessors[dataKey]);
           this[`${dataKey}Items`] = items;
@@ -342,9 +342,13 @@ const GroupingStore = Reflux.createStore({
 
   // Toggle collapsed state of all fingerprints
   onToggleCollapseFingerprints() {
-    this.setStateForId(this.unmergeState, this.mergedItems.map(({id}) => id), {
-      collapsed: !this.unmergeLastCollapsed,
-    });
+    this.setStateForId(
+      this.unmergeState,
+      this.mergedItems.map(({id}) => id),
+      {
+        collapsed: !this.unmergeLastCollapsed,
+      }
+    );
 
     this.unmergeLastCollapsed = !this.unmergeLastCollapsed;
 

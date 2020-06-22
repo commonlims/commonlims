@@ -203,7 +203,7 @@ const OrganizationInnerContext = createReactClass({
 
   render() {
     return (
-      <DocumentTitle ref={ref => (this.docTitleRef = ref)} title={this.getTitle()}>
+      <DocumentTitle ref={(ref) => (this.docTitleRef = ref)} title={this.getTitle()}>
         {this.renderBody()}
       </DocumentTitle>
     );

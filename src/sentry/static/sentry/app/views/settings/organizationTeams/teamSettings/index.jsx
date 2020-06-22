@@ -57,7 +57,7 @@ export default class TeamSettings extends AsyncView {
   };
 
   handleRemoveTeam = () => {
-    removeTeam(this.api, this.props.params).then(data => {
+    removeTeam(this.api, this.props.params).then((data) => {
       this.props.router.push(`/settings/${this.props.params.orgId}/teams/`);
     });
   };

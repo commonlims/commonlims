@@ -8,9 +8,9 @@ jest.mock('app/stores/configStore', () => ({
   get: jest.fn(),
 }));
 
-describe('InstallWizard', function() {
-  beforeAll(function() {
-    ConfigStore.get.mockImplementation(key => {
+describe('InstallWizard', function () {
+  beforeAll(function () {
+    ConfigStore.get.mockImplementation((key) => {
       if (key === 'version') {
         return {
           current: '1.33.7',
@@ -24,9 +24,9 @@ describe('InstallWizard', function() {
     });
   });
 
-  beforeEach(function() {});
+  beforeEach(function () {});
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = mount(<InstallWizard onConfigured={jest.fn()} />);
     expect(wrapper).toMatchSnapshot();
   });

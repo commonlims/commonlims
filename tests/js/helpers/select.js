@@ -28,7 +28,7 @@ export function findOption(wrapper, {value, label} = {}, options) {
   return wrapper
     .find(`${selector} Option`)
     .findWhere(
-      el => el.prop('option') && el.prop('option')[valueSelector] === (value || label)
+      (el) => el.prop('option') && el.prop('option')[valueSelector] === (value || label)
     );
 }
 

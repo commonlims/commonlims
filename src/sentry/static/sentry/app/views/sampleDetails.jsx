@@ -89,7 +89,7 @@ const SampleDetails = createReactClass({
 
     this.api.request(this.getSampleDetailsEndpoint(), {
       query,
-      success: data => {
+      success: (data) => {
         // TODO: Ideally, this would rebuild the route before parameter
         // interpolation, replace the `groupId` field of `this.routeParams`,
         // and use `formatPattern` from `react-router` to rebuild the URL,

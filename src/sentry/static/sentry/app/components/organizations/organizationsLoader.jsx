@@ -14,7 +14,7 @@ const OrganizationsLoader = createReactClass({
       query: {
         member: '1',
       },
-      success: data => {
+      success: (data) => {
         OrganizationsStore.load(data);
         this.setState({
           loading: false,

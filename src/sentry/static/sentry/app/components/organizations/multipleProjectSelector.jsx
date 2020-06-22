@@ -45,7 +45,7 @@ export default class MultipleProjectSelector extends React.PureComponent {
    *
    * Should perform an "update" callback
    */
-  handleUpdate = actions => {
+  handleUpdate = (actions) => {
     actions.close();
     this.doUpdate();
   };
@@ -65,7 +65,7 @@ export default class MultipleProjectSelector extends React.PureComponent {
    *
    * Should perform an "update" callback
    */
-  handleClose = props => {
+  handleClose = (props) => {
     // Only update if there are changes
     if (!this.state.hasChanges) {
       return;
@@ -98,7 +98,7 @@ export default class MultipleProjectSelector extends React.PureComponent {
     const {value, projects, multi} = this.props;
     const selectedProjectIds = new Set(value);
 
-    const selected = projects.filter(project =>
+    const selected = projects.filter((project) =>
       selectedProjectIds.has(parseInt(project.id, 10))
     );
 

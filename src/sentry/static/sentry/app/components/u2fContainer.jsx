@@ -15,7 +15,7 @@ class U2fContainer extends React.Component {
   componentDidMount() {
     this.api
       .requestPromise('/authenticators/')
-      .then(resp => {
+      .then((resp) => {
         this.setState({
           authenticators: resp || [],
         });

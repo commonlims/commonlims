@@ -4,11 +4,11 @@ import ProjectLink from 'app/components/projectLink';
 
 const path = 'http://some.url/';
 
-describe('ProjectLink', function() {
-  it('has environment in query', function() {
+describe('ProjectLink', function () {
+  it('has environment in query', function () {
     const environments = ['staging', ''];
 
-    environments.forEach(function(env) {
+    environments.forEach(function (env) {
       const wrapper = shallow(<ProjectLink to={path}>Go somewhere!</ProjectLink>, {
         context: {
           location: {
@@ -27,7 +27,7 @@ describe('ProjectLink', function() {
     });
   });
 
-  it('does not have environment in query', function() {
+  it('does not have environment in query', function () {
     const wrapper = shallow(<ProjectLink to={path}>Go somewhere!</ProjectLink>, {
       context: {
         location: {

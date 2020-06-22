@@ -22,7 +22,7 @@ export function getQueryFromQueryString(queryString) {
   const result = {};
   let parsedQuery = queryString;
   parsedQuery = parsedQuery.replace(/^\?|\/$/g, '').split('&');
-  parsedQuery.forEach(item => {
+  parsedQuery.forEach((item) => {
     if (item.includes('=')) {
       const [key, value] = item.split('=');
       if (queryKeys.has(key)) {
@@ -51,7 +51,7 @@ export function getOrderbyFields(queryBuilder) {
   const query = queryBuilder.getInternal();
 
   // If there are valid aggregations, only allow summarized fields and aggregations in orderby
-  const validAggregations = query.aggregations.filter(agg =>
+  const validAggregations = query.aggregations.filter((agg) =>
     isValidAggregation(agg, columns)
   );
 
@@ -77,7 +77,7 @@ export function getOrderbyFields(queryBuilder) {
 
   const aggregationOptions = [
     // Ensure aggregations are unique (since users might input duplicates)
-    ...new Set(validAggregations.map(aggregation => aggregation[2])),
+    ...new Set(validAggregations.map((aggregation) => aggregation[2])),
   ].reduce((acc, agg) => {
     return [...acc, {value: agg, label: agg}];
   }, []);

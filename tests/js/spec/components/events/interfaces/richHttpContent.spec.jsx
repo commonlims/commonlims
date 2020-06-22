@@ -3,12 +3,12 @@ import {mount, shallow} from 'enzyme';
 
 import RichHttpContent from 'app/components/events/interfaces/richHttpContent';
 
-describe('RichHttpContent', function() {
+describe('RichHttpContent', function () {
   let sandbox;
   let data;
   let elem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     data = {
       query: '',
       data: '',
@@ -20,12 +20,12 @@ describe('RichHttpContent', function() {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  describe('getBodySection', function() {
-    it('should return plain-text when given unrecognized inferred Content-Type', function() {
+  describe('getBodySection', function () {
+    it('should return plain-text when given unrecognized inferred Content-Type', function () {
       const out = elem.getBodySection({
         inferredContentType: null, // no inferred content type
         data: 'helloworld',
@@ -34,7 +34,7 @@ describe('RichHttpContent', function() {
       expect(out.type).toEqual('pre');
     });
 
-    it('should return a KeyValueList element when inferred Content-Type is x-www-form-urlencoded', function() {
+    it('should return a KeyValueList element when inferred Content-Type is x-www-form-urlencoded', function () {
       const out = elem.getBodySection({
         inferredContentType: 'application/x-www-form-urlencoded',
         data: {foo: ['bar'], bar: ['baz']},
@@ -42,10 +42,13 @@ describe('RichHttpContent', function() {
 
       // NOTE: displayName is set manually in this class
       expect(out.type.displayName).toEqual('KeyValueList');
-      expect(out.props.data).toEqual([['bar', 'baz'], ['foo', 'bar']]);
+      expect(out.props.data).toEqual([
+        ['bar', 'baz'],
+        ['foo', 'bar'],
+      ]);
     });
 
-    it('should return a ContextData element when inferred Content-Type is application/json', function() {
+    it('should return a ContextData element when inferred Content-Type is application/json', function () {
       const out = elem.getBodySection({
         inferredContentType: 'application/json',
         data: {foo: 'bar'},
@@ -58,7 +61,7 @@ describe('RichHttpContent', function() {
       });
     });
 
-    it('should not blow up in a malformed uri', function() {
+    it('should not blow up in a malformed uri', function () {
       // > decodeURIComponent('a%AFc')
       // URIError: URI malformed
       data = {
@@ -71,7 +74,7 @@ describe('RichHttpContent', function() {
       expect(() => shallow(<RichHttpContent data={data} />)).not.toThrow(URIError);
     });
 
-    it("should not cause an invariant violation if data.data isn't a string", function() {
+    it("should not cause an invariant violation if data.data isn't a string", function () {
       data = {
         query: '',
         data: [{foo: 'bar', baz: 1}],

@@ -92,7 +92,7 @@ const UploadSamplesButton = createReactClass({
       const reader = new FileReader();
       reader.readAsBinaryString(this.state.selectedFile);
 
-      reader.onload = function() {
+      reader.onload = function () {
         const data = {
           content: btoa(reader.result),
           filename: this.state.selectedFile.name,
@@ -101,14 +101,14 @@ const UploadSamplesButton = createReactClass({
         this.api.request(endpoint, {
           method: 'POST',
           data,
-          success: response => {
+          success: (response) => {
             this.onToggle();
             this.setState({
               state: FormState.READY,
               errors: {},
             });
           },
-          error: err => {
+          error: (err) => {
             let errors = err.responseJSON || true;
             errors = errors.detail || true;
             this.setState({
@@ -122,7 +122,7 @@ const UploadSamplesButton = createReactClass({
         });
       }.bind(this);
 
-      reader.onError = function() {
+      reader.onError = function () {
         this.setState({
           state: FormState.ERROR,
         });

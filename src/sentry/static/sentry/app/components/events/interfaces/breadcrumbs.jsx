@@ -64,7 +64,7 @@ class BreadcrumbsInterface extends React.Component {
     });
   };
 
-  renderBreadcrumbs = crumbs => {
+  renderBreadcrumbs = (crumbs) => {
     // reverse array to get consistent idx between collapsed/expanded state
     // (indexes begin and increment from last breadcrumb)
     return crumbs
@@ -90,7 +90,7 @@ class BreadcrumbsInterface extends React.Component {
     const evt = this.props.event;
     let crumb;
 
-    const exception = evt.entries.find(entry => entry.type === 'exception');
+    const exception = evt.entries.find((entry) => entry.type === 'exception');
     if (exception) {
       const {type, value, module} = exception.data.values[0];
       crumb = {
@@ -103,7 +103,7 @@ class BreadcrumbsInterface extends React.Component {
         },
       };
     } else if (evt.message) {
-      const levelTag = (evt.tags || []).find(tag => tag.key === 'level');
+      const levelTag = (evt.tags || []).find((tag) => tag.key === 'level');
       const level = levelTag && levelTag.value;
       crumb = {
         type: 'message',
@@ -123,16 +123,16 @@ class BreadcrumbsInterface extends React.Component {
     return crumb;
   };
 
-  setQuery = evt => {
+  setQuery = (evt) => {
     this.setState({
       queryValue: evt.target.value,
     });
   };
 
   filterCrumbs = (crumbs, queryValue) => {
-    return crumbs.filter(item => {
+    return crumbs.filter((item) => {
       // return true if any of category, message, or level contain queryValue
-      return !!['category', 'message', 'level'].find(prop => {
+      return !!['category', 'message', 'level'].find((prop) => {
         const propValue = (item[prop] || '').toLowerCase();
         return propValue.includes(queryValue);
       });

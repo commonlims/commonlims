@@ -23,7 +23,7 @@ class ApplicationScopes extends React.Component {
 
   handleToggleScopes = (scope, e) => {
     this.setState(
-      state => {
+      (state) => {
         const {scopes} = this.state;
         if (scopes.has(scope)) {
           scopes.delete(scope);
@@ -43,7 +43,7 @@ class ApplicationScopes extends React.Component {
   render() {
     return (
       <ScopesGrid>
-        {API_SCOPES.map(scope => {
+        {API_SCOPES.map((scope) => {
           return (
             <ScopesGridItemWrapper key={scope}>
               <ScopesGridItem>
@@ -80,7 +80,7 @@ const ScopesGrid = styled('div')`
 const ScopesGridItem = styled('div')`
   display: flex;
   align-items: center;
-  background: ${p => p.theme.whiteDark};
+  background: ${(p) => p.theme.whiteDark};
   border-radius: 3px;
   flex: 1;
   padding: 12px;

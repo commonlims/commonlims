@@ -12,7 +12,7 @@ class GpuContextType extends React.Component {
     data: PropTypes.object.isRequired,
   };
 
-  formatMemory = memory_size => {
+  formatMemory = (memory_size) => {
     if (!Number.isInteger(memory_size) || memory_size <= 0) {
       return null;
     }
@@ -58,7 +58,7 @@ class GpuContextType extends React.Component {
   }
 }
 
-GpuContextType.getTitle = function(value) {
+GpuContextType.getTitle = function (value) {
   return 'GPU';
 };
 

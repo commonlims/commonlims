@@ -78,20 +78,19 @@ const StyledNameAndEmail = styled('div')`
 const StyledEmail = styled('div')`
   font-size: 0.875em;
   margin-top: ${space(0.25)};
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   ${overflowEllipsis};
 `;
 
-const StyledName = styled(
-  ({useLink, hideEmail, to, ...props}) =>
-    useLink ? <Link to={to} {...props} /> : <span {...props} />
+const StyledName = styled(({useLink, hideEmail, to, ...props}) =>
+  useLink ? <Link to={to} {...props} /> : <span {...props} />
 )`
-  font-weight: ${p => (p.hideEmail ? 'inherit' : 'bold')};
+  font-weight: ${(p) => (p.hideEmail ? 'inherit' : 'bold')};
   line-height: 1.15em;
   ${overflowEllipsis};
 `;
 
-const StyledAvatar = styled(props => <Avatar {...props} />)`
+const StyledAvatar = styled((props) => <Avatar {...props} />)`
   min-width: ${space(3)};
   min-height: ${space(3)};
   margin-right: ${space(1)};

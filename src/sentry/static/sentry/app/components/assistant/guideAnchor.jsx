@@ -66,7 +66,7 @@ const GuideAnchor = createReactClass({
     const {target, type} = this.props;
 
     return (
-      <GuideAnchorContainer innerRef={el => (this.anchorElement = el)} type={type}>
+      <GuideAnchorContainer innerRef={(el) => (this.anchorElement = el)} type={type}>
         {this.props.children}
         <StyledGuideAnchor
           className={classNames('guide-anchor-ping', target)}
@@ -98,7 +98,7 @@ const recedeAnchor = keyframes`
 `;
 
 const GuideAnchorContainer = styled('div')`
-  ${p =>
+  ${(p) =>
     p.type == 'text' &&
     `
       display: inline-block;
@@ -115,7 +115,7 @@ const StyledGuideAnchor = styled('div')`
   pointer-events: none;
   visibility: hidden;
 
-  ${p =>
+  ${(p) =>
     p.active
       ? `
     visibility: visible;
@@ -138,7 +138,7 @@ const StyledGuideAnchorRipples = styled('div')`
     display: block;
     left: calc(50% - 10px);
     top: calc(50% - 10px);
-    background-color: ${p => p.theme.greenTransparent};
+    background-color: ${(p) => p.theme.greenTransparent};
     border-radius: 50%;
   }
 
@@ -152,7 +152,7 @@ const StyledGuideAnchorRipples = styled('div')`
     height: 70%;
     left: calc(50% - 7px);
     top: calc(50% - 7px);
-    background-color: ${p => p.theme.greenTransparent};
+    background-color: ${(p) => p.theme.greenTransparent};
   }
 
   &:after {
@@ -160,7 +160,7 @@ const StyledGuideAnchorRipples = styled('div')`
     height: 50%;
     left: calc(50% - 5px);
     top: calc(50% - 5px);
-    color: ${p => p.theme.green};
+    color: ${(p) => p.theme.green};
   }
 `;
 

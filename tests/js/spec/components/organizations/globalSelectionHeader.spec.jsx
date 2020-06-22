@@ -19,7 +19,7 @@ const changeQuery = (routerContext, query) => ({
   },
 });
 
-describe('GlobalSelectionHeader', function() {
+describe('GlobalSelectionHeader', function () {
   const {organization, router, routerContext} = initializeOrg({
     organization: TestStubs.Organization({features: ['global-views']}),
     router: {
@@ -27,7 +27,7 @@ describe('GlobalSelectionHeader', function() {
     },
   });
 
-  beforeAll(function() {
+  beforeAll(function () {
     jest.spyOn(globalActions, 'updateDateTime');
     jest.spyOn(globalActions, 'updateEnvironments');
     jest.spyOn(globalActions, 'updateProjects');
@@ -38,17 +38,17 @@ describe('GlobalSelectionHeader', function() {
     });
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     GlobalSelectionStore.reset();
     [
       globalActions.updateDateTime,
       globalActions.updateProjects,
       globalActions.updateEnvironments,
       router.push,
-    ].forEach(mock => mock.mockClear());
+    ].forEach((mock) => mock.mockClear());
   });
 
-  it('does not update router if there is custom routing', function() {
+  it('does not update router if there is custom routing', function () {
     mount(
       <GlobalSelectionHeader organization={organization} hasCustomRouting />,
       routerContext
@@ -56,7 +56,7 @@ describe('GlobalSelectionHeader', function() {
     expect(router.push).not.toHaveBeenCalled();
   });
 
-  it('updates URL with values from store when mounted with no query params', function() {
+  it('updates URL with values from store when mounted with no query params', function () {
     mount(<GlobalSelectionHeader organization={organization} />, routerContext);
 
     expect(router.push).toHaveBeenCalledWith(
@@ -71,7 +71,7 @@ describe('GlobalSelectionHeader', function() {
     );
   });
 
-  it('only updates GlobalSelection store when mounted with query params', async function() {
+  it('only updates GlobalSelection store when mounted with query params', async function () {
     mount(
       <GlobalSelectionHeader organization={organization} />,
       changeQuery(routerContext, {
@@ -103,7 +103,7 @@ describe('GlobalSelectionHeader', function() {
     });
   });
 
-  it('updates GlobalSelection store when re-rendered with different query params', async function() {
+  it('updates GlobalSelection store when re-rendered with different query params', async function () {
     const wrapper = mount(
       <GlobalSelectionHeader organization={organization} />,
       changeQuery(routerContext, {
@@ -140,7 +140,7 @@ describe('GlobalSelectionHeader', function() {
     });
   });
 
-  it('does not update store if url params have not changed', async function() {
+  it('does not update store if url params have not changed', async function () {
     const wrapper = mount(
       <GlobalSelectionHeader organization={organization} />,
       changeQuery(routerContext, {
@@ -152,7 +152,7 @@ describe('GlobalSelectionHeader', function() {
       globalActions.updateDateTime,
       globalActions.updateProjects,
       globalActions.updateEnvironments,
-    ].forEach(mock => mock.mockClear());
+    ].forEach((mock) => mock.mockClear());
 
     wrapper.setContext(
       changeQuery(routerContext, {
@@ -179,8 +179,8 @@ describe('GlobalSelectionHeader', function() {
     });
   });
 
-  describe('Single project selection mode', function() {
-    it('selects first project if more than one is requested', function() {
+  describe('Single project selection mode', function () {
+    it('selects first project if more than one is requested', function () {
       const initializationObj = initializeOrg({
         router: {
           location: {query: {project: [1, 2]}},
@@ -195,7 +195,7 @@ describe('GlobalSelectionHeader', function() {
       expect(globalActions.updateProjects).toHaveBeenCalledWith([1]);
     });
 
-    it('selects first project if none (i.e. all) is requested', function() {
+    it('selects first project if none (i.e. all) is requested', function () {
       const project = TestStubs.Project({id: '3'});
       const org = TestStubs.Organization({projects: [project]});
       const initializationObj = initializeOrg({

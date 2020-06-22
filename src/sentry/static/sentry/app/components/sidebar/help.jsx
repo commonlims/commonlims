@@ -33,12 +33,12 @@ class SidebarHelp extends React.Component {
       return;
     }
 
-    HookStore.get('sidebar:help-menu').map(cb =>
+    HookStore.get('sidebar:help-menu').map((cb) =>
       cb(this.props.organization, {SidebarMenuItem}, this.handleSupportHookUpdate)
     );
   }
 
-  handleSupportHookUpdate = menuItem => {
+  handleSupportHookUpdate = (menuItem) => {
     this.setState({
       supportMenuItem: menuItem,
     });

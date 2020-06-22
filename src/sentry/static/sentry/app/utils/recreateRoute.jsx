@@ -10,7 +10,7 @@ import replaceRouterParams from 'app/utils/replaceRouterParams';
 // See tests for examples
 export default function recreateRoute(to, {routes, params, location, stepBack}) {
   const paths = routes.map(({path}) => path || '');
-  const lastRootIndex = findLastIndex(paths, path => path[0] === '/');
+  const lastRootIndex = findLastIndex(paths, (path) => path[0] === '/');
   let routeIndex;
   const routeToRoute = typeof to !== 'string';
   if (routeToRoute) {

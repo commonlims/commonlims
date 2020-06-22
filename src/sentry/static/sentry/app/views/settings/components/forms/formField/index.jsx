@@ -17,7 +17,7 @@ import returnButton from 'app/views/settings/components/forms/returnButton';
 import space from 'app/styles/space';
 
 const FormFieldErrorReason = styled.div`
-  color: ${p => p.theme.redDark};
+  color: ${(p) => p.theme.redDark};
   position: absolute;
   right: 2px;
   margin-top: 6px;
@@ -48,12 +48,12 @@ const FormFieldErrorReason = styled.div`
 `;
 
 const FormFieldError = styled.div`
-  color: ${p => p.theme.redDark};
+  color: ${(p) => p.theme.redDark};
   animation: ${pulse} 1s ease infinite;
 `;
 
 const FormFieldIsSaved = styled.div`
-  color: ${p => p.theme.green};
+  color: ${(p) => p.theme.green};
   animation: ${fadeOut} 0.3s ease 2s 1 forwards;
   position: absolute;
   top: 0;
@@ -268,7 +268,7 @@ class FormField extends React.Component {
 
   // Only works for styled inputs
   // Attempts to autofocus input field if field's name is in url hash
-  handleInputMount = ref => {
+  handleInputMount = (ref) => {
     if (ref && !this.input) {
       const hash = this.context.location && this.context.location.hash;
 
@@ -373,7 +373,7 @@ class FormField extends React.Component {
     const model = this.getModel();
     const saveOnBlurFieldOverride = typeof saveOnBlur !== 'undefined' && !saveOnBlur;
 
-    const makeField = extraProps => (
+    const makeField = (extraProps) => (
       <React.Fragment>
         <Field
           id={id}
@@ -470,8 +470,8 @@ class FormField extends React.Component {
     );
 
     const observedProps = propsToObserver
-      .filter(p => typeof this.props[p] === 'function')
-      .map(p => [p, () => this.props[p](model)]);
+      .filter((p) => typeof this.props[p] === 'function')
+      .map((p) => [p, () => this.props[p](model)]);
 
     // This field has no properties that require observation to compute their
     // value, this field is static and will not be re-rendered.

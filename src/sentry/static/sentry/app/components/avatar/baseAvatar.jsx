@@ -73,7 +73,7 @@ class BaseAvatar extends React.Component {
     // If requested size > allowed size then use the largest allowed size
     const allowed =
       size &&
-      (ALLOWED_SIZES.find(allowedSize => allowedSize >= size) ||
+      (ALLOWED_SIZES.find((allowedSize) => allowedSize >= size) ||
         ALLOWED_SIZES[ALLOWED_SIZES.length - 1]);
 
     return remoteImageSize || allowed || DEFAULT_GRAVATAR_SIZE;
@@ -175,8 +175,8 @@ export default BaseAvatar;
 // sensible default.
 const StyledBaseAvatar = styled('span')`
   flex-shrink: 0;
-  ${p => !p.loaded && 'background-color: rgba(200, 200, 200, 0.1);'};
-  ${p => p.round && 'border-radius: 100%;'};
+  ${(p) => !p.loaded && 'background-color: rgba(200, 200, 200, 0.1);'};
+  ${(p) => p.round && 'border-radius: 100%;'};
 `;
 
 const Image = styled('img')`

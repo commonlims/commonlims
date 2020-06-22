@@ -42,8 +42,8 @@ export default SidebarPanelItem;
 const SidebarPanelItemRoot = styled('div')`
   padding: 15px 20px;
   line-height: 1.2;
-  border-bottom: 1px solid ${p => p.theme.borderLight};
-  background: ${p => p.theme.white};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
+  background: ${(p) => p.theme.white};
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   font-size: 14px;
 `;
@@ -51,8 +51,8 @@ const SidebarPanelItemRoot = styled('div')`
 const Title = styled(({hasSeen, ...props}) => <div {...props} />)`
   font-size: 15px;
   margin-bottom: 5px;
-  color: ${p => p.theme.gray5};
-  ${p => !p.hasSeen && 'font-weight: 600;'};
+  color: ${(p) => p.theme.gray5};
+  ${(p) => !p.hasSeen && 'font-weight: 600;'};
 
   .culprit {
     font-weight: normal;
@@ -68,5 +68,5 @@ const Text = styled('div')`
 `;
 
 const Message = styled(Text)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;

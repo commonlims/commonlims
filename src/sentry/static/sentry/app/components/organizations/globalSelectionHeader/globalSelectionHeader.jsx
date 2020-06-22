@@ -92,7 +92,7 @@ class GlobalSelectionHeader extends React.Component {
     const stateFromRouter = getStateFromQuery(this.props.location.query);
     // We should update store if there are any relevant URL parameters when component
     // is mounted
-    if (Object.values(stateFromRouter).some(i => !!i)) {
+    if (Object.values(stateFromRouter).some((i) => !!i)) {
       const {project, environment, start, end, period, utc} = stateFromRouter;
 
       // This will update store with values from URL parameters
@@ -220,14 +220,14 @@ class GlobalSelectionHeader extends React.Component {
         }
       : {};
 
-  handleChangeProjects = projects => {
+  handleChangeProjects = (projects) => {
     this.setState({
       projects,
     });
     callIfFunction(this.props.onChangeProjects, projects);
   };
 
-  handleChangeEnvironments = environments => {
+  handleChangeEnvironments = (environments) => {
     this.setState({
       environments,
     });
@@ -265,13 +265,13 @@ class GlobalSelectionHeader extends React.Component {
   getProjects = () => {
     return (
       this.props.projects ||
-      this.props.organization.projects.filter(project => project.isMember)
+      this.props.organization.projects.filter((project) => project.isMember)
     );
   };
 
   getFirstProject = () => {
     return this.getProjects()
-      .map(p => parseInt(p.id, 10))
+      .map((p) => parseInt(p.id, 10))
       .slice(0, 1);
   };
 

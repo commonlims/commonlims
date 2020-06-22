@@ -4,11 +4,11 @@ import React from 'react';
 import {mount} from 'enzyme';
 import SentryAppPermissionsModal from 'app/components/modals/sentryAppPermissionsModal';
 
-describe('SentryAppPermissionsModal', function() {
+describe('SentryAppPermissionsModal', function () {
   const org = TestStubs.Organization();
   const routerContext = TestStubs.routerContext();
 
-  it('renders permissions modal', function() {
+  it('renders permissions modal', function () {
     const onInstall = jest.fn();
     const onClose = jest.fn();
     const sentryApp = TestStubs.SentryApp();
@@ -26,15 +26,12 @@ describe('SentryAppPermissionsModal', function() {
     );
 
     expect(wrapper).toMatchSnapshot();
-    wrapper
-      .find('Button')
-      .last()
-      .simulate('click');
+    wrapper.find('Button').last().simulate('click');
     expect(onClose).toHaveBeenCalled();
   });
 
-  describe('displays resources that the Sentry App has access to', function() {
-    it('matches resource with highest level', function() {
+  describe('displays resources that the Sentry App has access to', function () {
+    it('matches resource with highest level', function () {
       const onInstall = jest.fn();
       const onClose = jest.fn();
       const scopes = [
@@ -58,27 +55,16 @@ describe('SentryAppPermissionsModal', function() {
         />,
         routerContext
       );
-      expect(
-        wrapper
-          .find('PanelItem')
-          .first()
-          .text()
-      ).toEqual('Read access to Member');
-      expect(
-        wrapper
-          .find('PanelItem')
-          .at(1)
-          .text()
-      ).toEqual('Read and write access to Project');
-      expect(
-        wrapper
-          .find('PanelItem')
-          .at(2)
-          .text()
-      ).toEqual('Admin access to Team, Organization');
+      expect(wrapper.find('PanelItem').first().text()).toEqual('Read access to Member');
+      expect(wrapper.find('PanelItem').at(1).text()).toEqual(
+        'Read and write access to Project'
+      );
+      expect(wrapper.find('PanelItem').at(2).text()).toEqual(
+        'Admin access to Team, Organization'
+      );
     });
 
-    it('matches releases with admin', function() {
+    it('matches releases with admin', function () {
       const onInstall = jest.fn();
       const onClose = jest.fn();
       const sentryApp = TestStubs.SentryApp({scopes: ['project:releases']});
@@ -98,7 +84,7 @@ describe('SentryAppPermissionsModal', function() {
     });
   });
 
-  it('installs the application', function() {
+  it('installs the application', function () {
     const onInstall = jest.fn();
     const onClose = jest.fn();
     const sentryApp = TestStubs.SentryApp();
@@ -116,10 +102,7 @@ describe('SentryAppPermissionsModal', function() {
     );
 
     expect(wrapper).toMatchSnapshot();
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
     expect(onInstall).toHaveBeenCalled();
   });
 });

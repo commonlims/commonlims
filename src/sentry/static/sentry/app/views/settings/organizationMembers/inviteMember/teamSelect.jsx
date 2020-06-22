@@ -51,14 +51,14 @@ class TeamSelect extends React.Component {
 
         <PanelBody className="grouping-controls team-choices">
           <PanelItem css={{flexWrap: 'wrap'}}>
-            {teams.map(team => (
+            {teams.map((team) => (
               <TeamItem key={team.slug}>
                 <label disabled={disabled} className="checkbox">
                   <Checkbox
                     id={team.slug}
                     disabled={disabled}
                     checked={selectedTeams.has(team.slug)}
-                    onChange={e => {
+                    onChange={(e) => {
                       toggleTeam(team.slug);
                     }}
                     style={{verticalAlign: 'middle'}}
@@ -81,7 +81,7 @@ const TeamItem = styled.div`
 
 const SelectAll = styled.span`
   font-size: 13px;
-  color: ${p => (p.lightText ? p.theme.gray2 : p.theme.gray3)};
+  color: ${(p) => (p.lightText ? p.theme.gray2 : p.theme.gray3)};
 `;
 
 export default TeamSelect;

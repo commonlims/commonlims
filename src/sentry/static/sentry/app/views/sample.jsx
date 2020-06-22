@@ -45,7 +45,7 @@ const SampleRow = createReactClass({
         const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
         this.api.request(`/samples/${sample.id}/`, {
           method: 'DELETE',
-          success: data => {
+          success: (data) => {
             IndicatorStore.remove(loadingIndicator);
             this.props.onRemove();
           },
@@ -153,11 +153,11 @@ const Samples = createReactClass({
     const {projectId} = this.props.params;
     this.api.request('/samples/', {
       method: 'POST',
-      success: sample => {
+      success: (sample) => {
         IndicatorStore.remove(loadingIndicator);
         this.context.router.push(`/sentry/${projectId}/samples/${sample.id}/`);
       },
-      error: error => {
+      error: (error) => {
         IndicatorStore.remove(loadingIndicator);
         IndicatorStore.add(t('Unable to create sample. Please try again.'), 'error');
       },
@@ -166,7 +166,7 @@ const Samples = createReactClass({
 
   onRemoveSample(sample) {
     this.setState({
-      sampleList: this.state.sampleList.filter(a => a.id !== sample.id),
+      sampleList: this.state.sampleList.filter((a) => a.id !== sample.id),
     });
   },
 
@@ -179,7 +179,7 @@ const Samples = createReactClass({
       );
     }
 
-    return this.state.sampleList.map(sample => {
+    return this.state.sampleList.map((sample) => {
       return (
         <SampleRow
           key={sample.id}

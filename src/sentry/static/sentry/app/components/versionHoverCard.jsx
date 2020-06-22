@@ -56,7 +56,7 @@ const VersionHoverCard = createReactClass({
     )}/`;
     this.api.request(releasePath, {
       method: 'GET',
-      success: data => {
+      success: (data) => {
         this.setState({
           release: data,
         });
@@ -73,7 +73,7 @@ const VersionHoverCard = createReactClass({
     const repoPath = `/organizations/${orgId}/repos/`;
     this.api.request(repoPath, {
       method: 'GET',
-      success: data => {
+      success: (data) => {
         this.setState({
           hasRepos: data.length > 0,
         });
@@ -92,7 +92,7 @@ const VersionHoverCard = createReactClass({
     )}/deploys/`;
     this.api.request(deployPath, {
       method: 'GET',
-      success: data => {
+      success: (data) => {
         this.setState({
           deploys: data,
         });
@@ -137,7 +137,7 @@ const VersionHoverCard = createReactClass({
     const lastCommit = release.lastCommit;
     const shortVersion = getShortVersion(version);
 
-    const recentDeploysByEnviroment = deploys.reduce(function(dbe, deploy) {
+    const recentDeploysByEnviroment = deploys.reduce(function (dbe, deploy) {
       const {dateFinished, environment} = deploy;
       if (!dbe.hasOwnProperty(environment)) {
         dbe[environment] = dateFinished;

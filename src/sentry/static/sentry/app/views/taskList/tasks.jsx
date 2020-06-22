@@ -121,9 +121,9 @@ Tasks.propTypes = {
 };
 Tasks.displayName = 'Tasks';
 
-const mapStateToProps = state => state.task;
+const mapStateToProps = (state) => state.task;
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTasks: () => dispatch(tasksGet()),
 });
 

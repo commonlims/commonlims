@@ -30,7 +30,7 @@ export default class Subscriptions extends React.Component {
     const {events} = this.state;
     const {permissions} = this.props;
 
-    const permittedEvents = events.filter(resource => {
+    const permittedEvents = events.filter((resource) => {
       return permissions[PERMISSIONS_MAP[resource]] !== 'no-access';
     });
 
@@ -45,7 +45,7 @@ export default class Subscriptions extends React.Component {
     this.save(Array.from(events));
   };
 
-  save = events => {
+  save = (events) => {
     this.setState({events});
     this.props.onChange(events);
     this.context.form.setValue('events', events);
@@ -57,7 +57,7 @@ export default class Subscriptions extends React.Component {
 
     return (
       <SubscriptionGrid>
-        {EVENT_CHOICES.map(choice => {
+        {EVENT_CHOICES.map((choice) => {
           const disabled = permissions[PERMISSIONS_MAP[choice]] === 'no-access';
           return (
             <React.Fragment key={choice}>

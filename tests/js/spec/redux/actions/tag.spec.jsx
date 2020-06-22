@@ -15,12 +15,12 @@ import {
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-describe('tag redux actions', function() {
-  beforeEach(function() {
+describe('tag redux actions', function () {
+  beforeEach(function () {
     moxios.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     moxios.uninstall();
   });
 

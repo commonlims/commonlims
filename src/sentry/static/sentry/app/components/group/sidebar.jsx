@@ -39,7 +39,7 @@ const GroupSidebar = createReactClass({
   UNSAFE_componentWillMount() {
     const {group} = this.props;
     this.api.request(`/issues/${group.id}/participants/`, {
-      success: data => {
+      success: (data) => {
         this.setState({
           participants: data,
           error: false,
@@ -54,7 +54,7 @@ const GroupSidebar = createReactClass({
     // Fetch group data for all environments since the one passed in props is filtered for the selected environment
     // The charts rely on having all environment data as well as the data for the selected env
     this.api.request(`/issues/${group.id}/`, {
-      success: data => {
+      success: (data) => {
         this.setState({
           allEnvironmentsGroupData: data,
         });
@@ -81,10 +81,10 @@ const GroupSidebar = createReactClass({
     // Fetch the top values for the current group's top tags.
     this.api.request(`/issues/${group.id}/tags/`, {
       query: _.pickBy({
-        key: group.tags.map(data => data.key),
+        key: group.tags.map((data) => data.key),
         environment: this.state.environment && this.state.environment.name,
       }),
-      success: data => {
+      success: (data) => {
         this.setState({
           tagsWithTopValues: _.keyBy(data, 'key'),
         });
@@ -126,7 +126,7 @@ const GroupSidebar = createReactClass({
       {
         complete: () => {
           this.api.request(`/issues/${group.id}/participants/`, {
-            success: data => {
+            success: (data) => {
               this.setState({
                 participants: data,
                 error: false,
@@ -147,7 +147,7 @@ const GroupSidebar = createReactClass({
 
   renderPluginIssue() {
     const issues = [];
-    (this.props.group.pluginIssues || []).forEach(plugin => {
+    (this.props.group.pluginIssues || []).forEach((plugin) => {
       const issue = plugin.issue;
       // # TODO(dcramer): remove plugin.title check in Sentry 8.22+
       if (issue) {
@@ -253,7 +253,7 @@ const GroupSidebar = createReactClass({
           <span>{t('Tags')}</span>
         </h6>
         {this.state.tagsWithTopValues &&
-          group.tags.map(tag => {
+          group.tags.map((tag) => {
             const tagWithTopValues = this.state.tagsWithTopValues[tag.key];
             const topValues = tagWithTopValues ? tagWithTopValues.topValues : [];
             const topValuesTotal = tagWithTopValues ? tagWithTopValues.totalValues : 0;

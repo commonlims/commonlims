@@ -16,7 +16,7 @@ const formGroups = [
         help: t(
           'Our default list will attempt to ignore common issues and reduce noise.'
         ),
-        getData: data => ({
+        getData: (data) => ({
           options: data,
         }),
       },
@@ -33,7 +33,7 @@ const formGroups = [
           'Discard reports about requests from the given sources. Separate multiple entries with a newline.'
         ),
         extraHelp: t('Separate multiple entries with a newline.'),
-        getData: data => ({
+        getData: (data) => ({
           options: data,
         }),
       },

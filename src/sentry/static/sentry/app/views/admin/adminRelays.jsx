@@ -11,7 +11,7 @@ import withEnvironment from 'app/utils/withEnvironment';
 import ResultGrid from 'app/components/resultGrid';
 import LinkWithConfirmation from 'app/components/linkWithConfirmation';
 
-const prettyDate = function(x) {
+const prettyDate = function (x) {
   return moment(x).format('ll LTS');
 };
 

@@ -10,12 +10,12 @@ jest.mock('app/actionCreators/modal', () => ({
   openIntegrationDetails: jest.fn(),
 }));
 
-describe('OrganizationIntegrations', function() {
-  beforeEach(function() {
+describe('OrganizationIntegrations', function () {
+  beforeEach(function () {
     Client.clearMockResponses();
   });
 
-  describe('render()', function() {
+  describe('render()', function () {
     const org = TestStubs.Organization();
 
     const githubProvider = TestStubs.GitHubIntegrationProvider({
@@ -38,7 +38,7 @@ describe('OrganizationIntegrations', function() {
     const open = jest.fn().mockReturnValue({focus});
     global.open = open;
 
-    describe('without integrations', function() {
+    describe('without integrations', function () {
       Client.addMockResponse({
         url: `/organizations/${org.slug}/integrations/`,
         body: [],
@@ -69,7 +69,7 @@ describe('OrganizationIntegrations', function() {
         routerContext
       );
 
-      it('renders with internal-catchall', function() {
+      it('renders with internal-catchall', function () {
         Client.addMockResponse({
           url: `/organizations/${org.slug}/integrations/`,
           body: [],
@@ -103,32 +103,29 @@ describe('OrganizationIntegrations', function() {
         expect(installsRequest).toHaveBeenCalled();
       });
 
-      it('Does`t hit sentry apps endpoints when internal-catchall isn`t present', function() {
+      it('Does`t hit sentry apps endpoints when internal-catchall isn`t present', function () {
         expect(sentryAppsRequest).not.toHaveBeenCalled();
         expect(sentryInstallsRequest).not.toHaveBeenCalled();
       });
 
-      it('Displays integration providers', function() {
+      it('Displays integration providers', function () {
         expect(wrapper).toMatchSnapshot();
       });
 
-      it('Opens the integration dialog on install', function() {
+      it('Opens the integration dialog on install', function () {
         const options = {
           provider: githubProvider,
           onAddIntegration: wrapper.instance().onInstall,
           organization: routerContext.context.organization,
         };
 
-        wrapper
-          .find('Button')
-          .first()
-          .simulate('click');
+        wrapper.find('Button').first().simulate('click');
 
         expect(openIntegrationDetails).toHaveBeenCalledWith(options);
       });
     });
 
-    describe('with installed integrations', function() {
+    describe('with installed integrations', function () {
       Client.addMockResponse({
         url: `/organizations/${org.slug}/integrations/`,
         body: [githubIntegration, jiraIntegration],
@@ -157,18 +154,18 @@ describe('OrganizationIntegrations', function() {
         name: 'Updated Integration',
       });
 
-      it('Displays InstalledIntegration', function() {
+      it('Displays InstalledIntegration', function () {
         expect(wrapper).toMatchSnapshot();
       });
 
-      it('Merges installed integrations', function() {
+      it('Merges installed integrations', function () {
         wrapper.instance().onInstall(updatedIntegration);
 
         expect(wrapper.instance().state.integrations).toHaveLength(2);
         expect(wrapper.instance().state.integrations[1]).toBe(updatedIntegration);
       });
 
-      it('Deletes an integration', function() {
+      it('Deletes an integration', function () {
         Client.addMockResponse({
           url: `/organizations/${org.slug}/integrations/${jiraIntegration.id}/`,
           method: 'DELETE',
@@ -182,7 +179,7 @@ describe('OrganizationIntegrations', function() {
       });
     });
 
-    describe('with matching plugins installed', function() {
+    describe('with matching plugins installed', function () {
       Client.addMockResponse({
         url: `/organizations/${org.slug}/integrations/`,
         body: [githubIntegration],
@@ -226,11 +223,11 @@ describe('OrganizationIntegrations', function() {
         routerContext
       );
 
-      it('displays an Update when the Plugin is enabled but a new Integration is not', function() {
+      it('displays an Update when the Plugin is enabled but a new Integration is not', function () {
         expect(
           wrapper
             .find('ProviderRow')
-            .filterWhere(n => n.key() === 'vsts')
+            .filterWhere((n) => n.key() === 'vsts')
             .find('Button')
             .first()
             .text()
@@ -241,7 +238,7 @@ describe('OrganizationIntegrations', function() {
         expect(
           wrapper
             .find('ProviderRow')
-            .filterWhere(n => n.key() === 'github')
+            .filterWhere((n) => n.key() === 'github')
             .find('Button')
             .first()
             .text()
@@ -252,7 +249,7 @@ describe('OrganizationIntegrations', function() {
         expect(
           wrapper
             .find('ProviderRow')
-            .filterWhere(n => n.key() === 'jira')
+            .filterWhere((n) => n.key() === 'jira')
             .find('Button')
             .first()
             .text()

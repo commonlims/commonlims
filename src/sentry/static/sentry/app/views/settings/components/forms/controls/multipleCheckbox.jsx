@@ -42,7 +42,7 @@ export default class MultipleCheckbox extends React.Component {
     if (e.target.checked) {
       newValue = value ? [...value, selectedValue] : [value];
     } else {
-      newValue = value.filter(v => v !== selectedValue);
+      newValue = value.filter((v) => v !== selectedValue);
     }
 
     onChange(newValue, e);

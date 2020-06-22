@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'react-emotion';
 
 const LoadingMask = styled('div')`
-  background-color: ${p => p.theme.offWhite};
-  border-radius: ${p => p.theme.borderRadius};
+  background-color: ${(p) => p.theme.offWhite};
+  border-radius: ${(p) => p.theme.borderRadius};
   position: absolute;
   top: 0;
   bottom: 0;
@@ -11,7 +11,7 @@ const LoadingMask = styled('div')`
   right: 0;
 `;
 
-const LoadingPanel = styled(props => (
+const LoadingPanel = styled((props) => (
   <div {...props}>
     <LoadingMask />
   </div>

@@ -16,8 +16,8 @@ export default class Registry {
   loadAll(dataList, callback) {
     let remaining = dataList.length;
     const pluginList = [];
-    dataList.map(data => {
-      this.load(data, plugin => {
+    dataList.map((data) => {
+      this.load(data, (plugin) => {
         remaining--;
         pluginList.push(plugin);
         if (remaining === 0) {
@@ -30,7 +30,7 @@ export default class Registry {
   load(data, callback) {
     // TODO(dcramer): we should probably register all valid plugins
     let remainingAssets = data.assets.length;
-    const finishLoad = function() {
+    const finishLoad = function () {
       if (!defined(this.plugins[data.id])) {
         if (data.type === 'issue-tracking') {
           this.plugins[data.id] = DefaultIssuePlugin;
@@ -46,14 +46,14 @@ export default class Registry {
       return;
     }
 
-    const onAssetLoaded = function(asset) {
+    const onAssetLoaded = function (asset) {
       remainingAssets--;
       if (remainingAssets === 0) {
         finishLoad();
       }
     };
 
-    const onAssetFailed = function(asset) {
+    const onAssetFailed = function (asset) {
       remainingAssets--;
       if (remainingAssets === 0) {
         finishLoad();
@@ -61,7 +61,7 @@ export default class Registry {
     };
 
     // TODO(dcramer): what do we do on failed asset loading?
-    data.assets.forEach(asset => {
+    data.assets.forEach((asset) => {
       // TODO: Look into this, but we're adding an incorrect prefix here, hardcoding to localhost:8000 until solved
       const url = window.location.origin + `/${asset.url}`;
       if (!defined(this.assetCache[url])) {

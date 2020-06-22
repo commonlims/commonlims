@@ -28,7 +28,7 @@ export function setLocale(locale) {
   const translations = getTranslations(locale);
   i18n = new Jed({
     domain: 'sentry',
-    missing_key_callback: function(key) {},
+    missing_key_callback: function (key) {},
     locale_data: {
       sentry: translations,
     },
@@ -78,7 +78,7 @@ function argsInvolveReact(args) {
     return true;
   }
   if (args.length == 1 && _.isObject(args[0])) {
-    return Object.keys(args[0]).some(key => {
+    return Object.keys(args[0]).some((key) => {
       return React.isValidElement(args[0][key]);
     });
   }
@@ -142,7 +142,7 @@ export function renderComponentTemplate(template, components) {
   function renderGroup(group) {
     const children = [];
 
-    (template[group] || []).forEach(item => {
+    (template[group] || []).forEach((item) => {
       if (_.isString(item)) {
         children.push(<span key={idx++}>{item}</span>);
       } else {
@@ -185,7 +185,7 @@ function mark(rv) {
     _store: {},
   };
 
-  proxy.toString = function() {
+  proxy.toString = function () {
     return '🇦🇹' + rv + '🇦🇹';
   };
 

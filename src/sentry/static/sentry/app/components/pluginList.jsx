@@ -20,7 +20,7 @@ export default class PluginList extends React.Component {
     onEnablePlugin: () => {},
   };
 
-  handleEnablePlugin = plugin => {
+  handleEnablePlugin = (plugin) => {
     const {organization, project} = this.props;
     enablePlugin({
       projectId: project.slug,
@@ -31,7 +31,7 @@ export default class PluginList extends React.Component {
     this.props.onEnablePlugin(plugin);
   };
 
-  handleDisablePlugin = plugin => {
+  handleDisablePlugin = (plugin) => {
     const {organization, project} = this.props;
     disablePlugin({
       projectId: project.slug,
@@ -59,20 +59,22 @@ export default class PluginList extends React.Component {
 
     return (
       <div>
-        {pluginList.filter(p => p.enabled).map(data => {
-          return (
-            <PluginConfig
-              data={data}
-              organization={organization}
-              project={project}
-              key={data.id}
-              onDisablePlugin={this.handleDisablePlugin}
-            />
-          );
-        })}
+        {pluginList
+          .filter((p) => p.enabled)
+          .map((data) => {
+            return (
+              <PluginConfig
+                data={data}
+                organization={organization}
+                project={project}
+                key={data.id}
+                onDisablePlugin={this.handleDisablePlugin}
+              />
+            );
+          })}
 
         <InactivePlugins
-          plugins={pluginList.filter(p => !p.enabled && !p.isHidden)}
+          plugins={pluginList.filter((p) => !p.enabled && !p.isHidden)}
           onEnablePlugin={this.handleEnablePlugin}
         />
       </div>

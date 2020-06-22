@@ -47,8 +47,10 @@ export default class ResultTable extends React.Component {
     }
   }
 
-  getCellRenderer = cols => ({key, rowIndex, columnIndex, style}) => {
-    const {data: {data, meta}} = this.props;
+  getCellRenderer = (cols) => ({key, rowIndex, columnIndex, style}) => {
+    const {
+      data: {data, meta},
+    } = this.props;
 
     const isSpacingCol = columnIndex === cols.length;
 
@@ -86,10 +88,11 @@ export default class ResultTable extends React.Component {
     );
   };
 
-  getEventLink = event => {
+  getEventLink = (event) => {
     const {slug, projects} = this.context.organization;
-    const projectSlug = projects.find(project => project.id === `${event['project.id']}`)
-      .slug;
+    const projectSlug = projects.find(
+      (project) => project.id === `${event['project.id']}`
+    ).slug;
 
     return (
       <Tooltip title={t('Open event')}>
@@ -100,10 +103,11 @@ export default class ResultTable extends React.Component {
     );
   };
 
-  getIssueLink = event => {
+  getIssueLink = (event) => {
     const {slug, projects} = this.context.organization;
-    const projectSlug = projects.find(project => project.id === `${event['project.id']}`)
-      .slug;
+    const projectSlug = projects.find(
+      (project) => project.id === `${event['project.id']}`
+    ).slug;
 
     return (
       <Tooltip title={t('Open issue')}>
@@ -119,26 +123,28 @@ export default class ResultTable extends React.Component {
   // rows of data. Since this might be expensive, we'll only do this if there\
   // are less than 20 columns of data to check in total.
   // Adds an empty column at the end with the remaining table width if any.
-  getColumnWidths = tableWidth => {
-    const {data: {data}} = this.props;
+  getColumnWidths = (tableWidth) => {
+    const {
+      data: {data},
+    } = this.props;
     const cols = this.getColumnList();
 
     const widths = [];
 
     if (cols.length < 20) {
-      cols.forEach(col => {
+      cols.forEach((col) => {
         const colName = col.name;
         const sizes = [this.measureText(colName, true)];
 
         // Get top 3 unique results sorted by string length
         // We want to avoid calling measureText() too much so only do this
         // for the top 3 longest strings
-        const uniqs = [...new Set(data.map(row => row[colName]))]
-          .map(colData => getDisplayText(colData))
+        const uniqs = [...new Set(data.map((row) => row[colName]))]
+          .map((colData) => getDisplayText(colData))
           .sort((a, b) => b.length - a.length)
           .slice(0, 3);
 
-        uniqs.forEach(colData => {
+        uniqs.forEach((colData) => {
           sizes.push(this.measureText(colData, false));
         });
 
@@ -165,14 +171,16 @@ export default class ResultTable extends React.Component {
   };
 
   getRowHeight = (rowIndex, columnsToCheck) => {
-    const {data: {data}} = this.props;
+    const {
+      data: {data},
+    } = this.props;
 
     if (rowIndex === 0) {
       return TABLE_ROW_HEIGHT_WITH_BORDER;
     }
 
     const row = data[rowIndex - 1]; // -1 offset due to header row
-    const colWidths = columnsToCheck.map(col => {
+    const colWidths = columnsToCheck.map((col) => {
       return this.measureText(getDisplayText(row[col]), false);
     });
     const maxColWidth = Math.max(...colWidths, 0);
@@ -188,11 +196,14 @@ export default class ResultTable extends React.Component {
   };
 
   getColumnList = () => {
-    const {query, data: {meta}} = this.props;
+    const {
+      query,
+      data: {meta},
+    } = this.props;
 
     const fields = new Set([
       ...(query.fields || []),
-      ...query.aggregations.map(agg => agg[2]),
+      ...query.aggregations.map((agg) => agg[2]),
     ]);
 
     return meta.filter(({name}) => fields.has(name));
@@ -212,7 +223,7 @@ export default class ResultTable extends React.Component {
     return Math.ceil(context.measureText(text).width) + 5;
   };
 
-  getMaxVisibleRows = elementHeight => {
+  getMaxVisibleRows = (elementHeight) => {
     if (!elementHeight) {
       return MIN_VISIBLE_ROWS;
     }
@@ -227,7 +238,10 @@ export default class ResultTable extends React.Component {
   };
 
   renderTable() {
-    const {data: {data}, height} = this.props;
+    const {
+      data: {data},
+      height,
+    } = this.props;
 
     const cols = this.getColumnList();
 
@@ -242,7 +256,7 @@ export default class ResultTable extends React.Component {
       <Panel>
         <Grid visibleRows={Math.min(data.length, visibleRows) + 1}>
           <AutoSizer>
-            {size => {
+            {(size) => {
               const columnWidths = this.getColumnWidths(size.width);
 
               // Since calculating row height might be expensive, we'll only
@@ -257,7 +271,7 @@ export default class ResultTable extends React.Component {
 
               return (
                 <MultiGrid
-                  ref={ref => (this.grid = ref)}
+                  ref={(ref) => (this.grid = ref)}
                   width={size.width - 1}
                   height={size.height}
                   rowCount={data.length + 1}
@@ -291,7 +305,7 @@ export default class ResultTable extends React.Component {
 }
 
 const Grid = styled(({visibleRows, ...props}) => <div {...props} />)`
-  height: ${p =>
+  height: ${(p) =>
     p.visibleRows * TABLE_ROW_HEIGHT_WITH_BORDER +
     2}px; /* cell height + cell border + top and bottom Panel border */
   overflow: hidden;
@@ -302,12 +316,12 @@ const Grid = styled(({visibleRows, ...props}) => <div {...props} />)`
 `;
 
 const Cell = styled('div')`
-  ${p => !p.isOddRow && `background-color: ${p.theme.whiteDark};`} ${p =>
-      `text-align: ${p.align};`} overflow: scroll;
+  ${(p) => !p.isOddRow && `background-color: ${p.theme.whiteDark};`} ${(p) =>
+    `text-align: ${p.align};`} overflow: scroll;
   font-size: 14px;
   line-height: ${TABLE_ROW_HEIGHT}px;
   padding: 0 10px;
-  border-top: 1px solid ${p => p.theme.borderLight};
+  border-top: 1px solid ${(p) => p.theme.borderLight};
 
   ::-webkit-scrollbar {
     display: none;
@@ -321,10 +335,10 @@ const Cell = styled('div')`
 `;
 
 const TableHeader = styled(Cell)`
-  background: ${p => p.theme.offWhite};
-  color: ${p => p.theme.gray3};
+  background: ${(p) => p.theme.offWhite};
+  color: ${(p) => p.theme.gray3};
   border-top: none;
-  border-bottom: 1px solid ${p => p.theme.borderDark};
+  border-bottom: 1px solid ${(p) => p.theme.borderDark};
   &:first-of-type {
     border-top-left-radius: 3px;
   }

@@ -35,7 +35,7 @@ const GroupReleaseChart = createReactClass({
     const releaseStats = props.releaseStats;
     const releasePoints = {};
     if (releaseStats) {
-      releaseStats[props.statsPeriod].forEach(point => {
+      releaseStats[props.statsPeriod].forEach((point) => {
         releasePoints[point[0]] = point[1];
       });
     }
@@ -43,7 +43,7 @@ const GroupReleaseChart = createReactClass({
     const envStats = props.environmentStats;
     const envPoints = {};
     if (envStats) {
-      envStats[props.statsPeriod].forEach(point => {
+      envStats[props.statsPeriod].forEach((point) => {
         envPoints[point[0]] = point[1];
       });
     }
@@ -72,17 +72,16 @@ const GroupReleaseChart = createReactClass({
       `<dd>${intcomma(totalY)} event${totalY !== 1 ? 's' : ''}</dd>` +
       (environment
         ? '<dt class="environment"><span></span></dt>' +
-          `<dd>${intcomma(envPoints[point.x] || 0)} event${envPoints[point.x] !== 1
-            ? 's'
-            : ''}` +
+          `<dd>${intcomma(envPoints[point.x] || 0)} event${
+            envPoints[point.x] !== 1 ? 's' : ''
+          }` +
           `<small>in ${escape(environment)}</small></dd>`
         : '') +
       (release
         ? '<dt class="active"><span></span></dt>' +
-          `<dd>${intcomma(releasePoints[point.x] || 0)} event${releasePoints[point.x] !==
-          1
-            ? 's'
-            : ''}` +
+          `<dd>${intcomma(releasePoints[point.x] || 0)} event${
+            releasePoints[point.x] !== 1 ? 's' : ''
+          }` +
           `<small>in ${escape(release.version.substr(0, 12))}</small></dd>`
         : '') +
       '</dl>' +
@@ -101,7 +100,7 @@ const GroupReleaseChart = createReactClass({
 
     const {releasePoints, envPoints} = this.state;
 
-    const points = stats.map(point => {
+    const points = stats.map((point) => {
       const rData = releasePoints[point[0]] || 0;
       let eData = (envPoints[point[0]] || 0) - rData;
       if (eData < 0) {

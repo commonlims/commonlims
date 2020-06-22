@@ -47,7 +47,7 @@ export default createReactClass({
       'client-api.all-versions.responses.5xx',
     ];
 
-    statNameList.forEach(statName => {
+    statNameList.forEach((statName) => {
       this.api.request('/internal/stats/', {
         method: 'GET',
         data: {
@@ -55,8 +55,8 @@ export default createReactClass({
           resolution: this.props.resolution,
           key: statName,
         },
-        success: data => {
-          this.setState(prevState => {
+        success: (data) => {
+          this.setState((prevState) => {
             const rawData = prevState.rawData;
             rawData[statName] = data;
             return {
@@ -64,7 +64,7 @@ export default createReactClass({
             };
           }, this.requestFinished);
         },
-        error: data => {
+        error: (data) => {
           this.setState({
             error: true,
           });
@@ -90,7 +90,7 @@ export default createReactClass({
   },
 
   processRawSeries(series) {
-    return series.map(item => {
+    return series.map((item) => {
       return {x: item[0], y: item[1]};
     });
   },

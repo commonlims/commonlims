@@ -7,7 +7,7 @@ import ResultGrid from 'app/components/resultGrid';
 import {t} from 'app/locale';
 
 class AdminOrganizations extends React.Component {
-  getRow = row => {
+  getRow = (row) => {
     return [
       <td>
         <strong>

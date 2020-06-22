@@ -14,19 +14,19 @@ import space from 'app/styles/space';
 const BackButtonWrapper = styled(Link)`
   display: flex;
   align-items: center;
-  color: ${p => p.theme.gray3};
-  background: ${p => p.theme.whiteDark};
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  color: ${(p) => p.theme.gray3};
+  background: ${(p) => p.theme.whiteDark};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
   padding: ${space(1.5)} ${space(2)};
-  font-size: ${p => p.theme.fontSizeMedium};
+  font-size: ${(p) => p.theme.fontSizeMedium};
   &:hover {
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
   }
 `;
 
 const Icon = styled(InlineSvg)`
   margin: 0 6px 0 -3px;
-  background: ${p => p.theme.offWhite2};
+  background: ${(p) => p.theme.offWhite2};
   border-radius: 50%;
   padding: ${space(0.5)};
   box-sizing: content-box;

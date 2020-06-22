@@ -2,23 +2,23 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import SplitDiff from 'app/components/splitDiff';
 
-describe('SplitDiff', function() {
+describe('SplitDiff', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(<SplitDiff base="restaurant" target="aura" />);
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders with newlines', function() {
+  it('renders with newlines', function () {
     const base = `this is my restaurant
     and restaurant
     common`;

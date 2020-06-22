@@ -109,7 +109,7 @@ class CommandSource extends React.Component {
   }
 }
 
-const CommandSourceWithFeature = props => (
+const CommandSourceWithFeature = (props) => (
   <Access isSuperuser>
     {({hasSuperuser}) => <CommandSource {...props} isSuperuser={hasSuperuser} />}
   </Access>

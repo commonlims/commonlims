@@ -56,7 +56,7 @@ class AutoComplete extends React.Component {
   };
 
   static defaultProps = {
-    itemToString: i => i,
+    itemToString: (i) => i,
     inputIsActor: true,
     disabled: false,
     closeOnSelect: true,
@@ -266,7 +266,7 @@ class AutoComplete extends React.Component {
       return;
     }
 
-    this.setState(state => {
+    this.setState((state) => {
       return {
         isOpen: false,
         inputValue: resetInputOnClose ? '' : state.inputValue,
@@ -274,7 +274,7 @@ class AutoComplete extends React.Component {
     });
   };
 
-  getInputProps = inputProps => ({
+  getInputProps = (inputProps) => ({
     ...inputProps,
     value: this.state.inputValue,
     onChange: this.handleInputChange.bind(this, inputProps),
@@ -298,7 +298,7 @@ class AutoComplete extends React.Component {
     };
   };
 
-  getMenuProps = menuProps => ({
+  getMenuProps = (menuProps) => ({
     ...menuProps,
     onMouseDown: this.handleMenuMouseDown.bind(this, menuProps),
   });
@@ -313,12 +313,12 @@ class AutoComplete extends React.Component {
         onClickOutside={this.handleClickOutside}
         onOpen={onMenuOpen}
       >
-        {dropdownMenuProps =>
+        {(dropdownMenuProps) =>
           children({
             ...dropdownMenuProps,
-            getMenuProps: props =>
+            getMenuProps: (props) =>
               dropdownMenuProps.getMenuProps(this.getMenuProps(props)),
-            getInputProps: props => {
+            getInputProps: (props) => {
               const inputProps = this.getInputProps(props);
 
               if (!this.props.inputIsActor) {
@@ -335,7 +335,8 @@ class AutoComplete extends React.Component {
               open: this.openMenu,
               close: this.closeMenu,
             },
-          })}
+          })
+        }
       </DropdownMenu>
     );
   }

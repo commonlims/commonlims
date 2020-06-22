@@ -69,8 +69,8 @@ class LazyLoad extends React.Component {
 
   getComponentGetter = () => this.props.component || this.props.route.componentPromise;
 
-  handleFetchError = error => {
-    Sentry.withScope(scope => {
+  handleFetchError = (error) => {
+    Sentry.withScope((scope) => {
       if (isWebpackChunkLoadingError(error)) {
         scope.setFingerprint(['webpack', 'error loading chunk']);
       }
@@ -79,7 +79,7 @@ class LazyLoad extends React.Component {
     this.handleError(error);
   };
 
-  handleError = error => {
+  handleError = (error) => {
     // eslint-disable-next-line no-console
     console.error(error);
     this.setState({

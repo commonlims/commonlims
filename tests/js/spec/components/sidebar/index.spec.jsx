@@ -4,14 +4,14 @@ import {mount, shallow} from 'enzyme';
 import ConfigStore from 'app/stores/configStore';
 import SidebarContainer, {Sidebar} from 'app/components/sidebar';
 
-describe('Sidebar', function() {
+describe('Sidebar', function () {
   let wrapper;
   const routerContext = TestStubs.routerContext();
   const {organization, router} = routerContext.context;
   const user = TestStubs.User();
   const apiMocks = {};
 
-  const createWrapper = props =>
+  const createWrapper = (props) =>
     mount(
       <Sidebar
         organization={organization}
@@ -23,7 +23,7 @@ describe('Sidebar', function() {
       routerContext
     );
 
-  beforeEach(function() {
+  beforeEach(function () {
     apiMocks.broadcasts = MockApiClient.addMockResponse({
       url: '/broadcasts/',
       body: [TestStubs.Broadcast()],
@@ -34,7 +34,7 @@ describe('Sidebar', function() {
     });
   });
 
-  it('renders', function() {
+  it('renders', function () {
     wrapper = shallow(
       <Sidebar organization={organization} user={user} router={router} />,
       TestStubs.routerContext()
@@ -43,7 +43,7 @@ describe('Sidebar', function() {
     expect(wrapper.find('StyledSidebar')).toHaveLength(1);
   });
 
-  it('renders without org and router', function() {
+  it('renders without org and router', function () {
     wrapper = createWrapper({
       organization: null,
       router: null,
@@ -57,7 +57,7 @@ describe('Sidebar', function() {
     expect(wrapper.find('OrgAndUserMenu')).toMatchSnapshot();
   });
 
-  it('can toggle collapsed state', async function() {
+  it('can toggle collapsed state', async function () {
     wrapper = mount(
       <SidebarContainer organization={organization} user={user} router={router} />,
       routerContext
@@ -80,7 +80,7 @@ describe('Sidebar', function() {
     expect(wrapper.find('SidebarItemLabel').length).toBeGreaterThan(0);
   });
 
-  it('can have onboarding feature', function() {
+  it('can have onboarding feature', function () {
     wrapper = mount(
       <SidebarContainer
         organization={{...organization, features: ['onboarding']}}
@@ -97,8 +97,8 @@ describe('Sidebar', function() {
     expect(wrapper.find('OnboardingStatus SidebarPanel')).toMatchSnapshot();
   });
 
-  describe('SidebarHelp', function() {
-    it('can toggle help menu', function() {
+  describe('SidebarHelp', function () {
+    it('can toggle help menu', function () {
       wrapper = createWrapper();
       wrapper.find('HelpActor').simulate('click');
       const menu = wrapper.find('HelpMenu');
@@ -110,15 +110,15 @@ describe('Sidebar', function() {
     });
   });
 
-  describe('SidebarDropdown', function() {
-    it('can open Sidebar org/name dropdown menu', function() {
+  describe('SidebarDropdown', function () {
+    it('can open Sidebar org/name dropdown menu', function () {
       wrapper = createWrapper();
       wrapper.find('SidebarDropdownActor').simulate('click');
       expect(wrapper.find('OrgAndUserMenu')).toHaveLength(1);
       expect(wrapper.find('OrgAndUserMenu')).toMatchSnapshot();
     });
 
-    it('has link to Members settings with `member:write`', function() {
+    it('has link to Members settings with `member:write`', function () {
       let org = TestStubs.Organization();
       org = {
         ...org,
@@ -135,7 +135,7 @@ describe('Sidebar', function() {
       ).toHaveLength(1);
     });
 
-    it('can open "Switch Organization" sub-menu', function() {
+    it('can open "Switch Organization" sub-menu', function () {
       ConfigStore.set('features', new Set(['organizations:create']));
       jest.useFakeTimers();
       wrapper = createWrapper();
@@ -148,7 +148,7 @@ describe('Sidebar', function() {
       jest.useRealTimers();
     });
 
-    it('has can logout', function() {
+    it('has can logout', function () {
       const mock = MockApiClient.addMockResponse({
         url: '/auth/',
         method: 'DELETE',

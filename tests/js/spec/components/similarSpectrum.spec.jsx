@@ -2,18 +2,18 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import SimilarSpectrum from 'app/components/similarSpectrum';
 
-describe('SimilarSpectrum', function() {
+describe('SimilarSpectrum', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(<SimilarSpectrum />);
     expect(wrapper).toMatchSnapshot();
   });

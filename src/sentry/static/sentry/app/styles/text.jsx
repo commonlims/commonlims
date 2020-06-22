@@ -1,6 +1,6 @@
 import {css} from 'react-emotion';
 
-const textStyles = props => {
+const textStyles = (props) => {
   return css`
     /* stylelint-disable no-descending-specificity */
     h1,

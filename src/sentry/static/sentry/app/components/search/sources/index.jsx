@@ -21,7 +21,7 @@ class SearchSources extends React.Component {
     const {children} = this.props;
 
     // loading means if any result has `isLoading` OR any result is null
-    const isLoading = !!allSources.find(arg => arg.isLoading || arg.results === null);
+    const isLoading = !!allSources.find((arg) => arg.isLoading || arg.results === null);
 
     const foundResults = isLoading
       ? []
@@ -44,7 +44,7 @@ class SearchSources extends React.Component {
     const Source = sources[idx];
     return (
       <Source {...this.props}>
-        {args => {
+        {(args) => {
           // Mutate the array instead of pushing because we don't know how often
           // this child function will be called and pushing will cause duplicate
           // results to be pushed for all calls down the chain.

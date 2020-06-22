@@ -42,7 +42,7 @@ class OrganizationCrumb extends React.Component {
             </Flex>
           </TextLink>
         }
-        onSelect={item => {
+        onSelect={(item) => {
           // If we are currently in a project context, and we're attempting to switch organizations,
           // then we need to default to index route (e.g. `route`)
           //
@@ -58,7 +58,7 @@ class OrganizationCrumb extends React.Component {
         }}
         hasMenu={hasMenu}
         route={route}
-        items={organizations.map(org => ({
+        items={organizations.map((org) => ({
           value: org.slug,
           label: (
             <MenuItem>

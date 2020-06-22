@@ -11,7 +11,7 @@ class FrameVariables extends React.Component {
 
   // make sure that clicking on the variables does not actually do
   // anything on the containing element.
-  preventToggling = evt => {
+  preventToggling = (evt) => {
     evt.stopPropagation();
   };
 

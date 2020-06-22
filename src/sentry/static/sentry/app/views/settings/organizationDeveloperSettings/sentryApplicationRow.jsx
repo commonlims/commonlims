@@ -154,15 +154,15 @@ const SentryAppName = styled('div')`
 `;
 
 const StyledLink = styled(Link)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;
 
 const SentryAppLink = styled(Link)`
-  color: ${props => props.theme.textColor};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const StyledButton = styled(Button)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;
 
 const Status = styled(
@@ -178,12 +178,12 @@ const Status = styled(
     );
   })
 )`
-  color: ${props => (props.enabled ? props.theme.success : props.theme.gray2)};
+  color: ${(props) => (props.enabled ? props.theme.success : props.theme.gray2)};
   margin-left: ${space(0.5)};
   font-weight: light;
   &:after {
     content: '|';
-    color: ${p => p.theme.gray1};
+    color: ${(p) => p.theme.gray1};
     margin-left: ${space(0.75)};
     font-weight: normal;
   }
@@ -197,7 +197,7 @@ const PublishStatus = styled(({published, ...props}) => {
     </Flex>
   );
 })`
-  color: ${props => (props.published ? props.theme.success : props.theme.gray2)};
+  color: ${(props) => (props.published ? props.theme.success : props.theme.gray2)};
   font-weight: light;
   margin-right: ${space(0.75)};
 `;

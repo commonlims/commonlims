@@ -107,7 +107,7 @@ const Title = styled.div`
     font-size: 14px;
     font-style: normal;
     font-weight: 300;
-    color: ${p => p.theme.gray3};
+    color: ${(p) => p.theme.gray3};
   }
 `;
 
@@ -124,12 +124,12 @@ const iconStyles = css`
 
 const Muted = styled.span`
   ${iconStyles};
-  color: ${p => p.theme.red};
+  color: ${(p) => p.theme.red};
 `;
 
 const Starred = styled.span`
   ${iconStyles};
-  color: ${p => p.theme.yellowOrange};
+  color: ${(p) => p.theme.yellowOrange};
 `;
 
 const SampleLabel = styled.div`
@@ -139,7 +139,7 @@ const SampleLabel = styled.div`
   height: 15px;
   border-radius: 0 3px 3px 0;
 
-  background-color: ${p => {
+  background-color: ${(p) => {
     switch (p.sampleState) {
       case 'waiting':
         return p.theme.purple;

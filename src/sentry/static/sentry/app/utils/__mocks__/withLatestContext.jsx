@@ -8,7 +8,7 @@ const DEFAULTS = {
   lastRoute: {},
 };
 
-const withLatestContextMock = WrappedComponent =>
+const withLatestContextMock = (WrappedComponent) =>
   class WithLatestContextMockWrappeer extends React.Component {
     render() {
       return <WrappedComponent {...DEFAULTS} {...this.props} />;

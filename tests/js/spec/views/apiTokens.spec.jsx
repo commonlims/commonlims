@@ -4,14 +4,14 @@ import {shallow, mount} from 'enzyme';
 import {Client} from 'app/api';
 import ApiTokens from 'app/views/settings/account/apiTokens';
 
-describe('ApiTokens', function() {
+describe('ApiTokens', function () {
   const routerContext = TestStubs.routerContext();
 
-  beforeEach(function() {
+  beforeEach(function () {
     Client.clearMockResponses();
   });
 
-  it('renders empty result', function() {
+  it('renders empty result', function () {
     Client.addMockResponse({
       url: '/api-tokens/',
     });
@@ -22,7 +22,7 @@ describe('ApiTokens', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders with result', function() {
+  it('renders with result', function () {
     Client.addMockResponse({
       url: '/api-tokens/',
       body: [TestStubs.ApiToken()],
@@ -34,7 +34,7 @@ describe('ApiTokens', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('can delete token', function() {
+  it('can delete token', function () {
     Client.addMockResponse({
       url: '/api-tokens/',
       body: [TestStubs.ApiToken()],

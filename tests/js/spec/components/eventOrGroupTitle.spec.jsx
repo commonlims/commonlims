@@ -3,7 +3,7 @@ import {shallow} from 'enzyme';
 import toJson from 'enzyme-to-json';
 import EventOrGroupTitle from 'app/components/eventOrGroupTitle';
 
-describe('EventOrGroupTitle', function() {
+describe('EventOrGroupTitle', function () {
   const data = {
     metadata: {
       title: 'metadata title',
@@ -14,7 +14,7 @@ describe('EventOrGroupTitle', function() {
     culprit: 'culprit',
   };
 
-  it('renders with subtitle when `type = error`', function() {
+  it('renders with subtitle when `type = error`', function () {
     const component = shallow(
       <EventOrGroupTitle
         data={{
@@ -29,7 +29,7 @@ describe('EventOrGroupTitle', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with subtitle when `type = csp`', function() {
+  it('renders with subtitle when `type = csp`', function () {
     const component = shallow(
       <EventOrGroupTitle
         data={{
@@ -44,7 +44,7 @@ describe('EventOrGroupTitle', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with no subtitle when `type = default`', function() {
+  it('renders with no subtitle when `type = default`', function () {
     const component = shallow(
       <EventOrGroupTitle
         data={{

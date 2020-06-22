@@ -138,7 +138,7 @@ export default class OrganizationDiscover extends React.Component {
     }
   }
 
-  updateProjects = val => {
+  updateProjects = (val) => {
     this.updateField('projects', val);
     updateProjects(val);
   };
@@ -149,11 +149,11 @@ export default class OrganizationDiscover extends React.Component {
     end: (end && getUtcDateString(end)) || null,
   });
 
-  changeTime = datetime => {
+  changeTime = (datetime) => {
     this.updateFields(this.getDateTimeFields(datetime));
   };
 
-  updateDateTime = datetime => {
+  updateDateTime = (datetime) => {
     const {start, end, range} = this.getDateTimeFields(datetime);
 
     this.updateFields({start, end, range});
@@ -164,7 +164,7 @@ export default class OrganizationDiscover extends React.Component {
     });
   };
 
-  updateDateTimeAndRun = datetime => {
+  updateDateTimeAndRun = (datetime) => {
     this.updateDateTime(datetime);
     this.runQuery();
   };
@@ -174,13 +174,13 @@ export default class OrganizationDiscover extends React.Component {
     this.forceUpdate();
   };
 
-  updateFields = query => {
+  updateFields = (query) => {
     Object.entries(query).forEach(([field, value]) => {
       this.updateField(field, value);
     });
   };
 
-  updateAndRunQuery = query => {
+  updateAndRunQuery = (query) => {
     this.updateFields(query);
     this.runQuery();
   };
@@ -194,11 +194,11 @@ export default class OrganizationDiscover extends React.Component {
 
     // Strip any invalid conditions and aggregations
     const {conditions, aggregations} = queryBuilder.getInternal();
-    const filteredConditions = conditions.filter(condition =>
+    const filteredConditions = conditions.filter((condition) =>
       isValidCondition(condition, queryBuilder.getColumns())
     );
 
-    const filteredAggregations = aggregations.filter(aggregation =>
+    const filteredAggregations = aggregations.filter((aggregation) =>
       isValidAggregation(aggregation, queryBuilder.getColumns())
     );
 
@@ -214,7 +214,7 @@ export default class OrganizationDiscover extends React.Component {
 
     resultManager
       .fetchAll()
-      .then(data => {
+      .then((data) => {
         const shouldRedirect = !this.props.params.savedQueryId;
 
         if (shouldRedirect) {
@@ -234,28 +234,28 @@ export default class OrganizationDiscover extends React.Component {
           isFetchingQuery: false,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         const message = (err && err.message) || t('An error occurred');
         addErrorMessage(message);
         this.setState({isFetchingQuery: false});
       });
   };
 
-  onFetchPage = nextOrPrev => {
+  onFetchPage = (nextOrPrev) => {
     this.setState({isFetchingQuery: true});
     return this.state.resultManager
       .fetchPage(nextOrPrev)
-      .then(data => {
+      .then((data) => {
         this.setState({data, isFetchingQuery: false});
       })
-      .catch(err => {
+      .catch((err) => {
         const message = (err && err.message) || t('An error occurred');
         addErrorMessage(message);
         this.setState({isFetchingQuery: false});
       });
   };
 
-  toggleSidebar = view => {
+  toggleSidebar = (view) => {
     if (view !== this.state.view) {
       this.setState({view});
       browserHistory.replace({
@@ -306,14 +306,14 @@ export default class OrganizationDiscover extends React.Component {
       });
   };
 
-  updateSavedQuery = name => {
+  updateSavedQuery = (name) => {
     const {queryBuilder, savedQuery, organization, toggleEditMode} = this.props;
     const query = queryBuilder.getInternal();
 
     const data = {...query, name};
 
     updateSavedQuery(organization, savedQuery.id, data)
-      .then(resp => {
+      .then((resp) => {
         addSuccessMessage(t('Updated query'));
         toggleEditMode(); // Return to read-only mode
         this.props.updateSavedQueryData(resp);
@@ -385,22 +385,21 @@ export default class OrganizationDiscover extends React.Component {
               isLoading={isLoading}
             />
           )}
-          {isEditingSavedQuery &&
-            savedQuery && (
-              <QueryPanel title={t('Edit Query')} onClose={toggleEditMode}>
-                <EditSavedQuery
-                  savedQuery={savedQuery}
-                  queryBuilder={queryBuilder}
-                  isFetchingQuery={isFetchingQuery}
-                  onUpdateField={this.updateField}
-                  onRunQuery={this.runQuery}
-                  onReset={this.reset}
-                  onDeleteQuery={this.deleteSavedQuery}
-                  onSaveQuery={this.updateSavedQuery}
-                  isLoading={isLoading}
-                />
-              </QueryPanel>
-            )}
+          {isEditingSavedQuery && savedQuery && (
+            <QueryPanel title={t('Edit Query')} onClose={toggleEditMode}>
+              <EditSavedQuery
+                savedQuery={savedQuery}
+                queryBuilder={queryBuilder}
+                isFetchingQuery={isFetchingQuery}
+                onUpdateField={this.updateField}
+                onRunQuery={this.runQuery}
+                onReset={this.reset}
+                onDeleteQuery={this.deleteSavedQuery}
+                onSaveQuery={this.updateSavedQuery}
+                isLoading={isLoading}
+              />
+            </QueryPanel>
+          )}
         </Sidebar>
 
         <DiscoverGlobalSelectionHeader

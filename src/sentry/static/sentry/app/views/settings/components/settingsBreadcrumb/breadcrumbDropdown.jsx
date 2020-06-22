@@ -76,7 +76,7 @@ class BreadcrumbDropdown extends React.Component {
   };
 
   // Close immediately when clicked outside
-  handleClose = actions => {
+  handleClose = (actions) => {
     this.close();
   };
 

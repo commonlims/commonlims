@@ -122,7 +122,7 @@ const SampleProcesses = createReactClass({
           pageLinks: jqXHR.getResponseHeader('Link'),
         });
       },
-      error: err => {
+      error: (err) => {
         let error = err.responseJSON || true;
         error = error.detail || true;
         this.setState({

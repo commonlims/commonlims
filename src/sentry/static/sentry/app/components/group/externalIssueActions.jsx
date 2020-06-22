@@ -48,7 +48,7 @@ class ExternalIssueForm extends AsyncComponent {
     ];
   }
 
-  onSubmitSuccess = data => {
+  onSubmitSuccess = (data) => {
     addSuccessMessage(MESSAGES_BY_ACTION[this.props.action]);
     this.props.onSubmitSuccess(data);
   };
@@ -73,7 +73,7 @@ class ExternalIssueForm extends AsyncComponent {
       success: (data, _, jqXHR) => {
         this.handleRequestSuccess({stateKey: 'integrationDetails', data, jqXHR}, true);
       },
-      error: error => {
+      error: (error) => {
         this.handleError(error, ['integrationDetails', endpoint, null, null]);
       },
     });
@@ -85,7 +85,7 @@ class ExternalIssueForm extends AsyncComponent {
     const config = integrationDetails[`${action}IssueConfig`];
 
     return config
-      .filter(field => field.updatesForm)
+      .filter((field) => field.updatesForm)
       .reduce((a, field) => ({...a, [field.name]: field.default}), {});
   }
 
@@ -112,7 +112,7 @@ class ExternalIssueForm extends AsyncComponent {
       const options = (field.choices || []).map(([value, label]) => ({value, label}));
       return Promise.resolve({options});
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.debouncedOptionLoad(field, input, resolve);
     });
   };
@@ -135,16 +135,16 @@ class ExternalIssueForm extends AsyncComponent {
 
       // We can't use the API client here since the URL is not scoped under the
       // API endpoints (which the client prefixes)
-      $.ajax(request).then(data => resolve({options: data}));
+      $.ajax(request).then((data) => resolve({options: data}));
     },
     200,
     {trailing: true}
   );
 
-  getFieldProps = field =>
+  getFieldProps = (field) =>
     field.url
       ? {
-          loadOptions: input => this.getOptions(field, input),
+          loadOptions: (input) => this.getOptions(field, input),
           async: true,
           cache: false,
           onSelectResetsInput: false,
@@ -160,7 +160,7 @@ class ExternalIssueForm extends AsyncComponent {
     const config = integrationDetails[`${action}IssueConfig`];
 
     const initialData = {};
-    config.forEach(field => {
+    config.forEach((field) => {
       // passing an empty array breaks multi select
       // TODO(jess): figure out why this is breaking and fix
       initialData[field.name] = field.multiple ? '' : field.default;
@@ -177,7 +177,7 @@ class ExternalIssueForm extends AsyncComponent {
         submitDisabled={this.state.reloading}
         footerClass="modal-footer"
       >
-        {config.map(field => (
+        {config.map((field) => (
           <FieldFromConfig
             key={`${field.name}-${field.default}`}
             field={field}
@@ -232,7 +232,7 @@ class ExternalIssueActions extends AsyncComponent {
           issue: null,
         });
       },
-      error: error => {
+      error: (error) => {
         addErrorMessage(t('Unable to unlink issue.'));
       },
     });
@@ -247,7 +247,7 @@ class ExternalIssueActions extends AsyncComponent {
     });
   };
 
-  closeModal = data => {
+  closeModal = (data) => {
     this.setState({
       showModal: false,
       action: null,
@@ -255,7 +255,7 @@ class ExternalIssueActions extends AsyncComponent {
     });
   };
 
-  handleClick = action => {
+  handleClick = (action) => {
     this.setState({action});
   };
 

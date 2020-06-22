@@ -16,7 +16,7 @@ const data = {
   culprit: 'culprit',
 };
 
-describe('EventDataSection', function() {
+describe('EventDataSection', function () {
   const groupData = {
     ...data,
     level: 'error',
@@ -29,7 +29,7 @@ describe('EventDataSection', function() {
     groupID: 'groupID',
     culprit: undefined,
   };
-  it('renders formatted', function() {
+  it('renders formatted', function () {
     const component = shallow(
       <EventDataSection
         group={groupData}
@@ -43,7 +43,7 @@ describe('EventDataSection', function() {
     expect(component).toMatchSnapshot();
   });
 
-  it('renders raw', function() {
+  it('renders raw', function () {
     const component = shallow(
       <EventDataSection
         group={groupData}
@@ -57,7 +57,7 @@ describe('EventDataSection', function() {
   });
 });
 
-describe('KeyValueList', function() {
+describe('KeyValueList', function () {
   const context = {
     somestuff: {andsomeotherstuff: 'here'},
     plussomeotherstuff: 'here',
@@ -65,7 +65,7 @@ describe('KeyValueList', function() {
   };
   const extraDataArray = objectToArray(context);
 
-  it('renders formatted', function() {
+  it('renders formatted', function () {
     const component = shallow(
       <KeyValueList data={extraDataArray} isContextData={true} raw={false} />
     );
@@ -73,7 +73,7 @@ describe('KeyValueList', function() {
     expect(component).toMatchSnapshot();
   });
 
-  it('renders raw', function() {
+  it('renders raw', function () {
     const component = shallow(
       <KeyValueList data={extraDataArray} isContextData={true} raw={true} />
     );

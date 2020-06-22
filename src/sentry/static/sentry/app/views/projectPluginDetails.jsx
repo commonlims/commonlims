@@ -45,7 +45,7 @@ class ProjectPluginDetails extends AsyncView {
     this.api.request(`/projects/${orgId}/${projectId}/plugins/${pluginId}/`, {
       method: 'POST',
       data: {reset: true},
-      success: pluginDetails => {
+      success: (pluginDetails) => {
         this.setState({pluginDetails});
         IndicatorStore.addSuccess(t('Plugin was reset'));
       },

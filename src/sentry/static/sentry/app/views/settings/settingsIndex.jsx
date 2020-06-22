@@ -311,7 +311,7 @@ const HomePanelBody = styled(PanelBody)`
     li {
       line-height: 1.6;
       /* Bullet color */
-      color: ${p => p.theme.gray1};
+      color: ${(p) => p.theme.gray1};
     }
   }
 `;
@@ -321,7 +321,7 @@ const getHomeIconMargin = css`
 `;
 
 const HomeIcon = styled.div`
-  background: ${p => p.theme[p.color || 'gray2']};
+  background: ${(p) => p.theme[p.color || 'gray2']};
   color: #fff;
   width: ${HOME_ICON_SIZE}px;
   height: ${HOME_ICON_SIZE}px;
@@ -332,10 +332,10 @@ const HomeIcon = styled.div`
 `;
 
 const HomeLink = styled(Link)`
-  color: ${p => p.theme.purple};
+  color: ${(p) => p.theme.purple};
 
   &:hover {
-    color: ${p => p.theme.purpleDark};
+    color: ${(p) => p.theme.purpleDark};
   }
 `;
 
@@ -346,10 +346,10 @@ const HomeLinkIcon = styled(HomeLink)`
 `;
 
 const ExternalHomeLink = styled(ExternalLink)`
-  color: ${p => p.theme.purple};
+  color: ${(p) => p.theme.purple};
 
   &:hover {
-    color: ${p => p.theme.purpleDark};
+    color: ${(p) => p.theme.purpleDark};
   }
 `;
 

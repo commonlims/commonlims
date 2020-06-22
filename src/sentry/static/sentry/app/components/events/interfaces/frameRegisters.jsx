@@ -22,10 +22,10 @@ export class RegisterValue extends React.Component {
   }
 
   toggleView = () => {
-    this.setState(state => ({view: (state.view + 1) % REGISTER_VIEWS.length}));
+    this.setState((state) => ({view: (state.view + 1) % REGISTER_VIEWS.length}));
   };
 
-  formatValue = value => {
+  formatValue = (value) => {
     try {
       const parsed = typeof value === 'string' ? parseInt(value, 16) : value;
       if (isNaN(parsed)) {
@@ -63,12 +63,12 @@ class FrameRegisters extends React.Component {
 
   // make sure that clicking on the registers does not actually do
   // anything on the containing element.
-  preventToggling = evt => {
+  preventToggling = (evt) => {
     evt.stopPropagation();
   };
 
   render() {
-    const registers = objectToArray(this.props.data).filter(register =>
+    const registers = objectToArray(this.props.data).filter((register) =>
       defined(register[1])
     );
 
@@ -76,7 +76,7 @@ class FrameRegisters extends React.Component {
       <RegistersWrapper>
         <RegistersHeading>{t('registers')}</RegistersHeading>
         <Registers>
-          {registers.map(register => (
+          {registers.map((register) => (
             <Register key={register[0]} onClick={this.preventToggling}>
               <RegisterName>{register[0]}</RegisterName>{' '}
               <RegisterValue value={register[1]} />

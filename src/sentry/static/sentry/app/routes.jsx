@@ -40,26 +40,26 @@ function appendTrailingSlash(nextState, replace) {
  * The reason for this is because react-router handles the route tree better and if we use <LazyLoad> it will end
  * up having to re-render more components than necesssary.
  */
-const lazyLoad = cb => m => cb(null, m.default);
+const lazyLoad = (cb) => (m) => cb(null, m.default);
 
 function routes() {
   const hooksRoutes = [];
-  HookStore.get('routes').forEach(cb => {
+  HookStore.get('routes').forEach((cb) => {
     hooksRoutes.push(cb());
   });
 
   const hooksAdminRoutes = [];
-  HookStore.get('routes:admin').forEach(cb => {
+  HookStore.get('routes:admin').forEach((cb) => {
     hooksAdminRoutes.push(cb());
   });
 
   const hooksOrgRoutes = [];
-  HookStore.get('routes:organization').forEach(cb => {
+  HookStore.get('routes:organization').forEach((cb) => {
     hooksOrgRoutes.push(cb());
   });
 
   const hooksSurveyRoute = [];
-  HookStore.get('routes:onboarding-survey').forEach(cb => {
+  HookStore.get('routes:onboarding-survey').forEach((cb) => {
     hooksSurveyRoute.push(cb());
   });
 
@@ -71,21 +71,30 @@ function routes() {
         path="details/"
         name="Details"
         componentPromise={() =>
-          import(/* webpackChunkName: "AccountDetails" */ './views/settings/account/accountDetails')}
+          import(
+            /* webpackChunkName: "AccountDetails" */ './views/settings/account/accountDetails'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route path="notifications/" name="Notifications">
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "AccountNotifications" */ './views/settings/account/accountNotifications')}
+            import(
+              /* webpackChunkName: "AccountNotifications" */ './views/settings/account/accountNotifications'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path=":fineTuneType/"
           name="Fine Tune Alerts"
           componentPromise={() =>
-            import(/* webpackChunkName: "AccountNotificationsFineTuning" */ './views/settings/account/accountNotificationFineTuning')}
+            import(
+              /* webpackChunkName: "AccountNotificationsFineTuning" */ './views/settings/account/accountNotificationFineTuning'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
@@ -93,40 +102,58 @@ function routes() {
         path="emails/"
         name="Emails"
         componentPromise={() =>
-          import(/* webpackChunkName: "AccountEmails" */ './views/settings/account/accountEmails')}
+          import(
+            /* webpackChunkName: "AccountEmails" */ './views/settings/account/accountEmails'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route
         path="authorizations/"
         componentPromise={() =>
-          import(/* webpackChunkName: "AccountAuthorizations" */ './views/settings/account/accountAuthorizations')}
+          import(
+            /* webpackChunkName: "AccountAuthorizations" */ './views/settings/account/accountAuthorizations'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route name="Security" path="security/">
         <Route
           componentPromise={() =>
-            import(/* webpackChunkName: "AccountSecurityWrapper" */ './views/settings/account/accountSecurity/accountSecurityWrapper')}
+            import(
+              /* webpackChunkName: "AccountSecurityWrapper" */ './views/settings/account/accountSecurity/accountSecurityWrapper'
+            )
+          }
           component={errorHandler(LazyLoad)}
         >
           <IndexRoute
             componentPromise={() =>
-              import(/* webpackChunkName: "AccountSecurity" */ './views/settings/account/accountSecurity/index')}
+              import(
+                /* webpackChunkName: "AccountSecurity" */ './views/settings/account/accountSecurity/index'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route
             path="session-history/"
             name="Session History"
             componentPromise={() =>
-              import(/* webpackChunkName: "AccountSecuritySessionHistory" */ './views/settings/account/accountSecurity/accountSecuritySessionHistory')}
+              import(
+                /* webpackChunkName: "AccountSecuritySessionHistory" */ './views/settings/account/accountSecurity/accountSecuritySessionHistory'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route
             path="mfa/:authId/"
             name="Details"
             componentPromise={() =>
-              import(/* webpackChunkName: "AccountSecurityDetails" */ './views/settings/account/accountSecurity/accountSecurityDetails')}
+              import(
+                /* webpackChunkName: "AccountSecurityDetails" */ './views/settings/account/accountSecurity/accountSecurityDetails'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
         </Route>
@@ -135,7 +162,10 @@ function routes() {
           path="mfa/:authId/enroll/"
           name="Enroll"
           componentPromise={() =>
-            import(/* webpackChunkName: "AccountSecurityEnroll" */ './views/settings/account/accountSecurity/accountSecurityEnroll')}
+            import(
+              /* webpackChunkName: "AccountSecurityEnroll" */ './views/settings/account/accountSecurity/accountSecurityEnroll'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
@@ -146,14 +176,20 @@ function routes() {
         <Route path="auth-tokens/" name="Auth Tokens">
           <IndexRoute
             componentPromise={() =>
-              import(/* webpackChunkName: "ApiTokensIndex" */ './views/settings/account/apiTokens')}
+              import(
+                /* webpackChunkName: "ApiTokensIndex" */ './views/settings/account/apiTokens'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route
             path="new-token/"
             name="Create New Token"
             componentPromise={() =>
-              import(/* webpackChunkName: "ApiTokenCreate" */ './views/settings/account/apiNewToken')}
+              import(
+                /* webpackChunkName: "ApiTokenCreate" */ './views/settings/account/apiNewToken'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
         </Route>
@@ -161,14 +197,20 @@ function routes() {
         <Route path="applications/" name="Applications">
           <IndexRoute
             componentPromise={() =>
-              import(/* webpackChunkName: "ApiApplications" */ './views/settings/account/apiApplications')}
+              import(
+                /* webpackChunkName: "ApiApplications" */ './views/settings/account/apiApplications'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route
             path=":appId/"
             name="Details"
             componentPromise={() =>
-              import(/* webpackChunkName: "ApiApplicationDetails" */ './views/settings/account/apiApplicationDetails')}
+              import(
+                /* webpackChunkName: "ApiApplicationDetails" */ './views/settings/account/apiApplicationDetails'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
         </Route>
@@ -178,7 +220,10 @@ function routes() {
         path="close-account/"
         name="Close Account"
         componentPromise={() =>
-          import(/* webpackChunkName: "AccountClose" */ './views/settings/account/accountClose')}
+          import(
+            /* webpackChunkName: "AccountClose" */ './views/settings/account/accountClose'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
     </React.Fragment>
@@ -191,14 +236,20 @@ function routes() {
       <IndexRoute
         name="General"
         componentPromise={() =>
-          import(/* webpackChunkName: "OrganizationGeneralSettings" */ './views/settings/organizationGeneralSettings')}
+          import(
+            /* webpackChunkName: "OrganizationGeneralSettings" */ './views/settings/organizationGeneralSettings'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route path="api-keys/" name="API Key">
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationApiKeys" */ './views/settings/organizationApiKeys')}
+            import(
+              /* webpackChunkName: "OrganizationApiKeys" */ './views/settings/organizationApiKeys'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
 
@@ -206,7 +257,10 @@ function routes() {
           path=":apiKey/"
           name="Details"
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationApiKeyDetails" */ './views/settings/organizationApiKeys/organizationApiKeyDetails')}
+            import(
+              /* webpackChunkName: "OrganizationApiKeyDetails" */ './views/settings/organizationApiKeys/organizationApiKeyDetails'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
@@ -215,7 +269,10 @@ function routes() {
         path="audit-log/"
         name="Audit Log"
         componentPromise={() =>
-          import(/* webpackChunkName: "OrganizationAuditLog" */ './views/settings/organizationAuditLog')}
+          import(
+            /* webpackChunkName: "OrganizationAuditLog" */ './views/settings/organizationAuditLog'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
@@ -223,7 +280,10 @@ function routes() {
         path="auth/"
         name="Auth Providers"
         componentPromise={() =>
-          import(/* webpackChunkName: "OrganizationAuth" */ './views/settings/organizationAuth')}
+          import(
+            /* webpackChunkName: "OrganizationAuth" */ './views/settings/organizationAuth'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
@@ -240,7 +300,10 @@ function routes() {
           path="new/"
           name="Invite"
           componentPromise={() =>
-            import(/* webpackChunkName: "InviteMember" */ './views/settings/organizationMembers/inviteMember')}
+            import(
+              /* webpackChunkName: "InviteMember" */ './views/settings/organizationMembers/inviteMember'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
 
@@ -248,7 +311,10 @@ function routes() {
           path=":memberId/"
           name="Details"
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationMemberDetail" */ './views/settings/organizationMembers/organizationMemberDetail')}
+            import(
+              /* webpackChunkName: "OrganizationMemberDetail" */ './views/settings/organizationMembers/organizationMemberDetail'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
@@ -257,21 +323,30 @@ function routes() {
         path="rate-limits/"
         name="Rate Limits"
         componentPromise={() =>
-          import(/* webpackChunkName: "OrganizationRateLimits" */ './views/settings/organizationRateLimits')}
+          import(
+            /* webpackChunkName: "OrganizationRateLimits" */ './views/settings/organizationRateLimits'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route
         path="settings/"
         componentPromise={() =>
-          import(/* webpackChunkName: "OrganizationGeneralSettings" */ './views/settings/organizationGeneralSettings')}
+          import(
+            /* webpackChunkName: "OrganizationGeneralSettings" */ './views/settings/organizationGeneralSettings'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route name="Teams" path="teams/">
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationTeams" */ './views/settings/organizationTeams')}
+            import(
+              /* webpackChunkName: "OrganizationTeams" */ './views/settings/organizationTeams'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
 
@@ -279,7 +354,10 @@ function routes() {
           name="Team"
           path=":teamId/"
           componentPromise={() =>
-            import(/* webpackChunkName: "TeamDetails" */ './views/settings/organizationTeams/teamDetails')}
+            import(
+              /* webpackChunkName: "TeamDetails" */ './views/settings/organizationTeams/teamDetails'
+            )
+          }
           component={errorHandler(LazyLoad)}
         >
           <IndexRedirect to="members/" />
@@ -287,14 +365,20 @@ function routes() {
             path="members/"
             name="Members"
             componentPromise={() =>
-              import(/* webpackChunkName: "TeamMembers" */ './views/settings/organizationTeams/teamMembers')}
+              import(
+                /* webpackChunkName: "TeamMembers" */ './views/settings/organizationTeams/teamMembers'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route
             path="settings/"
             name="settings"
             componentPromise={() =>
-              import(/* webpackChunkName: "TeamSettings" */ './views/settings/organizationTeams/teamSettings')}
+              import(
+                /* webpackChunkName: "TeamSettings" */ './views/settings/organizationTeams/teamSettings'
+              )
+            }
             component={errorHandler(LazyLoad)}
           />
         </Route>
@@ -303,35 +387,50 @@ function routes() {
       <Route name="Integrations" path="integrations/">
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationIntegrations" */ './views/organizationIntegrations')}
+            import(
+              /* webpackChunkName: "OrganizationIntegrations" */ './views/organizationIntegrations'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           name="Configure Integration"
           path=":providerKey/:integrationId/"
           componentPromise={() =>
-            import(/* webpackChunkName: "ConfigureIntegration" */ './views/settings/organizationIntegrations/configureIntegration')}
+            import(
+              /* webpackChunkName: "ConfigureIntegration" */ './views/settings/organizationIntegrations/configureIntegration'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
       <Route name="Developer Settings" path="developer-settings/">
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "OrganizationDeveloperSettings" */ './views/settings/organizationDeveloperSettings')}
+            import(
+              /* webpackChunkName: "OrganizationDeveloperSettings" */ './views/settings/organizationDeveloperSettings'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           name="New Application"
           path="new/"
           componentPromise={() =>
-            import(/* webpackChunkName: "sentryApplicationDetails" */ './views/settings/organizationDeveloperSettings/sentryApplicationDetails')}
+            import(
+              /* webpackChunkName: "sentryApplicationDetails" */ './views/settings/organizationDeveloperSettings/sentryApplicationDetails'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           name="Edit Application"
           path=":appSlug/"
           componentPromise={() =>
-            import(/* webpackChunkName: "sentryApplicationDetails" */ './views/settings/organizationDeveloperSettings/sentryApplicationDetails')}
+            import(
+              /* webpackChunkName: "sentryApplicationDetails" */ './views/settings/organizationDeveloperSettings/sentryApplicationDetails'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
       </Route>
@@ -343,22 +442,29 @@ function routes() {
       <Route
         path="/accept-transfer/"
         componentPromise={() =>
-          import(/* webpackChunkName: "AcceptProjectTransfer" */ 'app/views/acceptProjectTransfer')}
+          import(
+            /* webpackChunkName: "AcceptProjectTransfer" */ 'app/views/acceptProjectTransfer'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
       <Route
         path="/extensions/external-install/:providerId/:installationId"
         componentPromise={() =>
-          import(/* webpackChunkName: "AcceptProjectTransfer" */ 'app/views/integrationInstallation')}
+          import(
+            /* webpackChunkName: "AcceptProjectTransfer" */ 'app/views/integrationInstallation'
+          )
+        }
         component={errorHandler(LazyLoad)}
       />
 
       <Route
         path="/extensions/vsts/link/"
         getComponent={(loc, cb) =>
-          import(/* webpackChunkName: "VSTSOrganizationLink" */ './views/vstsOrganizationLink').then(
-            lazyLoad(cb)
-          )}
+          import(
+            /* webpackChunkName: "VSTSOrganizationLink" */ './views/vstsOrganizationLink'
+          ).then(lazyLoad(cb))
+        }
       />
 
       <Redirect from="/account/" to="/settings/account/details/" />
@@ -366,18 +472,20 @@ function routes() {
       <Route path="/settings/" name="Settings" component={SettingsWrapper}>
         <IndexRoute
           getComponent={(loc, cb) =>
-            import(/* webpackChunkName: "SettingsIndex" */ './views/settings/settingsIndex').then(
-              lazyLoad(cb)
-            )}
+            import(
+              /* webpackChunkName: "SettingsIndex" */ './views/settings/settingsIndex'
+            ).then(lazyLoad(cb))
+          }
         />
 
         <Route
           path="account/"
           name="Account"
           getComponent={(loc, cb) =>
-            import(/* webpackChunkName: "AccountSettingsLayout" */ './views/settings/account/accountSettingsLayout').then(
-              lazyLoad(cb)
-            )}
+            import(
+              /* webpackChunkName: "AccountSettingsLayout" */ './views/settings/account/accountSettingsLayout'
+            ).then(lazyLoad(cb))
+          }
         >
           {accountSettingsRoutes}
         </Route>
@@ -389,9 +497,10 @@ function routes() {
         >
           <Route
             getComponent={(loc, cb) =>
-              import(/* webpackChunkName: "OrganizationSettingsLayout" */ './views/settings/organization/organizationSettingsLayout').then(
-                lazyLoad(cb)
-              )}
+              import(
+                /* webpackChunkName: "OrganizationSettingsLayout" */ './views/settings/organization/organizationSettingsLayout'
+              ).then(lazyLoad(cb))
+            }
           >
             {hooksOrgRoutes}
             {orgSettingsRoutes}
@@ -402,60 +511,78 @@ function routes() {
       <Route
         path="/manage/"
         componentPromise={() =>
-          import(/* webpackChunkName: "AdminLayout" */ 'app/views/admin/adminLayout')}
+          import(/* webpackChunkName: "AdminLayout" */ 'app/views/admin/adminLayout')
+        }
         component={errorHandler(LazyLoad)}
       >
         <IndexRoute
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminOverview" */ 'app/views/admin/adminOverview')}
+            import(
+              /* webpackChunkName: "AdminOverview" */ 'app/views/admin/adminOverview'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="buffer/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminBuffer" */ 'app/views/admin/adminBuffer')}
+            import(/* webpackChunkName: "AdminBuffer" */ 'app/views/admin/adminBuffer')
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="relays/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminRelays" */ 'app/views/admin/adminRelays')}
+            import(/* webpackChunkName: "AdminRelays" */ 'app/views/admin/adminRelays')
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="organizations/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminOrganizations" */ 'app/views/admin/adminOrganizations')}
+            import(
+              /* webpackChunkName: "AdminOrganizations" */ 'app/views/admin/adminOrganizations'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="projects/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminProjects" */ 'app/views/admin/adminProjects')}
+            import(
+              /* webpackChunkName: "AdminProjects" */ 'app/views/admin/adminProjects'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="queue/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminQueue" */ 'app/views/admin/adminQueue')}
+            import(/* webpackChunkName: "AdminQueue" */ 'app/views/admin/adminQueue')
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="quotas/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminQuotas" */ 'app/views/admin/adminQuotas')}
+            import(/* webpackChunkName: "AdminQuotas" */ 'app/views/admin/adminQuotas')
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="settings/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminSettings" */ 'app/views/admin/adminSettings')}
+            import(
+              /* webpackChunkName: "AdminSettings" */ 'app/views/admin/adminSettings'
+            )
+          }
           component={errorHandler(LazyLoad)}
         />
         <Route
           path="users/"
           componentPromise={() =>
-            import(/* webpackChunkName: "AdminUsers" */ 'app/views/admin/adminUsers')}
+            import(/* webpackChunkName: "AdminUsers" */ 'app/views/admin/adminUsers')
+          }
           component={errorHandler(LazyLoad)}
         />
         {hooksAdminRoutes}
@@ -481,7 +608,10 @@ function routes() {
             <Route
               path="activity/"
               componentPromise={() =>
-                import(/* webpackChunkName: "WorkBatchActivity" */ './views/workBatchDetails/shared/workBatchActivity')}
+                import(
+                  /* webpackChunkName: "WorkBatchActivity" */ './views/workBatchDetails/shared/workBatchActivity'
+                )
+              }
               component={errorHandler(LazyLoad)}
             />
           </Route>
@@ -489,19 +619,28 @@ function routes() {
           <Route
             path="/organizations/:orgId/dashboards/"
             componentPromise={() =>
-              import(/* webpackChunkName: "OrganizationDashboardContainer" */ './views/organizationDashboard')}
+              import(
+                /* webpackChunkName: "OrganizationDashboardContainer" */ './views/organizationDashboard'
+              )
+            }
             component={errorHandler(LazyLoad)}
           >
             <IndexRoute
               componentPromise={() =>
-                import(/* webpackChunkName: "OverviewDashboard" */ './views/organizationDashboard/overviewDashboard')}
+                import(
+                  /* webpackChunkName: "OverviewDashboard" */ './views/organizationDashboard/overviewDashboard'
+                )
+              }
               component={errorHandler(LazyLoad)}
             />
           </Route>
           <Route
             path="/organizations/:orgId/discover/"
             componentPromise={() =>
-              import(/* webpackChunkName: "OrganizationDiscover" */ './views/organizationDiscover/index')}
+              import(
+                /* webpackChunkName: "OrganizationDiscover" */ './views/organizationDiscover/index'
+              )
+            }
             component={errorHandler(LazyLoad)}
           >
             <Redirect path="saved/" to="/organizations/:orgId/discover/" />
@@ -514,31 +653,46 @@ function routes() {
           <Route
             path="/organizations/:orgId/events/"
             componentPromise={() =>
-              import(/* webpackChunkName: "OrganizationEventsContainer" */ './views/organizationEvents')}
+              import(
+                /* webpackChunkName: "OrganizationEventsContainer" */ './views/organizationEvents'
+              )
+            }
             component={errorHandler(LazyLoad)}
           >
             <IndexRoute
               componentPromise={() =>
-                import(/* webpackChunkName: "OrganizationEvents" */ './views/organizationEvents/events')}
+                import(
+                  /* webpackChunkName: "OrganizationEvents" */ './views/organizationEvents/events'
+                )
+              }
               component={errorHandler(LazyLoad)}
             />
           </Route>
           <Route
             path="/organizations/:orgId/issues/"
             componentPromise={() =>
-              import(/* webpackChunkName: "OrganizationStreamContainer" */ './views/organizationStream/container')}
+              import(
+                /* webpackChunkName: "OrganizationStreamContainer" */ './views/organizationStream/container'
+              )
+            }
             component={errorHandler(LazyLoad)}
           >
             <Redirect from="/organizations/:orgId/" to="/organizations/:orgId/issues/" />
             <IndexRoute
               componentPromise={() =>
-                import(/* webpackChunkName: "OrganizationStreamOverview" */ './views/organizationStream/overview')}
+                import(
+                  /* webpackChunkName: "OrganizationStreamOverview" */ './views/organizationStream/overview'
+                )
+              }
               component={errorHandler(LazyLoad)}
             />
             <Route
               path="searches/:searchId/"
               componentPromise={() =>
-                import(/* webpackChunkName: "OrganizationStreamOverview" */ './views/organizationStream/overview')}
+                import(
+                  /* webpackChunkName: "OrganizationStreamOverview" */ './views/organizationStream/overview'
+                )
+              }
               component={errorHandler(LazyLoad)}
             />
           </Route>
@@ -560,7 +714,8 @@ function routes() {
           <Route
             path="/organizations/:orgId/teams/new/"
             componentPromise={() =>
-              import(/* webpackChunkName: "TeamCreate" */ './views/teamCreate')}
+              import(/* webpackChunkName: "TeamCreate" */ './views/teamCreate')
+            }
             component={errorHandler(LazyLoad)}
           />
           <Route path="/organizations/:orgId/" component={OrganizationHomeContainer}>

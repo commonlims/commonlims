@@ -19,7 +19,7 @@ export function fetchGroupEventAndMarkSeen(orgId, projectId, groupId, eventId) {
 
   const promise = api.requestPromise(url);
 
-  promise.then(data => {
+  promise.then((data) => {
     api.bulkUpdate({
       orgId,
       projectId,

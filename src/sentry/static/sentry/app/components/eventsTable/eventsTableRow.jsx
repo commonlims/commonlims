@@ -18,7 +18,7 @@ class EventsTableRow extends React.Component {
     tagList: PropTypes.arrayOf(CustomPropTypes.Tag),
   };
 
-  getEventTitle = event => {
+  getEventTitle = (event) => {
     switch (event.type) {
       case 'error':
         if (event.metadata.type && event.metadata.value) {
@@ -39,13 +39,13 @@ class EventsTableRow extends React.Component {
     if (!event.crashFile) {
       return null;
     }
-    const url = `/api/0/projects/${orgId}/${projectId}/events/${event.id}/attachments/${event
-      .crashFile.id}/?download=1`;
+    const url = `/api/0/projects/${orgId}/${projectId}/events/${event.id}/attachments/${event.crashFile.id}/?download=1`;
     const crashFileType =
       event.crashFile.type === 'event.minidump' ? 'Minidump' : 'Crash file';
     return (
       <small>
-        {crashFileType}: <a href={url}>{event.crashFile.name}</a> (<FileSize bytes={event.crashFile.size} />)
+        {crashFileType}: <a href={url}>{event.crashFile.name}</a> (
+        <FileSize bytes={event.crashFile.size} />)
       </small>
     );
   }
@@ -53,7 +53,7 @@ class EventsTableRow extends React.Component {
   render() {
     const {className, event, orgId, projectId, groupId, tagList, hasUser} = this.props;
     const tagMap = {};
-    event.tags.forEach(tag => {
+    event.tags.forEach((tag) => {
       tagMap[tag.key] = tag.value;
     });
 
@@ -82,7 +82,7 @@ class EventsTableRow extends React.Component {
           </td>
         )}
 
-        {tagList.map(tag => {
+        {tagList.map((tag) => {
           return (
             <td key={tag.key}>
               <div>

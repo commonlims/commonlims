@@ -37,7 +37,7 @@ class RequestInterface extends React.Component {
     return !this.props.data.method || !this.props.data.url;
   };
 
-  toggleView = value => {
+  toggleView = (value) => {
     this.setState({
       view: value,
     });
@@ -81,8 +81,10 @@ class RequestInterface extends React.Component {
             className={(view === 'formatted' ? 'active' : '') + ' btn btn-default btn-sm'}
             onClick={this.toggleView.bind(this, 'formatted')}
           >
-            {/* Translators: this means "formatted" rendering (fancy tables) */
-            t('Formatted')}
+            {
+              /* Translators: this means "formatted" rendering (fancy tables) */
+              t('Formatted')
+            }
           </a>
           <a
             className={(view === 'curl' ? 'active' : '') + ' btn btn-default btn-sm'}

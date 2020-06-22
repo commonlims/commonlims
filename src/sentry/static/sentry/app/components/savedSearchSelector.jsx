@@ -184,7 +184,7 @@ const SavedSearchSelector = withApi(
       if (!searchId) {
         return t('Custom Search');
       }
-      const results = this.props.savedSearchList.filter(search => {
+      const results = this.props.savedSearchList.filter((search) => {
         return searchId === search.id;
       });
       return results.length ? results[0].name : t('Custom Search');
@@ -194,7 +194,7 @@ const SavedSearchSelector = withApi(
       const {orgId, projectId, queryCount, queryMaxCount} = this.props;
       const hasProject = !!projectId;
 
-      const children = this.props.savedSearchList.map(search => {
+      const children = this.props.savedSearchList.map((search) => {
         const url = hasProject
           ? `/${orgId}/${projectId}/searches/${search.id}/`
           : `/organizations/${orgId}/issues/searches/${search.id}/`;
@@ -271,7 +271,7 @@ const StyledMenuItem = styled(MenuItem)`
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
     padding: 0;
     background: inherit;
   }

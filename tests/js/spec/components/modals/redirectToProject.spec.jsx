@@ -5,7 +5,7 @@ import {RedirectToProjectModal} from 'app/components/modals/redirectToProject';
 import {mount} from 'enzyme';
 
 jest.unmock('app/utils/recreateRoute');
-describe('RedirectToProjectModal', function() {
+describe('RedirectToProjectModal', function () {
   jest.useFakeTimers();
   const routes = [
     {path: '/', childRoutes: []},
@@ -13,15 +13,15 @@ describe('RedirectToProjectModal', function() {
     {name: 'Projects', path: ':projectId/', childRoutes: []},
   ];
 
-  beforeEach(function() {
+  beforeEach(function () {
     sinon.stub(window.location, 'assign');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     window.location.assign.restore();
   });
 
-  it('has timer to redirect to new slug after mounting', function() {
+  it('has timer to redirect to new slug after mounting', function () {
     mount(
       <RedirectToProjectModal
         routes={routes}

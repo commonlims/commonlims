@@ -41,9 +41,8 @@ export default class SavedQueries extends React.Component {
 
     // Update query in the list with new data
     if (nextProps.savedQuery && nextProps.savedQuery !== this.props.savedQuery) {
-      const data = this.state.data.map(
-        savedQuery =>
-          savedQuery.id === nextProps.savedQuery.id ? nextProps.savedQuery : savedQuery
+      const data = this.state.data.map((savedQuery) =>
+        savedQuery.id === nextProps.savedQuery.id ? nextProps.savedQuery : savedQuery
       );
       this.setState({data});
     }
@@ -62,7 +61,7 @@ export default class SavedQueries extends React.Component {
 
   fetchAll() {
     fetchSavedQueries(this.props.organization)
-      .then(data => {
+      .then((data) => {
         this.setState({isLoading: false, data});
       })
       .catch(() => {
@@ -115,7 +114,7 @@ export default class SavedQueries extends React.Component {
       return this.renderEmpty();
     }
 
-    return data.map(query => {
+    return data.map((query) => {
       return query.id !== savedQueryId ? this.renderListItem(query) : null;
     });
   }

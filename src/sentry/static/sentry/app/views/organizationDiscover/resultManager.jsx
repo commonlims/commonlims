@@ -29,7 +29,7 @@ export default function createResultManager(queryBuilder) {
     const cursor = data.baseQuery[pageToFetch];
 
     if (cursor) {
-      return queryBuilder.fetch(baseQuery, cursor).then(resp => {
+      return queryBuilder.fetch(baseQuery, cursor).then((resp) => {
         data.baseQuery.current = cursor;
         data.baseQuery.query = query;
         data.baseQuery.data = resp;
@@ -71,7 +71,7 @@ export default function createResultManager(queryBuilder) {
       promises.push(queryBuilder.fetch(byDayQuery));
     }
 
-    return Promise.all(promises).then(resp => {
+    return Promise.all(promises).then((resp) => {
       data.baseQuery.query = query;
       data.baseQuery.data = resp[0];
       data.baseQuery.current = '0:0:1';

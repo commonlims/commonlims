@@ -85,7 +85,7 @@ class OrganizationAuditLog extends AsyncView {
     return `${org.name} Audit Log`;
   }
 
-  handleEventSelect = value => {
+  handleEventSelect = (value) => {
     // Dont update if event has not changed
     if (this.props.location.query.event === value) {
       return;

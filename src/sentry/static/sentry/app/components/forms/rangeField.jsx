@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import InputField from 'app/components/forms/inputField';
 
 export default class RangeField extends InputField {
-  static formatMinutes = value => {
+  static formatMinutes = (value) => {
     value = value / 60;
     return `${value} minute${value != 1 ? 's' : ''}`;
   };
@@ -21,7 +21,7 @@ export default class RangeField extends InputField {
 
   static defaultProps = {
     ...InputField.defaultProps,
-    formatLabel: value => value,
+    formatLabel: (value) => value,
     min: 0,
     max: 100,
     step: 1,

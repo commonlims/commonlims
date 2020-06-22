@@ -44,24 +44,24 @@ export const substanceSearchEntriesGetSuccess = (
   };
 };
 
-export const substanceSearchEntriesGetFailure = err => ({
+export const substanceSearchEntriesGetFailure = (err) => ({
   type: SUBSTANCE_SEARCH_ENTRIES_GET_FAILURE,
   message: err,
 });
 
-export const substanceSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
+export const substanceSearchEntriesGet = (search, groupBy, cursor) => (dispatch) => {
   dispatch(substanceSearchEntriesGetRequest(search, groupBy, cursor));
 
   const restCall = getRestcall(search, groupBy, cursor);
   return axios
     .get(restCall.endpoint, restCall.request)
-    .then(res => {
+    .then((res) => {
       dispatch(substanceSearchEntriesGetSuccess(res.data, res.headers.link, groupBy));
     })
-    .catch(err => dispatch(substanceSearchEntriesGetFailure(err)));
+    .catch((err) => dispatch(substanceSearchEntriesGetFailure(err)));
 };
 
-export const substanceSearchEntriesToggleSelectAll = doSelect => {
+export const substanceSearchEntriesToggleSelectAll = (doSelect) => {
   return {
     type: SUBSTANCE_SEARCH_ENTRIES_TOGGLE_SELECT_ALL,
     doSelect,

@@ -57,7 +57,7 @@ const TodoItem = createReactClass({
     } else if (task.featureLocation === 'absolute') {
       learnMoreUrl = task.location;
     } else {
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('props', this.props);
         scope.setExtra('state', this.state);
         Sentry.captureMessage('No learnMoreUrl created for this featureLocation');

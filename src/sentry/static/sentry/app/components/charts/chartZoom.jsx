@@ -11,7 +11,7 @@ import DataZoom from 'app/components/charts/components/dataZoom';
 import SentryTypes from 'app/sentryTypes';
 import ToolBox from 'app/components/charts/components/toolBox';
 
-const getDate = date =>
+const getDate = (date) =>
   date ? moment.utc(date).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS) : null;
 
 /**
@@ -69,7 +69,7 @@ class ChartZoom extends React.Component {
    * Save current period state from period in props to be used
    * in handling chart's zoom history state
    */
-  saveCurrentPeriod = props => {
+  saveCurrentPeriod = (props) => {
     this.currentPeriod = {
       period: props.period,
       start: getDate(props.start),
@@ -124,7 +124,7 @@ class ChartZoom extends React.Component {
   /**
    * Enable zoom immediately instead of having to toggle to zoom
    */
-  handleChartReady = chart => {
+  handleChartReady = (chart) => {
     chart.dispatchAction({
       type: 'takeGlobalCursor',
       key: 'dataZoomSelect',

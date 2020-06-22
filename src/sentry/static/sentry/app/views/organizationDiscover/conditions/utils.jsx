@@ -20,7 +20,7 @@ export function isValidCondition(condition, cols) {
   const isColValid = columns.has(condition[0]);
   const isOperatorValid = allOperators.has(condition[1]);
 
-  const colType = (cols.find(col => col.name === condition[0]) || {}).type;
+  const colType = (cols.find((col) => col.name === condition[0]) || {}).type;
 
   const isValueValid =
     specialConditions.has(condition[1]) ||
@@ -31,23 +31,23 @@ export function isValidCondition(condition, cols) {
 }
 
 /***
-* Converts external Snuba format to internal format for dropdown
-*
-* @param {Array} condition Condition in external Snuba format
-* @param {Array} cols List of columns with name and type e.g. {name: 'message', type: 'string}
-* @returns {String}
-*/
+ * Converts external Snuba format to internal format for dropdown
+ *
+ * @param {Array} condition Condition in external Snuba format
+ * @param {Array} cols List of columns with name and type e.g. {name: 'message', type: 'string}
+ * @returns {String}
+ */
 export function getInternal(external) {
   return external.join(' ').trim();
 }
 
 /***
-* Converts internal dropdown format to external Snuba format
-*
-* @param {String} internal Condition in internal format
-* @param {Array} {Array} cols List of columns with name and type e.g. {name: 'message', type: 'string}
-* @returns {Array} condition Condition in external Snuba format
-*/
+ * Converts internal dropdown format to external Snuba format
+ *
+ * @param {String} internal Condition in internal format
+ * @param {Array} {Array} cols List of columns with name and type e.g. {name: 'message', type: 'string}
+ * @returns {Array} condition Condition in external Snuba format
+ */
 export function getExternal(internal, columns) {
   internal = internal || '';
   const external = [null, null, null];
@@ -68,7 +68,7 @@ export function getExternal(internal, columns) {
   if (specialConditions.has(remaining)) {
     external[1] = remaining;
   } else {
-    CONDITION_OPERATORS.forEach(operator => {
+    CONDITION_OPERATORS.forEach((operator) => {
       if (remaining.startsWith(operator)) {
         external[1] = operator;
       }
@@ -109,12 +109,12 @@ export function getExternal(internal, columns) {
 }
 
 /**
-* Transform casing of condition operators to uppercase. Applies to the operators
-* IS NULL, IS NOT NULL, LIKE and NOT LIKE
-*
-* @param {String} input Condition string as input by user
-* @returns {String}
-*/
+ * Transform casing of condition operators to uppercase. Applies to the operators
+ * IS NULL, IS NOT NULL, LIKE and NOT LIKE
+ *
+ * @param {String} input Condition string as input by user
+ * @returns {String}
+ */
 
 export function ignoreCase(input = '') {
   const colName = input.split(' ')[0];

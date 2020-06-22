@@ -61,7 +61,7 @@ const ErrorRobot = createReactClass({
             sampleIssueId: (data.length > 0 && data[0].id) || '',
           });
         },
-        error: err => {
+        error: (err) => {
           let error = err.responseJSON || true;
           error = error.detail || true;
           this.setState({
@@ -83,7 +83,7 @@ const ErrorRobot = createReactClass({
     });
 
     sendSampleEvent(this.api, org.slug, project.slug)
-      .then(data => {
+      .then((data) => {
         browserHistory.push(`/${org.slug}/${project.slug}/issues/${data.groupID}/`);
       })
       .catch(() => addErrorMessage(t('Unable to create sample event')));
@@ -142,8 +142,9 @@ const ErrorRobot = createReactClass({
                 data-test-id="install-instructions"
                 priority="primary"
                 size="large"
-                to={`/${org.slug}/${project.slug}/getting-started/${project.platform ||
-                  ''}`}
+                to={`/${org.slug}/${project.slug}/getting-started/${
+                  project.platform || ''
+                }`}
               >
                 {t('Installation Instructions')}
               </Button>
@@ -161,7 +162,7 @@ export default ErrorRobot;
 const ErrorRobotWrapper = styled('div')`
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 0 0 3px 3px;
-  ${p =>
+  ${(p) =>
     p.gradient
       ? `
           background-image: linear-gradient(to bottom, #F8F9FA, #ffffff);

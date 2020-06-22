@@ -45,7 +45,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return !!transitionSourceLocations.find(tl => tl.equals(location));
+    return !!transitionSourceLocations.find((tl) => tl.equals(location));
   }
 
   isActiveTransitionSource(location) {
@@ -65,7 +65,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return !!transitionTargetLocations.find(tl => tl.equals(location));
+    return !!transitionTargetLocations.find((tl) => tl.equals(location));
   }
 
   isTransitionTargetOfHoveredSample(location) {
@@ -75,7 +75,7 @@ export class SampleContainer extends React.Component {
       return false;
     }
 
-    return !!transitionTargetLocationsOfHoveredSample.find(tl => tl.equals(location));
+    return !!transitionTargetLocationsOfHoveredSample.find((tl) => tl.equals(location));
   }
 
   onMouseOut() {
@@ -118,11 +118,11 @@ export class SampleContainer extends React.Component {
   renderSampleWell(row, col, sampleId) {
     const {containerId, onWellClicked, onWellMouseOver} = this.props;
 
-    const handleClick = location => {
+    const handleClick = (location) => {
       onWellClicked(location, sampleId);
     };
 
-    const handleMouseOver = location => {
+    const handleMouseOver = (location) => {
       if (!this.isHoveredRowOrColumn(row, col)) {
         this.setState({hoverRow: row, hoverCol: col});
       }
@@ -157,10 +157,10 @@ export class SampleContainer extends React.Component {
 
     for (let r = 0; r < numRows; r++) {
       const row = [this.renderRowHeader(r)];
-      const rowSamples = samples.filter(s => s.getLocation().getRow() === r);
+      const rowSamples = samples.filter((s) => s.getLocation().getRow() === r);
 
       for (let c = 0; c < numColumns; c++) {
-        const sample = rowSamples.find(s => s.getLocation().getColumn() === c);
+        const sample = rowSamples.find((s) => s.getLocation().getColumn() === c);
         const sampleId = sample ? sample.id : null;
         row.push(this.renderSampleWell(r, c, sampleId));
       }

@@ -12,36 +12,36 @@ export const workBatchesGetRequest = () => {
   };
 };
 
-export const workBatchesGetSuccess = workBatches => {
+export const workBatchesGetSuccess = (workBatches) => {
   return {
     type: WORK_BATCHES_GET_SUCCESS,
     workBatches,
   };
 };
 
-export const workBatchesGetFailure = err => ({
+export const workBatchesGetFailure = (err) => ({
   type: WORK_BATCHES_GET_FAILURE,
   message: err,
 });
 
-export const workBatchesGet = () => dispatch => {
+export const workBatchesGet = () => (dispatch) => {
   dispatch(workBatchesGetRequest());
   // TODO: create a new API client to replace api.jsx
   // and use axios instead of jquery there
   return axios
     .get('/api/0/organizations/lab/work-batches/')
-    .then(res => dispatch(workBatchesGetSuccess(res.data)))
-    .catch(err => dispatch(workBatchesGetFailure(err)));
+    .then((res) => dispatch(workBatchesGetSuccess(res.data)))
+    .catch((err) => dispatch(workBatchesGetFailure(err)));
 };
 
-export const workBatchToggleSelect = id => {
+export const workBatchToggleSelect = (id) => {
   return {
     type: WORK_BATCH_TOGGLE_SELECT,
     id,
   };
 };
 
-export const workBatchesToggleSelectAll = doSelect => {
+export const workBatchesToggleSelectAll = (doSelect) => {
   return {
     type: WORK_BATCHES_TOGGLE_SELECT_ALL,
     doSelect,

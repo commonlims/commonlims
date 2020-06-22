@@ -96,15 +96,16 @@ const SampleExtraDetails = createReactClass({
             );
           })}
 
-        {showAssignee &&
-          assignedTo && <Box>{tct('Assigned to [name]', {name: assignedTo.name})}</Box>}
+        {showAssignee && assignedTo && (
+          <Box>{tct('Assigned to [name]', {name: assignedTo.name})}</Box>
+        )}
       </GroupExtra>
     );
   },
 });
 
 const GroupExtra = styled(Flex)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   font-size: 12px;
   a {
     color: inherit;
@@ -112,12 +113,12 @@ const GroupExtra = styled(Flex)`
 `;
 
 const GroupExtraCommentsAndLogger = styled(Flex)`
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
 `;
 
 const GroupShortId = styled(ShortId)`
   font-size: 12px;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;
 
 const GroupExtraIcon = styled.span`

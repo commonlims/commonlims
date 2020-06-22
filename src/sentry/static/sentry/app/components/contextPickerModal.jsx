@@ -178,9 +178,7 @@ class ContextPickerModal extends React.Component {
     }
 
     // eslint-disable-next-line react/no-find-dom-node
-    ReactDOM.findDOMNode(this.projectSelect)
-      .querySelector('input')
-      .focus();
+    ReactDOM.findDOMNode(this.projectSelect).querySelector('input').focus();
   };
 
   focusOrganizationSelector = () => {
@@ -189,9 +187,7 @@ class ContextPickerModal extends React.Component {
     }
 
     // eslint-disable-next-line react/no-find-dom-node
-    ReactDOM.findDOMNode(this.orgSelect)
-      .querySelector('input')
-      .focus();
+    ReactDOM.findDOMNode(this.orgSelect).querySelector('input').focus();
   };
 
   handleSelectOrganization = ({value}) => {
@@ -254,7 +250,7 @@ class ContextPickerModal extends React.Component {
             <div>{t('Select an organization/project to continue')}</div>
             {needOrg && (
               <StyledSelectControl
-                innerRef={ref => {
+                innerRef={(ref) => {
                   this.orgSelect = ref;
                   if (shouldShowProjectSelector) {
                     return;
@@ -270,22 +266,20 @@ class ContextPickerModal extends React.Component {
               />
             )}
 
-            {latestContext.organization &&
-              needProject &&
-              projects && (
-                <StyledSelectControl
-                  innerRef={ref => {
-                    this.projectSelect = ref;
-                    this.focusProjectSelector();
-                  }}
-                  placeholder="Select a Project"
-                  name="project"
-                  value=""
-                  openOnFocus
-                  options={projects.map(({slug}) => ({label: slug, value: slug}))}
-                  onChange={this.handleSelectProject}
-                />
-              )}
+            {latestContext.organization && needProject && projects && (
+              <StyledSelectControl
+                innerRef={(ref) => {
+                  this.projectSelect = ref;
+                  this.focusProjectSelector();
+                }}
+                placeholder="Select a Project"
+                name="project"
+                value=""
+                openOnFocus
+                options={projects.map(({slug}) => ({label: slug, value: slug}))}
+                onChange={this.handleSelectProject}
+              />
+            )}
           </Body>
         </React.Fragment>
       </div>

@@ -41,18 +41,18 @@ class SettingsPageHeading extends React.Component {
   }
 }
 
-const Title = styled(Flex, {shouldForwardProp: p => p !== 'styled'})`
-  ${p =>
+const Title = styled(Flex, {shouldForwardProp: (p) => p !== 'styled'})`
+  ${(p) =>
     !p.styled &&
     `
     font-size: 20px;
     font-weight: bold;`};
-  margin: ${p => (p.tabs ? `${space(4)} 0 ${space(2)}` : `${space(4)} 0`)};
+  margin: ${(p) => (p.tabs ? `${space(4)} 0 ${space(2)}` : `${space(4)} 0`)};
   flex: 1;
 `;
 
 const Action = styled('div')`
-  ${p => (p.tabs ? `margin-top: ${space(2)}` : null)};
+  ${(p) => (p.tabs ? `margin-top: ${space(2)}` : null)};
 `;
 
 const Wrapper = styled.div`

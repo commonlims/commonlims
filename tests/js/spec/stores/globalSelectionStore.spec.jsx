@@ -12,17 +12,17 @@ jest.mock('app/utils/localStorage', () => {
   };
 });
 
-describe('GlobalSelectionStore', function() {
+describe('GlobalSelectionStore', function () {
   const organization = TestStubs.Organization({
     features: ['global-views'],
     projects: [TestStubs.Project({id: '5'})],
   });
 
-  afterEach(function() {
+  afterEach(function () {
     GlobalSelectionStore.reset();
   });
 
-  it('get()', function() {
+  it('get()', function () {
     expect(GlobalSelectionStore.get()).toEqual({
       projects: [],
       environments: [],
@@ -30,14 +30,14 @@ describe('GlobalSelectionStore', function() {
     });
   });
 
-  it('updateProjects()', async function() {
+  it('updateProjects()', async function () {
     expect(GlobalSelectionStore.get().projects).toEqual([]);
     updateProjects([1]);
     await tick();
     expect(GlobalSelectionStore.get().projects).toEqual([1]);
   });
 
-  it('updateDateTime()', async function() {
+  it('updateDateTime()', async function () {
     expect(GlobalSelectionStore.get().datetime.period).toEqual('14d');
     updateDateTime({period: '2h', start: null, end: null});
     await tick();
@@ -49,14 +49,14 @@ describe('GlobalSelectionStore', function() {
     });
   });
 
-  it('updateEnvironments()', async function() {
+  it('updateEnvironments()', async function () {
     expect(GlobalSelectionStore.get().environments).toEqual([]);
     updateEnvironments(['alpha']);
     await tick();
     expect(GlobalSelectionStore.get().environments).toEqual(['alpha']);
   });
 
-  it('loadInitialData() - queryParams', async function() {
+  it('loadInitialData() - queryParams', async function () {
     GlobalSelectionStore.loadInitialData(organization, {
       project: '5',
       environment: ['staging'],
@@ -68,7 +68,7 @@ describe('GlobalSelectionStore', function() {
     expect(GlobalSelectionStore.get().environments).toEqual(['staging']);
   });
 
-  it('loadInitialData() - localStorage', async function() {
+  it('loadInitialData() - localStorage', async function () {
     GlobalSelectionStore.loadInitialData(organization, {});
     await tick();
 
@@ -76,7 +76,7 @@ describe('GlobalSelectionStore', function() {
     expect(GlobalSelectionStore.get().environments).toEqual(['staging']);
   });
 
-  it('loadInitialData() - defaults used if invalid', async function() {
+  it('loadInitialData() - defaults used if invalid', async function () {
     GlobalSelectionStore.loadInitialData(organization, {project: [2]});
     await tick();
 

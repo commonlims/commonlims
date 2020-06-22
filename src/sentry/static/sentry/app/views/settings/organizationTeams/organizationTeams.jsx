@@ -54,7 +54,8 @@ class OrganizationTeams extends React.Component {
         onClick={() =>
           openCreateTeamModal({
             organization,
-          })}
+          })
+        }
         icon="icon-circle-add"
       >
         {t('Create Team')}
@@ -64,8 +65,8 @@ class OrganizationTeams extends React.Component {
     const teamRoute = routes.find(({path}) => path === 'teams/');
     const urlPrefix = recreateRoute(teamRoute, {routes, params, stepBack: -1});
 
-    const activeTeamIds = new Set(activeTeams.map(team => team.id));
-    const otherTeams = allTeams.filter(team => !activeTeamIds.has(team.id));
+    const activeTeamIds = new Set(activeTeams.map((team) => team.id));
+    const otherTeams = allTeams.filter((team) => !activeTeamIds.has(team.id));
 
     return (
       <div className="team-list">

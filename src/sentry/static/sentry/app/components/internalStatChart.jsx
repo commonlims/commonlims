@@ -64,14 +64,14 @@ export default createReactClass({
         resolution: this.props.resolution,
         key: this.props.stat,
       },
-      success: data => {
+      success: (data) => {
         this.setState({
           data,
           loading: false,
           error: false,
         });
       },
-      error: data => {
+      error: (data) => {
         this.setState({
           error: true,
         });

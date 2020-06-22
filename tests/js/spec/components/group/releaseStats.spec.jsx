@@ -5,9 +5,9 @@ import ConfigStore from 'app/stores/configStore';
 import GroupReleaseStats from 'app/components/group/releaseStats';
 import EnvironmentStore from 'app/stores/environmentStore';
 
-describe('GroupReleaseStats', function() {
+describe('GroupReleaseStats', function () {
   let component;
-  beforeEach(function() {
+  beforeEach(function () {
     // Set timezone for snapshot
     ConfigStore.loadInitialData({
       user: {
@@ -32,7 +32,7 @@ describe('GroupReleaseStats', function() {
     );
   });
 
-  it('renders', function() {
+  it('renders', function () {
     EnvironmentStore.loadInitialData(TestStubs.Environments());
     expect(component).toMatchSnapshot();
   });

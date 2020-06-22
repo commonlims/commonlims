@@ -52,7 +52,7 @@ export default class BooleanField extends InputField {
                 {({open}) => (
                   <Switch
                     {...switchProps}
-                    toggle={e => {
+                    toggle={(e) => {
                       // If we have a `confirm` prop and enabling switch
                       // Then show confirm dialog, otherwise propagate change as normal
                       if (confirm[!value]) {

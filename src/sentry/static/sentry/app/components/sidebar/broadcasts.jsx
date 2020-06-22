@@ -65,7 +65,7 @@ const Broadcasts = createReactClass({
     }
 
     return getAllBroadcasts(this.api)
-      .then(data => {
+      .then((data) => {
         this.setState({
           broadcasts: data || [],
           loading: false,
@@ -113,10 +113,10 @@ const Broadcasts = createReactClass({
     }
 
     return this.state.broadcasts
-      .filter(item => {
+      .filter((item) => {
         return !item.hasSeen;
       })
-      .map(item => {
+      .map((item) => {
         return item.id;
       });
   },
@@ -127,9 +127,9 @@ const Broadcasts = createReactClass({
       return;
     }
 
-    markBroadcastsAsSeen(this.api, unseenBroadcastIds).then(data => {
-      this.setState(state => ({
-        broadcasts: state.broadcasts.map(item => {
+    markBroadcastsAsSeen(this.api, unseenBroadcastIds).then((data) => {
+      this.setState((state) => ({
+        broadcasts: state.broadcasts.map((item) => {
           item.hasSeen = true;
           return item;
         }),
@@ -156,36 +156,35 @@ const Broadcasts = createReactClass({
           onClick={this.handleShowPanel}
         />
 
-        {showPanel &&
-          currentPanel == 'broadcasts' && (
-            <SidebarPanel
-              data-test-id="sidebar-broadcasts-panel"
-              orientation={orientation}
-              collapsed={collapsed}
-              title={t("What's new in Sentry")}
-              hidePanel={hidePanel}
-            >
-              {loading ? (
-                <LoadingIndicator />
-              ) : broadcasts.length === 0 ? (
-                <SidebarPanelEmpty>
-                  {t('No recent updates from the Sentry team.')}
-                </SidebarPanelEmpty>
-              ) : (
-                broadcasts.map(item => {
-                  return (
-                    <SidebarPanelItem
-                      key={item.id}
-                      hasSeen={item.hasSeen}
-                      title={item.title}
-                      message={item.message}
-                      link={item.link}
-                    />
-                  );
-                })
-              )}
-            </SidebarPanel>
-          )}
+        {showPanel && currentPanel == 'broadcasts' && (
+          <SidebarPanel
+            data-test-id="sidebar-broadcasts-panel"
+            orientation={orientation}
+            collapsed={collapsed}
+            title={t("What's new in Sentry")}
+            hidePanel={hidePanel}
+          >
+            {loading ? (
+              <LoadingIndicator />
+            ) : broadcasts.length === 0 ? (
+              <SidebarPanelEmpty>
+                {t('No recent updates from the Sentry team.')}
+              </SidebarPanelEmpty>
+            ) : (
+              broadcasts.map((item) => {
+                return (
+                  <SidebarPanelItem
+                    key={item.id}
+                    hasSeen={item.hasSeen}
+                    title={item.title}
+                    message={item.message}
+                    link={item.link}
+                  />
+                );
+              })
+            )}
+          </SidebarPanel>
+        )}
       </React.Fragment>
     );
   },

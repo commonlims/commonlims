@@ -42,11 +42,11 @@ describe('PermissionSelection', () => {
   });
 
   it('lists human readable permissions', () => {
-    const findOptions = name => {
+    const findOptions = (name) => {
       openMenu(wrapper, {name: `${name}--permission`});
       return wrapper
         .find(`SelectField[name="${name}--permission"] Option`)
-        .map(o => o.text());
+        .map((o) => o.text());
     };
 
     expect(findOptions('Project')).toEqual([
@@ -85,7 +85,7 @@ describe('PermissionSelection', () => {
   });
 
   it('stores the permissions the User has selected', () => {
-    const getStateValue = resource => {
+    const getStateValue = (resource) => {
       return wrapper.instance().state.permissions[resource];
     };
 

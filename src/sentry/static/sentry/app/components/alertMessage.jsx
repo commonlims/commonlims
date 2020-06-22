@@ -8,10 +8,10 @@ import InlineSvg from 'app/components/inlineSvg';
 import {t} from 'app/locale';
 
 const StyledAlert = styled(Alert)`
-  padding: ${p => p.theme.grid}px ${p => p.theme.grid * 2}px;
+  padding: ${(p) => p.theme.grid}px ${(p) => p.theme.grid * 2}px;
   position: relative;
   margin: 0;
-  padding-right: ${p => p.theme.grid * 4}px;
+  padding-right: ${(p) => p.theme.grid * 4}px;
 `;
 
 const StyledInlineSvg = styled(InlineSvg)`
@@ -24,12 +24,12 @@ const StyledCloseButton = styled.button`
   opacity: 0.4;
   transition: opacity 0.2s linear;
   position: absolute;
-  right: ${p => p.theme.grid}px;
+  right: ${(p) => p.theme.grid}px;
   top: 7px;
 
   /* stylelint-disable-next-line no-duplicate-selectors */
   ${StyledInlineSvg} {
-    color: ${p => p.theme.gray4};
+    color: ${(p) => p.theme.gray4};
   }
 
   &:hover {

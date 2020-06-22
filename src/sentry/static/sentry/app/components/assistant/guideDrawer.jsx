@@ -172,15 +172,15 @@ const StyledCueText = styled(CueText)`
 const StyledCueContainer = styled(CueContainer)`
   right: 50%;
   transform: translateX(50%);
-  background-color: ${p => p.theme.greenDark};
-  border-color: ${p => p.theme.greenLight};
-  color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.greenDark};
+  border-color: ${(p) => p.theme.greenLight};
+  color: ${(p) => p.theme.offWhite};
 `;
 
 const GuideContainer = styled(AssistantContainer)`
-  background-color: ${p => p.theme.greenDark};
-  border-color: ${p => p.theme.greenLight};
-  color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.greenDark};
+  border-color: ${(p) => p.theme.greenLight};
+  color: ${(p) => p.theme.offWhite};
   height: auto;
   right: 50%;
   transform: translateX(50%);
@@ -202,7 +202,7 @@ const StyledContent = styled('div')`
   line-height: 1.5;
 
   a {
-    color: ${p => p.theme.greenLight};
+    color: ${(p) => p.theme.greenLight};
   }
 `;
 

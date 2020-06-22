@@ -39,7 +39,7 @@ class WorkBatchDetailsFiles extends React.Component {
     this.props.api.request(this.getFilesEndpoint() + `${id}/`, {
       method: 'DELETE',
       success: () => {
-        const fileList = this.state.fileList.filter(file => {
+        const fileList = this.state.fileList.filter((file) => {
           return file.id !== id;
         });
 
@@ -77,7 +77,7 @@ class WorkBatchDetailsFiles extends React.Component {
             <Flex flex="3">{t('Size')}</Flex>
           </PanelHeader>
           <PanelBody>
-            {this.props.workBatch.files.map(file => {
+            {this.props.workBatch.files.map((file) => {
               return (
                 <PanelItem key={file.id}>
                   <Flex

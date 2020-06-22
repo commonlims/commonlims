@@ -4,7 +4,7 @@ import React from 'react';
 import InputField from 'app/views/settings/components/forms/inputField';
 import SelectControl from 'app/components/forms/selectControl';
 
-const getChoices = props => {
+const getChoices = (props) => {
   let choices = props.choices || [];
 
   if (typeof props.choices === 'function') {
@@ -34,7 +34,7 @@ export default class SelectField extends React.Component {
     multiple: false,
     small: false,
     formatMessageValue: (value, props) =>
-      (getChoices(props).find(choice => choice[0] === value) || [null, value])[1],
+      (getChoices(props).find((choice) => choice[0] === value) || [null, value])[1],
   };
 
   handleChange = (onBlur, onChange, optionObj) => {

@@ -62,7 +62,7 @@ class Confirm extends React.PureComponent {
       onConfirming();
     }
 
-    this.setState(state => ({
+    this.setState((state) => ({
       isModalOpen: true,
       disableConfirmButton,
     }));
@@ -76,7 +76,7 @@ class Confirm extends React.PureComponent {
     if (typeof onCancel === 'function') {
       onCancel();
     }
-    this.setState(state => ({
+    this.setState((state) => ({
       isModalOpen: false,
       disableConfirmButton,
     }));
@@ -85,7 +85,7 @@ class Confirm extends React.PureComponent {
     this.confirming = false;
   };
 
-  handleConfirm = e => {
+  handleConfirm = (e) => {
     // `confirming` is used to make sure `onConfirm` is only called once
     if (!this.confirming) {
       this.props.onConfirm();
@@ -99,7 +99,7 @@ class Confirm extends React.PureComponent {
     this.confirming = true;
   };
 
-  handleToggle = e => {
+  handleToggle = (e) => {
     const {disabled, bypass} = this.props;
     if (disabled) {
       return;

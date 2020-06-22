@@ -50,7 +50,7 @@ export default class ConsolidatedScopes {
       pull(scopes, PROJECT_RELEASES); // remove project:releases
     }
 
-    this.topScopes(scopes).forEach(scope => {
+    this.topScopes(scopes).forEach((scope) => {
       const [resource, permission] = scope.split(':');
       permissions[HUMAN_RESOURCE_NAMES[resource]] = permission;
     });
@@ -87,7 +87,7 @@ export default class ConsolidatedScopes {
       pull(scopes, PROJECT_RELEASES); // remove project:releases
     }
 
-    this.topScopes(scopes).forEach(scope => {
+    this.topScopes(scopes).forEach((scope) => {
       const [resource, permission] = scope.split(':');
       permissions[permission].push(HUMAN_RESOURCE_NAMES[resource]);
     });
@@ -106,9 +106,9 @@ export default class ConsolidatedScopes {
    *      ['project:write', 'team:admin']
    */
   topScopes(scopeList) {
-    return Object.values(groupBy(scopeList, scope => scope.split(':')[0]))
-      .map(scopes => scopes.sort(this.compareScopes))
-      .map(scopes => scopes.pop());
+    return Object.values(groupBy(scopeList, (scope) => scope.split(':')[0]))
+      .map((scopes) => scopes.sort(this.compareScopes))
+      .map((scopes) => scopes.pop());
   }
 
   compareScopes = (a, b) => {
@@ -119,7 +119,7 @@ export default class ConsolidatedScopes {
    * Numerical value of the scope where Admin is higher than Write,
    * which is higher than Read. Used to sort scopes by access.
    */
-  permissionLevel = scope => {
+  permissionLevel = (scope) => {
     const permission = scope.split(':')[1];
     return PERMISSION_LEVELS[permission];
   };

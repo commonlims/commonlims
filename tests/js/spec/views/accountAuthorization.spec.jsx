@@ -5,12 +5,12 @@ import {Client} from 'app/api';
 import {shallow} from 'enzyme';
 import AccountAuthorizations from 'app/views/settings/account/accountAuthorizations';
 
-describe('AccountAuthorizations', function() {
-  beforeEach(function() {
+describe('AccountAuthorizations', function () {
+  beforeEach(function () {
     Client.clearMockResponses();
   });
 
-  it('renders empty', function() {
+  it('renders empty', function () {
     Client.addMockResponse({
       url: '/api-authorizations/',
       method: 'GET',

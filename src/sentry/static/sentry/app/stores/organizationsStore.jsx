@@ -32,7 +32,7 @@ const OrganizationsStore = Reflux.createStore({
   },
 
   get(slug) {
-    return this.items.find(item => item.slug === slug);
+    return this.items.find((item) => item.slug === slug);
   },
 
   getAll() {
@@ -40,7 +40,7 @@ const OrganizationsStore = Reflux.createStore({
   },
 
   remove(slug) {
-    this.items = this.items.filter(item => slug !== item.slug);
+    this.items = this.items.filter((item) => slug !== item.slug);
     this.trigger(this.items);
   },
 

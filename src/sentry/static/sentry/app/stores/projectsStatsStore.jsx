@@ -25,7 +25,7 @@ const ProjectsStatsStore = Reflux.createStore({
   },
 
   onStatsLoadSuccess(projects) {
-    projects.forEach(project => {
+    projects.forEach((project) => {
       this.itemsBySlug[project.slug] = project;
     });
     this.trigger(this.itemsBySlug);

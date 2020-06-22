@@ -6,7 +6,7 @@ import getDisplayName from 'app/utils/getDisplayName';
 /**
  * Currently wraps component with organization from context
  */
-const withOrganization = WrappedComponent =>
+const withOrganization = (WrappedComponent) =>
   class extends React.Component {
     static displayName = `withOrganizations(${getDisplayName(WrappedComponent)})`;
     static contextTypes = {

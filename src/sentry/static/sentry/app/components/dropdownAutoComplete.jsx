@@ -19,7 +19,7 @@ class DropdownAutoComplete extends React.Component {
 
     return (
       <DropdownAutoCompleteMenu {...props}>
-        {renderProps => {
+        {(renderProps) => {
           // Don't pass `onClick` from `getActorProps`
           const {
             //eslint-disable-next-line no-unused-vars
@@ -47,7 +47,7 @@ const Actor = styled('div')`
   position: relative;
   width: 100%;
   /* This is needed to be able to cover dropdown menu so that it looks like one unit */
-  ${p => p.isOpen && `z-index: ${p.theme.zIndex.dropdownAutocomplete.actor}`};
+  ${(p) => p.isOpen && `z-index: ${p.theme.zIndex.dropdownAutocomplete.actor}`};
 `;
 
 export default DropdownAutoComplete;

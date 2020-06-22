@@ -136,7 +136,9 @@ export const TableChart = styled(
                   width:
                     columnIndex < widths.length
                       ? widths[columnIndex]
-                      : showRowTotal ? rowTotalWidth : null,
+                      : showRowTotal
+                      ? rowTotalWidth
+                      : null,
                   showRowTotal,
                   ...props,
                 })
@@ -154,7 +156,9 @@ export const TableChart = styled(
                     width:
                       index < widths.length
                         ? widths[index]
-                        : showRowTotal ? rowTotalWidth : null,
+                        : showRowTotal
+                        ? rowTotalWidth
+                        : null,
                     justify: 'right',
                     showRowTotal,
                     ...props,
@@ -168,7 +172,7 @@ export const TableChart = styled(
       };
 
       // Default renderer for ALL cells
-      const defaultRenderCell = p => {
+      const defaultRenderCell = (p) => {
         const {
           isTableHeader,
           isHeader,
@@ -185,7 +189,9 @@ export const TableChart = styled(
           <Cell justify={justify} width={width} key={`${rowIndex}-${columnIndex}`}>
             {isTableHeader
               ? renderTableHeaderCell(p)
-              : isHeader ? renderHeaderCell(p) : renderDataCell(p)}
+              : isHeader
+              ? renderHeaderCell(p)
+              : renderDataCell(p)}
           </Cell>
         );
       };
@@ -203,7 +209,7 @@ export const TableChart = styled(
 
       return {
         dataStartIndex: 1,
-        getValue: i => i,
+        getValue: (i) => i,
         renderTableHeader: defaultRenderTableHeader,
         renderBody: defaultRenderBody,
         renderRow: defaultRenderRow,
@@ -365,7 +371,7 @@ export const TableChartRow = styled(
     render() {
       const {className, showBar, total, value, children} = this.props;
       const barWidth =
-        total > 0 && typeof value === 'number' ? Math.round(value / total * 100) : 0;
+        total > 0 && typeof value === 'number' ? Math.round((value / total) * 100) : 0;
 
       return (
         <PanelItem className={className}>
@@ -388,8 +394,8 @@ export const TableChartRowBar = styled(({width, ...props}) => <div {...props} />
   top: 0;
   bottom: 0;
   left: 0;
-  right: ${p => 100 - p.width}%;
-  background-color: ${p => p.theme.offWhite2};
+  right: ${(p) => 100 - p.width}%;
+  background-color: ${(p) => p.theme.offWhite2};
   z-index: 1;
 `;
 
@@ -399,8 +405,8 @@ export const Cell = styled('div')`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  ${p => (!p.width ? 'flex: 1' : '')};
-  ${p => (p.justify === 'right' ? 'text-align: right' : '')};
+  ${(p) => (!p.width ? 'flex: 1' : '')};
+  ${(p) => (p.justify === 'right' ? 'text-align: right' : '')};
 `;
 
 const DataGroup = styled(Flex)`
@@ -412,6 +418,6 @@ const Row = styled(Flex)`
 `;
 
 const TableBody = styled('div')`
-  height: ${p => p.height};
+  height: ${(p) => p.height};
   overflow-y: auto;
 `;

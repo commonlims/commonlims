@@ -34,7 +34,7 @@ class OrganizationAuth extends AsyncView {
     return `${org.name} - Auth Settings`;
   }
 
-  handleSendReminders = provider => {
+  handleSendReminders = (provider) => {
     this.setState({sendRemindersBusy: true});
 
     this.api.request(
@@ -42,15 +42,15 @@ class OrganizationAuth extends AsyncView {
       {
         method: 'POST',
         data: {},
-        success: data => IndicatorStore.add(t('Sent reminders to members'), 'success'),
-        error: err => IndicatorStore.add(t('Failed to send reminders'), 'error'),
+        success: (data) => IndicatorStore.add(t('Sent reminders to members'), 'success'),
+        error: (err) => IndicatorStore.add(t('Failed to send reminders'), 'error'),
         complete: () => this.setState({sendRemindersBusy: false}),
       }
     );
   };
 
   // Configure auth provider
-  handleConfigure = provider => {
+  handleConfigure = (provider) => {
     this.setState({
       busy: true,
     });
@@ -58,20 +58,20 @@ class OrganizationAuth extends AsyncView {
     this.api.request(`/organizations/${this.props.params.orgId}/auth-provider/`, {
       method: 'POST',
       data: {provider, init: true},
-      success: data => {
+      success: (data) => {
         // Redirect to auth provider URL
         if (data && data.auth_url) {
           window.location.href = data.auth_url;
         }
       },
-      error: err => {
+      error: (err) => {
         this.setState({busy: false});
       },
     });
   };
 
   // Disable auth provider
-  handleDisableProvider = provider => {
+  handleDisableProvider = (provider) => {
     this.setState({
       disableBusy: true,
     });
@@ -79,13 +79,13 @@ class OrganizationAuth extends AsyncView {
     this.api.request(`/organizations/${this.props.params.orgId}/auth-provider/`, {
       method: 'DELETE',
       data: {provider},
-      success: data => {
+      success: (data) => {
         this.setState({
           provider: null,
           disableBusy: false,
         });
       },
-      error: err => {
+      error: (err) => {
         this.setState({disableBusy: false});
       },
     });
@@ -102,7 +102,7 @@ class OrganizationAuth extends AsyncView {
     }
 
     const activeProvider = providerList.find(
-      p => provider && p.key === provider.provider_name
+      (p) => provider && p.key === provider.provider_name
     );
 
     return (

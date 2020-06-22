@@ -10,7 +10,7 @@ import SentryTypes from 'app/sentryTypes';
 import LoadingPanel from '../loadingPanel';
 
 const propNamesToIgnore = ['api', 'children', 'organizations', 'project', 'loading'];
-const omitIgnoredProps = props =>
+const omitIgnoredProps = (props) =>
   omitBy(props, (value, key) => propNamesToIgnore.includes(key));
 
 class EventsRequest extends React.PureComponent {
@@ -95,7 +95,7 @@ class EventsRequest extends React.PureComponent {
     end: null,
     interval: '1d',
     limit: 15,
-    getCategory: i => i,
+    getCategory: (i) => i,
     query: '',
 
     includePrevious: true,
@@ -130,7 +130,7 @@ class EventsRequest extends React.PureComponent {
     const {api, ...props} = this.props;
     let timeseriesData;
 
-    this.setState(state => ({
+    this.setState((state) => ({
       reloading: state.timeseriesData !== null,
     }));
 
@@ -157,7 +157,7 @@ class EventsRequest extends React.PureComponent {
    *
    * Returns `null` if data does not exist
    */
-  getData = data => {
+  getData = (data) => {
     const {includePrevious} = this.props;
 
     if (!data) {
@@ -178,7 +178,7 @@ class EventsRequest extends React.PureComponent {
   };
 
   // This aggregates all values per `timestamp`
-  calculateTotalsPerTimestamp = (data, getName = timestamp => timestamp * 1000) => {
+  calculateTotalsPerTimestamp = (data, getName = (timestamp) => timestamp * 1000) => {
     return data.map(([timestamp, countArray], i) => ({
       name: getName(timestamp, countArray, i),
       value: countArray.reduce((acc, {count}) => acc + count, 0),
@@ -221,7 +221,7 @@ class EventsRequest extends React.PureComponent {
   /**
    * Transforms query response into timeseries data to be used in a chart
    */
-  transformTimeseriesData = data => {
+  transformTimeseriesData = (data) => {
     return [
       {
         seriesName: 'Events',
@@ -233,7 +233,7 @@ class EventsRequest extends React.PureComponent {
     ];
   };
 
-  transformData = data => {
+  transformData = (data) => {
     if (!data) {
       return null;
     }
@@ -289,8 +289,7 @@ class EventsRequest extends React.PureComponent {
       originalPreviousData: originalPreviousTimeseriesData,
       previousData: previousTimeseriesData,
       timeAggregatedData,
-    } =
-      (timeseriesData && this.processData(timeseriesData, true)) || {};
+    } = (timeseriesData && this.processData(timeseriesData, true)) || {};
 
     return children({
       loading,

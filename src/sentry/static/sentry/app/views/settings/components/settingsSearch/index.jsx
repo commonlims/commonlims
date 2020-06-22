@@ -34,7 +34,7 @@ class SettingsSearch extends React.Component {
           <SearchInputWrapper>
             <SearchInputIcon size="14px" />
             <SearchInput
-              innerRef={ref => (this.searchInput = ref)}
+              innerRef={(ref) => (this.searchInput = ref)}
               {...getInputProps({
                 type: 'text',
                 placeholder: t('Search'),
@@ -57,8 +57,8 @@ const SearchInputWrapper = styled.div`
   position: relative;
 `;
 
-const SearchInputIcon = styled(props => <InlineSvg src="icon-search" {...props} />)`
-  color: ${p => p.theme.gray2};
+const SearchInputIcon = styled((props) => <InlineSvg src="icon-search" {...props} />)`
+  color: ${(p) => p.theme.gray2};
   position: absolute;
   left: 10px;
   top: 8px;
@@ -70,18 +70,18 @@ const SearchInput = styled.input`
   width: 260px;
   line-height: 1;
   padding: 5px 8px 4px 28px;
-  border: 1px solid ${p => p.theme.borderDark};
+  border: 1px solid ${(p) => p.theme.borderDark};
   border-radius: 30px;
   height: 28px;
 
-  box-shadow: inset ${p => p.theme.dropShadowLight};
+  box-shadow: inset ${(p) => p.theme.dropShadowLight};
 
   &:focus {
     outline: none;
-    border: 1px solid ${p => p.theme.gray1};
+    border: 1px solid ${(p) => p.theme.gray1};
   }
 
   &::placeholder {
-    color: ${p => p.theme.gray2};
+    color: ${(p) => p.theme.gray2};
   }
 `;

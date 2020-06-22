@@ -39,7 +39,7 @@ export default class CspInterface extends React.Component {
     };
   }
 
-  toggleView = value => {
+  toggleView = (value) => {
     this.setState({
       view: value,
     });

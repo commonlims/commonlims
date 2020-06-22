@@ -8,7 +8,11 @@ export const fields = {
     name: 'workflowNotifications',
     type: 'radio',
     label: t('Send Me Workflow Notifications'),
-    choices: [[0, 'Always'], [1, 'Only On Issues I Subscribe To'], [2, 'Never']],
+    choices: [
+      [0, 'Always'],
+      [1, 'Only On Issues I Subscribe To'],
+      [2, 'Never'],
+    ],
     help: t('E.g. changes in issue assignment, resolution status, and comments.'),
   },
   weeklyReports: {

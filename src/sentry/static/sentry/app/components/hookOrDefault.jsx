@@ -41,7 +41,7 @@ function HookOrDefault({hookName, defaultComponent, params}) {
         return;
       }
 
-      this.setState(state => ({
+      this.setState((state) => ({
         hooks,
       }));
     },

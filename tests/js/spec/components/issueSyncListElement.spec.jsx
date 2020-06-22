@@ -2,13 +2,13 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import IssueSyncListElement from 'app/components/issueSyncListElement';
 
-describe('AlertLink', function() {
-  it('renders', function() {
+describe('AlertLink', function () {
+  it('renders', function () {
     const wrapper = shallow(<IssueSyncListElement integrationType="github" />);
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('can open', function() {
+  it('can open', function () {
     const onOpen = jest.fn();
     const wrapper = shallow(
       <IssueSyncListElement integrationType="github" onOpen={onOpen} />
@@ -18,7 +18,7 @@ describe('AlertLink', function() {
     expect(onOpen).toHaveBeenCalled();
   });
 
-  it('can close', function() {
+  it('can close', function () {
     const onClose = jest.fn();
     const onOpen = jest.fn();
 

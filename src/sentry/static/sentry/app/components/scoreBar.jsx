@@ -54,7 +54,7 @@ class ScoreBar extends React.Component {
 const StyledScoreBar = styled(ScoreBar)`
   display: flex;
 
-  ${p =>
+  ${(p) =>
     p.vertical &&
     `
     flex-direction: column-reverse;
@@ -65,10 +65,10 @@ const StyledScoreBar = styled(ScoreBar)`
 const Bar = styled('div')`
   border-radius: 3px;
   margin: 2px;
-  ${p => p.empty && `background-color: ${p.theme.similarity.empty};`};
-  ${p => p.color && `background-color: ${p.color};`};
+  ${(p) => p.empty && `background-color: ${p.theme.similarity.empty};`};
+  ${(p) => p.color && `background-color: ${p.color};`};
 
-  width: ${p => (!p.vertical ? p.thickness : p.size)}px;
-  height: ${p => (!p.vertical ? p.size : p.thickness)}px;
+  width: ${(p) => (!p.vertical ? p.thickness : p.size)}px;
+  height: ${(p) => (!p.vertical ? p.size : p.thickness)}px;
 `;
 export default StyledScoreBar;

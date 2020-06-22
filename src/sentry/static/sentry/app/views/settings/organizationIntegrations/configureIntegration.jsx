@@ -42,7 +42,7 @@ class ConfigureIntegration extends AsyncView {
     const {orgId} = this.props.params;
     const {integration} = this.state;
     const provider = this.state.config.providers.find(
-      p => p.key === integration.provider.key
+      (p) => p.key === integration.provider.key
     );
 
     const title = <IntegrationItem integration={integration} withProvider={true} />;

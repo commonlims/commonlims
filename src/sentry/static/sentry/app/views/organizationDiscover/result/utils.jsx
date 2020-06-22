@@ -19,13 +19,13 @@ const CHART_KEY = '__CHART_KEY__';
 export function getChartData(data, query) {
   const {fields} = query;
 
-  return query.aggregations.map(aggregation => {
+  return query.aggregations.map((aggregation) => {
     return {
       seriesName: aggregation[2],
-      data: data.map(res => {
+      data: data.map((res) => {
         return {
           value: res[aggregation[2]],
-          name: fields.map(field => `${field} ${res[field]}`).join(' '),
+          name: fields.map((field) => `${field} ${res[field]}`).join(' '),
         };
       }),
     };
@@ -48,7 +48,7 @@ export function getChartDataForWidget(data, query, options = {}) {
   const totalsBySeries = new Map();
 
   if (options.includePercentages) {
-    query.aggregations.forEach(aggregation => {
+    query.aggregations.forEach((aggregation) => {
       totalsBySeries.set(
         aggregation[2],
         data.reduce((acc, res) => {
@@ -59,18 +59,18 @@ export function getChartDataForWidget(data, query, options = {}) {
     });
   }
 
-  return query.aggregations.map(aggregation => {
+  return query.aggregations.map((aggregation) => {
     const total = options.includePercentages && totalsBySeries.get(aggregation[2]);
     return {
       seriesName: aggregation[2],
-      data: data.map(res => {
+      data: data.map((res) => {
         const obj = {
           value: res[aggregation[2]],
-          name: fields.map(field => `${res[field]}`).join(' '),
+          name: fields.map((field) => `${res[field]}`).join(' '),
         };
 
         if (options.includePercentages && total) {
-          obj.percentage = Math.round(res[aggregation[2]] / total * 10000) / 100;
+          obj.percentage = Math.round((res[aggregation[2]] / total) * 10000) / 100;
         }
 
         return obj;
@@ -105,13 +105,13 @@ export function getChartDataByDay(rawData, query, options = {}) {
 
   // Reverse to get ascending dates - we request descending to ensure latest
   // day data is compplete in the case of limits being hit
-  const dates = [...new Set(rawData.map(entry => formatDate(entry.time)))].reverse();
+  const dates = [...new Set(rawData.map((entry) => formatDate(entry.time)))].reverse();
 
   // Temporarily store series as object with series names as keys
   const seriesHash = getEmptySeriesHash(top10Series, dates, options);
 
   // Insert data into series if it's in a top 10 series
-  data.forEach(row => {
+  data.forEach((row) => {
     const key = row[CHART_KEY];
 
     const dateIdx = dates.indexOf(formatDate(row.time));
@@ -175,7 +175,7 @@ export function getRowsPageRange(baseQuery) {
 function getEmptySeriesHash(seriesSet, dates, options = {}) {
   const output = {};
 
-  [...seriesSet].forEach(series => {
+  [...seriesSet].forEach((series) => {
     output[series] = getEmptySeries(dates, options);
   });
 
@@ -183,7 +183,7 @@ function getEmptySeriesHash(seriesSet, dates, options = {}) {
 }
 
 function getEmptySeries(dates, options) {
-  return dates.map(date => {
+  return dates.map((date) => {
     return {
       value: 0,
       name: date,
@@ -199,8 +199,8 @@ function getTopSeries(data, aggregate, limit = NUMBER_OF_SERIES_BY_DAY) {
     ...new Set(
       allData
         // `row` can be an empty time bucket, in which case it will have no `CHART_KEY` property
-        .filter(row => typeof row[CHART_KEY] !== 'undefined')
-        .map(row => row[CHART_KEY])
+        .filter((row) => typeof row[CHART_KEY] !== 'undefined')
+        .map((row) => row[CHART_KEY])
     ),
   ];
 
@@ -212,7 +212,7 @@ function getDataWithKeys(data, query, options = {}) {
   // We only chart the first aggregation for now
   const aggregate = aggregations[0][2];
 
-  return data.map(row => {
+  return data.map((row) => {
     // `row` can be an empty time bucket, in which case it has no value
     // for `aggregate`
     if (!row.hasOwnProperty(aggregate)) {
@@ -220,7 +220,7 @@ function getDataWithKeys(data, query, options = {}) {
     }
 
     const key = fields.length
-      ? fields.map(field => getLabel(row[field], options)).join(',')
+      ? fields.map((field) => getLabel(row[field], options)).join(',')
       : aggregate;
 
     return {
@@ -325,11 +325,11 @@ export function getDisplayText(val) {
 }
 
 const LightGray = styled.span`
-  color: ${p => p.theme.gray1};
+  color: ${(p) => p.theme.gray1};
 `;
 
 const DarkGray = styled.span`
-  color: ${p => p.theme.gray5};
+  color: ${(p) => p.theme.gray5};
 `;
 
 /**
@@ -346,8 +346,8 @@ export function downloadAsCsv(result) {
 
   const csvContent = Papa.unparse({
     fields: headings,
-    data: data.map(row => {
-      return headings.map(col => disableMacros(row[col]));
+    data: data.map((row) => {
+      return headings.map((col) => disableMacros(row[col]));
     }),
   });
 

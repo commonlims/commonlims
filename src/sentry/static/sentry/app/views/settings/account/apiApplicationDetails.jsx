@@ -50,7 +50,7 @@ class ApiApplicationDetails extends AsyncView {
           saveOnBlur
           allowUndo
           initialData={this.state.app}
-          onSubmitError={err => addErrorMessage('Unable to save change')}
+          onSubmitError={(err) => addErrorMessage('Unable to save change')}
         >
           <Box>
             <JsonForm location={this.props.location} forms={apiApplication} />

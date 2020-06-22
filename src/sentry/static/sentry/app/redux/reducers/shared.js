@@ -66,7 +66,7 @@ export function getListSuccess(state, action) {
     // nomerge-just workbatches => data
     byIds[entry.id] = entry;
   }
-  const visibleIds = action.entries.map(x => x.id);
+  const visibleIds = action.entries.map((x) => x.id);
 
   return {
     ...state,

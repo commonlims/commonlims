@@ -14,7 +14,7 @@ const CONFIG_DOCS_URL = 'https://docs.sentry.io/server/config/';
 
 const installText = (features, featureName) =>
   `# ${t('Enables the %s feature', featureName)}\n${features
-    .map(f => `SENTRY_FEATURES['${f}'] = True`)
+    .map((f) => `SENTRY_FEATURES['${f}'] = True`)
     .join('\n')}`;
 
 /**
@@ -62,9 +62,9 @@ class FeatureDisabled extends React.Component {
     showHelp: false,
   };
 
-  toggleHelp = e => {
+  toggleHelp = (e) => {
     e.preventDefault();
-    this.setState(state => ({showHelp: !state.showHelp}));
+    this.setState((state) => ({showHelp: !state.showHelp}));
   };
 
   render() {
@@ -101,7 +101,7 @@ class FeatureDisabled extends React.Component {
                 }
               )}
             </p>
-            <pre onClick={e => selectText(e.target)}>
+            <pre onClick={(e) => selectText(e.target)}>
               <code>{installText(features, featureName)}</code>
             </pre>
           </HelpDescription>

@@ -32,7 +32,7 @@ class EventErrors extends React.Component {
     this.setState({isOpen: !this.state.isOpen});
   };
 
-  uniqueErrors = errors => {
+  uniqueErrors = (errors) => {
     return _.uniqWith(errors, _.isEqual);
   };
 

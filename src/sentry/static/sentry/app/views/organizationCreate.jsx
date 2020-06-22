@@ -7,7 +7,7 @@ import {ApiForm, BooleanField, TextField} from 'app/components/forms';
 import {t, tct} from 'app/locale';
 
 export default class OrganizationCreate extends AsyncView {
-  onSubmitSuccess = data => {
+  onSubmitSuccess = (data) => {
     // redirect to project creation *(BYPASS REACT ROUTER AND FORCE PAGE REFRESH TO GRAB CSRF TOKEN)*
     // browserHistory.pushState(null, `/organizations/${data.slug}/projects/new/`);
     window.location.href = `/organizations/${data.slug}/projects/new/`;
@@ -50,21 +50,20 @@ export default class OrganizationCreate extends AsyncView {
             required={true}
           />
 
-          {termsUrl &&
-            privacyUrl && (
-              <BooleanField
-                name="agreeTerms"
-                label={tct(
-                  'I agree to the [termsLink:Terms of Service] and the [privacyLink:Privacy Policy]',
-                  {
-                    termsLink: <a href={termsUrl} />,
-                    privacyLink: <a href={privacyUrl} />,
-                  }
-                )}
-                placeholder={t('e.g. My Company')}
-                required={true}
-              />
-            )}
+          {termsUrl && privacyUrl && (
+            <BooleanField
+              name="agreeTerms"
+              label={tct(
+                'I agree to the [termsLink:Terms of Service] and the [privacyLink:Privacy Policy]',
+                {
+                  termsLink: <a href={termsUrl} />,
+                  privacyLink: <a href={privacyUrl} />,
+                }
+              )}
+              placeholder={t('e.g. My Company')}
+              required={true}
+            />
+          )}
         </ApiForm>
       </NarrowLayout>
     );

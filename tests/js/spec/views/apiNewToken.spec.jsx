@@ -3,9 +3,9 @@ import {shallow} from 'enzyme';
 
 import ApiNewToken from 'app/views/apiNewToken';
 
-describe('ApiNewToken', function() {
-  describe('render()', function() {
-    it('renders', function() {
+describe('ApiNewToken', function () {
+  describe('render()', function () {
+    it('renders', function () {
       const wrapper = shallow(<ApiNewToken params={{}} />, {
         context: {
           router: TestStubs.router(),

@@ -52,7 +52,7 @@ const Score = styled('div')`
   height: 16px;
   width: 48px;
   border-radius: 2px;
-  background-color: ${p =>
+  background-color: ${(p) =>
     p.score === null ? p.theme.similarity.empty : p.theme.similarity.colors[p.score]};
 `;
 

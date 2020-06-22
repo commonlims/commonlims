@@ -50,11 +50,11 @@ const PluginActions = createReactClass({
     // doesn't think the plugin still has an issue linked
     const endpoint = `/issues/${this.props.group.id}/plugins/${plugin.slug}/unlink/`;
     this.api.request(endpoint, {
-      success: data => {
+      success: (data) => {
         this.loadPlugin(plugin);
         addSuccessMessage(t('Successfully unlinked issue.'));
       },
-      error: error => {
+      error: (error) => {
         addErrorMessage(t('Unable to unlink issue'));
       },
     });
@@ -126,22 +126,20 @@ const PluginActions = createReactClass({
               <a onClick={() => this.handleClick('link')}>{t('Link')}</a>
             </li>
           </NavTabs>
-          {this.state.showModal &&
-            actionType &&
-            !this.state.pluginLoading && (
-              // need the key here so React will re-render
-              // with new action prop
-              <Modal.Body key={actionType}>
-                {plugins.get(plugin).renderGroupActions({
-                  plugin,
-                  group: this.props.group,
-                  project: this.props.project,
-                  organization: this.getOrganization(),
-                  actionType,
-                  onSuccess: this.closeModal,
-                })}
-              </Modal.Body>
-            )}
+          {this.state.showModal && actionType && !this.state.pluginLoading && (
+            // need the key here so React will re-render
+            // with new action prop
+            <Modal.Body key={actionType}>
+              {plugins.get(plugin).renderGroupActions({
+                plugin,
+                group: this.props.group,
+                project: this.props.project,
+                organization: this.getOrganization(),
+                actionType,
+                onSuccess: this.closeModal,
+              })}
+            </Modal.Body>
+          )}
         </Modal>
       </React.Fragment>
     );

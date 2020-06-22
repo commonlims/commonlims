@@ -7,7 +7,7 @@ const SubmitButton = styled('div')`
   background: transparent;
   box-shadow: none;
   border: 1px solid transparent;
-  border-radius: ${p => p.theme.borderRadius};
+  border-radius: ${(p) => p.theme.borderRadius};
   transition: 0.2s all;
   display: flex;
   align-items: center;
@@ -27,12 +27,12 @@ const ClickTargetStyled = styled('div')`
 
   &:hover ${SubmitButton} {
     background: #fff;
-    box-shadow: ${p => p.theme.dropShadowLight};
-    border: 1px solid ${p => p.theme.borderLight};
+    box-shadow: ${(p) => p.theme.dropShadowLight};
+    border: 1px solid ${(p) => p.theme.borderLight};
   }
 `;
 
-const returnButton = props => {
+const returnButton = (props) => {
   return (
     <ClickTargetStyled {...props}>
       <Tooltip title="Save">

@@ -4,12 +4,12 @@ import {mount} from 'enzyme';
 import GlobalSelectionStore from 'app/stores/globalSelectionStore';
 import withGlobalSelection from 'app/utils/withGlobalSelection';
 
-describe('withGlobalSelection HoC', function() {
+describe('withGlobalSelection HoC', function () {
   beforeEach(() => {
     GlobalSelectionStore.init();
   });
 
-  it('handles projects', function() {
+  it('handles projects', function () {
     const MyComponent = () => null;
     const Container = withGlobalSelection(MyComponent);
     const wrapper = mount(<Container />);
@@ -22,7 +22,7 @@ describe('withGlobalSelection HoC', function() {
     expect(wrapper.find('MyComponent').prop('selection').projects).toEqual([1]);
   });
 
-  it('handles datetime', function() {
+  it('handles datetime', function () {
     const MyComponent = () => null;
     const Container = withGlobalSelection(MyComponent);
     const wrapper = mount(<Container />);
@@ -45,7 +45,7 @@ describe('withGlobalSelection HoC', function() {
     });
   });
 
-  it('handles environments', function() {
+  it('handles environments', function () {
     const MyComponent = () => null;
     const Container = withGlobalSelection(MyComponent);
     const wrapper = mount(<Container />);

@@ -19,16 +19,16 @@ class CreateTeamModal extends React.Component {
 
   handleSubmit = (data, onSuccess, onError) => {
     createTeam(new Client(), data, {orgId: this.props.organization.slug})
-      .then(resp => {
+      .then((resp) => {
         this.handleSuccess(resp);
         onSuccess(resp);
       })
-      .catch(err => {
+      .catch((err) => {
         onError(err);
       });
   };
 
-  handleSuccess = data => {
+  handleSuccess = (data) => {
     if (this.props.onClose) {
       this.props.onClose(data);
     }

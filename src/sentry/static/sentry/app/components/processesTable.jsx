@@ -21,7 +21,7 @@ class ProcessesTable extends React.Component {
 
     // TODO: events-table => processes-table
     const cx = classNames('table events-table', className);
-    const hasUser = !!processes.find(process => process.user);
+    const hasUser = !!processes.find((process) => process.user);
     const {orgId, projectId, groupId} = this.props.params;
 
     return (
@@ -33,7 +33,7 @@ class ProcessesTable extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {processes.map(process => {
+          {processes.map((process) => {
             return (
               <ProcessesTableRow
                 truncate={fixedDimensions}

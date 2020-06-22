@@ -33,7 +33,7 @@ class OrganizationWorkBatchList extends React.Component {
     GroupStore.reset();
   }
 
-  getQueryStringState = props => {
+  getQueryStringState = (props) => {
     const query = props.location.query;
     const status = 'status' in query ? query.status : 'unresolved';
     return {

@@ -120,7 +120,7 @@ class DeviceContextType extends React.Component {
   }
 }
 
-DeviceContextType.getTitle = function(value) {
+DeviceContextType.getTitle = function (value) {
   return 'Device';
 };
 

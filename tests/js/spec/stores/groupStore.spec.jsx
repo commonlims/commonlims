@@ -1,26 +1,26 @@
 import GroupStore from 'app/stores/groupStore';
 
-describe('GroupStore', function() {
+describe('GroupStore', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     GroupStore.reset();
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  describe('add()', function() {
-    it('should add new entries', function() {
+  describe('add()', function () {
+    it('should add new entries', function () {
       GroupStore.items = [];
       GroupStore.add([{id: 1}, {id: 2}]);
 
       expect(GroupStore.items).toEqual([{id: 1}, {id: 2}]);
     });
 
-    it('should update matching existing entries', function() {
+    it('should update matching existing entries', function () {
       GroupStore.items = [{id: 1}, {id: 2}];
 
       GroupStore.add([{id: 1, foo: 'bar'}, {id: 3}]);
@@ -29,8 +29,8 @@ describe('GroupStore', function() {
     });
   });
 
-  describe('onMergeSuccess()', function() {
-    it('should remove the non-parent merged ids', function() {
+  describe('onMergeSuccess()', function () {
+    it('should remove the non-parent merged ids', function () {
       GroupStore.items = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
       GroupStore.onMergeSuccess(
@@ -46,14 +46,14 @@ describe('GroupStore', function() {
     });
   });
 
-  describe('update methods', function() {
-    beforeEach(function() {
+  describe('update methods', function () {
+    beforeEach(function () {
       GroupStore.reset();
       GroupStore.items = [{id: 1}, {id: 2}, {id: 3}];
     });
 
-    describe('onUpdate()', function() {
-      it("should treat undefined itemIds argument as 'all'", function() {
+    describe('onUpdate()', function () {
+      it("should treat undefined itemIds argument as 'all'", function () {
         sandbox.stub(GroupStore, 'trigger');
         GroupStore.onUpdate(1337, undefined, 'somedata');
 
@@ -62,8 +62,8 @@ describe('GroupStore', function() {
       });
     });
 
-    describe('onUpdateSuccess()', function() {
-      it("should treat undefined itemIds argument as 'all'", function() {
+    describe('onUpdateSuccess()', function () {
+      it("should treat undefined itemIds argument as 'all'", function () {
         sandbox.stub(GroupStore, 'trigger');
         GroupStore.onUpdateSuccess(1337, undefined, 'somedata');
 
@@ -72,8 +72,8 @@ describe('GroupStore', function() {
       });
     });
 
-    describe('onUpdateError()', function() {
-      it("should treat undefined itemIds argument as 'all'", function() {
+    describe('onUpdateError()', function () {
+      it("should treat undefined itemIds argument as 'all'", function () {
         sandbox.stub(GroupStore, 'trigger');
         GroupStore.onUpdateError(1337, undefined, 'something failed', false);
 
@@ -82,8 +82,8 @@ describe('GroupStore', function() {
       });
     });
 
-    describe('onDeleteSuccess()', function() {
-      it("should treat undefined itemIds argument as 'all'", function() {
+    describe('onDeleteSuccess()', function () {
+      it("should treat undefined itemIds argument as 'all'", function () {
         sandbox.stub(GroupStore, 'trigger');
         GroupStore.onDeleteSuccess(1337, undefined, 'somedata');
 

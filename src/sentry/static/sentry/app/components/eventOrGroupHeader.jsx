@@ -83,12 +83,12 @@ class EventOrGroupHeader extends React.Component {
 
     if (includeLink) {
       props.to = {
-        pathname: `${basePath}${isEvent ? groupID : id}/${isEvent
-          ? `events/${data.id}/`
-          : ''}`,
-        search: `${this.props.query
-          ? `?query=${window.encodeURIComponent(this.props.query)}`
-          : ''}`,
+        pathname: `${basePath}${isEvent ? groupID : id}/${
+          isEvent ? `events/${data.id}/` : ''
+        }`,
+        search: `${
+          this.props.query ? `?query=${window.encodeURIComponent(this.props.query)}` : ''
+        }`,
       };
       if (projectId) {
         Wrapper = ProjectLink;
@@ -104,12 +104,11 @@ class EventOrGroupHeader extends React.Component {
         {...props}
         style={data.status === 'resolved' ? {textDecoration: 'line-through'} : null}
       >
-        {!hideLevel &&
-          level && (
-            <Tooltip title={`Error level: ${capitalize(level)}`}>
-              <GroupLevel level={data.level} />
-            </Tooltip>
-          )}
+        {!hideLevel && level && (
+          <Tooltip title={`Error level: ${capitalize(level)}`}>
+            <GroupLevel level={data.level} />
+          </Tooltip>
+        )}
         {!hideIcons && data.status === 'ignored' && <Muted className="icon-soundoff" />}
         {!hideIcons && data.isBookmarked && <Starred className="icon-star-solid" />}
         <EventOrGroupTitle
@@ -150,7 +149,7 @@ const Title = styled.div`
     font-size: 14px;
     font-style: normal;
     font-weight: 300;
-    color: ${p => p.theme.gray3};
+    color: ${(p) => p.theme.gray3};
   }
 `;
 
@@ -160,7 +159,7 @@ const LocationWrapper = styled.div`
   text-align: left;
   font-size: 14px;
   margin: 0 0 5px;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   span {
     direction: ltr;
   }
@@ -188,12 +187,12 @@ const iconStyles = css`
 
 const Muted = styled.span`
   ${iconStyles};
-  color: ${p => p.theme.red};
+  color: ${(p) => p.theme.red};
 `;
 
 const Starred = styled.span`
   ${iconStyles};
-  color: ${p => p.theme.yellowOrange};
+  color: ${(p) => p.theme.yellowOrange};
 `;
 
 const GroupLevel = styled.div`
@@ -203,7 +202,7 @@ const GroupLevel = styled.div`
   height: 15px;
   border-radius: 0 3px 3px 0;
 
-  background-color: ${p => {
+  background-color: ${(p) => {
     switch (p.level) {
       case 'sample':
         return p.theme.purple;

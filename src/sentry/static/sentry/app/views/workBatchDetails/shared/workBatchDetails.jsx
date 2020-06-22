@@ -76,7 +76,7 @@ const WorkBatchDetails = createReactClass({
 
     this.api.request(this.getWorkBatchDetailsEndpoint(), {
       query,
-      success: data => {
+      success: (data) => {
         // TODO: hacking, use promises
         this.setState({
           loading: false,
@@ -151,7 +151,7 @@ const WorkBatchDetails = createReactClass({
   },
 
   renderTodoItems() {
-    const ret = this.state.workBatch.subtasks.map(x => {
+    const ret = this.state.workBatch.subtasks.map((x) => {
       return (
         <TodoItem
           handleManualClick={() => this.subtaskManualClick(x)}
@@ -228,7 +228,7 @@ const WorkBatchDetails = createReactClass({
   },
 });
 
-const TodoItem = props => {
+const TodoItem = (props) => {
   let icon = 'icon-checkmark';
   if (props.status === 'error') {
     icon = 'icon-ban';

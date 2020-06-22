@@ -3,18 +3,18 @@ import {shallow} from 'enzyme';
 import EventsTableRow from 'app/components/eventsTable/eventsTableRow';
 import events from '../../../mocks/events';
 
-describe('EventsTableRow', function() {
+describe('EventsTableRow', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(
       <EventsTableRow
         tagList={[]}

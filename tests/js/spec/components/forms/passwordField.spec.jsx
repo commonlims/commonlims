@@ -3,19 +3,19 @@ import {shallow} from 'enzyme';
 
 import {PasswordField} from 'app/components/forms';
 
-describe('PasswordField', function() {
-  describe('render()', function() {
-    it('renders', function() {
+describe('PasswordField', function () {
+  describe('render()', function () {
+    it('renders', function () {
       const wrapper = shallow(<PasswordField name="fieldName" />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with value', function() {
+    it('renders with value', function () {
       const wrapper = shallow(<PasswordField name="fieldName" value="foobar" />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with form context', function() {
+    it('renders with form context', function () {
       const wrapper = shallow(<PasswordField name="fieldName" />, {
         context: {
           form: {

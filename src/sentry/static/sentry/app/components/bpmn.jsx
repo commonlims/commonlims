@@ -44,7 +44,7 @@ export default class Bpmn extends React.Component {
 
     this.bpmnViewer = new BpmnViewer({container});
 
-    this.bpmnViewer.on('import.done', event => {
+    this.bpmnViewer.on('import.done', (event) => {
       const {error, warnings} = event;
 
       if (error) {

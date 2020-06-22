@@ -4,14 +4,14 @@ import {mount} from 'enzyme';
 import {Client} from 'app/api';
 import EventCause from 'app/components/events/eventCause';
 
-describe('EventCause', function() {
+describe('EventCause', function () {
   let wrapper, organization, project, event;
 
-  afterEach(function() {
+  afterEach(function () {
     Client.clearMockResponses();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     event = TestStubs.Event();
     organization = TestStubs.Organization();
     project = TestStubs.Project();
@@ -69,7 +69,7 @@ describe('EventCause', function() {
     );
   });
 
-  it('renders', function(done) {
+  it('renders', function (done) {
     wrapper.update();
 
     setTimeout(() => {
@@ -78,7 +78,7 @@ describe('EventCause', function() {
     });
   });
 
-  it('expands', async function(done) {
+  it('expands', async function (done) {
     wrapper.update();
     wrapper.find('ExpandButton').simulate('click');
     await tick();

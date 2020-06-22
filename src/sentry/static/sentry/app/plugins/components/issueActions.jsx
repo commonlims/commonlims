@@ -93,9 +93,9 @@ class IssueActions extends PluginComponentBase {
   fetchData() {
     if (this.props.actionType === 'create') {
       this.api.request(this.getPluginCreateEndpoint(), {
-        success: data => {
+        success: (data) => {
           const createFormData = {};
-          data.forEach(field => {
+          data.forEach((field) => {
             createFormData[field.name] = field.default;
           });
           this.setState(
@@ -112,9 +112,9 @@ class IssueActions extends PluginComponentBase {
       });
     } else if (this.props.actionType === 'link') {
       this.api.request(this.getPluginLinkEndpoint(), {
-        success: data => {
+        success: (data) => {
           const linkFormData = {};
-          data.forEach(field => {
+          data.forEach((field) => {
             linkFormData[field.name] = field.default;
           });
           this.setState(
@@ -141,7 +141,7 @@ class IssueActions extends PluginComponentBase {
     this.api.request(this.getPluginCreateEndpoint(), {
       data: this.state.createFormData,
       success: this.onSuccess,
-      error: this.onSaveError.bind(this, error => {
+      error: this.onSaveError.bind(this, (error) => {
         this.setError(error, t('There was an error creating the issue.'));
       }),
       complete: this.onSaveComplete,
@@ -152,7 +152,7 @@ class IssueActions extends PluginComponentBase {
     this.api.request(this.getPluginLinkEndpoint(), {
       data: this.state.linkFormData,
       success: this.onSuccess,
-      error: this.onSaveError.bind(this, error => {
+      error: this.onSaveError.bind(this, (error) => {
         this.setError(error, t('There was an error linking the issue.'));
       }),
       complete: this.onSaveComplete,
@@ -162,7 +162,7 @@ class IssueActions extends PluginComponentBase {
   unlinkIssue() {
     this.api.request(this.getPluginUnlinkEndpoint(), {
       success: this.onSuccess,
-      error: this.onSaveError.bind(this, error => {
+      error: this.onSaveError.bind(this, (error) => {
         this.setError(error, t('There was an error unlinking the issue.'));
       }),
       complete: this.onSaveComplete,
@@ -189,7 +189,7 @@ class IssueActions extends PluginComponentBase {
               submitLabel={t('Create Issue')}
               footerClass=""
             >
-              {this.state.createFieldList.map(field => {
+              {this.state.createFieldList.map((field) => {
                 if (field.has_autocomplete) {
                   field = Object.assign(
                     {
@@ -221,7 +221,7 @@ class IssueActions extends PluginComponentBase {
         if (this.state.linkFieldList) {
           form = (
             <Form onSubmit={this.linkIssue} submitLabel={t('Link Issue')} footerClass="">
-              {this.state.linkFieldList.map(field => {
+              {this.state.linkFieldList.map((field) => {
                 if (field.has_autocomplete) {
                   field = Object.assign(
                     {

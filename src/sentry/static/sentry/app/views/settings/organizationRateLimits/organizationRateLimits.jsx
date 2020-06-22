@@ -83,7 +83,7 @@ export default class OrganizationRateLimit extends React.Component {
                     'The maximum number of events to accept across this entire organization.'
                   )}
                   placeholder="e.g. 500"
-                  formatLabel={value => {
+                  formatLabel={(value) => {
                     return !value
                       ? t('No Limit')
                       : tct('[number] per hour', {
@@ -118,7 +118,7 @@ export default class OrganizationRateLimit extends React.Component {
                 step={5}
                 min={50}
                 max={100}
-                formatLabel={value => {
+                formatLabel={(value) => {
                   return value !== 100 ? (
                     `${value}%`
                   ) : (

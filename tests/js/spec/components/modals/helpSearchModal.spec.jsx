@@ -4,8 +4,8 @@ import {mount} from 'enzyme';
 import {openHelpSearchModal} from 'app/actionCreators/modal';
 import App from 'app/views/app';
 
-describe('Docs Search Modal', function() {
-  beforeEach(function() {
+describe('Docs Search Modal', function () {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
 
     MockApiClient.addMockResponse({
@@ -51,9 +51,9 @@ describe('Docs Search Modal', function() {
     });
   });
 
-  it('can open help search modal and complete a search', async function() {
+  it('can open help search modal and complete a search', async function () {
     jest.mock('algoliasearch', () => {
-      const search = jest.fn(params => {
+      const search = jest.fn((params) => {
         const docHits = [
           {
             url: '/doc_result',

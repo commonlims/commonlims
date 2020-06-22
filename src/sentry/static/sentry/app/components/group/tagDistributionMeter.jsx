@@ -68,7 +68,7 @@ const TagDistributionMeter = createReactClass({
     });
 
     loadDeviceListModule()
-      .then(iOSDeviceList => {
+      .then((iOSDeviceList) => {
         this.setState({
           iOSDeviceList,
           error: false,
@@ -203,7 +203,7 @@ const Description = styled('span', {shouldForwardProp: isPropValid})`
   line-height: 1;
   z-index: 1;
   width: 100%;
-  display: ${p => (p.first ? 'block' : 'none')};
+  display: ${(p) => (p.first ? 'block' : 'none')};
 
   &:hover {
     display: block;
@@ -213,7 +213,7 @@ const Description = styled('span', {shouldForwardProp: isPropValid})`
 
 const Percentage = styled('span')`
   margin-right: 6px;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   display: inline-block;
   vertical-align: middle;
 `;
@@ -227,7 +227,7 @@ const Label = styled('span')`
   vertical-align: middle;
 `;
 
-const getColor = p => {
+const getColor = (p) => {
   return [
     '#7c7484',
     '#867f90',
@@ -248,14 +248,14 @@ const Segment = styled(Link, {shouldForwardProp: isPropValid})`
   color: inherit;
 
   &:hover {
-    background: ${p => p.theme.purple};
+    background: ${(p) => p.theme.purple};
   }
 
-  border-top-left-radius: ${p => p.first && p.theme.borderRadius};
-  border-bottom-left-radius: ${p => p.first && p.theme.borderRadius};
+  border-top-left-radius: ${(p) => p.first && p.theme.borderRadius};
+  border-bottom-left-radius: ${(p) => p.first && p.theme.borderRadius};
 
-  border-top-right-radius: ${p => p.last && p.theme.borderRadius};
-  border-bottom-right-radius: ${p => p.last && p.theme.borderRadius};
+  border-top-right-radius: ${(p) => p.last && p.theme.borderRadius};
+  border-bottom-right-radius: ${(p) => p.last && p.theme.borderRadius};
 
   background-color: ${getColor};
 `;

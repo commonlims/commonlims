@@ -34,7 +34,7 @@ const isEqualWithEmptyArrays = (newQuery, current) => {
  */
 export function updateProjects(projects, router, options) {
   if (!isProjectsValid(projects)) {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra('projects', projects);
       Sentry.captureException(new Error('Invalid projects selected'));
     });
@@ -48,7 +48,7 @@ export function updateProjects(projects, router, options) {
 }
 
 function isProjectsValid(projects) {
-  return Array.isArray(projects) && projects.every(project => isInteger(project));
+  return Array.isArray(projects) && projects.every((project) => isInteger(project));
 }
 
 /**

@@ -42,7 +42,7 @@ export default class PasswordField extends InputField {
     return 'password';
   }
 
-  cancelEdit = e => {
+  cancelEdit = (e) => {
     e.preventDefault();
     this.setState(
       {
@@ -54,7 +54,7 @@ export default class PasswordField extends InputField {
     );
   };
 
-  startEdit = e => {
+  startEdit = (e) => {
     e.preventDefault();
     this.setState({
       editing: true,

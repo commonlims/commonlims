@@ -103,7 +103,7 @@ export default class PermissionSelection extends React.Component {
    */
   permissionStateToList() {
     const {permissions} = this.state;
-    const findResource = r => find(SENTRY_APP_PERMISSIONS, ['resource', r]);
+    const findResource = (r) => find(SENTRY_APP_PERMISSIONS, ['resource', r]);
 
     return flatMap(
       Object.entries(permissions),
@@ -117,7 +117,7 @@ export default class PermissionSelection extends React.Component {
     this.save(permissions);
   };
 
-  save = permissions => {
+  save = (permissions) => {
     this.setState({permissions});
     this.props.onChange(permissions);
     this.context.form.setValue('scopes', this.permissionStateToList());
@@ -128,7 +128,7 @@ export default class PermissionSelection extends React.Component {
 
     return (
       <React.Fragment>
-        {SENTRY_APP_PERMISSIONS.map(config => {
+        {SENTRY_APP_PERMISSIONS.map((config) => {
           const toChoice = ([value, opt]) => [value, opt.label];
           const choices = Object.entries(config.choices).map(toChoice);
           const value = permissions[config.resource];

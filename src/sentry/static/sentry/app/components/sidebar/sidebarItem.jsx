@@ -38,7 +38,7 @@ class SidebarItem extends React.Component {
     orientation: PropTypes.oneOf(['top', 'left']),
   };
 
-  handleClick = e => {
+  handleClick = (e) => {
     const {id, onClick} = this.props;
 
     if (typeof onClick !== 'function') {
@@ -88,12 +88,11 @@ class SidebarItem extends React.Component {
         >
           <SidebarItemWrapper>
             <SidebarItemIcon>{icon}</SidebarItemIcon>
-            {!collapsed &&
-              !isTop && (
-                <SidebarItemLabel>
-                  <TextOverflow>{label}</TextOverflow>
-                </SidebarItemLabel>
-              )}
+            {!collapsed && !isTop && (
+              <SidebarItemLabel>
+                <TextOverflow>{label}</TextOverflow>
+              </SidebarItemLabel>
+            )}
             {badge > 0 && (
               <SidebarItemBadge collapsed={collapsed}>{badge}</SidebarItemBadge>
             )}
@@ -150,7 +149,7 @@ const StyledSidebarItem = styled(({active, ...props}) => <Link {...props} />)`
     transition: 0.15s background-color linear;
   }
 
-  @media (max-width: ${p => p.theme.breakpoints[0]}) {
+  @media (max-width: ${(p) => p.theme.breakpoints[0]}) {
     margin: 0 4px;
 
     &:before {
@@ -166,7 +165,7 @@ const StyledSidebarItem = styled(({active, ...props}) => <Link {...props} />)`
 
   &:hover,
   &:focus {
-    color: ${p => p.theme.gray1};
+    color: ${(p) => p.theme.gray1};
   }
 
   ${getActiveStyle};
@@ -220,13 +219,13 @@ const getCollapsedBadgeStyle = ({collapsed, theme}) => {
 const SidebarItemBadge = styled(({collapsed, ...props}) => <span {...props} />)`
   display: block;
   text-align: center;
-  color: ${p => p.theme.white};
+  color: ${(p) => p.theme.white};
   font-size: 12px;
-  background: ${p => p.theme.red};
-  width: ${p => p.theme.sidebar.badgeSize};
-  height: ${p => p.theme.sidebar.badgeSize};
-  border-radius: ${p => p.theme.sidebar.badgeSize};
-  line-height: ${p => p.theme.sidebar.badgeSize};
+  background: ${(p) => p.theme.red};
+  width: ${(p) => p.theme.sidebar.badgeSize};
+  height: ${(p) => p.theme.sidebar.badgeSize};
+  border-radius: ${(p) => p.theme.sidebar.badgeSize};
+  line-height: ${(p) => p.theme.sidebar.badgeSize};
 
   ${getCollapsedBadgeStyle};
 `;

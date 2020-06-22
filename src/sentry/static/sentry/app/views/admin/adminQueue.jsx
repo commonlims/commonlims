@@ -37,7 +37,7 @@ export default class AdminQueue extends AsyncView {
     });
   }
 
-  changeTask = value => {
+  changeTask = (value) => {
     this.setState({activeTask: value});
   };
 
@@ -47,12 +47,12 @@ export default class AdminQueue extends AsyncView {
     return (
       <div>
         <div className="btn-group pull-right">
-          {['1h', '1d', '1w'].map(r => {
+          {['1h', '1d', '1w'].map((r) => {
             return (
               <a
-                className={`btn btn-sm ${r == this.state.timeWindow
-                  ? 'btn-primary'
-                  : 'btn-default'}`}
+                className={`btn btn-sm ${
+                  r == this.state.timeWindow ? 'btn-primary' : 'btn-default'
+                }`}
                 onClick={() => this.changeWindow(r)}
                 key={r}
               >
@@ -86,7 +86,7 @@ export default class AdminQueue extends AsyncView {
               onChange={this.changeTask}
               value={activeTask}
               allowClear={true}
-              choices={[''].concat(...taskList).map(t => [t, t])}
+              choices={[''].concat(...taskList).map((t) => [t, t])}
             />
           </div>
           {activeTask ? (

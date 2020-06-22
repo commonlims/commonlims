@@ -8,7 +8,7 @@ import NotFound from 'app/components/errors/notFound';
 
 class RouteNotFound extends React.Component {
   componentDidMount() {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setFingerprint(['RouteNotFound']);
       Sentry.captureException(new Error('Route not found'));
     });

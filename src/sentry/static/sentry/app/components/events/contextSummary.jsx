@@ -7,7 +7,7 @@ import SentryTypes from 'app/sentryTypes';
 import {t} from 'app/locale';
 import {objectIsEmpty} from 'app/utils';
 
-const generateClassName = function(name) {
+const generateClassName = function (name) {
   return name
     .split(/\d/)[0]
     .toLowerCase()

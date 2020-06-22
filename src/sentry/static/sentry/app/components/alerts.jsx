@@ -22,7 +22,7 @@ const Alerts = createReactClass({
     return (
       <ThemeProvider theme={theme}>
         <div {...this.props}>
-          {this.state.alerts.map(function(alert) {
+          {this.state.alerts.map(function (alert) {
             return <AlertMessage alert={alert} key={alert.key} system />;
           })}
         </div>

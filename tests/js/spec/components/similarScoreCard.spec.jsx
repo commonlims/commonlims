@@ -2,23 +2,23 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import SimilarScoreCard from 'app/components/similarScoreCard';
 
-describe('SimilarScoreCard', function() {
+describe('SimilarScoreCard', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(<SimilarScoreCard />);
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders with score list', function() {
+  it('renders with score list', function () {
     const wrapper = shallow(
       <SimilarScoreCard
         scoreList={[

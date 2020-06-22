@@ -3,7 +3,7 @@ import ListView from 'app/components/listView.jsx';
 import {shallow} from 'enzyme';
 import {Set} from 'immutable';
 
-describe('instantiate listview', function() {
+describe('instantiate listview', function () {
   const oneSample = {
     dataById: {
       1: {
@@ -40,21 +40,23 @@ describe('instantiate listview', function() {
       Header: 'Sample name',
       id: 'name',
       accessor: 'name',
-      aggregate: vals => '',
+      aggregate: (vals) => '',
     },
     {
       Header: 'Container',
       id: 'container',
-      accessor: d =>
+      accessor: (d) =>
         d.isGroupHeader ? null : d.location ? d.location.container.name : '<No location>',
     },
     {
       Header: 'Sample Type',
       id: 'sample_type',
-      accessor: d =>
+      accessor: (d) =>
         d.isGroupHeader
           ? null
-          : d.properties.sample_type ? d.properties.sample_type.value : null,
+          : d.properties.sample_type
+          ? d.properties.sample_type.value
+          : null,
     },
   ];
 
@@ -81,10 +83,7 @@ describe('instantiate listview', function() {
   });
 
   function fetchElement(wrapper, index) {
-    return wrapper
-      .find('td')
-      .at(index)
-      .text();
+    return wrapper.find('td').at(index).text();
   }
 
   it('column entries ok for 1 sample', () => {

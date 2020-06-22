@@ -101,7 +101,7 @@ class DateRange extends React.Component {
     });
   };
 
-  handleChangeStart = e => {
+  handleChangeStart = (e) => {
     // Safari does not support "time" inputs, so we don't have access to
     // `e.target.valueAsDate`, must parse as string
     //
@@ -120,7 +120,7 @@ class DateRange extends React.Component {
     });
   };
 
-  handleChangeEnd = e => {
+  handleChangeEnd = (e) => {
     const {start, end, onChange} = this.props;
     const endTime = e.target.value;
 
@@ -202,7 +202,7 @@ class DateRange extends React.Component {
 const StyledDateRange = styled(DateRange)`
   display: flex;
   flex-direction: column;
-  border-left: 1px solid ${p => p.theme.borderLight};
+  border-left: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 const StyledDateRangePicker = styled(DateRangePicker)`
@@ -288,27 +288,27 @@ const StyledDateRangePicker = styled(DateRangePicker)`
   }
 
   .rdrNextPrevButton {
-    background-color: ${p => p.theme.offWhite2};
+    background-color: ${(p) => p.theme.offWhite2};
   }
 
   .rdrPprevButton i {
-    border-right-color: ${p => p.theme.gray4};
+    border-right-color: ${(p) => p.theme.gray4};
   }
 
   .rdrNextButton i {
-    border-left-color: ${p => p.theme.gray4};
+    border-left-color: ${(p) => p.theme.gray4};
   }
 `;
 
 const TimeAndUtcPicker = styled('div')`
   display: flex;
   align-items: center;
-  padding: ${p => space(2)};
-  border-top: 1px solid ${p => p.theme.borderLight};
+  padding: ${(p) => space(2)};
+  border-top: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 const UtcPicker = styled('div')`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   display: flex;
   align-items: center;
   justify-content: flex-end;

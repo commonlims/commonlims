@@ -38,7 +38,7 @@ class TeamCrumb extends React.Component {
             <IdBadge avatarSize={18} team={team} />
           </TextLink>
         }
-        onSelect={item => {
+        onSelect={(item) => {
           browserHistory.push(
             recreateRoute('', {
               routes,
@@ -48,7 +48,7 @@ class TeamCrumb extends React.Component {
         }}
         hasMenu={hasMenu}
         route={route}
-        items={teams.map(teamItem => ({
+        items={teams.map((teamItem) => ({
           value: teamItem.slug,
           label: (
             <MenuItem>

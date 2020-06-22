@@ -4,14 +4,14 @@ import {descopeFeatureName} from 'app/utils';
 import {mount} from 'enzyme';
 import ProviderItem from 'app/views/settings/organizationAuth/providerItem';
 
-describe('ProviderItem', function() {
+describe('ProviderItem', function () {
   const provider = TestStubs.AuthProviders()[0];
   const org = TestStubs.Organization({
     features: [descopeFeatureName(provider.requiredFeature)],
   });
   const routerContext = TestStubs.routerContext([{organization: org}]);
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = mount(
       <ProviderItem organization={org} provider={provider} onConfigure={() => {}} />,
       routerContext
@@ -23,7 +23,7 @@ describe('ProviderItem', function() {
     expect(wrapper.find('Tag').exists()).toBe(false);
   });
 
-  it('calls configure callback', function() {
+  it('calls configure callback', function () {
     const mock = jest.fn();
     const wrapper = mount(
       <ProviderItem organization={org} provider={provider} onConfigure={mock} />,
@@ -34,7 +34,7 @@ describe('ProviderItem', function() {
     expect(mock).toHaveBeenCalledWith('dummy', expect.anything());
   });
 
-  it('renders a disabled Tag when disabled', function() {
+  it('renders a disabled Tag when disabled', function () {
     const noFeatureRouterContext = TestStubs.routerContext();
     const wrapper = mount(
       <ProviderItem organization={org} provider={provider} onConfigure={() => {}} />,

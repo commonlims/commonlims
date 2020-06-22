@@ -29,7 +29,7 @@ class ActorAvatar extends React.Component {
       return <Avatar team={team} hasTooltip {...props} />;
     }
 
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra('actor', actor);
       Sentry.captureException(new Error('Unknown avatar type'));
     });

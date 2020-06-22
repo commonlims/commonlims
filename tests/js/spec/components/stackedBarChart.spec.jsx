@@ -3,9 +3,9 @@ import {shallow} from 'enzyme';
 
 import StackedBarChart from 'app/components/stackedBarChart';
 
-describe('StackedBarChart', function() {
-  describe('render()', function() {
-    it('renders with points data', function() {
+describe('StackedBarChart', function () {
+  describe('render()', function () {
+    it('renders with points data', function () {
       const points = [
         {x: 1439766000, y: [10]},
         {x: 1439769600, y: [20]},
@@ -21,7 +21,7 @@ describe('StackedBarChart', function() {
       expect(columns.at(2).text()).toEqual('30');
     });
 
-    it('renders with points and markers', function() {
+    it('renders with points and markers', function () {
       const points = [
         {x: 1439769600, y: [10]},
         {x: 1439773200, y: [20]},
@@ -44,7 +44,7 @@ describe('StackedBarChart', function() {
       expect(columns.at(4).text()).toEqual('last seen');
     });
 
-    it('renders with points and markers, when first and last seen are same data point', function() {
+    it('renders with points and markers, when first and last seen are same data point', function () {
       const points = [{x: 1439776800, y: [30]}];
       const markers = [
         {x: 1439776800, className: 'first-seen', label: 'first seen'},

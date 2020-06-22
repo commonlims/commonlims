@@ -14,7 +14,7 @@ const forms = [
         // additional data/props that is related to rendering of form field rather than data
         label: 'Name',
         help: 'e.g. My Application',
-        setValue: value => getDynamicText({value, fixed: 'PERCY_APPLICATION_NAME'}),
+        setValue: (value) => getDynamicText({value, fixed: 'PERCY_APPLICATION_NAME'}),
       },
       {
         name: 'homepageUrl',
@@ -51,8 +51,9 @@ const forms = [
         placeholder: 'e.g. https://example.com/oauth/complete',
         label: 'Authorized Redirect URIs',
         help: 'Separate multiple entries with a newline.',
-        getValue: val => extractMultilineFields(val),
-        setValue: val => (val && typeof val.join === 'function' && val.join('\n')) || '',
+        getValue: (val) => extractMultilineFields(val),
+        setValue: (val) =>
+          (val && typeof val.join === 'function' && val.join('\n')) || '',
       },
       {
         name: 'allowedOrigins',
@@ -61,8 +62,9 @@ const forms = [
         placeholder: 'e.g. example.com',
         label: 'Authorized JavaScript Origins',
         help: 'Separate multiple entries with a newline.',
-        getValue: val => extractMultilineFields(val),
-        setValue: val => (val && typeof val.join === 'function' && val.join('\n')) || '',
+        getValue: (val) => extractMultilineFields(val),
+        setValue: (val) =>
+          (val && typeof val.join === 'function' && val.join('\n')) || '',
       },
     ],
   },

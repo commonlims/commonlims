@@ -24,9 +24,9 @@ class TaskList extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.tag;
+const mapStateToProps = (state) => state.tag;
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTags: () => dispatch(tagsGet('task')),
 });
 

@@ -76,8 +76,8 @@ export const ICON_PATHS = {
 
 const IntegrationIcon = styled.div`
   position: relative;
-  height: ${p => p.size}px;
-  width: ${p => p.size}px;
+  height: ${(p) => p.size}px;
+  width: ${(p) => p.size}px;
   border-radius: 2px;
   border: 0;
   /* this is so that there aren't gray boxes before load */
@@ -86,7 +86,7 @@ const IntegrationIcon = styled.div`
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url(${p => p.image});
+  background-image: url(${(p) => p.image});
 `;
 
 class PluginIcon extends React.Component {

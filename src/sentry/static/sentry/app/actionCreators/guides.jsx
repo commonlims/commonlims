@@ -7,7 +7,7 @@ const api = new Client();
 export function fetchGuides() {
   api.request('/assistant/', {
     method: 'GET',
-    success: data => {
+    success: (data) => {
       GuideActions.fetchSucceeded(data);
     },
   });

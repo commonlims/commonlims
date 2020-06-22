@@ -1,13 +1,13 @@
 import {css} from 'react-emotion';
 
-const readOnlyStyle = props =>
+const readOnlyStyle = (props) =>
   props.readOnly
     ? css`
         cursor: default;
       `
     : '';
 
-const inputStyles = props => {
+const inputStyles = (props) => {
   return css`
     color: ${props.disabled ? props.theme.disabled : props.theme.gray5};
     display: block;

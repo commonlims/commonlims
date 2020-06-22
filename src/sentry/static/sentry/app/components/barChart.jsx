@@ -29,7 +29,7 @@ class BarChart extends React.Component {
   };
 
   render() {
-    const points = this.props.points.map(point => {
+    const points = this.props.points.map((point) => {
       return {x: point.x, y: [point.y]};
     });
     const props = Object.assign({}, this.props, {points});

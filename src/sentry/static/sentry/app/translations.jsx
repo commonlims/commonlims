@@ -12,7 +12,7 @@ export function getTranslations(language) {
   try {
     return require(`sentry-locale/${language}/LC_MESSAGES/django.po`);
   } catch (e) {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setLevel('warning');
       scope.setFingerprint(['sentry-locale-not-found']);
       scope.setExtra('locale', language);

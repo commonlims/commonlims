@@ -78,7 +78,7 @@ const InviteMember = createReactClass({
 
     this.api.request(`/organizations/${slug}/members/me/`, {
       method: 'GET',
-      success: resp => {
+      success: (resp) => {
         const {roles} = resp || {};
 
         if (!resp || !roles) {
@@ -89,7 +89,7 @@ const InviteMember = createReactClass({
             },
           });
 
-          Sentry.withScope(scope => {
+          Sentry.withScope((scope) => {
             scope.setExtra('resp', resp);
             scope.setExtra('state', this.state);
             Sentry.captureException(new Error('[members]: data fetch invalid response'));
@@ -103,12 +103,12 @@ const InviteMember = createReactClass({
           }
         }
       },
-      error: error => {
+      error: (error) => {
         if (error.status == 404 && isSuperuser) {
           // use the static list
           this.setState({roleList: STATIC_ROLE_LIST, loading: false});
         } else if (error.status !== 0) {
-          Sentry.withScope(scope => {
+          Sentry.withScope((scope) => {
             scope.setExtra('error', error);
             scope.setExtra('state', this.state);
             Sentry.captureException(new Error('[members]: data fetch error'));
@@ -134,8 +134,8 @@ const InviteMember = createReactClass({
   splitEmails(text) {
     return text
       .split(',')
-      .map(e => e.trim())
-      .filter(e => e);
+      .map((e) => e.trim())
+      .filter((e) => e);
   },
 
   inviteUser(email) {
@@ -161,7 +161,7 @@ const InviteMember = createReactClass({
           );
           resolve();
         },
-        error: err => {
+        error: (err) => {
           if (err.status === 403) {
             addErrorMessage(t("You aren't allowed to invite members."));
             resolve();
@@ -185,9 +185,9 @@ const InviteMember = createReactClass({
     this.setState({busy: true});
     Promise.all(emails.map(this.inviteUser))
       .then(() => this.redirectToMemberPage())
-      .catch(error => {
+      .catch((error) => {
         if (error && !error.email && !error.role) {
-          Sentry.withScope(scope => {
+          Sentry.withScope((scope) => {
             scope.setExtra('error', error);
             scope.setExtra('state', this.state);
             Sentry.captureException(new Error('Unknown invite member api response'));
@@ -198,7 +198,7 @@ const InviteMember = createReactClass({
   },
 
   toggleTeam(slug) {
-    this.setState(state => {
+    this.setState((state) => {
       const {selectedTeams} = state;
       if (selectedTeams.has(slug)) {
         selectedTeams.delete(slug);
@@ -220,7 +220,7 @@ const InviteMember = createReactClass({
   handleSelectAll() {
     const {teams} = this.getOrganization();
 
-    this.setState(state => {
+    this.setState((state) => {
       let {selectedTeams} = state;
       if (this.allSelected()) {
         selectedTeams.clear();
@@ -261,7 +261,7 @@ const InviteMember = createReactClass({
                 label={invitesEnabled ? t('Email') + '(s)' : t('Username') + '(s)'}
                 placeholder="e.g. teammate@example.com"
                 spellCheck="false"
-                onChange={v => this.setState({email: v})}
+                onChange={(v) => this.setState({email: v})}
               />
               {error && error.email && <p className="error">{error.email}</p>}
             </div>
@@ -270,7 +270,7 @@ const InviteMember = createReactClass({
               enforceAllowed={!isSuperuser}
               roleList={roleList}
               selectedRole={selectedRole}
-              setRole={slug => this.setState({selectedRole: slug})}
+              setRole={(slug) => this.setState({selectedRole: slug})}
             />
             <TeamSelect
               teams={teams}

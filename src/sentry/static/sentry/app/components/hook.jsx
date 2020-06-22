@@ -29,7 +29,7 @@ const Hook = createReactClass({
     const {name, ...props} = this.props;
 
     return {
-      hooks: HookStore.get(name).map(cb => cb(props)),
+      hooks: HookStore.get(name).map((cb) => cb(props)),
     };
   },
 
@@ -41,8 +41,8 @@ const Hook = createReactClass({
       return;
     }
 
-    this.setState(state => ({
-      hooks: hooks.map(cb => cb(props)),
+    this.setState((state) => ({
+      hooks: hooks.map((cb) => cb(props)),
     }));
   },
 

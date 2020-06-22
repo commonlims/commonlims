@@ -6,11 +6,11 @@ import StreamGroup from 'app/components/stream/group';
 
 // jest.mock('app/mixins/projectState');
 
-describe('StreamGroup', function() {
+describe('StreamGroup', function () {
   let sandbox;
   let GROUP_1;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
     GROUP_1 = TestStubs.Group({
       id: '1337',
@@ -23,11 +23,11 @@ describe('StreamGroup', function() {
     sandbox.stub(GroupStore, 'get').returns(GROUP_1);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders with anchors', function() {
+  it('renders with anchors', function () {
     const component = shallow(
       <StreamGroup
         id="1L"

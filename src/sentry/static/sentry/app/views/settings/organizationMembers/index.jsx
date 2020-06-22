@@ -66,7 +66,7 @@ class OrganizationMembersView extends AsyncView {
         `/organizations/${this.props.params.orgId}/auth-provider/`,
         {},
         {
-          allowError: error => {
+          allowError: (error) => {
             // Allow for 403s
             return error.status === 403;
           },
@@ -81,7 +81,7 @@ class OrganizationMembersView extends AsyncView {
     return `${org.name} Members`;
   }
 
-  removeMember = id => {
+  removeMember = (id) => {
     const {params} = this.props;
     const {orgId} = params || {};
 
@@ -89,13 +89,13 @@ class OrganizationMembersView extends AsyncView {
       this.api.request(`/organizations/${orgId}/members/${id}/`, {
         method: 'DELETE',
         data: {},
-        success: data => {
-          this.setState(state => ({
+        success: (data) => {
+          this.setState((state) => ({
             members: state.members.filter(({id: existingId}) => existingId !== id),
           }));
           resolve(data);
         },
-        error: err => reject(err),
+        error: (err) => reject(err),
       });
     });
   };
@@ -104,7 +104,7 @@ class OrganizationMembersView extends AsyncView {
     const {params} = this.props;
     const {orgId} = params || {};
 
-    this.setState(state => ({
+    this.setState((state) => ({
       accessRequestBusy: state.accessRequestBusy.set(id, true),
     }));
 
@@ -112,26 +112,26 @@ class OrganizationMembersView extends AsyncView {
       this.api.request(`/organizations/${orgId}/access-requests/${id}/`, {
         method: 'PUT',
         data: {isApproved},
-        success: data => {
-          this.setState(state => ({
+        success: (data) => {
+          this.setState((state) => ({
             requestList: state.requestList.filter(
               ({id: existingId}) => existingId !== id
             ),
           }));
           resolve(data);
         },
-        error: err => reject(err),
+        error: (err) => reject(err),
         complete: () =>
-          this.setState(state => ({
+          this.setState((state) => ({
             accessRequestBusy: state.accessRequestBusy.set(id, false),
           })),
       });
     });
   };
 
-  handleApprove = id => this.approveOrDeny(true, id);
+  handleApprove = (id) => this.approveOrDeny(true, id);
 
-  handleDeny = id => this.approveOrDeny(false, id);
+  handleDeny = (id) => this.approveOrDeny(false, id);
 
   handleRemove = ({id, name}, e) => {
     const {organization} = this.context;
@@ -176,19 +176,19 @@ class OrganizationMembersView extends AsyncView {
   };
 
   handleSendInvite = ({id}) => {
-    this.setState(state => ({
+    this.setState((state) => ({
       invited: state.invited.set(id, 'loading'),
     }));
 
     this.api.request(`/organizations/${this.props.params.orgId}/members/${id}/`, {
       method: 'PUT',
       data: {reinvite: 1},
-      success: data =>
-        this.setState(state => ({
+      success: (data) =>
+        this.setState((state) => ({
           invited: state.invited.set(id, 'success'),
         })),
       error: () => {
-        this.setState(state => ({
+        this.setState((state) => ({
           invited: state.invited.set(id, null),
         }));
         addErrorMessage(t('Error sending invite'));
@@ -196,13 +196,13 @@ class OrganizationMembersView extends AsyncView {
     });
   };
 
-  handleChange = evt => {
+  handleChange = (evt) => {
     const searchQuery = evt.target.value;
     this.getMembers(searchQuery);
     this.setState({searchQuery});
   };
 
-  getMembers = debounce(searchQuery => {
+  getMembers = debounce((searchQuery) => {
     const {params} = this.props;
     const {orgId} = params || {};
 
@@ -278,7 +278,7 @@ class OrganizationMembersView extends AsyncView {
           </PanelHeader>
 
           <PanelBody>
-            {members.map(member => {
+            {members.map((member) => {
               return (
                 <OrganizationMemberRow
                   routes={routes}

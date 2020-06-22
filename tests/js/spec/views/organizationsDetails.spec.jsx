@@ -3,8 +3,8 @@ import {render} from 'enzyme';
 
 import OrganizationDetails from 'app/views/organizationDetails';
 
-describe('OrganizationDetails', function() {
-  beforeEach(function() {
+describe('OrganizationDetails', function () {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: '/broadcasts/',
@@ -12,9 +12,9 @@ describe('OrganizationDetails', function() {
     });
   });
 
-  describe('render()', function() {
+  describe('render()', function () {
     describe('pending deletion', () => {
-      it('should render a restoration prompt', function() {
+      it('should render a restoration prompt', function () {
         MockApiClient.addMockResponse({
           url: '/organizations/org-slug/',
           body: TestStubs.Organization({
@@ -32,7 +32,7 @@ describe('OrganizationDetails', function() {
         expect(tree).toMatchSnapshot();
       });
 
-      it('should render a restoration prompt without action for members', function() {
+      it('should render a restoration prompt without action for members', function () {
         MockApiClient.addMockResponse({
           url: '/organizations/org-slug/',
           body: TestStubs.Organization({
@@ -66,7 +66,7 @@ describe('OrganizationDetails', function() {
         });
       });
 
-      it('should render a deletion in progress prompt', function() {
+      it('should render a deletion in progress prompt', function () {
         const tree = render(
           <OrganizationDetails params={{orgId: 'org-slug'}} location={{}} />,
           TestStubs.routerContext()

@@ -73,7 +73,7 @@ const App = createReactClass({
       query: {
         member: '1',
       },
-      success: data => {
+      success: (data) => {
         OrganizationsStore.load(data);
         this.setState({
           loading: false,
@@ -88,9 +88,9 @@ const App = createReactClass({
     });
 
     this.api.request('/internal/health/', {
-      success: data => {
+      success: (data) => {
         if (data && data.problems) {
-          data.problems.forEach(problem => {
+          data.problems.forEach((problem) => {
             AlertActions.addAlert({
               id: problem.id,
               message: problem.message,
@@ -103,14 +103,14 @@ const App = createReactClass({
       error: () => {}, // TODO: do something?
     });
 
-    ConfigStore.get('messages').forEach(msg => {
+    ConfigStore.get('messages').forEach((msg) => {
       AlertActions.addAlert({
         message: msg.message,
         type: msg.level,
       });
     });
 
-    $(document).ajaxError(function(evt, jqXHR) {
+    $(document).ajaxError(function (evt, jqXHR) {
       // TODO: Need better way of identifying anonymous pages
       //       that don't trigger redirect
       const pageAllowsAnon = /^\/share\//.test(window.location.pathname);
@@ -234,7 +234,7 @@ const App = createReactClass({
           <div
             className="main-container"
             tabIndex="-1"
-            ref={ref => (this.mainContainerRef = ref)}
+            ref={(ref) => (this.mainContainerRef = ref)}
           >
             <GlobalModal onClose={this.handleGlobalModalClose} />
             <Alerts className="messages-container" />

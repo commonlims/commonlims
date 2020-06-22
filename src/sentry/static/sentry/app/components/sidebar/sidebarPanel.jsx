@@ -29,7 +29,7 @@ class SidebarPanel extends React.Component {
 
 export default SidebarPanel;
 
-const getPositionForOrientation = p => {
+const getPositionForOrientation = (p) => {
   if (p.orientation === 'top') {
     return css`
       top: ${p.theme.sidebar.mobileHeight};
@@ -49,10 +49,10 @@ const StyledSidebarPanel = styled(({collapsed, orientation, ...props}) => (
 ))`
   position: fixed;
   bottom: 0;
-  background: ${p => p.theme.whiteDark};
-  z-index: ${p => p.theme.zIndex.sidebar};
+  background: ${(p) => p.theme.whiteDark};
+  z-index: ${(p) => p.theme.zIndex.sidebar};
   color: #2f2936;
-  border-right: 1px solid ${p => p.theme.borderLight};
+  border-right: 1px solid ${(p) => p.theme.borderLight};
   box-shadow: 1px 0 2px rgba(0, 0, 0, 0.06);
   text-align: left;
   line-height: 24px;
@@ -61,18 +61,18 @@ const StyledSidebarPanel = styled(({collapsed, orientation, ...props}) => (
 `;
 
 const SidebarPanelHeader = styled('div')`
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
   padding: 20px;
-  background: ${p => p.theme.background};
+  background: ${(p) => p.theme.background};
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  height: ${p => p.theme.sidebar.panel.headerHeight};
+  height: ${(p) => p.theme.sidebar.panel.headerHeight};
 `;
 const SidebarPanelBody = styled('div')`
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  top: ${p => p.theme.sidebar.panel.headerHeight};
+  top: ${(p) => p.theme.sidebar.panel.headerHeight};
   overflow: auto;
 `;
 
@@ -82,10 +82,10 @@ const PanelClose = styled('a')`
   position: relative;
   top: 0;
   right: -3px;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 
   &:hover {
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
   }
 `;
 

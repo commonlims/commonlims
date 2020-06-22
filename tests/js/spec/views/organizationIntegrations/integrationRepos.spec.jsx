@@ -5,8 +5,8 @@ import {Client} from 'app/api';
 import {mount} from 'enzyme';
 import IntegrationRepos from 'app/views/organizationIntegrations/integrationRepos';
 
-describe('IntegrationRepos', function() {
-  beforeEach(function() {
+describe('IntegrationRepos', function () {
+  beforeEach(function () {
     Client.clearMockResponses();
   });
 
@@ -14,8 +14,8 @@ describe('IntegrationRepos', function() {
   const integration = TestStubs.GitHubIntegration();
   const routerContext = TestStubs.routerContext();
 
-  describe('Adding repositories', function() {
-    it('can save successfully', async function() {
+  describe('Adding repositories', function () {
+    it('can save successfully', async function () {
       const addRepo = Client.addMockResponse({
         url: `/organizations/${org.slug}/repos/`,
         method: 'POST',
@@ -53,15 +53,12 @@ describe('IntegrationRepos', function() {
           },
         })
       );
-      const name = wrapper
-        .find('RepositoryRow')
-        .find('strong')
-        .first();
+      const name = wrapper.find('RepositoryRow').find('strong').first();
       expect(name).toHaveLength(1);
       expect(name.text()).toEqual('example/repo-name');
     });
 
-    it('handles failure during save', async function() {
+    it('handles failure during save', async function () {
       const addRepo = Client.addMockResponse({
         url: `/organizations/${org.slug}/repos/`,
         method: 'POST',
@@ -97,7 +94,7 @@ describe('IntegrationRepos', function() {
     });
   });
 
-  describe('migratable repo', function() {
+  describe('migratable repo', function () {
     it('associates repository with integration', () => {
       Client.addMockResponse({
         url: `/organizations/${org.slug}/repos/`,

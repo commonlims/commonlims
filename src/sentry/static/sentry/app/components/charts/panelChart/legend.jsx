@@ -63,7 +63,7 @@ const SeriesName = styled('span')`
 const DottedLineIndicator = styled('span')`
   display: flex;
   width: 20px;
-  border: 1px dashed ${p => p.theme.charts.previousPeriod};
+  border: 1px dashed ${(p) => p.theme.charts.previousPeriod};
   align-items: center;
 `;
 

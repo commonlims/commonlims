@@ -34,9 +34,9 @@ class ListFilters extends React.Component {
   static defaultProps = {
     sort: '',
     query: null,
-    onSortChange: function() {},
-    onSearch: function() {},
-    onSidebarToggle: function() {},
+    onSortChange: function () {},
+    onSearch: function () {},
+    onSidebarToggle: function () {},
   };
 
   componentWillMount() {
@@ -105,11 +105,11 @@ class ListFilters extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {savedSearch: state.savedSearch};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getSavedSearches: () => dispatch(savedSearchesGet()),
 });
 

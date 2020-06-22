@@ -9,8 +9,8 @@ import {
   downloadAsCsv,
 } from 'app/views/organizationDiscover/result/utils';
 
-describe('Utils', function() {
-  describe('getChartData()', function() {
+describe('Utils', function () {
+  describe('getChartData()', function () {
     const raw = [
       {count: 2, uniq_id: 1, 'project.id': 5, environment: null},
       {count: 2, uniq_id: 3, 'project.id': 5, environment: 'staging'},
@@ -18,11 +18,14 @@ describe('Utils', function() {
       {count: 6, uniq_id: 10, 'project.id': 5, environment: 'production'},
     ];
     const query = {
-      aggregations: [['count()', null, 'count'], ['uniq', 'id', 'uniq_id']],
+      aggregations: [
+        ['count()', null, 'count'],
+        ['uniq', 'id', 'uniq_id'],
+      ],
       fields: ['project.id', 'environment'],
     };
 
-    it('returns chart data', function() {
+    it('returns chart data', function () {
       const expected = [
         {
           seriesName: 'count',
@@ -48,7 +51,7 @@ describe('Utils', function() {
     });
   });
 
-  describe('getChartDataForWidget()', function() {
+  describe('getChartDataForWidget()', function () {
     const raw = [
       {count: 2, uniq_id: 1, 'project.id': 5, environment: null},
       {count: 2, uniq_id: 3, 'project.id': 5, environment: 'staging'},
@@ -56,11 +59,14 @@ describe('Utils', function() {
       {count: 6, uniq_id: 10, 'project.id': 5, environment: 'production'},
     ];
     const query = {
-      aggregations: [['count()', null, 'count'], ['uniq', 'id', 'uniq_id']],
+      aggregations: [
+        ['count()', null, 'count'],
+        ['uniq', 'id', 'uniq_id'],
+      ],
       fields: ['project.id', 'environment'],
     };
 
-    it('returns chart data with percentages', function() {
+    it('returns chart data with percentages', function () {
       const expected = [
         {
           seriesName: 'count',
@@ -88,7 +94,7 @@ describe('Utils', function() {
     });
   });
 
-  describe('getChartDataByDay()', function() {
+  describe('getChartDataByDay()', function () {
     const raw = [
       {
         'error.type': 'Type Error',
@@ -145,7 +151,7 @@ describe('Utils', function() {
       fields: ['platform', 'error.type'],
     };
 
-    it('returns chart data grouped by day', function() {
+    it('returns chart data grouped by day', function () {
       const expected = [
         {
           data: [
@@ -184,7 +190,7 @@ describe('Utils', function() {
       expect(getChartDataByDay(raw, query)).toEqual(expected);
     });
 
-    it('returns chart data with zero filled dates', function() {
+    it('returns chart data with zero filled dates', function () {
       const zeroFilledRaw = [
         {
           'error.type': 'Type Error',
@@ -255,7 +261,7 @@ describe('Utils', function() {
       expect(getChartDataByDay(zeroFilledRaw, query)).toEqual(expected);
     });
 
-    it('shows only top 10 series by default', function() {
+    it('shows only top 10 series by default', function () {
       expect(
         getChartDataByDay(
           [
@@ -272,7 +278,7 @@ describe('Utils', function() {
       ).toHaveLength(10);
     });
 
-    it('shows all series', function() {
+    it('shows all series', function () {
       expect(
         getChartDataByDay(
           [
@@ -290,7 +296,7 @@ describe('Utils', function() {
       ).toHaveLength(14);
     });
 
-    it('maps field value to label', function() {
+    it('maps field value to label', function () {
       const expected = [
         {
           data: [
@@ -333,7 +339,7 @@ describe('Utils', function() {
     });
   });
 
-  it('getDisplayValue()', function() {
+  it('getDisplayValue()', function () {
     const testData = [
       {input: null, expectedText: 'null'},
       {
@@ -359,7 +365,7 @@ describe('Utils', function() {
     });
   });
 
-  it('getTextValue()', function() {
+  it('getTextValue()', function () {
     const testData = [
       {input: null, expectedText: 'null'},
       {
@@ -385,15 +391,15 @@ describe('Utils', function() {
     });
   });
 
-  describe('downloadAsCsv()', function() {
+  describe('downloadAsCsv()', function () {
     let locationSpy;
-    beforeEach(function() {
-      locationSpy = jest.spyOn(window.location, 'assign').mockImplementation(_ => _);
+    beforeEach(function () {
+      locationSpy = jest.spyOn(window.location, 'assign').mockImplementation((_) => _);
     });
-    afterEach(function() {
+    afterEach(function () {
       jest.restoreAllMocks();
     });
-    it('handles raw data', function() {
+    it('handles raw data', function () {
       const result = {
         meta: [{name: 'message'}, {name: 'environment'}],
         data: [
@@ -408,7 +414,7 @@ describe('Utils', function() {
         )
       );
     });
-    it('handles aggregations', function() {
+    it('handles aggregations', function () {
       const result = {
         meta: [{type: 'UInt64', name: 'count'}],
         data: [{count: 3}],
@@ -418,7 +424,7 @@ describe('Utils', function() {
         expect.stringContaining(encodeURI('count\r\n3'))
       );
     });
-    it('quotes unsafe strings', function() {
+    it('quotes unsafe strings', function () {
       const result = {
         meta: [{name: 'message'}],
         data: [{message: '=HYPERLINK(http://some-bad-website)'}],

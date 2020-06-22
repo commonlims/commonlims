@@ -108,7 +108,7 @@ export default class ResolveActions extends React.Component {
       <div style={{display: 'inline-block'}}>
         <CustomResolutionModal
           show={this.state.modal}
-          onSelected={statusDetails => this.onCustomResolution(statusDetails)}
+          onSelected={(statusDetails) => this.onCustomResolution(statusDetails)}
           onCanceled={() => this.setState({modal: false})}
           orgId={orgId}
           projectId={projectId}

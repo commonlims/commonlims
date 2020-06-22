@@ -50,8 +50,8 @@ class DebugMetaInterface extends React.Component {
   render() {
     const data = this.props.data;
     const images = data.images
-      .map(img => this.getImageDetail(img, this.props.event))
-      .filter(img => img); // removes null values
+      .map((img) => this.getImageDetail(img, this.props.event))
+      .filter((img) => img); // removes null values
 
     let result = null;
 

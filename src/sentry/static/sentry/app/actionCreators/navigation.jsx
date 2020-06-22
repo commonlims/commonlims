@@ -18,7 +18,7 @@ export function navigateTo(to, router) {
           nextPath={to}
           needOrg={needOrg}
           needProject={needProject}
-          onFinish={path => {
+          onFinish={(path) => {
             closeModal();
             router.push(path);
           }}

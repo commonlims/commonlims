@@ -27,5 +27,5 @@ const EmptyText = styled(Flex)`
   margin-left: 4px;
   margin-right: 4px;
   height: 68px;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;

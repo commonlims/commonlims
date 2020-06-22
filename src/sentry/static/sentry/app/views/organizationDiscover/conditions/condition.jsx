@@ -31,7 +31,7 @@ export default class Condition extends React.Component {
     this.select.focus();
   }
 
-  handleChange = option => {
+  handleChange = (option) => {
     const external = getExternal(option.value, this.props.columns);
 
     if (isValidCondition(external, this.props.columns)) {
@@ -75,13 +75,13 @@ export default class Condition extends React.Component {
     const numberOnlyOperators = new Set(['>', '<', '>=', '<=']);
     const stringOnlyOperators = new Set(['LIKE', 'NOT LIKE']);
 
-    return CONDITION_OPERATORS.filter(operator => {
+    return CONDITION_OPERATORS.filter((operator) => {
       if (colType === 'number' || colType === 'datetime') {
         return !stringOnlyOperators.has(operator);
       }
 
       // We currently only support =, !=, LIKE and NOT LIKE on array fields
-      if (ARRAY_FIELD_PREFIXES.some(prefix => colName.startsWith(prefix))) {
+      if (ARRAY_FIELD_PREFIXES.some((prefix) => colName.startsWith(prefix))) {
         return ['=', '!=', 'LIKE', 'NOT LIKE'].includes(operator);
       }
 
@@ -90,7 +90,7 @@ export default class Condition extends React.Component {
     });
   }
 
-  filterOptions = options => {
+  filterOptions = (options) => {
     const input = this.state.inputValue;
 
     let optionList = options;
@@ -113,7 +113,7 @@ export default class Condition extends React.Component {
 
     if (hasSelectedColumn && !hasSelectedOperator) {
       const selectedColumn = external[0];
-      optionList = this.getConditionsForColumn(selectedColumn).map(op => {
+      optionList = this.getConditionsForColumn(selectedColumn).map((op) => {
         const value = `${selectedColumn} ${op}`;
         return {
           value,
@@ -130,8 +130,8 @@ export default class Condition extends React.Component {
     return isValidCondition(getExternal(label, this.props.columns), this.props.columns);
   };
 
-  inputRenderer = props => {
-    const onChange = evt => {
+  inputRenderer = (props) => {
+    const onChange = (evt) => {
       if (evt.target.value === '') {
         // React select won't trigger an onChange event when a value is completely
         // cleared, so we'll force this before calling onChange
@@ -152,7 +152,7 @@ export default class Condition extends React.Component {
     );
   };
 
-  valueComponent = props => {
+  valueComponent = (props) => {
     if (this.state.inputValue) {
       return null;
     }
@@ -160,12 +160,12 @@ export default class Condition extends React.Component {
     return <Value {...props} />;
   };
 
-  shouldKeyDownEventCreateNewOption = keyCode => {
+  shouldKeyDownEventCreateNewOption = (keyCode) => {
     const createKeyCodes = new Set([13, 9]); // ENTER, TAB
     return createKeyCodes.has(keyCode);
   };
 
-  handleInputChange = value => {
+  handleInputChange = (value) => {
     this.setState({
       inputValue: ignoreCase(value),
     });
@@ -173,7 +173,7 @@ export default class Condition extends React.Component {
     return value;
   };
 
-  handleBlur = evt => {
+  handleBlur = (evt) => {
     const external = getExternal(evt.target.value, this.props.columns);
     const isValid = isValidCondition(external, this.props.columns);
     if (isValid) {
@@ -198,7 +198,7 @@ export default class Condition extends React.Component {
     return (
       <Box w={1}>
         <SelectControl
-          innerRef={ref => (this.select = ref)}
+          innerRef={(ref) => (this.select = ref)}
           value={getInternal(this.props.value)}
           placeholder={<PlaceholderText>{t('Add condition...')}</PlaceholderText>}
           options={this.getOptions()}
@@ -217,7 +217,7 @@ export default class Condition extends React.Component {
           onInputChange={this.handleInputChange}
           onBlur={this.handleBlur}
           creatable={true}
-          promptTextCreator={text => text}
+          promptTextCreator={(text) => text}
           shouldKeyDownEventCreateNewOption={this.shouldKeyDownEventCreateNewOption}
           disabled={this.props.disabled}
           newOptionCreator={this.newOptionCreator}

@@ -86,7 +86,7 @@ class HelpSource extends React.Component {
     const [docResults, faqResults] = response.results;
 
     const results = [
-      ...docResults.hits.map(result =>
+      ...docResults.hits.map((result) =>
         buildHit(result, {
           descriptionKey: 'content',
           type: 'doc',
@@ -94,7 +94,7 @@ class HelpSource extends React.Component {
           makeUrl: ({url}) => `https://docs.sentry.io${url}`,
         })
       ),
-      ...faqResults.hits.map(result =>
+      ...faqResults.hits.map((result) =>
         buildHit(result, {
           descriptionKey: 'body_safe',
           type: 'faq',
@@ -161,12 +161,12 @@ const ResultIcon = styled('div')`
   color: #fff;
 `;
 
-const DocsBadge = styled(p => <ResultIcon {...p}>docs</ResultIcon>)`
-  background: ${p => p.theme.blueLight};
+const DocsBadge = styled((p) => <ResultIcon {...p}>docs</ResultIcon>)`
+  background: ${(p) => p.theme.blueLight};
 `;
 
-const FaqsBadge = styled(p => <ResultIcon {...p}>faqs</ResultIcon>)`
-  background: ${p => p.theme.greenLight};
+const FaqsBadge = styled((p) => <ResultIcon {...p}>faqs</ResultIcon>)`
+  background: ${(p) => p.theme.greenLight};
 `;
 
 export {HelpSource};

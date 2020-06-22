@@ -24,7 +24,7 @@ class AutoSelectText extends React.Component {
     selectText(this.el);
   };
 
-  handleMount = el => {
+  handleMount = (el) => {
     this.el = el;
   };
 

@@ -32,7 +32,7 @@ class Clipboard extends React.Component {
     }
   }
 
-  handleMount = ref => {
+  handleMount = (ref) => {
     if (!ref) {
       return;
     }

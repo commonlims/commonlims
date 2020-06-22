@@ -8,7 +8,7 @@ import {ApiForm, MultipleCheckboxField} from 'app/components/forms';
 import {t, tct} from 'app/locale';
 
 const SORTED_DEFAULT_API_SCOPES = DEFAULT_API_SCOPES.sort();
-const API_CHOICES = API_SCOPES.map(s => [s, s]);
+const API_CHOICES = API_SCOPES.map((s) => [s, s]);
 
 export default class ApiNewToken extends AsyncView {
   getEndpoints() {

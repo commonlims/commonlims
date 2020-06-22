@@ -14,14 +14,14 @@ class SearchDropdown extends React.PureComponent {
 
   static defaultProps = {
     searchSubstring: '',
-    onClick: function() {},
+    onClick: function () {},
   };
 
-  onClick = itemValue => {
+  onClick = (itemValue) => {
     this.props.onClick(itemValue);
   };
 
-  renderDescription = item => {
+  renderDescription = (item) => {
     const searchSubstring = this.props.searchSubstring;
     if (!searchSubstring) {
       return item.desc;
@@ -52,7 +52,7 @@ class SearchDropdown extends React.PureComponent {
               <LoadingIndicator mini={true} />
             </li>
           ) : (
-            this.props.items.map(item => {
+            this.props.items.map((item) => {
               return (
                 <li
                   key={item.value || item.desc}

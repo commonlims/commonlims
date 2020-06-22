@@ -79,9 +79,9 @@ export default class ChoiceMapper extends React.Component {
     formatMessageValue: false,
   };
 
-  hasValue = value => defined(value) && !objectIsEmpty(value);
+  hasValue = (value) => defined(value) && !objectIsEmpty(value);
 
-  renderField = props => {
+  renderField = (props) => {
     const {
       onChange,
       onBlur,
@@ -101,11 +101,11 @@ export default class ChoiceMapper extends React.Component {
     const valueIsEmpty = this.hasValue(props.value);
     const value = valueIsEmpty ? props.value : {};
 
-    const saveChanges = nextValue => {
+    const saveChanges = (nextValue) => {
       onChange(nextValue, {});
 
       const validValues = !Object.values(nextValue)
-        .map(o => Object.values(o).find(v => v === null))
+        .map((o) => Object.values(o).find((v) => v === null))
         .includes(null);
 
       if (allowEmpty || validValues) {
@@ -113,11 +113,11 @@ export default class ChoiceMapper extends React.Component {
       }
     };
 
-    const addRow = data => {
+    const addRow = (data) => {
       saveChanges({...value, [data.value]: emptyValue});
     };
 
-    const removeRow = itemKey => {
+    const removeRow = (itemKey) => {
       //eslint-disable-next-line no-unused-vars
       const {[itemKey]: _, ...updatedValue} = value;
       saveChanges(updatedValue);
@@ -129,7 +129,7 @@ export default class ChoiceMapper extends React.Component {
 
     // Remove already added values from the items list
     const selectableValues = addDropdown.items.filter(
-      i => !value.hasOwnProperty(i.value)
+      (i) => !value.hasOwnProperty(i.value)
     );
 
     const valueMap = addDropdown.items.reduce((map, item) => {
@@ -183,7 +183,7 @@ export default class ChoiceMapper extends React.Component {
             </Flex>
           ))}
         </Flex>
-        {Object.keys(value).map(itemKey => (
+        {Object.keys(value).map((itemKey) => (
           <Flex key={itemKey} align="center" mt={1}>
             <LabelColumn>{valueMap[itemKey]}</LabelColumn>
             {mappedKeys.map((fieldKey, i) => (
@@ -195,7 +195,7 @@ export default class ChoiceMapper extends React.Component {
                       : mappedSelectors[fieldKey])}
                     height={30}
                     disabled={disabled}
-                    onChange={v => setValue(itemKey, fieldKey, v ? v.value : null)}
+                    onChange={(v) => setValue(itemKey, fieldKey, v ? v.value : null)}
                     value={value[itemKey][fieldKey]}
                   />
                 </Box>
@@ -221,17 +221,17 @@ export default class ChoiceMapper extends React.Component {
     return (
       <InputField
         {...this.props}
-        inline={model => !this.hasValue(model.getValue(this.props.name))}
+        inline={(model) => !this.hasValue(model.getValue(this.props.name))}
         field={this.renderField}
       />
     );
   }
 }
 
-const LabelColumn = styled(p => <Box flex="0 0 200px" {...p} />)``;
+const LabelColumn = styled((p) => <Box flex="0 0 200px" {...p} />)``;
 
 const StyledHeader = styled(Box)`
   font-size: 0.8em;
   text-transform: uppercase;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;

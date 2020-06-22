@@ -13,7 +13,7 @@ export default class MissingProjectWarningModal extends React.Component {
   };
 
   renderProject(id) {
-    const project = this.props.organization.projects.find(p => p.id === id.toString());
+    const project = this.props.organization.projects.find((p) => p.id === id.toString());
     return <li key={id}>{project ? project.slug : t(`Unknown project ${id}`)}</li>;
   }
   render() {
@@ -28,7 +28,7 @@ export default class MissingProjectWarningModal extends React.Component {
             omitted from the displayed results:`
             )}
           </p>
-          <ul>{this.props.projects.map(id => this.renderProject(id))}</ul>
+          <ul>{this.props.projects.map((id) => this.renderProject(id))}</ul>
         </Body>
         <Footer>
           <Button priority="primary" onClick={this.props.closeModal}>

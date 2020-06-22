@@ -58,7 +58,7 @@ class AuditLogList extends React.Component {
     const ipv4Length = 15;
     const options = [
       {value: '', label: t('Any action'), clearableVaue: false},
-      ...eventTypes.map(type => ({label: type, value: type, clearableValue: false})),
+      ...eventTypes.map((type) => ({label: type, value: type, clearableValue: false})),
     ];
 
     const action = (
@@ -96,7 +96,7 @@ class AuditLogList extends React.Component {
             )}
 
             {hasEntries &&
-              entries.map(entry => {
+              entries.map((entry) => {
                 return (
                   <PanelItem p={0} align="center" key={entry.id}>
                     <UserInfo flex="1" p={2}>

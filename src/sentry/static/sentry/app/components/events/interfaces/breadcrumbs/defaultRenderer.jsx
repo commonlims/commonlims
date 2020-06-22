@@ -17,7 +17,7 @@ class DefaultRenderer extends React.Component {
     }
     return crumb.type
       .split(/[_-\s]+/g)
-      .map(word => {
+      .map((word) => {
         return word.substr(0, 1).toUpperCase() + word.substr(1);
       })
       .join(' ');

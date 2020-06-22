@@ -3,7 +3,7 @@ import {shallow} from 'enzyme';
 
 import TaskListItem from 'app/components/task/taskListItem';
 
-describe('TaskListItem', function() {
+describe('TaskListItem', function () {
   let mockProps;
   let taskDefinitionKey;
   let name;
@@ -28,12 +28,7 @@ describe('TaskListItem', function() {
 
   it('renders sample count for the task', () => {
     const wrapper = mountTaskListItem();
-    expect(
-      wrapper
-        .find('.task-list-item-sample-count')
-        .at(0)
-        .text()
-    ).toBe('3');
+    expect(wrapper.find('.task-list-item-sample-count').at(0).text()).toBe('3');
   });
 
   // it('redirects to the select samples view when button is clicked', () => {});

@@ -13,7 +13,7 @@ const Delta = ({current, previous, className}) => {
   if (typeof previous === 'undefined') {
     return null;
   }
-  const changePercent = Math.round(Math.abs(current - previous) / previous * 100);
+  const changePercent = Math.round((Math.abs(current - previous) / previous) * 100);
   const direction = !changePercent ? 0 : current - previous;
   return (
     <StyledDelta direction={direction} className={className}>
@@ -29,7 +29,7 @@ Delta.propTypes = {
 
 const DeltaCaret = styled(InlineSvg)`
   /* should probably have a chevron-up svg (: */
-  ${p => p.direction > 0 && 'transform: rotate(180deg)'};
+  ${(p) => p.direction > 0 && 'transform: rotate(180deg)'};
   width: 10px;
   height: 10px;
 `;
@@ -39,8 +39,8 @@ const StyledDelta = styled('div')`
   align-items: center;
   padding: 0 ${space(0.25)};
   margin-right: ${space(0.5)};
-  font-size: ${p => p.theme.fontSizeSmall};
-  color: ${p =>
+  font-size: ${(p) => p.theme.fontSizeSmall};
+  color: ${(p) =>
     p.direction > 0 ? p.theme.green : p.direction < 0 ? p.theme.red : p.theme.gray2};
 `;
 
@@ -124,7 +124,7 @@ const Row = styled(function RowComponent({className, data, rowIndex, onClick, ch
   return (
     <div
       className={className}
-      onClick={e => typeof onClick === 'function' && onClick(data[rowIndex], e)}
+      onClick={(e) => typeof onClick === 'function' && onClick(data[rowIndex], e)}
     >
       {children}
     </div>
@@ -164,7 +164,7 @@ const PercentageLabel = styled('div')`
 const BarWrapper = styled('div')`
   flex: 1;
   margin-right: ${space(1)};
-  background-color: ${p => p.theme.whiteDark};
+  background-color: ${(p) => p.theme.whiteDark};
 `;
 
 const Percentage = styled('div')`
@@ -175,8 +175,8 @@ const Percentage = styled('div')`
 
 const Bar = styled(({width, ...props}) => <div {...props} />)`
   flex: 1;
-  width: ${p => p.width}%;
-  background-color: ${p => p.theme.gray1};
+  width: ${(p) => p.width}%;
+  background-color: ${(p) => p.theme.gray1};
   height: 12px;
   border-radius: 2px;
 `;

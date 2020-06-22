@@ -3,13 +3,13 @@ import GuideStore from 'app/stores/guideStore';
 import GuideAnchor from 'app/components/assistant/guideAnchor';
 import ConfigStore from 'app/stores/configStore';
 
-describe('GuideStore', function() {
+describe('GuideStore', function () {
   let sandbox;
   const anchor1 = <GuideAnchor target="target 1" type="text" />;
   const anchor2 = <GuideAnchor target="target 2" type="text" />;
   let data;
 
-  beforeEach(function() {
+  beforeEach(function () {
     ConfigStore.config = {
       user: {
         isSuperuser: true,
@@ -51,7 +51,11 @@ describe('GuideStore', function() {
     GuideStore.onRegisterAnchor(anchor2);
     MockApiClient.addMockResponse({
       url: '/projects/org/proj/stats/',
-      body: [[1, 500], [2, 300], [3, 500]],
+      body: [
+        [1, 500],
+        [2, 300],
+        [3, 500],
+      ],
     });
     MockApiClient.addMockResponse({
       url: '/projects/org/proj/rules/',
@@ -59,11 +63,11 @@ describe('GuideStore', function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('should move through the steps in the guide', async function() {
+  it('should move through the steps in the guide', async function () {
     GuideStore.onFetchSucceeded(data);
     await tick();
     let guide = GuideStore.state.currentGuide;
@@ -79,7 +83,7 @@ describe('GuideStore', function() {
     expect(guide).toEqual(null);
   });
 
-  it('should force show a guide', async function() {
+  it('should force show a guide', async function () {
     GuideStore.onFetchSucceeded(data);
     await tick();
     window.location.hash = '#assistant';
@@ -94,7 +98,7 @@ describe('GuideStore', function() {
     window.location.hash = '';
   });
 
-  it('should render tip', async function() {
+  it('should render tip', async function () {
     GuideStore.onFetchSucceeded({
       ...data,
       Guide2: {
@@ -111,7 +115,7 @@ describe('GuideStore', function() {
     spy.mockRestore();
   });
 
-  it('should record analytics events when guide is cued', async function() {
+  it('should record analytics events when guide is cued', async function () {
     const spy = jest.spyOn(GuideStore, 'recordCue');
 
     GuideStore.onFetchSucceeded(data);
@@ -121,7 +125,7 @@ describe('GuideStore', function() {
     spy.mockRestore();
   });
 
-  it('should not send multiple cue analytics events for same guide', async function() {
+  it('should not send multiple cue analytics events for same guide', async function () {
     const spy = jest.spyOn(GuideStore, 'recordCue');
 
     GuideStore.onFetchSucceeded(data);

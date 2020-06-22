@@ -4,18 +4,18 @@ import EventsTable from 'app/components/eventsTable/eventsTable';
 
 import events from '../../../mocks/events';
 
-describe('EventsTable', function() {
+describe('EventsTable', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(
       <EventsTable
         tagList={[]}

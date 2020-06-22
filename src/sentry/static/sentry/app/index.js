@@ -37,7 +37,7 @@ import plugins from 'app/plugins';
 // window.__SENTRY__OPTIONS will be emmited by sdk-config.html before loading this script
 Sentry.init(window.__SENTRY__OPTIONS);
 
-Sentry.configureScope(scope => {
+Sentry.configureScope((scope) => {
   if (window.__SENTRY__USER) {
     scope.setUser(window.__SENTRY__USER);
   }
@@ -46,7 +46,7 @@ Sentry.configureScope(scope => {
   }
 
   // There's no setTransaction API *yet*, so we have to be explicit here
-  scope.addEventProcessor(event => {
+  scope.addEventProcessor((event) => {
     return {
       ...event,
       transaction: tracing.getRoute(),
@@ -90,7 +90,7 @@ if (window.__initialData) {
 // these get exported to a global variable, which is important as its the only
 // way we can call into scoped objects
 
-const render = Component => {
+const render = (Component) => {
   const rootEl = document.getElementById('blk_router');
   ReactDOM.render(<Component />, rootEl);
 };
@@ -99,7 +99,9 @@ const render = Component => {
 // zxcvbn, a relatively byte-heavy password strength estimation library. Load
 // it on demand.
 async function loadPasswordStrength(callback) {
-  const module = await import(/* webpackChunkName: "passwordStrength" */ 'app/components/passwordStrength');
+  const module = await import(
+    /* webpackChunkName: "passwordStrength" */ 'app/components/passwordStrength'
+  );
   callback(module);
 }
 
@@ -245,6 +247,6 @@ const globals = {
 };
 
 // Make globals available on the window object
-Object.keys(globals).forEach(name => (window[name] = globals[name]));
+Object.keys(globals).forEach((name) => (window[name] = globals[name]));
 
 export default globals;

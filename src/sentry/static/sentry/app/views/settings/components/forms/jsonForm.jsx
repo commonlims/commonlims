@@ -72,7 +72,7 @@ class JsonForm extends React.Component {
     }
   }
 
-  getLocation = props => {
+  getLocation = (props) => {
     return props.location || this.context.location || {};
   };
 
@@ -120,7 +120,7 @@ class JsonForm extends React.Component {
     return (
       <Box {...otherProps}>
         {hasFormGroups ? (
-          forms.map(formGroup => (
+          forms.map((formGroup) => (
             <FormPanel
               key={formGroup.title}
               title={formGroup.title}
@@ -197,8 +197,8 @@ class FormPanel extends React.Component {
 
           {fields
             // TODO: Temporary fix. This is sometimes called with a list having an undefined value
-            .filter(field => typeof field !== 'undefined')
-            .map(field => {
+            .filter((field) => typeof field !== 'undefined')
+            .map((field) => {
               if (typeof field === 'function') {
                 return field();
               }

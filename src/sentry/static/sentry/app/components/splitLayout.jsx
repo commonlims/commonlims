@@ -13,7 +13,7 @@ const SplitLayout = ({children, className, responsive, splitWidth, ...props}) =>
 
   return (
     <SpreadLayout {...props} className={cx}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         const childProps = (child && child.props) || {};
         childCount++;
         const isLastChild = childCount === totalChildren;

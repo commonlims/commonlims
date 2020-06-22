@@ -1,13 +1,13 @@
 import {Client} from 'app/api';
 import {doHealthRequest} from 'app/actionCreators/health';
 
-describe('Health ActionCreator', function() {
+describe('Health ActionCreator', function () {
   const api = new Client();
   const organization = TestStubs.Organization();
   const project = TestStubs.Project();
   let mock;
 
-  it('requests timeseries w/o tag', function() {
+  it('requests timeseries w/o tag', function () {
     mock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/health/graph/',
     });
@@ -37,7 +37,7 @@ describe('Health ActionCreator', function() {
     );
   });
 
-  it('requests timeseries w/ tag', function() {
+  it('requests timeseries w/ tag', function () {
     mock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/health/graph/',
     });
@@ -69,7 +69,7 @@ describe('Health ActionCreator', function() {
     );
   });
 
-  it('requests top', function() {
+  it('requests top', function () {
     mock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/health/top/',
     });
@@ -98,7 +98,7 @@ describe('Health ActionCreator', function() {
     );
   });
 
-  it('requests timeseries w/ tag and previous period', function() {
+  it('requests timeseries w/ tag and previous period', function () {
     mock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/health/graph/',
     });
@@ -125,7 +125,7 @@ describe('Health ActionCreator', function() {
     );
   });
 
-  it('requests non-timeseries and previous period', function() {
+  it('requests non-timeseries and previous period', function () {
     mock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/health/top/',
     });

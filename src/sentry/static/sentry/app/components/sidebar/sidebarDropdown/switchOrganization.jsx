@@ -36,7 +36,7 @@ class SwitchOrganization extends React.Component {
                 {...getActorProps({
                   isStyled: true,
                 })}
-                onClick={e => {
+                onClick={(e) => {
                   // This overwrites `DropdownMenu.getActorProps.onClick` which normally handles clicks on actor
                   // to toggle visibility of menu. Instead, do nothing because it is nested and we only want it
                   // to appear when hovered on. Will also stop menu from closing when clicked on (which seems to be common
@@ -59,7 +59,7 @@ class SwitchOrganization extends React.Component {
                   {...getMenuProps({isStyled: true})}
                 >
                   <OrganizationList>
-                    {organizations.map(organization => (
+                    {organizations.map((organization) => (
                       <SidebarMenuItem
                         key={organization.slug}
                         to={`/${organization.slug}/`}
@@ -68,8 +68,9 @@ class SwitchOrganization extends React.Component {
                       </SidebarMenuItem>
                     ))}
                   </OrganizationList>
-                  {hasOrganizations &&
-                    canCreateOrganization && <Divider css={{marginTop: 0}} />}
+                  {hasOrganizations && canCreateOrganization && (
+                    <Divider css={{marginTop: 0}} />
+                  )}
                   {canCreateOrganization && (
                     <SidebarMenuItem
                       data-test-id="sidebar-create-org"
@@ -100,7 +101,7 @@ const AddIcon = styled(InlineSvg)`
   width: 15px;
   height: 15px;
   margin-right: 8px;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
 `;
 
 const MenuItemLabelWithIcon = styled('span')`
@@ -111,12 +112,12 @@ const MenuItemLabelWithIcon = styled('span')`
 `;
 
 const SubMenuCaret = styled('span')`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   transition: 0.1s color linear;
 
   &:hover,
   &:active {
-    color: ${p => p.theme.gray3};
+    color: ${(p) => p.theme.gray3};
   }
 `;
 
@@ -125,8 +126,8 @@ const SwitchOrganizationMenuActor = styled('span')`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 -${p => p.theme.sidebar.menuSpacing};
-  padding: 0 ${p => p.theme.sidebar.menuSpacing};
+  margin: 0 -${(p) => p.theme.sidebar.menuSpacing};
+  padding: 0 ${(p) => p.theme.sidebar.menuSpacing};
 `;
 
 const SwitchOrganizationMenu = styled('div')`

@@ -18,7 +18,7 @@ class SearchOptions extends React.PureComponent {
     };
   }
 
-  getMenuItem = item => {
+  getMenuItem = (item) => {
     return (
       <MenuItem
         onSelect={this.onSelect}
@@ -31,7 +31,7 @@ class SearchOptions extends React.PureComponent {
     );
   };
 
-  onSelect = selected => {
+  onSelect = (selected) => {
     this.setState({selected});
     if (this.props.onSelect) {
       this.props.onSelect(selected);
@@ -39,7 +39,7 @@ class SearchOptions extends React.PureComponent {
   };
 
   getTitle(key) {
-    const val = this.props.options.find(x => x.key === key);
+    const val = this.props.options.find((x) => x.key === key);
     return val ? val.title : '';
   }
 
@@ -53,7 +53,7 @@ class SearchOptions extends React.PureComponent {
 
     return (
       <DropdownLink btnGroup={true} title={dropdownTitle}>
-        {this.props.options.map(x => this.getMenuItem(x))}
+        {this.props.options.map((x) => this.getMenuItem(x))}
       </DropdownLink>
     );
   }

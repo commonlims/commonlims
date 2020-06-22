@@ -14,7 +14,11 @@ export default createReactClass({
     return this.props.value !== nextProps.value;
   },
 
-  numberFormats: [[1000000000, 'b'], [1000000, 'm'], [1000, 'k']],
+  numberFormats: [
+    [1000000000, 'b'],
+    [1000000, 'm'],
+    [1000, 'k'],
+  ],
 
   floatFormat(number, places) {
     const multi = Math.pow(10, places);

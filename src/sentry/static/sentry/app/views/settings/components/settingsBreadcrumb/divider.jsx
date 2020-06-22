@@ -7,11 +7,11 @@ import InlineSvg from 'app/components/inlineSvg';
 const StyledDivider = styled.span`
   display: inline-block;
   margin-left: 6px;
-  color: ${p => p.theme.borderDark};
+  color: ${(p) => p.theme.borderDark};
   position: relative;
   top: -1px;
 
-  ${p =>
+  ${(p) =>
     p.isHover
       ? `
     transform: rotate(90deg);

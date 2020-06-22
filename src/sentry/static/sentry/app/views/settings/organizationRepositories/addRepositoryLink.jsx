@@ -26,7 +26,7 @@ class AddRepositoryLink extends PluginComponentBase {
       state: FormState.LOADING,
     });
 
-    ['onOpen', 'onCancel', 'formSubmit', 'changeField'].forEach(method => {
+    ['onOpen', 'onCancel', 'formSubmit', 'changeField'].forEach((method) => {
       this[method] = this[method].bind(this);
     });
   }
@@ -35,7 +35,7 @@ class AddRepositoryLink extends PluginComponentBase {
     const formData = {};
     // makes sure default choice field is saved
     // if a user doesn't choose a different option
-    this.props.provider.config.forEach(field => {
+    this.props.provider.config.forEach((field) => {
       if (field.initial) {
         formData[field.name] = field.initial;
       }
@@ -80,11 +80,11 @@ class AddRepositoryLink extends PluginComponentBase {
         this.api.request(`/organizations/${this.props.orgId}/repos/`, {
           data: formData,
           method: 'POST',
-          success: this.onSaveSuccess.bind(this, data => {
+          success: this.onSaveSuccess.bind(this, (data) => {
             this.setState({isModalOpen: false, formData: {}, error: {}});
             this.props.onSuccess(data);
           }),
-          error: this.onSaveError.bind(this, error => {
+          error: this.onSaveError.bind(this, (error) => {
             this.setState({
               error: error.responseJSON || UNKNOWN_ERROR || UNKNOWN_ERROR,
               state: FormState.error,
@@ -97,7 +97,7 @@ class AddRepositoryLink extends PluginComponentBase {
   }
 
   changeField(name, value) {
-    this.setState(state => ({
+    this.setState((state) => ({
       formData: {
         ...state.formData,
         [name]: value,
@@ -127,7 +127,7 @@ class AddRepositoryLink extends PluginComponentBase {
     const errors = this.state.error.errors || {};
     const provider = this.props.provider;
     let hasIntegration = true;
-    provider.config.forEach(field => {
+    provider.config.forEach((field) => {
       if (field.initial == '') {
         hasIntegration = false;
       }
@@ -140,7 +140,7 @@ class AddRepositoryLink extends PluginComponentBase {
           </div>
         )}
         {!hasIntegration && this.renderNote(provider)}
-        {provider.config.map(field => {
+        {provider.config.map((field) => {
           return (
             <div key={field.name}>
               {this.renderField({

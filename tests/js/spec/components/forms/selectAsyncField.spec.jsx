@@ -3,10 +3,10 @@ import {mount} from 'enzyme';
 
 import {Form, SelectAsyncField} from 'app/components/forms';
 
-describe('SelectAsyncField', function() {
+describe('SelectAsyncField', function () {
   let api;
 
-  beforeEach(function() {
+  beforeEach(function () {
     api = MockApiClient.addMockResponse({
       url: '/foo/bar/',
       query: {
@@ -19,7 +19,7 @@ describe('SelectAsyncField', function() {
     });
   });
 
-  it('supports autocomplete arguments from an integration', async function() {
+  it('supports autocomplete arguments from an integration', async function () {
     const wrapper = mount(<SelectAsyncField url="/foo/bar/" name="fieldName" />);
 
     wrapper.find('input[id="id-fieldName"]').simulate('change', {target: {value: 'baz'}});
@@ -38,7 +38,7 @@ describe('SelectAsyncField', function() {
     ]);
   });
 
-  it('with Form context', async function() {
+  it('with Form context', async function () {
     const submitMock = jest.fn();
     const wrapper = mount(
       <Form onSubmit={submitMock}>

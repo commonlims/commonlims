@@ -82,18 +82,17 @@ const SidebarDropdown = withApi(
                 >
                   <div style={{display: 'flex', alignItems: 'flex-start'}}>
                     {avatar}
-                    {!collapsed &&
-                      orientation !== 'top' && (
-                        <OrgAndUserWrapper>
-                          <OrgOrUserName>
-                            {hasOrganization ? org.name : user.name}{' '}
-                            <i className="icon-arrow-down" />
-                          </OrgOrUserName>
-                          <UserNameOrEmail>
-                            {hasOrganization ? user.name : user.email}
-                          </UserNameOrEmail>
-                        </OrgAndUserWrapper>
-                      )}
+                    {!collapsed && orientation !== 'top' && (
+                      <OrgAndUserWrapper>
+                        <OrgOrUserName>
+                          {hasOrganization ? org.name : user.name}{' '}
+                          <i className="icon-arrow-down" />
+                        </OrgOrUserName>
+                        <UserNameOrEmail>
+                          {hasOrganization ? user.name : user.email}
+                        </UserNameOrEmail>
+                      </OrgAndUserWrapper>
+                    )}
                   </div>
                 </SidebarDropdownActor>
 
@@ -174,9 +173,9 @@ const SidebarDropdown = withApi(
 export default SidebarDropdown;
 
 const SentryLink = styled(Link)`
-  color: ${p => p.theme.white};
+  color: ${(p) => p.theme.white};
   &:hover {
-    color: ${p => p.theme.white};
+    color: ${(p) => p.theme.white};
   }
 `;
 
@@ -201,7 +200,7 @@ const OrgOrUserName = styled(TextOverflow)`
   font-size: 16px;
   line-height: 1.2;
   font-weight: bold;
-  color: ${p => p.theme.white};
+  color: ${(p) => p.theme.white};
   text-shadow: 0 0 6px rgba(255, 255, 255, 0);
   transition: 0.15s text-shadow linear;
 `;
@@ -222,7 +221,7 @@ const SidebarDropdownActor = styled('div')`
     }
     /* stylelint-disable-next-line no-duplicate-selectors */
     ${UserNameOrEmail} {
-      color: ${p => p.theme.gray1};
+      color: ${(p) => p.theme.gray1};
     }
   }
 `;
@@ -230,7 +229,7 @@ const SidebarDropdownActor = styled('div')`
 const StyledAvatar = styled(Avatar)`
   margin-top: 2px;
   margin-bottom: 2px;
-  margin-right: ${p => (p.collapsed ? '0' : '12px')};
+  margin-right: ${(p) => (p.collapsed ? '0' : '12px')};
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
   border-radius: 6px; /* Fixes background bleeding on corners */
 `;
@@ -239,5 +238,5 @@ const OrgAndUserMenu = styled('div')`
   ${SidebarDropdownMenu};
   top: 42px;
   min-width: 180px;
-  z-index: ${p => p.theme.zIndex.orgAndUserMenu};
+  z-index: ${(p) => p.theme.zIndex.orgAndUserMenu};
 `;

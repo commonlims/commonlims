@@ -25,7 +25,7 @@ const OrganizationStateMixin = {
 export default OrganizationStateMixin;
 
 // Non-mixin version for use with es6 components
-export const getOrganizationState = function(org) {
+export const getOrganizationState = function (org) {
   return {
     getOrganization: () => {
       return org;

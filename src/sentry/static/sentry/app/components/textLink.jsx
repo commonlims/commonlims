@@ -5,9 +5,9 @@ import styled from 'react-emotion';
  * Link colored as normal text
  */
 const TextLink = styled(Link)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   &:hover {
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
   }
 `;
 

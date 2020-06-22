@@ -8,7 +8,7 @@ class Confirmation extends React.Component {
     dismiss: PropTypes.func.isRequired,
   };
 
-  skip = e => {
+  skip = (e) => {
     e.preventDefault();
     this.props.onSkip();
   };

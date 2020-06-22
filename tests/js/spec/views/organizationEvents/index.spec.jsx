@@ -7,7 +7,7 @@ import {setActiveOrganization} from 'app/actionCreators/organizations';
 import GlobalSelectionStore from 'app/stores/globalSelectionStore';
 import OrganizationEventsContainer from 'app/views/organizationEvents';
 
-describe('OrganizationEvents', function() {
+describe('OrganizationEvents', function () {
   let wrapper;
   const {organization, router, routerContext} = initializeOrg({
     projects: [{isMember: true}, {isMember: true, slug: 'new-project', id: 3}],
@@ -22,10 +22,13 @@ describe('OrganizationEvents', function() {
     },
   });
 
-  beforeAll(async function() {
+  beforeAll(async function () {
     MockApiClient.addMockResponse({
       url: '/organizations/org-slug/tags/',
-      body: [{count: 1, tag: 'transaction'}, {count: 2, tag: 'mechanism'}],
+      body: [
+        {count: 1, tag: 'transaction'},
+        {count: 2, tag: 'mechanism'},
+      ],
     });
     MockApiClient.addMockResponse({
       url: `/organizations/${organization.slug}/environments/`,
@@ -36,8 +39,8 @@ describe('OrganizationEvents', function() {
     await tick();
   });
 
-  describe('Header', function() {
-    beforeEach(function() {
+  describe('Header', function () {
+    beforeEach(function () {
       GlobalSelectionStore.reset();
 
       router.location = {
@@ -58,21 +61,18 @@ describe('OrganizationEvents', function() {
       mockRouterPush(wrapper, router);
     });
 
-    it('renders', function() {
+    it('renders', function () {
       expect(wrapper.find('PageContent')).toHaveLength(1);
     });
 
-    it('updates router when changing environments', async function() {
+    it('updates router when changing environments', async function () {
       expect(wrapper.find('MultipleEnvironmentSelector').prop('value')).toEqual([]);
 
       wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
       await tick();
       wrapper.update();
 
-      wrapper
-        .find('EnvironmentSelectorItem')
-        .at(0)
-        .simulate('click');
+      wrapper.find('EnvironmentSelectorItem').at(0).simulate('click');
 
       await tick();
       wrapper.update();
@@ -96,11 +96,7 @@ describe('OrganizationEvents', function() {
       wrapper.find('MultipleEnvironmentSelector HeaderItem').simulate('click');
       await tick();
       wrapper.update();
-      wrapper
-        .find('EnvironmentSelectorItem')
-        .at(1)
-        .find('MultiSelect')
-        .simulate('click');
+      wrapper.find('EnvironmentSelectorItem').at(1).find('MultiSelect').simulate('click');
 
       expect(wrapper.find('MultipleEnvironmentSelector').prop('value')).toEqual([
         'production',
@@ -149,15 +145,12 @@ describe('OrganizationEvents', function() {
       });
     });
 
-    it('updates router when changing projects', async function() {
+    it('updates router when changing projects', async function () {
       expect(wrapper.find('MultipleProjectSelector').prop('value')).toEqual([]);
 
       wrapper.find('MultipleProjectSelector HeaderItem').simulate('click');
 
-      wrapper
-        .find('MultipleProjectSelector AutoCompleteItem')
-        .at(0)
-        .simulate('click');
+      wrapper.find('MultipleProjectSelector AutoCompleteItem').at(0).simulate('click');
 
       await tick();
       wrapper.update();
@@ -172,7 +165,7 @@ describe('OrganizationEvents', function() {
       expect(wrapper.find('MultipleProjectSelector').prop('value')).toEqual([2]);
     });
 
-    it('selects multiple projects', async function() {
+    it('selects multiple projects', async function () {
       expect(wrapper.find('MultipleProjectSelector').prop('value')).toEqual([]);
 
       wrapper.find('MultipleProjectSelector HeaderItem').simulate('click');
@@ -203,7 +196,7 @@ describe('OrganizationEvents', function() {
     });
 
     // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('changes to absolute time (utc is default)', async function() {
+    it.skip('changes to absolute time (utc is default)', async function () {
       const start = new Date('2017-10-01T00:00:00.000Z');
       const end = new Date('2017-10-01T23:59:59.000Z');
       wrapper.find('TimeRangeSelector HeaderItem').simulate('click');
@@ -211,10 +204,7 @@ describe('OrganizationEvents', function() {
       await wrapper.find('SelectorItem[value="absolute"]').simulate('click');
 
       // Oct 1st
-      wrapper
-        .find('DayCell')
-        .at(0)
-        .simulate('mouseUp');
+      wrapper.find('DayCell').at(0).simulate('mouseUp');
 
       wrapper.find('TimeRangeSelector StyledChevron').simulate('click');
 
@@ -235,7 +225,7 @@ describe('OrganizationEvents', function() {
       expect(wrapper.find('TimeRangeSelector').prop('relative')).toEqual(null);
     });
 
-    it('does not update router when toggling environment selector without changes', async function() {
+    it('does not update router when toggling environment selector without changes', async function () {
       const prevCallCount = router.push.mock.calls.length;
 
       wrapper.setProps({
@@ -260,7 +250,7 @@ describe('OrganizationEvents', function() {
       expect(router.push).toHaveBeenCalledTimes(prevCallCount);
     });
 
-    it('updates router when changing periods', async function() {
+    it('updates router when changing periods', async function () {
       expect(wrapper.find('TimeRangeSelector').prop('start')).toEqual(null);
       expect(wrapper.find('TimeRangeSelector').prop('end')).toEqual(null);
       expect(wrapper.find('TimeRangeSelector').prop('relative')).toEqual('14d');
@@ -319,7 +309,7 @@ describe('OrganizationEvents', function() {
       );
     });
 
-    it('updates TimeRangeSelector when changing routes', async function() {
+    it('updates TimeRangeSelector when changing routes', async function () {
       let newRouter = {
         router: {
           ...router,

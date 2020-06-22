@@ -15,14 +15,14 @@ const data = {
   culprit: 'culprit',
 };
 
-describe('EventOrGroupHeader', function() {
-  describe('Group', function() {
+describe('EventOrGroupHeader', function () {
+  describe('Group', function () {
     const groupData = {
       ...data,
       level: 'error',
       id: 'id',
     };
-    it('renders with `type = error`', function() {
+    it('renders with `type = error`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -39,7 +39,7 @@ describe('EventOrGroupHeader', function() {
       expect(toJson(component)).toMatchSnapshot();
     });
 
-    it('renders with `type = csp`', function() {
+    it('renders with `type = csp`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -56,7 +56,7 @@ describe('EventOrGroupHeader', function() {
       expect(toJson(component)).toMatchSnapshot();
     });
 
-    it('renders with `type = default`', function() {
+    it('renders with `type = default`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -74,7 +74,7 @@ describe('EventOrGroupHeader', function() {
     });
   });
 
-  describe('Event', function() {
+  describe('Event', function () {
     const eventData = {
       ...data,
       id: 'id',
@@ -83,7 +83,7 @@ describe('EventOrGroupHeader', function() {
       culprit: undefined,
     };
 
-    it('renders with `type = error`', function() {
+    it('renders with `type = error`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -100,7 +100,7 @@ describe('EventOrGroupHeader', function() {
       expect(toJson(component)).toMatchSnapshot();
     });
 
-    it('renders with `type = csp`', function() {
+    it('renders with `type = csp`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -117,7 +117,7 @@ describe('EventOrGroupHeader', function() {
       expect(toJson(component)).toMatchSnapshot();
     });
 
-    it('renders with `type = default`', function() {
+    it('renders with `type = default`', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"
@@ -134,7 +134,7 @@ describe('EventOrGroupHeader', function() {
       expect(toJson(component)).toMatchSnapshot();
     });
 
-    it('hides level tag', function() {
+    it('hides level tag', function () {
       const component = shallow(
         <EventOrGroupHeader
           orgId="orgId"

@@ -5,7 +5,7 @@ import ProcessListItem from 'app/components/task/processListItem';
 import TaskListItem from 'app/components/task/taskListItem';
 import {PanelBody} from 'app/components/panels';
 
-describe('ProcessListItem', function() {
+describe('ProcessListItem', function () {
   let mockProps;
   let processDefinitionKey;
   let processDefinitionName;
@@ -57,18 +57,8 @@ describe('ProcessListItem', function() {
 
   it('toggles visibility of tasks per process', () => {
     const wrapper = mountProcessListItem({tasks: [task1]});
-    expect(
-      wrapper
-        .find(PanelBody)
-        .at(0)
-        .hasClass('hidden')
-    ).toBeFalsy();
+    expect(wrapper.find(PanelBody).at(0).hasClass('hidden')).toBeFalsy();
     wrapper.find('.process-list-item-header').simulate('click');
-    expect(
-      wrapper
-        .find(PanelBody)
-        .at(0)
-        .hasClass('hidden')
-    ).toBeTruthy();
+    expect(wrapper.find(PanelBody).at(0).hasClass('hidden')).toBeTruthy();
   });
 });

@@ -34,7 +34,11 @@ const FREQUENCY_CHOICES = [
   ['43200', t('30 days')],
 ];
 
-const ACTION_MATCH_CHOICES = [['all', t('all')], ['any', t('any')], ['none', t('none')]];
+const ACTION_MATCH_CHOICES = [
+  ['all', t('all')],
+  ['any', t('any')],
+  ['none', t('none')],
+];
 
 const AlertRuleRow = styled('h6')`
   display: flex;
@@ -77,7 +81,7 @@ const RuleEditor = createReactClass({
     if (ruleId) {
       const endpoint = `/projects/${orgId}/${projectId}/rules/${ruleId}/`;
       this.api.request(endpoint, {
-        success: rule => {
+        success: (rule) => {
           this.setState({
             rule,
           });
@@ -118,7 +122,7 @@ const RuleEditor = createReactClass({
     this.api.request(endpoint, {
       method: isNew ? 'POST' : 'PUT',
       data,
-      success: resp => {
+      success: (resp) => {
         this.setState({error: null, loading: false, rule: resp});
         // Redirect to correct ID if /new
         if (isNew) {
@@ -128,7 +132,7 @@ const RuleEditor = createReactClass({
         }
         addSuccessMessage(isNew ? t('Created alert rule') : t('Updated alert rule'));
       },
-      error: response => {
+      error: (response) => {
         this.setState({
           error: response.responseJSON || {__all__: 'Unknown error'},
           loading: false,
@@ -156,7 +160,7 @@ const RuleEditor = createReactClass({
   },
 
   handleChange(prop, val) {
-    this.setState(state => {
+    this.setState((state) => {
       const rule = {...state.rule};
       rule[prop] = val;
       return {rule};
@@ -164,7 +168,7 @@ const RuleEditor = createReactClass({
   },
 
   handlePropertyChange(type) {
-    return idx => {
+    return (idx) => {
       return (prop, val) => {
         const rule = {...this.state.rule};
         rule[type][idx][prop] = val;
@@ -174,8 +178,8 @@ const RuleEditor = createReactClass({
   },
 
   handleAddRow(type) {
-    return id => {
-      this.setState(prevState => {
+    return (id) => {
+      this.setState((prevState) => {
         prevState.rule[type].push({id});
         return {
           rule: prevState.rule,
@@ -185,8 +189,8 @@ const RuleEditor = createReactClass({
   },
 
   handleDeleteRow(type) {
-    return idx => {
-      this.setState(prevState => {
+    return (idx) => {
+      this.setState((prevState) => {
         prevState.rule[type].splice(idx, 1);
         return {
           rule: prevState.rule,
@@ -199,7 +203,7 @@ const RuleEditor = createReactClass({
     const activeEnvs = EnvironmentStore.getActive() || [];
     const environmentChoices = [
       [ALL_ENVIRONMENTS_KEY, t('All Environments')],
-      ...activeEnvs.map(env => [env.name, env.displayName]),
+      ...activeEnvs.map((env) => [env.name, env.displayName]),
     ];
 
     if (!this.state.rule) {
@@ -213,7 +217,7 @@ const RuleEditor = createReactClass({
       rule.environment === null ? ALL_ENVIRONMENTS_KEY : rule.environment;
 
     return (
-      <form onSubmit={this.handleSubmit} ref={node => (this.formNode = node)}>
+      <form onSubmit={this.handleSubmit} ref={(node) => (this.formNode = node)}>
         <Panel className="rule-detail">
           <PanelHeader>{rule.id ? 'Edit Alert Rule' : 'New Alert Rule'}</PanelHeader>
           <PanelBody disablePadding={false}>
@@ -232,7 +236,7 @@ const RuleEditor = createReactClass({
               defaultValue={name}
               required={true}
               placeholder={t('My Rule Name')}
-              onChange={val => this.handleChange('name', val)}
+              onChange={(val) => this.handleChange('name', val)}
             />
 
             <hr />
@@ -248,7 +252,7 @@ const RuleEditor = createReactClass({
                   value={actionMatch}
                   required={true}
                   choices={ACTION_MATCH_CHOICES}
-                  onChange={val => this.handleChange('actionMatch', val)}
+                  onChange={(val) => this.handleChange('actionMatch', val)}
                 />
               )}
             </AlertRuleRow>
@@ -277,7 +281,7 @@ const RuleEditor = createReactClass({
               value={environment}
               required={true}
               choices={environmentChoices}
-              onChange={val => this.handleEnvironmentChange(val)}
+              onChange={(val) => this.handleEnvironmentChange(val)}
             />
 
             <hr />
@@ -309,7 +313,7 @@ const RuleEditor = createReactClass({
                   style={{marginBottom: 0, marginLeft: 5, marginRight: 5, width: 140}}
                   required={true}
                   choices={FREQUENCY_CHOICES}
-                  onChange={val => this.handleChange('frequency', val)}
+                  onChange={(val) => this.handleChange('frequency', val)}
                 />
               )}
             </AlertRuleRow>
@@ -339,6 +343,6 @@ const ActionBar = styled('div')`
   display: flex;
   justify-content: flex-end;
   padding: ${space(2)};
-  border-top: 1px solid ${p => p.theme.borderLight};
+  border-top: 1px solid ${(p) => p.theme.borderLight};
   margin: 0 -${space(2)} -${space(2)};
 `;

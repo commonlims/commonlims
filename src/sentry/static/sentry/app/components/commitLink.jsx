@@ -39,7 +39,7 @@ function CommitLink({inline, commitId, repository}) {
 
   const shortId = getShortVersion(commitId);
 
-  const providerData = SUPPORTED_PROVIDERS.find(provider => {
+  const providerData = SUPPORTED_PROVIDERS.find((provider) => {
     if (!repository.provider) {
       return false;
     }
@@ -73,7 +73,7 @@ CommitLink.propTypes = {
   inline: PropTypes.bool,
 };
 
-const CommitIcon = styled(p => (
+const CommitIcon = styled((p) => (
   <InlineSvg size="14px" src={p.src} className={p.className} />
 ))`
   vertical-align: text-top;

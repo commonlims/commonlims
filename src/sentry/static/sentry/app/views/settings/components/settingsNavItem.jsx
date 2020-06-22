@@ -42,23 +42,23 @@ const StyledTag = styled(Tag)`
 
 const StyledNavItem = styled(Link)`
   display: block;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   font-size: 14px;
   line-height: 30px;
   position: relative;
 
   &.active {
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
 
     &:before {
-      background: ${p => p.theme.purple};
+      background: ${(p) => p.theme.purple};
     }
   }
 
   &:hover,
   &:focus,
   &:active {
-    color: ${p => p.theme.gray5};
+    color: ${(p) => p.theme.gray5};
   }
 
   &:before {

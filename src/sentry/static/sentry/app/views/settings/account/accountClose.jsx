@@ -75,7 +75,7 @@ class AccountClose extends AsyncView {
       return;
     }
 
-    this.setState(state => {
+    this.setState((state) => {
       const set = state.orgsToRemove || new Set(this.getSingleOwners());
       if (checked) {
         set.add(slug);

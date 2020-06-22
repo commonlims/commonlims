@@ -10,7 +10,7 @@ import TeamStore from 'app/stores/teamStore';
 export function redirectToRemainingOrganization({orgId}) {
   // Remove queued, should redirect
   const allOrgs = OrganizationsStore.getAll().filter(
-    org => org.status.id === 'active' && org.slug !== orgId
+    (org) => org.status.id === 'active' && org.slug !== orgId
   );
   if (!allOrgs.length) {
     browserHistory.push('/organizations/new/');
@@ -28,14 +28,14 @@ export function remove(api, {successMessage, errorMessage, orgId} = {}) {
     .requestPromise(endpoint, {
       method: 'DELETE',
     })
-    .then(data => {
+    .then((data) => {
       OrganizationsActions.removeSuccess(orgId);
 
       if (successMessage) {
         IndicatorStore.add(successMessage, 'success', {duration: 3000});
       }
     })
-    .catch(err => {
+    .catch((err) => {
       OrganizationsActions.removeError();
 
       if (errorMessage) {
@@ -64,7 +64,7 @@ export function fetchOrganizationByMember(memberId, {addOrg, fetchOrgDetails}) {
   const api = new Client();
   const request = api.requestPromise(`/organizations/?query=member_id:${memberId}`);
 
-  request.then(data => {
+  request.then((data) => {
     if (data.length) {
       if (addOrg) {
         // add org to SwitchOrganization dropdown
@@ -85,7 +85,7 @@ export function fetchOrganizationDetails(orgId, {setActive, loadProjects, loadTe
   const api = new Client();
   const request = api.requestPromise(`/organizations/${orgId}/`);
 
-  request.then(data => {
+  request.then((data) => {
     if (setActive) {
       setActiveOrganization(data);
     }

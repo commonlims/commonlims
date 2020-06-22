@@ -20,7 +20,7 @@ const formGroups = [
                 If reprocessing is disabled Events with unresolved issues will also
                 show up in the stream.
                 `),
-        getData: form => ({
+        getData: (form) => ({
           options: form,
         }),
       },

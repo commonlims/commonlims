@@ -18,14 +18,14 @@ export function getCurlCommand(data) {
 
   // TODO(benvinegar): just gzip? what about deflate?
   const compressed = data.headers.find(
-    h => h[0] === 'Accept-Encoding' && h[1].indexOf('gzip') !== -1
+    (h) => h[0] === 'Accept-Encoding' && h[1].indexOf('gzip') !== -1
   );
   if (compressed) {
     result += ' \\\n --compressed';
   }
 
   // sort headers
-  const headers = data.headers.sort(function(a, b) {
+  const headers = data.headers.sort(function (a, b) {
     return a[0] === b[0] ? 0 : a[0] < b[0] ? -1 : 1;
   });
 
@@ -48,7 +48,7 @@ export function getCurlCommand(data) {
         } else if (Object.keys(data.data).length === 0) {
           // Do nothing with empty object data.
         } else {
-          Sentry.withScope(scope => {
+          Sentry.withScope((scope) => {
             scope.setExtra('data', data);
             Sentry.captureException(new Error('Unknown event data'));
           });
@@ -86,11 +86,11 @@ export function objectToSortedTupleArray(obj) {
       const val = obj[k];
       return out.concat(
         {}.toString.call(val) === '[object Array]'
-          ? val.map(v => [k, v]) // key has multiple values (array)
+          ? val.map((v) => [k, v]) // key has multiple values (array)
           : [[k, val]] // key has single value
       );
     }, [])
-    .sort(function([keyA, valA], [keyB, valB]) {
+    .sort(function ([keyA, valA], [keyB, valB]) {
       // if keys are identical, sort on value
       if (keyA === keyB) {
         return valA < valB ? -1 : 1;

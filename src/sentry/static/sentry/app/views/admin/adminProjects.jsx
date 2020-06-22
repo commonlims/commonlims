@@ -6,12 +6,12 @@ import moment from 'moment';
 import ResultGrid from 'app/components/resultGrid';
 import {t} from 'app/locale';
 
-export const prettyDate = function(x) {
+export const prettyDate = function (x) {
   return moment(x).format('ll');
 };
 
 class AdminProjects extends React.Component {
-  getRow = row => {
+  getRow = (row) => {
     return [
       <td>
         <strong>
@@ -45,7 +45,10 @@ class AdminProjects extends React.Component {
           filters={{
             status: {
               name: 'Status',
-              options: [['active', 'Active'], ['deleted', 'Deleted']],
+              options: [
+                ['active', 'Active'],
+                ['deleted', 'Deleted'],
+              ],
             },
           }}
           sortOptions={[['date', 'Date Created']]}

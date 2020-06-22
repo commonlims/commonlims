@@ -114,9 +114,9 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   createFieldsFromDefinition(processDefinition) {
-    return processDefinition.fields.map(fieldConfig => {
+    return processDefinition.fields.map((fieldConfig) => {
       const field = Object.assign({}, fieldConfig);
-      field.onChange = val => this.props.processAssignSetVariable(field.name, val);
+      field.onChange = (val) => this.props.processAssignSetVariable(field.name, val);
       return field;
     });
   },
@@ -143,15 +143,15 @@ const AssignToWorkflowButton = createReactClass({
       return <LoadingIndicator />;
     }
 
-    const presets = Object.entries(
-      this.props.processDefinition.presetsById
-    ).map(entry => {
-      return {value: entry[0], label: entry[1].name};
-    });
+    const presets = Object.entries(this.props.processDefinition.presetsById).map(
+      (entry) => {
+        return {value: entry[0], label: entry[1].name};
+      }
+    );
 
     const processDefinitions = Object.entries(
       this.props.processDefinition.processDefinitionsById
-    ).map(entry => {
+    ).map((entry) => {
       return {value: entry[0], label: entry[1].id};
     });
 
@@ -178,7 +178,7 @@ const AssignToWorkflowButton = createReactClass({
             <div className="stream-tag-filter">
               <h6 className="nav-header">Preset</h6>
               <SelectControl
-                onChange={preset => this.props.processAssignSelectPreset(preset.value)}
+                onChange={(preset) => this.props.processAssignSelectPreset(preset.value)}
                 placeholder="Select a preset of workflow and variables"
                 options={presets}
                 value={assignPreset}
@@ -188,7 +188,7 @@ const AssignToWorkflowButton = createReactClass({
             <div className="stream-tag-filter">
               <h6 className="nav-header">Workflow</h6>
               <SelectControl
-                onChange={sel => this.props.processAssignSelectProcess(sel.value)}
+                onChange={(sel) => this.props.processAssignSelectProcess(sel.value)}
                 placeholder="Select a workflow or subprocess"
                 options={processDefinitions}
                 value={assignProcessDefinition ? assignProcessDefinition.id : null}
@@ -222,7 +222,7 @@ const AssignToWorkflowButton = createReactClass({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     processDefinition: state.processDefinition,
     substanceSearchEntry: state.substanceSearchEntry,
@@ -230,13 +230,13 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   processDefinitionsGet: () => dispatch(processDefinitionsGet()),
   processesPost: (definitionId, variables, instances) =>
     dispatch(processesPost(definitionId, variables, instances)),
 
-  processAssignSelectPreset: preset => dispatch(processAssignSelectPreset(preset)),
-  processAssignSelectProcess: process => dispatch(processAssignSelectProcess(process)),
+  processAssignSelectPreset: (preset) => dispatch(processAssignSelectPreset(preset)),
+  processAssignSelectProcess: (process) => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
     dispatch(processAssignSetVariable(key, value)),
 });

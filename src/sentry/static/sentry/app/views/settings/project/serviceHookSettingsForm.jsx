@@ -11,7 +11,7 @@ import TextField from 'app/views/settings/components/forms/textField';
 import MultipleCheckbox from 'app/views/settings/components/forms/controls/multipleCheckbox';
 import {Panel, PanelBody, PanelHeader} from 'app/components/panels';
 
-const EVENT_CHOICES = ['event.alert', 'event.created'].map(e => [e, e]);
+const EVENT_CHOICES = ['event.alert', 'event.created'].map((e) => [e, e]);
 
 export default createReactClass({
   displayName: 'ServiceHookSettingsForm',

@@ -9,7 +9,7 @@ const newLineHelpText = t('Separate multiple entries with a newline.');
 const globHelpText = tct('Allows [link:glob pattern matching].', {
   link: <ExternalLink href="https://en.wikipedia.org/wiki/Glob_(programming)" />,
 });
-const getOptionsData = data => ({
+const getOptionsData = (data) => ({
   options: data,
 });
 

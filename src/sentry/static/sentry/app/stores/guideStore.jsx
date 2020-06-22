@@ -77,7 +77,7 @@ const GuideStore = Reflux.createStore({
   onCloseGuide() {
     const {currentGuide} = this.state;
     this.state.guides[
-      Object.keys(this.state.guides).find(key => {
+      Object.keys(this.state.guides).find((key) => {
         return this.state.guides[key].id == currentGuide.id;
       })
     ].seen = true;
@@ -156,7 +156,7 @@ const GuideStore = Reflux.createStore({
           since: new Date().getTime() / 1000 - 3600 * 24 * 30,
         },
       })
-      .then(data => {
+      .then((data) => {
         const eventsReceived = data.reduce((sum, point) => sum + point[1], 0);
         projectStats.set(projectId, eventsReceived);
         return eventsReceived;
@@ -178,7 +178,7 @@ const GuideStore = Reflux.createStore({
           since: new Date().getTime() / 1000 - 3600 * 24 * 30,
         },
       })
-      .then(data => {
+      .then((data) => {
         const result = !this.isDefaultAlert(data);
         projectRules.set(projectId, result);
         return result;
@@ -213,7 +213,7 @@ const GuideStore = Reflux.createStore({
       }
 
       resolve(
-        guideKeys.find(key => {
+        guideKeys.find((key) => {
           // Pick the first guide that satisfies conditions.
           if (key === ALERT_REMINDER_1) {
             const [stats, rules] = projectData;
@@ -240,19 +240,19 @@ const GuideStore = Reflux.createStore({
     // 5. If the user has seen the guide, don't show it.
     // 6. Otherwise show the guide.
 
-    const availableTargets = [...this.state.anchors].map(a => a.props.target);
+    const availableTargets = [...this.state.anchors].map((a) => a.props.target);
 
     // sort() so that we pick a guide deterministically every time this function is called.
     let guideKeys = Object.keys(this.state.guides)
       .sort()
-      .filter(key => {
+      .filter((key) => {
         return this.state.guides[key].required_targets.every(
-          t => availableTargets.indexOf(t) >= 0
+          (t) => availableTargets.indexOf(t) >= 0
         );
       });
 
     if (!this.state.forceShow) {
-      guideKeys = guideKeys.filter(key => !this.state.guides[key].seen);
+      guideKeys = guideKeys.filter((key) => !this.state.guides[key].seen);
     }
 
     // Pick the first guide that satisfies conditions.
@@ -265,7 +265,7 @@ const GuideStore = Reflux.createStore({
 
         // Remove steps that don't have an anchor on the page.
         steps: this.state.guides[bestGuideKey].steps.filter(
-          step =>
+          (step) =>
             step.target === null ||
             (step.target && availableTargets.indexOf(step.target) >= 0)
         ),

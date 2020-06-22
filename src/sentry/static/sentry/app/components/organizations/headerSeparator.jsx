@@ -5,7 +5,7 @@ import space from 'app/styles/space';
 
 const HeaderSeparator = styled(Box)`
   width: 1px;
-  background-color: ${p => p.theme.borderLight};
+  background-color: ${(p) => p.theme.borderLight};
   margin: ${space(2)} 0;
 `;
 

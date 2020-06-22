@@ -33,7 +33,7 @@ export function getData(results, widget) {
   // Has 2 y axes
   if (hasYAxes) {
     yAxisMapping.forEach((mappings, yAxisIndex) => {
-      mappings.forEach(seriesIndex => {
+      mappings.forEach((seriesIndex) => {
         if (typeof series[seriesIndex] === 'undefined') {
           return;
         }

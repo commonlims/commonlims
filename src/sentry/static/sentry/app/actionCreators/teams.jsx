@@ -13,11 +13,11 @@ const doCallback = (params = {}, name, ...args) => {
 export function fetchTeams(api, params, options) {
   TeamActions.fetchAll(params.orgId);
   return api.request(`/teams/${params.orgId}/`, {
-    success: data => {
+    success: (data) => {
       TeamActions.fetchAllSuccess(params.orgId, data);
       doCallback(options, 'success', data);
     },
-    error: error => {
+    error: (error) => {
       TeamActions.fetchAllError(params.orgId, error);
       doCallback(options, 'error', error);
     },
@@ -27,11 +27,11 @@ export function fetchTeams(api, params, options) {
 export function fetchTeamDetails(api, params, options) {
   TeamActions.fetchDetails(params.teamId);
   return api.request(`/teams/${params.orgId}/${params.teamId}/`, {
-    success: data => {
+    success: (data) => {
       TeamActions.fetchDetailsSuccess(params.teamId, data);
       doCallback(options, 'success', data);
     },
-    error: error => {
+    error: (error) => {
       TeamActions.fetchDetailsError(params.teamId, error);
       doCallback(options, 'error', error);
     },
@@ -49,11 +49,11 @@ export function updateTeam(api, params, options) {
   return api.request(endpoint, {
     method: 'PUT',
     data: params.data,
-    success: data => {
+    success: (data) => {
       updateTeamSuccess(params.teamId, data);
       doCallback(options, 'success', data);
     },
-    error: error => {
+    error: (error) => {
       TeamActions.updateError(params.teamId, error);
       doCallback(options, 'error', error);
     },
@@ -61,8 +61,9 @@ export function updateTeam(api, params, options) {
 }
 
 export function joinTeam(api, params, options) {
-  const endpoint = `/organizations/${params.orgId}/members/${params.memberId ||
-    'me'}/teams/${params.teamId}/`;
+  const endpoint = `/organizations/${params.orgId}/members/${
+    params.memberId || 'me'
+  }/teams/${params.teamId}/`;
   const id = uniqueId();
 
   TeamActions.update(id, params.teamId);
@@ -70,11 +71,11 @@ export function joinTeam(api, params, options) {
   return api.request(endpoint, {
     method: 'POST',
     data: params.data,
-    success: data => {
+    success: (data) => {
       TeamActions.updateSuccess(params.teamId, data);
       doCallback(options, 'success', data);
     },
-    error: error => {
+    error: (error) => {
       TeamActions.updateError(id, params.teamId, error);
       doCallback(options, 'error', error);
     },
@@ -82,19 +83,20 @@ export function joinTeam(api, params, options) {
 }
 
 export function leaveTeam(api, params, options) {
-  const endpoint = `/organizations/${params.orgId}/members/${params.memberId ||
-    'me'}/teams/${params.teamId}/`;
+  const endpoint = `/organizations/${params.orgId}/members/${
+    params.memberId || 'me'
+  }/teams/${params.teamId}/`;
   const id = uniqueId();
 
   TeamActions.update(id, params.teamId);
 
   return api.request(endpoint, {
     method: 'DELETE',
-    success: data => {
+    success: (data) => {
       TeamActions.updateSuccess(params.teamId, data);
       doCallback(options, 'success', data);
     },
-    error: error => {
+    error: (error) => {
       TeamActions.updateError(id, params.teamId, error);
       doCallback(options, 'error', error);
     },
@@ -110,7 +112,7 @@ export function createTeam(api, team, params, options) {
       data: team,
     })
     .then(
-      data => {
+      (data) => {
         TeamActions.createTeamSuccess(data);
         addSuccessMessage(
           tct('[team] has been added to the [organization] organization', {
@@ -120,7 +122,7 @@ export function createTeam(api, team, params, options) {
         );
         return data;
       },
-      err => {
+      (err) => {
         TeamActions.createTeamError(team.slug || team.name, err);
         addErrorMessage(
           tct('Unable to create [team] in the [organization] organization', {
@@ -141,7 +143,7 @@ export function removeTeam(api, params, options) {
       method: 'DELETE',
     })
     .then(
-      data => {
+      (data) => {
         TeamActions.removeTeamSuccess(params.teamId, data);
         addSuccessMessage(
           tct('[team] has been removed from the [organization] organization', {
@@ -151,7 +153,7 @@ export function removeTeam(api, params, options) {
         );
         return data;
       },
-      err => {
+      (err) => {
         TeamActions.removeTeamError(params.teamId, err);
         addErrorMessage(
           tct('Unable to remove [team] from the [organization] organization', {

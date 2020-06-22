@@ -40,7 +40,7 @@ const ReleaseStats = createReactClass({
 });
 
 const ReleaseSummaryHeading = styled.div`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   font-size: 12px;
   line-height: 1.2;
   font-weight: 600;

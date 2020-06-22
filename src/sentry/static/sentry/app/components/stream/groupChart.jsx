@@ -31,7 +31,7 @@ class GroupChart extends React.Component {
       return null;
     }
 
-    const chartData = stats.map(point => {
+    const chartData = stats.map((point) => {
       return {x: point[0], y: point[1]};
     });
 

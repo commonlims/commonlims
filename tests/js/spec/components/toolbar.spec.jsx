@@ -2,18 +2,18 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import Toolbar from 'app/components/toolbar';
 
-describe('Toolbar', function() {
+describe('Toolbar', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     const wrapper = shallow(
       <Toolbar>
         <div />

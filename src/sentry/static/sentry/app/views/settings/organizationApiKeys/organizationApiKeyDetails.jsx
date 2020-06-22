@@ -13,7 +13,7 @@ import TextField from 'app/components/forms/textField';
 import TextareaField from 'app/components/forms/textareaField';
 import recreateRoute from 'app/utils/recreateRoute';
 
-const API_CHOICES = API_SCOPES.map(s => [s, s]);
+const API_CHOICES = API_SCOPES.map((s) => [s, s]);
 
 class OrganizationApiKeyDetails extends AsyncView {
   static contextTypes = {
@@ -77,8 +77,7 @@ class OrganizationApiKeyDetails extends AsyncView {
 
         <ApiForm
           apiMethod="PUT"
-          apiEndpoint={`/organizations/${this.props.params.orgId}/api-keys/${this.props
-            .params.apiKey}/`}
+          apiEndpoint={`/organizations/${this.props.params.orgId}/api-keys/${this.props.params.apiKey}/`}
           initialData={this.state.apiKey}
           onSubmitSuccess={this.handleSubmitSuccess}
           onSubmitError={this.handleSubmitError}
@@ -89,7 +88,8 @@ class OrganizationApiKeyDetails extends AsyncView {
                 routes: this.props.routes,
                 params: this.props.params,
               })
-            )}
+            )
+          }
         >
           <SplitLayout splitWidth={15}>
             <TextField label={t('Label')} name="label" />

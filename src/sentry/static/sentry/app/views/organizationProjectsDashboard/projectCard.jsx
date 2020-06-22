@@ -145,7 +145,7 @@ const ProjectCardContainer = createReactClass({
 
 const ChartContainer = styled.div`
   position: relative;
-  background: ${p => p.theme.offWhite};
+  background: ${(p) => p.theme.offWhite};
   padding-top: ${space(1)};
 `;
 
@@ -162,23 +162,23 @@ const ProjectCardWrapper = styled(Box)`
 
 const StyledProjectCard = styled.div`
   background-color: white;
-  border: 1px solid ${p => p.theme.borderDark};
-  border-radius: ${p => p.theme.borderRadius};
-  box-shadow: ${p => p.theme.dropShadowLight};
+  border: 1px solid ${(p) => p.theme.borderDark};
+  border-radius: ${(p) => p.theme.borderRadius};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
 `;
 
 const Star = styled.a`
-  color: ${p => (p.active ? p.theme.yellowOrange : p.theme.gray6)};
+  color: ${(p) => (p.active ? p.theme.yellowOrange : p.theme.gray6)};
   margin-left: ${space(1)};
   &:hover {
-    color: ${p => p.theme.yellowOrange};
+    color: ${(p) => p.theme.yellowOrange};
     opacity: 0.6;
   }
 `;
 
 const LoadingCard = styled('div')`
   border: 1px solid transparent;
-  background-color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.offWhite};
   height: 210px;
 `;
 

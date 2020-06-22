@@ -15,10 +15,10 @@ jest.mock('react-router', () => {
   };
 });
 
-describe('OrganizationGeneralSettings', function() {
+describe('OrganizationGeneralSettings', function () {
   const org = TestStubs.Organization();
   const ENDPOINT = `/organizations/${org.slug}/`;
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: ENDPOINT,
@@ -28,7 +28,7 @@ describe('OrganizationGeneralSettings', function() {
     browserHistory.replace.mockReset();
   });
 
-  it('has LoadingError on error', async function() {
+  it('has LoadingError on error', async function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: ENDPOINT,
@@ -46,7 +46,7 @@ describe('OrganizationGeneralSettings', function() {
     expect(wrapper.find('LoadingError')).toHaveLength(1);
   });
 
-  it('can enable "early adopter"', async function() {
+  it('can enable "early adopter"', async function () {
     const wrapper = mount(
       <OrganizationGeneralSettings params={{orgId: org.slug}} />,
       TestStubs.routerContext()
@@ -68,7 +68,7 @@ describe('OrganizationGeneralSettings', function() {
     );
   });
 
-  it('changes org slug and redirects to new slug', async function() {
+  it('changes org slug and redirects to new slug', async function () {
     const wrapper = mount(
       <OrganizationGeneralSettings params={{orgId: org.slug}} />,
       TestStubs.routerContext()
@@ -101,7 +101,7 @@ describe('OrganizationGeneralSettings', function() {
     expect(browserHistory.replace).toHaveBeenCalledWith('/settings/new-slug/');
   });
 
-  it('disables the entire form if user does not have write access', async function() {
+  it('disables the entire form if user does not have write access', async function () {
     const readOnlyOrg = TestStubs.Organization({access: ['org:read']});
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
@@ -118,17 +118,12 @@ describe('OrganizationGeneralSettings', function() {
     wrapper.update();
 
     expect(wrapper.find('Form FormField[disabled=false]')).toHaveLength(0);
-    expect(
-      wrapper
-        .find('PermissionAlert')
-        .first()
-        .text()
-    ).toEqual(
+    expect(wrapper.find('PermissionAlert').first().text()).toEqual(
       'These settings can only be edited by users with the owner or manager role.'
     );
   });
 
-  it('does not have remove organization button', async function() {
+  it('does not have remove organization button', async function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: ENDPOINT,
@@ -148,7 +143,7 @@ describe('OrganizationGeneralSettings', function() {
     expect(wrapper.find('Confirm[priority="danger"]')).toHaveLength(0);
   });
 
-  it('can remove organization when org admin', async function() {
+  it('can remove organization when org admin', async function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: ENDPOINT,
@@ -185,7 +180,7 @@ describe('OrganizationGeneralSettings', function() {
     );
   });
 
-  it('returns to "off" if switch enable fails (e.g. API error)', async function() {
+  it('returns to "off" if switch enable fails (e.g. API error)', async function () {
     MockApiClient.addMockResponse({
       url: '/organizations/org-slug/',
       method: 'PUT',

@@ -3,13 +3,13 @@ import {shallow, mount} from 'enzyme';
 import GlobalModal from 'app/components/globalModal';
 import {openModal, closeModal} from 'app/actionCreators/modal';
 
-describe('GlobalModal', function() {
-  it('renders', function() {
+describe('GlobalModal', function () {
+  it('renders', function () {
     const wrapper = shallow(<GlobalModal />);
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('uses actionCreators to open and close Modal', function(done) {
+  it('uses actionCreators to open and close Modal', function (done) {
     const wrapper = mount(<GlobalModal />);
 
     openModal(() => <div id="modal-test">Hi</div>);
@@ -30,7 +30,7 @@ describe('GlobalModal', function() {
     }, 1);
   });
 
-  it('calls onClose handler when modal closes', function(done) {
+  it('calls onClose handler when modal closes', function (done) {
     const wrapper = mount(<GlobalModal />);
     const closeSpy = jest.fn();
 

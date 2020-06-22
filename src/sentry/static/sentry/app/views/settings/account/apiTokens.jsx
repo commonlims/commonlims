@@ -28,19 +28,19 @@ class ApiTokens extends AsyncView {
     return [['tokenList', '/api-tokens/']];
   }
 
-  handleRemoveToken = token => {
+  handleRemoveToken = (token) => {
     const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
     const oldTokenList = this.state.tokenList;
 
     this.setState(
-      state => ({
-        tokenList: state.tokenList.filter(tk => tk.token !== token.token),
+      (state) => ({
+        tokenList: state.tokenList.filter((tk) => tk.token !== token.token),
       }),
       () =>
         this.api.request('/api-tokens/', {
           method: 'DELETE',
           data: {token: token.token},
-          success: data => {
+          success: (data) => {
             IndicatorStore.remove(loadingIndicator);
             IndicatorStore.addSuccess(t('Removed token'));
           },
@@ -90,8 +90,7 @@ class ApiTokens extends AsyncView {
         <TextBlock>
           <small>
             psst. Looking for the <strong>DSN</strong> for an SDK? You'll find that under{' '}
-            <strong>[Project] » Settings » Client Keys</strong>
-            .
+            <strong>[Project] » Settings » Client Keys</strong>.
           </small>
         </TextBlock>
         <Panel>
@@ -111,7 +110,7 @@ class ApiTokens extends AsyncView {
             )}
 
             {!isEmpty &&
-              tokenList.map(token => {
+              tokenList.map((token) => {
                 return (
                   <ApiTokenRow
                     key={token.token}
