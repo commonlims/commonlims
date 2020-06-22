@@ -24,7 +24,7 @@ class ProjectInstallOverview extends React.Component {
     return location.href.indexOf('getting-started') > 0;
   };
 
-  redirectToDocs = platform => {
+  redirectToDocs = (platform) => {
     const {orgId, projectId} = this.props.params;
     const prefix = recreateRoute('', {...this.props, stepBack: -3});
     let rootUrl = `${prefix}install`;
@@ -84,7 +84,8 @@ class ProjectInstallOverview extends React.Component {
             <small>
               {tct('Already have things setup? [link:Get your DSN]', {
                 link: <a className="btn-xsmall" onClick={this.toggleDsn} />,
-              })}.
+              })}
+              .
             </small>
           </p>
         )}

@@ -67,7 +67,7 @@ class OrganizationAccessRequests extends React.Component {
                 </Box>
                 <Box p={2}>
                   <Button
-                    onClick={e => this.handleApprove(id, e)}
+                    onClick={(e) => this.handleApprove(id, e)}
                     busy={accessRequestBusy.get(id)}
                     priority="primary"
                     style={{marginRight: 4}}
@@ -77,7 +77,7 @@ class OrganizationAccessRequests extends React.Component {
                   </Button>
                   <Button
                     busy={accessRequestBusy.get(id)}
-                    onClick={e => this.handleDeny(id, e)}
+                    onClick={(e) => this.handleDeny(id, e)}
                     size="small"
                   >
                     {t('Deny')}

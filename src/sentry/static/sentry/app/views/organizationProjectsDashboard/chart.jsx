@@ -14,7 +14,7 @@ export default class Chart extends React.Component {
   };
 
   render() {
-    const data = this.props.stats.map(d => ({x: d[0], y: d[1]}));
+    const data = this.props.stats.map((d) => ({x: d[0], y: d[1]}));
 
     return (
       <div>

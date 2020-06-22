@@ -89,7 +89,7 @@ class SmartSearchBar extends React.Component {
   static defaultProps = {
     defaultQuery: '',
     query: null,
-    onSearch: function() {},
+    onSearch: function () {},
     excludeEnvironment: false,
     placeholder: t('Search for events, users, tags, and everything else.'),
     supportedTags: {},
@@ -140,7 +140,7 @@ class SmartSearchBar extends React.Component {
     this.searchInput.current.blur();
   };
 
-  onSubmit = evt => {
+  onSubmit = (evt) => {
     evt.preventDefault();
     this.blur();
     this.props.onSearch(removeSpace(this.state.query));
@@ -165,11 +165,11 @@ class SmartSearchBar extends React.Component {
     }, this.DROPDOWN_BLUR_DURATION);
   };
 
-  onQueryChange = evt => {
+  onQueryChange = (evt) => {
     this.setState({query: evt.target.value}, () => this.updateAutoCompleteItems());
   };
 
-  onKeyUp = evt => {
+  onKeyUp = (evt) => {
     if (evt.key === 'Escape' || evt.keyCode === 27) {
       // blur handler should additionally hide dropdown
       this.blur();
@@ -188,22 +188,22 @@ class SmartSearchBar extends React.Component {
    *
    * e.g. ['is:', 'assigned:', 'url:', 'release:']
    */
-  getTagKeys = function(query) {
+  getTagKeys = function (query) {
     const {supportedTags, prepareQuery} = this.props;
 
     // Return all if query is empty
-    let tagKeys = Object.keys(supportedTags).map(key => `${key}:`);
+    let tagKeys = Object.keys(supportedTags).map((key) => `${key}:`);
 
     if (query) {
       const preparedQuery =
         typeof prepareQuery === 'function' ? prepareQuery(query) : query;
-      tagKeys = tagKeys.filter(key => key.indexOf(preparedQuery) > -1);
+      tagKeys = tagKeys.filter((key) => key.indexOf(preparedQuery) > -1);
     }
 
     // If the environment feature is active and excludeEnvironment = true
     // then remove the environment key
     if (this.props.excludeEnvironment) {
-      return tagKeys.filter(key => key !== 'environment:');
+      return tagKeys.filter((key) => key !== 'environment:');
     } else {
       return tagKeys;
     }
@@ -222,10 +222,10 @@ class SmartSearchBar extends React.Component {
     });
 
     this.props.onGetTagValues(tag, query).then(
-      values => {
+      (values) => {
         this.setState({loading: false});
         callback(
-          values.map(value => {
+          values.map((value) => {
             // Wrap in quotes if there is a space
             return value.indexOf(' ') > -1 ? `"${value}"` : value;
           }),
@@ -243,8 +243,8 @@ class SmartSearchBar extends React.Component {
    * Returns array of tag values that substring match `query`; invokes `callback`
    * with results
    */
-  getPredefinedTagValues = function(tag, query, callback) {
-    const values = tag.values.filter(value => value.indexOf(query) > -1);
+  getPredefinedTagValues = function (tag, query, callback) {
+    const values = tag.values.filter((value) => value.indexOf(query) > -1);
 
     callback(values, tag.key);
   };
@@ -323,7 +323,9 @@ class SmartSearchBar extends React.Component {
       // with actual tag value results
       const filteredSearchItems = !preparedQuery
         ? this.state.searchItems
-        : this.state.searchItems.filter(item => item.value.indexOf(preparedQuery) !== -1);
+        : this.state.searchItems.filter(
+            (item) => item.value.indexOf(preparedQuery) !== -1
+          );
 
       this.setState({
         searchTerm: query,
@@ -357,7 +359,7 @@ class SmartSearchBar extends React.Component {
   updateAutoCompleteState = (searchItems, tagName) => {
     const {maxSearchItems} = this.props;
 
-    searchItems = searchItems.map(item => {
+    searchItems = searchItems.map((item) => {
       const out = {
         desc: item,
         value: item,
@@ -397,7 +399,7 @@ class SmartSearchBar extends React.Component {
     });
   };
 
-  onKeyDown = evt => {
+  onKeyDown = (evt) => {
     const state = this.state;
     const searchItems = state.searchItems;
 
@@ -425,7 +427,7 @@ class SmartSearchBar extends React.Component {
     }
   };
 
-  onAutoComplete = replaceText => {
+  onAutoComplete = (replaceText) => {
     const cursor = this.getCursorPosition();
     const query = this.state.query;
 
@@ -561,7 +563,7 @@ const SmartSearchBarContainer = withOrganization(
 );
 
 const DropdownWrapper = styled('div')`
-  display: ${p => (p.visible ? 'block' : 'none')};
+  display: ${(p) => (p.visible ? 'block' : 'none')};
 `;
 
 export default SmartSearchBarContainer;

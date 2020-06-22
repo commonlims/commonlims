@@ -96,7 +96,7 @@ const ProjectEnvironments = createReactClass({
       query: {
         visibility: hidden ? 'hidden' : 'visible',
       },
-      success: env => {
+      success: (env) => {
         const load = hidden ? loadHiddenEnvironments : loadActiveEnvironments;
         load(env);
       },
@@ -106,7 +106,7 @@ const ProjectEnvironments = createReactClass({
   fetchProjectDetails() {
     const {orgId, projectId} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/`, {
-      success: project => {
+      success: (project) => {
         this.setState({project});
       },
     });
@@ -134,14 +134,14 @@ const ProjectEnvironments = createReactClass({
           name: env.name,
           isHidden: shouldHide,
         },
-        success: e => {
+        success: (e) => {
           addSuccessMessage(
             tct('Updated [environment]', {
               environment: env.displayName,
             })
           );
         },
-        error: err => {
+        error: (err) => {
           addErrorMessage(
             tct('Unable to update [environment]', {
               environment: env.displayName,
@@ -162,7 +162,7 @@ const ProjectEnvironments = createReactClass({
     const oldProject = this.state.project;
 
     // Optimistically update state
-    this.setState(state => ({
+    this.setState((state) => ({
       ...state,
       project: {
         ...state.project,
@@ -184,9 +184,9 @@ const ProjectEnvironments = createReactClass({
           })
         );
       },
-      err => {
+      (err) => {
         // Error occurred, revert project state
-        this.setState(state => ({
+        this.setState((state) => ({
           ...state,
           project: oldProject,
         }));
@@ -293,7 +293,7 @@ const ProjectEnvironments = createReactClass({
     return (
       <React.Fragment>
         {this.renderSystemRows()}
-        {envs.map(env => {
+        {envs.map((env) => {
           const isDefault = project && env.name === project.defaultEnvironment;
           // Don't show "Set as default" button until project details are loaded
           const shouldShowSetDefault = !isHidden && !isDefault && !!project;
@@ -430,9 +430,9 @@ const EnvironmentButton = styled(Button)`
   margin-left: ${space(0.5)};
 `;
 
-const InvalidDefaultEnvironmentIcon = styled(props => (
+const InvalidDefaultEnvironmentIcon = styled((props) => (
   <InlineSvg src="icon-circle-exclamation" {...props} />
 ))`
-  color: ${p => p.theme.error};
+  color: ${(p) => p.theme.error};
 `;
 export default ProjectEnvironments;

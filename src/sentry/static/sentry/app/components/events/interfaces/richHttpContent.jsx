@@ -14,7 +14,7 @@ class RichHttpContent extends React.Component {
     data: PropTypes.object.isRequired,
   };
 
-  getBodySection = data => {
+  getBodySection = (data) => {
     // The http interface provides an inferred content type for the data body.
     switch (data.inferredContentType) {
       case 'application/json':
@@ -28,7 +28,7 @@ class RichHttpContent extends React.Component {
     }
   };
 
-  getQueryStringOrRaw = data => {
+  getQueryStringOrRaw = (data) => {
     try {
       // Sentry API abbreviates long query string values, sometimes resulting in
       // an un-parsable querystring ... stay safe kids
@@ -61,14 +61,13 @@ class RichHttpContent extends React.Component {
           </ClippedBox>
         )}
 
-        {data.cookies &&
-          !objectIsEmpty(data.cookies) && (
-            <ClippedBox title={t('Cookies')} defaultCollapsed>
-              <ErrorBoundary mini>
-                <KeyValueList data={data.cookies} />
-              </ErrorBoundary>
-            </ClippedBox>
-          )}
+        {data.cookies && !objectIsEmpty(data.cookies) && (
+          <ClippedBox title={t('Cookies')} defaultCollapsed>
+            <ErrorBoundary mini>
+              <KeyValueList data={data.cookies} />
+            </ErrorBoundary>
+          </ClippedBox>
+        )}
         {!objectIsEmpty(data.headers) && (
           <ClippedBox title={t('Headers')}>
             <ErrorBoundary mini>

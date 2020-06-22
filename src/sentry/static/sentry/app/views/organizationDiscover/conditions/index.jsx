@@ -55,7 +55,7 @@ export default class Conditions extends React.Component {
           <SelectListItem key={`${idx}_${condition[2]}`}>
             <Condition
               value={condition}
-              onChange={val => this.handleChange(val, idx)}
+              onChange={(val) => this.handleChange(val, idx)}
               columns={columns}
               disabled={disabled}
             />

@@ -4,17 +4,17 @@ import {mount} from 'enzyme';
 import TeamStore from 'app/stores/teamStore';
 import TeamSettings from 'app/views/settings/organizationTeams/teamSettings';
 
-describe('TeamSettings', function() {
-  beforeEach(function() {
+describe('TeamSettings', function () {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     sinon.stub(window.location, 'assign');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     window.location.assign.restore();
   });
 
-  it('can change name and slug', async function() {
+  it('can change name and slug', async function () {
     const team = TestStubs.Team();
     const putMock = MockApiClient.addMockResponse({
       url: `/teams/org/${team.slug}/`,
@@ -68,7 +68,7 @@ describe('TeamSettings', function() {
     expect(router.push).toHaveBeenCalledWith('/settings/org/teams/new-slug/settings/');
   });
 
-  it('needs team:admin in order to see an enabled Remove Team button', function() {
+  it('needs team:admin in order to see an enabled Remove Team button', function () {
     const team = TestStubs.Team();
 
     const wrapper = mount(
@@ -80,16 +80,10 @@ describe('TeamSettings', function() {
       />,
       TestStubs.routerContext([{organization: TestStubs.Organization({access: []})}])
     );
-    expect(
-      wrapper
-        .find('Panel')
-        .last()
-        .find('Button')
-        .prop('disabled')
-    ).toBe(true);
+    expect(wrapper.find('Panel').last().find('Button').prop('disabled')).toBe(true);
   });
 
-  it('can remove team', async function() {
+  it('can remove team', async function () {
     const team = TestStubs.Team();
     const deleteMock = MockApiClient.addMockResponse({
       url: `/teams/org/${team.slug}/`,

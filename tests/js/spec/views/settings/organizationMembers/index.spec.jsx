@@ -9,7 +9,7 @@ import {addSuccessMessage, addErrorMessage} from 'app/actionCreators/indicator';
 jest.mock('app/api');
 jest.mock('app/actionCreators/indicator');
 
-describe('OrganizationMembers', function() {
+describe('OrganizationMembers', function () {
   const members = TestStubs.Members();
   const currentUser = members[1];
   const defaultProps = {
@@ -31,18 +31,15 @@ describe('OrganizationMembers', function() {
   });
   let getStub;
 
-  beforeAll(function() {
-    getStub = sinon
-      .stub(ConfigStore, 'get')
-      .withArgs('user')
-      .returns(currentUser);
+  beforeAll(function () {
+    getStub = sinon.stub(ConfigStore, 'get').withArgs('user').returns(currentUser);
   });
 
-  afterAll(function() {
+  afterAll(function () {
     getStub.restore();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     Client.clearMockResponses();
     Client.addMockResponse({
       url: '/organizations/org-id/members/',
@@ -80,7 +77,7 @@ describe('OrganizationMembers', function() {
     });
   });
 
-  it('can remove a member', async function() {
+  it('can remove a member', async function () {
     const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'DELETE',
@@ -96,10 +93,7 @@ describe('OrganizationMembers', function() {
       TestStubs.routerContext([{organization}])
     );
 
-    wrapper
-      .find('Button[icon="icon-circle-subtract"]')
-      .at(0)
-      .simulate('click');
+    wrapper.find('Button[icon="icon-circle-subtract"]').at(0).simulate('click');
 
     await tick();
 
@@ -111,7 +105,7 @@ describe('OrganizationMembers', function() {
     expect(addSuccessMessage).toHaveBeenCalled();
   });
 
-  it('displays error message when failing to remove member', async function() {
+  it('displays error message when failing to remove member', async function () {
     const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'DELETE',
@@ -128,10 +122,7 @@ describe('OrganizationMembers', function() {
       TestStubs.routerContext([{organization}])
     );
 
-    wrapper
-      .find('Button[icon="icon-circle-subtract"]')
-      .at(0)
-      .simulate('click');
+    wrapper.find('Button[icon="icon-circle-subtract"]').at(0).simulate('click');
 
     await tick();
 
@@ -143,7 +134,7 @@ describe('OrganizationMembers', function() {
     expect(addErrorMessage).toHaveBeenCalled();
   });
 
-  it('can leave org', async function() {
+  it('can leave org', async function () {
     const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[1].id}/`,
       method: 'DELETE',
@@ -159,10 +150,7 @@ describe('OrganizationMembers', function() {
       TestStubs.routerContext([{organization}])
     );
 
-    wrapper
-      .find('Button[priority="danger"]')
-      .at(0)
-      .simulate('click');
+    wrapper.find('Button[priority="danger"]').at(0).simulate('click');
 
     await tick();
 
@@ -174,7 +162,7 @@ describe('OrganizationMembers', function() {
     expect(addSuccessMessage).toHaveBeenCalled();
   });
 
-  it('displays error message when failing to leave org', async function() {
+  it('displays error message when failing to leave org', async function () {
     const deleteMock = Client.addMockResponse({
       url: `/organizations/org-id/members/${members[1].id}/`,
       method: 'DELETE',
@@ -191,10 +179,7 @@ describe('OrganizationMembers', function() {
       TestStubs.routerContext([{organization}])
     );
 
-    wrapper
-      .find('Button[priority="danger"]')
-      .at(0)
-      .simulate('click');
+    wrapper.find('Button[priority="danger"]').at(0).simulate('click');
 
     await tick();
 
@@ -206,7 +191,7 @@ describe('OrganizationMembers', function() {
     expect(addErrorMessage).toHaveBeenCalled();
   });
 
-  it('can re-send invite to member', async function() {
+  it('can re-send invite to member', async function () {
     const inviteMock = MockApiClient.addMockResponse({
       url: `/organizations/org-id/members/${members[0].id}/`,
       method: 'PUT',
@@ -226,16 +211,13 @@ describe('OrganizationMembers', function() {
 
     expect(inviteMock).not.toHaveBeenCalled();
 
-    wrapper
-      .find('ResendInviteButton')
-      .first()
-      .simulate('click');
+    wrapper.find('ResendInviteButton').first().simulate('click');
 
     await tick();
     expect(inviteMock).toHaveBeenCalled();
   });
 
-  it('can approve pending access request', async function() {
+  it('can approve pending access request', async function () {
     const approveMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/access-requests/pending-id/',
       method: 'PUT',
@@ -268,7 +250,7 @@ describe('OrganizationMembers', function() {
     );
   });
 
-  it('can deny pending access request', async function() {
+  it('can deny pending access request', async function () {
     const denyMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/access-requests/pending-id/',
       method: 'PUT',
@@ -285,10 +267,7 @@ describe('OrganizationMembers', function() {
 
     expect(denyMock).not.toHaveBeenCalled();
 
-    wrapper
-      .find('OrganizationAccessRequests Button')
-      .at(1)
-      .simulate('click');
+    wrapper.find('OrganizationAccessRequests Button').at(1).simulate('click');
 
     await tick();
 
@@ -302,7 +281,7 @@ describe('OrganizationMembers', function() {
     );
   });
 
-  it('can search organization members', async function() {
+  it('can search organization members', async function () {
     const searchMock = MockApiClient.addMockResponse({
       url: '/organizations/org-id/members/',
       body: [],

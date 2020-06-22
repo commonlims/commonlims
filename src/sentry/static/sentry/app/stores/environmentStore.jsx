@@ -43,7 +43,7 @@ const EnvironmentStore = Reflux.createStore({
 
   loadData(key, items) {
     items = items || [];
-    this[key] = items.map(item => ({
+    this[key] = items.map((item) => ({
       id: item.id,
       name: item.name,
       get displayName() {
@@ -58,7 +58,7 @@ const EnvironmentStore = Reflux.createStore({
 
   getByName(name) {
     const envs = this.items;
-    return envs.find(item => item.name === name) || null;
+    return envs.find((item) => item.name === name) || null;
   },
 
   getActive() {
@@ -80,7 +80,7 @@ const EnvironmentStore = Reflux.createStore({
   getDefault() {
     const allEnvs = this.items;
 
-    const defaultEnv = allEnvs.find(e => e.name === this.defaultEnvironment);
+    const defaultEnv = allEnvs.find((e) => e.name === this.defaultEnvironment);
 
     return defaultEnv || null;
   },

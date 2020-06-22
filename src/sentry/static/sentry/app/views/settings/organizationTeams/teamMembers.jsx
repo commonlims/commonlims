@@ -56,7 +56,7 @@ const TeamMembers = createReactClass({
     }
   },
 
-  debouncedFetchMembersRequest: debounce(function(query) {
+  debouncedFetchMembersRequest: debounce(function (query) {
     this.setState(
       {
         dropdownBusy: true,
@@ -77,7 +77,7 @@ const TeamMembers = createReactClass({
       {
         success: () => {
           this.setState({
-            teamMemberList: this.state.teamMemberList.filter(m => {
+            teamMemberList: this.state.teamMemberList.filter((m) => {
               return m.id !== member.id;
             }),
           });
@@ -102,7 +102,7 @@ const TeamMembers = createReactClass({
       query: {
         query,
       },
-      success: data => {
+      success: (data) => {
         this.setState({
           orgMemberList: data,
           dropdownBusy: false,
@@ -123,7 +123,7 @@ const TeamMembers = createReactClass({
     const params = this.props.params;
 
     this.api.request(`/teams/${params.orgId}/${params.teamId}/members/`, {
-      success: data => {
+      success: (data) => {
         this.setState({
           teamMemberList: data,
           loading: false,
@@ -160,7 +160,7 @@ const TeamMembers = createReactClass({
       },
       {
         success: () => {
-          const orgMember = this.state.orgMemberList.find(member => {
+          const orgMember = this.state.orgMemberList.find((member) => {
             return member.id === selection.value;
           });
           this.setState({
@@ -183,10 +183,10 @@ const TeamMembers = createReactClass({
   },
 
   /**
- * We perform an API request to support orgs with > 100 members (since that's the max API returns)
- *
- * @param {Event} e React Event when member filter input changes
- */
+   * We perform an API request to support orgs with > 100 members (since that's the max API returns)
+   *
+   * @param {Event} e React Event when member filter input changes
+   */
   handleMemberFilterChange(e) {
     this.setState({dropdownBusy: true});
     this.debouncedFetchMembersRequest(e.target.value);
@@ -208,11 +208,11 @@ const TeamMembers = createReactClass({
       );
     }
 
-    const existingMembers = new Set(this.state.teamMemberList.map(member => member.id));
+    const existingMembers = new Set(this.state.teamMemberList.map((member) => member.id));
 
     const items = (this.state.orgMemberList || [])
-      .filter(m => !existingMembers.has(m.id))
-      .map(m => {
+      .filter((m) => !existingMembers.has(m.id))
+      .map((m) => {
         return {
           searchKey: `${m.name} ${m.email}`,
           value: m.id,
@@ -284,7 +284,7 @@ const TeamMembers = createReactClass({
           <div style={{textTransform: 'none'}}>{this.renderDropdown(access)}</div>
         </PanelHeader>
         {this.state.teamMemberList.length ? (
-          this.state.teamMemberList.map(member => (
+          this.state.teamMemberList.map((member) => (
             <StyledMemberContainer key={member.id}>
               <IdBadge avatarSize={36} member={member} useLink orgId={params.orgId} />
               {access.has('org:write') && this.removeButton(member)}
@@ -304,7 +304,7 @@ const StyledMemberContainer = styled('div')`
   display: flex;
   justify-content: space-between;
   padding: ${space(2)};
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 const StyledUserListElement = styled('div')`
@@ -320,7 +320,7 @@ const StyledNameOrEmail = styled('div')`
   ${overflowEllipsis};
 `;
 
-const StyledAvatar = styled(props => <Avatar {...props} />)`
+const StyledAvatar = styled((props) => <Avatar {...props} />)`
   min-width: 1.75em;
   min-height: 1.75em;
   width: 1.5em;

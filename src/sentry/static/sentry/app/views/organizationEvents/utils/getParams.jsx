@@ -1,7 +1,7 @@
 import {DEFAULT_STATS_PERIOD} from 'app/constants';
 import {defined} from 'app/utils';
 
-const getUtcValue = utc => {
+const getUtcValue = (utc) => {
   if (typeof utc !== 'undefined') {
     return utc === true || utc === 'true' ? 'true' : 'false';
   }

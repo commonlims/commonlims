@@ -8,27 +8,30 @@ import OrganizationDiscoverContainerWithStore, {
   OrganizationDiscoverContainer,
 } from 'app/views/organizationDiscover';
 
-describe('OrganizationDiscoverContainer', function() {
-  beforeEach(function() {
+describe('OrganizationDiscoverContainer', function () {
+  beforeEach(function () {
     browserHistory.push = jest.fn();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  describe('new query', function() {
+  describe('new query', function () {
     let wrapper;
     const organization = TestStubs.Organization({
       projects: [TestStubs.Project({id: '1', slug: 'test-project'})],
       features: ['discover'],
     });
-    beforeEach(async function() {
+    beforeEach(async function () {
       MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/query/?per_page=1000&cursor=0:0:1',
         method: 'POST',
         body: {
-          data: [{tags_key: 'tag1', count: 5}, {tags_key: 'tag2', count: 1}],
+          data: [
+            {tags_key: 'tag1', count: 5},
+            {tags_key: 'tag2', count: 1},
+          ],
         },
       });
       wrapper = mount(
@@ -42,14 +45,18 @@ describe('OrganizationDiscoverContainer', function() {
       await tick();
     });
 
-    it('fetches tags', function() {
+    it('fetches tags', function () {
       const queryBuilder = wrapper.instance().queryBuilder;
       expect(wrapper.state().isLoading).toBe(false);
-      expect(queryBuilder.getColumns().some(column => column.name === 'tag1')).toBe(true);
-      expect(queryBuilder.getColumns().some(column => column.name === 'tag2')).toBe(true);
+      expect(queryBuilder.getColumns().some((column) => column.name === 'tag1')).toBe(
+        true
+      );
+      expect(queryBuilder.getColumns().some((column) => column.name === 'tag2')).toBe(
+        true
+      );
     });
 
-    it('sets active projects from global selection', async function() {
+    it('sets active projects from global selection', async function () {
       GlobalSelectionStore.reset({
         projects: [1],
         environments: [],
@@ -67,13 +74,13 @@ describe('OrganizationDiscoverContainer', function() {
     });
   });
 
-  describe('saved query', function() {
+  describe('saved query', function () {
     let wrapper, savedQueryMock, savedQueries;
     const organization = TestStubs.Organization({
       projects: [TestStubs.Project()],
       features: ['discover'],
     });
-    beforeEach(async function() {
+    beforeEach(async function () {
       savedQueries = [
         TestStubs.DiscoverSavedQuery({id: '1', name: 'one'}),
         TestStubs.DiscoverSavedQuery({id: '2', name: 'two'}),
@@ -104,11 +111,11 @@ describe('OrganizationDiscoverContainer', function() {
       wrapper.update();
     });
 
-    it('fetches saved query', function() {
+    it('fetches saved query', function () {
       expect(savedQueryMock).toHaveBeenCalled();
     });
 
-    it('navigates to second query', function() {
+    it('navigates to second query', function () {
       const nextQueryMock = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/saved/2/',
         body: savedQueries[1],
@@ -124,7 +131,7 @@ describe('OrganizationDiscoverContainer', function() {
       expect(nextQueryMock).toHaveBeenCalledTimes(1);
     });
 
-    it('toggles edit mode', function() {
+    it('toggles edit mode', function () {
       wrapper.instance().toggleEditMode();
       expect(browserHistory.push).toHaveBeenCalledWith({
         pathname: '/organizations/org-slug/discover/saved/1/',
@@ -133,8 +140,8 @@ describe('OrganizationDiscoverContainer', function() {
     });
   });
 
-  describe('no access', function() {
-    it('display coming soon message', async function() {
+  describe('no access', function () {
+    it('display coming soon message', async function () {
       const organization = TestStubs.Organization({projects: [TestStubs.Project()]});
       const wrapper = mount(
         <OrganizationDiscoverContainer

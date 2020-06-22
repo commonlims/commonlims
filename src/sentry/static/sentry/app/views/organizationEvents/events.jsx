@@ -76,7 +76,7 @@ class OrganizationEvents extends AsyncView {
   constructor(props) {
     super(props);
     this.projectsMap = new Map(
-      props.organization.projects.map(project => [project.id, project])
+      props.organization.projects.map((project) => [project.id, project])
     );
   }
 
@@ -87,7 +87,7 @@ class OrganizationEvents extends AsyncView {
     }
 
     const isDiff = ['path', 'search'].find(
-      key => !isEqual(this.props.location[key], nextProps.location[key])
+      (key) => !isEqual(this.props.location[key], nextProps.location[key])
     );
 
     // Always update if query parameters change
@@ -166,32 +166,31 @@ class OrganizationEvents extends AsyncView {
           onUpdateComplete={this.handleTableUpdateComplete}
         />
 
-        {!loading &&
-          !error && (
-            <Flex align="center" justify="space-between">
-              <RowDisplay>
-                {events.length ? t(`Results ${this.renderRowCounts()}`) : t('No Results')}
-                {!!events.length && (
-                  <TotalEventCount
-                    organization={organization}
-                    location={location}
-                    isAllResults={
-                      !parsedLinks.previous.results && !parsedLinks.next.results
-                    }
-                    numRows={events.length}
-                  />
-                )}
-              </RowDisplay>
-              <Pagination pageLinks={eventsPageLinks} className="" />
-            </Flex>
-          )}
+        {!loading && !error && (
+          <Flex align="center" justify="space-between">
+            <RowDisplay>
+              {events.length ? t(`Results ${this.renderRowCounts()}`) : t('No Results')}
+              {!!events.length && (
+                <TotalEventCount
+                  organization={organization}
+                  location={location}
+                  isAllResults={
+                    !parsedLinks.previous.results && !parsedLinks.next.results
+                  }
+                  numRows={events.length}
+                />
+              )}
+            </RowDisplay>
+            <Pagination pageLinks={eventsPageLinks} className="" />
+          </Flex>
+        )}
       </React.Fragment>
     );
   }
 }
 
 const RowDisplay = styled('div')`
-  color: ${p => p.theme.gray6};
+  color: ${(p) => p.theme.gray6};
 `;
 
 export default withRouter(withOrganization(OrganizationEvents));

@@ -35,9 +35,9 @@ class StreamFilters extends React.Component {
     projectId: null,
     sort: '',
     query: null,
-    onSortChange: function() {},
-    onSearch: function() {},
-    onSidebarToggle: function() {},
+    onSortChange: function () {},
+    onSearch: function () {},
+    onSidebarToggle: function () {},
   };
 
   render() {

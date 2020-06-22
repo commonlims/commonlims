@@ -66,11 +66,11 @@ class AccountAuthorizations extends AsyncView {
     return 'Approved Applications';
   }
 
-  handleRevoke = authorization => {
+  handleRevoke = (authorization) => {
     const oldData = this.state.data;
 
     this.setState(
-      state => ({
+      (state) => ({
         data: state.data.filter(({id}) => id !== authorization.id),
       }),
       () => {
@@ -78,7 +78,7 @@ class AccountAuthorizations extends AsyncView {
         this.api.request('/api-authorizations/', {
           method: 'DELETE',
           data: {authorization: authorization.id},
-          success: data => {
+          success: (data) => {
             IndicatorStore.remove(loadingIndicator);
           },
           error: () => {
@@ -124,7 +124,7 @@ class AccountAuthorizations extends AsyncView {
 
             {!isEmpty && (
               <div>
-                {data.map(authorization => {
+                {data.map((authorization) => {
                   return (
                     <AuthorizationRow
                       key={authorization.id}

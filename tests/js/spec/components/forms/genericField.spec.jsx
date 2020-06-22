@@ -3,8 +3,8 @@ import {shallow} from 'enzyme';
 
 import {GenericField, FormState} from 'app/components/forms';
 
-describe('GenericField', function() {
-  it('renders text as TextInput', function() {
+describe('GenericField', function () {
+  it('renders text as TextInput', function () {
     const wrapper = shallow(
       <GenericField
         formState={FormState.READY}
@@ -19,7 +19,7 @@ describe('GenericField', function() {
     expect(wrapper.name()).toEqual('TextField');
   });
 
-  it('renders text with choices as SelectCreatableField', function() {
+  it('renders text with choices as SelectCreatableField', function () {
     const wrapper = shallow(
       <GenericField
         formState={FormState.READY}

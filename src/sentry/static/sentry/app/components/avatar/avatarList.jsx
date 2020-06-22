@@ -44,7 +44,7 @@ export default class AvatarList extends React.Component {
             </CollapsedUsers>
           </Tooltip>
         )}
-        {visibleUsers.map(user => {
+        {visibleUsers.map((user) => {
           return (
             <StyledAvatar
               key={`${user.id}-${user.email}`}
@@ -84,11 +84,11 @@ const CollapsedUsers = styled('div')`
   position: relative;
   text-align: center;
   font-weight: 600;
-  background-color: ${p => p.theme.borderLight};
-  color: ${p => p.theme.gray2};
-  font-size: ${p => Math.floor(p.size / 2.3)}px;
-  width: ${p => p.size}px;
-  height: ${p => p.size}px;
+  background-color: ${(p) => p.theme.borderLight};
+  color: ${(p) => p.theme.gray2};
+  font-size: ${(p) => Math.floor(p.size / 2.3)}px;
+  width: ${(p) => p.size}px;
+  height: ${(p) => p.size}px;
   ${Circle};
 `;
 

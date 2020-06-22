@@ -82,7 +82,7 @@ class Access extends React.Component {
     const {access: orgAccess} = organization || {access: []};
     const method = requireAll ? 'every' : 'some';
 
-    const hasAccess = !access || access[method](acc => orgAccess.includes(acc));
+    const hasAccess = !access || access[method]((acc) => orgAccess.includes(acc));
     const hasSuperuser = !!configUser.isSuperuser;
 
     const renderProps = {

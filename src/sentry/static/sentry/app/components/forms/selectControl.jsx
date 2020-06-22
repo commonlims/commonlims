@@ -91,35 +91,35 @@ const StyledSelect = styled(React.forwardRef(forwardRef))`
 
   .Select-control,
   &.Select.is-focused:not(.is-open) > .Select-control {
-    height: ${p => p.height}px;
+    height: ${(p) => p.height}px;
     overflow: visible;
-    border: 1px solid ${p => p.theme.borderDark};
-    box-shadow: inset ${p => p.theme.dropShadowLight};
+    border: 1px solid ${(p) => p.theme.borderDark};
+    box-shadow: inset ${(p) => p.theme.dropShadowLight};
   }
   .Select-input {
-    height: ${p => p.height}px;
+    height: ${(p) => p.height}px;
     input {
-      line-height: ${p => p.height}px;
+      line-height: ${(p) => p.height}px;
       padding: 0 0;
     }
   }
 
   .Select-placeholder,
   &.Select--single > .Select-control .Select-value {
-    height: ${p => p.height}px;
-    line-height: ${p => p.height}px;
+    height: ${(p) => p.height}px;
+    line-height: ${(p) => p.height}px;
     &:focus {
-      border: 1px solid ${p => p.theme.gray};
+      border: 1px solid ${(p) => p.theme.gray};
     }
   }
 
   &.Select--single.is-disabled .Select-control .Select-value .Select-value-label {
-    color: ${p => p.theme.disabled};
+    color: ${(p) => p.theme.disabled};
   }
 
   .Select-option.is-focused {
     color: white;
-    background-color: ${p => p.theme.purple};
+    background-color: ${(p) => p.theme.purple};
   }
   .Select-multi-value-wrapper {
     > a {
@@ -128,6 +128,6 @@ const StyledSelect = styled(React.forwardRef(forwardRef))`
   }
 
   .Select.is-focused:not(.is-open) > .Select-control {
-    border-color: ${p => p.theme.gray};
+    border-color: ${(p) => p.theme.gray};
   }
 `;

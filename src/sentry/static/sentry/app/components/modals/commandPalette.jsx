@@ -14,7 +14,7 @@ const dropdownStyle = css`
   border-top-right-radius: 0;
   position: initial;
   box-shadow: none;
-  border-top: 1px solid ${p => theme.borderLight};
+  border-top: 1px solid ${(p) => theme.borderLight};
 `;
 
 class CommandPaletteModal extends React.Component {
@@ -28,7 +28,7 @@ class CommandPaletteModal extends React.Component {
     analytics('omnisearch.open');
   }
 
-  handleSuccess = data => {
+  handleSuccess = (data) => {
     if (this.props.onClose) {
       this.props.onClose(data);
     }
@@ -51,7 +51,7 @@ class CommandPaletteModal extends React.Component {
             <InputWrapper>
               <Input
                 autoFocus
-                innerRef={ref => (this.searchInput = ref)}
+                innerRef={(ref) => (this.searchInput = ref)}
                 {...getInputProps({
                   type: 'text',
                   placeholder: t('Search for projects, teams, settings, etc...'),

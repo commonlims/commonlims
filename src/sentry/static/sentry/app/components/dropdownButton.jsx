@@ -18,22 +18,22 @@ DropdownButton.propTypes = {
   isOpen: PropTypes.bool,
 };
 
-const StyledChevronDown = styled(props => (
+const StyledChevronDown = styled((props) => (
   <InlineSvg src="icon-chevron-down" {...props} />
 ))`
   margin-left: 0.33em;
 `;
 
 const StyledButton = styled(({isOpen, ...props}) => <Button {...props} />)`
-  border-bottom-right-radius: ${p => (p.isOpen ? 0 : p.theme.borderRadius)};
-  border-bottom-left-radius: ${p => (p.isOpen ? 0 : p.theme.borderRadius)};
+  border-bottom-right-radius: ${(p) => (p.isOpen ? 0 : p.theme.borderRadius)};
+  border-bottom-left-radius: ${(p) => (p.isOpen ? 0 : p.theme.borderRadius)};
   position: relative;
   z-index: 2;
-  box-shadow: ${p => (p.isOpen ? 'none' : p.theme.dropShadowLight)};
+  box-shadow: ${(p) => (p.isOpen ? 'none' : p.theme.dropShadowLight)};
 
   &,
   &:hover {
-    border-bottom-color: ${p => (p.isOpen ? 'transparent' : p.theme.borderDark)};
+    border-bottom-color: ${(p) => (p.isOpen ? 'transparent' : p.theme.borderDark)};
   }
 `;
 

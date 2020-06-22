@@ -9,7 +9,7 @@ import withLatestContext from 'app/utils/withLatestContext';
 const StyledSettingsWrapper = styled.div`
   font-family: 'Rubik', sans-serif;
   font-size: 16px;
-  color: ${p => p.theme.gray5};
+  color: ${(p) => p.theme.gray5};
   margin: 0 auto;
   line-height: 1;
 `;
@@ -29,7 +29,9 @@ class SettingsWrapper extends React.Component {
     this.state = {
       lastAppContext: !!props.project
         ? 'project'
-        : !!props.organization ? 'organization' : null,
+        : !!props.organization
+        ? 'organization'
+        : null,
     };
   }
 

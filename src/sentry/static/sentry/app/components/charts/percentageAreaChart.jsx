@@ -25,7 +25,7 @@ export default class PercentageAreaChart extends React.Component {
     return {
       getDataItemName: ({name}) => name,
       getValue: ({name, value}, total) =>
-        !total ? 0 : Math.round(value / total * 1000) / 10,
+        !total ? 0 : Math.round((value / total) * 1000) / 10,
     };
   }
 
@@ -47,7 +47,7 @@ export default class PercentageAreaChart extends React.Component {
           areaStyle: {opacity: 1},
           smooth: true,
           stack: 'percentageAreaChartStack',
-          data: data.map(dataObj => [
+          data: data.map((dataObj) => [
             getDataItemName(dataObj),
             getValue(dataObj, totals.get(dataObj.name)),
           ]),
@@ -63,11 +63,13 @@ export default class PercentageAreaChart extends React.Component {
         tooltip={{
           // Make sure tooltip is inside of chart (because of overflow: hidden)
           confine: true,
-          formatter: seriesParams => {
+          formatter: (seriesParams) => {
             // Filter series that have 0 counts
             const date =
-              `${seriesParams.length &&
-                moment(seriesParams[0].axisValue).format('MMM D, YYYY')}<br />` || '';
+              `${
+                seriesParams.length &&
+                moment(seriesParams[0].axisValue).format('MMM D, YYYY')
+              }<br />` || '';
             return `${date} ${seriesParams
               .filter(
                 ({seriesName, data}) => data[1] > 0.001 && seriesName !== FILLER_NAME

@@ -35,7 +35,7 @@ class DataForwardingStats extends AsyncComponent {
   }
 
   renderBody() {
-    const stats = this.state.stats.map(p => ({x: p[0], y: [p[1]]}));
+    const stats = this.state.stats.map((p) => ({x: p[0], y: [p[1]]}));
 
     return (
       <Panel>
@@ -75,12 +75,12 @@ class ProjectDataForwarding extends AsyncComponent {
 
   get forwardingPlugins() {
     return this.state.plugins.filter(
-      p => p.type === 'data-forwarding' && p.hasConfiguration
+      (p) => p.type === 'data-forwarding' && p.hasConfiguration
     );
   }
 
   updatePlugin(plugin, enabled) {
-    const plugins = this.state.plugins.map(p => ({
+    const plugins = this.state.plugins.map((p) => ({
       ...p,
       enabled: p.id === plugin.id ? enabled : p.enabled,
     }));
@@ -88,8 +88,8 @@ class ProjectDataForwarding extends AsyncComponent {
     this.setState({plugins});
   }
 
-  onEnablePlugin = plugin => this.updatePlugin(plugin, true);
-  onDisablePlugin = plugin => this.updatePlugin(plugin, false);
+  onEnablePlugin = (plugin) => this.updatePlugin(plugin, true);
+  onDisablePlugin = (plugin) => this.updatePlugin(plugin, false);
 
   renderBody() {
     const {params, organization, project} = this.props;
@@ -117,7 +117,7 @@ class ProjectDataForwarding extends AsyncComponent {
       <div data-test-id="data-forwarding-settings">
         <Feature
           features={['projects:data-forwarding']}
-          renderDisabled={p => p.children(p)}
+          renderDisabled={(p) => p.children(p)}
         >
           {({hasFeature, features}) => (
             <React.Fragment>

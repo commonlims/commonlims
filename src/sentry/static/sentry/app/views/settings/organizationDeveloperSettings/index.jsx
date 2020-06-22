@@ -15,8 +15,8 @@ export default class OrganizationDeveloperSettings extends AsyncView {
     return [['applications', `/organizations/${orgId}/sentry-apps/`]];
   }
 
-  removeApp = app => {
-    const apps = this.state.applications.filter(a => a.slug !== app.slug);
+  removeApp = (app) => {
+    const apps = this.state.applications.filter((a) => a.slug !== app.slug);
     removeSentryApp(this.api, app).then(
       () => {
         this.setState({applications: apps});
@@ -47,7 +47,7 @@ export default class OrganizationDeveloperSettings extends AsyncView {
           <PanelHeader>{t('Applications')}</PanelHeader>
           <PanelBody>
             {!isEmpty ? (
-              this.state.applications.map(app => {
+              this.state.applications.map((app) => {
                 return (
                   <SentryApplicationRow
                     key={app.uuid}

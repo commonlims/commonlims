@@ -80,8 +80,9 @@ class AccountSecurity extends AsyncView {
           }
         />
 
-        {!isEmpty &&
-          countEnrolled == 0 && <TwoFactorRequired orgsRequire2fa={orgsRequire2fa} />}
+        {!isEmpty && countEnrolled == 0 && (
+          <TwoFactorRequired orgsRequire2fa={orgsRequire2fa} />
+        )}
 
         <PasswordForm />
 
@@ -114,7 +115,7 @@ class AccountSecurity extends AsyncView {
 
           <PanelBody>
             {!isEmpty &&
-              authenticators.map(auth => {
+              authenticators.map((auth) => {
                 const {
                   id,
                   authId,
@@ -132,49 +133,46 @@ class AccountSecurity extends AsyncView {
                         <AuthenticatorName>{name}</AuthenticatorName>
                       </Box>
 
-                      {!isBackupInterface &&
-                        !isEnrolled && (
-                          <Button
-                            to={`/settings/account/security/mfa/${id}/enroll/`}
-                            size="small"
-                            priority="primary"
-                            className="enroll-button"
-                          >
-                            {t('Add')}
-                          </Button>
-                        )}
+                      {!isBackupInterface && !isEnrolled && (
+                        <Button
+                          to={`/settings/account/security/mfa/${id}/enroll/`}
+                          size="small"
+                          priority="primary"
+                          className="enroll-button"
+                        >
+                          {t('Add')}
+                        </Button>
+                      )}
 
-                      {isEnrolled &&
-                        authId && (
-                          <Button
-                            to={`/settings/account/security/mfa/${authId}/`}
-                            size="small"
-                            className="details-button"
-                          >
-                            {configureButton}
-                          </Button>
-                        )}
+                      {isEnrolled && authId && (
+                        <Button
+                          to={`/settings/account/security/mfa/${authId}/`}
+                          size="small"
+                          className="details-button"
+                        >
+                          {configureButton}
+                        </Button>
+                      )}
 
-                      {!isBackupInterface &&
-                        isEnrolled && (
-                          <Tooltip
-                            title={t(
-                              "Two-factor authentication is required for at least one organization you're a member of."
-                            )}
-                            disabled={!deleteDisabled}
-                          >
-                            <span>
-                              <RemoveConfirm
-                                onConfirm={() => onDisable(auth)}
-                                disabled={deleteDisabled}
-                              >
-                                <Button css={{marginLeft: 6}} size="small">
-                                  <span className="icon icon-trash" />
-                                </Button>
-                              </RemoveConfirm>
-                            </span>
-                          </Tooltip>
-                        )}
+                      {!isBackupInterface && isEnrolled && (
+                        <Tooltip
+                          title={t(
+                            "Two-factor authentication is required for at least one organization you're a member of."
+                          )}
+                          disabled={!deleteDisabled}
+                        >
+                          <span>
+                            <RemoveConfirm
+                              onConfirm={() => onDisable(auth)}
+                              disabled={deleteDisabled}
+                            >
+                              <Button css={{marginLeft: 6}} size="small">
+                                <span className="icon icon-trash" />
+                              </Button>
+                            </RemoveConfirm>
+                          </span>
+                        </Tooltip>
+                      )}
 
                       {isBackupInterface && !isEnrolled ? t('requires 2FA') : null}
                     </Flex>

@@ -11,7 +11,7 @@ class Option extends React.Component {
     onChange: PropTypes.func,
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     const {onChange} = this.props;
     const value = e.target.value === 'true';
 

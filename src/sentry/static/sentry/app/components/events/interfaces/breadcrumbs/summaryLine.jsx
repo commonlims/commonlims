@@ -21,7 +21,7 @@ class SummaryLine extends React.Component {
     window.addEventListener('resize', this.respondToLayoutChanges);
   }
 
-  makeSummariesGreatAgain = ref => {
+  makeSummariesGreatAgain = (ref) => {
     this.domElement = ref;
     this.respondToLayoutChanges();
   };

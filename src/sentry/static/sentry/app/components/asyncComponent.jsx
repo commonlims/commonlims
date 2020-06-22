@@ -86,10 +86,14 @@ export default class AsyncComponent extends React.Component {
 
     const currentLocation = isLocationInProps
       ? this.props.location
-      : isRouterInContext ? this.context.router.location : null;
+      : isRouterInContext
+      ? this.context.router.location
+      : null;
     const prevLocation = isLocationInProps
       ? prevProps.location
-      : isRouterInContext ? prevContext.router.location : null;
+      : isRouterInContext
+      ? prevContext.router.location
+      : null;
 
     if (!(currentLocation && prevLocation)) {
       return;
@@ -149,7 +153,7 @@ export default class AsyncComponent extends React.Component {
 
   reloadData = () => this.fetchData({reloading: true});
 
-  fetchData = extraState => {
+  fetchData = (extraState) => {
     const endpoints = this.getEndpoints();
 
     if (!endpoints.length) {
@@ -184,7 +188,7 @@ export default class AsyncComponent extends React.Component {
         success: (data, _, jqXHR) => {
           this.handleRequestSuccess({stateKey, data, jqXHR}, true);
         },
-        error: error => {
+        error: (error) => {
           // Allow endpoints to fail
           // allowError can have side effects to handle the error
           if (options.allowError && options.allowError(error)) {
@@ -201,7 +205,7 @@ export default class AsyncComponent extends React.Component {
   }
 
   handleRequestSuccess = ({stateKey, data, jqXHR}, initialRequest) => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const state = {
         [stateKey]: data,
         // TODO(billy): This currently fails if this request is retried by SudoModal
@@ -227,7 +231,7 @@ export default class AsyncComponent extends React.Component {
         level: 'error',
       });
     }
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const state = {
         [stateKey]: null,
         errors: {
@@ -303,18 +307,18 @@ export default class AsyncComponent extends React.Component {
   renderError(error, disableLog = false) {
     // 401s are captured by SudaModal, but may be passed back to AsyncComponent if they close the modal without identifying
     const unauthorizedErrors = Object.values(this.state.errors).find(
-      resp => resp && resp.status === 401
+      (resp) => resp && resp.status === 401
     );
 
     // Look through endpoint results to see if we had any 403s, means their role can not access resource
     const permissionErrors = Object.values(this.state.errors).find(
-      resp => resp && resp.status === 403
+      (resp) => resp && resp.status === 403
     );
 
     // If all error responses have status code === 0, then show error message but don't
     // log it to sentry
     const shouldLogSentry =
-      !!Object.values(this.state.errors).find(resp => resp && resp.status !== 0) ||
+      !!Object.values(this.state.errors).find((resp) => resp && resp.status !== 0) ||
       disableLog;
 
     if (unauthorizedErrors) {
@@ -330,10 +334,10 @@ export default class AsyncComponent extends React.Component {
     if (this.shouldRenderBadRequests) {
       const badRequests = Object.values(this.state.errors)
         .filter(
-          resp =>
+          (resp) =>
             resp && resp.status === 400 && resp.responseJSON && resp.responseJSON.detail
         )
-        .map(resp => resp.responseJSON.detail);
+        .map((resp) => resp.responseJSON.detail);
 
       if (badRequests.length) {
         return <LoadingError message={badRequests.join('\n')} />;
@@ -354,8 +358,8 @@ export default class AsyncComponent extends React.Component {
     return this.state.loading && (!this.shouldReload || !this.state.reloading)
       ? this.renderLoading()
       : this.state.error
-        ? this.renderError(new Error('Unable to load all required endpoints'))
-        : this.renderBody();
+      ? this.renderError(new Error('Unable to load all required endpoints'))
+      : this.renderBody();
   }
 
   render() {

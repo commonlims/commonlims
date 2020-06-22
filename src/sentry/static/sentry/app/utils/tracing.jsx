@@ -8,7 +8,7 @@ export function startTransaction() {
   spanId = uniqueId();
   transactionId = uniqueId();
   if (window.Sentry) {
-    window.Sentry.configureScope(function(scope) {
+    window.Sentry.configureScope(function (scope) {
       scope.setTag('span_id', spanId);
       scope.setTag('transaction_id', transactionId);
     });

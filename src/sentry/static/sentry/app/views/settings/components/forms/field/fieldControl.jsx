@@ -11,16 +11,16 @@ import Tooltip from 'app/components/tooltip';
 // * can NOT be a flex box here because of `position: absolute` on "control error message"
 // * can NOT have overflow hidden because "control error message" overflows
 const FieldControlErrorWrapper = styled(({inline, ...props}) => <Box {...props} />)`
-  ${p => (p.inline ? 'width: 50%; padding-left: 10px;' : '')};
+  ${(p) => (p.inline ? 'width: 50%; padding-left: 10px;' : '')};
 `;
 
 const FieldControlStyled = styled(({alignRight, ...props}) => <Box {...props} />)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   display: flex;
   flex: 1;
   flex-direction: column;
   position: relative;
-  ${p => (p.alignRight ? 'align-items: flex-end;' : '')};
+  ${(p) => (p.alignRight ? 'align-items: flex-end;' : '')};
 `;
 
 const FieldControlWrapper = styled(({hasControlState, ...props}) => <Flex {...props} />)`
@@ -29,13 +29,13 @@ const FieldControlWrapper = styled(({hasControlState, ...props}) => <Flex {...pr
 
 const StyledInlineSvg = styled(InlineSvg)`
   display: block;
-  color: ${p => p.theme.gray1};
+  color: ${(p) => p.theme.gray1};
   margin: 0 auto;
   cursor: pointer;
   transition: 0.15s color;
 
   &:hover {
-    color: ${p => p.theme.gray3};
+    color: ${(p) => p.theme.gray3};
   }
 `;
 
@@ -71,14 +71,13 @@ class FieldControl extends React.Component {
         <FieldControlWrapper>
           <FieldControlStyled alignRight={alignRight}>{children}</FieldControlStyled>
 
-          {disabled &&
-            disabledReason && (
-              <Flex align="center" ml={1} className="disabled-indicator">
-                <Tooltip title={disabledReason}>
-                  <StyledInlineSvg src="icon-circle-question" size="18px" />
-                </Tooltip>
-              </Flex>
-            )}
+          {disabled && disabledReason && (
+            <Flex align="center" ml={1} className="disabled-indicator">
+              <Tooltip title={disabledReason}>
+                <StyledInlineSvg src="icon-circle-question" size="18px" />
+              </Tooltip>
+            </Flex>
+          )}
 
           <FieldControlState flexibleControlStateSize={flexibleControlStateSize}>
             {controlState}

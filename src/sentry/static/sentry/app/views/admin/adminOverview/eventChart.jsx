@@ -44,7 +44,7 @@ export default createReactClass({
   fetchData() {
     const statNameList = ['events.total', 'events.dropped'];
 
-    statNameList.forEach(statName => {
+    statNameList.forEach((statName) => {
       // query the organization stats via a separate call as its possible the project stats
       // are too heavy
       this.api.request('/internal/stats/', {
@@ -54,8 +54,8 @@ export default createReactClass({
           resolution: this.props.resolution,
           key: statName,
         },
-        success: data => {
-          this.setState(prevState => {
+        success: (data) => {
+          this.setState((prevState) => {
             const rawData = prevState.rawData;
             rawData[statName] = data;
             return {
@@ -63,7 +63,7 @@ export default createReactClass({
             };
           }, this.requestFinished);
         },
-        error: data => {
+        error: (data) => {
           this.setState({
             error: true,
           });
@@ -112,10 +112,10 @@ export default createReactClass({
         avgRate: parseInt(aReceived[0] / aReceived[1] / 60, 10),
       },
       stats: {
-        rejected: Object.keys(sRejected).map(ts => {
+        rejected: Object.keys(sRejected).map((ts) => {
           return {x: ts, y: sRejected[ts] || null};
         }),
-        accepted: Object.keys(sReceived).map(ts => {
+        accepted: Object.keys(sReceived).map((ts) => {
           // total number of events accepted (received - rejected)
           return {x: ts, y: sReceived[ts] - sRejected[ts]};
         }),

@@ -3,14 +3,14 @@ import {shallow} from 'enzyme';
 
 import {BooleanField} from 'app/components/forms';
 
-describe('BooleanField', function() {
-  describe('render()', function() {
-    it('renders without form context', function() {
+describe('BooleanField', function () {
+  describe('render()', function () {
+    it('renders without form context', function () {
       const wrapper = shallow(<BooleanField name="fieldName" />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with form context', function() {
+    it('renders with form context', function () {
       const wrapper = shallow(<BooleanField name="fieldName" />, {
         context: {
           form: {

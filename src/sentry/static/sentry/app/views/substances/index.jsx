@@ -27,8 +27,8 @@ class SubstancesContainer extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.tag;
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = (state) => state.tag;
+const mapDispatchToProps = (dispatch) => ({});
 
 SubstancesContainer.propTypes = {
   organization: PropTypes.object.isRequired,

@@ -13,15 +13,15 @@ class BasicComponent extends React.Component {
 
 const WrappedComponent = withEnvironmentInQueryString(BasicComponent);
 
-describe('withEnvironmentInQueryString', function() {
-  beforeEach(function() {
+describe('withEnvironmentInQueryString', function () {
+  beforeEach(function () {
     browserHistory.replace = jest.fn();
     LatestContextStore.onSetActiveOrganization({});
   });
 
-  describe('updates environment', function() {
+  describe('updates environment', function () {
     let wrapper;
-    beforeEach(function() {
+    beforeEach(function () {
       LatestContextStore.onSetActiveEnvironment({
         name: 'prod',
       });
@@ -32,18 +32,18 @@ describe('withEnvironmentInQueryString', function() {
       );
     });
 
-    it('passes environment prop to component', function() {
+    it('passes environment prop to component', function () {
       expect(wrapper.prop('environment').name).toBe('prod');
     });
 
-    it('replaces browser history', function() {
+    it('replaces browser history', function () {
       expect(browserHistory.replace).toHaveBeenCalledWith('http://lol/?environment=prod');
     });
   });
 
-  describe('handles correct environment value', function() {
+  describe('handles correct environment value', function () {
     let wrapper;
-    beforeEach(function() {
+    beforeEach(function () {
       LatestContextStore.onSetActiveEnvironment({
         name: 'prod',
       });
@@ -56,18 +56,18 @@ describe('withEnvironmentInQueryString', function() {
       );
     });
 
-    it('passes environment prop to component', function() {
+    it('passes environment prop to component', function () {
       expect(wrapper.prop('environment').name).toBe('prod');
     });
 
-    it('does not replace browser history', function() {
+    it('does not replace browser history', function () {
       expect(browserHistory.replace).not.toHaveBeenCalled();
     });
   });
 
-  describe('removes invalid environment value', function() {
+  describe('removes invalid environment value', function () {
     let wrapper;
-    beforeEach(function() {
+    beforeEach(function () {
       LatestContextStore.onSetActiveEnvironment({name: 'staging'});
 
       wrapper = shallow(
@@ -78,11 +78,11 @@ describe('withEnvironmentInQueryString', function() {
       );
     });
 
-    it('passes environment prop to component', function() {
+    it('passes environment prop to component', function () {
       expect(wrapper.prop('environment').name).toBe('staging');
     });
 
-    it('replaces browser history', function() {
+    it('replaces browser history', function () {
       expect(browserHistory.replace).toHaveBeenCalledWith(
         'http://lol/?environment=staging'
       );

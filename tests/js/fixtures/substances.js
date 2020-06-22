@@ -31,7 +31,7 @@ export function Substance(id, props) {
       selected: false,
     },
   };
-  ret.properties = props.map(x => ({[x]: SubstanceProperty(x)}));
+  ret.properties = props.map((x) => ({[x]: SubstanceProperty(x)}));
   return ret;
 }
 

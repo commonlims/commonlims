@@ -84,10 +84,10 @@ const OrganizationContext = createReactClass({
 
   fetchData() {
     this.api.request(this.getOrganizationDetailsEndpoint(), {
-      success: data => {
+      success: (data) => {
         // Allow injection via getsentry et all
         const hooks = [];
-        HookStore.get('organization:header').forEach(cb => {
+        HookStore.get('organization:header').forEach((cb) => {
           hooks.push(cb(data));
         });
 

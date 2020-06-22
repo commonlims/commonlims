@@ -81,7 +81,7 @@ class Result extends React.Component {
     window.removeEventListener('resize', this.throttledUpdateDimensions);
   }
 
-  setDimensions = ref => {
+  setDimensions = (ref) => {
     this.container = ref;
     if (ref && this.state.height === null) {
       this.updateDimensions();
@@ -101,7 +101,7 @@ class Result extends React.Component {
 
   throttledUpdateDimensions = throttle(this.updateDimensions, 200, {trailing: true});
 
-  handleToggleVisualizations = opt => {
+  handleToggleVisualizations = (opt) => {
     const {location} = this.props;
     this.setState({
       view: opt,
@@ -190,7 +190,12 @@ class Result extends React.Component {
   }
 
   render() {
-    const {data: {baseQuery, byDayQuery}, savedQuery, onFetchPage, utc} = this.props;
+    const {
+      data: {baseQuery, byDayQuery},
+      savedQuery,
+      onFetchPage,
+      utc,
+    } = this.props;
 
     const {view} = this.state;
 
@@ -200,11 +205,11 @@ class Result extends React.Component {
       byDayQuery.data && getChartDataByDay(byDayQuery.data.data, byDayQuery.query);
 
     const legendData = byDayChartData
-      ? {data: byDayChartData.map(entry => entry.seriesName), truncate: 80}
+      ? {data: byDayChartData.map((entry) => entry.seriesName), truncate: 80}
       : null;
 
     const tooltipOptions = {
-      filter: value => value !== null,
+      filter: (value) => value !== null,
       truncate: 80,
     };
 

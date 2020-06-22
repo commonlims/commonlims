@@ -8,7 +8,7 @@ import InlineSvg from 'app/components/inlineSvg';
 import space from 'app/styles/space';
 
 const StyledInlineSvg = styled(InlineSvg)`
-  margin-right: calc(${p => p.size} / 2);
+  margin-right: calc(${(p) => p.size} / 2);
 `;
 
 const getAlertColorStyles = ({backgroundLight, border, iconColor}, textColor) => `
@@ -51,13 +51,13 @@ const AlertWrapper = styled(Flex)`
   margin: 0 0 ${space(3)};
   padding: ${space(2)};
   font-size: 15px;
-  box-shadow: ${p => p.theme.dropShadowLight};
-  border-radius: ${p => p.theme.borderRadius};
-  background: ${p => p.theme.whiteDark};
-  border: 1px solid ${p => p.theme.borderDark};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
+  border-radius: ${(p) => p.theme.borderRadius};
+  background: ${(p) => p.theme.whiteDark};
+  border: 1px solid ${(p) => p.theme.borderDark};
   align-items: center;
 
-  ${p =>
+  ${(p) =>
     p.system
       ? p.type && getSystemAlertColorStyles(p.theme.alert[p.type])
       : p.type && getAlertColorStyles(p.theme.alert[p.type], p.theme.gray5)};

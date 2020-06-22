@@ -15,7 +15,7 @@ import AssignToWorkflowButton from 'app/components/substances/assignToWorkflow';
 // TODO: In Sentry they had a way to apply an action to everything in a search, even outside
 // the current page. Consider doing the same.
 const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
-  return function(action, canBeUndone, append = '') {
+  return function (action, canBeUndone, append = '') {
     const question = tn(
       `Are you sure you want to ${action} this %s issue${append}?`,
       `Are you sure you want to ${action} these %s issues${append}?`,
@@ -40,7 +40,7 @@ const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
 };
 
 const getLabel = (numIssues, allInQuerySelected) => {
-  return function(action, append = '') {
+  return function (action, append = '') {
     const capitalized = capitalize(action);
     const text = allInQuerySelected
       ? t(`Bulk ${action} issues`)
@@ -96,7 +96,7 @@ const ListActionBar = createReactClass({
       selectedIds = undefined; // undefined means "all"
     } else {
       const itemIdSet = SelectedGroupStore.getSelectedIds();
-      selectedIds = this.props.groupIds.filter(itemId => itemIdSet.has(itemId));
+      selectedIds = this.props.groupIds.filter((itemId) => itemIdSet.has(itemId));
     }
 
     callback(selectedIds);
@@ -168,8 +168,8 @@ const ListActionBar = createReactClass({
 
 const StyledFlex = styled(Flex)`
   align-items: center;
-  background: ${p => p.theme.offWhite};
-  border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
+  background: ${(p) => p.theme.offWhite};
+  border-radius: ${(p) => p.theme.borderRadius} ${(p) => p.theme.borderRadius} 0 0;
   margin-bottom: -1px;
 `;
 

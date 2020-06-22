@@ -3,7 +3,7 @@ import styled, {css} from 'react-emotion';
 import {Flex} from 'grid-emotion';
 import space from 'app/styles/space';
 
-const inlineStyle = p =>
+const inlineStyle = (p) =>
   p.inline
     ? css`
         align-items: center;
@@ -13,7 +13,7 @@ const inlineStyle = p =>
         align-items: stretch;
       `;
 
-const highlightedStyle = p =>
+const highlightedStyle = (p) =>
   p.highlighted
     ? css`
         position: relative;
@@ -32,14 +32,14 @@ const highlightedStyle = p =>
       `
     : '';
 
-const borderStyle = p =>
+const borderStyle = (p) =>
   p.stacked
     ? ''
     : css`
         border-bottom: 1px solid ${p.theme.borderLight};
       `;
 
-const getPadding = p =>
+const getPadding = (p) =>
   p.stacked && !p.inline
     ? css`
         padding: 0 ${p.hasControlState ? 0 : space(2)} ${space(1)} 0;
@@ -51,8 +51,8 @@ const getPadding = p =>
 /**
  * `hasControlState` - adds padding to right if this is false
  */
-const FieldWrapper = styled(p => <Flex {...p} />, {
-  shouldForwardProp: prop =>
+const FieldWrapper = styled((p) => <Flex {...p} />, {
+  shouldForwardProp: (prop) =>
     !['highlighted', 'inline', 'stacked', 'hasControlState', 'p'].includes(prop),
 })`
   ${getPadding};
@@ -63,7 +63,7 @@ const FieldWrapper = styled(p => <Flex {...p} />, {
   ${highlightedStyle};
 
   /* Better padding with form inside of a modal */
-  ${p =>
+  ${(p) =>
     !p.hasControlState
       ? `.modal-content & {
       padding-right: 0;
@@ -72,7 +72,7 @@ const FieldWrapper = styled(p => <Flex {...p} />, {
 
   &:last-child {
     border-bottom: none;
-    ${p => (p.stacked ? 'padding-bottom: 0' : '')};
+    ${(p) => (p.stacked ? 'padding-bottom: 0' : '')};
   }
 `;
 

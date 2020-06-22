@@ -132,7 +132,7 @@ const definitions = [
   },
 ];
 
-const definitionsMap = _.keyBy(definitions, def => def.key);
+const definitionsMap = _.keyBy(definitions, (def) => def.key);
 
 const disabledReasons = {
   diskPriority:
@@ -145,7 +145,7 @@ export function getOption(option) {
 }
 
 function optionsForSection(section) {
-  return definitions.filter(option => option.key.split('.')[0] === section.key);
+  return definitions.filter((option) => option.key.split('.')[0] === section.key);
 }
 
 export function getOptionField(option, field) {

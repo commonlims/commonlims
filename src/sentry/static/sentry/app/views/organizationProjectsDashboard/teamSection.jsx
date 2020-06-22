@@ -33,7 +33,7 @@ class TeamSection extends React.Component {
           {hasTeamAccess && team && <TeamMembers teamId={team.slug} orgId={orgId} />}
         </TeamTitleBar>
         <ProjectCards>
-          {projects.map(project => (
+          {projects.map((project) => (
             <ProjectCard
               data-test-id={project.slug}
               key={project.slug}
@@ -53,7 +53,7 @@ const ProjectCards = styled(Flex)`
 `;
 
 const TeamSectionWrapper = styled.div`
-  border-bottom: ${p => (p.showBorder ? '1px solid ' + p.theme.borderLight : 0)};
+  border-bottom: ${(p) => (p.showBorder ? '1px solid ' + p.theme.borderLight : 0)};
 
   /* stylelint-disable no-duplicate-selectors */
   &:last-child {

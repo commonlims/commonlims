@@ -41,9 +41,9 @@ class Dashboard extends React.Component {
     const sortedProjects = sortProjects(projects);
     const {projectsByTeam} = getProjectsByTeams(teams, sortedProjects);
     const teamSlugs = Object.keys(projectsByTeam).sort();
-    const favorites = projects.filter(project => project.isBookmarked);
+    const favorites = projects.filter((project) => project.isBookmarked);
     const access = new Set(organization.access);
-    const teamsMap = new Map(teams.map(teamObj => [teamObj.slug, teamObj]));
+    const teamsMap = new Map(teams.map((teamObj) => [teamObj.slug, teamObj]));
 
     const hasTeamAdminAccess = access.has('team:admin');
 
@@ -89,10 +89,9 @@ class Dashboard extends React.Component {
             </LazyLoad>
           );
         })}
-        {teamSlugs.length === 0 &&
-          favorites.length === 0 && (
-            <EmptyState projects={projects} teams={teams} organization={organization} />
-          )}
+        {teamSlugs.length === 0 && favorites.length === 0 && (
+          <EmptyState projects={projects} teams={teams} organization={organization} />
+        )}
       </React.Fragment>
     );
   }

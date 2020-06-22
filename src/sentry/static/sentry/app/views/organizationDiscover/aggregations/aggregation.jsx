@@ -43,7 +43,9 @@ export default class Aggregation extends React.Component {
 
     if (input.startsWith('uniq')) {
       optionList = this.props.columns
-        .filter(({name}) => !ARRAY_FIELD_PREFIXES.some(prefix => name.startsWith(prefix)))
+        .filter(
+          ({name}) => !ARRAY_FIELD_PREFIXES.some((prefix) => name.startsWith(prefix))
+        )
         .map(({name}) => ({
           value: `uniq(${name})`,
           label: `uniq(${name})`,
@@ -66,7 +68,7 @@ export default class Aggregation extends React.Component {
     this.select.focus();
   }
 
-  handleChange = option => {
+  handleChange = (option) => {
     if (option.value === 'uniq' || option.value === 'avg') {
       this.setState({inputValue: option.value}, this.focus);
     } else {
@@ -84,8 +86,8 @@ export default class Aggregation extends React.Component {
     }
   };
 
-  inputRenderer = props => {
-    const onChange = evt => {
+  inputRenderer = (props) => {
+    const onChange = (evt) => {
       if (evt.target.value === '') {
         // React select won't trigger an onChange event when a value is completely
         // cleared, so we'll force this before calling onChange
@@ -106,7 +108,7 @@ export default class Aggregation extends React.Component {
     );
   };
 
-  valueComponent = props => {
+  valueComponent = (props) => {
     if (this.state.isOpen) {
       return null;
     }
@@ -114,7 +116,7 @@ export default class Aggregation extends React.Component {
     return <Value {...props} />;
   };
 
-  handleInputChange = value => {
+  handleInputChange = (value) => {
     this.setState({
       inputValue: value,
     });
@@ -124,7 +126,7 @@ export default class Aggregation extends React.Component {
     return (
       <Box w={1}>
         <SelectControl
-          innerRef={ref => (this.select = ref)}
+          innerRef={(ref) => (this.select = ref)}
           value={getInternal(this.props.value)}
           placeholder={
             <PlaceholderText>{t('Add aggregation function...')}</PlaceholderText>

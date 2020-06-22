@@ -29,8 +29,8 @@ class OrganizationApiKeys extends AsyncView {
     api.request(`/organizations/${this.props.params.orgId}/api-keys/${id}/`, {
       method: 'DELETE',
       data: {},
-      success: data => {
-        this.setState(state => ({
+      success: (data) => {
+        this.setState((state) => ({
           keys: state.keys.filter(({id: existingId}) => existingId !== id),
         }));
       },
@@ -48,7 +48,7 @@ class OrganizationApiKeys extends AsyncView {
     api.request(`/organizations/${this.props.params.orgId}/api-keys/`, {
       method: 'POST',
       data: {},
-      success: data => {
+      success: (data) => {
         this.setState({busy: false});
         browserHistory.push(
           recreateRoute(`${data.id}/`, {

@@ -77,7 +77,7 @@ export default class SelectField extends FormField {
     }
 
     if (this.isMultiple()) {
-      return value.map(v => v.value);
+      return value.map((v) => v.value);
     } else if (value.hasOwnProperty('value')) {
       return value.value;
     }
@@ -95,7 +95,7 @@ export default class SelectField extends FormField {
     return '';
   }
 
-  onChange = opt => {
+  onChange = (opt) => {
     // Changing this will most likely break react-select (e.g. you won't be able to select
     // a menu option that is from an async request, or a multi select).
     this.setValue(opt);

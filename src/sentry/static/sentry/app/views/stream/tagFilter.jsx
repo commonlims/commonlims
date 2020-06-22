@@ -72,13 +72,13 @@ class StreamTagFilter extends React.Component {
     });
 
     fetchTagValues(this.api, tag.key, orgId, projectId, textValue)
-      .then(resp => {
+      .then((resp) => {
         this.setState({
           isLoading: false,
           options: Object.values(resp).map(StreamTagFilter.tagValueToSelectFormat),
         });
       })
-      .catch(err => {
+      .catch((err) => {
         // TODO(billy): This endpoint seems to timeout a lot,
         // should we log these errors into datadog?
 
@@ -90,7 +90,7 @@ class StreamTagFilter extends React.Component {
       });
   };
 
-  handleChangeInput = e => {
+  handleChangeInput = (e) => {
     const value = e.target.value;
     this.setState({
       textValue: value,
@@ -98,7 +98,7 @@ class StreamTagFilter extends React.Component {
     this.debouncedTextChange(value);
   };
 
-  debouncedTextChange = debounce(function(text) {
+  debouncedTextChange = debounce(function (text) {
     this.handleChange(text);
   }, 150);
 
@@ -115,12 +115,12 @@ class StreamTagFilter extends React.Component {
     );
   };
 
-  handleChangeSelect = valueObj => {
+  handleChangeSelect = (valueObj) => {
     const value = valueObj ? valueObj.value : null;
     this.handleChange(value);
   };
 
-  handleChangeSelectInput = value => {
+  handleChangeSelectInput = (value) => {
     this.setState(
       {
         textValue: value,
@@ -129,7 +129,7 @@ class StreamTagFilter extends React.Component {
     );
   };
 
-  handleChange = value => {
+  handleChange = (value) => {
     const {onSelect, tag} = this.props;
 
     this.setState(
@@ -171,7 +171,7 @@ class StreamTagFilter extends React.Component {
             options={
               tag.predefined
                 ? tag.values &&
-                  tag.values.map(value => ({
+                  tag.values.map((value) => ({
                     value,
                     label: value,
                   }))

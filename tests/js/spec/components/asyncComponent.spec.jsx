@@ -4,7 +4,7 @@ import {Client} from 'app/api';
 
 import AsyncComponent from 'app/components/asyncComponent';
 
-describe('AsyncComponent', function() {
+describe('AsyncComponent', function () {
   class TestAsyncComponent extends AsyncComponent {
     shouldRenderBadRequests = true;
 
@@ -22,7 +22,7 @@ describe('AsyncComponent', function() {
     }
   }
 
-  it('renders on successful request', function() {
+  it('renders on successful request', function () {
     Client.clearMockResponses();
     Client.addMockResponse({
       url: '/some/path/to/something/',
@@ -36,7 +36,7 @@ describe('AsyncComponent', function() {
     expect(wrapper.find('div').text()).toEqual('hi');
   });
 
-  it('renders error message', function() {
+  it('renders error message', function () {
     Client.clearMockResponses();
     Client.addMockResponse({
       url: '/some/path/to/something/',
@@ -48,11 +48,8 @@ describe('AsyncComponent', function() {
     });
     const wrapper = mount(<TestAsyncComponent />);
     expect(wrapper.find('LoadingError')).toHaveLength(1);
-    expect(
-      wrapper
-        .find('LoadingError')
-        .find('p')
-        .text()
-    ).toEqual('oops there was a problem');
+    expect(wrapper.find('LoadingError').find('p').text()).toEqual(
+      'oops there was a problem'
+    );
   });
 });

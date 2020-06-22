@@ -21,7 +21,7 @@ const UserName = styled(Link)`
 `;
 
 const Email = styled.div`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   font-size: 14px;
 `;
 
@@ -48,7 +48,7 @@ export default class OrganizationMemberRow extends React.PureComponent {
     this.state = {busy: false};
   }
 
-  handleRemove = e => {
+  handleRemove = (e) => {
     const {onRemove} = this.props;
 
     if (typeof onRemove !== 'function') {
@@ -59,7 +59,7 @@ export default class OrganizationMemberRow extends React.PureComponent {
     onRemove(this.props.member, e);
   };
 
-  handleLeave = e => {
+  handleLeave = (e) => {
     const {onLeave} = this.props;
 
     if (typeof onLeave !== 'function') {
@@ -70,7 +70,7 @@ export default class OrganizationMemberRow extends React.PureComponent {
     onLeave(this.props.member, e);
   };
 
-  handleSendInvite = e => {
+  handleSendInvite = (e) => {
     const {onSendInvite} = this.props;
 
     if (typeof onSendInvite !== 'function') {
@@ -146,17 +146,15 @@ export default class OrganizationMemberRow extends React.PureComponent {
                   </div>
                 )}
                 {isInviteSuccessful && <span>Sent!</span>}
-                {!isInviting &&
-                  !isInviteSuccessful &&
-                  canResend && (
-                    <ResendInviteButton
-                      priority="primary"
-                      size="xsmall"
-                      onClick={this.handleSendInvite}
-                    >
-                      {t('Resend invite')}
-                    </ResendInviteButton>
-                  )}
+                {!isInviting && !isInviteSuccessful && canResend && (
+                  <ResendInviteButton
+                    priority="primary"
+                    size="xsmall"
+                    onClick={this.handleSendInvite}
+                  >
+                    {t('Resend invite')}
+                  </ResendInviteButton>
+                )}
               </div>
             ) : (
               <div>
@@ -178,74 +176,68 @@ export default class OrganizationMemberRow extends React.PureComponent {
 
         {showRemoveButton || showLeaveButton ? (
           <Box px={2} w={140}>
-            {showRemoveButton &&
-              canRemoveMember && (
-                <Confirm
-                  message={tct('Are you sure you want to remove [name] from [orgName]?', {
-                    name,
-                    orgName,
-                  })}
-                  onConfirm={this.handleRemove}
-                  onSuccess={tct('Removed [name] from [orgName]', {
-                    name,
-                    orgName,
-                  })}
-                  onError={tct('Error removing [name] from [orgName]', {
-                    name,
-                    orgName,
-                  })}
-                >
-                  <Button icon="icon-circle-subtract" size="small" busy={this.state.busy}>
-                    {t('Remove')}
-                  </Button>
-                </Confirm>
-              )}
-
-            {showRemoveButton &&
-              !canRemoveMember && (
-                <Button
-                  disabled
-                  size="small"
-                  title={t('You do not have access to remove member')}
-                  icon="icon-circle-subtract"
-                >
+            {showRemoveButton && canRemoveMember && (
+              <Confirm
+                message={tct('Are you sure you want to remove [name] from [orgName]?', {
+                  name,
+                  orgName,
+                })}
+                onConfirm={this.handleRemove}
+                onSuccess={tct('Removed [name] from [orgName]', {
+                  name,
+                  orgName,
+                })}
+                onError={tct('Error removing [name] from [orgName]', {
+                  name,
+                  orgName,
+                })}
+              >
+                <Button icon="icon-circle-subtract" size="small" busy={this.state.busy}>
                   {t('Remove')}
                 </Button>
-              )}
+              </Confirm>
+            )}
 
-            {showLeaveButton &&
-              memberCanLeave && (
-                <Confirm
-                  message={tct('Are you sure you want to leave [orgName]?', {
-                    orgName,
-                  })}
-                  onConfirm={this.handleLeave}
-                  onSuccess={tct('Left [orgName]', {
-                    orgName,
-                  })}
-                  onError={tct('Error leaving [orgName]', {
-                    orgName,
-                  })}
-                >
-                  <Button priority="danger" size="small" icon="icon-exit">
-                    {t('Leave')}
-                  </Button>
-                </Confirm>
-              )}
+            {showRemoveButton && !canRemoveMember && (
+              <Button
+                disabled
+                size="small"
+                title={t('You do not have access to remove member')}
+                icon="icon-circle-subtract"
+              >
+                {t('Remove')}
+              </Button>
+            )}
 
-            {showLeaveButton &&
-              !memberCanLeave && (
-                <Button
-                  size="small"
-                  icon="icon-exit"
-                  disabled
-                  title={t(
-                    'You cannot leave the organization as you are the only owner.'
-                  )}
-                >
+            {showLeaveButton && memberCanLeave && (
+              <Confirm
+                message={tct('Are you sure you want to leave [orgName]?', {
+                  orgName,
+                })}
+                onConfirm={this.handleLeave}
+                onSuccess={tct('Left [orgName]', {
+                  orgName,
+                })}
+                onError={tct('Error leaving [orgName]', {
+                  orgName,
+                })}
+              >
+                <Button priority="danger" size="small" icon="icon-exit">
                   {t('Leave')}
                 </Button>
-              )}
+              </Confirm>
+            )}
+
+            {showLeaveButton && !memberCanLeave && (
+              <Button
+                size="small"
+                icon="icon-exit"
+                disabled
+                title={t('You cannot leave the organization as you are the only owner.')}
+              >
+                {t('Leave')}
+              </Button>
+            )}
           </Box>
         ) : null}
       </PanelItem>
@@ -253,16 +245,16 @@ export default class OrganizationMemberRow extends React.PureComponent {
   }
 }
 
-const NoTwoFactorIcon = styled(props => (
+const NoTwoFactorIcon = styled((props) => (
   <InlineSvg {...props} src="icon-circle-exclamation" />
 ))`
-  color: ${p => p.theme.error};
+  color: ${(p) => p.theme.error};
   font-size: 18px;
 `;
-const HasTwoFactorIcon = styled(props => (
+const HasTwoFactorIcon = styled((props) => (
   <InlineSvg {...props} src="icon-circle-check" />
 ))`
-  color: ${p => p.theme.success};
+  color: ${(p) => p.theme.success};
   font-size: 18px;
 `;
 

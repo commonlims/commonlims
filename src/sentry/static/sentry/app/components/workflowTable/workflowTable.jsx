@@ -28,7 +28,7 @@ class WorkflowTable extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {workflows.map(workflow => {
+          {workflows.map((workflow) => {
             return (
               <WorkflowTableRow
                 truncate={fixedDimensions}

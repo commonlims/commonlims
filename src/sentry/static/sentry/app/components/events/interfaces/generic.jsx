@@ -34,7 +34,7 @@ export default class GenericInterface extends Component {
     };
   }
 
-  toggleView = value => {
+  toggleView = (value) => {
     this.setState({
       view: value,
     });

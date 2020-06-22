@@ -51,7 +51,7 @@ const AssigneeSelectorComponent = createReactClass({
 
       const sessionUser = ConfigStore.get('user');
       const sessionUserIndex = members.findIndex(
-        member => sessionUser && member.id === sessionUser.id
+        (member) => sessionUser && member.id === sessionUser.id
       );
 
       if (sessionUserIndex === -1) {
@@ -119,7 +119,7 @@ const AssigneeSelectorComponent = createReactClass({
     // TODO: Make sure TeamStore doesn't include teams from other orgs than the one in scope
     return TeamStore.getAll()
       .sort((a, b) => a.slug.localeCompare(b.slug))
-      .map(team => ({
+      .map((team) => ({
         id: buildTeamId(team.id),
         display: `#${team.slug}`,
         email: team.id,
@@ -160,7 +160,7 @@ const AssigneeSelectorComponent = createReactClass({
     const {size} = this.props;
     const members = AssigneeSelectorComponent.putSessionUserFirst(this.memberList());
 
-    return members.map(member => {
+    return members.map((member) => {
       return {
         value: {type: 'member', assignee: member},
         searchKey: `${member.email} ${member.name} ${member.slug}`,
@@ -229,7 +229,7 @@ const AssigneeSelectorComponent = createReactClass({
           <DropdownAutoComplete
             maxHeight={400}
             zIndex={2}
-            onOpen={e => {
+            onOpen={(e) => {
               // This can be called multiple times and does not always have `event`
               if (!e) {
                 return;
@@ -265,8 +265,7 @@ const AssigneeSelectorComponent = createReactClass({
                 <InviteMemberLink
                   data-test-id="invite-member"
                   disabled={loading}
-                  to={`/settings/${this.context.organization
-                    .slug}/members/new/?referrer=assignee_selector`}
+                  to={`/settings/${this.context.organization.slug}/members/new/?referrer=assignee_selector`}
                 >
                   <MenuItemWrapper>
                     <IconContainer>
@@ -317,7 +316,7 @@ const getSvgStyle = () => `
 `;
 
 const IconUser = styled(InlineSvg)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   height: 20px;
   width: 20px;
 
@@ -339,7 +338,7 @@ const MenuItemWrapper = styled(({py, ...props}) => <div {...props} />)`
   display: flex;
   align-items: center;
   font-size: 13px;
-  ${props =>
+  ${(props) =>
     typeof props.py !== 'undefined' &&
     `
       padding-top: ${props.py};
@@ -348,20 +347,22 @@ const MenuItemWrapper = styled(({py, ...props}) => <div {...props} />)`
 `;
 
 const InviteMemberLink = styled(Link)`
-  color: ${p => p.theme.textColor};
+  color: ${(p) => p.theme.textColor};
 `;
 
 const Label = styled(TextOverflow)`
   margin-left: 6px;
 `;
 
-const ClearAssigneeIcon = styled(props => (
+const ClearAssigneeIcon = styled((props) => (
   <InlineSvg {...props} src="icon-circle-close" />
 ))`
   ${getSvgStyle};
 `;
 
-const InviteMemberIcon = styled(props => <InlineSvg {...props} src="icon-circle-add" />)`
+const InviteMemberIcon = styled((props) => (
+  <InlineSvg {...props} src="icon-circle-add" />
+))`
   ${getSvgStyle};
 `;
 

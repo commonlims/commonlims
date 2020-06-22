@@ -26,10 +26,10 @@ class ProcessesManager {
       return this;
     }
 
-    items = items.filter(item => item.hasOwnProperty('id'));
+    items = items.filter((item) => item.hasOwnProperty('id'));
 
-    items.forEach(item => removeFromList(item.id, this.idList));
-    const ids = items.map(item => item.id);
+    items.forEach((item) => removeFromList(item.id, this.idList));
+    const ids = items.map((item) => item.id);
     this.idList = [].concat(this.idList, ids);
 
     this.trim();
@@ -52,8 +52,8 @@ class ProcessesManager {
       return this;
     }
 
-    items.forEach(item => removeFromList(item.id, this.idList));
-    const ids = items.map(item => item.id);
+    items.forEach((item) => removeFromList(item.id, this.idList));
+    const ids = items.map((item) => item.id);
     this.idList = [].concat(ids, this.idList);
 
     this.trim();

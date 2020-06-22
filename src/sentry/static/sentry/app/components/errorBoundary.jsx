@@ -38,7 +38,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     this.setState({error});
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtra('errorInfo', errorInfo);
       Sentry.captureException(error);
     });
@@ -79,8 +79,8 @@ class ErrorBoundary extends React.Component {
 }
 
 const Wrapper = styled.div`
-  color: ${p => p.theme.gray4};
-  padding: ${p => p.theme.grid * 3}px;
+  color: ${(p) => p.theme.gray4};
+  padding: ${(p) => p.theme.grid * 3}px;
   max-width: 1000px;
   margin: auto;
 `;

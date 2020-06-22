@@ -89,8 +89,8 @@ const IntroContainer = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${p => p.theme.fontSizeLarge};
-  color: ${p => p.theme.gray5};
+  font-size: ${(p) => p.theme.fontSizeLarge};
+  color: ${(p) => p.theme.gray5};
   width: 100%;
   height: 100%;
   min-height: 420px;
@@ -98,7 +98,7 @@ const IntroContainer = styled('div')`
 `;
 
 const Heading = styled('div')`
-  font-size: ${p => p.theme.fontSizeExtraLarge};
+  font-size: ${(p) => p.theme.fontSizeExtraLarge};
   font-weight: 700;
   margin: 0 0 20px;
 `;
@@ -114,6 +114,6 @@ const ExampleQuery = styled(Panel)`
   padding: ${space(2)};
 `;
 const ExampleQueryDescription = styled('div')`
-  font-size: ${p => p.theme.fontSizeSmall};
-  color: ${p => p.theme.gray1};
+  font-size: ${(p) => p.theme.fontSizeSmall};
+  color: ${(p) => p.theme.gray1};
 `;

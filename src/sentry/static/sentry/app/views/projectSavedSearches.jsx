@@ -13,7 +13,7 @@ import IndicatorStore from 'app/stores/indicatorStore';
 import SentryTypes from 'app/sentryTypes';
 import SettingsPageHeader from 'app/views/settings/components/settingsPageHeader';
 
-const InputColumn = props => <Flex flex="1" justify="center" {...props} />;
+const InputColumn = (props) => <Flex flex="1" justify="center" {...props} />;
 
 const SearchTitle = styled.div`
   font-size: 18px;
@@ -110,13 +110,13 @@ class ProjectSavedSearches extends AsyncView {
     return [['savedSearchList', `/projects/${orgId}/${projectId}/searches/`]];
   }
 
-  handleUpdate = params => {
+  handleUpdate = (params) => {
     const {orgId, projectId} = this.props.params;
     const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
     const {data, isDefault, isUserDefault} = params;
     const key = typeof isDefault !== 'undefined' ? 'isDefault' : 'isUserDefault';
     const {savedSearchList} = this.state;
-    const newSearchList = savedSearchList.map(search => ({
+    const newSearchList = savedSearchList.map((search) => ({
       ...search,
       [key]: data.id === search.id,
     }));
@@ -146,12 +146,12 @@ class ProjectSavedSearches extends AsyncView {
     );
   };
 
-  handleRemovedSearch = params => {
+  handleRemovedSearch = (params) => {
     const {orgId, projectId} = this.props.params;
     const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
     const {data} = params;
     const {savedSearchList} = this.state;
-    const newSearchList = savedSearchList.filter(search => {
+    const newSearchList = savedSearchList.filter((search) => {
       return search.id !== data.id;
     });
 
@@ -190,7 +190,7 @@ class ProjectSavedSearches extends AsyncView {
 
     return (
       <React.Fragment>
-        {this.state.savedSearchList.map(search => {
+        {this.state.savedSearchList.map((search) => {
           return (
             <SavedSearchRow
               access={access}

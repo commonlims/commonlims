@@ -16,7 +16,7 @@ class AccountDetails extends AsyncView {
     return [['user', ENDPOINT]];
   }
 
-  handleSubmitSuccess = user => {
+  handleSubmitSuccess = (user) => {
     updateUser(user);
     this.setState({user});
   };

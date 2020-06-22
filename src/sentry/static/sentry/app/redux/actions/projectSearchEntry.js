@@ -21,12 +21,12 @@ export const projectSearchEntriesGetSuccess = (projectSearchEntries, link) => {
   };
 };
 
-export const projectSearchEntriesGetFailure = err => ({
+export const projectSearchEntriesGetFailure = (err) => ({
   type: PROJECT_SEARCH_ENTRIES_GET_FAILURE,
   message: err,
 });
 
-export const projectSearchEntriesGet = (search, groupBy, cursor) => dispatch => {
+export const projectSearchEntriesGet = (search, groupBy, cursor) => (dispatch) => {
   dispatch(projectSearchEntriesGetRequest(search, groupBy, cursor));
 
   const request = {
@@ -35,8 +35,8 @@ export const projectSearchEntriesGet = (search, groupBy, cursor) => dispatch => 
 
   axios
     .get('/api/0/organizations/lab/projects/', request)
-    .then(res => {
-      const formattedData = res.data.reduce(function(map, project) {
+    .then((res) => {
+      const formattedData = res.data.reduce(function (map, project) {
         map[project.id] = {
           id: project.id,
           name: project.name,
@@ -46,5 +46,5 @@ export const projectSearchEntriesGet = (search, groupBy, cursor) => dispatch => 
       }, {});
       dispatch(projectSearchEntriesGetSuccess(formattedData, res.headers.link));
     })
-    .catch(err => dispatch(projectSearchEntriesGetFailure(err)));
+    .catch((err) => dispatch(projectSearchEntriesGetFailure(err)));
 };

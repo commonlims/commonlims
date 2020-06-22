@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser';
 
 export default function handleXhrErrorResponse(message) {
-  return resp => {
+  return (resp) => {
     if (!resp) {
       return;
     }
@@ -13,7 +13,7 @@ export default function handleXhrErrorResponse(message) {
 
     // If this is a string then just capture it as error
     if (typeof responseJSON.detail === 'string') {
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('status', resp.status);
         scope.setExtra('detail', responseJSON.detail);
         Sentry.captureException(new Error(message));
@@ -27,7 +27,7 @@ export default function handleXhrErrorResponse(message) {
     }
 
     if (typeof responseJSON.detail.message === 'string') {
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('status', resp.status);
         scope.setExtra('detail', responseJSON.detail);
         scope.setExtra('code', responseJSON.detail.code);

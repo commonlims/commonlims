@@ -65,7 +65,7 @@ class MultipleEnvironmentSelector extends React.PureComponent {
    * Toggle selected state of an environment
    */
   toggleSelected = (env, e) => {
-    this.setState(state => {
+    this.setState((state) => {
       const selectedEnvs = new Set(state.selectedEnvs);
 
       if (selectedEnvs.has(env.name)) {
@@ -86,7 +86,7 @@ class MultipleEnvironmentSelector extends React.PureComponent {
   /**
    * Calls "onUpdate" callback and closes the dropdown menu
    */
-  handleUpdate = actions => {
+  handleUpdate = (actions) => {
     actions.close();
     this.doUpdate();
   };
@@ -119,7 +119,7 @@ class MultipleEnvironmentSelector extends React.PureComponent {
    * Selects an environment, should close menu and initiate an update
    */
   handleSelect = ({value: env}, e) => {
-    this.setState(state => {
+    this.setState((state) => {
       this.doChange([env.name], e);
 
       return {
@@ -163,7 +163,7 @@ class MultipleEnvironmentSelector extends React.PureComponent {
             menuProps={{style: {position: 'relative'}}}
             items={
               environments
-                ? environments.map(env => ({
+                ? environments.map((env) => ({
                     value: env,
                     searchKey: env.name,
                     label: ({inputValue}) => (
@@ -218,7 +218,7 @@ const FetchOrganizationEnvironments = withApi(
 
     componentDidMount() {
       const {api, organization} = this.props;
-      fetchOrganizationEnvironments(api, organization.slug).then(environments =>
+      fetchOrganizationEnvironments(api, organization.slug).then((environments) =>
         this.setState({environments})
       );
     }
@@ -243,10 +243,10 @@ const StyledInlineSvg = styled(InlineSvg)`
 
 const StyledDropdownAutoComplete = styled(DropdownAutoComplete)`
   background: #fff;
-  border: 1px solid ${p => p.theme.borderLight};
+  border: 1px solid ${(p) => p.theme.borderLight};
   position: absolute;
   top: 100%;
-  box-shadow: ${p => p.theme.dropShadowLight};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
   border-radius: 0;
   margin-top: 0;
   min-width: 120%;
@@ -260,12 +260,12 @@ class EnvironmentSelectorItem extends React.PureComponent {
     isChecked: PropTypes.bool,
   };
 
-  handleMultiSelect = e => {
+  handleMultiSelect = (e) => {
     const {environment, onMultiSelect} = this.props;
     onMultiSelect(environment, e);
   };
 
-  handleClick = e => {
+  handleClick = (e) => {
     e.stopPropagation();
     this.handleMultiSelect(e);
   };

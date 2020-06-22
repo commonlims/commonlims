@@ -83,7 +83,7 @@ const AccountAvatar = createReactClass({
         avatar_photo: avatarPhoto,
         avatar_type: this.state.user.avatar.avatarType,
       },
-      success: user => {
+      success: (user) => {
         this.setState({savedDataUrl: this.state.dataUrl});
         this.handleSuccess(user);
       },
@@ -131,7 +131,7 @@ const AccountAvatar = createReactClass({
                 ]}
                 value={this.state.user.avatar.avatarType || 'letter_avatar'}
                 label="Avatar Type"
-                onChange={id => this.handleChange(id)}
+                onChange={(id) => this.handleChange(id)}
               />
 
               {isLetter && (
@@ -169,7 +169,7 @@ const AccountAvatar = createReactClass({
 
 const AvatarGroup = styled.div`
   display: flex;
-  flex-direction: ${p => (p.inline ? 'row' : 'column')};
+  flex-direction: ${(p) => (p.inline ? 'row' : 'column')};
 `;
 
 const AvatarForm = styled('form')`

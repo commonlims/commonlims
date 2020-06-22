@@ -40,7 +40,7 @@ class AppContextType extends React.Component {
   }
 }
 
-AppContextType.getTitle = function(value) {
+AppContextType.getTitle = function (value) {
   return 'App';
 };
 

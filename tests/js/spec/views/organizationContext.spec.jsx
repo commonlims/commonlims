@@ -15,7 +15,7 @@ jest.mock('app/actionCreators/modal', () => ({
   openSudo: jest.fn(),
 }));
 
-describe('OrganizationContext', function() {
+describe('OrganizationContext', function () {
   let wrapper;
   const org = TestStubs.Organization({
     teams: [TestStubs.Team()],
@@ -23,9 +23,9 @@ describe('OrganizationContext', function() {
   });
   let getOrgMock;
 
-  beforeAll(function() {});
+  beforeAll(function () {});
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     getOrgMock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/',
@@ -42,12 +42,12 @@ describe('OrganizationContext', function() {
     );
   });
 
-  afterEach(function() {
+  afterEach(function () {
     TeamStore.loadInitialData.mockRestore();
     ProjectsStore.loadInitialData.mockRestore();
   });
 
-  it('renders and fetches org', function() {
+  it('renders and fetches org', function () {
     expect(getOrgMock).toHaveBeenCalledWith(
       '/organizations/org-slug/',
       expect.anything()
@@ -62,14 +62,14 @@ describe('OrganizationContext', function() {
     expect(GlobalSelectionStore.loadInitialData).toHaveBeenCalledWith(org, {});
   });
 
-  it('resets TeamStore when unmounting', function() {
+  it('resets TeamStore when unmounting', function () {
     jest.spyOn(TeamStore, 'reset');
     wrapper.unmount();
     expect(TeamStore.reset).toHaveBeenCalled();
     TeamStore.reset.mockRestore();
   });
 
-  it('fetches new org when router params change', function() {
+  it('fetches new org when router params change', function () {
     const mock = MockApiClient.addMockResponse({
       url: '/organizations/new-slug/',
       body: org,
@@ -80,7 +80,7 @@ describe('OrganizationContext', function() {
     expect(mock).toHaveBeenLastCalledWith('/organizations/new-slug/', expect.anything());
   });
 
-  it('fetches new org when router location state is `refresh`', function() {
+  it('fetches new org when router location state is `refresh`', function () {
     getOrgMock.mockReset();
     wrapper.setProps({location: {state: 'refresh'}});
     wrapper.update();
@@ -91,7 +91,7 @@ describe('OrganizationContext', function() {
     );
   });
 
-  it('shows loading error for non-superusers on 403s', function() {
+  it('shows loading error for non-superusers on 403s', function () {
     getOrgMock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/',
       statusCode: 403,
@@ -105,7 +105,7 @@ describe('OrganizationContext', function() {
     expect(wrapper.find('LoadingError')).toHaveLength(1);
   });
 
-  it('opens sudo modal for superusers on 403s', function() {
+  it('opens sudo modal for superusers on 403s', function () {
     ConfigStore.get.mockImplementation(() => ({
       isSuperuser: true,
     }));

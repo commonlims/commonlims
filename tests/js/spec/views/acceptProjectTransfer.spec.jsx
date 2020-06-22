@@ -5,11 +5,11 @@ import AcceptProjectTransfer from 'app/views/acceptProjectTransfer';
 
 jest.mock('jquery');
 
-describe('AcceptProjectTransfer', function() {
+describe('AcceptProjectTransfer', function () {
   let getMock;
   let postMock;
   const endpoint = '/accept-transfer/';
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
 
     getMock = MockApiClient.addMockResponse({
@@ -28,7 +28,7 @@ describe('AcceptProjectTransfer', function() {
     });
   });
 
-  it('renders', function() {
+  it('renders', function () {
     mount(
       <AcceptProjectTransfer
         location={{
@@ -42,7 +42,7 @@ describe('AcceptProjectTransfer', function() {
     expect(getMock).toHaveBeenCalled();
   });
 
-  it('submits', function() {
+  it('submits', function () {
     const wrapper = mount(
       <AcceptProjectTransfer
         location={{

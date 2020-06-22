@@ -219,7 +219,7 @@ class FormModel {
     const form = this.getData();
 
     return Object.keys(form)
-      .map(id => [id, this.getTransformedValue(id)])
+      .map((id) => [id, this.getTransformedValue(id)])
       .reduce((acc, [id, value]) => {
         acc[id] = value;
         return acc;
@@ -248,8 +248,8 @@ class FormModel {
       this.api.request(endpoint, {
         method,
         data,
-        success: response => resolve(response),
-        error: error => reject(error),
+        success: (response) => resolve(response),
+        error: (error) => reject(error),
       });
     });
   }
@@ -361,7 +361,7 @@ class FormModel {
 
     this.formState = FormState.SAVING;
     request
-      .then(resp => {
+      .then((resp) => {
         // save snapshot
         if (saveSnapshot) {
           saveSnapshot();
@@ -402,7 +402,7 @@ class FormModel {
     }
 
     return savePromise
-      .then(resp => {
+      .then((resp) => {
         const newValue = this.getValue(id);
         const change = {old: oldValue, new: newValue};
 
@@ -417,7 +417,7 @@ class FormModel {
 
         return resp;
       })
-      .catch(error => {
+      .catch((error) => {
         if (this.options.onSubmitError) {
           this.options.onSubmitError(error, this, id);
         }
@@ -463,7 +463,7 @@ class FormModel {
 
     // Check if field needs to handle transforming request object
     const getData =
-      typeof fieldDescriptor.getData === 'function' ? fieldDescriptor.getData : a => a;
+      typeof fieldDescriptor.getData === 'function' ? fieldDescriptor.getData : (a) => a;
 
     const request = this.doApiRequest({
       data: getData(
@@ -473,7 +473,7 @@ class FormModel {
     });
 
     request
-      .then(data => {
+      .then((data) => {
         this.setSaving(id, false);
 
         // save snapshot
@@ -487,7 +487,7 @@ class FormModel {
 
         return data;
       })
-      .catch(resp => {
+      .catch((resp) => {
         // should we revert field value to last known state?
         saveSnapshot = null;
 
@@ -615,7 +615,7 @@ class FormModel {
 
   @action
   validateForm() {
-    Array.from(this.fieldDescriptor.keys()).forEach(id => !this.validateField(id));
+    Array.from(this.fieldDescriptor.keys()).forEach((id) => !this.validateField(id));
   }
 
   @action
@@ -625,7 +625,7 @@ class FormModel {
     }
 
     // Show resp msg from API endpoint if possible
-    Object.keys(resp).forEach(id => {
+    Object.keys(resp).forEach((id) => {
       if (
         id === 'non_field_errors' &&
         Array.isArray(resp.non_field_errors) &&

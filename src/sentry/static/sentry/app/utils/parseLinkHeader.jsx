@@ -6,7 +6,7 @@ export default function parseLinkHeader(header) {
   const header_vals = header.split(','),
     links = {};
 
-  header_vals.forEach(val => {
+  header_vals.forEach((val) => {
     const match = /<([^>]+)>; rel="([^"]+)"(?:; results="([^"]+)")?(?:; cursor="([^"]+)")?/g.exec(
       val
     );

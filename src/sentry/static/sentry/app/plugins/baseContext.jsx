@@ -16,7 +16,7 @@ BaseContext.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
-BaseContext.getTitle = function(value) {
+BaseContext.getTitle = function (value) {
   return value;
 };
 

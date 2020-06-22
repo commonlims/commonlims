@@ -7,7 +7,7 @@ const FieldControlState = styled(({flexibleControlStateSize, ...props}) => (
   <Flex {...props} />
 ))`
   position: relative;
-  ${p => !p.flexibleControlStateSize && `width: ${width}`};
+  ${(p) => !p.flexibleControlStateSize && `width: ${width}`};
   flex-shrink: 0;
   justify-content: center;
   align-items: center;

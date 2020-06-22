@@ -15,7 +15,7 @@ export function getStateFromQuery(query) {
   const hasAbsolute = !!start && !!end;
 
   if (defined(project) && Array.isArray(project)) {
-    project = project.map(p => parseInt(p, 10));
+    project = project.map((p) => parseInt(p, 10));
   } else if (defined(project)) {
     const projectIdInt = parseInt(project, 10);
     project = isNaN(projectIdInt) ? [] : [projectIdInt];

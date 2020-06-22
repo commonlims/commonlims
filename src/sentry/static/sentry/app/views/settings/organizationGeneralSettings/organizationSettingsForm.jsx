@@ -42,7 +42,7 @@ const OrganizationSettingsForm = createReactClass({
             onSave(initialData, model.initialData);
           }
         }}
-        onSubmitError={err => addErrorMessage('Unable to save change')}
+        onSubmitError={(err) => addErrorMessage('Unable to save change')}
       >
         <PermissionAlert />
         <JsonForm

@@ -77,44 +77,42 @@ const Incidents = createReactClass({
           label={t('Service status')}
           onClick={onShowPanel}
         />
-        {showPanel &&
-          active &&
-          status && (
-            <SidebarPanel
-              orientation={orientation}
-              title={t('Recent status updates')}
-              hidePanel={hidePanel}
-              collapsed={collapsed}
-            >
-              {isEmpty && (
-                <SidebarPanelEmpty>
-                  {t('There are no incidents to report')}
-                </SidebarPanelEmpty>
-              )}
-              <IncidentList className="incident-list">
-                {status.incidents.map(incident => (
-                  <IncidentItem key={incident.id}>
-                    <IncidentTitle>{incident.title}</IncidentTitle>
-                    {incident.updates ? (
-                      <div>
-                        <StatusHeader>{t('Latest updates:')}</StatusHeader>
-                        <StatusList>
-                          {incident.updates.map((update, key) => (
-                            <StatusItem key={key}>{update}</StatusItem>
-                          ))}
-                        </StatusList>
-                      </div>
-                    ) : null}
+        {showPanel && active && status && (
+          <SidebarPanel
+            orientation={orientation}
+            title={t('Recent status updates')}
+            hidePanel={hidePanel}
+            collapsed={collapsed}
+          >
+            {isEmpty && (
+              <SidebarPanelEmpty>
+                {t('There are no incidents to report')}
+              </SidebarPanelEmpty>
+            )}
+            <IncidentList className="incident-list">
+              {status.incidents.map((incident) => (
+                <IncidentItem key={incident.id}>
+                  <IncidentTitle>{incident.title}</IncidentTitle>
+                  {incident.updates ? (
                     <div>
-                      <Button href={incident.url} size="small" external>
-                        {t('Learn more')}
-                      </Button>
+                      <StatusHeader>{t('Latest updates:')}</StatusHeader>
+                      <StatusList>
+                        {incident.updates.map((update, key) => (
+                          <StatusItem key={key}>{update}</StatusItem>
+                        ))}
+                      </StatusList>
                     </div>
-                  </IncidentItem>
-                ))}
-              </IncidentList>
-            </SidebarPanel>
-          )}
+                  ) : null}
+                  <div>
+                    <Button href={incident.url} size="small" external>
+                      {t('Learn more')}
+                    </Button>
+                  </div>
+                </IncidentItem>
+              ))}
+            </IncidentList>
+          </SidebarPanel>
+        )}
       </React.Fragment>
     );
   },
@@ -129,7 +127,7 @@ const IncidentList = styled('ul')`
 `;
 
 const IncidentItem = styled('li')`
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
   margin-bottom: 20px;
   padding-bottom: 5px;
 `;

@@ -28,7 +28,7 @@ const CreateSampleEvent = createReactClass({
   componentDidMount() {
     const {projectId} = this.props.params;
     const {organization} = this.context;
-    const project = organization.projects.find(proj => proj.slug === projectId);
+    const project = organization.projects.find((proj) => proj.slug === projectId);
 
     if (!project) {
       return;
@@ -47,7 +47,7 @@ const CreateSampleEvent = createReactClass({
     const {orgId, projectId} = this.props.params;
     const {organization} = this.context;
     const url = `/projects/${orgId}/${projectId}/create-sample/`;
-    const project = organization.projects.find(proj => proj.slug === projectId);
+    const project = organization.projects.find((proj) => proj.slug === projectId);
 
     analytics('sample_event.created', {
       org_id: parseInt(organization.id, 10),
@@ -57,11 +57,11 @@ const CreateSampleEvent = createReactClass({
 
     this.api.request(url, {
       method: 'POST',
-      success: data => {
+      success: (data) => {
         browserHistory.push(`/${orgId}/${projectId}/issues/${data.groupID}/`);
       },
-      error: err => {
-        Sentry.withScope(scope => {
+      error: (err) => {
+        Sentry.withScope((scope) => {
           scope.setExtra('err', err);
           Sentry.captureException(
             new Error('Create sample event in onboarding configure step failed')

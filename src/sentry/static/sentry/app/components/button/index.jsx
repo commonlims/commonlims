@@ -66,7 +66,7 @@ class Button extends React.Component {
     onClick(...args);
   };
 
-  getUrl = prop => {
+  getUrl = (prop) => {
     const {disabled} = this.props;
     if (disabled) {
       return null;
@@ -152,7 +152,7 @@ const getFontSize = ({size, theme}) => {
 const getFontWeight = ({priority, borderless}) =>
   `font-weight: ${priority === 'link' || borderless ? 400 : 600};`;
 
-const getBoxShadow = active => ({priority, borderless, disabled}) => {
+const getBoxShadow = (active) => ({priority, borderless, disabled}) => {
   if (disabled || borderless || priority === 'link') {
     return 'box-shadow: none';
   }
@@ -212,7 +212,7 @@ const StyledButton = styled(({busy, external, borderless, ...props}) => {
 })`
   display: inline-block;
   line-height: 1;
-  border-radius: ${p => p.theme.button.borderRadius};
+  border-radius: ${(p) => p.theme.button.borderRadius};
   padding: 0;
   text-transform: none;
 
@@ -220,8 +220,8 @@ const StyledButton = styled(({busy, external, borderless, ...props}) => {
   font-size: ${getFontSize};
   ${getColors};
   ${getBoxShadow(false)};
-  cursor: ${p => (p.disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${p => (p.busy || p.disabled) && '0.65'};
+  cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${(p) => (p.busy || p.disabled) && '0.65'};
 
   &:active {
     ${getBoxShadow(true)};
@@ -230,7 +230,7 @@ const StyledButton = styled(({busy, external, borderless, ...props}) => {
     outline: none;
   }
 
-  ${p => p.borderless && 'border-color: transparent'};
+  ${(p) => p.borderless && 'border-color: transparent'};
 `;
 
 /**

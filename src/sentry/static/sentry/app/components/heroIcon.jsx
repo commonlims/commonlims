@@ -3,10 +3,10 @@ import styled from 'react-emotion';
 
 import InlineSvg from 'app/components/inlineSvg';
 
-const HeroIcon = styled(props => {
+const HeroIcon = styled((props) => {
   return <InlineSvg {...props} />;
 })`
-  color: ${p => p.theme.gray6};
+  color: ${(p) => p.theme.gray6};
 `;
 
 HeroIcon.defaultProps = {

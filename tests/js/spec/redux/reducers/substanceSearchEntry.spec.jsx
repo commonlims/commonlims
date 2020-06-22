@@ -9,7 +9,7 @@ import {keyBy} from 'lodash';
 
 describe('substance reducer', () => {
   const mockResponseNoGroup = TestStubs.SubstanceSearchEntries(2, 'substance');
-  const mockResponseNoGroupById = keyBy(mockResponseNoGroup, entry => entry.global_id);
+  const mockResponseNoGroupById = keyBy(mockResponseNoGroup, (entry) => entry.global_id);
 
   it('should handle initial state', () => {
     expect(substanceSearchEntry(undefined, {})).toEqual(initialState);
@@ -121,7 +121,7 @@ describe('substance reducer', () => {
     // Assert
 
     const responseFromReducer = TestStubs.SubstanceEntriesFromReducer(2, 'substance');
-    const expectedByIds = keyBy(responseFromReducer, entry => entry.global_id);
+    const expectedByIds = keyBy(responseFromReducer, (entry) => entry.global_id);
     expect(nextState).toEqual({
       ...prevState,
       errorMessage: null,
@@ -161,7 +161,7 @@ describe('substance reducer', () => {
       },
     ];
 
-    const expectedByIds = keyBy(expectedEntryFromReducer, entry => entry.global_id);
+    const expectedByIds = keyBy(expectedEntryFromReducer, (entry) => entry.global_id);
 
     expect(nextState).toEqual({
       ...prevState,
@@ -202,7 +202,7 @@ describe('substance reducer', () => {
       },
     ];
 
-    const expectedByIds = keyBy(expectedEntryFromReducer, entry => entry.global_id);
+    const expectedByIds = keyBy(expectedEntryFromReducer, (entry) => entry.global_id);
 
     expect(nextState).toEqual({
       ...prevState,

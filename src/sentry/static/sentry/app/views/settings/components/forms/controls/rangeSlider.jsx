@@ -78,7 +78,7 @@ class RangeSlider extends React.Component {
     }
   }
 
-  getActualValue = sliderValue => {
+  getActualValue = (sliderValue) => {
     const {allowedValues} = this.props;
     let value;
 
@@ -92,7 +92,7 @@ class RangeSlider extends React.Component {
     return value;
   };
 
-  handleInput = e => {
+  handleInput = (e) => {
     const sliderValue = parseInt(e.target.value, 10);
 
     this.setState({
@@ -105,7 +105,7 @@ class RangeSlider extends React.Component {
     }
   };
 
-  handleBlur = e => {
+  handleBlur = (e) => {
     const {onBlur} = this.props;
     if (typeof onBlur !== 'function') {
       return;
@@ -160,13 +160,13 @@ const Slider = styled.input`
   /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-appearance: none;
   width: 100%;
-  margin: ${p => p.theme.grid}px 0 ${p => p.theme.grid * 2}px;
+  margin: ${(p) => p.theme.grid}px 0 ${(p) => p.theme.grid * 2}px;
 
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 3px;
     cursor: pointer;
-    background: ${p => p.theme.borderLight};
+    background: ${(p) => p.theme.borderLight};
     border-radius: 3px;
     border: 0;
   }
@@ -175,7 +175,7 @@ const Slider = styled.input`
     width: 100%;
     height: 3px;
     cursor: pointer;
-    background: ${p => p.theme.borderLight};
+    background: ${(p) => p.theme.borderLight};
     border-radius: 3px;
     border: 0;
   }
@@ -184,7 +184,7 @@ const Slider = styled.input`
     width: 100%;
     height: 3px;
     cursor: pointer;
-    background: ${p => p.theme.borderLight};
+    background: ${(p) => p.theme.borderLight};
     border-radius: 3px;
     border: 0;
   }
@@ -194,7 +194,7 @@ const Slider = styled.input`
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: ${p => p.theme.purple};
+    background: ${(p) => p.theme.purple};
     cursor: pointer;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-appearance: none;
@@ -207,7 +207,7 @@ const Slider = styled.input`
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: ${p => p.theme.purple};
+    background: ${(p) => p.theme.purple};
     cursor: pointer;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-appearance: none;
@@ -220,7 +220,7 @@ const Slider = styled.input`
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: ${p => p.theme.purple};
+    background: ${(p) => p.theme.purple};
     cursor: pointer;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-appearance: none;
@@ -229,13 +229,13 @@ const Slider = styled.input`
   }
 
   &::-ms-fill-lower {
-    background: ${p => p.theme.borderLight};
+    background: ${(p) => p.theme.borderLight};
     border: 0;
     border-radius: 50%;
   }
 
   &::-ms-fill-upper {
-    background: ${p => p.theme.borderLight});
+    background: ${(p) => p.theme.borderLight});
     border: 0;
     border-radius: 50%;
   }
@@ -244,31 +244,31 @@ const Slider = styled.input`
     outline: none;
 
     &::-webkit-slider-runnable-track {
-      background: ${p => p.theme.borderDark};
+      background: ${(p) => p.theme.borderDark};
     }
 
     &::-ms-fill-upper {
-      background: ${p => p.theme.borderDark};
+      background: ${(p) => p.theme.borderDark};
     }
 
     &::-ms-fill-lower {
-      background: ${p => p.theme.borderDark};
+      background: ${(p) => p.theme.borderDark};
     }
   }
 
   &[disabled] {
     &::-webkit-slider-thumb {
-      background: ${p => p.theme.gray6};
+      background: ${(p) => p.theme.gray6};
       cursor: default;
     }
 
     &::-moz-range-thumb {
-      background: ${p => p.theme.gray6};
+      background: ${(p) => p.theme.gray6};
       cursor: default;
     }
 
     &::-ms-thumb {
-      background: ${p => p.theme.gray6};
+      background: ${(p) => p.theme.gray6};
       cursor: default;
     }
 
@@ -288,6 +288,6 @@ const Slider = styled.input`
 
 const Label = styled.label`
   font-size: 14px;
-  margin-bottom: ${p => p.theme.grid}px;
-  color: ${p => p.theme.gray3};
+  margin-bottom: ${(p) => p.theme.grid}px;
+  color: ${(p) => p.theme.gray3};
 `;

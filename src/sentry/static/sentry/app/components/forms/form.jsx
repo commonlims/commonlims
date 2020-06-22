@@ -63,16 +63,16 @@ class Form extends React.Component {
     };
   }
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state.data, this.onSubmitSuccess, this.onSubmitError);
   };
 
-  onSubmitSuccess = data => {
+  onSubmitSuccess = (data) => {
     const curData = this.state.data;
     let newData = {};
     if (data) {
-      Object.keys(curData).forEach(k => {
+      Object.keys(curData).forEach((k) => {
         if (data.hasOwnProperty(k)) {
           newData[k] = data[k];
         } else {
@@ -91,7 +91,7 @@ class Form extends React.Component {
     this.props.onSubmitSuccess && this.props.onSubmitSuccess(data);
   };
 
-  onSubmitError = error => {
+  onSubmitError = (error) => {
     this.setState({
       state: FormState.ERROR,
       errors: error.responseJSON,
@@ -107,7 +107,7 @@ class Form extends React.Component {
   };
 
   onFieldChange = (name, value) => {
-    this.setState(state => ({
+    this.setState((state) => ({
       data: {
         ...state.data,
         [name]: value,
@@ -127,23 +127,26 @@ class Form extends React.Component {
 
     return (
       <StyledForm onSubmit={this.onSubmit} className={this.props.className}>
-        {isError &&
-          !hideErrors && (
-            <div className="alert alert-error alert-block">
-              {nonFieldErrors ? (
-                <div>
-                  <p>
-                    {t(
-                      'Unable to save your changes. Please correct the following errors try again.'
-                    )}
-                  </p>
-                  <ul>{nonFieldErrors.map((e, i) => <li key={i}>{e}</li>)}</ul>
-                </div>
-              ) : (
-                errorMessage
-              )}
-            </div>
-          )}
+        {isError && !hideErrors && (
+          <div className="alert alert-error alert-block">
+            {nonFieldErrors ? (
+              <div>
+                <p>
+                  {t(
+                    'Unable to save your changes. Please correct the following errors try again.'
+                  )}
+                </p>
+                <ul>
+                  {nonFieldErrors.map((e, i) => (
+                    <li key={i}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              errorMessage
+            )}
+          </div>
+        )}
         {this.props.children}
         <div className={this.props.footerClass} style={{marginTop: 25}}>
           <button

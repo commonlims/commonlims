@@ -77,51 +77,53 @@ class Substances extends React.Component {
         Header: 'Sample name',
         id: 'name',
         accessor: 'name',
-        fontstyle: d => (d.isGroupHeader ? 'italic' : 'normal'),
+        fontstyle: (d) => (d.isGroupHeader ? 'italic' : 'normal'),
       },
       {
         Header: 'Container',
         id: 'container',
-        accessor: d =>
+        accessor: (d) =>
           d.isGroupHeader
             ? null
-            : d.location ? d.location.container.name : '<No location>',
+            : d.location
+            ? d.location.container.name
+            : '<No location>',
       },
       {
         Header: 'Index',
         id: 'index',
-        accessor: d =>
+        accessor: (d) =>
           d.isGroupHeader ? null : d.location ? d.location.index : '<No location>',
       },
       {
         Header: 'Volume',
         id: 'volume',
-        accessor: d =>
+        accessor: (d) =>
           d.isGroupHeader
             ? null
             : d.properties && d.properties.volume
-              ? showRounded(d.properties.volume.value)
-              : null,
+            ? showRounded(d.properties.volume.value)
+            : null,
       },
       {
         Header: 'Sample Type',
         id: 'sample_type',
-        accessor: d =>
+        accessor: (d) =>
           d.isGroupHeader
             ? null
             : d.properties && d.properties.sample_type
-              ? d.properties.sample_type.value
-              : null,
+            ? d.properties.sample_type.value
+            : null,
       },
       {
         Header: 'Priority',
         id: 'priority',
-        accessor: d => (d.isGroupHeader ? null : d.priority),
+        accessor: (d) => (d.isGroupHeader ? null : d.priority),
       },
       {
         Header: 'Waiting',
         id: 'days_waiting',
-        accessor: d => (d.isGroupHeader ? null : d.days_waiting),
+        accessor: (d) => (d.isGroupHeader ? null : d.days_waiting),
       },
     ];
   }
@@ -223,7 +225,7 @@ Substances.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     substanceSearchEntry: state.substanceSearchEntry,
   };
@@ -231,10 +233,10 @@ const mapStateToProps = state => {
 
 // TODO: Rename all functions in `mapDispatchToProps` in other files so that they match the action
 // creators name for consistency.
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   substanceSearchEntriesGet: (query, groupBy, cursor, isGroupHeader) =>
     dispatch(substanceSearchEntriesGet(query, groupBy, cursor, isGroupHeader)),
-  substanceSearchEntriesToggleSelectAll: doSelect =>
+  substanceSearchEntriesToggleSelectAll: (doSelect) =>
     dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
   substanceSearchEntryToggleSelect: (id, doSelect) =>
     dispatch(substanceSearchEntryToggleSelect(id, doSelect)),

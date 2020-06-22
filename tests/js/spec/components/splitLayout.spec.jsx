@@ -3,8 +3,8 @@ import {shallow} from 'enzyme';
 import toJson from 'enzyme-to-json';
 import SplitLayout from 'app/components/splitLayout';
 
-describe('SplitLayout', function() {
-  it('renders with one child', function() {
+describe('SplitLayout', function () {
+  it('renders with one child', function () {
     const component = shallow(
       <SplitLayout>
         <div>child</div>
@@ -14,7 +14,7 @@ describe('SplitLayout', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with multiple children', function() {
+  it('renders with multiple children', function () {
     const component = shallow(
       <SplitLayout>
         <div>child #1</div>
@@ -26,7 +26,7 @@ describe('SplitLayout', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with responsive property', function() {
+  it('renders with responsive property', function () {
     const component = shallow(
       <SplitLayout responsive>
         <div>child #1</div>
@@ -38,7 +38,7 @@ describe('SplitLayout', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders with a separation width', function() {
+  it('renders with a separation width', function () {
     const component = shallow(
       <SplitLayout responsive splitWidth={5}>
         <div>child #1</div>

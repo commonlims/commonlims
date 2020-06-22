@@ -27,17 +27,17 @@ class EmailRow extends React.Component {
     onSetPrimary: PropTypes.func,
   };
 
-  handleSetPrimary = e => {
+  handleSetPrimary = (e) => {
     if (typeof this.props.onSetPrimary === 'function') {
       this.props.onSetPrimary(this.props.email, e);
     }
   };
 
-  handleRemove = e => {
+  handleRemove = (e) => {
     this.props.onRemove(this.props.email, e);
   };
 
-  handleVerify = e => {
+  handleVerify = (e) => {
     this.props.onVerify(this.props.email, e);
   };
 
@@ -60,29 +60,27 @@ class EmailRow extends React.Component {
           )}
         </Flex>
         <Flex>
-          {!isPrimary &&
-            isVerified && (
-              <Button size="small" onClick={this.handleSetPrimary}>
-                {t('Set as primary')}
-              </Button>
-            )}
+          {!isPrimary && isVerified && (
+            <Button size="small" onClick={this.handleSetPrimary}>
+              {t('Set as primary')}
+            </Button>
+          )}
           {!isVerified && (
             <Button size="small" onClick={this.handleVerify}>
               {t('Resend verification')}
             </Button>
           )}
-          {!hideRemove &&
-            !isPrimary && (
-              <Box ml={1}>
-                <Button
-                  data-test-id="remove"
-                  priority="danger"
-                  size="small"
-                  icon="icon-trash"
-                  onClick={this.handleRemove}
-                />
-              </Box>
-            )}
+          {!hideRemove && !isPrimary && (
+            <Box ml={1}>
+              <Button
+                data-test-id="remove"
+                priority="danger"
+                size="small"
+                icon="icon-trash"
+                onClick={this.handleRemove}
+              />
+            </Box>
+          )}
         </Flex>
       </PanelItem>
     );
@@ -103,7 +101,7 @@ class AccountEmails extends AsyncView {
     this.remountComponent();
   };
 
-  handleError = err => {
+  handleError = (err) => {
     this.remountComponent();
 
     if (err && err.responseJSON && err.responseJSON.email) {
@@ -120,7 +118,7 @@ class AccountEmails extends AsyncView {
     });
   };
 
-  handleSetPrimary = email => {
+  handleSetPrimary = (email) => {
     this.createApiCall(ENDPOINT, {
       method: 'PUT',
       data: {
@@ -129,7 +127,7 @@ class AccountEmails extends AsyncView {
     });
   };
 
-  handleRemove = email => {
+  handleRemove = (email) => {
     this.createApiCall(ENDPOINT, {
       method: 'DELETE',
       data: {
@@ -138,7 +136,7 @@ class AccountEmails extends AsyncView {
     });
   };
 
-  handleVerify = email => {
+  handleVerify = (email) => {
     this.createApiCall(`${ENDPOINT}confirm/`, {
       method: 'POST',
       data: {
@@ -168,7 +166,7 @@ class AccountEmails extends AsyncView {
             )}
 
             {secondary &&
-              secondary.map(emailObj => {
+              secondary.map((emailObj) => {
                 return (
                   <EmailRow
                     key={emailObj.email}

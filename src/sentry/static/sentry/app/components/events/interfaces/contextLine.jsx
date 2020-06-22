@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {defined} from 'app/utils';
 
-const ContextLine = function(props) {
+const ContextLine = function (props) {
   const {line, isActive} = props;
   let liClassName = 'expandable';
   if (isActive) {

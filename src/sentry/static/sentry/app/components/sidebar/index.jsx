@@ -141,7 +141,7 @@ class Sidebar extends React.Component {
     }
   };
 
-  handleMediaQueryChange = changed => {
+  handleMediaQueryChange = (changed) => {
     this.setState({
       horizontal: changed.matches,
     });
@@ -167,7 +167,7 @@ class Sidebar extends React.Component {
       'events',
       'releases',
       'user-feedback',
-    ].map(route => `/organizations/${this.props.params.orgId}/${route}/`);
+    ].map((route) => `/organizations/${this.props.params.orgId}/${route}/`);
 
     // Only keep the querystring if the current route matches one of the above
     if (globalSelectionRoutes.includes(this.props.location.pathname)) {
@@ -188,7 +188,7 @@ class Sidebar extends React.Component {
   };
 
   // Show slideout panel
-  showPanel = panel => {
+  showPanel = (panel) => {
     this.setState({
       showPanel: true,
       currentPanel: panel,
@@ -203,7 +203,7 @@ class Sidebar extends React.Component {
     }
   };
 
-  documentClickHandler = evt => {
+  documentClickHandler = (evt) => {
     // If click occurs outside of sidebar, close any active panel
     if (this.sidebar && !this.sidebar.contains(evt.target)) {
       this.hidePanel();
@@ -227,7 +227,7 @@ class Sidebar extends React.Component {
     const hasSentry10 = hasOrganization && new Set(organization.features).has('sentry10');
 
     return (
-      <StyledSidebar innerRef={ref => (this.sidebar = ref)} collapsed={collapsed}>
+      <StyledSidebar innerRef={(ref) => (this.sidebar = ref)} collapsed={collapsed}>
         <SidebarSectionGroup>
           <SidebarSection>
             <SidebarDropdown
@@ -437,26 +437,26 @@ const responsiveFlex = css`
 `;
 
 const StyledSidebar = styled('div')`
-  background: ${p => p.theme.sidebar.background};
-  background: linear-gradient(${p => p.theme.gray4}, ${p => p.theme.gray5});
-  color: ${p => p.theme.sidebar.color};
+  background: ${(p) => p.theme.sidebar.background};
+  background: linear-gradient(${(p) => p.theme.gray4}, ${(p) => p.theme.gray5});
+  color: ${(p) => p.theme.sidebar.color};
   line-height: 1;
   padding: 12px 19px 2px; /* Allows for 32px avatars  */
-  width: ${p => p.theme.sidebar.expandedWidth};
+  width: ${(p) => p.theme.sidebar.expandedWidth};
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   justify-content: space-between;
-  z-index: ${p => p.theme.zIndex.sidebar};
+  z-index: ${(p) => p.theme.zIndex.sidebar};
   ${responsiveFlex};
-  ${p => p.collapsed && `width: ${p.theme.sidebar.collapsedWidth};`};
+  ${(p) => p.collapsed && `width: ${p.theme.sidebar.collapsedWidth};`};
 
-  @media (max-width: ${p => p.theme.breakpoints[0]}) {
+  @media (max-width: ${(p) => p.theme.breakpoints[0]}) {
     top: 0;
     left: 0;
     right: 0;
-    height: ${p => p.theme.sidebar.mobileHeight};
+    height: ${(p) => p.theme.sidebar.mobileHeight};
     bottom: auto;
     width: auto;
     padding: 0;
@@ -470,14 +470,14 @@ const SidebarSectionGroup = styled('div')`
 `;
 
 const SidebarSection = styled(SidebarSectionGroup)`
-  ${p => !p.noMargin && `margin: ${space(1)} 0`};
-  @media (max-width: ${p => p.theme.breakpoints[0]}) {
+  ${(p) => !p.noMargin && `margin: ${space(1)} 0`};
+  @media (max-width: ${(p) => p.theme.breakpoints[0]}) {
     margin: 0 ${space(1)};
   }
 `;
 
 const SidebarCollapseItem = styled(SidebarItem)`
-  @media (max-width: ${p => p.theme.breakpoints[0]}) {
+  @media (max-width: ${(p) => p.theme.breakpoints[0]}) {
     display: none;
   }
 `;

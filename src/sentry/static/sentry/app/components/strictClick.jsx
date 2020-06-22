@@ -22,7 +22,7 @@ class StrictClick extends React.PureComponent {
     };
   }
 
-  handleMouseDown = evt => {
+  handleMouseDown = (evt) => {
     this.setState({
       startCoords: {
         x: evt.screenX,
@@ -31,7 +31,7 @@ class StrictClick extends React.PureComponent {
     });
   };
 
-  handleMouseClick = evt => {
+  handleMouseClick = (evt) => {
     // Click happens if mouse down/up in same element - click will
     // not fire if either initial mouse down OR final ouse up occurs in
     // different element

@@ -24,11 +24,13 @@ export default class ProviderItem extends React.PureComponent {
     onConfigure: () => {},
   };
 
-  handleConfigure = e => {
+  handleConfigure = (e) => {
     this.props.onConfigure(this.props.provider.key, e);
   };
 
-  renderDisabledLock = p => <LockedFeature provider={p.provider} features={p.features} />;
+  renderDisabledLock = (p) => (
+    <LockedFeature provider={p.provider} features={p.features} />
+  );
 
   renderInstallButton = ({provider, hasFeature}) => (
     <Access access={['org:admin']}>
@@ -52,9 +54,10 @@ export default class ProviderItem extends React.PureComponent {
 
     return (
       <Feature
-        features={[provider.requiredFeature].filter(f => f)}
+        features={[provider.requiredFeature].filter((f) => f)}
         renderDisabled={({children, ...props}) =>
-          children({...props, renderDisabled: this.renderDisabledLock})}
+          children({...props, renderDisabled: this.renderDisabledLock})
+        }
       >
         {({hasFeature, features, organization, renderDisabled, renderInstallButton}) => (
           <PanelItem align="center">
@@ -101,8 +104,8 @@ const ProviderDescription = styled('div')`
   font-size: 0.8em;
 `;
 
-const ActiveIndicator = styled(p => <div className={p.className}>Active</div>)`
-  background: ${p => p.theme.green};
+const ActiveIndicator = styled((p) => <div className={p.className}>Active</div>)`
+  background: ${(p) => p.theme.green};
   color: #fff;
   padding: 8px 12px;
   border-radius: 2px;

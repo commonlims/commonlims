@@ -67,7 +67,7 @@ const HookStore = Reflux.createStore({
     if (!validHookNames.has(hookName)) {
       // eslint-disable-next-line no-console
       console.error('Invalid hook name: ' + hookName);
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('hookName', hookName);
         Sentry.captureException(new Error('Invalid hook name'));
       });
@@ -83,7 +83,7 @@ const HookStore = Reflux.createStore({
     if (_.isUndefined(this.hooks[hookName])) {
       return;
     }
-    this.hooks[hookName] = this.hooks[hookName].filter(cb => {
+    this.hooks[hookName] = this.hooks[hookName].filter((cb) => {
       return cb !== callback;
     });
     this.trigger(hookName, this.hooks[hookName]);

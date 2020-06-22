@@ -26,7 +26,7 @@ class PermissionDenied extends React.Component {
     const {organization, project} = this.context;
 
     const route = getRouteStringFromRoutes(routes);
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setFingerprint([ERROR_NAME, route]);
       scope.setExtra('route', route);
       scope.setExtra('orgFeatures', (organization && organization.features) || []);

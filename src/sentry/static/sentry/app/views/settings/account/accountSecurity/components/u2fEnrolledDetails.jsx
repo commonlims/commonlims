@@ -48,7 +48,7 @@ class U2fEnrolledDetails extends React.Component {
             <EmptyMessage>{t('You have not added any U2F devices')}</EmptyMessage>
           )}
           {hasDevices &&
-            devices.map(device => (
+            devices.map((device) => (
               <PanelItem p={0} key={device.name}>
                 <Flex p={2} pr={0} align="center" flex="1">
                   <Box flex="1">{device.name}</Box>

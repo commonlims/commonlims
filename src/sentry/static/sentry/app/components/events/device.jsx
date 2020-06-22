@@ -15,7 +15,7 @@ class DeviceInterface extends React.Component {
   render() {
     const {group, event} = this.props;
     const data = event.device;
-    const extras = Object.keys(data.data || {}).map(key => {
+    const extras = Object.keys(data.data || {}).map((key) => {
       const value = data.data[key];
       return (
         <tr key={key}>

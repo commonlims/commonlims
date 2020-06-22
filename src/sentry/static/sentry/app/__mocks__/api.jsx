@@ -114,7 +114,7 @@ class Client {
           body,
           {},
           {
-            getResponseHeader: key => response.headers[key],
+            getResponseHeader: (key) => response.headers[key],
           }
         );
       }

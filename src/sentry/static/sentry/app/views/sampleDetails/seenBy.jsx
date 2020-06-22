@@ -33,11 +33,11 @@ const SampleSeenBy = createReactClass({
     return (
       <SeenByWrapper className="seen-by">
         <AvatarList
-          users={seenBy.filter(user => activeUser.id !== user.id)}
+          users={seenBy.filter((user) => activeUser.id !== user.id)}
           avatarSize={28}
           maxVisibleAvatars={10}
           tooltipOptions={{html: true}}
-          renderTooltip={user => `${_.escape(userDisplayName(user))} <br/>
+          renderTooltip={(user) => `${_.escape(userDisplayName(user))} <br/>
             ${moment(user.lastSeen).format('LL')}`}
         />
         <IconWrapper>

@@ -4,14 +4,11 @@ import {mount} from 'enzyme';
 import SearchBar from 'app/views/organizationEvents/searchBar';
 import TagStore from 'app/stores/tagStore';
 
-const focusInput = el => el.find('input[name="query"]').simulate('focus');
-const selectFirstAutocompleteItem = el => {
+const focusInput = (el) => el.find('input[name="query"]').simulate('focus');
+const selectFirstAutocompleteItem = (el) => {
   focusInput(el);
 
-  el
-    .find('.search-autocomplete-item')
-    .first()
-    .simulate('click');
+  el.find('.search-autocomplete-item').first().simulate('click');
   const input = el.find('input');
   input
     .getDOMNode()
@@ -19,14 +16,13 @@ const selectFirstAutocompleteItem = el => {
   return el;
 };
 const setQuery = (el, query) => {
-  el
-    .find('input')
+  el.find('input')
     .simulate('change', {target: {value: query}})
     .getDOMNode()
     .setSelectionRange(query.length, query.length);
 };
 
-describe('SearchBar', function() {
+describe('SearchBar', function () {
   let options;
   let tagValuesMock;
   let tagKeysMock;
@@ -35,7 +31,7 @@ describe('SearchBar', function() {
     organization,
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     TagStore.reset();
     TagStore.onLoadTagsSuccess(TestStubs.Tags());
 
@@ -47,15 +43,18 @@ describe('SearchBar', function() {
     });
     tagKeysMock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/tags/',
-      body: [{count: 3, key: 'gpu'}, {count: 3, key: 'mytag'}],
+      body: [
+        {count: 3, key: 'gpu'},
+        {count: 3, key: 'mytag'},
+      ],
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  it('fetches organization tags on mount', async function() {
+  it('fetches organization tags on mount', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
     expect(tagKeysMock).toHaveBeenCalledTimes(1);
     wrapper.update();
@@ -67,7 +66,7 @@ describe('SearchBar', function() {
     );
   });
 
-  it('searches and selects an event field value', async function() {
+  it('searches and selects an event field value', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
     setQuery(wrapper, 'gpu:');
 
@@ -91,7 +90,7 @@ describe('SearchBar', function() {
     expect(wrapper.find('input').prop('value')).toBe('gpu:"Nvidia 1080ti" ');
   });
 
-  it('does not requery for event field values if query does not change', async function() {
+  it('does not requery for event field values if query does not change', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
     setQuery(wrapper, 'gpu:');
 
@@ -105,7 +104,7 @@ describe('SearchBar', function() {
     expect(tagValuesMock).toHaveBeenCalledTimes(1);
   });
 
-  it('removes highlight when query is empty', async function() {
+  it('removes highlight when query is empty', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
     setQuery(wrapper, 'gpu');
 
@@ -119,7 +118,7 @@ describe('SearchBar', function() {
     expect(wrapper.find('.search-description strong')).toHaveLength(0);
   });
 
-  it('ignores negation ("!") at the beginning of search term', async function() {
+  it('ignores negation ("!") at the beginning of search term', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
 
     setQuery(wrapper, '!gp');
@@ -130,7 +129,7 @@ describe('SearchBar', function() {
     expect(wrapper.find('.search-autocomplete-item').text()).toBe('gpu:');
   });
 
-  it('ignores wildcard ("*") at the beginning of tag value query', async function() {
+  it('ignores wildcard ("*") at the beginning of tag value query', async function () {
     const wrapper = await mount(<SearchBar {...props} />, options);
 
     setQuery(wrapper, '!gpu:*');

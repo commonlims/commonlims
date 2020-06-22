@@ -9,7 +9,7 @@ export const growIn = keyframes`
   }
 `;
 
-export const growDown = height => keyframes`
+export const growDown = (height) => keyframes`
   0% {
     height: 0;
   }
@@ -96,7 +96,7 @@ export const slideInUp = keyframes`
   }
 `;
 
-export const highlight = color => keyframes`
+export const highlight = (color) => keyframes`
   0%,
   100% {
     background: rgba(255, 255, 255, 0);

@@ -4,9 +4,9 @@ import {shallow} from 'enzyme';
 import OrganizationMemberRow from 'app/views/settings/organizationMembers/organizationMemberRow';
 
 const findWithText = (wrapper, text) =>
-  wrapper.filterWhere(n => n.prop('children') && n.prop('children').includes(text));
+  wrapper.filterWhere((n) => n.prop('children') && n.prop('children').includes(text));
 
-describe('OrganizationMemberRow', function() {
+describe('OrganizationMemberRow', function () {
   const member = {
     id: '1',
     email: '',
@@ -45,9 +45,9 @@ describe('OrganizationMemberRow', function() {
     onLeave: () => {},
   };
 
-  beforeEach(function() {});
+  beforeEach(function () {});
 
-  it('does not have 2fa warning if user has 2fa', function() {
+  it('does not have 2fa warning if user has 2fa', function () {
     const wrapper = shallow(
       <OrganizationMemberRow
         {...defaultProps}
@@ -64,7 +64,7 @@ describe('OrganizationMemberRow', function() {
     expect(wrapper.find('HasTwoFactorIcon')).toHaveLength(1);
   });
 
-  it('has 2fa warning if user does not have 2fa enabled', function() {
+  it('has 2fa warning if user does not have 2fa enabled', function () {
     const wrapper = shallow(
       <OrganizationMemberRow
         {...defaultProps}
@@ -81,7 +81,7 @@ describe('OrganizationMemberRow', function() {
     expect(wrapper.find('HasTwoFactorIcon')).toHaveLength(0);
   });
 
-  describe('Pending user', function() {
+  describe('Pending user', function () {
     const props = {
       ...defaultProps,
       member: {
@@ -90,7 +90,7 @@ describe('OrganizationMemberRow', function() {
       },
     };
 
-    it('has "Invited" status, no "Resend Invite"', function() {
+    it('has "Invited" status, no "Resend Invite"', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...props}
@@ -106,7 +106,7 @@ describe('OrganizationMemberRow', function() {
       expect(wrapper.find('ResendInviteButton')).toHaveLength(0);
     });
 
-    it('has "Resend Invite" button only if `canAddMembers` is true', function() {
+    it('has "Resend Invite" button only if `canAddMembers` is true', function () {
       const wrapper = shallow(<OrganizationMemberRow {...props} canAddMembers={true} />);
 
       expect(findWithText(wrapper.find('strong'), 'Invited')).toHaveLength(1);
@@ -114,7 +114,7 @@ describe('OrganizationMemberRow', function() {
       expect(wrapper.find('ResendInviteButton')).toHaveLength(1);
     });
 
-    it('has the right inviting states', function() {
+    it('has the right inviting states', function () {
       let wrapper = shallow(<OrganizationMemberRow {...props} canAddMembers={true} />);
 
       expect(wrapper.find('ResendInviteButton')).toHaveLength(1);
@@ -140,8 +140,8 @@ describe('OrganizationMemberRow', function() {
     });
   });
 
-  describe('Expired user', function() {
-    it('has "Expired" status', function() {
+  describe('Expired user', function () {
+    it('has "Expired" status', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...defaultProps}
@@ -158,7 +158,7 @@ describe('OrganizationMemberRow', function() {
     });
   });
 
-  describe('Requires SSO Link', function() {
+  describe('Requires SSO Link', function () {
     const props = {
       ...defaultProps,
       flags: {
@@ -167,7 +167,7 @@ describe('OrganizationMemberRow', function() {
       requireLink: true,
     };
 
-    it('shows "Invited" status if user has not registered and not linked', function() {
+    it('shows "Invited" status if user has not registered and not linked', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...props}
@@ -183,7 +183,7 @@ describe('OrganizationMemberRow', function() {
       expect(wrapper.find('ResendInviteButton')).toHaveLength(0);
     });
 
-    it('shows "missing SSO link" message if user is registered and needs link', function() {
+    it('shows "missing SSO link" message if user is registered and needs link', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...props}
@@ -198,7 +198,7 @@ describe('OrganizationMemberRow', function() {
       expect(wrapper.find('ResendInviteButton')).toHaveLength(0);
     });
 
-    it('has "Resend Invite" button only if `canAddMembers` is true and no link', function() {
+    it('has "Resend Invite" button only if `canAddMembers` is true and no link', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...props}
@@ -212,7 +212,7 @@ describe('OrganizationMemberRow', function() {
       expect(wrapper.find('ResendInviteButton')).toHaveLength(1);
     });
 
-    it('has 2fa warning if user is linked does not have 2fa enabled', function() {
+    it('has 2fa warning if user is linked does not have 2fa enabled', function () {
       const wrapper = shallow(
         <OrganizationMemberRow
           {...defaultProps}
@@ -233,7 +233,7 @@ describe('OrganizationMemberRow', function() {
     });
   });
 
-  describe('Is Current User', function() {
+  describe('Is Current User', function () {
     const props = {
       ...defaultProps,
       member: {
@@ -242,45 +242,43 @@ describe('OrganizationMemberRow', function() {
       },
     };
 
-    it('has button to leave organization and no button to remove', function() {
+    it('has button to leave organization and no button to remove', function () {
       const wrapper = shallow(<OrganizationMemberRow {...props} memberCanLeave={true} />);
       expect(findWithText(wrapper.find('Button'), 'Leave')).toHaveLength(1);
       expect(findWithText(wrapper.find('Button'), 'Remove')).toHaveLength(0);
     });
 
-    it('has disabled button to leave organization and no button to remove when member can not leave', function() {
+    it('has disabled button to leave organization and no button to remove when member can not leave', function () {
       const wrapper = shallow(
         <OrganizationMemberRow {...props} memberCanLeave={false} />
       );
       expect(findWithText(wrapper.find('Button'), 'Leave')).toHaveLength(1);
-      expect(
-        findWithText(wrapper.find('Button'), 'Leave')
-          .first()
-          .prop('disabled')
-      ).toBe(true);
+      expect(findWithText(wrapper.find('Button'), 'Leave').first().prop('disabled')).toBe(
+        true
+      );
       expect(findWithText(wrapper.find('Button'), 'Remove')).toHaveLength(0);
     });
   });
 
-  describe('Not Current User', function() {
+  describe('Not Current User', function () {
     const props = {
       ...defaultProps,
     };
 
-    it('does not have Leave button', function() {
+    it('does not have Leave button', function () {
       const wrapper = shallow(<OrganizationMemberRow {...props} memberCanLeave={true} />);
 
       expect(findWithText(wrapper.find('Button'), 'Leave')).toHaveLength(0);
     });
 
-    it('has Remove disabled button when `canRemoveMembers` is false', function() {
+    it('has Remove disabled button when `canRemoveMembers` is false', function () {
       const wrapper = shallow(<OrganizationMemberRow {...props} />);
 
       expect(findWithText(wrapper.find('Button'), 'Remove')).toHaveLength(1);
       expect(findWithText(wrapper.find('Button'), 'Remove').prop('disabled')).toBe(true);
     });
 
-    it('has Remove button when `canRemoveMembers` is true', function() {
+    it('has Remove button when `canRemoveMembers` is true', function () {
       const wrapper = shallow(
         <OrganizationMemberRow {...props} canRemoveMembers={true} />
       );

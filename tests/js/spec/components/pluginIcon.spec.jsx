@@ -7,15 +7,15 @@ import PluginIcon from 'app/plugins/components/pluginIcon';
 // jest.mock('images/integrations/integration-default.png', () => 'default', {});
 jest.mock('images/integrations/github-logo.png', () => 'github', {});
 
-describe('PluginIcon', function() {
-  it('renders', function() {
+describe('PluginIcon', function () {
+  it('renders', function () {
     const wrapper = shallow(<PluginIcon pluginId="github" size={20} />);
     expect(wrapper).toMatchSnapshot();
   });
 
   // doesn't work because of the above comment
   // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('renders with default icon with invalid plugin id', function() {
+  it.skip('renders with default icon with invalid plugin id', function () {
     const wrapper = shallow(<PluginIcon pluginId="invalid" size={20} />);
     expect(wrapper).toMatchSnapshot();
   });

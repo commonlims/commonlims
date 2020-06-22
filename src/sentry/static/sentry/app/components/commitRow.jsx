@@ -16,7 +16,7 @@ export default class CommitRow extends React.Component {
     commit: PropTypes.object,
   };
 
-  renderMessage = message => {
+  renderMessage = (message) => {
     if (!message) {
       return t('No message provided');
     }
@@ -64,5 +64,5 @@ const Meta = styled.p`
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;

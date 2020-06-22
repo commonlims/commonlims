@@ -4,12 +4,15 @@ import {
   objectToSortedTupleArray,
 } from 'app/components/events/interfaces/utils';
 
-describe('components/interfaces/utils', function() {
-  describe('getCurlCommand()', function() {
-    it('should convert an http request object to an equivalent unix curl command string', function() {
+describe('components/interfaces/utils', function () {
+  describe('getCurlCommand()', function () {
+    it('should convert an http request object to an equivalent unix curl command string', function () {
       expect(
         getCurlCommand({
-          cookies: [['foo', 'bar'], ['biz', 'baz']],
+          cookies: [
+            ['foo', 'bar'],
+            ['biz', 'baz'],
+          ],
           url: 'http://example.com/foo',
           headers: [
             ['Referer', 'http://example.com'],
@@ -93,7 +96,7 @@ describe('components/interfaces/utils', function() {
       ).toEqual('curl \\\n "http://example.com/foo"');
     });
 
-    it('works with a Proxy', function() {
+    it('works with a Proxy', function () {
       const spy = jest.spyOn(MetaProxy.prototype, 'get');
       const data = {
         fragment: '',
@@ -128,8 +131,8 @@ describe('components/interfaces/utils', function() {
     });
   });
 
-  describe('objectToSortedTupleArray()', function() {
-    it('should convert a key/value object to a sorted array of key/value tuples', function() {
+  describe('objectToSortedTupleArray()', function () {
+    it('should convert a key/value object to a sorted array of key/value tuples', function () {
       // expect(
       //   objectToSortedTupleArray({
       //     awe: 'some',
@@ -147,7 +150,10 @@ describe('components/interfaces/utils', function() {
         objectToSortedTupleArray({
           foo: ['bar', 'baz'],
         })
-      ).toEqual([['foo', 'bar'], ['foo', 'baz']]);
+      ).toEqual([
+        ['foo', 'bar'],
+        ['foo', 'baz'],
+      ]);
 
       // expect(
       //   objectToSortedTupleArray({

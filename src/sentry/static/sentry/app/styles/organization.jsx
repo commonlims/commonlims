@@ -20,9 +20,9 @@ export const PageHeader = styled('div')`
 
 export const HeaderTitle = styled('h4')`
   flex: 1;
-  font-size: ${p => p.theme.headerFontSize};
-  line-height: ${p => p.theme.headerFontSize};
+  font-size: ${(p) => p.theme.headerFontSize};
+  line-height: ${(p) => p.theme.headerFontSize};
   font-weight: normal;
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   margin: 0;
 `;

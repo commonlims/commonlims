@@ -7,8 +7,8 @@ import ConfigStore from 'app/stores/configStore';
 
 jest.mock('jquery');
 
-describe('Sudo Modal', function() {
-  beforeEach(function() {
+describe('Sudo Modal', function () {
+  beforeEach(function () {
     Client.clearMockResponses();
     Client.addMockResponse({
       url: '/internal/health/',
@@ -41,7 +41,7 @@ describe('Sudo Modal', function() {
     });
   });
 
-  it('can delete an org with sudo flow', async function() {
+  it('can delete an org with sudo flow', async function () {
     ConfigStore.set('user', {
       ...ConfigStore.get('user'),
       hasPasswordAuth: true,
@@ -125,7 +125,7 @@ describe('Sudo Modal', function() {
     expect(wrapper.find('ModalDialog')).toHaveLength(0);
   });
 
-  it('shows button to redirect if user does not have password auth', async function() {
+  it('shows button to redirect if user does not have password auth', async function () {
     ConfigStore.set('user', {
       ...ConfigStore.get('user'),
       hasPasswordAuth: false,

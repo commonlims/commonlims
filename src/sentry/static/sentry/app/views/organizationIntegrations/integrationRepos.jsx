@@ -49,13 +49,13 @@ export default class IntegrationRepos extends AsyncComponent {
 
   getIntegrationRepos() {
     const integrationId = this.props.integration.id;
-    return this.state.itemList.filter(repo => repo.integrationId === integrationId);
+    return this.state.itemList.filter((repo) => repo.integrationId === integrationId);
   }
 
   // Called by row to signal repository change.
-  onRepositoryChange = data => {
+  onRepositoryChange = (data) => {
     const itemList = this.state.itemList;
-    itemList.forEach(item => {
+    itemList.forEach((item) => {
       if (item.id === data.id) {
         item.status = data.status;
       }
@@ -64,28 +64,27 @@ export default class IntegrationRepos extends AsyncComponent {
   };
 
   debouncedSearchRepositoriesRequest = debounce(
-    query => this.searchRepositoriesRequest(query),
+    (query) => this.searchRepositoriesRequest(query),
     200
   );
 
-  searchRepositoriesRequest = searchQuery => {
+  searchRepositoriesRequest = (searchQuery) => {
     const orgId = this.context.organization.slug;
     const query = {search: searchQuery};
-    const endpoint = `/organizations/${orgId}/integrations/${this.props.integration
-      .id}/repos/`;
+    const endpoint = `/organizations/${orgId}/integrations/${this.props.integration.id}/repos/`;
     return this.api.request(endpoint, {
       method: 'GET',
       query,
-      success: data => {
+      success: (data) => {
         this.setState({integrationRepos: data, dropdownBusy: false});
       },
-      error: error => {
+      error: (error) => {
         this.setState({dropdownBusy: false});
       },
     });
   };
 
-  handleSearchRepositories = e => {
+  handleSearchRepositories = (e) => {
     this.setState({dropdownBusy: true});
     this.debouncedSearchRepositoriesRequest(e.target.value);
   };
@@ -97,7 +96,7 @@ export default class IntegrationRepos extends AsyncComponent {
 
     this.setState({adding: true});
 
-    const migratableRepo = itemList.filter(item => {
+    const migratableRepo = itemList.filter((item) => {
       if (!(selection.value && item.externalSlug)) {
         return false;
       }
@@ -111,7 +110,7 @@ export default class IntegrationRepos extends AsyncComponent {
       promise = addRepository(this.api, orgId, selection.value, integration);
     }
     promise.then(
-      repo => {
+      (repo) => {
         this.setState({adding: false, itemList: itemList.concat(repo)});
       },
       () => this.setState({adding: false})
@@ -133,12 +132,12 @@ export default class IntegrationRepos extends AsyncComponent {
       );
     }
     const repositories = new Set(
-      this.state.itemList.filter(item => item.integrationId).map(i => i.externalSlug)
+      this.state.itemList.filter((item) => item.integrationId).map((i) => i.externalSlug)
     );
     const repositoryOptions = (this.state.integrationRepos.repos || []).filter(
-      repo => !repositories.has(repo.identifier)
+      (repo) => !repositories.has(repo.identifier)
     );
-    const items = repositoryOptions.map(repo => {
+    const items = repositoryOptions.map((repo) => {
       return {
         searchKey: repo.name,
         value: repo.identifier,
@@ -208,7 +207,7 @@ export default class IntegrationRepos extends AsyncComponent {
                 }
               />
             )}
-            {itemList.map(repo => {
+            {itemList.map((repo) => {
               return (
                 <RepositoryRow
                   key={repo.id}

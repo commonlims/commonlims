@@ -13,7 +13,7 @@ export class ValidationIssues extends React.Component {
       {
         Header: '',
         id: 'type',
-        accessor: row => {
+        accessor: (row) => {
           return getIssueIcon(row.type, true);
         },
       },

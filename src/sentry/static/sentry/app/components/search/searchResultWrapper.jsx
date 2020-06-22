@@ -5,10 +5,10 @@ import styled from 'react-emotion';
 const SearchResultWrapper = styled(({highlighted, ...props}) => <div {...props} />)`
   cursor: pointer;
   display: block;
-  color: ${p => p.theme.gray5};
+  color: ${(p) => p.theme.gray5};
   padding: 10px;
 
-  ${p =>
+  ${(p) =>
     p.highlighted &&
     css`
       color: ${p.theme.purpleDarkest};
@@ -16,7 +16,7 @@ const SearchResultWrapper = styled(({highlighted, ...props}) => <div {...props} 
     `};
 
   &:not(:first-child) {
-    border-top: 1px solid ${p => p.theme.borderLight};
+    border-top: 1px solid ${(p) => p.theme.borderLight};
   }
 `;
 

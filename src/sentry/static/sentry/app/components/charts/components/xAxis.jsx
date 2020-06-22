@@ -3,7 +3,7 @@ import theme from 'app/utils/theme';
 import {truncationFormatter} from '../utils';
 
 export default function XAxis({isGroupedByDate, interval, utc, ...props} = {}) {
-  const axisLabelFormatter = value => {
+  const axisLabelFormatter = (value) => {
     if (isGroupedByDate) {
       const format = interval === 'hour' ? 'LT' : 'MMM Do';
       return getFormattedDate(value, format, {local: !utc});

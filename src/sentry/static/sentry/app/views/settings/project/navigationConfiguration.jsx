@@ -3,7 +3,7 @@ import {t} from 'app/locale';
 const pathPrefix = '/settings/:orgId/:projectId';
 
 export default function getConfiguration({project}) {
-  const plugins = ((project && project.plugins) || []).filter(plugin => plugin.enabled);
+  const plugins = ((project && project.plugins) || []).filter((plugin) => plugin.enabled);
 
   return [
     {
@@ -108,7 +108,7 @@ export default function getConfiguration({project}) {
           title: t('Legacy Integrations'),
           description: t('View, enable, and disable all integrations for a project'),
         },
-        ...plugins.map(plugin => ({
+        ...plugins.map((plugin) => ({
           path: `${pathPrefix}/plugins/${plugin.id}/`,
           title: plugin.name,
           show: ({access}) => access.has('project:write'),

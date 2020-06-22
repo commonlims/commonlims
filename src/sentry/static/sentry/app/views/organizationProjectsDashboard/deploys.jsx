@@ -25,11 +25,11 @@ export default class Deploys extends React.Component {
 
     const projectId = project.slug;
 
-    const flattenedDeploys = Object.entries(
-      project.latestDeploys || {}
-    ).map(([environment, value]) => {
-      return {environment, ...value};
-    });
+    const flattenedDeploys = Object.entries(project.latestDeploys || {}).map(
+      ([environment, value]) => {
+        return {environment, ...value};
+      }
+    );
 
     const deploys = (flattenedDeploys || [])
       .sort((a, b) => new Date(b.dateFinished) - new Date(a.dateFinished))
@@ -38,7 +38,7 @@ export default class Deploys extends React.Component {
     if (deploys.length) {
       return (
         <DeployBox p={2} pt={1}>
-          {deploys.map(deploy => (
+          {deploys.map((deploy) => (
             <Deploy
               key={deploy.version}
               deploy={deploy}
@@ -83,7 +83,7 @@ class Deploy extends React.Component {
 }
 
 const DeployRow = styled(Flex)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   font-size: 12px;
   margin-top: 8px;
 `;
@@ -92,11 +92,11 @@ const Environment = styled(TextOverflow)`
   font-size: 11px;
   text-transform: uppercase;
   width: 80px;
-  border: 1px solid ${p => p.theme.offWhite2};
+  border: 1px solid ${(p) => p.theme.offWhite2};
   margin-right: 8px;
-  background-color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.offWhite};
   text-align: center;
-  border-radius: ${p => p.theme.borderRadius};
+  border-radius: ${(p) => p.theme.borderRadius};
 `;
 
 const Version = styled(TextOverflow)`
@@ -137,5 +137,5 @@ const DeployBox = styled(Box)`
 
 const Background = styled(Flex)`
   height: 100%;
-  background-color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.offWhite};
 `;

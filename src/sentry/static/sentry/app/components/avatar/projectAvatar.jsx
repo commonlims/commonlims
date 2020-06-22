@@ -10,7 +10,7 @@ class ProjectAvatar extends React.Component {
     ...BaseAvatar.propTypes,
   };
 
-  getPlatforms = project => {
+  getPlatforms = (project) => {
     // `platform` is a user selectable option that is performed during the onboarding process. The reason why this
     // is not the default is because there currently is no way to update it. Fallback to this if project does not
     // have recent events with a platform.

@@ -1,18 +1,18 @@
 import {logAjaxError} from 'app/utils/logging';
 import * as Sentry from '@sentry/browser';
 
-describe('logging', function() {
-  describe('logAjaxError()', function() {
-    beforeEach(function() {
+describe('logging', function () {
+  describe('logAjaxError()', function () {
+    beforeEach(function () {
       jest.spyOn(console, 'error').mockImplementation(() => {});
       Sentry.captureMessage.mockReset();
     });
 
-    afterEach(function() {
+    afterEach(function () {
       window.console.error.mockRestore();
     });
 
-    it('should handle (Sentry) JSON responses', function() {
+    it('should handle (Sentry) JSON responses', function () {
       logAjaxError(
         {
           status: 500,
@@ -27,7 +27,7 @@ describe('logging', function() {
       );
     });
 
-    it('should handle text/html responses', function() {
+    it('should handle text/html responses', function () {
       logAjaxError(
         {
           status: 401,
@@ -42,7 +42,7 @@ describe('logging', function() {
       );
     });
 
-    it('should handle responseJSON/responseText undefined (bad content type?)', function() {
+    it('should handle responseJSON/responseText undefined (bad content type?)', function () {
       logAjaxError({status: 404}, {foo: 'bar'} /* context */);
 
       expect(Sentry.captureMessage).toHaveBeenCalled();

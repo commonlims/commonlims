@@ -41,7 +41,7 @@ const ProjectHeaderProjectSelector = withRouter(
       return project.slug;
     }
 
-    handleSelect = project => {
+    handleSelect = (project) => {
       const {router} = this.props;
       const {to, href} = this.getProjectUrlProps(project);
       if (to) {
@@ -96,13 +96,13 @@ const DropdownLabel = styled(FlexY)`
   margin-right: ${space(1)};
 `;
 
-const DropdownIcon = styled(props => <InlineSvg {...props} src="icon-chevron-down" />)`
+const DropdownIcon = styled((props) => <InlineSvg {...props} src="icon-chevron-down" />)`
   margin-left: ${space(0.5)};
   font-size: 10px;
 `;
 
 const SelectProject = styled('span')`
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   cursor: pointer;
   font-size: 20px;
   font-weight: 600;
@@ -110,7 +110,7 @@ const SelectProject = styled('span')`
 `;
 
 const ProjectNameLink = styled(Link)`
-  color: ${p => p.theme.textColor};
+  color: ${(p) => p.theme.textColor};
   font-size: 20px;
   line-height: 1.2;
   font-weight: 600;

@@ -106,7 +106,7 @@ const ReleaseProjectStatSparkline = createReactClass({
     }
 
     const {Sparklines, SparklinesLine, newIssueCount, stats} = this.state;
-    const values = stats.map(tuple => tuple[1]);
+    const values = stats.map((tuple) => tuple[1]);
 
     return (
       <li>

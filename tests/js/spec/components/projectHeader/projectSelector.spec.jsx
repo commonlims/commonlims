@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 
 import ProjectHeaderProjectSelector from 'app/components/projectHeader/projectSelector';
 
-describe('ProjectHeaderProjectSelector', function() {
+describe('ProjectHeaderProjectSelector', function () {
   const testTeam = TestStubs.Team({
     id: 'test-team',
     slug: 'test-team',
@@ -34,9 +34,9 @@ describe('ProjectHeaderProjectSelector', function() {
 
   const routerContext = TestStubs.routerContext([{organization: mockOrg}]);
 
-  const openMenu = wrapper => wrapper.find('DropdownLabel').simulate('click');
+  const openMenu = (wrapper) => wrapper.find('DropdownLabel').simulate('click');
 
-  it('renders with "Select a project" when no project is selected', function() {
+  it('renders with "Select a project" when no project is selected', function () {
     const wrapper = mount(
       <ProjectHeaderProjectSelector organization={mockOrg} projectId="" />,
       routerContext
@@ -45,7 +45,7 @@ describe('ProjectHeaderProjectSelector', function() {
     expect(wrapper.find('SelectProject')).toHaveLength(1);
   });
 
-  it('has project label when project is selected', function() {
+  it('has project label when project is selected', function () {
     const wrapper = mount(
       <ProjectHeaderProjectSelector organization={mockOrg} projectId="" />,
       routerContext
@@ -53,10 +53,7 @@ describe('ProjectHeaderProjectSelector', function() {
     openMenu(wrapper);
 
     // Select first project
-    wrapper
-      .find('AutoCompleteItem')
-      .first()
-      .simulate('click');
+    wrapper.find('AutoCompleteItem').first().simulate('click');
 
     expect(wrapper.find('IdBadge').prop('project')).toEqual(
       expect.objectContaining({
@@ -65,7 +62,7 @@ describe('ProjectHeaderProjectSelector', function() {
     );
   });
 
-  it('calls `router.push` when a project is selected', function() {
+  it('calls `router.push` when a project is selected', function () {
     const routerMock = TestStubs.router();
     const wrapper = mount(
       <ProjectHeaderProjectSelector
@@ -78,10 +75,7 @@ describe('ProjectHeaderProjectSelector', function() {
     openMenu(wrapper);
 
     // Select first project
-    wrapper
-      .find('AutoCompleteItem')
-      .first()
-      .simulate('click');
+    wrapper.find('AutoCompleteItem').first().simulate('click');
 
     expect(routerMock.push).toHaveBeenCalledWith('/org/test-project/');
   });

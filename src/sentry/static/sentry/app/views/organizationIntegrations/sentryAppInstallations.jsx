@@ -29,7 +29,7 @@ class SentryAppInstallations extends React.Component {
     };
   }
 
-  redirectUser = data => {
+  redirectUser = (data) => {
     const {install, app} = data;
     const {installs} = this.state;
 
@@ -51,20 +51,20 @@ class SentryAppInstallations extends React.Component {
     }
   };
 
-  install = app => {
+  install = (app) => {
     const {orgId, api} = this.props;
     installSentryApp(api, orgId, app).then(
-      data => {
+      (data) => {
         this.redirectUser({install: {...data}, app: {...app}});
       },
       () => {}
     );
   };
 
-  uninstall = install => {
+  uninstall = (install) => {
     const {api} = this.props;
     const origInstalls = [...this.state.installs];
-    const installs = this.state.installs.filter(i => install.uuid != i.uuid);
+    const installs = this.state.installs.filter((i) => install.uuid != i.uuid);
 
     uninstallSentryApp(api, install).then(
       () => this.setState({installs}),
@@ -75,14 +75,14 @@ class SentryAppInstallations extends React.Component {
     );
   };
 
-  openModal = app => {
+  openModal = (app) => {
     const {orgId} = this.props;
     const onInstall = () => this.install(app);
     openSentryAppPermissionModal({app, orgId, onInstall});
   };
 
   get installsByApp() {
-    return groupBy(this.state.installs, install => install.app.slug);
+    return groupBy(this.state.installs, (install) => install.app.slug);
   }
 
   render() {
@@ -92,7 +92,7 @@ class SentryAppInstallations extends React.Component {
     return (
       <React.Fragment>
         {!isEmpty &&
-          this.state.applications.map(app => {
+          this.state.applications.map((app) => {
             return (
               <SentryApplicationRow
                 key={app.uuid}

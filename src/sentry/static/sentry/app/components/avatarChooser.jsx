@@ -99,7 +99,7 @@ const AvatarChooser = createReactClass({
     this.api.request(endpoint, {
       method: 'PUT',
       data,
-      success: resp => {
+      success: (resp) => {
         this.setState({savedDataUrl: this.state.dataUrl});
         this.handleSuccess(resp);
       },
@@ -161,7 +161,7 @@ const AvatarChooser = createReactClass({
                 choices={choices}
                 value={avatarType}
                 label="Avatar Type"
-                onChange={id => this.handleChange(id)}
+                onChange={(id) => this.handleChange(id)}
                 disabled={disabled}
               />
 
@@ -178,13 +178,12 @@ const AvatarChooser = createReactClass({
             </AvatarGroup>
 
             <AvatarUploadSection>
-              {allowGravatar &&
-                avatarType === 'gravatar' && (
-                  <Well>
-                    {t('Gravatars are managed through ')}
-                    <ExternalLink href="http://gravatar.com">Gravatar.com</ExternalLink>
-                  </Well>
-                )}
+              {allowGravatar && avatarType === 'gravatar' && (
+                <Well>
+                  {t('Gravatars are managed through ')}
+                  <ExternalLink href="http://gravatar.com">Gravatar.com</ExternalLink>
+                </Well>
+              )}
 
               {avatarType === 'upload' && (
                 <AvatarCropper
@@ -214,7 +213,7 @@ const AvatarChooser = createReactClass({
 
 const AvatarGroup = styled.div`
   display: flex;
-  flex-direction: ${p => (p.inline ? 'row' : 'column')};
+  flex-direction: ${(p) => (p.inline ? 'row' : 'column')};
 `;
 
 const AvatarForm = styled('div')`

@@ -98,7 +98,7 @@ export default class Form extends React.Component {
     this.model = null;
   }
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
     if (this.model.isSaving) {
       return;
@@ -116,12 +116,12 @@ export default class Form extends React.Component {
     }
   };
 
-  onSubmitSuccess = data => {
+  onSubmitSuccess = (data) => {
     this.model.submitSuccess(data);
     this.props.onSubmitSuccess(data, this.model);
   };
 
-  onSubmitError = error => {
+  onSubmitError = (error) => {
     this.model.submitError(error);
     this.props.onSubmitError(error, this.model);
   };
@@ -202,7 +202,7 @@ const StyledFooter = styled('div')`
   padding: 16px 0 0;
   margin-bottom: 16px;
 
-  ${p =>
+  ${(p) =>
     !p.saveOnBlur &&
     `
   ${Panel} & {

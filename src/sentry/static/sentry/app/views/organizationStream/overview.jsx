@@ -99,7 +99,7 @@ const OrganizationStream = createReactClass({
     });
 
     fetchTags(this.props.organization.slug);
-    fetchOrgMembers(this.api, this.props.organization.slug).then(members => {
+    fetchOrgMembers(this.api, this.props.organization.slug).then((members) => {
       const memberList = members.reduce((acc, member) => {
         for (const project of member.projects) {
           if (acc[project] === undefined) {
@@ -194,7 +194,7 @@ const OrganizationStream = createReactClass({
     }
 
     // only include defined values.
-    return pickBy(params, v => utils.defined(v));
+    return pickBy(params, (v) => utils.defined(v));
   },
 
   getAccess() {
@@ -206,9 +206,9 @@ const OrganizationStream = createReactClass({
    */
   getGlobalSearchProjects() {
     let {projects} = this.props.selection;
-    projects = projects.map(p => p.toString());
+    projects = projects.map((p) => p.toString());
 
-    return this.props.organization.projects.filter(p => projects.indexOf(p.id) > -1);
+    return this.props.organization.projects.filter((p) => projects.indexOf(p.id) > -1);
   },
 
   fetchData() {
@@ -276,13 +276,13 @@ const OrganizationStream = createReactClass({
           pageLinks: jqXHR.getResponseHeader('Link'),
         });
       },
-      error: err => {
+      error: (err) => {
         this.setState({
           error: parseApiError(err),
           loading: false,
         });
       },
-      complete: jqXHR => {
+      complete: (jqXHR) => {
         this.lastRequest = null;
 
         this.resumePolling();
@@ -294,9 +294,9 @@ const OrganizationStream = createReactClass({
     const {orgId} = this.props.params;
     const projects = this.props.selection.projects;
     fetchProcessingIssues(this.api, orgId, projects).then(
-      data => {
+      (data) => {
         const haveIssues = data.filter(
-          p => p.hasIssues || p.resolveableIssues > 0 || p.issuesProcessing > 0
+          (p) => p.hasIssues || p.resolveableIssues > 0 || p.issuesProcessing > 0
         );
 
         if (haveIssues.length > 0) {
@@ -305,7 +305,7 @@ const OrganizationStream = createReactClass({
           });
         }
       },
-      error => {
+      (error) => {
         // this is okay. it's just a ui hint
         logAjaxError(error);
       }
@@ -341,7 +341,7 @@ const OrganizationStream = createReactClass({
     }
 
     const {searchId} = this.props.params;
-    const match = this.state.savedSearchList.find(search => search.id === searchId);
+    const match = this.state.savedSearchList.find((search) => search.id === searchId);
     if (match) {
       let projects = [];
       if (match.projectId) {
@@ -379,7 +379,7 @@ const OrganizationStream = createReactClass({
   },
 
   onGroupChange() {
-    const groupIds = this._streamManager.getAllItems().map(item => item.id);
+    const groupIds = this._streamManager.getAllItems().map((item) => item.id);
     if (!isEqual(groupIds, this.state.groupIds)) {
       this.setState({groupIds});
     }
@@ -419,8 +419,8 @@ const OrganizationStream = createReactClass({
   onSelectedGroupChange() {
     const selected = SelectedGroupStore.getSelectedIds();
     const projects = [...selected]
-      .map(id => GroupStore.get(id))
-      .map(group => group.project.slug);
+      .map((id) => GroupStore.get(id))
+      .map((group) => group.project.slug);
 
     const uniqProjects = uniq(projects);
 
@@ -445,7 +445,7 @@ const OrganizationStream = createReactClass({
     }
 
     const orgId = this.props.organization.slug;
-    fetchProject(this.api, orgId, projectSlug).then(project => {
+    fetchProject(this.api, orgId, projectSlug).then((project) => {
       this.projectCache[project.slug] = project;
       this.setState({selectedProject: project});
     });
@@ -505,7 +505,7 @@ const OrganizationStream = createReactClass({
     const {memberList} = this.state;
 
     const {orgId} = this.props.params;
-    const groupNodes = ids.map(id => {
+    const groupNodes = ids.map((id) => {
       const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
 
       const group = GroupStore.get(id);
@@ -541,7 +541,7 @@ const OrganizationStream = createReactClass({
   renderStreamBody() {
     let body;
     const selectedProjects = this.getGlobalSearchProjects();
-    const noEvents = selectedProjects.filter(p => !p.firstEvent).length > 0;
+    const noEvents = selectedProjects.filter((p) => !p.firstEvent).length > 0;
 
     if (this.state.loading) {
       body = this.renderLoading();
@@ -562,10 +562,10 @@ const OrganizationStream = createReactClass({
     this.setState({loading: true});
 
     fetchSavedSearches(this.api, orgId).then(
-      savedSearchList => {
+      (savedSearchList) => {
         this.setState({savedSearchList}, this.onSavedSearchChange);
       },
-      error => {
+      (error) => {
         logAjaxError(error);
       }
     );

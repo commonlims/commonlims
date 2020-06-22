@@ -21,7 +21,7 @@ const MissingProjectMembership = createReactClass({
 
   getInitialState() {
     const {organization, projectId} = this.props;
-    const project = organization.projects.find(p => p.slug === projectId);
+    const project = organization.projects.find((p) => p.slug === projectId);
 
     return {
       loading: false,
@@ -106,7 +106,7 @@ const MissingProjectMembership = createReactClass({
       );
     }
 
-    return teams.map(team => {
+    return teams.map((team) => {
       return (
         <p key={team.slug}>
           #{team.slug}: {this.renderJoinTeam(team, features)}

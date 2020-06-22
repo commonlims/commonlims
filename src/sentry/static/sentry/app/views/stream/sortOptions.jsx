@@ -23,7 +23,7 @@ class SortOptions extends React.PureComponent {
     });
   }
 
-  getMenuItem = key => {
+  getMenuItem = (key) => {
     return (
       <MenuItem
         onSelect={this.onSelect}
@@ -35,14 +35,14 @@ class SortOptions extends React.PureComponent {
     );
   };
 
-  onSelect = sort => {
+  onSelect = (sort) => {
     this.setState({sortKey: sort});
     if (this.props.onSelect) {
       this.props.onSelect(sort);
     }
   };
 
-  getSortLabel = key => {
+  getSortLabel = (key) => {
     switch (key) {
       case 'new':
         return t('First Seen');

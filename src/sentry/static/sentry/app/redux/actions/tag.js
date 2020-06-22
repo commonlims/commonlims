@@ -11,14 +11,14 @@ export const tagsGetRequest = () => {
   };
 };
 
-export const tagsGetSuccess = tags => {
+export const tagsGetSuccess = (tags) => {
   return {
     type: TAGS_GET_SUCCESS,
     tags,
   };
 };
 
-export const tagsGetFailure = err => ({
+export const tagsGetFailure = (err) => ({
   type: TAGS_GET_FAILURE,
   message: err,
 });
@@ -85,7 +85,7 @@ const tags = {
   },
 };
 
-export const tagsGet = resourceName => dispatch => {
+export const tagsGet = (resourceName) => (dispatch) => {
   dispatch(tagsGetRequest());
 
   // TODO: replace with the API call once CLIMS-202 is complete

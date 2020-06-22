@@ -231,7 +231,7 @@ theme.charts = {
   colors: CHART_PALETTE[CHART_PALETTE.length - 1],
 
   // We have an array that maps `number + 1` --> list of `number` colors
-  getColorPalette: length =>
+  getColorPalette: (length) =>
     CHART_PALETTE[Math.min(CHART_PALETTE.length - 1, length + 1)],
 
   previousPeriod: theme.gray1,

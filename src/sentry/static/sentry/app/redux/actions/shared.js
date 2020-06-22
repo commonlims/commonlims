@@ -3,7 +3,7 @@ import axios from 'axios';
 // Helper function that creates an action creator.
 // From: https://redux.js.org/recipes/reducing-boilerplate
 export function makeActionCreator(type, ...argNames) {
-  return function(...args) {
+  return function (...args) {
     const action = {type};
     argNames.forEach((arg, index) => {
       action[argNames[index]] = args[index];
@@ -15,7 +15,7 @@ export function makeActionCreator(type, ...argNames) {
 // Action creators for standard actions
 
 // List actions:
-export const acRequest = resource => {
+export const acRequest = (resource) => {
   return (search = null, groupBy = null, cursor = null) => {
     return {
       type: `GET_${resource}_LIST_REQUEST`,
@@ -26,7 +26,7 @@ export const acRequest = resource => {
   };
 };
 
-export const acSuccess = resource => {
+export const acSuccess = (resource) => {
   return (entries, link) => {
     return {
       type: `GET_${resource}_LIST_SUCCESS`,
@@ -36,15 +36,15 @@ export const acSuccess = resource => {
   };
 };
 
-export const acFailure = resource => {
-  return err => ({
+export const acFailure = (resource) => {
+  return (err) => ({
     type: `GET_${resource}_LIST_FAILURE`,
     message: err,
   });
 };
 
 export const acGetList = (resource, url) => {
-  return (search, groupBy, cursor) => dispatch => {
+  return (search, groupBy, cursor) => (dispatch) => {
     dispatch(acRequest(resource)(search, groupBy, cursor));
 
     const config = {
@@ -56,13 +56,13 @@ export const acGetList = (resource, url) => {
 
     return axios
       .get(url, config)
-      .then(res => dispatch(acSuccess(resource)(res.data, res.headers.link)))
-      .catch(err => dispatch(acFailure(resource)(err)));
+      .then((res) => dispatch(acSuccess(resource)(res.data, res.headers.link)))
+      .catch((err) => dispatch(acFailure(resource)(err)));
   };
 };
 
-export const acSelectPage = resource => {
-  return doSelect => {
+export const acSelectPage = (resource) => {
+  return (doSelect) => {
     return {
       type: `TOGGLE_SELECT_PAGE_OF_${resource}`,
       doSelect,
@@ -70,7 +70,7 @@ export const acSelectPage = resource => {
   };
 };
 
-export const acSelect = resource => {
+export const acSelect = (resource) => {
   return (id, doSelect) => {
     return {
       type: `TOGGLE_SELECT_${resource}`,

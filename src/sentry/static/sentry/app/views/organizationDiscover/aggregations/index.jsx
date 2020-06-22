@@ -55,7 +55,7 @@ export default class Aggregations extends React.Component {
           <SelectListItem key={`${idx}_${aggregation[2]}`}>
             <Aggregation
               value={aggregation}
-              onChange={val => this.handleChange(val, idx)}
+              onChange={(val) => this.handleChange(val, idx)}
               columns={columns}
               disabled={disabled}
             />

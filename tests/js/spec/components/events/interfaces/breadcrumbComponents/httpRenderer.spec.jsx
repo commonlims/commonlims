@@ -2,9 +2,9 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import HttpRenderer from 'app/components/events/interfaces/breadcrumbs/httpRenderer';
 
-describe('HttpRenderer', function() {
-  describe('render()', function() {
-    it('should work', function() {
+describe('HttpRenderer', function () {
+  describe('render()', function () {
+    it('should work', function () {
       const httpRendererWrapper = shallow(
         <HttpRenderer
           crumb={{
@@ -22,16 +22,13 @@ describe('HttpRenderer', function() {
 
       const summaryLineWrapper = shallow(summaryLine);
       expect(summaryLineWrapper.find('strong').text()).toEqual('POST ');
-      expect(
-        summaryLineWrapper
-          .find('a')
-          .text()
-          .trim()
-      ).toEqual('http://example.com/foo');
+      expect(summaryLineWrapper.find('a').text().trim()).toEqual(
+        'http://example.com/foo'
+      );
       expect(summaryLineWrapper.find('span').text()).toEqual(' [0]');
     });
 
-    it("shouldn't blow up if crumb.data is missing", function() {
+    it("shouldn't blow up if crumb.data is missing", function () {
       const httpRendererWrapper = mount(
         <HttpRenderer
           crumb={{

@@ -171,15 +171,15 @@ const SampleContainerStackActions = createReactClass({
 
 const Sticky = styled.div`
   position: sticky;
-  z-index: ${p => p.theme.zIndex.header};
+  z-index: ${(p) => p.theme.zIndex.header};
   top: -1px;
 `;
 
 const StyledContainer = styled.div`
   align-items: center;
-  background: ${p => p.theme.offWhite};
-  border-bottom: 1px solid ${p => p.theme.borderDark};
-  border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
+  background: ${(p) => p.theme.offWhite};
+  border-bottom: 1px solid ${(p) => p.theme.borderDark};
+  border-radius: ${(p) => p.theme.borderRadius} ${(p) => p.theme.borderRadius} 0 0;
   margin-bottom: -1px;
 `;
 

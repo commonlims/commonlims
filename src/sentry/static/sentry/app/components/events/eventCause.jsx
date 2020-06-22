@@ -56,13 +56,12 @@ export default createReactClass({
       return;
     }
     this.api.request(
-      `/projects/${this.props.orgId}/${this.props
-        .projectId}/events/${event.id}/committers/`,
+      `/projects/${this.props.orgId}/${this.props.projectId}/events/${event.id}/committers/`,
       {
         success: (data, _, jqXHR) => {
           this.setState(data);
         },
-        error: error => {
+        error: (error) => {
           this.setState({
             committers: undefined,
           });
@@ -75,14 +74,14 @@ export default createReactClass({
     const {committers} = this.state;
     //get a list of commits with author information attached
     const commitsWithAuthors = flatMap(committers, ({commits, author}) =>
-      commits.map(commit => ({
+      commits.map((commit) => ({
         ...commit,
         author,
       }))
     );
 
     //remove duplicate commits
-    const uniqueCommitsWithAuthors = uniqBy(commitsWithAuthors, commit => commit.id);
+    const uniqueCommitsWithAuthors = uniqBy(commitsWithAuthors, (commit) => commit.id);
     return uniqueCommitsWithAuthors;
   },
 
@@ -114,7 +113,7 @@ export default createReactClass({
             )}
           </h3>
           <Panel>
-            {commits.slice(0, expanded ? 100 : 1).map(commit => {
+            {commits.slice(0, expanded ? 100 : 1).map((commit) => {
               return <CommitRow key={commit.id} commit={commit} />;
             })}
           </Panel>

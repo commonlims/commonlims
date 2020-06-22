@@ -5,7 +5,7 @@ import FormSource from 'app/components/search/sources/formSource';
 import FormSearchActions from 'app/actions/formSearchActions';
 import * as ActionCreators from 'app/actionCreators/formSearch';
 
-describe('FormSource', function() {
+describe('FormSource', function () {
   let wrapper;
   const searchMap = [
     {
@@ -31,16 +31,16 @@ describe('FormSource', function() {
   ];
   let loadStub;
 
-  beforeEach(function() {
+  beforeEach(function () {
     loadStub = sinon.stub(ActionCreators, 'loadSearchMap');
     FormSearchActions.loadSearchMap(searchMap);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     loadStub.restore();
   });
 
-  it('can find a form field', async function() {
+  it('can find a form field', async function () {
     const mock = jest.fn().mockReturnValue(null);
     wrapper = mount(<FormSource query="te">{mock}</FormSource>);
 
@@ -63,7 +63,7 @@ describe('FormSource', function() {
     });
   });
 
-  it('does not find any form field ', async function() {
+  it('does not find any form field ', async function () {
     const mock = jest.fn().mockReturnValue(null);
     wrapper = mount(<FormSource query="invalid">{mock}</FormSource>);
 

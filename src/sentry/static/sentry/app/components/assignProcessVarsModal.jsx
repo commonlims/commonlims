@@ -36,7 +36,7 @@ export default class AssignProcessVarsModal extends React.Component {
     });
   };
 
-  onChange = value => {
+  onChange = (value) => {
     this.setState({version: value});
   };
 
@@ -60,8 +60,8 @@ export default class AssignProcessVarsModal extends React.Component {
               onChange={this.onChange}
               placeholder={t('e.g. 1.0.4')}
               url={`/projects/${orgId}/${projectId}/releases/`}
-              onResults={results => {
-                return results.map(release => ({
+              onResults={(results) => {
+                return results.map((release) => ({
                   value: release.version,
                   label: (
                     <div>
@@ -76,7 +76,7 @@ export default class AssignProcessVarsModal extends React.Component {
                   ),
                 }));
               }}
-              onQuery={query => ({query})}
+              onQuery={(query) => ({query})}
             />
           </Body>
           <Footer>

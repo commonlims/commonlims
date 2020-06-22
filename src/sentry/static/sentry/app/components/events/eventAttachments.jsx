@@ -47,15 +47,14 @@ export default createReactClass({
       return;
     }
     this.api.request(
-      `/projects/${this.props.orgId}/${this.props
-        .projectId}/events/${event.id}/attachments/`,
+      `/projects/${this.props.orgId}/${this.props.projectId}/events/${event.id}/attachments/`,
       {
         success: (data, _, jqXHR) => {
           this.setState({
             attachmentList: data,
           });
         },
-        error: error => {
+        error: (error) => {
           this.setState({
             attachmentList: undefined,
           });
@@ -83,7 +82,7 @@ export default createReactClass({
           </h3>
           <Panel>
             <PanelBody>
-              {attachmentList.map(attachment => {
+              {attachmentList.map((attachment) => {
                 return (
                   <PanelItem key={attachment.id} align="center">
                     <Box

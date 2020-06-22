@@ -14,7 +14,7 @@ class ProcessesTableRow extends React.Component {
 
   static defaultProps = {truncate: false};
 
-  getProcessTitle = process => {
+  getProcessTitle = (process) => {
     if (process.processDefinitionInfo.name === null) {
       return process.processDefinitionInfo.key;
     } else {
@@ -22,7 +22,7 @@ class ProcessesTableRow extends React.Component {
     }
   };
 
-  getActivities = process => {
+  getActivities = (process) => {
     if (process.activities.length == 0) {
       return '';
     } else if (process.activities.length == 1) {

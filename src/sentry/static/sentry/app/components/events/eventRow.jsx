@@ -33,8 +33,7 @@ class EventRow extends React.Component {
 
   render() {
     const event = this.state.event;
-    const eventLink = `/${this.props.orgSlug}/${this.props
-      .projectSlug}/issues/${event.groupID}/events/${event.id}/`;
+    const eventLink = `/${this.props.orgSlug}/${this.props.projectSlug}/issues/${event.groupID}/events/${event.id}/`;
 
     const tagList = [];
     for (const key in event.tags) {
@@ -48,7 +47,7 @@ class EventRow extends React.Component {
             <Link to={eventLink}>{event.message}</Link>
           </h5>
           <small className="tagList">
-            {tagList.map(tag => {
+            {tagList.map((tag) => {
               return (
                 <span key={tag[0]}>
                   {tag[0]} = {tag[1]}{' '}

@@ -40,11 +40,11 @@ export default class PermissionsObserver extends React.Component {
     return new ConsolidatedScopes(this.props.scopes).toResourcePermissions();
   }
 
-  onPermissionChange = permissions => {
+  onPermissionChange = (permissions) => {
     this.setState({permissions});
   };
 
-  onEventChange = events => {
+  onEventChange = (events) => {
     this.setState({events});
   };
 

@@ -166,7 +166,7 @@ class DropdownAutoCompleteMenu extends React.Component {
   };
 
   filterItems = (items, inputValue) =>
-    items.filter(item => {
+    items.filter((item) => {
       return (
         (item.searchKey || `${item.value} ${item.label}`)
           .toLowerCase()
@@ -176,13 +176,13 @@ class DropdownAutoCompleteMenu extends React.Component {
 
   filterGroupedItems = (groups, inputValue) =>
     groups
-      .map(group => {
+      .map((group) => {
         return {
           ...group,
           items: this.filterItems(group.items, inputValue),
         };
       })
-      .filter(group => group.items.length > 0);
+      .filter((group) => group.items.length > 0);
 
   autoCompleteFilter = (items, inputValue) => {
     let itemCount = 0;
@@ -193,8 +193,8 @@ class DropdownAutoCompleteMenu extends React.Component {
 
     if (items[0] && items[0].items) {
       //if the first item has children, we assume it is a group
-      return _.flatMap(this.filterGroupedItems(items, inputValue), item => {
-        const groupItems = item.items.map(groupedItem => ({
+      return _.flatMap(this.filterGroupedItems(items, inputValue), (item) => {
+        const groupItems = item.items.map((groupedItem) => ({
           ...groupedItem,
           index: itemCount++,
         }));
@@ -241,7 +241,7 @@ class DropdownAutoCompleteMenu extends React.Component {
       );
     }
 
-    return items.map(item => {
+    return items.map((item) => {
       const {index} = item;
       const key = `${item.value}-${index}`;
 
@@ -310,7 +310,7 @@ class DropdownAutoCompleteMenu extends React.Component {
     return (
       <AutoComplete
         resetInputOnClose
-        itemToString={item => ''}
+        itemToString={(item) => ''}
         onSelect={onSelect}
         inputIsActor={false}
         onOpen={onOpen}
@@ -504,7 +504,7 @@ const AutoCompleteRoot = styled(({isOpen, ...props}) => <div {...props} />)`
 
 const InputLoadingWrapper = styled(Flex)`
   align-items: center;
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
   flex-shrink: 0;
   width: 30px;
 `;
@@ -517,17 +517,17 @@ const StyledInput = styled(Input)`
   &:active,
   &:hover {
     border: 1px solid transparent;
-    border-bottom: 1px solid ${p => p.theme.borderLight};
-    border-radius: ${p => `${p.theme.borderRadius} ${p.theme.borderRadius} 0 0`};
+    border-bottom: 1px solid ${(p) => p.theme.borderLight};
+    border-radius: ${(p) => `${p.theme.borderRadius} ${p.theme.borderRadius} 0 0`};
     box-shadow: none;
     font-size: 13px;
     padding: ${space(1)};
     font-weight: normal;
-    color: ${p => p.gray2};
+    color: ${(p) => p.gray2};
   }
 `;
 
-const getItemPaddingForSize = size => {
+const getItemPaddingForSize = (size) => {
   if (size === 'small') {
     return `${space(0.5)} ${space(1)}`;
   }
@@ -546,24 +546,24 @@ const AutoCompleteItem = styled('div')`
   justify-content: center;
 
   font-size: 0.9em;
-  background-color: ${p =>
+  background-color: ${(p) =>
     p.index == p.highlightedIndex ? p.theme.offWhite : 'transparent'};
-  padding: ${p => getItemPaddingForSize(p.size)};
+  padding: ${(p) => getItemPaddingForSize(p.size)};
   cursor: pointer;
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
 
   &:last-child {
     border-bottom: none;
   }
 
   &:hover {
-    background-color: ${p => p.theme.offWhite};
+    background-color: ${(p) => p.theme.offWhite};
   }
 `;
 
 const LabelWithBorder = styled('div')`
-  background-color: ${p => p.theme.offWhite};
-  border: 1px solid ${p => p.theme.borderLight};
+  background-color: ${(p) => p.theme.offWhite};
+  border: 1px solid ${(p) => p.theme.borderLight};
   border-width: 1px 0;
 
   &:first-child {
@@ -584,15 +584,15 @@ const GroupLabel = styled('div')`
 
 const StyledMenu = styled('div')`
   background: #fff;
-  border: 1px solid ${p => p.theme.borderDark};
+  border: 1px solid ${(p) => p.theme.borderDark};
   position: absolute;
   top: calc(100% - 1px);
   min-width: 250px;
-  z-index: ${p =>
+  z-index: ${(p) =>
     p.theme.zIndex.dropdownAutocomplete
       .menu}; /* This is needed to be able to cover e.g. pagination buttons, but also be below dropdown actor button's zindex */
   right: 0;
-  box-shadow: ${p => p.theme.dropShadowLight};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
 
   ${getMenuBorderRadius};
   ${({alignMenu}) => (alignMenu === 'left' ? 'left: 0;' : '')};
@@ -601,13 +601,13 @@ const StyledMenu = styled('div')`
 `;
 
 const StyledItemList = styled('div')`
-  max-height: ${p =>
+  max-height: ${(p) =>
     typeof p.maxHeight === 'number' ? `${p.maxHeight}px` : p.maxHeight};
   overflow-y: auto;
 `;
 
 const EmptyMessage = styled('div')`
-  color: ${p => p.theme.gray1};
+  color: ${(p) => p.theme.gray1};
   padding: ${space(2)};
   text-align: center;
   text-transform: none;

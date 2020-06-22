@@ -3,7 +3,7 @@ import RouteError from 'app/views/routeError';
 
 export default function errorHandler(Component) {
   const originalRender = Component.prototype.render;
-  Component.prototype.render = function() {
+  Component.prototype.render = function () {
     try {
       return originalRender.apply(this, arguments);
     } catch (err) {

@@ -2,8 +2,8 @@ import React from 'react';
 import {mount} from 'enzyme';
 import Tooltip from 'app/components/tooltip';
 
-describe('Tooltip', function() {
-  it('renders', function() {
+describe('Tooltip', function () {
+  it('renders', function () {
     const wrapper = mount(
       <Tooltip title="test">
         <span>My Button</span>
@@ -12,7 +12,7 @@ describe('Tooltip', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('updates title', function() {
+  it('updates title', function () {
     const wrapper = mount(
       <Tooltip title="test">
         <span>My Button</span>
@@ -27,7 +27,7 @@ describe('Tooltip', function() {
     expect(tip.props().title).toBe('baz');
   });
 
-  it('disables and re-enables', function() {
+  it('disables and re-enables', function () {
     const wrapper = mount(
       <Tooltip title="test">
         <span>My Button</span>
@@ -44,7 +44,7 @@ describe('Tooltip', function() {
     expect(tip.props().title).toBe('test');
   });
 
-  it('simultaneous enable and text change', function() {
+  it('simultaneous enable and text change', function () {
     const wrapper = mount(
       <Tooltip title="test">
         <span>My Button</span>

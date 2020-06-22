@@ -34,7 +34,9 @@ export default class IdBadge extends React.Component {
   render() {
     // Given the set of sentry types, find the prop name that was passed to this component,
     // of which we have a mapped component for
-    const propNameWithData = Object.keys(this.props).find(key => COMPONENT_MAP.has(key));
+    const propNameWithData = Object.keys(this.props).find((key) =>
+      COMPONENT_MAP.has(key)
+    );
 
     if (!propNameWithData) {
       throw new Error(

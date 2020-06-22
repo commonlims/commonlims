@@ -5,16 +5,16 @@ import TextField from 'app/views/settings/components/forms/textField';
 import Form from 'app/views/settings/components/forms/form';
 import FormModel from 'app/views/settings/components/forms/model';
 
-describe('FormField + model', function() {
+describe('FormField + model', function () {
   let model;
   let wrapper;
   const routerContext = TestStubs.routerContext();
 
-  beforeEach(function() {
+  beforeEach(function () {
     model = new FormModel();
   });
 
-  it('renders with Form', function() {
+  it('renders with Form', function () {
     wrapper = mount(
       <Form model={model}>
         <TextField name="fieldName" />
@@ -24,7 +24,7 @@ describe('FormField + model', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('sets initial data in model', function() {
+  it('sets initial data in model', function () {
     wrapper = mount(
       <Form model={model} initialData={{fieldName: 'test'}}>
         <TextField name="fieldName" />
@@ -35,7 +35,7 @@ describe('FormField + model', function() {
     expect(model.initialData.fieldName).toBe('test');
   });
 
-  it('has `defaultValue` from field', function() {
+  it('has `defaultValue` from field', function () {
     wrapper = mount(
       <Form model={model}>
         <TextField name="fieldName" defaultValue="foo" />
@@ -47,7 +47,7 @@ describe('FormField + model', function() {
     expect(model.fields.get('fieldName')).toBe('foo');
   });
 
-  it('does not use `defaultValue` when there is initial data', function() {
+  it('does not use `defaultValue` when there is initial data', function () {
     wrapper = mount(
       <Form model={model} initialData={{fieldName: 'test'}}>
         <TextField name="fieldName" defaultValue="foo" />
@@ -59,10 +59,10 @@ describe('FormField + model', function() {
     expect(model.fields.get('fieldName')).toBe('test');
   });
 
-  it('transforms `defaultValue` from field with `setValue`', function() {
+  it('transforms `defaultValue` from field with `setValue`', function () {
     wrapper = mount(
       <Form model={model}>
-        <TextField name="fieldName" defaultValue="foo" setValue={v => `${v}${v}`} />
+        <TextField name="fieldName" defaultValue="foo" setValue={(v) => `${v}${v}`} />
       </Form>,
       routerContext
     );
@@ -71,7 +71,7 @@ describe('FormField + model', function() {
     expect(model.fields.get('fieldName')).toBe('foofoo');
   });
 
-  it('sets field descriptor in model', function() {
+  it('sets field descriptor in model', function () {
     wrapper = mount(
       <Form model={model} initialData={{fieldName: 'test'}}>
         <TextField name="fieldName" required />
@@ -82,7 +82,7 @@ describe('FormField + model', function() {
     expect(model.getDescriptor('fieldName', 'required')).toBe(true);
   });
 
-  it('removes field descriptor in model on unmount', function() {
+  it('removes field descriptor in model on unmount', function () {
     wrapper = mount(
       <Form model={model} initialData={{fieldName: 'test'}}>
         <TextField name="fieldName" required />

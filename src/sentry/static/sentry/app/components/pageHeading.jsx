@@ -22,13 +22,13 @@ class PageHeading extends React.Component {
 }
 
 const Wrapper = styled('h1')`
-  font-size: ${p => p.theme.headerFontSize};
-  line-height: ${p => p.theme.headerFontSize};
+  font-size: ${(p) => p.theme.headerFontSize};
+  line-height: ${(p) => p.theme.headerFontSize};
   font-weight: normal;
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   margin: 0;
-  margin-bottom: ${p => p.withMargins && space(3)};
-  margin-top: ${p => p.withMargins && space(1)};
+  margin-bottom: ${(p) => p.withMargins && space(3)};
+  margin-top: ${(p) => p.withMargins && space(1)};
 `;
 
 export default PageHeading;

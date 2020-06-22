@@ -32,7 +32,7 @@ class InactivePlugins extends React.Component {
     onEnablePlugin: PropTypes.func.isRequired,
   };
 
-  enablePlugin = plugin => {
+  enablePlugin = (plugin) => {
     return this.props.onEnablePlugin(plugin, true);
   };
 
@@ -47,7 +47,7 @@ class InactivePlugins extends React.Component {
 
         <PanelBody>
           <Flex p={1} flex="1" wrap="wrap">
-            {plugins.map(plugin => {
+            {plugins.map((plugin) => {
               return (
                 <Box m={1} key={plugin.id}>
                   <IntegrationButton

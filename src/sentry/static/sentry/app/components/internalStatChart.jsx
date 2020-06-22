@@ -1,4 +1,3 @@
-/*eslint getsentry/jsx-needs-il8n:0*/
 import PropTypes from 'prop-types';
 
 import React from 'react';
@@ -64,14 +63,14 @@ export default createReactClass({
         resolution: this.props.resolution,
         key: this.props.stat,
       },
-      success: data => {
+      success: (data) => {
         this.setState({
           data,
           loading: false,
           error: false,
         });
       },
-      error: data => {
+      error: (data) => {
         this.setState({
           error: true,
         });

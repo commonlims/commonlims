@@ -18,11 +18,11 @@ const Panel = styled(({title, body, dashedBorder, ...props}) => {
     </div>
   );
 })`
-  background: ${p => (p.dashedBorder ? p.theme.offWhite : '#fff')};
-  border-radius: ${p => p.theme.borderRadius};
+  background: ${(p) => (p.dashedBorder ? p.theme.offWhite : '#fff')};
+  border-radius: ${(p) => p.theme.borderRadius};
   border: 1px
-    ${p => (p.dashedBorder ? 'dashed' + p.theme.gray2 : 'solid ' + p.theme.borderDark)};
-  box-shadow: ${p => (p.dashedBorder ? 'none' : p.theme.dropShadowLight)};
+    ${(p) => (p.dashedBorder ? 'dashed' + p.theme.gray2 : 'solid ' + p.theme.borderDark)};
+  box-shadow: ${(p) => (p.dashedBorder ? 'none' : p.theme.dropShadowLight)};
   margin-bottom: ${space(3)};
   position: relative;
 `;

@@ -20,12 +20,12 @@ class HeaderItem extends React.Component {
     allowClear: true,
   };
 
-  handleClear = e => {
+  handleClear = (e) => {
     e.stopPropagation();
     this.props.onClear();
   };
 
-  handleChevronClick = e => {
+  handleChevronClick = (e) => {
     if (!this.props.hasChanges) {
       return;
     }
@@ -57,8 +57,9 @@ class HeaderItem extends React.Component {
       >
         <IconContainer hasSelected={hasSelected}>{icon}</IconContainer>
         <Content>{children}</Content>
-        {hasSelected &&
-          allowClear && <StyledClose src="icon-close" onClick={this.handleClear} />}
+        {hasSelected && allowClear && (
+          <StyledClose src="icon-close" onClick={this.handleClear} />
+        )}
         <StyledChevron
           isOpen={isOpen}
           hasChanges={hasChanges}
@@ -76,7 +77,7 @@ const StyledHeaderItem = styled('div')`
   padding: 0 ${space(4)};
   align-items: center;
   cursor: pointer;
-  color: ${p => (p.isOpen || p.hasSelected ? p.theme.gray4 : p.theme.gray2)};
+  color: ${(p) => (p.isOpen || p.hasSelected ? p.theme.gray4 : p.theme.gray2)};
   transition: 0.1s color;
   user-select: none;
 `;
@@ -88,27 +89,27 @@ const Content = styled('div')`
 `;
 
 const IconContainer = styled('span')`
-  color: ${p => (p.hasSelected ? p.theme.blue : null)};
+  color: ${(p) => (p.hasSelected ? p.theme.blue : null)};
   margin-right: ${space(1.5)};
 `;
 
 const StyledClose = styled(InlineSvg)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   height: 10px;
   width: 10px;
-  margin-right: ${p => space(1)};
+  margin-right: ${(p) => space(1)};
   stroke-width: 1.5;
 `;
 
 const StyledChevron = styled('div')`
-  transform: rotate(${p => (p.isOpen ? '180deg' : '0deg')});
+  transform: rotate(${(p) => (p.isOpen ? '180deg' : '0deg')});
   transition: 0.1s all;
   width: 16px;
   height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  ${p =>
+  ${(p) =>
     p.hasChanges
       ? `
     background: ${p.theme.purple};

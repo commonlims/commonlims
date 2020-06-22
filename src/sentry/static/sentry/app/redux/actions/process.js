@@ -12,7 +12,7 @@ export const processesGetRequest = () => {
 };
 
 export const PROCESSES_GET_SUCCESS = 'PROCESSES_GET_SUCCESS';
-export const processesGetSuccess = processes => {
+export const processesGetSuccess = (processes) => {
   return {
     type: PROCESSES_GET_SUCCESS,
     processes,
@@ -20,12 +20,12 @@ export const processesGetSuccess = processes => {
 };
 
 export const PROCESSES_GET_FAILURE = 'PROCESSES_GET_FAILURE';
-export const processesGetFailure = err => ({
+export const processesGetFailure = (err) => ({
   type: PROCESSES_GET_FAILURE,
   message: err,
 });
 
-export const processesGet = () => dispatch => {
+export const processesGet = () => (dispatch) => {
   dispatch(processesGetRequest());
 
   const data = {
@@ -48,7 +48,7 @@ export const processesPostRequest = () => {
 };
 
 export const PROCESSES_POST_SUCCESS = 'PROCESSES_POST_SUCCESS';
-export const processesPostSuccess = response => {
+export const processesPostSuccess = (response) => {
   return {
     type: PROCESSES_POST_SUCCESS,
     response,
@@ -56,12 +56,12 @@ export const processesPostSuccess = response => {
 };
 
 export const PROCESSES_POST_FAILURE = 'PROCESSES_POST_FAILURE';
-export const processesPostFailure = err => ({
+export const processesPostFailure = (err) => ({
   type: PROCESSES_POST_FAILURE,
   message: err,
 });
 
-export const processesPost = (definitionId, variables, substances) => dispatch => {
+export const processesPost = (definitionId, variables, substances) => (dispatch) => {
   dispatch(processesPostRequest());
   const api = new Client();
 
@@ -74,10 +74,10 @@ export const processesPost = (definitionId, variables, substances) => dispatch =
   api.request('/api/0/organizations/lab/processes/', {
     method: 'POST',
     data,
-    success: res => {
+    success: (res) => {
       dispatch(processesPostSuccess(res));
     },
-    error: err => {
+    error: (err) => {
       dispatch(processesPostFailure(err));
     },
   });

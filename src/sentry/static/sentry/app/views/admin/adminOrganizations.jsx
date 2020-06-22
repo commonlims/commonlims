@@ -1,4 +1,3 @@
-/* eslint-disable getsentry/jsx-needs-il8n */
 /* eslint-disable react/jsx-key */
 import React from 'react';
 import {Link} from 'react-router';
@@ -7,7 +6,7 @@ import ResultGrid from 'app/components/resultGrid';
 import {t} from 'app/locale';
 
 class AdminOrganizations extends React.Component {
-  getRow = row => {
+  getRow = (row) => {
     return [
       <td>
         <strong>

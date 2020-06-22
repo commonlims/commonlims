@@ -15,11 +15,11 @@ class WorkBatchFields extends React.Component {
 
   renderFields() {
     // TODO: Connect formData from the workbatch object, so user data is saved between tab flips
-    return this.props.workBatch.fields.map(field => (
+    return this.props.workBatch.fields.map((field) => (
       <GenericField
         key={field.name}
         config={field}
-        onChange={value => this.handleChange(field, value)}
+        onChange={(value) => this.handleChange(field, value)}
       />
     ));
   }

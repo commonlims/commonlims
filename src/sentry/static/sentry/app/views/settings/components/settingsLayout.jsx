@@ -61,15 +61,15 @@ class SettingsLayout extends React.Component {
 
 const MaxWidthContainer = styled('div')`
   display: flex;
-  max-width: ${p => p.theme.settings.containerWidth};
+  max-width: ${(p) => p.theme.settings.containerWidth};
   flex: 1;
 `;
 
 const SidebarWrapper = styled('div')`
   flex-shrink: 0;
-  width: ${p => p.theme.settings.sidebarWidth};
+  width: ${(p) => p.theme.settings.sidebarWidth};
   background: #fff;
-  border-right: 1px solid ${p => p.theme.borderLight};
+  border-right: 1px solid ${(p) => p.theme.borderLight};
 `;
 
 const SidebarWrapperContent = styled('div')`

@@ -11,7 +11,7 @@ import ProjectLabel from 'app/components/projectLabel';
 import SentryTypes from 'app/sentryTypes';
 
 const InlineButton = styled('button')`
-  color: ${p => p.theme.gray1};
+  color: ${(p) => p.theme.gray1};
   border: none;
   background-color: inherit;
   padding: 0;

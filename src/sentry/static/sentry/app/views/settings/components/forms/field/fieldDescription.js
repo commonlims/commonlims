@@ -3,7 +3,7 @@ import styled, {css} from 'react-emotion';
 
 import space from 'app/styles/space';
 
-const inlineStyle = p =>
+const inlineStyle = (p) =>
   p.inline
     ? css`
         width: 50%;

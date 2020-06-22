@@ -6,7 +6,7 @@ export const processDefinitionsGetRequest = () => {
 };
 
 export const PROCESS_DEFINITIONS_GET_SUCCESS = 'PROCESS_DEFINITIONS_GET_SUCCESS';
-export const processDefinitionsGetSuccess = processDefinitions => {
+export const processDefinitionsGetSuccess = (processDefinitions) => {
   return {
     type: PROCESS_DEFINITIONS_GET_SUCCESS,
     processDefinitions,
@@ -14,12 +14,12 @@ export const processDefinitionsGetSuccess = processDefinitions => {
 };
 
 export const PROCESS_DEFINITIONS_GET_FAILURE = 'PROCESS_DEFINITIONS_GET_FAILURE';
-export const processDefinitionsGetFailure = err => ({
+export const processDefinitionsGetFailure = (err) => ({
   type: PROCESS_DEFINITIONS_GET_FAILURE,
   errorMessage: err,
 });
 
-export const processDefinitionsGet = () => dispatch => {
+export const processDefinitionsGet = () => (dispatch) => {
   dispatch(processDefinitionsGetRequest());
   const data = {
     processDefinitions: [

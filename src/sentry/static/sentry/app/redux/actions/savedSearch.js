@@ -10,22 +10,22 @@ export const savedSearchesGetRequest = () => {
   };
 };
 
-export const savedSearchesGetSuccess = savedSearches => {
+export const savedSearchesGetSuccess = (savedSearches) => {
   return {
     type: SAVED_SEARCHES_GET_SUCCESS,
     savedSearches,
   };
 };
 
-export const savedSearchesGetFailure = err => ({
+export const savedSearchesGetFailure = (err) => ({
   type: SAVED_SEARCHES_GET_FAILURE,
   message: err,
 });
 
-export const savedSearchesGet = () => dispatch => {
+export const savedSearchesGet = () => (dispatch) => {
   dispatch(savedSearchesGetRequest());
   return axios
     .get('/api/0/organizations/lab/saved-searches/')
-    .then(res => dispatch(savedSearchesGetSuccess(res.data)))
-    .catch(err => dispatch(savedSearchesGetFailure(err)));
+    .then((res) => dispatch(savedSearchesGetSuccess(res.data)))
+    .catch((err) => dispatch(savedSearchesGetFailure(err)));
 };

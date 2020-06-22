@@ -7,22 +7,22 @@ import Discover from 'app/views/organizationDiscover/discover';
 import GlobalSelectionStore from 'app/stores/globalSelectionStore';
 import createQueryBuilder from 'app/views/organizationDiscover/queryBuilder';
 
-describe('Discover', function() {
+describe('Discover', function () {
   let organization, project, queryBuilder;
-  beforeEach(function() {
+  beforeEach(function () {
     project = TestStubs.Project();
     organization = TestStubs.Organization({projects: [project]});
     queryBuilder = createQueryBuilder({}, organization);
     GlobalSelectionStore.reset();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  describe('componentDidMount()', function() {
+  describe('componentDidMount()', function () {
     let wrapper, mockResponse;
-    beforeEach(function() {
+    beforeEach(function () {
       mockResponse = {
         timing: {},
         data: [{foo: 'bar', 'project.id': project.id}],
@@ -31,7 +31,7 @@ describe('Discover', function() {
       queryBuilder.fetch = jest.fn(() => Promise.resolve(mockResponse));
     });
 
-    it('auto-runs saved query', async function() {
+    it('auto-runs saved query', async function () {
       const savedQuery = TestStubs.DiscoverSavedQuery();
       wrapper = mount(
         <Discover
@@ -52,7 +52,7 @@ describe('Discover', function() {
       );
     });
 
-    it('auto-runs when there is a query string', async function() {
+    it('auto-runs when there is a query string', async function () {
       wrapper = mount(
         <Discover
           location={{
@@ -74,7 +74,7 @@ describe('Discover', function() {
       );
     });
 
-    it('does not auto run when there is no query string', async function() {
+    it('does not auto run when there is no query string', async function () {
       wrapper = mount(
         <Discover
           location={{
@@ -94,8 +94,8 @@ describe('Discover', function() {
     });
   });
 
-  describe('componentWillRecieveProps()', function() {
-    it('handles navigating to saved query', function() {
+  describe('componentWillRecieveProps()', function () {
+    it('handles navigating to saved query', function () {
       const wrapper = mount(
         <Discover
           queryBuilder={queryBuilder}
@@ -121,7 +121,7 @@ describe('Discover', function() {
       expect(wrapper.find('EditSavedQuery')).toHaveLength(1);
     });
 
-    it('handles navigating to new date', async function() {
+    it('handles navigating to new date', async function () {
       const wrapper = mount(
         <Discover
           queryBuilder={queryBuilder}
@@ -150,10 +150,10 @@ describe('Discover', function() {
     });
   });
 
-  describe('Pagination', function() {
+  describe('Pagination', function () {
     let wrapper, firstPageMock, secondPageMock;
 
-    beforeEach(function() {
+    beforeEach(function () {
       firstPageMock = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/query/?per_page=1000&cursor=0:0:1',
         method: 'POST',
@@ -183,39 +183,27 @@ describe('Discover', function() {
       );
     });
 
-    it('can go to next page', async function() {
+    it('can go to next page', async function () {
       wrapper.instance().runQuery();
       await tick();
       wrapper.update();
-      wrapper
-        .find('PaginationButtons')
-        .find('Button')
-        .at(1)
-        .simulate('click');
+      wrapper.find('PaginationButtons').find('Button').at(1).simulate('click');
       expect(firstPageMock).toHaveBeenCalledTimes(1);
       expect(secondPageMock).toHaveBeenCalledTimes(1);
     });
 
-    it("can't go back", async function() {
+    it("can't go back", async function () {
       wrapper.instance().runQuery();
       await tick();
       wrapper.update();
       expect(
-        wrapper
-          .find('PaginationButtons')
-          .find('Button')
-          .at(0)
-          .prop('disabled')
+        wrapper.find('PaginationButtons').find('Button').at(0).prop('disabled')
       ).toBe(true);
-      wrapper
-        .find('PaginationButtons')
-        .find('Button')
-        .at(0)
-        .simulate('click');
+      wrapper.find('PaginationButtons').find('Button').at(0).simulate('click');
       expect(firstPageMock).toHaveBeenCalledTimes(1);
     });
 
-    it('does not paginate on aggregate', async function() {
+    it('does not paginate on aggregate', async function () {
       wrapper.instance().updateField('aggregations', [['count()', null, 'count']]);
       wrapper.instance().runQuery();
       await tick();
@@ -224,10 +212,10 @@ describe('Discover', function() {
     });
   });
 
-  describe('runQuery()', function() {
+  describe('runQuery()', function () {
     const mockResponse = {timing: {}, data: [], meta: []};
     let wrapper;
-    beforeEach(function() {
+    beforeEach(function () {
       queryBuilder.fetch = jest.fn(() => Promise.resolve(mockResponse));
 
       wrapper = mount(
@@ -242,7 +230,7 @@ describe('Discover', function() {
       );
     });
 
-    it('runs basic query', async function() {
+    it('runs basic query', async function () {
       const query = {...queryBuilder.getExternal()};
       query.fields = [...queryBuilder.getExternal().fields, 'project.id'];
 
@@ -253,7 +241,7 @@ describe('Discover', function() {
       expect(wrapper.state().data.baseQuery.data).toEqual(mockResponse);
     });
 
-    it('requests project.id if id is also requested', async function() {
+    it('requests project.id if id is also requested', async function () {
       queryBuilder.updateField('fields', ['message', 'id']);
       wrapper.instance().runQuery();
       await tick();
@@ -266,7 +254,7 @@ describe('Discover', function() {
       expect(wrapper.state().data.baseQuery.data).toEqual(mockResponse);
     });
 
-    it('removes incomplete conditions', async function() {
+    it('removes incomplete conditions', async function () {
       queryBuilder.updateField('conditions', [[], []]);
       wrapper.instance().runQuery();
       await tick();
@@ -274,7 +262,7 @@ describe('Discover', function() {
       expect(queryBuilder.getExternal().conditions).toEqual([]);
     });
 
-    it('removes incomplete aggregations', async function() {
+    it('removes incomplete aggregations', async function () {
       queryBuilder.updateField('aggregations', [[], []]);
       wrapper.instance().runQuery();
       await tick();
@@ -282,7 +270,7 @@ describe('Discover', function() {
       expect(queryBuilder.getExternal().aggregations).toEqual([]);
     });
 
-    it('also runs chart query if there are aggregations', async function() {
+    it('also runs chart query if there are aggregations', async function () {
       wrapper.instance().updateField('fields', []);
       wrapper.instance().updateField('aggregations', [['count()', null, 'count']]);
       wrapper.instance().runQuery();
@@ -298,8 +286,8 @@ describe('Discover', function() {
     });
   });
 
-  describe('saveQuery()', function() {
-    it('can be saved', function() {
+  describe('saveQuery()', function () {
+    it('can be saved', function () {
       const wrapper = mount(
         <Discover
           queryBuilder={queryBuilder}
@@ -326,12 +314,12 @@ describe('Discover', function() {
     });
   });
 
-  describe('reset()', function() {
-    describe('query builder (no saved query)', function() {
+  describe('reset()', function () {
+    describe('query builder (no saved query)', function () {
       let wrapper;
-      beforeEach(function() {
+      beforeEach(function () {
         const mockResponse = {timing: {}, data: [], meta: []};
-        browserHistory.push.mockImplementation(function({search}) {
+        browserHistory.push.mockImplementation(function ({search}) {
           wrapper.setProps({
             location: {
               search: search || '',
@@ -366,17 +354,19 @@ describe('Discover', function() {
         wrapper.update();
       });
 
-      it('resets query builder and state', function() {
+      it('resets query builder and state', function () {
         wrapper.instance().reset();
         expect(queryBuilder.reset).toHaveBeenCalled();
-        const {data: {baseQuery, byDayQuery}} = wrapper.instance().state;
+        const {
+          data: {baseQuery, byDayQuery},
+        } = wrapper.instance().state;
         expect(baseQuery.query).toBeNull();
         expect(baseQuery.data).toBeNull();
         expect(byDayQuery.query).toBeNull();
         expect(byDayQuery.data).toBeNull();
       });
 
-      it('resets "fields"', function() {
+      it('resets "fields"', function () {
         const fields = wrapper.find('SelectControl[name="fields"]');
         expect(fields.text()).toContain('message');
         wrapper.instance().reset();
@@ -384,7 +374,7 @@ describe('Discover', function() {
         expect(fields.text()).toContain('id');
       });
 
-      it('resets "orderby"', function() {
+      it('resets "orderby"', function () {
         expect(wrapper.find('SelectControl[name="orderbyDirection"]').text()).toBe('asc');
         expect(wrapper.find('SelectControl[name="orderbyField"]').text()).toBe('id');
         wrapper.instance().reset();
@@ -397,14 +387,14 @@ describe('Discover', function() {
         );
       });
 
-      it('resets "limit"', function() {
+      it('resets "limit"', function () {
         expect(wrapper.find('NumberField[name="limit"]').prop('value')).toBe(5);
         wrapper.instance().reset();
         wrapper.update();
         expect(wrapper.find('NumberField[name="limit"]').prop('value')).toBe(1000);
       });
 
-      it('does not reset if location.search is empty', function() {
+      it('does not reset if location.search is empty', function () {
         const prevCallCount = queryBuilder.reset.mock.calls.length;
         wrapper.setProps({
           location: {
@@ -416,9 +406,9 @@ describe('Discover', function() {
     });
   });
 
-  describe('Saved query', function() {
+  describe('Saved query', function () {
     let wrapper, deleteMock, updateMock;
-    beforeEach(function() {
+    beforeEach(function () {
       const savedQuery = TestStubs.DiscoverSavedQuery();
       wrapper = mount(
         <Discover
@@ -446,7 +436,7 @@ describe('Discover', function() {
       });
     });
 
-    it('resets saved query', function() {
+    it('resets saved query', function () {
       wrapper.instance().updateField('fields', ['message']);
       wrapper.instance().runQuery();
       wrapper.update();
@@ -456,21 +446,18 @@ describe('Discover', function() {
       expect(queryBuilder.getInternal().fields).toEqual(['test']);
     });
 
-    it('toggles edit mode', function() {
+    it('toggles edit mode', function () {
       wrapper.setProps({
         isEditingSavedQuery: true,
       });
       expect(wrapper.find('SavedQueryList')).toHaveLength(1);
       expect(wrapper.find('EditSavedQuery')).toHaveLength(1);
-      wrapper
-        .find('SavedQueryAction')
-        .find('a')
-        .simulate('click');
+      wrapper.find('SavedQueryAction').find('a').simulate('click');
       expect(wrapper.find('SavedQueryList')).toHaveLength(1);
       expect(wrapper.find('EditSavedQuery')).toHaveLength(1);
     });
 
-    it('delete saved query', function() {
+    it('delete saved query', function () {
       wrapper.setProps({
         isEditingSavedQuery: true,
       });
@@ -478,7 +465,7 @@ describe('Discover', function() {
       expect(deleteMock).toHaveBeenCalled();
     });
 
-    it('update name', function() {
+    it('update name', function () {
       wrapper.setProps({
         isEditingSavedQuery: true,
       });
@@ -500,10 +487,10 @@ describe('Discover', function() {
     });
   });
 
-  describe('Intro', function() {
+  describe('Intro', function () {
     let wrapper;
 
-    beforeEach(function() {
+    beforeEach(function () {
       wrapper = mount(
         <Discover
           queryBuilder={queryBuilder}
@@ -521,13 +508,13 @@ describe('Discover', function() {
       );
     });
 
-    it('renders example queries', function() {
+    it('renders example queries', function () {
       const queries = wrapper.find('IntroContainer').find('ExampleQuery');
       expect(queries).toHaveLength(3);
       expect(queries.first().text()).toContain('Events by stack filename');
     });
 
-    it('runs example query', function() {
+    it('runs example query', function () {
       expect(queryBuilder.fetch).not.toHaveBeenCalled();
       wrapper
         .find('IntroContainer')
@@ -543,10 +530,10 @@ describe('Discover', function() {
     });
   });
 
-  describe('toggleSidebar()', function() {
+  describe('toggleSidebar()', function () {
     let wrapper;
-    beforeEach(function() {
-      browserHistory.push.mockImplementation(function({search}) {
+    beforeEach(function () {
+      browserHistory.push.mockImplementation(function ({search}) {
         wrapper.setProps({
           location: {
             search: search || '',
@@ -567,24 +554,20 @@ describe('Discover', function() {
       );
     });
 
-    it('toggles sidebar', function() {
+    it('toggles sidebar', function () {
       expect(wrapper.find('QueryFields')).toHaveLength(1);
       expect(wrapper.find('SavedQueries')).toHaveLength(0);
-      wrapper
-        .find('SidebarTabs')
-        .find('a')
-        .at(1)
-        .simulate('click');
+      wrapper.find('SidebarTabs').find('a').at(1).simulate('click');
       expect(wrapper.find('QueryFields')).toHaveLength(0);
       expect(wrapper.find('SavedQueries')).toHaveLength(1);
     });
   });
 
-  describe('Time Selector', function() {
+  describe('Time Selector', function () {
     let wrapper;
     let query;
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/discover/query/?per_page=1000&cursor=0:0:1',
         method: 'POST',
@@ -602,7 +585,7 @@ describe('Discover', function() {
       );
     });
 
-    it('changes to absolute date', async function() {
+    it('changes to absolute date', async function () {
       await wrapper.instance().runQuery();
       expect(query).toHaveBeenLastCalledWith(
         expect.anything(),
@@ -640,7 +623,7 @@ describe('Discover', function() {
 
     // TODO: This fails during particular times of the day. CLIMS-186
     // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('switches between UTC and local dates', async function() {
+    it.skip('switches between UTC and local dates', async function () {
       ConfigStore.loadInitialData({
         user: {options: {timezone: 'America/New_York'}},
       });
@@ -650,10 +633,7 @@ describe('Discover', function() {
       wrapper.find('SelectorItem[value="absolute"]').simulate('click');
 
       // Select a single day
-      wrapper
-        .find('DayCell')
-        .at(0)
-        .simulate('mouseUp');
+      wrapper.find('DayCell').at(0).simulate('mouseUp');
 
       // Hide date picker
       wrapper.find('TimeRangeSelector HeaderItem').simulate('click');

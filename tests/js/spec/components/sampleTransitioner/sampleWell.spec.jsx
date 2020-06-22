@@ -5,7 +5,7 @@ import SampleWell from 'app/components/sampleTransitioner/sampleWell';
 import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 import InlineSvg from 'app/components/inlineSvg';
 
-describe('SampleWell', function() {
+describe('SampleWell', function () {
   let mockProps;
   let location;
   let onClick;

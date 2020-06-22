@@ -3,9 +3,9 @@ import {shallow} from 'enzyme';
 
 import ResolutionBox from 'app/components/resolutionBox';
 
-describe('ResolutionBox', function() {
-  describe('render()', function() {
-    it('handles inNextRelease', function() {
+describe('ResolutionBox', function () {
+  describe('render()', function () {
+    it('handles inNextRelease', function () {
       const wrapper = shallow(
         <ResolutionBox
           statusDetails={{inNextRelease: true}}
@@ -15,7 +15,7 @@ describe('ResolutionBox', function() {
       );
       expect(wrapper).toMatchSnapshot();
     });
-    it('handles inNextRelease with actor', function() {
+    it('handles inNextRelease with actor', function () {
       const wrapper = shallow(
         <ResolutionBox
           statusDetails={{
@@ -28,7 +28,7 @@ describe('ResolutionBox', function() {
       );
       expect(wrapper).toMatchSnapshot();
     });
-    it('handles inRelease', function() {
+    it('handles inRelease', function () {
       const wrapper = shallow(
         <ResolutionBox
           statusDetails={{
@@ -40,7 +40,7 @@ describe('ResolutionBox', function() {
       );
       expect(wrapper).toMatchSnapshot();
     });
-    it('handles inRelease with actor', function() {
+    it('handles inRelease with actor', function () {
       const wrapper = shallow(
         <ResolutionBox
           statusDetails={{
@@ -53,13 +53,13 @@ describe('ResolutionBox', function() {
       );
       expect(wrapper).toMatchSnapshot();
     });
-    it('handles default', function() {
+    it('handles default', function () {
       const wrapper = shallow(
         <ResolutionBox statusDetails={{}} orgId="org" projectId="project" />
       );
       expect(wrapper).toMatchSnapshot();
     });
-    it('handles inCommit', function() {
+    it('handles inCommit', function () {
       const wrapper = shallow(
         <ResolutionBox
           statusDetails={{

@@ -24,7 +24,7 @@ export function removeIntegrationFromProject(orgId, projectId, integration) {
     () => {
       addSuccessMessage(t('Disabled %s for %s', integration.name, projectId));
     },
-    err => {
+    (err) => {
       addErrorMessage(t('Failed to disable %s for %s', integration.name, projectId));
     }
   );
@@ -45,7 +45,7 @@ export function addIntegrationToProject(orgId, projectId, integration) {
     () => {
       addSuccessMessage(t('Enabled %s for %s', integration.name, projectId));
     },
-    err => {
+    (err) => {
       addErrorMessage(t('Failed to enabled %s for %s', integration.name, projectId));
     }
   );
@@ -98,13 +98,13 @@ export function cancelDeleteRepository(client, orgId, repositoryId) {
 
 function applyRepositoryAddComplete(promise) {
   promise.then(
-    repo => {
+    (repo) => {
       const message = tct('[repo] has been successfully added.', {
         repo: repo.name,
       });
       addSuccessMessage(message);
     },
-    errorData => {
+    (errorData) => {
       const text = errorData.responseJSON.errors
         ? errorData.responseJSON.errors.__all__
         : t('Unable to add repository.');

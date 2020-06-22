@@ -10,7 +10,7 @@ import getDisplayName from 'app/utils/getDisplayName';
 import EnvironmentStore from 'app/stores/environmentStore';
 import LatestContextStore from 'app/stores/latestContextStore';
 
-const withEnvironmentInQueryString = WrappedComponent =>
+const withEnvironmentInQueryString = (WrappedComponent) =>
   createReactClass({
     displayName: `withEnvironmentInQueryString(${getDisplayName(WrappedComponent)})`,
 

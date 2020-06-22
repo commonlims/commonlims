@@ -9,7 +9,7 @@ import TeamStore from 'app/stores/teamStore';
 /**
  * Higher order component that uses TeamStore and provides a list of teams
  */
-const withTeams = WrappedComponent =>
+const withTeams = (WrappedComponent) =>
   createReactClass({
     displayName: `withTeams(${getDisplayName(WrappedComponent)})`,
     propTypes: {

@@ -96,15 +96,16 @@ const SampleExtraDetails = createReactClass({
             );
           })}
 
-        {showAssignee &&
-          assignedTo && <Box>{tct('Assigned to [name]', {name: assignedTo.name})}</Box>}
+        {showAssignee && assignedTo && (
+          <Box>{tct('Assigned to [name]', {name: assignedTo.name})}</Box>
+        )}
       </SampleExtra>
     );
   },
 });
 
 const SampleExtra = styled(Flex)`
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
   font-size: 12px;
   a {
     color: inherit;
@@ -112,12 +113,12 @@ const SampleExtra = styled(Flex)`
 `;
 
 const SampleExtraCommentsAndLogger = styled(Flex)`
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
 `;
 
 const SampleShortId = styled(ShortId)`
   font-size: 12px;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;
 
 const SampleExtraIcon = styled.span`

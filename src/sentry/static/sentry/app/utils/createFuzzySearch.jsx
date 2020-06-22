@@ -10,9 +10,9 @@ export function createFuzzySearch(objects, options = {}) {
   }
 
   return loadFuzzySearch()
-    .then(mod => mod.default)
+    .then((mod) => mod.default)
     .then(
-      Fuse =>
+      (Fuse) =>
         new Fuse(objects, {
           ...DEFAULT_FUSE_OPTIONS,
           ...options,

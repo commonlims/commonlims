@@ -3,8 +3,8 @@ import {mount, shallow} from 'enzyme';
 
 import SelectControl from 'app/components/forms/selectControl';
 
-describe('SelectControl', function() {
-  it('renders with react-select "options"', function() {
+describe('SelectControl', function () {
+  it('renders with react-select "options"', function () {
     const wrapper = shallow(<SelectControl options={[{value: 'foo', label: 'Foo'}]} />);
 
     expect(wrapper.find('StyledSelect').prop('options')).toEqual([
@@ -12,7 +12,7 @@ describe('SelectControl', function() {
     ]);
   });
 
-  it('renders with react-select "multi"', function() {
+  it('renders with react-select "multi"', function () {
     let wrapper = shallow(<SelectControl multiple />);
 
     expect(wrapper.find('StyledSelect').prop('multi')).toEqual(true);
@@ -26,7 +26,7 @@ describe('SelectControl', function() {
     expect(wrapper.find('StyledSelect').prop('multi')).toBeUndefined();
   });
 
-  it('renders with select2 flat "choices"', function() {
+  it('renders with select2 flat "choices"', function () {
     const wrapper = shallow(<SelectControl choices={['a', 'b', 'c']} name="fieldName" />);
     expect(wrapper.find('StyledSelect').prop('options')).toEqual([
       {value: 'a', label: 'a'},
@@ -35,10 +35,14 @@ describe('SelectControl', function() {
     ]);
   });
 
-  it('renders with select2 paired "choices"', function() {
+  it('renders with select2 paired "choices"', function () {
     const wrapper = shallow(
       <SelectControl
-        choices={[['a', 'abc'], ['b', 'bcd'], ['c', 'cde']]}
+        choices={[
+          ['a', 'abc'],
+          ['b', 'bcd'],
+          ['c', 'cde'],
+        ]}
         name="fieldName"
       />
     );
@@ -49,14 +53,17 @@ describe('SelectControl', function() {
     ]);
   });
 
-  it('renders with complex objects with paired "choices"', function() {
+  it('renders with complex objects with paired "choices"', function () {
     const mock = jest.fn();
     const Foo = <div>Foo</div>;
     const Bar = <div>Bar</div>;
 
     const wrapper = mount(
       <SelectControl
-        choices={[[{id: 'foo', name: 'Foo'}, Foo], [{id: 'bar', name: 'Bar'}, Bar]]}
+        choices={[
+          [{id: 'foo', name: 'Foo'}, Foo],
+          [{id: 'bar', name: 'Bar'}, Bar],
+        ]}
         name="fieldName"
         onChange={mock}
       />
@@ -68,17 +75,9 @@ describe('SelectControl', function() {
 
     wrapper.find('input').simulate('focus');
     wrapper.find('.Select-control').simulate('mouseDown', {button: 0});
-    expect(
-      wrapper
-        .find('div.Select-option')
-        .first()
-        .prop('children')
-    ).toEqual(Foo);
+    expect(wrapper.find('div.Select-option').first().prop('children')).toEqual(Foo);
 
-    wrapper
-      .find('Option')
-      .first()
-      .simulate('mouseDown');
+    wrapper.find('Option').first().simulate('mouseDown');
 
     expect(mock).toHaveBeenCalledWith({
       value: {id: 'foo', name: 'Foo'},

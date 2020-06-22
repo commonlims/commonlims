@@ -35,7 +35,7 @@ const ProjectDocsContext = createReactClass({
     const projectId = this.context.project.slug;
 
     this.api.request(`/projects/${orgId}/${projectId}/docs/`, {
-      success: data => {
+      success: (data) => {
         this.setState({
           loading: false,
           data,

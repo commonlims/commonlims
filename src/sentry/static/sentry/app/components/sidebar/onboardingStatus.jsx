@@ -43,12 +43,12 @@ class OnboardingStatus extends React.Component {
     }
 
     const doneTasks = (org.onboardingTasks || []).filter(
-      task => task.status === 'complete' || task.status === 'skipped'
+      (task) => task.status === 'complete' || task.status === 'skipped'
     );
-    const allDisplayedTasks = TodoList.TASKS.filter(task => task.display);
+    const allDisplayedTasks = TodoList.TASKS.filter((task) => task.display);
 
     const percentage = Math.round(
-      doneTasks.length / allDisplayedTasks.length * 100
+      (doneTasks.length / allDisplayedTasks.length) * 100
     ).toString();
 
     const style = {
@@ -76,16 +76,15 @@ class OnboardingStatus extends React.Component {
             <div className="slider" style={style} />
           </div>
         </Tooltip>
-        {showPanel &&
-          currentPanel === 'todos' && (
-            <SidebarPanel
-              collapsed={collapsed}
-              title="Getting Started with Sentry"
-              hidePanel={hidePanel}
-            >
-              <TodoList />
-            </SidebarPanel>
-          )}
+        {showPanel && currentPanel === 'todos' && (
+          <SidebarPanel
+            collapsed={collapsed}
+            title="Getting Started with Sentry"
+            hidePanel={hidePanel}
+          >
+            <TodoList />
+          </SidebarPanel>
+        )}
       </div>
     );
   }

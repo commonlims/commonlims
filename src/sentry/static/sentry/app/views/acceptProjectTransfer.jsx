@@ -18,7 +18,7 @@ class AcceptProjectTransfer extends AsyncView {
     return t('Accept Project Transfer');
   }
 
-  handleSubmit = formData => {
+  handleSubmit = (formData) => {
     this.api.request('/accept-transfer/', {
       method: 'POST',
       data: {
@@ -31,7 +31,7 @@ class AcceptProjectTransfer extends AsyncView {
         this.props.router.push(`/${orgSlug}`);
         addSuccessMessage(t('Project successfully transferred'));
       },
-      error: error => {
+      error: (error) => {
         const errorMsg =
           error && error.responseJSON && typeof error.responseJSON.detail === 'string'
             ? error.responseJSON.detail
@@ -60,7 +60,7 @@ class AcceptProjectTransfer extends AsyncView {
     const {transferDetails} = this.state;
     const choices = [];
 
-    transferDetails.organizations.forEach(org => {
+    transferDetails.organizations.forEach((org) => {
       choices.push([org.slug, org.slug]);
     });
     return (

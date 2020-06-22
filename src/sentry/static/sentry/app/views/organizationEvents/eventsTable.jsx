@@ -84,7 +84,7 @@ class EventsTable extends React.Component {
   constructor(props) {
     super(props);
     this.projectsMap = new Map(
-      props.organization.projects.map(project => [project.id, project])
+      props.organization.projects.map((project) => [project.id, project])
     );
   }
 
@@ -132,12 +132,11 @@ class EventsTable extends React.Component {
           </TableLayout>
         </PanelHeader>
         {loading && <LoadingIndicator />}
-        {!loading &&
-          !hasEvents && (
-            <EmptyStateWarning>
-              <p>No events</p>
-            </EmptyStateWarning>
-          )}
+        {!loading && !hasEvents && (
+          <EmptyStateWarning>
+            <p>No events</p>
+          </EmptyStateWarning>
+        )}
         {hasEvents && (
           <StyledPanelBody>
             {(reloading || zoomChanged) && <StyledLoadingIndicator overlay />}
@@ -178,8 +177,8 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 `;
 
 const TableRow = styled(TableLayout)`
-  font-size: ${p => p.theme.fontSizeMedium};
-  border-top: 1px solid ${p => (p.first ? 'transparent' : p.theme.borderLight)};
+  font-size: ${(p) => p.theme.fontSizeMedium};
+  border-top: 1px solid ${(p) => (p.first ? 'transparent' : p.theme.borderLight)};
   align-items: center;
   padding: ${space(1)} ${space(2)};
 `;
@@ -195,11 +194,11 @@ const EventTitle = styled(TableData)`
 
 const Project = styled(Link)`
   display: flex;
-  color: ${p => p.theme.gray4};
+  color: ${(p) => p.theme.gray4};
   ${overflowEllipsis};
 `;
 
 const StyledDateTime = styled(DateTime)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   ${overflowEllipsis};
 `;

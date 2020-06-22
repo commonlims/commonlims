@@ -82,7 +82,7 @@ const IssueList = createReactClass({
           data,
           loading: false,
           error: false,
-          issueIds: data.map(item => item.id),
+          issueIds: data.map((item) => item.id),
           pageLinks: jqXHR.getResponseHeader('Link'),
         });
       },
@@ -109,7 +109,7 @@ const IssueList = createReactClass({
       body = (
         <Panel style={panelStyle}>
           <PanelBody className="issue-list">
-            {this.state.data.map(issue => {
+            {this.state.data.map((issue) => {
               return (
                 <CompactWorkBatch
                   key={issue.id}
@@ -154,10 +154,9 @@ const IssueList = createReactClass({
     return (
       <React.Fragment>
         {this.renderResults()}
-        {this.props.pagination &&
-          this.state.pageLinks && (
-            <Pagination pageLinks={this.state.pageLinks} {...this.props} />
-          )}
+        {this.props.pagination && this.state.pageLinks && (
+          <Pagination pageLinks={this.state.pageLinks} {...this.props} />
+        )}
       </React.Fragment>
     );
   },

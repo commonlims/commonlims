@@ -3,8 +3,8 @@ import {shallow} from 'enzyme';
 
 import DetailedError from 'app/components/errors/detailedError';
 
-describe('DetailedError', function() {
-  it('renders', function() {
+describe('DetailedError', function () {
+  it('renders', function () {
     const wrapper = shallow(
       <DetailedError heading="Error heading" message={<div>Message</div>} />
     );
@@ -12,7 +12,7 @@ describe('DetailedError', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders with "Retry" button', function() {
+  it('renders with "Retry" button', function () {
     const wrapper = shallow(
       <DetailedError
         onRetry={() => {}}
@@ -24,7 +24,7 @@ describe('DetailedError', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('can hide support links', function() {
+  it('can hide support links', function () {
     const wrapper = shallow(
       <DetailedError
         hideSupportLinks
@@ -37,7 +37,7 @@ describe('DetailedError', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('hides footer when no "Retry" and no support links', function() {
+  it('hides footer when no "Retry" and no support links', function () {
     const wrapper = shallow(
       <DetailedError
         hideSupportLinks

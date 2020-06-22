@@ -26,10 +26,10 @@ const OrganizationSettingsNavigation = createReactClass({
     const org = this.getOrganization();
 
     return {
-      hookConfigs: HookStore.get('settings:organization-navigation-config').map(cb =>
+      hookConfigs: HookStore.get('settings:organization-navigation-config').map((cb) =>
         cb(org)
       ),
-      hooks: HookStore.get('settings:organization-navigation').map(cb => cb(org)),
+      hooks: HookStore.get('settings:organization-navigation').map((cb) => cb(org)),
     };
   },
 
@@ -38,8 +38,8 @@ const OrganizationSettingsNavigation = createReactClass({
     if (name !== 'settings:organization-navigation-config') {
       return;
     }
-    this.setState(state => ({
-      hookConfigs: hooks.map(cb => cb(org)),
+    this.setState((state) => ({
+      hookConfigs: hooks.map((cb) => cb(org)),
     }));
   },
 

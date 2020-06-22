@@ -5,12 +5,12 @@ import TestUtils from 'react-dom/test-utils';
 
 import {TagDistributionMeter} from 'app/components/group/tagDistributionMeter';
 
-describe('TagDistributionMeter', function() {
+describe('TagDistributionMeter', function () {
   let sandbox;
   let element;
   let emptyElement;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
 
     element = TestUtils.renderIntoDocument(
@@ -37,12 +37,12 @@ describe('TagDistributionMeter', function() {
     );
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  describe('renderBody()', function() {
-    it('should return null if loading', function(done) {
+  describe('renderBody()', function () {
+    it('should return null if loading', function (done) {
       element.setState(
         {
           loading: true,
@@ -55,7 +55,7 @@ describe('TagDistributionMeter', function() {
       );
     });
 
-    it('should return null if in an error state', function(done) {
+    it('should return null if in an error state', function (done) {
       element.setState(
         {
           error: true,
@@ -68,7 +68,7 @@ describe('TagDistributionMeter', function() {
       );
     });
 
-    it('should return "no recent data" if no total values present', function(done) {
+    it('should return "no recent data" if no total values present', function (done) {
       emptyElement.setState(
         {
           error: false,
@@ -84,7 +84,7 @@ describe('TagDistributionMeter', function() {
       );
     });
 
-    it('should call renderSegments() if values present', function(done) {
+    it('should call renderSegments() if values present', function (done) {
       sandbox.stub(element, 'renderSegments');
 
       element.setState(

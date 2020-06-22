@@ -12,7 +12,7 @@ import withOrganizations from 'app/utils/withOrganizations';
 // HoC that returns most usable organization + project
 // This means your org if you only have 1 org, or
 // last accessed organization/project
-const withLatestContext = WrappedComponent =>
+const withLatestContext = (WrappedComponent) =>
   withOrganizations(
     createReactClass({
       displayName: `withLatestContext(${getDisplayName(WrappedComponent)})`,

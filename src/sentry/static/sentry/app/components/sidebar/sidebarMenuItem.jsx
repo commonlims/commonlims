@@ -37,7 +37,7 @@ export default SidebarMenuItem;
 
 const MenuItemLabel = styled('span')`
   flex: 1;
-  ${p =>
+  ${(p) =>
     p.hasMenu
       ? css`
           margin: 0 -15px;
@@ -60,20 +60,20 @@ const MenuItemLink = styled(({to, href, external, ...props}) => {
 
   return <div {...props} />;
 })`
-  color: ${p => p.theme.gray5};
+  color: ${(p) => p.theme.gray5};
   cursor: pointer;
   display: flex;
   font-size: 14px;
   line-height: 32px;
-  padding: 0 ${p => p.theme.sidebar.menuSpacing};
+  padding: 0 ${(p) => p.theme.sidebar.menuSpacing};
   position: relative;
   transition: 0.1s all linear;
-  ${p => (!!p.to || !!p.href) && 'overflow: hidden'};
+  ${(p) => (!!p.to || !!p.href) && 'overflow: hidden'};
 
   &:hover,
   &:active {
-    background: ${p => p.theme.offWhite};
-    color: ${p => p.theme.gray5};
+    background: ${(p) => p.theme.offWhite};
+    color: ${(p) => p.theme.gray5};
   }
 
   /* stylelint-disable-next-line no-duplicate-selectors */

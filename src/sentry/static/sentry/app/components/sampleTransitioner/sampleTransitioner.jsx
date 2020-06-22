@@ -108,8 +108,8 @@ class SampleTransitioner extends React.Component {
 
     // Find all transitions for this well and highlight them.
     const transitionTargetLocationsOfHoveredSample = sampleTransitions
-      .filter(t => t.sourceLocation.equals(sampleLocation))
-      .map(f => f.targetLocation);
+      .filter((t) => t.sourceLocation.equals(sampleLocation))
+      .map((f) => f.targetLocation);
     this.setState({transitionTargetLocationsOfHoveredSample});
   }
 
@@ -160,7 +160,7 @@ class SampleTransitioner extends React.Component {
               onMouseOut={this.onMouseOut.bind(this)}
               activeTransitionSourceLocation={activeTransitionSourceLocation}
               transitionSourceLocations={workBatch.transitions.map(
-                st => st.sourceLocation
+                (st) => st.sourceLocation
               )}
             />
           </Box>
@@ -177,7 +177,7 @@ class SampleTransitioner extends React.Component {
                 transitionTargetLocationsOfHoveredSample
               }
               transitionTargetLocations={workBatch.transitions.map(
-                st => st.targetLocation
+                (st) => st.targetLocation
               )}
             />
           </Box>

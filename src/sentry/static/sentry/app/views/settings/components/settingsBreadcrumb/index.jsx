@@ -47,7 +47,7 @@ class SettingsBreadcrumb extends React.Component {
 
   render() {
     const {routes, params, pathMap} = this.props;
-    const lastRouteIndex = routes.map(r => !!r.name).lastIndexOf(true);
+    const lastRouteIndex = routes.map((r) => !!r.name).lastIndexOf(true);
     return (
       <Breadcrumbs>
         {routes.map((route, i) => {

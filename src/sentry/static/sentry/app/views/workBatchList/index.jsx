@@ -32,9 +32,9 @@ class WorkBatchList extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.tag;
+const mapStateToProps = (state) => state.tag;
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTags: () => dispatch(tagsGet('workBatch')),
 });
 

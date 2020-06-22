@@ -13,7 +13,7 @@ import SentryTypes from 'app/sentryTypes';
  * Higher order component that fetches list of plugins and
  * passes PluginsStore to component as `plugins`
  */
-const withPlugins = WrappedComponent =>
+const withPlugins = (WrappedComponent) =>
   createReactClass({
     displayName: `withPlugins(${getDisplayName(WrappedComponent)})`,
     propTypes: {

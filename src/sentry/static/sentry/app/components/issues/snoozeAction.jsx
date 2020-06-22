@@ -37,7 +37,7 @@ class SnoozeAction extends React.Component {
     this.setState({isModalOpen: false});
   };
 
-  onSnooze = duration => {
+  onSnooze = (duration) => {
     this.props.onSnooze(duration);
     this.closeModal();
   };

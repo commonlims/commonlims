@@ -6,7 +6,7 @@ import getDisplayName from 'app/utils/getDisplayName';
 /**
  * HoC that provides "api" client when mounted, and clears API requests when component is unmounted
  */
-const withApi = WrappedComponent => {
+const withApi = (WrappedComponent) => {
   class WithApi extends React.Component {
     constructor(props) {
       super(props);

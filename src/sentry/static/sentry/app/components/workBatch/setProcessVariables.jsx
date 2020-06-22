@@ -114,14 +114,14 @@ const SetProcessVariables = createReactClass({
         this.api.request(endpoint, {
           method: 'POST',
           data,
-          success: response => {
+          success: (response) => {
             this.onToggle();
             this.setState({
               state: FormState.READY,
               errors: {},
             });
           },
-          error: err => {
+          error: (err) => {
             let errors = err.responseJSON || true;
             errors = errors.detail || true;
             this.setState({
@@ -148,7 +148,7 @@ const SetProcessVariables = createReactClass({
       },
     ];
 
-    this.setState(state => ({workflowVars: vars, value, process: value}));
+    this.setState((state) => ({workflowVars: vars, value, process: value}));
     // Fetch the variables for this, if they don't exist yet:
   },
 

@@ -45,7 +45,7 @@ const getBulkConfirmMessage = (action, queryCount) => {
 };
 
 const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
-  return function(action, canBeUndone, append = '') {
+  return function (action, canBeUndone, append = '') {
     const question = allInQuerySelected
       ? getBulkConfirmMessage(`${action}${append}`, queryCount)
       : tn(
@@ -83,7 +83,7 @@ const getConfirm = (numIssues, allInQuerySelected, query, queryCount) => {
 };
 
 const getLabel = (numIssues, allInQuerySelected) => {
-  return function(action, append = '') {
+  return function (action, append = '') {
     const capitalized = capitalize(action);
     const text = allInQuerySelected
       ? t(`Bulk ${action} issues`)
@@ -191,7 +191,7 @@ const StreamActions = createReactClass({
       selectedIds = undefined; // undefined means "all"
     } else {
       const itemIdSet = SelectedGroupStore.getSelectedIds();
-      selectedIds = this.props.groupIds.filter(itemId => itemIdSet.has(itemId));
+      selectedIds = this.props.groupIds.filter((itemId) => itemIdSet.has(itemId));
     }
 
     callback(selectedIds);
@@ -205,7 +205,7 @@ const StreamActions = createReactClass({
   },
 
   onUpdate(data) {
-    this.actionSelectedGroups(itemIds => {
+    this.actionSelectedGroups((itemIds) => {
       const loadingIndicator = IndicatorStore.add(t('Saving changes..'));
       this.api.bulkUpdate(
         {
@@ -228,7 +228,7 @@ const StreamActions = createReactClass({
   onDelete(event) {
     const loadingIndicator = IndicatorStore.add(t('Removing events..'));
 
-    this.actionSelectedGroups(itemIds => {
+    this.actionSelectedGroups((itemIds) => {
       this.api.bulkDelete(
         {
           orgId: this.props.orgId,
@@ -249,7 +249,7 @@ const StreamActions = createReactClass({
   onMerge(event) {
     const loadingIndicator = IndicatorStore.add(t('Merging events..'));
 
-    this.actionSelectedGroups(itemIds => {
+    this.actionSelectedGroups((itemIds) => {
       this.api.merge(
         {
           orgId: this.props.orgId,
@@ -504,47 +504,46 @@ const StreamActions = createReactClass({
           </Box>
         </StyledFlex>
 
-        {!allResultsVisible &&
-          pageSelected && (
-            <div className="row stream-select-all-notice">
-              <div className="col-md-12">
-                {allInQuerySelected ? (
-                  <strong>
+        {!allResultsVisible && pageSelected && (
+          <div className="row stream-select-all-notice">
+            <div className="col-md-12">
+              {allInQuerySelected ? (
+                <strong>
+                  {queryCount >= BULK_LIMIT
+                    ? tct(
+                        'Selected up to the first [count] issues that match this search query.',
+                        {
+                          count: BULK_LIMIT_STR,
+                        }
+                      )
+                    : tct('Selected all [count] issues that match this search query.', {
+                        count: queryCount,
+                      })}
+                </strong>
+              ) : (
+                <span>
+                  {tn(
+                    '%s issue on this page selected.',
+                    '%s issues on this page selected.',
+                    numIssues
+                  )}
+                  <a onClick={this.selectAll}>
                     {queryCount >= BULK_LIMIT
                       ? tct(
-                          'Selected up to the first [count] issues that match this search query.',
+                          'Select the first [count] issues that match this search query.',
                           {
                             count: BULK_LIMIT_STR,
                           }
                         )
-                      : tct('Selected all [count] issues that match this search query.', {
+                      : tct('Select all [count] issues that match this search query.', {
                           count: queryCount,
                         })}
-                  </strong>
-                ) : (
-                  <span>
-                    {tn(
-                      '%s issue on this page selected.',
-                      '%s issues on this page selected.',
-                      numIssues
-                    )}
-                    <a onClick={this.selectAll}>
-                      {queryCount >= BULK_LIMIT
-                        ? tct(
-                            'Select the first [count] issues that match this search query.',
-                            {
-                              count: BULK_LIMIT_STR,
-                            }
-                          )
-                        : tct('Select all [count] issues that match this search query.', {
-                            count: queryCount,
-                          })}
-                    </a>
-                  </span>
-                )}
-              </div>
+                  </a>
+                </span>
+              )}
             </div>
-          )}
+          </div>
+        )}
       </Sticky>
     );
   },
@@ -552,15 +551,15 @@ const StreamActions = createReactClass({
 
 const Sticky = styled.div`
   position: sticky;
-  z-index: ${p => p.theme.zIndex.header};
+  z-index: ${(p) => p.theme.zIndex.header};
   top: -1px;
 `;
 
 const StyledFlex = styled(Flex)`
   align-items: center;
-  background: ${p => p.theme.offWhite};
-  border-bottom: 1px solid ${p => p.theme.borderDark};
-  border-radius: ${p => p.theme.borderRadius} ${p => p.theme.borderRadius} 0 0;
+  background: ${(p) => p.theme.offWhite};
+  border-bottom: 1px solid ${(p) => p.theme.borderDark};
+  border-radius: ${(p) => p.theme.borderRadius} ${(p) => p.theme.borderRadius} 0 0;
   margin-bottom: -1px;
 `;
 
@@ -591,7 +590,7 @@ const GraphToggle = styled.a`
   &:hover,
   &:focus,
   &:active {
-    color: ${p => (p.active ? p.theme.gray4 : p.theme.disabled)};
+    color: ${(p) => (p.active ? p.theme.gray4 : p.theme.disabled)};
   }
 `;
 

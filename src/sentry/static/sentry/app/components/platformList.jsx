@@ -32,16 +32,13 @@ class PlatformList extends React.Component {
     consistentWidth: false,
   };
 
-  getIcon = platform => {
+  getIcon = (platform) => {
     const {size} = this.props;
     return <StyledPlatformIcon key={platform} platform={platform} size={size} />;
   };
 
-  getIcons = platforms => {
-    return platforms
-      .slice()
-      .reverse()
-      .map(this.getIcon);
+  getIcons = (platforms) => {
+    return platforms.slice().reverse().map(this.getIcon);
   };
 
   render() {
@@ -64,15 +61,15 @@ class PlatformList extends React.Component {
   }
 }
 
-const getOverlapWidth = size => Math.round(size / 4);
+const getOverlapWidth = (size) => Math.round(size / 4);
 
 const PlatformIcons = styled('div')`
   margin-right: ${space(0.5)};
   display: flex;
   flex-shrink: 0;
   flex-direction: row;
-  justify-content: ${p => (p.direction === 'right' ? 'flex-end' : 'flex-start')};
-  ${p =>
+  justify-content: ${(p) => (p.direction === 'right' ? 'flex-end' : 'flex-start')};
+  ${(p) =>
     p.consistentWidth && `width: ${p.size + (p.max - 1) * getOverlapWidth(p.size)}px;`};
 `;
 
@@ -82,7 +79,7 @@ const StyledPlatformIcon = styled(({size, ...props}) => (
   border-radius: 3px;
   box-shadow: 0 0 0 1px #fff;
   &:not(:first-child) {
-    margin-left: ${p => `${p.size * -1 + getOverlapWidth(p.size)}px;`};
+    margin-left: ${(p) => `${p.size * -1 + getOverlapWidth(p.size)}px;`};
   }
 `;
 

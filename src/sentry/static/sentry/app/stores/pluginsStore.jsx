@@ -57,7 +57,7 @@ const PluginsStore = Reflux.createStore({
   },
 
   onFetchAllSuccess(data, {pageLinks}) {
-    this.plugins = new Map(data.map(plugin => [plugin.id, plugin]));
+    this.plugins = new Map(data.map((plugin) => [plugin.id, plugin]));
     this.state.pageLinks = pageLinks;
     this.state.loading = false;
     this.triggerState();

@@ -38,25 +38,26 @@ class Switch extends React.Component {
   }
 }
 
-const getSize = p => (p.size == 'sm' ? 16 : 24);
-const getToggleSize = p => getSize(p) - (p.size == 'sm' ? 6 : 10);
-const getToggleTop = p => (p.size == 'sm' ? 2 : 4);
-const getTranslateX = p => (p.isActive ? getToggleTop(p) + getSize(p) : getToggleTop(p));
+const getSize = (p) => (p.size == 'sm' ? 16 : 24);
+const getToggleSize = (p) => getSize(p) - (p.size == 'sm' ? 6 : 10);
+const getToggleTop = (p) => (p.size == 'sm' ? 2 : 4);
+const getTranslateX = (p) =>
+  p.isActive ? getToggleTop(p) + getSize(p) : getToggleTop(p);
 
 const SwitchContainer = styled('div')`
   display: inline-block;
-  border: 1px solid ${p => (p.isActive ? p.theme.borderDark : p.theme.borderLight)};
+  border: 1px solid ${(p) => (p.isActive ? p.theme.borderDark : p.theme.borderLight)};
   position: relative;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.04);
   transition: 0.15s border ease;
-  cursor: ${p => (p.isLoading || p.isDisabled ? 'not-allowed' : 'pointer')};
-  pointer-events: ${p => (p.isLoading || p.isDisabled ? 'none' : null)};
+  cursor: ${(p) => (p.isLoading || p.isDisabled ? 'not-allowed' : 'pointer')};
+  pointer-events: ${(p) => (p.isLoading || p.isDisabled ? 'none' : null)};
   height: ${getSize}px;
-  width: ${p => getSize(p) * 2}px;
+  width: ${(p) => getSize(p) * 2}px;
   border-radius: ${getSize}px;
 
   &:hover {
-    border-color: ${p => p.theme.borderDark};
+    border-color: ${(p) => p.theme.borderDark};
   }
 `;
 
@@ -69,8 +70,8 @@ const Toggle = styled('span')`
   transform: translateX(${getTranslateX}px);
   width: ${getToggleSize}px;
   height: ${getToggleSize}px;
-  background: ${p => (p.isActive ? p.theme.green : p.theme.gray6)};
-  opacity: ${p => (p.isDisabled ? 0.4 : null)};
+  background: ${(p) => (p.isActive ? p.theme.green : p.theme.gray6)};
+  opacity: ${(p) => (p.isDisabled ? 0.4 : null)};
 `;
 
 export default Switch;

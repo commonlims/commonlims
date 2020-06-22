@@ -6,11 +6,11 @@ import {ContextPickerModal} from 'app/components/contextPickerModal';
 
 jest.mock('jquery');
 
-describe('ContextPickerModal', function() {
+describe('ContextPickerModal', function () {
   let project, project2, org, org2;
   const onFinish = jest.fn();
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.clearMockResponses();
     onFinish.mockReset();
 
@@ -23,7 +23,7 @@ describe('ContextPickerModal', function() {
     });
   });
 
-  const getComponent = props => (
+  const getComponent = (props) => (
     <ContextPickerModal
       Header={() => <div />}
       Body="div"
@@ -36,14 +36,14 @@ describe('ContextPickerModal', function() {
     />
   );
 
-  it('renders with only org selector when no org in latest context', function() {
+  it('renders with only org selector when no org in latest context', function () {
     const wrapper = shallow(getComponent());
 
     expect(wrapper.find('StyledSelectControl[name="organization"]').exists()).toBe(true);
     expect(wrapper.find('StyledSelectControl[name="project"]').exists()).toBe(false);
   });
 
-  it('fetches org details and sets as active org if there is only one org', function() {
+  it('fetches org details and sets as active org if there is only one org', function () {
     const spy = jest.spyOn(OrgActions, 'fetchOrganizationDetails');
     const api = MockApiClient.addMockResponse({
       url: `/organizations/${org2.slug}/`,
@@ -58,7 +58,7 @@ describe('ContextPickerModal', function() {
     expect(api).toHaveBeenCalled();
   });
 
-  it('calls onFinish after latestContext is set, if project id is not needed, and only 1 org', function() {
+  it('calls onFinish after latestContext is set, if project id is not needed, and only 1 org', function () {
     const spy = jest.spyOn(OrgActions, 'fetchOrganizationDetails');
     const api = MockApiClient.addMockResponse({
       url: `/organizations/${org2.slug}/`,
@@ -76,7 +76,7 @@ describe('ContextPickerModal', function() {
     expect(onFinish).toHaveBeenCalledWith('/test/org2/path/');
   });
 
-  it('calls onFinish if there is only 1 org and 1 project', function() {
+  it('calls onFinish if there is only 1 org and 1 project', function () {
     const spy = jest.spyOn(OrgActions, 'fetchOrganizationDetails');
     const api = MockApiClient.addMockResponse({
       url: `/organizations/${org2.slug}/`,
@@ -101,7 +101,7 @@ describe('ContextPickerModal', function() {
     expect(onFinish).toHaveBeenCalledWith('/test/org2/path/project2/');
   });
 
-  it('selects an org and calls `onFinish` with URL with organization slug', function() {
+  it('selects an org and calls `onFinish` with URL with organization slug', function () {
     const wrapper = mount(getComponent({}));
     const mock = MockApiClient.addMockResponse({
       url: `/organizations/${org.slug}/`,
@@ -111,16 +111,13 @@ describe('ContextPickerModal', function() {
 
     expect(wrapper.find('Select[name="organization"] .Select-menu')).toHaveLength(1);
 
-    wrapper
-      .find('Select[name="organization"] Option')
-      .first()
-      .simulate('mouseDown');
+    wrapper.find('Select[name="organization"] Option').first().simulate('mouseDown');
     expect(onFinish).toHaveBeenCalledWith('/test/org-slug/path/');
     // Is not called because we don't need to fetch org details
     expect(mock).not.toHaveBeenCalled();
   });
 
-  it('renders with project selector and org selector selected when org is in latest context', function() {
+  it('renders with project selector and org selector selected when org is in latest context', function () {
     const wrapper = shallow(
       getComponent({
         needOrg: true,
@@ -144,7 +141,7 @@ describe('ContextPickerModal', function() {
     ]);
   });
 
-  it('can select org and project', async function() {
+  it('can select org and project', async function () {
     const spy = jest.spyOn(OrgActions, 'fetchOrganizationDetails');
     const api = MockApiClient.addMockResponse({
       url: `/organizations/${org2.slug}/`,
@@ -180,10 +177,7 @@ describe('ContextPickerModal', function() {
       .simulate('change', {value: org2.slug, label: org2.slug});
 
     wrapper.find('StyledSelectControl[name="organization"] input').simulate('focus');
-    wrapper
-      .find('Select[name="organization"] Option')
-      .at(1)
-      .simulate('mouseDown');
+    wrapper.find('Select[name="organization"] Option').at(1).simulate('mouseDown');
 
     expect(spy).toHaveBeenCalledWith('org2', {
       setActive: true,
@@ -204,10 +198,7 @@ describe('ContextPickerModal', function() {
 
     // Select project3
     wrapper.find('StyledSelectControl[name="project"] input').simulate('focus');
-    wrapper
-      .find('Select[name="project"] Option')
-      .at(1)
-      .simulate('mouseDown');
+    wrapper.find('Select[name="project"] Option').at(1).simulate('mouseDown');
 
     expect(onFinish).toHaveBeenCalledWith('/test/org2/path/project3/');
   });

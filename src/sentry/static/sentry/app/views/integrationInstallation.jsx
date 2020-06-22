@@ -30,10 +30,10 @@ export default class IntegrationInstallation extends AsyncView {
   }
 
   get provider() {
-    return this.state.providers.find(p => p.key === this.props.params.providerId);
+    return this.state.providers.find((p) => p.key === this.props.params.providerId);
   }
 
-  onInstall = data => {
+  onInstall = (data) => {
     const orgId = this.state.organization.slug;
     this.props.router.push(
       `/settings/${orgId}/integrations/${data.provider.key}/${data.id}`
@@ -45,7 +45,7 @@ export default class IntegrationInstallation extends AsyncView {
     const reloading = false;
 
     this.api.request(`/organizations/${orgId}/`, {
-      success: organization => this.setState({organization, reloading}),
+      success: (organization) => this.setState({organization, reloading}),
       error: () => {
         this.setState({reloading});
         IndicatorStore.addError(t('Failed to retrieve organization details'));
@@ -53,7 +53,7 @@ export default class IntegrationInstallation extends AsyncView {
     });
 
     this.api.request(`/organizations/${orgId}/config/integrations/`, {
-      success: providers => this.setState({providers: providers.providers, reloading}),
+      success: (providers) => this.setState({providers: providers.providers, reloading}),
       error: () => {
         this.setState({reloading});
         IndicatorStore.addError(t('Failed to retrieve integration provider details'));
@@ -61,13 +61,13 @@ export default class IntegrationInstallation extends AsyncView {
     });
   };
 
-  hasAccess = org => org.access.includes('org:integrations');
+  hasAccess = (org) => org.access.includes('org:integrations');
 
   renderAddButton() {
     const {organization, reloading} = this.state;
     const {installationId} = this.props.params;
 
-    const AddButton = p => (
+    const AddButton = (p) => (
       <Button priority="primary" busy={reloading} {...p}>
         Install Integration
       </Button>
@@ -79,7 +79,7 @@ export default class IntegrationInstallation extends AsyncView {
 
     return (
       <AddIntegration provider={this.provider} onInstall={this.onInstall}>
-        {addIntegration => (
+        {(addIntegration) => (
           <AddButton
             disabled={organization && !this.hasAccess(organization)}
             onClick={() => addIntegration({installation_id: installationId})}
@@ -91,7 +91,7 @@ export default class IntegrationInstallation extends AsyncView {
 
   renderBody() {
     const {organization, selectedOrg} = this.state;
-    const choices = this.state.organizations.map(org => [org.slug, org.slug]);
+    const choices = this.state.organizations.map((org) => [org.slug, org.slug]);
 
     const featureListHooks = HookStore.get('integrations:feature-gates');
     featureListHooks.push(() => ({FeatureList: null}));
@@ -111,41 +111,36 @@ export default class IntegrationInstallation extends AsyncView {
           )}
         </p>
 
-        {selectedOrg &&
-          organization &&
-          !this.hasAccess(organization) && (
-            <Alert type="error" icon="icon-circle-exclamation">
-              <p>
-                {tct(
-                  `You do not have permission to install integrations in
+        {selectedOrg && organization && !this.hasAccess(organization) && (
+          <Alert type="error" icon="icon-circle-exclamation">
+            <p>
+              {tct(
+                `You do not have permission to install integrations in
                   [organization]. Ask your organization owner or manager to
                   visit this page to finish installing this integration.`,
-                  {organization: <strong>{organization.slug}</strong>}
-                )}
-              </p>
-              <InstallLink>{window.location.href}</InstallLink>
-            </Alert>
-          )}
+                {organization: <strong>{organization.slug}</strong>}
+              )}
+            </p>
+            <InstallLink>{window.location.href}</InstallLink>
+          </Alert>
+        )}
 
-        {this.provider &&
-          organization &&
-          this.hasAccess(organization) &&
-          FeatureList && (
-            <React.Fragment>
-              <p>
-                {tct(
-                  'The following features will be availble for [organization] when installed.',
-                  {organization: <strong>{organization.slug}</strong>}
-                )}
-              </p>
-              <FeatureList
-                organization={organization}
-                features={this.provider.metadata.features}
-                formatter={singleLineRenderer}
-                provider={this.provider}
-              />
-            </React.Fragment>
-          )}
+        {this.provider && organization && this.hasAccess(organization) && FeatureList && (
+          <React.Fragment>
+            <p>
+              {tct(
+                'The following features will be availble for [organization] when installed.',
+                {organization: <strong>{organization.slug}</strong>}
+              )}
+            </p>
+            <FeatureList
+              organization={organization}
+              features={this.provider.metadata.features}
+              formatter={singleLineRenderer}
+              provider={this.provider}
+            />
+          </React.Fragment>
+        )}
 
         <Field label={t('Organization')} inline={false} stacked required>
           {() => (

@@ -134,7 +134,7 @@ const TagStore = Reflux.createStore({
         {}
       )
     );
-    this.tags.has.values = data.map(tag => tag.key);
+    this.tags.has.values = data.map((tag) => tag.key);
     this.trigger(this.tags);
   },
 

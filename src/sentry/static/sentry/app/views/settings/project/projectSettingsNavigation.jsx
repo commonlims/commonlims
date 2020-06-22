@@ -15,7 +15,7 @@ const ProjectSettingsNavigation = createReactClass({
     // Allow injection via getsentry et all
     const org = this.getOrganization();
     const hooks = [];
-    HookStore.get('project:settings-sidebar').forEach(cb => {
+    HookStore.get('project:settings-sidebar').forEach((cb) => {
       hooks.push(cb(org));
     });
 

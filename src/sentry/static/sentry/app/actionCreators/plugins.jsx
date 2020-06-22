@@ -21,7 +21,7 @@ function doUpdate({orgId, projectId, pluginId, update, ...params}) {
     .then(() => {
       PluginActions.updateSuccess(pluginId, update);
     })
-    .catch(resp => {
+    .catch((resp) => {
       const err =
         resp && resp.responseJSON && typeof resp.responseJSON.detail === 'string'
           ? new Error(resp.responseJSON.detail)
@@ -66,7 +66,7 @@ export function fetchPlugins({orgId, projectId}, options) {
 
       return data;
     })
-    .catch(err => {
+    .catch((err) => {
       PluginActions.fetchAllError(err);
       throw new Error('Unable to fetch plugins');
     })

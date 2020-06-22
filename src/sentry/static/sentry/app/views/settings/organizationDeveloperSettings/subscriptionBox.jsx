@@ -23,7 +23,7 @@ export default class SubscriptionBox extends React.Component {
     };
   }
 
-  onChange = evt => {
+  onChange = (evt) => {
     const checked = evt.target.checked;
     const {resource} = this.props;
     this.setState({checked});
@@ -69,8 +69,8 @@ const SubscriptionGridItem = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: ${p => p.theme.whiteDark};
-  opacity: ${p => (p.disabled ? 0.3 : 1)};
+  background: ${(p) => p.theme.whiteDark};
+  opacity: ${(p) => (p.disabled ? 0.3 : 1)};
   border-radius: 3px;
   flex: 1;
   padding: 12px;
@@ -85,14 +85,14 @@ const SubscriptionGridItemWrapper = styled('div')`
 const SubscriptionDescription = styled('div')`
   font-size: 12px;
   line-height: 1;
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   white-space: nowrap;
 `;
 
 const SubscriptionTitle = styled('div')`
   font-size: 16px;
   line-height: 1;
-  color: ${p => p.theme.textColor};
+  color: ${(p) => p.theme.textColor};
   white-space: nowrap;
   margin-bottom: 5px;
 `;

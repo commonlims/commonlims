@@ -15,7 +15,7 @@ export default class CreateTeamForm extends React.Component {
     formProps: PropTypes.object,
   };
 
-  handleCreateTeamSuccess = data => {
+  handleCreateTeamSuccess = (data) => {
     const {onSuccess} = this.props;
 
     if (typeof onSuccess !== 'function') {

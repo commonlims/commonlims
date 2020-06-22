@@ -3,10 +3,10 @@ import React from 'react';
 import {mount} from 'enzyme';
 import AccountNotifications from 'app/views/settings/account/accountNotifications';
 
-describe('AccountNotifications', function() {
+describe('AccountNotifications', function () {
   const url = '/users/me/notifications/';
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.addMockResponse({
       url,
       method: 'GET',
@@ -21,11 +21,11 @@ describe('AccountNotifications', function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  it('renders with values from API', function() {
+  it('renders with values from API', function () {
     const wrapper = mount(<AccountNotifications />, TestStubs.routerContext());
 
     // "Workflow Notifications"

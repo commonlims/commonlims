@@ -26,8 +26,8 @@ function makeDefaultErrorJson() {
   return {detail: t('Unknown error. Please try again.')};
 }
 
-const buildUserId = id => `user:${id}`;
-const buildTeamId = id => `team:${id}`;
+const buildUserId = (id) => `user:${id}`;
+const buildTeamId = (id) => `team:${id}`;
 
 const NoteInput = createReactClass({
   displayName: 'NoteInput',
@@ -190,7 +190,7 @@ const NoteInput = createReactClass({
       data: {
         text: this.state.value,
       },
-      error: error => {
+      error: (error) => {
         this.setState({
           loading: false,
           preview: false,
@@ -199,7 +199,7 @@ const NoteInput = createReactClass({
         });
         IndicatorStore.remove(loadingIndicator);
       },
-      success: data => {
+      success: (data) => {
         this.setState({
           preview: false,
           expanded: false,
@@ -249,8 +249,8 @@ const NoteInput = createReactClass({
 
     // each mention looks like [id, display]
     return [...memberMentions, ...teamMentions]
-      .filter(mention => this.state.value.indexOf(mention[1]) !== -1)
-      .map(mention => mention[0]);
+      .filter((mention) => this.state.value.indexOf(mention[1]) !== -1)
+      .map((mention) => mention[0]);
   },
 
   expand(e) {
@@ -276,8 +276,8 @@ const NoteInput = createReactClass({
   mentionableUsers() {
     const {memberList, sessionUser} = this.props;
     return _.uniqBy(memberList, ({id}) => id)
-      .filter(member => sessionUser.id !== member.id)
-      .map(member => ({
+      .filter((member) => sessionUser.id !== member.id)
+      .map((member) => ({
         id: buildUserId(member.id),
         display: member.name,
         email: member.email,
@@ -288,9 +288,11 @@ const NoteInput = createReactClass({
     // TODO: Rewrite without requiring teams
     const project = 'internal';
 
-    return (ProjectsStore.getBySlug(project) || {
-      teams: [],
-    }).teams.map(team => ({
+    return (
+      ProjectsStore.getBySlug(project) || {
+        teams: [],
+      }
+    ).teams.map((team) => ({
       id: buildTeamId(team.id),
       display: `#${team.slug}`,
       email: team.id,
@@ -360,7 +362,8 @@ const NoteInput = createReactClass({
               required={true}
               autoFocus={true}
               displayTransform={(id, display, type) =>
-                `${type === 'member' ? '@' : ''}${display}`}
+                `${type === 'member' ? '@' : ''}${display}`
+              }
               markup="**[sentry.strip:__type__]__display__**"
             >
               <Mention

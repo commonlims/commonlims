@@ -2,15 +2,15 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import ShareIssue from 'app/components/shareIssue';
 
-describe('ShareIssue', function() {
-  it('renders when not shared', function() {
+describe('ShareIssue', function () {
+  it('renders when not shared', function () {
     const wrapper = shallow(
       <ShareIssue isSharing={false} onToggle={() => {}} onShare={() => {}} />
     );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders when shared ', function() {
+  it('renders when shared ', function () {
     const wrapper = shallow(
       <ShareIssue
         isSharing={true}
@@ -22,7 +22,7 @@ describe('ShareIssue', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders when busy', function() {
+  it('renders when busy', function () {
     const wrapper = shallow(
       <ShareIssue onToggle={() => {}} onShare={() => {}} busy={true} />
     );

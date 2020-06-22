@@ -149,7 +149,7 @@ const TodoList = createReactClass({
   UNSAFE_componentWillMount() {
     // Map server task state (who finished what) to TodoList.TASK objects
     const org = this.getOrganization();
-    const tasks = TodoList.TASKS.map(task => {
+    const tasks = TodoList.TASKS.map((task) => {
       for (const server_task of org.onboardingTasks) {
         if (server_task.task == task.task) {
           Object.assign(task, server_task);
@@ -167,7 +167,7 @@ const TodoList = createReactClass({
       method: 'POST',
       data: {task: skipped_task, status: 'skipped'},
       success: () => {
-        const new_state = this.state.tasks.map(task => {
+        const new_state = this.state.tasks.map((task) => {
           if (task.task == skipped_task) {
             task.status = 'skipped';
           }
@@ -180,9 +180,9 @@ const TodoList = createReactClass({
   },
 
   render() {
-    const nextTasks = this.state.tasks.filter(task => task.display);
+    const nextTasks = this.state.tasks.filter((task) => task.display);
 
-    const todoListTasks = nextTasks.map(task => {
+    const todoListTasks = nextTasks.map((task) => {
       return <TodoItem key={task.task} task={task} onSkip={this.skipTask} />;
     });
 

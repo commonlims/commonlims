@@ -45,12 +45,12 @@ class DiscoverQuery extends React.Component {
   }
 
   componentWillUnmount() {
-    this.queryBuilders.forEach(builder => builder.cancelRequests());
+    this.queryBuilders.forEach((builder) => builder.cancelRequests());
   }
 
   createQueryBuilders() {
     const {organization, queries} = this.props;
-    queries.forEach(query => {
+    queries.forEach((query) => {
       this.queryBuilders.push(createQueryBuilder(this.getQuery(query), organization));
     });
   }
@@ -88,7 +88,7 @@ class DiscoverQuery extends React.Component {
     this.resetQueries();
 
     // Fetch
-    const promises = this.queryBuilders.map(builder => builder.fetchWithoutLimit());
+    const promises = this.queryBuilders.map((builder) => builder.fetchWithoutLimit());
     const results = await Promise.all(promises);
     const previousData = null;
     const data = null;
@@ -104,7 +104,7 @@ class DiscoverQuery extends React.Component {
     const {children} = this.props;
 
     return children({
-      queries: this.queryBuilders.map(builder => builder.getInternal()),
+      queries: this.queryBuilders.map((builder) => builder.getInternal()),
       results: this.state.results,
       data: this.state.data,
       previousData: this.state.previousData,

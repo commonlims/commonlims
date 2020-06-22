@@ -2,8 +2,8 @@ import React from 'react';
 import {mount} from 'enzyme';
 import OrganizationBadge from 'app/components/idBadge/organizationBadge';
 
-describe('OrganizationBadge', function() {
-  it('renders with Avatar and organization name', function() {
+describe('OrganizationBadge', function () {
+  it('renders with Avatar and organization name', function () {
     const wrapper = mount(
       <OrganizationBadge organization={TestStubs.Organization()} />,
       TestStubs.routerContext()

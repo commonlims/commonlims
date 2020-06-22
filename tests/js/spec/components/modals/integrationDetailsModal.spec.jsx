@@ -4,12 +4,12 @@ import {mount} from 'enzyme';
 import IntegrationDetailsModal from 'app/components/modals/integrationDetailsModal';
 import HookStore from 'app/stores/hookStore';
 
-describe('IntegrationDetailsModal', function() {
+describe('IntegrationDetailsModal', function () {
   const integrationAdded = jest.fn();
   const org = TestStubs.Organization();
   const routerContext = TestStubs.routerContext();
 
-  it('renders simple integration', function() {
+  it('renders simple integration', function () {
     const onClose = jest.fn();
     const provider = TestStubs.GitHubIntegrationProvider();
 
@@ -24,14 +24,11 @@ describe('IntegrationDetailsModal', function() {
     );
 
     expect(wrapper).toMatchSnapshot();
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('renders link for non-addable integration', function() {
+  it('renders link for non-addable integration', function () {
     const onClose = jest.fn();
     const provider = TestStubs.JiraIntegrationProvider();
 
@@ -48,10 +45,10 @@ describe('IntegrationDetailsModal', function() {
     expect(wrapper.find('Button[external]').exists()).toBe(true);
   });
 
-  it('disables the button via a hookstore IntegrationFeatures component', function() {
+  it('disables the button via a hookstore IntegrationFeatures component', function () {
     HookStore.add('integrations:feature-gates', () => ({
-      FeatureList: p => null,
-      IntegrationFeatures: p =>
+      FeatureList: (p) => null,
+      IntegrationFeatures: (p) =>
         p.children({
           disabled: true,
           disabledReason: 'Integration disabled',

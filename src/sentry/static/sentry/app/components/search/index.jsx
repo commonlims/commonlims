@@ -109,7 +109,7 @@ class Search extends React.Component {
     navigateTo(nextPath, router);
   };
 
-  saveQueryMetrics = debounce(query => {
+  saveQueryMetrics = debounce((query) => {
     if (!query) {
       return;
     }
@@ -208,8 +208,9 @@ class Search extends React.Component {
                             getItemProps,
                           });
                         })}
-                      {!isLoading &&
-                        !hasAnyResults && <EmptyItem>{t('No results found')}</EmptyItem>}
+                      {!isLoading && !hasAnyResults && (
+                        <EmptyItem>{t('No results found')}</EmptyItem>
+                      )}
                     </DropdownBox>
                   )}
                 </SearchSources>
@@ -226,8 +227,8 @@ export default withRouter(Search);
 
 const DropdownBox = styled.div`
   background: #fff;
-  border: 1px solid ${p => p.theme.borderDark};
-  box-shadow: ${p => p.theme.dropShadowHeavy};
+  border: 1px solid ${(p) => p.theme.borderDark};
+  box-shadow: ${(p) => p.theme.dropShadowHeavy};
   position: absolute;
   top: 36px;
   right: 0;

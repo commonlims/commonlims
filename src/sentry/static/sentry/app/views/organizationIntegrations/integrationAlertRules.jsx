@@ -34,7 +34,7 @@ class IntegrationAlertRules extends React.Component {
               {t('You have no projects to add Alert Rules to')}
             </EmptyMessage>
           )}
-          {projects.map(project => (
+          {projects.map((project) => (
             <PanelItem key={project.slug} align="center">
               <Box flex="1">
                 <ProjectBadge project={project} avatarSize={16} />

@@ -39,7 +39,7 @@ class RuleNode extends React.Component {
         choices={data.choices}
         key={name}
         style={{marginLeft: 6, marginRight: 6}}
-        onChange={val => this.props.handlePropertyChange(name, val)}
+        onChange={(val) => this.props.handlePropertyChange(name, val)}
       />
     );
   }
@@ -52,7 +52,7 @@ class RuleNode extends React.Component {
         placeholder={data.placeholder}
         key={name}
         style={{marginBottom: 0}}
-        onChange={val => this.props.handlePropertyChange(name, val)}
+        onChange={(val) => this.props.handlePropertyChange(name, val)}
       />
     );
   }
@@ -65,7 +65,7 @@ class RuleNode extends React.Component {
         placeholder={data.placeholder.toString()}
         key={name}
         style={{marginBottom: 0}}
-        onChange={val => this.props.handlePropertyChange(name, val)}
+        onChange={(val) => this.props.handlePropertyChange(name, val)}
       />
     );
   }
@@ -82,7 +82,7 @@ class RuleNode extends React.Component {
   getComponent(node) {
     const {label, formFields} = node;
 
-    return label.split(/({\w+})/).map(part => {
+    return label.split(/({\w+})/).map((part) => {
       if (!/^{\w+}$/.test(part)) {
         return part;
       }
@@ -125,7 +125,7 @@ const RuleNodeRow = styled.div`
   padding: 0 15px;
 
   &:nth-child(odd) {
-    background-color: ${p => p.theme.offWhite};
+    background-color: ${(p) => p.theme.offWhite};
   }
 `;
 

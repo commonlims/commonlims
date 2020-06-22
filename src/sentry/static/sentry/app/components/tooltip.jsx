@@ -25,7 +25,7 @@ class Tooltip extends React.Component {
     }
   }
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps) => {
     // Reattach tooltip if options or tooltip message changes
     if (
       !this.props.disabled &&
@@ -37,7 +37,7 @@ class Tooltip extends React.Component {
     }
   };
 
-  handleMount = ref => {
+  handleMount = (ref) => {
     if (ref && !this.ref) {
       this.attachTooltips(ref);
     } else if (!ref && this.ref) {
@@ -47,7 +47,7 @@ class Tooltip extends React.Component {
     this.ref = ref;
   };
 
-  attachTooltips = ref => {
+  attachTooltips = (ref) => {
     // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 
@@ -65,7 +65,7 @@ class Tooltip extends React.Component {
     });
   };
 
-  removeTooltips = ref => {
+  removeTooltips = (ref) => {
     // eslint-disable-next-line react/no-find-dom-node
     this.$ref = $(ReactDOM.findDOMNode(ref));
 

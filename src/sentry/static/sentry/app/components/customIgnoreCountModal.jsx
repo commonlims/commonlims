@@ -50,7 +50,7 @@ export default class CustomIgnoreCountModal extends React.Component {
                 className="form-control"
                 type="number"
                 value={count}
-                onChange={e => this.onChange('count', e.target.value)}
+                onChange={(e) => this.onChange('count', e.target.value)}
                 style={{padding: '3px 10px'}}
                 required={true}
                 placeholder={t('e.g. 100')}
@@ -61,7 +61,7 @@ export default class CustomIgnoreCountModal extends React.Component {
               <SelectField
                 value={window}
                 name="window"
-                onChange={v => this.onChange('window', v)}
+                onChange={(v) => this.onChange('window', v)}
                 choices={this.props.windowChoices}
                 placeholder={t('e.g. per hour')}
                 allowClear={true}

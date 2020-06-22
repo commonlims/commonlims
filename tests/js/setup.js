@@ -49,7 +49,7 @@ ConfigStore.loadInitialData({
 /**
  * Mocks
  */
-jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 jest.mock('app/utils/recreateRoute');
 jest.mock('app/translations');
 jest.mock('app/api');
@@ -123,7 +123,7 @@ jest.unmock('jquery');
  */
 
 // This is so we can use async/await in tests instead of wrapping with `setTimeout`
-window.tick = () => new Promise(resolve => setTimeout(resolve));
+window.tick = () => new Promise((resolve) => setTimeout(resolve));
 
 window.$ = window.jQuery = jQuery;
 window.sinon = sinon;
@@ -193,7 +193,7 @@ window.TestStubs = {
   }),
 
   AllAuthenticators: () => {
-    return Object.values(fixtures.Authenticators()).map(x => x());
+    return Object.values(fixtures.Authenticators()).map((x) => x());
   },
   ...fixtures,
 };

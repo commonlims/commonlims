@@ -3,13 +3,13 @@ import {mount} from 'enzyme';
 
 import ProjectSavedSearches from 'app/views/projectSavedSearches';
 
-describe('ProjectSavedSearches', function() {
+describe('ProjectSavedSearches', function () {
   let wrapper;
   const routerContext = TestStubs.routerContext();
   const org = routerContext.context.organization;
   const project = routerContext.context.project;
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.mockAsync = false;
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
@@ -24,7 +24,7 @@ describe('ProjectSavedSearches', function() {
     );
   });
 
-  it('renders empty', function() {
+  it('renders empty', function () {
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
       url: `/projects/${org.slug}/${project.slug}/searches/`,
@@ -40,11 +40,11 @@ describe('ProjectSavedSearches', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('removes a search query', function() {
+  it('removes a search query', function () {
     const removed = MockApiClient.addMockResponse({
       url: `/projects/${org.slug}/${project.slug}/searches/2/`,
       method: 'DELETE',
@@ -52,19 +52,14 @@ describe('ProjectSavedSearches', function() {
 
     expect(removed).not.toHaveBeenCalled();
 
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
 
-    $(document.body)
-      .find('.modal button:contains("Confirm")')
-      .click();
+    $(document.body).find('.modal button:contains("Confirm")').click();
 
     expect(removed).toHaveBeenCalled();
   });
 
-  it('rolls back update default on error', function() {
+  it('rolls back update default on error', function () {
     const url = `/projects/${org.slug}/${project.slug}/searches/2/`;
     const remove = MockApiClient.addMockResponse({
       url,
@@ -80,14 +75,9 @@ describe('ProjectSavedSearches', function() {
     expect(remove).not.toHaveBeenCalled();
 
     // Remove first row
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
 
-    $(document.body)
-      .find('.modal button:contains("Confirm")')
-      .click();
+    $(document.body).find('.modal button:contains("Confirm")').click();
 
     wrapper.update();
 
@@ -106,7 +96,7 @@ describe('ProjectSavedSearches', function() {
     MockApiClient.mockAsync = false;
   });
 
-  it('updates a search query to default', function() {
+  it('updates a search query to default', function () {
     const url = `/projects/${org.slug}/${project.slug}/searches/2/`;
     const update = MockApiClient.addMockResponse({
       url,
@@ -115,10 +105,7 @@ describe('ProjectSavedSearches', function() {
 
     expect(update).not.toHaveBeenCalled();
 
-    wrapper
-      .find('input[type="radio"]')
-      .first()
-      .simulate('change');
+    wrapper.find('input[type="radio"]').first().simulate('change');
 
     expect(update).toHaveBeenCalledWith(
       url,
@@ -130,18 +117,10 @@ describe('ProjectSavedSearches', function() {
       })
     );
 
-    expect(
-      wrapper
-        .find('input[type="radio"]')
-        .first()
-        .prop('checked')
-    ).toBe(true);
+    expect(wrapper.find('input[type="radio"]').first().prop('checked')).toBe(true);
 
     // Update Team default
-    wrapper
-      .find('input[type="radio"]')
-      .at(1)
-      .simulate('change');
+    wrapper.find('input[type="radio"]').at(1).simulate('change');
 
     expect(update).toHaveBeenCalledWith(
       url,
@@ -153,15 +132,10 @@ describe('ProjectSavedSearches', function() {
       })
     );
 
-    expect(
-      wrapper
-        .find('input[type="radio"]')
-        .at(1)
-        .prop('checked')
-    ).toBe(true);
+    expect(wrapper.find('input[type="radio"]').at(1).prop('checked')).toBe(true);
   });
 
-  it('rolls back update default on PUT error', function() {
+  it('rolls back update default on PUT error', function () {
     const url = `/projects/${org.slug}/${project.slug}/searches/2/`;
     const update = MockApiClient.addMockResponse({
       url,
@@ -172,28 +146,15 @@ describe('ProjectSavedSearches', function() {
     MockApiClient.mockAsync = true;
 
     // User default initial value is false
-    expect(
-      wrapper
-        .find('input[type="radio"]')
-        .first()
-        .prop('checked')
-    ).toBe(false);
+    expect(wrapper.find('input[type="radio"]').first().prop('checked')).toBe(false);
 
     expect(update).not.toHaveBeenCalled();
 
     // Select as user default
-    wrapper
-      .find('input[type="radio"]')
-      .first()
-      .simulate('change');
+    wrapper.find('input[type="radio"]').first().simulate('change');
 
     // Should update and be checked
-    expect(
-      wrapper
-        .find('input[type="radio"]')
-        .first()
-        .prop('checked')
-    ).toBe(true);
+    expect(wrapper.find('input[type="radio"]').first().prop('checked')).toBe(true);
 
     // calls API, API returns an error
 
@@ -201,12 +162,7 @@ describe('ProjectSavedSearches', function() {
       wrapper.update();
 
       // Reverts back to initial state
-      expect(
-        wrapper
-          .find('input[type="radio"]')
-          .first()
-          .prop('checked')
-      ).toBe(false);
+      expect(wrapper.find('input[type="radio"]').first().prop('checked')).toBe(false);
     }, 1);
 
     MockApiClient.mockAsync = false;

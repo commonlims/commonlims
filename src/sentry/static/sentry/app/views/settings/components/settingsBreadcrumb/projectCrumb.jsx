@@ -26,7 +26,7 @@ class ProjectCrumb extends React.Component {
     route: PropTypes.object,
   };
 
-  handleSelect = item => {
+  handleSelect = (item) => {
     const {routes, params} = this.props;
 
     const lastRoute = routes[routes.length - 1];
@@ -81,7 +81,7 @@ class ProjectCrumb extends React.Component {
           </ProjectName>
         }
         onSelect={this.handleSelect}
-        items={projects.map(project => ({
+        items={projects.map((project) => ({
           value: project.slug,
           label: (
             <MenuItem>

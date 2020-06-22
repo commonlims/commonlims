@@ -27,10 +27,10 @@ export function assignToUser(params) {
   });
 
   request
-    .then(data => {
+    .then((data) => {
       GroupActions.assignToSuccess(id, params.id, data);
     })
-    .catch(data => {
+    .catch((data) => {
       GroupActions.assignToError(id, params.id, data);
     });
 
@@ -57,10 +57,10 @@ export function clearAssignment(groupId) {
   });
 
   request
-    .then(data => {
+    .then((data) => {
       GroupActions.assignToSuccess(id, groupId, data);
     })
-    .catch(data => {
+    .catch((data) => {
       GroupActions.assignToError(id, groupId, data);
     });
 
@@ -87,7 +87,7 @@ export function assignToActor({id, actor}) {
       break;
 
     default:
-      Sentry.withScope(scope => {
+      Sentry.withScope((scope) => {
         scope.setExtra('actor', actor);
         Sentry.captureException('Unknown assignee type');
       });
@@ -98,10 +98,10 @@ export function assignToActor({id, actor}) {
       method: 'PUT',
       data: {assignedTo: actorId},
     })
-    .then(data => {
+    .then((data) => {
       GroupActions.assignToSuccess(guid, id, data);
     })
-    .catch(data => {
+    .catch((data) => {
       GroupActions.assignToError(guid, id, data);
     });
 }

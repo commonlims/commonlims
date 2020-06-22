@@ -3,10 +3,10 @@ import {mount, shallow} from 'enzyme';
 
 import OrganizationAccessRequests from 'app/views/settings/organizationMembers/organizationAccessRequests';
 
-describe('OrganizationAccessRequests', function() {
-  beforeEach(function() {});
+describe('OrganizationAccessRequests', function () {
+  beforeEach(function () {});
 
-  it('renders empty', function() {
+  it('renders empty', function () {
     const wrapper = shallow(
       <OrganizationAccessRequests
         params={{apiKey: 1, orgId: 'org-slug'}}
@@ -17,7 +17,7 @@ describe('OrganizationAccessRequests', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders list', function() {
+  it('renders list', function () {
     const wrapper = shallow(
       <OrganizationAccessRequests
         params={{apiKey: 1, orgId: 'org-slug'}}
@@ -46,7 +46,7 @@ describe('OrganizationAccessRequests', function() {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('can approve', function() {
+  it('can approve', function () {
     const mock = jest.fn();
     const wrapper = mount(
       <OrganizationAccessRequests
@@ -75,14 +75,11 @@ describe('OrganizationAccessRequests', function() {
       TestStubs.routerContext()
     );
 
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
     expect(mock).toHaveBeenCalled();
   });
 
-  it('can deny', function() {
+  it('can deny', function () {
     const mock = jest.fn();
     const wrapper = mount(
       <OrganizationAccessRequests
@@ -111,10 +108,7 @@ describe('OrganizationAccessRequests', function() {
       TestStubs.routerContext()
     );
 
-    wrapper
-      .find('Button')
-      .last()
-      .simulate('click');
+    wrapper.find('Button').last().simulate('click');
     expect(mock).toHaveBeenCalled();
   });
 });

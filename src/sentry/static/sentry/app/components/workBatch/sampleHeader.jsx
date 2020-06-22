@@ -99,7 +99,7 @@ const Title = styled.div`
     font-size: 14px;
     font-style: normal;
     font-weight: 300;
-    color: ${p => p.theme.gray3};
+    color: ${(p) => p.theme.gray3};
   }
 `;
 

@@ -23,7 +23,7 @@ class SettingsNavigation extends React.Component {
 
     return (
       <Box>
-        {navWithHooks.map(config => (
+        {navWithHooks.map((config) => (
           <SettingsNavigationGroup key={config.name} {...otherProps} {...config} />
         ))}
         {hooks.map((Hook, i) =>

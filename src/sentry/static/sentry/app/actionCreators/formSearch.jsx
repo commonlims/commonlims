@@ -16,10 +16,10 @@ const createSearchMap = ({route, formGroups, fields, ...other}) => {
   // If `formGroups` is defined, then return a flattened list of fields in all formGroups
   // Otherwise `fields` is a map of fieldName -> fieldObject -- create a list of fields
   const listOfFields = formGroups
-    ? flatMap(formGroups, formGroup => formGroup.fields)
-    : Object.keys(fields).map(fieldName => fields[fieldName]);
+    ? flatMap(formGroups, (formGroup) => formGroup.fields)
+    : Object.keys(fields).map((fieldName) => fields[fieldName]);
 
-  return listOfFields.map(field => ({
+  return listOfFields.map((field) => ({
     ...other,
     route,
     title: field.label,
@@ -37,7 +37,7 @@ export function loadSearchMap() {
   const allFormFields = flatten(
     context
       .keys()
-      .map(key => {
+      .map((key) => {
         const mod = context(key);
 
         // Since we're dynamically importing an entire directly, there could be malformed modules defined?
@@ -56,7 +56,7 @@ export function loadSearchMap() {
           route: mod.route,
         });
       })
-      .filter(i => !!i)
+      .filter((i) => !!i)
   );
 
   FormSearchActions.loadSearchMap(allFormFields);

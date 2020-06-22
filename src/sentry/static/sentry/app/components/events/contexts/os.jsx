@@ -27,7 +27,7 @@ class OsContextType extends React.Component {
   }
 }
 
-OsContextType.getTitle = function(value) {
+OsContextType.getTitle = function (value) {
   return 'Operating System';
 };
 

@@ -57,7 +57,7 @@ const ProcessTaskSettings = createReactClass({
     this.api.request(this.getPluginEndpoint(pluginId), {
       method: 'GET',
       data: {},
-      success: pluginDetails => {
+      success: (pluginDetails) => {
         this.setState({
           loading: false,
           fields: pluginDetails.views.start_sequence.fields,
@@ -78,7 +78,7 @@ const ProcessTaskSettings = createReactClass({
       <GenericField
         key={config.name}
         config={config}
-        onChange={value => this.handleChange(value, config)}
+        onChange={(value) => this.handleChange(value, config)}
       />
     );
   },
@@ -103,7 +103,7 @@ const ProcessTaskSettings = createReactClass({
           ) : (
             <div>
               <div>
-                {this.state.fields.map(fieldConfig => this.configToField(fieldConfig))}
+                {this.state.fields.map((fieldConfig) => this.configToField(fieldConfig))}
               </div>
             </div>
           )}

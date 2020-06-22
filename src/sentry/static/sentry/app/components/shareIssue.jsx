@@ -37,7 +37,7 @@ class ShareUrlContainer extends React.Component {
     selectText(ReactDOM.findDOMNode(this.urlRef));
   };
 
-  handleUrlMount = ref => {
+  handleUrlMount = (ref) => {
     this.urlRef = ref;
 
     if (this.urlRef) {
@@ -169,7 +169,7 @@ class ShareIssue extends React.Component {
     }
   }
 
-  handleToggleShare = e => {
+  handleToggleShare = (e) => {
     e.preventDefault();
     this.setState({busy: true}, () => this.props.onToggle());
   };
@@ -188,7 +188,7 @@ class ShareIssue extends React.Component {
   };
 
   // State of confirm modal so we can keep dropdown menu opn
-  handleConfirmCancel = e => (this.hasConfirmModal = false);
+  handleConfirmCancel = (e) => (this.hasConfirmModal = false);
   handleConfirmReshare = () => (this.hasConfirmModal = true);
 
   render() {
@@ -221,7 +221,7 @@ class ShareIssue extends React.Component {
           style={{
             padding: '12px 18px',
           }}
-          ref={ref => (this.container = ref)}
+          ref={(ref) => (this.container = ref)}
         >
           <SpreadLayout style={{marginBottom: busy || isSharing ? 12 : undefined}}>
             <SmallHeading>{t('Enable public share link')}</SmallHeading>
@@ -234,15 +234,14 @@ class ShareIssue extends React.Component {
             </FlowLayout>
           )}
 
-          {!busy &&
-            isSharing && (
-              <ShareUrlContainer
-                {...this.props}
-                onCancel={this.handleConfirmCancel}
-                onConfirming={this.handleConfirmReshare}
-                onShare={this.handleShare}
-              />
-            )}
+          {!busy && isSharing && (
+            <ShareUrlContainer
+              {...this.props}
+              onCancel={this.handleConfirmCancel}
+              onConfirming={this.handleConfirmReshare}
+              onShare={this.handleShare}
+            />
+          )}
         </li>
       </DropdownLink>
     );

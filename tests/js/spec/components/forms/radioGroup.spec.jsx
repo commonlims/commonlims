@@ -3,9 +3,9 @@ import {mount, shallow} from 'enzyme';
 
 import RadioGroup from 'app/views/settings/components/forms/controls/radioGroup';
 
-describe('RadioGroup', function() {
-  describe('render()', function() {
-    it('renders', function() {
+describe('RadioGroup', function () {
+  describe('render()', function () {
+    it('renders', function () {
       const wrapper = shallow(
         <RadioGroup
           name="radio"
@@ -20,7 +20,7 @@ describe('RadioGroup', function() {
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders disabled', function() {
+    it('renders disabled', function () {
       const wrapper = mount(
         <RadioGroup
           name="radio"
@@ -35,7 +35,7 @@ describe('RadioGroup', function() {
       expect(wrapper.find('RadioLineButtonFill').props().disabled).toBe(true);
     });
 
-    it('can select a different item', function() {
+    it('can select a different item', function () {
       const wrapper = shallow(
         <RadioGroup
           name="radio"
@@ -50,7 +50,7 @@ describe('RadioGroup', function() {
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('calls onChange when clicked', function() {
+    it('calls onChange when clicked', function () {
       const mock = jest.fn();
 
       const wrapper = mount(
@@ -65,10 +65,7 @@ describe('RadioGroup', function() {
           onChange={mock}
         />
       );
-      wrapper
-        .find('[role="radio"]')
-        .last()
-        .simulate('click');
+      wrapper.find('[role="radio"]').last().simulate('click');
       expect(mock).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
     });
   });

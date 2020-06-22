@@ -20,7 +20,7 @@ class AllTeamsList extends React.Component {
     useCreateModal: PropTypes.bool,
   };
 
-  handleCreateTeam = e => {
+  handleCreateTeam = (e) => {
     const {useCreateModal, organization} = this.props;
 
     if (!useCreateModal) {

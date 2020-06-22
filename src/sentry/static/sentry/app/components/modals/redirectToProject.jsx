@@ -35,7 +35,7 @@ class RedirectToProjectModal extends React.Component {
         return;
       }
 
-      this.setState(state => ({
+      this.setState((state) => ({
         timer: state.timer - 1,
       }));
     }, 1000);

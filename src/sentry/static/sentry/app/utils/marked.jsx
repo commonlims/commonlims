@@ -21,7 +21,7 @@ Object.assign(Renderer.prototype, marked.Renderer.prototype);
 // Anythign except javascript, vbscript, data protocols
 const safeLinkPattern = /^(https?:|mailto:)/i;
 
-Renderer.prototype.link = function(href, title, text) {
+Renderer.prototype.link = function (href, title, text) {
   // For a bad link, just return the plain text href
   if (this.options.sanitize && !isSafeHref(href, safeLinkPattern)) {
     return href;
@@ -38,7 +38,7 @@ Renderer.prototype.link = function(href, title, text) {
 // Only allow http(s) for image tags
 const safeImagePattern = /^https?:\/\/./i;
 
-Renderer.prototype.image = function(href, title, text) {
+Renderer.prototype.image = function (href, title, text) {
   // For a bad image, return an empty string
   if (this.options.sanitize && !isSafeHref(href, safeImagePattern)) {
     return '';
@@ -59,7 +59,7 @@ marked.setOptions({
 });
 
 const noParagraphRenderer = new Renderer();
-noParagraphRenderer.paragraph = s => s;
+noParagraphRenderer.paragraph = (s) => s;
 
 const singleLineRenderer = (text, options) =>
   marked(text, {...options, renderer: noParagraphRenderer});

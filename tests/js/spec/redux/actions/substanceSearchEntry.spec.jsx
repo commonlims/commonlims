@@ -19,12 +19,12 @@ import {
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-describe('substance redux actions', function() {
-  beforeEach(function() {
+describe('substance redux actions', function () {
+  beforeEach(function () {
     moxios.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     moxios.uninstall();
   });
 

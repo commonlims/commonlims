@@ -1,4 +1,3 @@
-/*eslint getsentry/jsx-needs-il8n:0*/
 import DocumentTitle from 'react-document-title';
 import React from 'react';
 
@@ -15,7 +14,7 @@ export default class AdminLayout extends React.Component {
     super(props);
     // Allow injection via getsentry et all
     const hooksManage = [];
-    HookStore.get('admin:sidebar:manage').forEach(cb => {
+    HookStore.get('admin:sidebar:manage').forEach((cb) => {
       hooksManage.push(cb());
     });
 

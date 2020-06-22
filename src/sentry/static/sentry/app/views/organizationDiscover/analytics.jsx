@@ -21,7 +21,7 @@ export function trackQuery(organization, query) {
     data.limit = query.limit;
   }
 
-  data.conditions = query.conditions.map(condition => {
+  data.conditions = query.conditions.map((condition) => {
     return [
       condition[0],
       condition[1],

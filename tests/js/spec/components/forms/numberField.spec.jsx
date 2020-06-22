@@ -6,24 +6,24 @@ import {shallow, mount} from 'enzyme';
 
 jest.mock('jquery');
 
-describe('NumberField', function() {
-  describe('render()', function() {
-    it('renders', function() {
+describe('NumberField', function () {
+  describe('render()', function () {
+    it('renders', function () {
       const wrapper = shallow(<NumberField name="fieldName" />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with optional attributes', function() {
+    it('renders with optional attributes', function () {
       const wrapper = shallow(<NumberField name="fieldName" min={0} max={100} />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with value', function() {
+    it('renders with value', function () {
       const wrapper = shallow(<NumberField name="fieldName" value={5} />);
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('renders with form context', function() {
+    it('renders with form context', function () {
       const wrapper = shallow(<NumberField name="fieldName" />, {
         context: {
           form: {
@@ -37,7 +37,7 @@ describe('NumberField', function() {
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('doesnt save `NaN` when new value is empty string', function() {
+    it('doesnt save `NaN` when new value is empty string', function () {
       const wrapper = mount(
         <Form onSubmit={() => {}}>
           <NumberField name="fieldName" defaultValue="2" />

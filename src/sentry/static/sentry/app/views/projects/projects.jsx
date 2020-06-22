@@ -131,13 +131,13 @@ Projects.propTypes = {
   projectSearchEntry: PropTypes.object,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     projectSearchEntry: state.projectSearchEntry,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   projectSearchEntriesGet: (query, groupBy, cursor) =>
     dispatch(projectSearchEntriesGet(query, groupBy, cursor)),
 });

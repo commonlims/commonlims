@@ -38,7 +38,7 @@ const ProjectNav = createReactClass({
         onSelect: () => {
           openCreateTeamModal({
             organization: org,
-            onClose: data => {
+            onClose: (data) => {
               if (!data) {
                 return;
               }
@@ -111,8 +111,8 @@ const ProjectNav = createReactClass({
 
 const StyledNav = styled(Flex)`
   font-size: 20px;
-  border-bottom: 1px solid ${p => p.theme.borderLight};
-  box-shadow: ${p => p.theme.dropShadowLight};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
   background-color: white;
   padding: ${space(2)} ${space(4)};
 `;
@@ -125,15 +125,15 @@ const StyledDropdown = styled.div`
   .icon-arrow-down {
     top: 1px;
     font-size: 12px !important;
-    color: ${p => p.theme.gray1};
+    color: ${(p) => p.theme.gray1};
     margin-left: ${space(0.5)};
   }
   li[role='presentation'] a:hover {
     color: white;
-    background-color: ${p => p.theme.purpleDark};
+    background-color: ${(p) => p.theme.purpleDark};
   }
   li[disabled] {
-    color: ${p => p.theme.disabled};
+    color: ${(p) => p.theme.disabled};
     padding: 3px 10px;
   }
 `;

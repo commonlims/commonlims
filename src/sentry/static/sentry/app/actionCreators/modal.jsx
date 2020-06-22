@@ -18,9 +18,9 @@ export function closeModal() {
 
 export function openSudo({onClose, ...args} = {}) {
   import(/* webpackChunkName: "SudoModal" */ '../components/modals/sudoModal')
-    .then(mod => mod.default)
-    .then(SudoModal =>
-      openModal(deps => <SudoModal {...deps} {...args} />, {
+    .then((mod) => mod.default)
+    .then((SudoModal) =>
+      openModal((deps) => <SudoModal {...deps} {...args} />, {
         modalClassName: 'sudo-modal',
         onClose,
       })
@@ -35,9 +35,9 @@ export function openSudo({onClose, ...args} = {}) {
  */
 export function openCreateTeamModal(options = {}) {
   import(/* webpackChunkName: "CreateTeamModal" */ '../components/modals/createTeamModal')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} {...options} />, {
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} {...options} />, {
         modalClassName: 'create-team-modal',
       });
     });
@@ -45,19 +45,21 @@ export function openCreateTeamModal(options = {}) {
 
 export function openCommandPalette(options = {}) {
   import(/* webpackChunkName: "CommandPalette" */ '../components/modals/commandPalette')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} {...options} />, {
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} {...options} />, {
         modalClassName: 'command-palette',
       });
     });
 }
 
 export function openRecoveryOptions(options = {}) {
-  import(/* webpackChunkName: "RecoveryOptionsModal" */ 'app/components/modals/recoveryOptionsModal')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} {...options} />, {
+  import(
+    /* webpackChunkName: "RecoveryOptionsModal" */ 'app/components/modals/recoveryOptionsModal'
+  )
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} {...options} />, {
         modalClassName: 'recovery-options',
       });
     });
@@ -68,38 +70,46 @@ export function openRecoveryOptions(options = {}) {
  * @param Function options.onAddIntegration Called after a new integration is added
  */
 export function openIntegrationDetails(options = {}) {
-  import(/* webpackChunkName: "IntegrationDetailsModal" */ 'app/components/modals/integrationDetailsModal')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} {...options} />, {
+  import(
+    /* webpackChunkName: "IntegrationDetailsModal" */ 'app/components/modals/integrationDetailsModal'
+  )
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} {...options} />, {
         modalClassName: 'integration-details',
       });
     });
 }
 
 export function redirectToProject(newProjectSlug) {
-  import(/* webpackChunkName: "RedirectToProjectModal" */ 'app/components/modals/redirectToProject')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} slug={newProjectSlug} />, {});
+  import(
+    /* webpackChunkName: "RedirectToProjectModal" */ 'app/components/modals/redirectToProject'
+  )
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} slug={newProjectSlug} />, {});
     });
 }
 
 export function openHelpSearchModal() {
-  import(/* webpackChunkName: "HelpSearchModal" */ 'app/components/modals/helpSearchModal')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} />, {
+  import(
+    /* webpackChunkName: "HelpSearchModal" */ 'app/components/modals/helpSearchModal'
+  )
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} />, {
         modalClassName: 'help-search-modal',
       });
     });
 }
 
 export function openSentryAppPermissionModal(options = {}) {
-  import(/* webpackChunkName: "SentryAppPermissionsModal" */ 'app/components/modals/sentryAppPermissionsModal')
-    .then(mod => mod.default)
-    .then(Modal => {
-      openModal(deps => <Modal {...deps} {...options} />, {
+  import(
+    /* webpackChunkName: "SentryAppPermissionsModal" */ 'app/components/modals/sentryAppPermissionsModal'
+  )
+    .then((mod) => mod.default)
+    .then((Modal) => {
+      openModal((deps) => <Modal {...deps} {...options} />, {
         modalClassName: 'sentry-app-permissions',
       });
     });

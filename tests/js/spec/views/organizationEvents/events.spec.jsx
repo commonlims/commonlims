@@ -18,7 +18,7 @@ const pageTwoLinks =
   '<https://sentry.io/api/0/organizations/sentry/events/?statsPeriod=14d&cursor=0:0:1>; rel="previous"; results="true"; cursor="0:0:1", ' +
   '<https://sentry.io/api/0/organizations/sentry/events/?statsPeriod=14d&cursor=0:200:0>; rel="next"; results="false"; cursor="0:200:0"';
 
-describe('OrganizationEventsErrors', function() {
+describe('OrganizationEventsErrors', function () {
   const {organization, router, routerContext} = initializeOrg({
     projects: [{isMember: true}, {isMember: true, slug: 'new-project', id: 3}],
     organization: {
@@ -37,18 +37,21 @@ describe('OrganizationEventsErrors', function() {
   let eventsStatsMock;
   let eventsMetaMock;
 
-  beforeAll(function() {
+  beforeAll(function () {
     MockApiClient.addMockResponse({
       url: `/organizations/${org.slug}/environments/`,
       body: TestStubs.Environments(),
     });
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     // Search bar makes this request when mounted
     MockApiClient.addMockResponse({
       url: '/organizations/org-slug/tags/',
-      body: [{count: 1, tag: 'transaction'}, {count: 2, tag: 'mechanism'}],
+      body: [
+        {count: 1, tag: 'transaction'},
+        {count: 2, tag: 'mechanism'},
+      ],
     });
     eventsMock = MockApiClient.addMockResponse({
       url: '/organizations/org-slug/events/',
@@ -67,7 +70,7 @@ describe('OrganizationEventsErrors', function() {
     });
   });
 
-  it('renders with errors', async function() {
+  it('renders with errors', async function () {
     MockApiClient.addMockResponse({
       url: `/organizations/${org.slug}/events/`,
       statusCode: 500,
@@ -90,7 +93,7 @@ describe('OrganizationEventsErrors', function() {
     expect(wrapper.find('RouteError')).toHaveLength(1);
   });
 
-  it('renders events table', async function() {
+  it('renders events table', async function () {
     const wrapper = mount(
       <OrganizationEvents organization={org} location={{query: {}}} />,
       routerContext
@@ -105,7 +108,7 @@ describe('OrganizationEventsErrors', function() {
 
   // This tests the component's `shouldComponentUpdate`
   // Use `search` to compare instead of `query` because that's what we check in `AsyncComponent`
-  it('location.query changes updates events table', async function() {
+  it('location.query changes updates events table', async function () {
     const wrapper = mount(
       <OrganizationEvents
         organization={org}
@@ -157,13 +160,13 @@ describe('OrganizationEventsErrors', function() {
     );
   });
 
-  describe('Events Integration', function() {
+  describe('Events Integration', function () {
     let chartRender;
     let tableRender;
     let wrapper;
     let newParams;
 
-    beforeEach(function() {
+    beforeEach(function () {
       const newLocation = {
         ...router.location,
         query: {
@@ -197,7 +200,7 @@ describe('OrganizationEventsErrors', function() {
       tableRender = jest.spyOn(wrapper.find('EventsTable').instance(), 'render');
     });
 
-    afterAll(function() {
+    afterAll(function () {
       if (chartRender) {
         chartRender.mockRestore();
       }
@@ -205,7 +208,7 @@ describe('OrganizationEventsErrors', function() {
       tableRender.mockRestore();
     });
 
-    it('zooms using chart', async function() {
+    it('zooms using chart', async function () {
       expect(tableRender).toHaveBeenCalledTimes(0);
 
       await tick();
@@ -243,10 +246,10 @@ describe('OrganizationEventsErrors', function() {
     });
   });
 
-  describe('OrganizationEventsContainer', function() {
+  describe('OrganizationEventsContainer', function () {
     let wrapper;
 
-    beforeEach(function() {
+    beforeEach(function () {
       // GlobalSelectionStore.reset();
 
       router.location = {
@@ -267,7 +270,7 @@ describe('OrganizationEventsErrors', function() {
       mockRouterPush(wrapper, router);
     });
 
-    it('performs the correct queries when there is a search query', async function() {
+    it('performs the correct queries when there is a search query', async function () {
       wrapper.find('SmartSearchBar input').simulate('change', {target: {value: 'http'}});
       wrapper.find('SmartSearchBar input').simulate('submit');
 
@@ -305,13 +308,13 @@ describe('OrganizationEventsErrors', function() {
   });
 });
 
-describe('parseRowFromLinks', function() {
-  it('calculates rows for first page', function() {
+describe('parseRowFromLinks', function () {
+  it('calculates rows for first page', function () {
     expect(parseRowFromLinks(pageOneLinks, 10)).toBe('1-10');
     expect(parseRowFromLinks(pageOneLinks, 100)).toBe('1-100');
   });
 
-  it('calculates rows for the second page', function() {
+  it('calculates rows for the second page', function () {
     expect(parseRowFromLinks(pageTwoLinks, 10)).toBe('101-110');
     expect(parseRowFromLinks(pageTwoLinks, 100)).toBe('101-200');
   });

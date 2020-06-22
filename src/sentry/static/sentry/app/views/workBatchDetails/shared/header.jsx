@@ -40,7 +40,7 @@ const WorkBatchHeader = createReactClass({
   },
 
   buildLinks() {
-    return this.props.workBatch.tabs.map(tab => {
+    return this.props.workBatch.tabs.map((tab) => {
       return (
         <li className={tab.active ? 'active' : ''} key={tab.id}>
           <a onClick={() => WorkBatchStore.activateTab(tab.id)}>{tab.title}</a>

@@ -31,7 +31,7 @@ export default class ApiForm extends Form {
     this.api.clear();
   }
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     if (this.state.state == FormState.SAVING) {
@@ -50,11 +50,11 @@ export default class ApiForm extends Form {
         this.api.request(this.props.apiEndpoint, {
           method: this.props.apiMethod,
           data,
-          success: result => {
+          success: (result) => {
             IndicatorStore.remove(loadingIndicator);
             this.onSubmitSuccess(result);
           },
-          error: error => {
+          error: (error) => {
             IndicatorStore.remove(loadingIndicator);
             IndicatorStore.add(this.props.submitErrorMessage, 'error');
             this.onSubmitError(error);

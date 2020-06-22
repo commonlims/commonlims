@@ -5,9 +5,9 @@ const FlowLayout = styled('div')`
   display: flex;
   flex: 1;
   align-items: center;
-  flex-direction: ${p => (p.vertical ? 'column' : null)};
-  justify-content: ${p => (p.center ? 'center' : null)};
-  overflow: ${p => (p.truncate ? 'hidden' : null)};
+  flex-direction: ${(p) => (p.vertical ? 'column' : null)};
+  justify-content: ${(p) => (p.center ? 'center' : null)};
+  overflow: ${(p) => (p.truncate ? 'hidden' : null)};
 `;
 
 FlowLayout.propTypes = {

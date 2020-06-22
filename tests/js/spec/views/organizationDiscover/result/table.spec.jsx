@@ -3,15 +3,18 @@ import {shallow, render} from 'enzyme';
 
 import ResultTable from 'app/views/organizationDiscover/result/table';
 
-describe('ResultTable', function() {
+describe('ResultTable', function () {
   let wrapper;
-  beforeEach(function() {
+  beforeEach(function () {
     wrapper = shallow(
       <ResultTable
         query={{aggregations: [], fields: ['id', 'project.id']}}
         data={{
           data: [{id: '111', 'project.id': 1}],
-          meta: [{name: 'id', type: 'string'}, {name: 'project.id', type: 'number'}],
+          meta: [
+            {name: 'id', type: 'string'},
+            {name: 'project.id', type: 'number'},
+          ],
         }}
       />,
       {
@@ -30,7 +33,7 @@ describe('ResultTable', function() {
     wrapper.instance().canvas = mockCanvas;
   });
 
-  it('getColumnWidths()', function() {
+  it('getColumnWidths()', function () {
     wrapper.setProps({
       data: {data: [{col1: 'foo'}], meta: [{name: 'col1'}]},
       query: {fields: ['col1'], aggregations: []},
@@ -39,10 +42,10 @@ describe('ResultTable', function() {
     expect(widths).toEqual([345, 153]);
   });
 
-  it('getRowHeight()', function() {
+  it('getRowHeight()', function () {
     const mockCanvas = {
       getContext: () => ({
-        measureText: text => {
+        measureText: (text) => {
           const lengths = {
             '"long-text"': 3000,
             '"medium-text"': 600,
@@ -71,7 +74,7 @@ describe('ResultTable', function() {
     expect(wrapper.instance().getRowHeight(3, columnsToCheck)).toBe(91);
   });
 
-  it('getCellRenderer()', function() {
+  it('getCellRenderer()', function () {
     const cols = wrapper.instance().getColumnList();
     const cellRenderer = wrapper.instance().getCellRenderer(cols);
 
@@ -82,7 +85,7 @@ describe('ResultTable', function() {
       {value: '1', row: 1, col: 1},
     ];
 
-    expectedCellValues.forEach(function({value, row, col}) {
+    expectedCellValues.forEach(function ({value, row, col}) {
       const cell = cellRenderer({rowIndex: row, columnIndex: col});
       const markup = render(cell);
       expect(markup.text()).toBe(value);

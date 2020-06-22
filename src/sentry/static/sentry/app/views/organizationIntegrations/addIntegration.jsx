@@ -31,14 +31,14 @@ export default class AddIntegration extends React.Component {
     const innerWidth = window.innerWidth
       ? window.innerWidth
       : document.documentElement.clientWidth
-        ? document.documentElement.clientWidth
-        : screen.width;
+      ? document.documentElement.clientWidth
+      : screen.width;
 
     const innerHeight = window.innerHeight
       ? window.innerHeight
       : document.documentElement.clientHeight
-        ? document.documentElement.clientHeight
-        : screen.height;
+      ? document.documentElement.clientHeight
+      : screen.height;
 
     const left = innerWidth / 2 - width / 2 + screenLeft;
     const top = innerHeight / 2 - height / 2 + screenTop;
@@ -46,7 +46,7 @@ export default class AddIntegration extends React.Component {
     return {left, top};
   }
 
-  openDialog = urlParams => {
+  openDialog = (urlParams) => {
     const name = 'sentryAddIntegration';
     const {url, width, height} = this.props.provider.setupDialog;
     const {left, top} = this.computeCenteredWindow(width, height);
@@ -64,7 +64,7 @@ export default class AddIntegration extends React.Component {
     this.dialog.focus();
   };
 
-  didReceiveMessage = message => {
+  didReceiveMessage = (message) => {
     if (message.origin !== document.location.origin) {
       return;
     }

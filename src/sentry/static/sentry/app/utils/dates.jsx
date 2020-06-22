@@ -35,9 +35,7 @@ export function getFormattedDate(dateObj, format, {local} = {}) {
 export function setDateToTime(dateObj, timeStr, {local} = {}) {
   const [hours, minutes, seconds] = timeStr.split(':');
 
-  const date = getParser(local)(dateObj)
-    .set('hours', hours)
-    .set('minutes', minutes);
+  const date = getParser(local)(dateObj).set('hours', hours).set('minutes', minutes);
 
   if (typeof seconds !== 'undefined') {
     date.set('seconds', seconds);
@@ -82,11 +80,7 @@ export function getLocalToUtc(dateObj) {
 
 // Get the beginning of day (e.g. midnight)
 export function getStartOfDay(date, {local} = {}) {
-  return getParser(local)(date)
-    .hour(0)
-    .minute(0)
-    .second(0)
-    .toDate();
+  return getParser(local)(date).hour(0).minute(0).second(0).toDate();
 }
 
 // Get tomorrow at midnight so that default endtime

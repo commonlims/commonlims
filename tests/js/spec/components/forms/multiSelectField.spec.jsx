@@ -3,22 +3,28 @@ import {shallow} from 'enzyme';
 
 import {MultiSelectField} from 'app/components/forms';
 
-describe('MultiSelectField', function() {
-  describe('render()', function() {
-    it('renders without form context', function() {
+describe('MultiSelectField', function () {
+  describe('render()', function () {
+    it('renders without form context', function () {
       const wrapper = shallow(
         <MultiSelectField
-          options={[{label: 'a', value: 'a'}, {label: 'b', value: 'b'}]}
+          options={[
+            {label: 'a', value: 'a'},
+            {label: 'b', value: 'b'},
+          ]}
           name="fieldName"
         />
       );
       expect(wrapper).toMatchSnapshot();
     });
 
-    it('has the right value from props', function() {
+    it('has the right value from props', function () {
       const wrapper = shallow(
         <MultiSelectField
-          options={[{label: 'a', value: 'a'}, {label: 'b', value: 'b'}]}
+          options={[
+            {label: 'a', value: 'a'},
+            {label: 'b', value: 'b'},
+          ]}
           name="fieldName"
           value={['a']}
         />
@@ -26,10 +32,13 @@ describe('MultiSelectField', function() {
       expect(wrapper.find('StyledSelectControl').prop('value')).toEqual(['a']);
     });
 
-    it('renders with form context', function() {
+    it('renders with form context', function () {
       const wrapper = shallow(
         <MultiSelectField
-          options={[{label: 'a', value: 'a'}, {label: 'b', value: 'b'}]}
+          options={[
+            {label: 'a', value: 'a'},
+            {label: 'b', value: 'b'},
+          ]}
           name="fieldName"
         />,
         {

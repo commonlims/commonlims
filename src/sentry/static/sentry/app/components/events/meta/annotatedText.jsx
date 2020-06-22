@@ -31,7 +31,7 @@ const Placeholder = styled(Redaction)`
 `;
 
 const ErrorIcon = styled(InlineSvg)`
-  color: ${props => props.theme.redDark};
+  color: ${(props) => props.theme.redDark};
 `;
 
 const REMARKS = {
@@ -97,7 +97,7 @@ function renderErrors(errors) {
   <div style="text-align: left">
     <strong>${tn('Processing Error:', 'Processing Errors:', errors.length)}</strong>
     <ul>
-      ${errors.map(e => `<li>${utils.escape(e)}</li>`)}
+      ${errors.map((e) => `<li>${utils.escape(e)}</li>`)}
     </ul>
   </div>
   `;

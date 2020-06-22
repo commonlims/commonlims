@@ -16,8 +16,8 @@ class SearchResult extends React.Component {
     highlighted: PropTypes.bool,
     item: PropTypes.shape({
       /**
-     * The source of the search result (i.e. a model type)
-     */
+       * The source of the search result (i.e. a model type)
+       */
       sourceType: PropTypes.oneOf([
         'organization',
         'project',
@@ -33,11 +33,11 @@ class SearchResult extends React.Component {
         'help',
       ]),
       /**
-     * The type of result this is, for example:
-     * - can be a setting route,
-     * - an application route (e.g. org dashboard)
-     * - form field
-     */
+       * The type of result this is, for example:
+       * - can be a setting route,
+       * - an application route (e.g. org dashboard)
+       * - form field
+       */
       resultType: PropTypes.oneOf([
         'settings',
         'command',
@@ -69,7 +69,9 @@ class SearchResult extends React.Component {
     let {sourceType, title, description, model} = item;
 
     if (matches) {
-      const HighlightedMarker = p => <HighlightMarker highlighted={highlighted} {...p} />;
+      const HighlightedMarker = (p) => (
+        <HighlightMarker highlighted={highlighted} {...p} />
+      );
 
       const matchedTitle = matches && matches.find(({key}) => key === 'title');
       const matchedDescription =
@@ -169,10 +171,10 @@ const SearchDetail = styled.div`
 
 const BadgeDetail = styled.div`
   line-height: 1.3;
-  color: ${p => (p.highlighted ? p.theme.purpleDarkest : null)};
+  color: ${(p) => (p.highlighted ? p.theme.purpleDarkest : null)};
 `;
 
-const Content = styled(props => <Flex direction="column" {...props} />)`
+const Content = styled((props) => <Flex direction="column" {...props} />)`
   /* stylelint-disable-next-line no-empty-block */
 `;
 

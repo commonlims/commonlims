@@ -26,7 +26,7 @@ const StreamSidebar = createReactClass({
     return {
       tags: {},
       query: '',
-      onQueryChange: function() {},
+      onQueryChange: function () {},
     };
   },
 
@@ -68,11 +68,11 @@ const StreamSidebar = createReactClass({
     );
   },
 
-  onTextChange: function(evt) {
+  onTextChange: function (evt) {
     this.setState({textFilter: evt.target.value});
   },
 
-  debouncedTextChange: _.debounce(function(text) {
+  debouncedTextChange: _.debounce(function (text) {
     this.setState(
       {
         queryObj: {...this.state.queryObj, __text: text},
@@ -137,7 +137,7 @@ const StreamSidebar = createReactClass({
               <hr />
             </div>
 
-            {_.map(tags, tag => {
+            {_.map(tags, (tag) => {
               return (
                 <StreamTagFilter
                   value={this.state.queryObj[tag.key]}

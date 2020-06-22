@@ -1,6 +1,6 @@
 import {css} from 'react-emotion';
 
-const SidebarDropdownMenu = p => css`
+const SidebarDropdownMenu = (p) => css`
   position: absolute;
   background: ${p.theme.white};
   color: ${p.theme.gray5};

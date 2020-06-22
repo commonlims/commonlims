@@ -3,9 +3,9 @@ import {shallow} from 'enzyme';
 
 import {Form} from 'app/components/forms';
 
-describe('Form', function() {
-  describe('render()', function() {
-    it('renders with children', function() {
+describe('Form', function () {
+  describe('render()', function () {
+    it('renders with children', function () {
       const wrapper = shallow(
         <Form onSubmit={() => {}}>
           <hr />

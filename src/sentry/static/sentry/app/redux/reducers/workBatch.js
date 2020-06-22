@@ -13,7 +13,7 @@ const initialState = {
 };
 
 const workBatchToggleSelect = (workBatches, id) =>
-  workBatches.map(ut => {
+  workBatches.map((ut) => {
     if (ut.id == id) {
       ut.selected = !!!ut.selected;
     }
@@ -21,7 +21,7 @@ const workBatchToggleSelect = (workBatches, id) =>
   });
 
 const workBatchesToggleSelectAll = (workBatches, doSelect) =>
-  workBatches.map(ut => {
+  workBatches.map((ut) => {
     ut.selected = doSelect;
     return ut;
   });

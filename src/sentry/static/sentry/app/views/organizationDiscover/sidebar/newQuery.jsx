@@ -29,14 +29,14 @@ export default class NewQuery extends React.Component {
     const data = {...queryBuilder.getInternal(), name: savedQueryName};
 
     createSavedQuery(organization, data)
-      .then(savedQuery => {
+      .then((savedQuery) => {
         addSuccessMessage(tct('Successfully saved query [name]', {name: savedQueryName}));
         browserHistory.push({
           pathname: `/organizations/${organization.slug}/discover/saved/${savedQuery.id}/`,
           query: {editing: true},
         });
       })
-      .catch(err => {
+      .catch((err) => {
         const message = (err && err.detail) || t('Could not save query');
         addErrorMessage(message);
       });

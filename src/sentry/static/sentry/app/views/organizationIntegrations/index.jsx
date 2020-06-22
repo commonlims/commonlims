@@ -52,21 +52,21 @@ class OrganizationIntegrations extends AsyncComponent {
 
   get enabledPlugins() {
     // List of slugs for each Plugin the Org/Project has currently enabled.
-    return compact(this.state.plugins.map(plugin => plugin.enabled && plugin.slug));
+    return compact(this.state.plugins.map((plugin) => plugin.enabled && plugin.slug));
   }
 
   get unmigratableReposByOrg() {
     // Group by [GitHub|BitBucket|VSTS] Org name
-    return groupBy(this.state.unmigratableRepos, repo => repo.name.split('/')[0]);
+    return groupBy(this.state.unmigratableRepos, (repo) => repo.name.split('/')[0]);
   }
 
   get providers() {
     // Adds a list of `integrations` (installed Integration records)
     // for each Provider, as well as an `isInstalled` boolean denoting
     // when at least one Integration is present.
-    return this.state.config.providers.map(provider => {
+    return this.state.config.providers.map((provider) => {
       const integrations = this.state.integrations.filter(
-        i => i.provider.key == provider.key
+        (i) => i.provider.key == provider.key
       );
       const isInstalled = integrations.length > 0;
 
@@ -80,10 +80,10 @@ class OrganizationIntegrations extends AsyncComponent {
 
   // Actions
 
-  onInstall = integration => {
+  onInstall = (integration) => {
     // Merge the new integration into the list. If we're updating an
     // integration overwrite the old integration.
-    const keyedItems = keyBy(this.state.integrations, i => i.id);
+    const keyedItems = keyBy(this.state.integrations, (i) => i.id);
 
     // Mark this integration as newlyAdded if it didn't already exist, allowing
     // us to animate the element in.
@@ -93,17 +93,17 @@ class OrganizationIntegrations extends AsyncComponent {
 
     const integrations = sortArray(
       Object.values({...keyedItems, [integration.id]: integration}),
-      i => i.name
+      (i) => i.name
     );
     this.setState({integrations});
   };
 
-  onRemove = integration => {
+  onRemove = (integration) => {
     const {orgId} = this.props.params;
 
     const origIntegrations = [...this.state.integrations];
 
-    const integrations = this.state.integrations.filter(i => i.id !== integration.id);
+    const integrations = this.state.integrations.filter((i) => i.id !== integration.id);
     this.setState({integrations});
 
     const options = {
@@ -117,7 +117,7 @@ class OrganizationIntegrations extends AsyncComponent {
     this.api.request(`/organizations/${orgId}/integrations/${integration.id}/`, options);
   };
 
-  onDisable = integration => {
+  onDisable = (integration) => {
     let url;
     const [domainName, orgName] = integration.domainName.split('/');
 
@@ -136,7 +136,7 @@ class OrganizationIntegrations extends AsyncComponent {
     const {reloading, applications, appInstalls} = this.state;
     const providers = this.providers
       .sort((a, b) => b.isInstalled - a.isInstalled)
-      .map(provider => (
+      .map((provider) => (
         <ProviderRow
           key={provider.key}
           provider={provider}

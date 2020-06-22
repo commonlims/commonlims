@@ -23,14 +23,14 @@ class SimilarSpectrum extends React.Component {
 
 const StyledSimilarSpectrum = styled(SimilarSpectrum)`
   display: flex;
-  font-size: ${p => p.theme.fontSizeSmall};
+  font-size: ${(p) => p.theme.fontSizeSmall};
 `;
 
 const SpectrumItem = styled('span')`
   border-radius: 2px;
   margin: 5px;
   width: 14px;
-  ${p =>
+  ${(p) =>
     typeof p.colorIndex !== 'undefined' &&
     `background-color: ${p.theme.similarity.colors[p.colorIndex]};`};
 `;

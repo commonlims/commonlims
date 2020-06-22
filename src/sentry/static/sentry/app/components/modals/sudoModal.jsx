@@ -77,7 +77,7 @@ class SudoModal extends React.Component {
     });
   };
 
-  handleU2fTap = data => {
+  handleU2fTap = (data) => {
     this.setState({busy: true});
     // u2Interface expects this to return a promise
     return this.props.api
@@ -88,7 +88,7 @@ class SudoModal extends React.Component {
       .then(() => {
         this.handleSuccess();
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({busy: false});
 
         // u2fInterface relies on this

@@ -32,7 +32,7 @@ export default class VSTSOrganizationLink extends AsyncView {
   }
 
   get organizations() {
-    return this.state.organizations.map(o => [o.slug, o.name]);
+    return this.state.organizations.map((o) => [o.slug, o.name]);
   }
 
   get defaultChoice() {

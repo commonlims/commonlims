@@ -16,8 +16,8 @@ export default function getRouteStringFromRoutes(routes) {
   return (
     '/' +
     routes
-      .filter(r => r.path)
-      .map(r => r.path.replace(/^\//, ''))
+      .filter((r) => r.path)
+      .map((r) => r.path.replace(/^\//, ''))
       .join('')
   );
 }

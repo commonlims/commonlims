@@ -77,10 +77,10 @@ export default class SentryApplicationDetails extends AsyncView {
       return events;
     }
 
-    return events.map(e => e.split('.').shift());
+    return events.map((e) => e.split('.').shift());
   }
 
-  onSubmitSuccess = data => {
+  onSubmitSuccess = (data) => {
     const {orgId} = this.props.params;
     addSuccessMessage(t(`${data.name} successfully saved.`));
     browserHistory.push(`/settings/${orgId}/developer-settings/`);
@@ -105,7 +105,7 @@ export default class SentryApplicationDetails extends AsyncView {
           initialData={{organization: orgId, isAlertable: false, ...app}}
           model={this.form}
           onSubmitSuccess={this.onSubmitSuccess}
-          onSubmitError={err => addErrorMessage(t('Unable to save change'))}
+          onSubmitError={(err) => addErrorMessage(t('Unable to save change'))}
         >
           <JsonForm location={this.props.location} forms={sentryApplicationForm} />
 

@@ -3,7 +3,7 @@ import moment from 'moment';
 import {DEFAULT_STATS_PERIOD} from 'app/constants';
 import {getUtcDateString} from 'app/utils/dates';
 
-const BASE_URL = org => `/organizations/${org.slug}/health/`;
+const BASE_URL = (org) => `/organizations/${org.slug}/health/`;
 
 // Gets the period to query with if we need to double the initial period in order
 // to get data for the previous period

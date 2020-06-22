@@ -65,7 +65,7 @@ const AlertStore = Reflux.createStore({
     }
 
     // TODO(dcramer): we need some animations here for closing alerts
-    this.alerts = this.alerts.filter(item => alert !== item);
+    this.alerts = this.alerts.filter((item) => alert !== item);
     this.trigger(this.alerts);
   },
 });

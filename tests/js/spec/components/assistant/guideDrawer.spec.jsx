@@ -3,7 +3,7 @@ import React from 'react';
 import {GuideDrawer} from 'app/components/assistant/guideDrawer';
 import {shallow} from 'enzyme';
 
-describe('GuideDrawer', function() {
+describe('GuideDrawer', function () {
   const guides = [
     {
       cue: 'Click here for a tour of the issue page',
@@ -27,7 +27,7 @@ describe('GuideDrawer', function() {
   ];
   let wrapper, component, closeMock, pushMock;
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.addMockResponse({
       url: '/assistant/',
       body: guides,
@@ -55,11 +55,11 @@ describe('GuideDrawer', function() {
     component = wrapper.instance();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  it('renders tip', async function() {
+  it('renders tip', async function () {
     component.onGuideStateChange({
       currentGuide: guides[1],
       currentStep: 1,
@@ -70,27 +70,21 @@ describe('GuideDrawer', function() {
     wrapper.update();
     expect(wrapper).toMatchSnapshot();
     // Click on the CTA.
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
     expect(pushMock).toHaveBeenCalledWith('/cta/link/testorg/testproj/');
   });
 
-  it('renders drawer', function() {
+  it('renders drawer', function () {
     component.onGuideStateChange({
       currentGuide: guides[0],
       currentStep: 0,
     });
     wrapper.update();
-    wrapper
-      .find('[data-test-id="assistant-cue"]')
-      .first()
-      .simulate('click');
+    wrapper.find('[data-test-id="assistant-cue"]').first().simulate('click');
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('gets dismissed', function() {
+  it('gets dismissed', function () {
     component.onGuideStateChange({
       currentGuide: guides[0],
       currentStep: 1,
@@ -115,7 +109,7 @@ describe('GuideDrawer', function() {
     );
   });
 
-  it('renders next step', function() {
+  it('renders next step', function () {
     component.onGuideStateChange({
       currentGuide: guides[0],
       currentStep: 2,
@@ -125,10 +119,7 @@ describe('GuideDrawer', function() {
     expect(wrapper).toMatchSnapshot();
 
     // Mark as useful.
-    wrapper
-      .find('Button')
-      .first()
-      .simulate('click');
+    wrapper.find('Button').first().simulate('click');
     expect(closeMock).toHaveBeenCalledWith(
       '/assistant/',
       expect.objectContaining({

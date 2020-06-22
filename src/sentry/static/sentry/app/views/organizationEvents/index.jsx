@@ -28,7 +28,7 @@ class OrganizationEventsContainer extends React.Component {
     this.state = {};
   }
 
-  handleSearch = query => {
+  handleSearch = (query) => {
     const {router, location} = this.props;
     router.push({
       pathname: location.pathname,
@@ -75,7 +75,7 @@ export default withRouter(
 export {OrganizationEventsContainer};
 
 const Body = styled('div')`
-  background-color: ${p => p.theme.whiteDark};
+  background-color: ${(p) => p.theme.whiteDark};
   flex-direction: column;
   flex: 1;
 `;

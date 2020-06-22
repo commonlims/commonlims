@@ -42,20 +42,22 @@ class SplitDiff extends React.Component {
       <SplitTable className={className}>
         <SplitBody>
           {results.map((line, j) => {
-            const highlightAdded = line.find(result => result.added);
-            const highlightRemoved = line.find(result => result.removed);
+            const highlightAdded = line.find((result) => result.added);
+            const highlightRemoved = line.find((result) => result.removed);
 
             return (
               <tr key={j}>
                 <Cell isRemoved={highlightRemoved}>
                   <Line>
-                    {line.filter(result => !result.added).map((result, i) => {
-                      return (
-                        <Word key={i} isRemoved={result.removed}>
-                          {result.value}
-                        </Word>
-                      );
-                    })}
+                    {line
+                      .filter((result) => !result.added)
+                      .map((result, i) => {
+                        return (
+                          <Word key={i} isRemoved={result.removed}>
+                            {result.value}
+                          </Word>
+                        );
+                      })}
                   </Line>
                 </Cell>
 
@@ -63,13 +65,15 @@ class SplitDiff extends React.Component {
 
                 <Cell isAdded={highlightAdded}>
                   <Line>
-                    {line.filter(result => !result.removed).map((result, i) => {
-                      return (
-                        <Word key={i} isAdded={result.added}>
-                          {result.value}
-                        </Word>
-                      );
-                    })}
+                    {line
+                      .filter((result) => !result.removed)
+                      .map((result, i) => {
+                        return (
+                          <Word key={i} isAdded={result.added}>
+                            {result.value}
+                          </Word>
+                        );
+                      })}
                   </Line>
                 </Cell>
               </tr>
@@ -94,8 +98,8 @@ const SplitBody = styled('tbody')`
 
 const Cell = styled('td')`
   vertical-align: top;
-  ${p => p.isRemoved && `background-color: ${p.theme.diff.removedRow}`};
-  ${p => p.isAdded && `background-color: ${p.theme.diff.addedRow}`};
+  ${(p) => p.isRemoved && `background-color: ${p.theme.diff.removedRow}`};
+  ${(p) => p.isAdded && `background-color: ${p.theme.diff.addedRow}`};
 `;
 
 const Gap = styled('td')`
@@ -110,8 +114,8 @@ const Line = styled('div')`
 const Word = styled('span')`
   white-space: pre-wrap;
   word-break: break-all;
-  ${p => p.isRemoved && `background-color: ${p.theme.diff.removed}`};
-  ${p => p.isAdded && `background-color: ${p.theme.diff.added}`};
+  ${(p) => p.isRemoved && `background-color: ${p.theme.diff.removed}`};
+  ${(p) => p.isAdded && `background-color: ${p.theme.diff.added}`};
 `;
 
 export default SplitDiff;

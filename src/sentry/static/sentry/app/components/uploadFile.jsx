@@ -88,7 +88,7 @@ const UploadFile = createReactClass({
     this.api.request(endpoint, {
       method: 'PUT',
       data,
-      success: resp => {
+      success: (resp) => {
         this.setState({savedDataUrl: this.state.dataUrl});
         this.handleSuccess(resp);
       },

@@ -41,7 +41,7 @@ class ReleaseSeries extends React.Component {
     const {api, organization} = this.props;
 
     getOrganizationReleases(api, organization)
-      .then(releases => {
+      .then((releases) => {
         this.setState({
           releases,
           releaseSeries: [this.getReleaseSeries(releases)],
@@ -52,7 +52,7 @@ class ReleaseSeries extends React.Component {
       });
   }
 
-  getReleaseSeries = releases => {
+  getReleaseSeries = (releases) => {
     const {organization, router} = this.props;
 
     return {
@@ -76,7 +76,7 @@ class ReleaseSeries extends React.Component {
         label: {
           show: false,
         },
-        data: releases.map(release => ({
+        data: releases.map((release) => ({
           xAxis: +new Date(release.dateCreated),
           name: release.shortVersion,
           value: release.shortVersion,

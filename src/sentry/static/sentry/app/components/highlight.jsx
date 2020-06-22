@@ -46,8 +46,8 @@ class HighlightComponent extends React.Component {
 
 const Highlight = styled(HighlightComponent)`
   font-weight: normal;
-  background-color: ${p => p.theme.yellowLight};
-  color: ${p => p.theme.gray4};
+  background-color: ${(p) => p.theme.yellowLight};
+  color: ${(p) => p.theme.gray4};
 `;
 
 Highlight.propTypes = HighlightComponent.propTypes;

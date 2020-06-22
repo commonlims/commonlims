@@ -46,7 +46,7 @@ class SearchBar extends React.PureComponent {
   componentDidMount() {
     const {api, organization} = this.props;
     fetchOrganizationTags(api, organization.slug).then(
-      results => {
+      (results) => {
         this.setState({
           tags: this.getAllTags(results.map(({key}) => key)),
         });
@@ -59,26 +59,28 @@ class SearchBar extends React.PureComponent {
    * Returns array of tag values that substring match `query`; invokes `callback`
    * with data when ready
    */
-  getEventFieldValues = memoize((tag, query) => {
-    const {api, organization} = this.props;
+  getEventFieldValues = memoize(
+    (tag, query) => {
+      const {api, organization} = this.props;
 
-    return fetchEventFieldValues(api, organization.slug, tag.key, query).then(
-      results => flatten(results.filter(({name}) => defined(name)).map(({name}) => name)),
-      () => {
-        throw new Error('Unable to fetch event field values');
-      }
-    );
-  }, ({key}, query) => `${key}-${query}`);
+      return fetchEventFieldValues(api, organization.slug, tag.key, query).then(
+        (results) =>
+          flatten(results.filter(({name}) => defined(name)).map(({name}) => name)),
+        () => {
+          throw new Error('Unable to fetch event field values');
+        }
+      );
+    },
+    ({key}, query) => `${key}-${query}`
+  );
 
   getAllTags = (orgTags = []) =>
-    TAGS.concat(orgTags)
-      .sort()
-      .reduce(tagToObjectReducer, {});
+    TAGS.concat(orgTags).sort().reduce(tagToObjectReducer, {});
 
   /**
    * Prepare query string (e.g. strip special characters like negation operator)
    */
-  prepareQuery = query => {
+  prepareQuery = (query) => {
     return query.replace(SEARCH_SPECIAL_CHARS_REGEXP, '');
   };
 

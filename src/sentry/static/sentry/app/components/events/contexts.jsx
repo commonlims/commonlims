@@ -80,7 +80,7 @@ class ContextChunk extends React.Component {
     }
   };
 
-  renderTitle = component => {
+  renderTitle = (component) => {
     const {value, alias, type} = this.props;
     let title = null;
     if (defined(value.title)) {

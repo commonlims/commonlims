@@ -9,12 +9,12 @@ jest.mock('app/actionCreators/modal', () => ({
   openIntegrationDetails: jest.fn(),
 }));
 
-describe('MigrationWarnings', function() {
-  beforeEach(function() {
+describe('MigrationWarnings', function () {
+  beforeEach(function () {
     Client.clearMockResponses();
   });
 
-  describe('render()', function() {
+  describe('render()', function () {
     const org = TestStubs.Organization();
     const routerContext = TestStubs.routerContext();
 
@@ -50,7 +50,7 @@ describe('MigrationWarnings', function() {
       routerContext
     );
 
-    it('fetches unmigratable repositories', function() {
+    it('fetches unmigratable repositories', function () {
       expect(wrapper.instance().state.unmigratableRepos).toHaveLength(1);
       expect(wrapper.instance().state.unmigratableRepos[0].name).toBe('Test-Org/foo');
     });
@@ -58,19 +58,13 @@ describe('MigrationWarnings', function() {
     it('displays a warning for each Org with unmigratable repos', () => {
       // Use a regex because React/Enzyme/Jest/Whatever turns single quotes into
       // apostrophes, so you can't match it explicitly.
-      expect(
-        wrapper
-          .find('AlertLink')
-          .first()
-          .text()
-      ).toMatch(/Your Test-Org repositories can.t send commit data to Sentry/);
+      expect(wrapper.find('AlertLink').first().text()).toMatch(
+        /Your Test-Org repositories can.t send commit data to Sentry/
+      );
     });
 
     it('opens the new Integration dialog when the warning is clicked', () => {
-      wrapper
-        .find('AlertLink')
-        .first()
-        .simulate('click');
+      wrapper.find('AlertLink').first().simulate('click');
 
       expect(open.mock.calls).toHaveLength(1);
       expect(focus.mock.calls).toHaveLength(1);

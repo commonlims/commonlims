@@ -16,7 +16,7 @@ const SelectedProcessStore = Reflux.createStore({
 
   add(ids) {
     const allSelected = this.allSelected();
-    ids.forEach(id => {
+    ids.forEach((id) => {
       if (!this.records.hasOwnProperty(id)) {
         this.records[id] = allSelected;
       }

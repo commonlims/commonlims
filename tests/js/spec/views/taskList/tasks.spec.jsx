@@ -6,7 +6,7 @@ import ProcessListItem from 'app/components/task/processListItem';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import LoadingError from 'app/components/loadingError';
 
-describe('Tasks', function() {
+describe('Tasks', function () {
   let mockProps;
   let getTasks;
   let tasks;

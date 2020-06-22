@@ -1,6 +1,6 @@
 export function Authenticators() {
   return {
-    Totp: params => ({
+    Totp: (params) => ({
       lastUsedAt: null,
       enrollButton: 'Enroll',
       description:
@@ -17,7 +17,7 @@ export function Authenticators() {
       isBackupInterface: false,
       ...params,
     }),
-    Sms: params => ({
+    Sms: (params) => ({
       enrollButton: 'Enroll',
       name: 'Text Message',
       allowMultiEnrollment: false,
@@ -31,7 +31,7 @@ export function Authenticators() {
         "This authenticator sends you text messages for verification.  It's useful as a backup method or when you do not have a phone that supports an authenticator application.",
       ...params,
     }),
-    U2f: params => ({
+    U2f: (params) => ({
       lastUsedAt: null,
       enrollButton: 'Enroll',
       description:
@@ -48,7 +48,7 @@ export function Authenticators() {
       isBackupInterface: false,
       ...params,
     }),
-    Recovery: params => ({
+    Recovery: (params) => ({
       lastUsedAt: null,
       enrollButton: 'Activate',
       description:

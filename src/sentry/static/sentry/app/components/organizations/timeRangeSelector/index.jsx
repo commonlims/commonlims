@@ -99,7 +99,7 @@ class TimeRangeSelector extends React.PureComponent {
     }
   };
 
-  handleUpdate = datetime => {
+  handleUpdate = (datetime) => {
     const {onUpdate} = this.props;
 
     this.setState(
@@ -131,7 +131,7 @@ class TimeRangeSelector extends React.PureComponent {
     callIfFunction(onChange, newDateTime);
   };
 
-  handleSelectRelative = value => {
+  handleSelectRelative = (value) => {
     const {onChange} = this.props;
     const newDateTime = {
       relative: value,
@@ -163,7 +163,7 @@ class TimeRangeSelector extends React.PureComponent {
     start = start || this.state.start;
     end = end || this.state.end;
 
-    this.setState(state => {
+    this.setState((state) => {
       const utc = !state.utc;
       analytics('dateselector.utc_changed', {
         utc,
@@ -274,18 +274,18 @@ const StyledInlineSvg = styled(InlineSvg)`
 `;
 
 const Menu = styled('div')`
-  ${p => !p.isAbsoluteSelected && 'left: -1px'};
-  ${p => p.isAbsoluteSelected && 'right: -1px'};
+  ${(p) => !p.isAbsoluteSelected && 'left: -1px'};
+  ${(p) => p.isAbsoluteSelected && 'right: -1px'};
 
   display: flex;
   background: #fff;
-  border: 1px solid ${p => p.theme.borderLight};
+  border: 1px solid ${(p) => p.theme.borderLight};
   position: absolute;
   top: 100%;
   min-width: 120%;
-  z-index: ${p => p.theme.zIndex.dropdown};
-  box-shadow: ${p => p.theme.dropShadowLight};
-  border-radius: 0 0 ${p => p.theme.borderRadius} ${p => p.theme.borderRadius};
+  z-index: ${(p) => p.theme.zIndex.dropdown};
+  box-shadow: ${(p) => p.theme.dropShadowLight};
+  border-radius: 0 0 ${(p) => p.theme.borderRadius} ${(p) => p.theme.borderRadius};
   font-size: 0.8em;
 `;
 
@@ -293,7 +293,7 @@ const SelectorList = styled(({isAbsoluteSelected, ...props}) => <Flex {...props}
   flex: 1;
   flex-direction: column;
   flex-shrink: 0;
-  width: ${p => (p.isAbsoluteSelected ? '160px' : '220px')};
+  width: ${(p) => (p.isAbsoluteSelected ? '160px' : '220px')};
   min-height: 305px;
 `;
 

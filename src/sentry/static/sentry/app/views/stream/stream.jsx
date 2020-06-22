@@ -167,7 +167,7 @@ const Stream = createReactClass({
     const {searchId} = this.state;
 
     fetchSavedSearches(this.api, orgId, projectId).then(
-      data => {
+      (data) => {
         const newState = {
           isDefaultSearch: false,
           savedSearchLoading: false,
@@ -176,7 +176,7 @@ const Stream = createReactClass({
         };
         const needsData = this.state.loading;
         if (searchId) {
-          const match = data.find(search => search.id === searchId);
+          const match = data.find((search) => search.id === searchId);
 
           if (match) {
             newState.query = match.query;
@@ -193,8 +193,8 @@ const Stream = createReactClass({
           }
         } else if (!this.hasQuery()) {
           const defaultResult =
-            data.find(search => search.isUserDefault) ||
-            data.find(search => search.isDefault);
+            data.find((search) => search.isUserDefault) ||
+            data.find((search) => search.isDefault);
 
           if (defaultResult) {
             // Check if there is an environment specified in the default search
@@ -215,7 +215,7 @@ const Stream = createReactClass({
 
         this.setState(newState, needsData ? this.fetchData : null);
       },
-      error => {
+      (error) => {
         // XXX(dcramer): fail gracefully by still loading the stream
         logAjaxError(error);
         this.setState({
@@ -233,14 +233,14 @@ const Stream = createReactClass({
   fetchProcessingIssues() {
     const {orgId, projectId} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/processingissues/`, {
-      success: data => {
+      success: (data) => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
           this.setState({
             processingIssues: data,
           });
         }
       },
-      error: error => {
+      error: (error) => {
         logAjaxError(error);
         // this is okay. it's just a ui hint
       },
@@ -287,7 +287,7 @@ const Stream = createReactClass({
 
     if (searchId) {
       const searchResult = this.state.savedSearchList.find(
-        search => search.id === searchId
+        (search) => search.id === searchId
       );
       if (searchResult) {
         // New behavior is that we no longer support environment in saved search
@@ -307,7 +307,7 @@ const Stream = createReactClass({
         newState.searchId = null;
       }
     } else if (!hasQuery) {
-      const defaultResult = this.state.savedSearchList.find(search => search.isDefault);
+      const defaultResult = this.state.savedSearchList.find((search) => search.isDefault);
       if (defaultResult) {
         newState.isDefaultSearch = true;
         newState.searchId = defaultResult.id;
@@ -382,8 +382,7 @@ const Stream = createReactClass({
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
             const {project, id, matchingEventId, matchingEventEnvironment} = data[0];
-            let redirect = `/${this.props.params
-              .orgId}/${project.slug}/issues/${id}/events/${matchingEventId}/`;
+            let redirect = `/${this.props.params.orgId}/${project.slug}/issues/${id}/events/${matchingEventId}/`;
             // Also direct to the environment of this specific event if this
             // key exists. We need to explicitly check against undefined becasue
             // an environment name may be an empty string, which is perfectly valid.
@@ -413,13 +412,13 @@ const Stream = createReactClass({
           pageLinks: jqXHR.getResponseHeader('Link'),
         });
       },
-      error: err => {
+      error: (err) => {
         this.setState({
           error: parseApiError(err),
           dataLoading: false,
         });
       },
-      complete: jqXHR => {
+      complete: (jqXHR) => {
         this.lastRequest = null;
 
         this.resumePolling();
@@ -460,7 +459,7 @@ const Stream = createReactClass({
         {
           statsPeriod: period,
         },
-        function() {
+        function () {
           this.transitionTo();
         }
       );
@@ -477,7 +476,7 @@ const Stream = createReactClass({
   },
 
   onGroupChange() {
-    const groupIds = this._streamManager.getAllItems().map(item => item.id);
+    const groupIds = this._streamManager.getAllItems().map((item) => item.id);
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
         groupIds,
@@ -510,7 +509,7 @@ const Stream = createReactClass({
     }
 
     // Ignore saved searches
-    if (this.state.savedSearchList.map(s => s.query == this.state.query).length > 0) {
+    if (this.state.savedSearchList.map((s) => s.query == this.state.query).length > 0) {
       const {orgId, projectId} = this.props.params;
       analytics('issue.search', {
         query: this.state.query,
@@ -599,7 +598,7 @@ const Stream = createReactClass({
     const topIssue = ids[0];
 
     const {orgId} = this.props.params;
-    const groupNodes = ids.map(id => {
+    const groupNodes = ids.map((id) => {
       const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       return (
         <StreamGroup

@@ -49,8 +49,8 @@ class UploadSubstancesButton extends React.Component {
 
   handleDownload(event) {
     fetch('/api/0/organizations/lab/substances/files/demo/')
-      .then(resp => resp.blob())
-      .then(blob => {
+      .then((resp) => resp.blob())
+      .then((blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
@@ -88,7 +88,7 @@ class UploadSubstancesButton extends React.Component {
         const reader = new FileReader();
         reader.readAsBinaryString(this.state.selectedFile);
 
-        reader.onload = function() {
+        reader.onload = function () {
           const data = {
             content: btoa(reader.result),
             filename: this.state.selectedFile.name,
@@ -97,7 +97,7 @@ class UploadSubstancesButton extends React.Component {
           this.api.request(endpoint, {
             method: 'POST',
             data,
-            success: response => {
+            success: (response) => {
               // Set validation issues if there were any:
               if (response.validationIssues.length === 0) {
                 this.onToggle();
@@ -112,7 +112,7 @@ class UploadSubstancesButton extends React.Component {
                 this.props.onImported();
               }
             },
-            error: err => {
+            error: (err) => {
               const errors = err.responseJSON || true;
               const errorMsg = errors.detail;
 
@@ -128,7 +128,7 @@ class UploadSubstancesButton extends React.Component {
           });
         }.bind(this);
 
-        reader.onError = function() {
+        reader.onError = function () {
           this.setState({
             state: FormState.ERROR,
           });

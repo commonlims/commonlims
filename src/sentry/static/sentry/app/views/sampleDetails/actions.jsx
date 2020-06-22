@@ -96,11 +96,11 @@ const SampleDetailsActions = createReactClass({
     this.api.request(`/issues/${group.id}/`, {
       method: 'PUT',
       data: {discard: true},
-      success: response => {
+      success: (response) => {
         GroupActions.discardSuccess(id, group.id, response);
         browserHistory.push(`/${org.slug}/${'NOTAVAIL.slug'}/`);
       },
-      error: error => {
+      error: (error) => {
         GroupActions.discardError(id, group.id, error);
       },
       complete: () => {

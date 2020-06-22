@@ -104,14 +104,14 @@ class StackedBarChart extends React.Component {
     return !_.isEqual(this.props, nextProps);
   }
 
-  getInterval = series => {
+  getInterval = (series) => {
     // TODO(dcramer): not guaranteed correct
     return series.length && series[0].data.length > 1
       ? series[0].data[1].x - series[0].data[0].x
       : null;
   };
 
-  pointsToSeries = points => {
+  pointsToSeries = (points) => {
     const series = [];
     points.forEach((p, pIdx) => {
       p.y.forEach((y, yIdx) => {
@@ -124,10 +124,10 @@ class StackedBarChart extends React.Component {
     return series;
   };
 
-  pointIndex = series => {
+  pointIndex = (series) => {
     const points = {};
-    series.forEach(s => {
-      s.data.forEach(p => {
+    series.forEach((s) => {
+      s.data.forEach((p) => {
         if (!points[p.x]) {
           points[p.x] = {y: [], x: p.x};
         }
@@ -207,7 +207,7 @@ class StackedBarChart extends React.Component {
     return Math.max(
       10,
       this.state.series
-        .map(s => Math.max(...s.data.map(p => p.y)))
+        .map((s) => Math.max(...s.data.map((p) => p.y)))
         .reduce((a, b) => a + b, 0)
     );
   }
@@ -257,13 +257,15 @@ class StackedBarChart extends React.Component {
       `<div class="time-label">${timeLabel}</div>` +
       '</div>';
     if (this.props.label) {
-      title += `<div class="value-label">${totalY.toLocaleString()} ${this.props
-        .label}</div>`;
+      title += `<div class="value-label">${totalY.toLocaleString()} ${
+        this.props.label
+      }</div>`;
     }
     point.y.forEach((y, i) => {
       const s = this.state.series[i];
       if (s.label) {
-        title += `<div><span style="color:${s.color}">${s.label}:</span> ${(y || 0
+        title += `<div><span style="color:${s.color}">${s.label}:</span> ${(
+          y || 0
         ).toLocaleString()}</div>`;
       }
     });
@@ -286,7 +288,7 @@ class StackedBarChart extends React.Component {
     let prevPct = 0;
     const pts = point.y.map((y, i) => {
       const pct = Math.max(
-        totalY && this.floatFormat(y / totalY * totalPct * maxPercentage, 2),
+        totalY && this.floatFormat((y / totalY) * totalPct * maxPercentage, 2),
         this.getMinHeight(i, point.y.length)
       );
 
@@ -332,7 +334,7 @@ class StackedBarChart extends React.Component {
 
   renderChart() {
     const {pointIndex, series} = this.state;
-    const totalPoints = Math.max(...series.map(s => s.data.length));
+    const totalPoints = Math.max(...series.map((s) => s.data.length));
     // we expand the graph just a hair beyond 100% prevent a subtle white line on the edge
     const nudge = 0.1;
     const pointWidth = this.floatFormat(
@@ -345,7 +347,7 @@ class StackedBarChart extends React.Component {
 
     // group points, then resort
     const points = Object.keys(pointIndex)
-      .map(k => {
+      .map((k) => {
         const p = pointIndex[k];
         return {x: p.x, y: p.y};
       })
@@ -371,7 +373,7 @@ class StackedBarChart extends React.Component {
 
     // in bizarre case where markers never got rendered, render them last
     // NOTE: should this ever happen?
-    markers.forEach(marker => {
+    markers.forEach((marker) => {
       markerChildren.push(this.renderMarker(marker, points.length, pointWidth));
     });
 
@@ -424,15 +426,15 @@ const SvgContainer = styled('div')`
 `;
 
 const CircleSvg = styled('svg')`
-  width: ${p => p.size}px;
-  height: ${p => p.size}px;
+  width: ${(p) => p.size}px;
+  height: ${(p) => p.size}px;
   position: absolute;
-  bottom: -${p => p.size / 2}px;
-  transform: translate(${p => (p.offset || 0) - p.size / 2}px, 0);
-  left: ${p => p.left}%;
+  bottom: -${(p) => p.size / 2}px;
+  transform: translate(${(p) => (p.offset || 0) - p.size / 2}px, 0);
+  left: ${(p) => p.left}%;
 
   &:hover circle {
-    fill: ${p => p.theme.purple};
+    fill: ${(p) => p.theme.purple};
   }
 `;
 

@@ -19,12 +19,12 @@ import {
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-describe('workBatch redux actions', function() {
-  beforeEach(function() {
+describe('workBatch redux actions', function () {
+  beforeEach(function () {
     moxios.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     moxios.uninstall();
   });
 

@@ -4,20 +4,20 @@ import {shallow} from 'enzyme';
 import {Client} from 'app/api';
 import ProjectInstallPlatform from 'app/views/projectInstall/platform';
 
-describe('ProjectInstallPlatform', function() {
+describe('ProjectInstallPlatform', function () {
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
 
     this.stubbedApiRequest = sandbox.stub(Client.prototype, 'request');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  describe('render()', function() {
+  describe('render()', function () {
     const baseProps = {
       location: {query: {}},
       platformData: {
@@ -60,7 +60,7 @@ describe('ProjectInstallPlatform', function() {
       },
     };
 
-    it('should render NotFound if no matching integration/platform', function() {
+    it('should render NotFound if no matching integration/platform', function () {
       const props = {
         ...baseProps,
         params: {
@@ -75,7 +75,7 @@ describe('ProjectInstallPlatform', function() {
       expect(wrapper.find('NotFound')).toHaveLength(1);
     });
 
-    it('should rendering Loading if integration/platform exists', function() {
+    it('should rendering Loading if integration/platform exists', function () {
       const props = {
         ...baseProps,
         params: {

@@ -5,7 +5,7 @@ import createReactClass from 'create-react-class';
 import getDisplayName from 'app/utils/getDisplayName';
 import OrganizationsStore from 'app/stores/organizationsStore';
 
-const withOrganizations = WrappedComponent =>
+const withOrganizations = (WrappedComponent) =>
   createReactClass({
     displayName: `withOrganizations(${getDisplayName(WrappedComponent)})`,
     mixins: [Reflux.connect(OrganizationsStore, 'organizations')],

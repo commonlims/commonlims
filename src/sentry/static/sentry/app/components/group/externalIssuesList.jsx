@@ -26,11 +26,11 @@ class ExternalIssueList extends AsyncComponent {
     const {group} = this.props;
 
     const activeIntegrations = integrations.filter(
-      integration => integration.status === 'active'
+      (integration) => integration.status === 'active'
     );
 
     return activeIntegrations.length
-      ? activeIntegrations.map(integration => (
+      ? activeIntegrations.map((integration) => (
           <ExternalIssueActions
             key={integration.id}
             integration={integration}

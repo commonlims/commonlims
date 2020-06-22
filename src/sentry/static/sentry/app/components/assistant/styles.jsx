@@ -5,14 +5,14 @@ import InlineSvg from 'app/components/inlineSvg';
 /* styles common to the guide and support cue/drawer. */
 const AssistantContainer = styled('div')`
   position: fixed;
-  z-index: ${p => p.theme.zIndex.modal};
+  z-index: ${(p) => p.theme.zIndex.modal};
   width: 25vw;
   max-width: 450px;
   min-width: 300px;
   bottom: 1vw;
   border-radius: 1.45em;
   font-weight: bold;
-  box-shadow: ${p => p.theme.dropShadowHeavy};
+  box-shadow: ${(p) => p.theme.dropShadowHeavy};
 `;
 
 const CueContainer = styled(AssistantContainer)`
@@ -33,10 +33,10 @@ const CueIcon = styled(({hasGuide, ...props}) => (
 ))`
   width: 2.75em;
   height: 2.75em;
-  color: ${p => (p.hasGuide ? p.theme.greenLight : p.theme.purple)};
+  color: ${(p) => (p.hasGuide ? p.theme.greenLight : p.theme.purple)};
 `;
 
-const CloseIcon = styled(props => <InlineSvg src="icon-close-lg" {...props} />)`
+const CloseIcon = styled((props) => <InlineSvg src="icon-close-lg" {...props} />)`
   stroke-width: 3px;
   width: 0.75em;
   height: 0.75em;

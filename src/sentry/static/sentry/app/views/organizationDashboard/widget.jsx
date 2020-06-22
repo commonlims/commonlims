@@ -26,7 +26,7 @@ class Widget extends React.Component {
     router: PropTypes.object,
   };
 
-  handleExportToDiscover = event => {
+  handleExportToDiscover = (event) => {
     const {organization, widget, router} = this.props;
     const [firstQuery] = widget.queries.discover;
     const {
@@ -159,6 +159,6 @@ const StyledPanelBody = styled(PanelBody)`
 `;
 
 const Placeholder = styled('div')`
-  background-color: ${p => p.theme.offWhite};
+  background-color: ${(p) => p.theme.offWhite};
   height: 248px;
 `;

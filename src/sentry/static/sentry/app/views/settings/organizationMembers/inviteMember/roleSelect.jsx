@@ -8,7 +8,7 @@ import Radio from 'app/components/radio';
 import TextBlock from 'app/views/settings/components/text/textBlock';
 
 const Label = styled.label`
-  ${p => (p.disabled ? 'cursor: default' : '')};
+  ${(p) => (p.disabled ? 'cursor: default' : '')};
   display: flex;
   flex: 1;
   align-items: center;

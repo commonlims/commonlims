@@ -6,7 +6,7 @@ import {FormState, GenericField} from 'app/components/forms';
 import IndicatorStore from 'app/stores/indicatorStore';
 import {t} from 'app/locale';
 
-const callbackWithArgs = function(callback, ...args) {
+const callbackWithArgs = function (callback, ...args) {
   if (_.isFunction(callback)) {
     callback = callback.bind(this, ...args);
   } else {
@@ -27,7 +27,7 @@ class PluginComponentBase extends React.Component {
       'onSaveError',
       'onSaveComplete',
       'renderField',
-    ].map(method => (this[method] = this[method].bind(this)));
+    ].map((method) => (this[method] = this[method].bind(this)));
 
     if (this.fetchData) {
       this.fetchData = this.onLoad.bind(this, this.fetchData.bind(this));

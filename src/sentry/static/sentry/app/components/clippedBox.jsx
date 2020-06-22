@@ -42,7 +42,7 @@ class ClippedBox extends React.Component {
     }
   }
 
-  reveal = e => {
+  reveal = (e) => {
     e.stopPropagation();
 
     this.setState({

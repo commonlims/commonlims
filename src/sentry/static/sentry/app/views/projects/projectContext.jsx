@@ -151,7 +151,7 @@ const ProjectContext = createReactClass({
     const activeProject = this.identifyProject();
     const hasAccess = activeProject && activeProject.hasAccess;
 
-    this.setState(state => ({
+    this.setState((state) => ({
       // if `skipReload` is true, then don't change loading state
       loading: skipReload ? state.loading : true,
       // we bind project initially, but it'll rebind
@@ -196,8 +196,8 @@ const ProjectContext = createReactClass({
 
       // TODO(dcramer): move member list to organization level
       this.api.request(this.getMemberListEndpoint(), {
-        success: data => {
-          MemberListStore.loadInitialData(data.filter(m => m.user).map(m => m.user));
+        success: (data) => {
+          MemberListStore.loadInitialData(data.filter((m) => m.user).map((m) => m.user));
         },
       });
     } else if (activeProject && !activeProject.isMember) {
@@ -273,7 +273,7 @@ const ProjectContext = createReactClass({
 
   render() {
     return (
-      <DocumentTitle ref={ref => (this.docTitleRef = ref)} title={this.getTitle()}>
+      <DocumentTitle ref={(ref) => (this.docTitleRef = ref)} title={this.getTitle()}>
         {this.renderBody()}
       </DocumentTitle>
     );

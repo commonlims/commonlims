@@ -25,7 +25,7 @@ export default class RadioBooleanField extends InputField {
     return value ? true : false;
   }
 
-  onChange = e => {
+  onChange = (e) => {
     const value = e.target.value === 'true';
     this.setValue(value);
   };

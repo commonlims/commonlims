@@ -7,7 +7,7 @@ import ProjectPluginDetailsContainer, {
 
 jest.mock('jquery');
 
-describe('ProjectPluginDetails', function() {
+describe('ProjectPluginDetails', function () {
   let component;
   const routerContext = TestStubs.routerContext();
   const {organization, project} = routerContext.context;
@@ -16,11 +16,11 @@ describe('ProjectPluginDetails', function() {
   const plugin = TestStubs.Plugin();
   const pluginId = plugin.id;
 
-  beforeAll(function() {
+  beforeAll(function () {
     sinon.stub(console, 'info');
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.addMockResponse({
       url: `/projects/${org.slug}/${project.slug}/plugins/`,
       method: 'GET',
@@ -58,16 +58,16 @@ describe('ProjectPluginDetails', function() {
     );
   });
 
-  afterAll(function() {
+  afterAll(function () {
     // eslint-disable-next-line no-console
     console.info.restore();
   });
 
-  it('renders', function() {
+  it('renders', function () {
     expect(component).toMatchSnapshot();
   });
 
-  it('resets plugin', function() {
+  it('resets plugin', function () {
     // Test component instead of container so that we can access state
     const wrapper = mount(
       <ProjectPluginDetails
@@ -85,7 +85,7 @@ describe('ProjectPluginDetails', function() {
     expect(wrapper.state().pluginDetails.config[0].value).toBe('default');
   });
 
-  it('enables/disables plugin', function(done) {
+  it('enables/disables plugin', function (done) {
     const btn = component.find('button').first();
     expect(btn.text()).toBe('Enable Plugin');
 

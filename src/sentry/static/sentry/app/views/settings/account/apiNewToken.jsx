@@ -12,7 +12,7 @@ import SettingsPageHeader from 'app/views/settings/components/settingsPageHeader
 import TextBlock from 'app/views/settings/components/text/textBlock';
 
 const SORTED_DEFAULT_API_SCOPES = DEFAULT_API_SCOPES.sort();
-const API_CHOICES = API_SCOPES.map(s => [s, s]);
+const API_CHOICES = API_SCOPES.map((s) => [s, s]);
 const API_INDEX_ROUTE = '/settings/account/api/auth-tokens/';
 
 export default class ApiNewToken extends React.Component {

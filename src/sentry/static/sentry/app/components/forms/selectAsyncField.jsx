@@ -34,14 +34,14 @@ class SelectAsyncField extends SelectField {
     placeholder: 'Start typing to search for an issue',
   };
 
-  onResults = data => {
+  onResults = (data) => {
     const {name} = this.props;
     const results = data && data[name];
 
     return (results && results.map(({id, text}) => ({value: id, label: text}))) || [];
   };
 
-  onQuery = query => {
+  onQuery = (query) => {
     // Used by legacy integrations
     return {autocomplete_query: query, autocomplete_field: this.props.name};
   };

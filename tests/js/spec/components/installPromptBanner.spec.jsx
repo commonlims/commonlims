@@ -2,8 +2,8 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import InstallPromptBanner from 'app/components/installPromptBanner';
 
-describe('InstallPromptBanner', function() {
-  it('renders', function() {
+describe('InstallPromptBanner', function () {
+  it('renders', function () {
     const project1 = TestStubs.Project();
     const project2 = TestStubs.Project({firstEvent: null});
     const organization = TestStubs.Organization({projects: [project1, project2]});
@@ -15,7 +15,7 @@ describe('InstallPromptBanner', function() {
     expect(wrapper.find('div').text()).toContain('Welcome to Common LIMS');
   });
 
-  it('does not render if first event sent', function() {
+  it('does not render if first event sent', function () {
     const project1 = TestStubs.Project();
     const project2 = TestStubs.Project({firstEvent: '2018-03-18'});
     const organization = TestStubs.Organization({projects: [project1, project2]});

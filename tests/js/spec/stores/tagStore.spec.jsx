@@ -1,7 +1,7 @@
 import TagStore from 'app/stores/tagStore';
 import MemberListStore from 'app/stores/memberListStore';
 
-describe('TagStore', function() {
+describe('TagStore', function () {
   let sandbox;
 
   beforeEach(() => {

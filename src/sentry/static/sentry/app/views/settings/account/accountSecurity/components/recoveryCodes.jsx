@@ -17,8 +17,8 @@ import {
   PanelAlert,
 } from 'app/components/panels';
 
-const Code = styled(props => <PanelItem p={2} {...props} />)`
-  font-family: ${p => p.theme.text.familyMono};
+const Code = styled((props) => <PanelItem p={2} {...props} />)`
+  font-family: ${(p) => p.theme.text.familyMono};
 `;
 
 class RecoveryCodes extends React.Component {
@@ -94,7 +94,9 @@ class RecoveryCodes extends React.Component {
               )}
             </Flex>
           </PanelAlert>
-          <Box>{!!codes.length && codes.map(code => <Code key={code}>{code}</Code>)}</Box>
+          <Box>
+            {!!codes.length && codes.map((code) => <Code key={code}>{code}</Code>)}
+          </Box>
           {!codes.length && (
             <EmptyMessage>{t('You have no more recovery codes to use')}</EmptyMessage>
           )}

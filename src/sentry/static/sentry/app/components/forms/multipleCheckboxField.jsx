@@ -23,7 +23,7 @@ export default class MultipleCheckboxField extends FormField {
         allValues = [value];
       }
     } else {
-      allValues = allValues.filter(v => v !== value);
+      allValues = allValues.filter((v) => v !== value);
     }
     this.setValue(allValues);
   };

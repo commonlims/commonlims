@@ -51,10 +51,10 @@ class ProcessSettings extends PluginComponentBase {
     this.api.request(this.getPluginEndpoint(), {
       data: parsedFormData,
       method: 'PUT',
-      success: this.onSaveSuccess.bind(this, data => {
+      success: this.onSaveSuccess.bind(this, (data) => {
         const formData = {};
         const initialData = {};
-        data.config.forEach(field => {
+        data.config.forEach((field) => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
         });
@@ -65,7 +65,7 @@ class ProcessSettings extends PluginComponentBase {
           errors: {},
         });
       }),
-      error: this.onSaveError.bind(this, error => {
+      error: this.onSaveError.bind(this, (error) => {
         this.setState({
           errors: (error.responseJSON || {}).errors || {},
         });
@@ -76,14 +76,14 @@ class ProcessSettings extends PluginComponentBase {
 
   fetchData() {
     this.api.request(this.getPluginEndpoint(), {
-      success: data => {
+      success: (data) => {
         // TODO: get the view required through an input parameter
         const view = data.views[this.props.viewKey];
         const viewFields = view.fields;
 
         const formData = {};
         const initialData = {};
-        viewFields.forEach(field => {
+        viewFields.forEach((field) => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
         });
@@ -147,7 +147,7 @@ class ProcessSettings extends PluginComponentBase {
             </ul>
           </div>
         )}
-        {this.state.fieldList.map(f => {
+        {this.state.fieldList.map((f) => {
           return this.renderField({
             key: f.name,
             config: f,

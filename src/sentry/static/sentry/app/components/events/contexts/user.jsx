@@ -43,7 +43,7 @@ class UserContextType extends React.Component {
     user.name && builtins.push(['Name', <pre>{user.name}</pre>]);
 
     // We also attach user supplied data as 'user.data'
-    _.each(user.data, function(value, key) {
+    _.each(user.data, function (value, key) {
       children.push([key, value]);
     });
 
@@ -76,7 +76,7 @@ class UserContextType extends React.Component {
   }
 }
 
-UserContextType.getTitle = function(value) {
+UserContextType.getTitle = function (value) {
   return 'User';
 };
 

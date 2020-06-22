@@ -44,7 +44,13 @@ export function HealthGraph(query = DEFAULT_QUERY, params) {
 
   return {
     data: [
-      [new Date(), [{...countObject, count: 321}, {...countObject, count: 79}]],
+      [
+        new Date(),
+        [
+          {...countObject, count: 321},
+          {...countObject, count: 79},
+        ],
+      ],
       [new Date(), [countObject]],
     ],
   };

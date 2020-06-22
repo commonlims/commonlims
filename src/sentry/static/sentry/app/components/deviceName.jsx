@@ -7,10 +7,7 @@ export function deviceNameMapper(model, iOSDeviceList) {
     return null;
   }
   const modelIdentifier = model.split(' ')[0];
-  const modelId = model
-    .split(' ')
-    .splice(1)
-    .join(' ');
+  const modelId = model.split(' ').splice(1).join(' ');
   const modelName = iOSDeviceList.generationByIdentifier(modelIdentifier);
   return modelName === undefined ? model : modelName + ' ' + modelId;
 }
@@ -49,7 +46,7 @@ export default class DeviceName extends React.Component {
 
     // This library is very big, so we are codesplitting it based on size and
     // the relatively small utility this library provides
-    loadDeviceListModule().then(iOSDeviceList => {
+    loadDeviceListModule().then((iOSDeviceList) => {
       if (!this._isMounted) {
         return;
       }

@@ -25,7 +25,7 @@ jest.mock('lodash/debounce', () => {
   return mockDebounce;
 });
 
-describe('OrganizationDashboard', function() {
+describe('OrganizationDashboard', function () {
   const routerContext = TestStubs.routerContext();
   routerContext.context.router = {
     ...routerContext.context.router,
@@ -35,7 +35,7 @@ describe('OrganizationDashboard', function() {
   };
   const teams = [TestStubs.Team()];
 
-  beforeEach(function() {
+  beforeEach(function () {
     MockApiClient.addMockResponse({
       url: '/teams/org-slug/team-slug/members/',
       body: [],
@@ -43,14 +43,14 @@ describe('OrganizationDashboard', function() {
     ProjectsStatsStore.reset();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     MockApiClient.clearMockResponses();
   });
 
-  describe('empty state', function() {
-    beforeEach(function() {});
+  describe('empty state', function () {
+    beforeEach(function () {});
 
-    it('renders with no projects', function() {
+    it('renders with no projects', function () {
       const projects = [];
 
       const wrapper = shallow(
@@ -66,7 +66,7 @@ describe('OrganizationDashboard', function() {
       expect(emptyState).toHaveLength(1);
     });
 
-    it('renders with 1 project, with no first event', function() {
+    it('renders with 1 project, with no first event', function () {
       MockApiClient.addMockResponse({
         url: '/projects/org-slug/project-slug/issues/',
         body: [{id: 'sampleIssueId'}],
@@ -91,10 +91,10 @@ describe('OrganizationDashboard', function() {
     });
   });
 
-  describe('with projects', function() {
-    beforeEach(function() {});
+  describe('with projects', function () {
+    beforeEach(function () {});
 
-    it('renders TeamSection', function() {
+    it('renders TeamSection', function () {
       const projects = [
         TestStubs.Project({
           teams,
@@ -119,7 +119,7 @@ describe('OrganizationDashboard', function() {
       expect(teamSection).toHaveLength(1);
     });
 
-    it('renders favorited project in favorites section ', function() {
+    it('renders favorited project in favorites section ', function () {
       const projects = [
         TestStubs.Project({
           teams,
@@ -141,7 +141,7 @@ describe('OrganizationDashboard', function() {
       expect(favorites).toHaveLength(1);
     });
 
-    it('renders bookmarked projects first in team list', function() {
+    it('renders bookmarked projects first in team list', function () {
       const projects = [
         TestStubs.Project({
           id: '1',
@@ -191,7 +191,10 @@ describe('OrganizationDashboard', function() {
         body: [
           TestStubs.Project({
             teams: [TestStubs.Team()],
-            stats: [[1517281200, 2], [1517310000, 1]],
+            stats: [
+              [1517281200, 2],
+              [1517310000, 1],
+            ],
           }),
         ],
       });
@@ -219,7 +222,7 @@ describe('OrganizationDashboard', function() {
       expect(projectCards.at(5).prop('data-test-id')).toBe('z');
     });
 
-    it('renders favorited projects if there is any, even if team list is empty', function() {
+    it('renders favorited projects if there is any, even if team list is empty', function () {
       const projects = [
         TestStubs.Project({
           id: '1',
@@ -253,7 +256,7 @@ describe('OrganizationDashboard', function() {
     });
   });
 
-  describe('ProjectsStatsStore', function() {
+  describe('ProjectsStatsStore', function () {
     const projects = [
       TestStubs.Project({
         id: '1',
@@ -293,15 +296,18 @@ describe('OrganizationDashboard', function() {
       }),
     ];
 
-    it('uses ProjectsStatsStore to load stats', async function() {
+    it('uses ProjectsStatsStore to load stats', async function () {
       jest.useFakeTimers();
       ProjectsStatsStore.onStatsLoadSuccess([{...projects[0], stats: [[1517281200, 2]]}]);
       const loadStatsSpy = jest.spyOn(projectsActions, 'loadStatsForProject');
       const mock = MockApiClient.addMockResponse({
         url: '/organizations/org-slug/projects/',
-        body: projects.map(project => ({
+        body: projects.map((project) => ({
           ...project,
-          stats: [[1517281200, 2], [1517310000, 1]],
+          stats: [
+            [1517281200, 2],
+            [1517310000, 1],
+          ],
         })),
       });
 

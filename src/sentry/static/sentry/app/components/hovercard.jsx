@@ -37,7 +37,7 @@ class Hovercard extends React.Component {
   handleToggleOn = () => this.toggleHovercard(true);
   handleToggleOff = () => this.toggleHovercard(false);
 
-  toggleHovercard = visible => {
+  toggleHovercard = (visible) => {
     const {header, body} = this.props;
 
     // Don't toggle hovercard if both of these are null
@@ -79,7 +79,9 @@ class Hovercard extends React.Component {
     const x =
       rect.right > window.innerWidth && !(rect.left < 0)
         ? 'right'
-        : rect.left < 0 ? 'left' : 'middle';
+        : rect.left < 0
+        ? 'left'
+        : 'middle';
 
     this.setState({position: {x, y, offset}});
   }
@@ -116,10 +118,10 @@ class Hovercard extends React.Component {
   }
 }
 
-const translateX = x => `translateX(${x === 'middle' ? '-50%' : 0})`;
-const slideTranslateY = y => `translateY(${(y === 'top' ? -1 : 1) * 14}px)`;
+const translateX = (x) => `translateX(${x === 'middle' ? '-50%' : 0})`;
+const slideTranslateY = (y) => `translateY(${(y === 'top' ? -1 : 1) * 14}px)`;
 
-const slideIn = p => keyframes`
+const slideIn = (p) => keyframes`
   from {
     transform: ${translateX(p.position.x)} ${slideTranslateY(p.position.y)};
   }
@@ -128,21 +130,23 @@ const slideIn = p => keyframes`
   }
 `;
 
-const positionX = offset => p => css`
+const positionX = (offset) => (p) => css`
   right: ${p.position.x === 'right' ? offset : 'inherit'};
   left: ${p.position.x === 'middle'
     ? '50%'
-    : p.position.x === 'left' ? offset : 'inherit'};
+    : p.position.x === 'left'
+    ? offset
+    : 'inherit'};
 
   transform: ${translateX(p.position.x)};
 `;
 
-const positionY = offset => p => css`
+const positionY = (offset) => (p) => css`
   bottom: ${p.position.y === 'top' ? offset : 'inherit'};
   top: ${p.position.y === 'bottom' ? offset : 'inherit'};
 `;
 
-const getTipColor = p =>
+const getTipColor = (p) =>
   p.position.y === 'bottom' && p.withHeader ? p.theme.offWhite : '#fff';
 
 const StyledHovercard = styled('div')`
@@ -152,23 +156,23 @@ const StyledHovercard = styled('div')`
   line-height: 1;
   z-index: 1000;
   white-space: initial;
-  color: ${p => p.theme.gray5};
-  border: 1px solid ${p => p.theme.borderLight};
+  color: ${(p) => p.theme.gray5};
+  border: 1px solid ${(p) => p.theme.borderLight};
   background: #fff;
   background-clip: padding-box;
   box-shadow: 0 0 35px 0 rgba(67, 62, 75, 0.2);
   width: 295px;
 
   /* The hovercard may appear in different contexts, don't inherit fonts */
-  font-family: ${p => p.theme.text.family};
+  font-family: ${(p) => p.theme.text.family};
 
   position: absolute;
   ${positionX('-2px')};
-  ${p => positionY(`${p.position.offset + 12}px`)};
+  ${(p) => positionY(`${p.position.offset + 12}px`)};
 
   animation: ${fadeIn} 100ms, ${slideIn} 100ms ease-in-out;
-  animation-play-state: ${p => (p.visible ? 'running' : 'paused')};
-  visibility: ${p => (p.visible ? 'visible' : 'hidden')};
+  animation-play-state: ${(p) => (p.visible ? 'running' : 'paused')};
+  visibility: ${(p) => (p.visible ? 'visible' : 'hidden')};
 
   &:before,
   &:after {
@@ -178,14 +182,14 @@ const StyledHovercard = styled('div')`
     z-index: -1;
     border: 10px solid transparent;
     /* stylelint-disable-next-line property-no-unknown */
-    border-${p => p.position.y}-color: ${getTipColor};
+    border-${(p) => p.position.y}-color: ${getTipColor};
     ${positionX('20px')};
     ${positionY('-20px')};
   }
 
   &:before {
     /* stylelint-disable-next-line property-no-unknown */
-    border-${p => p.position.y}-color: ${p => p.theme.borderLight};
+    border-${(p) => p.position.y}-color: ${(p) => p.theme.borderLight};
     ${positionY('-21px')};
   }
 `;
@@ -196,8 +200,8 @@ const Container = styled('span')`
 
 const Header = styled('div')`
   font-size: 14px;
-  background: ${p => p.theme.offWhite};
-  border-bottom: 1px solid ${p => p.theme.borderLight};
+  background: ${(p) => p.theme.offWhite};
+  border-bottom: 1px solid ${(p) => p.theme.borderLight};
   border-radius: 4px 4px 0 0;
   font-weight: 600;
   word-wrap: break-word;

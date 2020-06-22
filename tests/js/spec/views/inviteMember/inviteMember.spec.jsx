@@ -7,7 +7,7 @@ import ConfigStore from 'app/stores/configStore';
 jest.mock('app/api');
 jest.mock('jquery');
 
-describe('CreateProject', function() {
+describe('CreateProject', function () {
   let sandbox;
   const baseProps = {
     params: {
@@ -30,22 +30,22 @@ describe('CreateProject', function() {
     },
   ]);
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create();
     sandbox.stub(ConfigStore, 'getConfig').returns({id: 1, invitesEnabled: true});
     MockApiClient.clearMockResponses();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
   });
 
-  it('should render loading', function() {
+  it('should render loading', function () {
     const wrapper = shallow(<InviteMember {...baseProps} />, baseContext);
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('should render no team select when there is only one option', function() {
+  it('should render no team select when there is only one option', function () {
     MockApiClient.addMockResponse({
       url: '/organizations/testOrg/members/me/',
       body: {
@@ -71,7 +71,7 @@ describe('CreateProject', function() {
     expect(wrapper.state('selectedTeams').has(team[0].slug)).toBe(true);
   });
 
-  it('can select and deselect all teams', function() {
+  it('can select and deselect all teams', function () {
     MockApiClient.addMockResponse({
       url: '/organizations/testOrg/members/me/',
       body: {
@@ -123,7 +123,7 @@ describe('CreateProject', function() {
     expect(wrapper.state('selectedTeams').size).toBe(0);
   });
 
-  it('should use invite/add language based on config', function() {
+  it('should use invite/add language based on config', function () {
     sandbox.restore(ConfigStore, 'getConfig');
     sandbox.stub(ConfigStore, 'getConfig').returns({id: 1, invitesEnabled: false});
 
@@ -136,7 +136,7 @@ describe('CreateProject', function() {
     expect(wrapper.find('TextBlock')).toMatchSnapshot();
   });
 
-  it('should redirect when no roles available', function() {
+  it('should redirect when no roles available', function () {
     MockApiClient.addMockResponse({
       url: '/organizations/testOrg/members/me/',
       body: {
@@ -184,7 +184,7 @@ describe('CreateProject', function() {
     expect(pushMock).toHaveBeenCalledWith('/organizations/testOrg/members/');
   });
 
-  it('should render roles when available and allowed, and handle submitting', function() {
+  it('should render roles when available and allowed, and handle submitting', function () {
     MockApiClient.addMockResponse({
       url: '/organizations/testOrg/members/me/',
       body: {
@@ -228,7 +228,7 @@ describe('CreateProject', function() {
     expect(mock).toHaveBeenCalledTimes(3);
   });
 
-  it('shows an error when submitting an invalid email', async function() {
+  it('shows an error when submitting an invalid email', async function () {
     MockApiClient.addMockResponse({
       url: '/organizations/testOrg/members/me/',
       body: {

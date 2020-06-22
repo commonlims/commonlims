@@ -19,7 +19,7 @@ class Filter extends React.Component {
   };
 
   getCurrentLabel = () => {
-    const selected = this.props.options.filter(item => {
+    const selected = this.props.options.filter((item) => {
       return item[0] === (this.props.value || '');
     })[0];
     if (selected) {
@@ -50,7 +50,7 @@ class Filter extends React.Component {
     return (
       <DropdownLink title={this.getCurrentLabel()}>
         {this.getDefaultItem()}
-        {this.props.options.map(item => {
+        {this.props.options.map((item) => {
           const filterQuery = {};
           filterQuery[this.props.queryKey] = item[0];
           filterQuery.cursor = '';
@@ -92,7 +92,7 @@ class SortBy extends React.Component {
   };
 
   getCurrentSortLabel = () => {
-    return this.props.options.filter(item => {
+    return this.props.options.filter((item) => {
       return item[0] === this.props.value;
     })[0][1];
   };
@@ -100,7 +100,7 @@ class SortBy extends React.Component {
   getSortBySelector = () => {
     return (
       <DropdownLink title={this.getCurrentSortLabel()} className="sorted-by">
-        {this.props.options.map(item => {
+        {this.props.options.map((item) => {
           const query = $.extend({}, this.props.location.query, {
             sortBy: item[0],
             cursor: '',
@@ -169,10 +169,10 @@ const ResultGrid = createReactClass({
       sortOptions: [],
       filters: {},
       defaultSort: '',
-      keyForRow: function(row) {
+      keyForRow: function (row) {
         return row.id;
       },
-      columnsForRow: function(row) {
+      columnsForRow: function (row) {
         return [];
       },
       defaultParams: {
@@ -310,7 +310,7 @@ const ResultGrid = createReactClass({
   },
 
   renderResults() {
-    return this.state.rows.map(row => {
+    return this.state.rows.map((row) => {
       return <tr key={this.props.keyForRow(row)}>{this.props.columnsForRow(row)}</tr>;
     });
   },
@@ -347,7 +347,7 @@ const ResultGrid = createReactClass({
             path={this.props.path}
             location={this.props.location}
           />
-          {Object.keys(filters).map(filterKey => {
+          {Object.keys(filters).map((filterKey) => {
             return (
               <Filter
                 key={filterKey}
@@ -369,14 +369,15 @@ const ResultGrid = createReactClass({
             {this.state.loading
               ? this.renderLoading()
               : this.state.error
-                ? this.renderError()
-                : this.state.rows.length === 0
-                  ? this.renderNoResults()
-                  : this.renderResults()}
+              ? this.renderError()
+              : this.state.rows.length === 0
+              ? this.renderNoResults()
+              : this.renderResults()}
           </tbody>
         </table>
-        {this.props.hasPagination &&
-          this.state.pageLinks && <Pagination pageLinks={this.state.pageLinks} />}
+        {this.props.hasPagination && this.state.pageLinks && (
+          <Pagination pageLinks={this.state.pageLinks} />
+        )}
       </div>
     );
   },

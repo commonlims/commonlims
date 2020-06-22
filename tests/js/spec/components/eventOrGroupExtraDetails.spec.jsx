@@ -5,8 +5,8 @@ import EventOrGroupExtraDetails from 'app/components/eventOrGroupExtraDetails';
 
 jest.mock('app/mixins/projectState');
 
-describe('EventOrGroupExtraDetails', function() {
-  it('renders last and first seen', function() {
+describe('EventOrGroupExtraDetails', function () {
+  it('renders last and first seen', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"
@@ -20,7 +20,7 @@ describe('EventOrGroupExtraDetails', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders only first seen', function() {
+  it('renders only first seen', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"
@@ -33,7 +33,7 @@ describe('EventOrGroupExtraDetails', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders only last seen', function() {
+  it('renders only last seen', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"
@@ -46,7 +46,7 @@ describe('EventOrGroupExtraDetails', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders all details', function() {
+  it('renders all details', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"
@@ -68,7 +68,7 @@ describe('EventOrGroupExtraDetails', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('renders assignee and status', function() {
+  it('renders assignee and status', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"
@@ -92,7 +92,7 @@ describe('EventOrGroupExtraDetails', function() {
     expect(toJson(component)).toMatchSnapshot();
   });
 
-  it('details when mentioned', function() {
+  it('details when mentioned', function () {
     const component = shallow(
       <EventOrGroupExtraDetails
         orgId="orgId"

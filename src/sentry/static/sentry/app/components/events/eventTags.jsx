@@ -38,7 +38,7 @@ class EventTags extends React.Component {
         className="p-b-1"
       >
         <Pills className="no-margin">
-          {tags.map(tag => {
+          {tags.map((tag) => {
             return (
               <Pill key={tag.key} name={tag.key}>
                 <Link

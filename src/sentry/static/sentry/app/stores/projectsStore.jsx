@@ -95,7 +95,7 @@ const ProjectsStore = Reflux.createStore({
    */
   onDeleteTeam(teamSlug) {
     // Look for team in all projects
-    const projectIds = this.getWithTeam(teamSlug).map(projectWithTeam => {
+    const projectIds = this.getWithTeam(teamSlug).map((projectWithTeam) => {
       this.removeTeamFromProject(teamSlug, projectWithTeam);
       return projectWithTeam.id;
     });
@@ -182,11 +182,11 @@ const ProjectsStore = Reflux.createStore({
   },
 
   getById(id) {
-    return this.getAll().find(project => project.id === id);
+    return this.getAll().find((project) => project.id === id);
   },
 
   getBySlug(slug) {
-    return this.getAll().find(project => project.slug === slug);
+    return this.getAll().find((project) => project.slug === slug);
   },
 });
 

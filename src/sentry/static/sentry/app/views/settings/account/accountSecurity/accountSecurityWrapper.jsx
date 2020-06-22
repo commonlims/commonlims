@@ -9,10 +9,13 @@ const ENDPOINT = '/users/me/authenticators/';
 
 class AccountSecurityWrapper extends AsyncComponent {
   getEndpoints() {
-    return [['authenticators', ENDPOINT], ['organizations', '/organizations/']];
+    return [
+      ['authenticators', ENDPOINT],
+      ['organizations', '/organizations/'],
+    ];
   }
 
-  handleDisable = auth => {
+  handleDisable = (auth) => {
     if (!auth || !auth.authId) {
       return;
     }
@@ -49,9 +52,9 @@ class AccountSecurityWrapper extends AsyncComponent {
     const {authenticators, organizations} = this.state;
 
     const countEnrolled = authenticators.filter(
-      auth => auth.isEnrolled && !auth.isBackupInterface
+      (auth) => auth.isEnrolled && !auth.isBackupInterface
     ).length;
-    const orgsRequire2fa = organizations.filter(org => org.require2FA);
+    const orgsRequire2fa = organizations.filter((org) => org.require2FA);
     const deleteDisabled = orgsRequire2fa.length > 0 && countEnrolled === 1;
 
     // This happens when you switch between children views

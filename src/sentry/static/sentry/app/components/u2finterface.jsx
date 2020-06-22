@@ -28,7 +28,7 @@ class U2fInterface extends React.Component {
   };
 
   componentDidMount() {
-    u2f.isSupported().then(supported => {
+    u2f.isSupported().then((supported) => {
       this.setState({
         isSupported: supported,
       });
@@ -62,7 +62,7 @@ class U2fInterface extends React.Component {
       throw new Error(`Unsupported flow mode '${this.props.flowMode}'`);
     }
     promise
-      .then(data => {
+      .then((data) => {
         this.setState(
           {
             hasBeenTapped: true,
@@ -82,7 +82,7 @@ class U2fInterface extends React.Component {
                   response: u2fResponse,
                   challenge,
                 })
-                .catch(err => {
+                .catch((err) => {
                   // This is kind of gross but I want to limit the amount of changes to this component
                   this.setState({
                     deviceFailure: 'UNKNOWN_ERROR',
@@ -93,7 +93,7 @@ class U2fInterface extends React.Component {
           }
         );
       })
-      .catch(err => {
+      .catch((err) => {
         let failure = 'DEVICE_ERROR';
         // in some rare cases there is no metadata on the error which
         // causes this to blow up badly.
@@ -119,7 +119,7 @@ class U2fInterface extends React.Component {
       });
   };
 
-  bindChallengeElement = ref => {
+  bindChallengeElement = (ref) => {
     this.setState({
       challengeElement: ref,
       formElement: ref && ref.form,
@@ -130,7 +130,7 @@ class U2fInterface extends React.Component {
     }
   };
 
-  bindResponseElement = ref => {
+  bindResponseElement = (ref) => {
     this.setState({
       responseElement: ref,
     });

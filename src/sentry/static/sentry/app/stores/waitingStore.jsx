@@ -30,7 +30,7 @@ const WaitingStore = Reflux.createStore({
     this.reset();
 
     const itemIds = new Set();
-    items.forEach(item => {
+    items.forEach((item) => {
       itemIds.add(item.id);
       this.items.push(item);
     });
@@ -45,7 +45,7 @@ const WaitingStore = Reflux.createStore({
 
     const itemsById = {};
     const itemIds = new Set();
-    items.forEach(item => {
+    items.forEach((item) => {
       itemsById[item.id] = item;
       itemIds.add(item.id);
     });
@@ -174,7 +174,7 @@ const WaitingStore = Reflux.createStore({
 
   get(id) {
     const pendingForId = [];
-    this.pendingChanges.forEach(change => {
+    this.pendingChanges.forEach((change) => {
       if (change.id === id) {
         pendingForId.push(change);
       }
@@ -201,25 +201,25 @@ const WaitingStore = Reflux.createStore({
   },
 
   getAllItemIds() {
-    return this.items.map(item => item.id);
+    return this.items.map((item) => item.id);
   },
 
   getAllItems() {
     // regroup pending changes by their itemID
     const pendingById = {};
-    this.pendingChanges.forEach(change => {
+    this.pendingChanges.forEach((change) => {
       if (_.isUndefined(pendingById[change.id])) {
         pendingById[change.id] = [];
       }
       pendingById[change.id].push(change);
     });
 
-    return this.items.map(item => {
+    return this.items.map((item) => {
       let rItem = item;
       if (!_.isUndefined(pendingById[item.id])) {
         // copy the object so dirty state doesnt mutate original
         rItem = {...rItem};
-        pendingById[item.id].forEach(change => {
+        pendingById[item.id].forEach((change) => {
           rItem = {
             ...rItem,
             ...change.params,
@@ -253,7 +253,7 @@ const WaitingStore = Reflux.createStore({
 
   onDelete(changeId, itemIds) {
     itemIds = this._itemIdsOrAll(itemIds);
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.addStatus(itemId, 'delete');
     });
     this.trigger(new Set(itemIds));
@@ -266,7 +266,7 @@ const WaitingStore = Reflux.createStore({
       return;
     }
 
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.clearStatus(itemId, 'delete');
     });
     this.trigger(new Set(itemIds));
@@ -275,11 +275,11 @@ const WaitingStore = Reflux.createStore({
   onDeleteSuccess(changeId, itemIds, response) {
     itemIds = this._itemIdsOrAll(itemIds);
     const itemIdSet = new Set(itemIds);
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       delete this.statuses[itemId];
       this.clearStatus(itemId, 'delete');
     });
-    this.items = this.items.filter(item => !itemIdSet.has(item.id));
+    this.items = this.items.filter((item) => !itemIdSet.has(item.id));
     showAlert(t('The selected events have been scheduled for deletion.'), 'success');
     this.trigger(new Set(itemIds));
   },
@@ -298,7 +298,7 @@ const WaitingStore = Reflux.createStore({
   onDiscardSuccess(changeId, itemId, response) {
     delete this.statuses[itemId];
     this.clearStatus(itemId, 'discard');
-    this.items = this.items.filter(item => item.id !== itemId);
+    this.items = this.items.filter((item) => item.id !== itemId);
     showAlert(t('Similar events will be filtered and discarded.'), 'success');
     this.trigger(new Set([itemId]));
   },
@@ -306,7 +306,7 @@ const WaitingStore = Reflux.createStore({
   onMerge(changeId, itemIds) {
     itemIds = this._itemIdsOrAll(itemIds);
 
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.addStatus(itemId, 'merge');
     });
     // XXX(billy): Not sure if this is a bug or not but do we need to publish all itemIds?
@@ -317,7 +317,7 @@ const WaitingStore = Reflux.createStore({
   onMergeError(changeId, itemIds, response) {
     itemIds = this._itemIdsOrAll(itemIds);
 
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.clearStatus(itemId, 'merge');
     });
     showAlert(t('Unable to merge events. Please try again.'), 'error');
@@ -327,7 +327,7 @@ const WaitingStore = Reflux.createStore({
   onMergeSuccess(changeId, mergedIds, response) {
     mergedIds = this._itemIdsOrAll(mergedIds); // everything on page
 
-    mergedIds.forEach(itemId => {
+    mergedIds.forEach((itemId) => {
       this.clearStatus(itemId, 'merge');
     });
 
@@ -337,7 +337,7 @@ const WaitingStore = Reflux.createStore({
     // Looks like the `PUT /api/0/projects/:orgId/:projectId/issues/` endpoint
     // actually returns a 204, so there is no `response` body
     this.items = this.items.filter(
-      item =>
+      (item) =>
         !mergedIdSet.has(item.id) ||
         (response && response.merge && item.id === response.merge.parent)
     );
@@ -351,7 +351,7 @@ const WaitingStore = Reflux.createStore({
    */
   _itemIdsOrAll(itemIds) {
     if (_.isUndefined(itemIds)) {
-      itemIds = this.items.map(item => item.id);
+      itemIds = this.items.map((item) => item.id);
     }
     return itemIds;
   },
@@ -359,7 +359,7 @@ const WaitingStore = Reflux.createStore({
   onUpdate(changeId, itemIds, data) {
     itemIds = this._itemIdsOrAll(itemIds);
 
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.addStatus(itemId, 'update');
       this.pendingChanges.push(changeId, itemId, data);
     });
@@ -370,7 +370,7 @@ const WaitingStore = Reflux.createStore({
     itemIds = this._itemIdsOrAll(itemIds);
 
     this.pendingChanges.remove(changeId);
-    itemIds.forEach(itemId => {
+    itemIds.forEach((itemId) => {
       this.clearStatus(itemId, 'update');
     });
     if (!failSilently) {

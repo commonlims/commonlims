@@ -85,7 +85,7 @@ const IndicatorStore = Reflux.createStore({
       return;
     }
 
-    this.items = this.items.filter(item => {
+    this.items = this.items.filter((item) => {
       return item !== indicator;
     });
 

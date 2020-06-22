@@ -8,7 +8,7 @@ import InlineSvg from 'app/components/inlineSvg';
 
 const StyledInlineSvg = styled(InlineSvg)`
   display: block;
-  color: ${p => p.theme.gray3};
+  color: ${(p) => p.theme.gray3};
 `;
 
 export default class FormField extends React.PureComponent {
@@ -98,12 +98,12 @@ export default class FormField extends React.PureComponent {
     return value;
   }
 
-  onChange = e => {
+  onChange = (e) => {
     const value = e.target.value;
     this.setValue(value);
   };
 
-  setValue = value => {
+  setValue = (value) => {
     const form = (this.context || {}).form;
     this.setState(
       {

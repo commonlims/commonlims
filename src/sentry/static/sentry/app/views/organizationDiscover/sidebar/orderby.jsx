@@ -63,16 +63,19 @@ export default class Orderby extends React.Component {
               name="orderbyField"
               options={columns}
               value={field}
-              onChange={val => this.updateField(val.value)}
+              onChange={(val) => this.updateField(val.value)}
               disabled={disabled}
             />
           </OrderbyField>
           <OrderbyValue>
             <SelectControl
               name="orderbyDirection"
-              options={[{value: 'asc', label: 'asc'}, {value: 'desc', label: 'desc'}]}
+              options={[
+                {value: 'asc', label: 'asc'},
+                {value: 'desc', label: 'desc'},
+              ]}
               value={direction}
-              onChange={val => this.updateDirection(val.value)}
+              onChange={(val) => this.updateDirection(val.value)}
               disabled={disabled}
             />
           </OrderbyValue>

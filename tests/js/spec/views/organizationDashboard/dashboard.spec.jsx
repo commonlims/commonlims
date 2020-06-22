@@ -9,7 +9,7 @@ import OrganizationDashboardContainer from 'app/views/organizationDashboard';
 
 jest.mock('app/utils/withLatestContext');
 
-describe('OrganizationDashboard', function() {
+describe('OrganizationDashboard', function () {
   const {organization, router, routerContext} = initializeOrg({
     projects: [{isMember: true}, {isMember: true, slug: 'new-project', id: 3}],
     organization: {
@@ -26,7 +26,7 @@ describe('OrganizationDashboard', function() {
 
   let discoverMock;
 
-  beforeEach(function() {
+  beforeEach(function () {
     router.push.mockRestore();
     MockApiClient.clearMockResponses();
     MockApiClient.addMockResponse({
@@ -44,7 +44,7 @@ describe('OrganizationDashboard', function() {
     });
   });
 
-  it('queries and renders discover-based widgets grouped by time', async function() {
+  it('queries and renders discover-based widgets grouped by time', async function () {
     const wrapper = mount(
       <OrganizationDashboardContainer>
         <Dashboard {...TestStubs.Dashboard()} />
@@ -98,7 +98,7 @@ describe('OrganizationDashboard', function() {
     expect(wrapper.find('LineChart')).toHaveLength(1);
   });
 
-  it('queries and renders discover-based widgets not grouped by time', async function() {
+  it('queries and renders discover-based widgets not grouped by time', async function () {
     const wrapper = mount(
       <OrganizationDashboardContainer>
         <Dashboard

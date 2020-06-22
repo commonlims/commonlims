@@ -39,11 +39,11 @@ const ProjectInstallPlatform = createReactClass({
     let integration;
     let platform;
 
-    props.platformData.platforms.forEach(p_item => {
+    props.platformData.platforms.forEach((p_item) => {
       if (integration) {
         return;
       }
-      integration = p_item.integrations.filter(i_item => {
+      integration = p_item.integrations.filter((i_item) => {
         return i_item.id == key;
       })[0];
       if (integration) {
@@ -79,7 +79,7 @@ const ProjectInstallPlatform = createReactClass({
   fetchData() {
     const {orgId, projectId, platform} = this.props.params;
     this.api.request(`/projects/${orgId}/${projectId}/docs/${platform}/`, {
-      success: data => {
+      success: (data) => {
         this.setState({
           loading: false,
           error: false,

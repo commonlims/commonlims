@@ -14,11 +14,11 @@ import HookStore from 'app/stores/hookStore';
  * @param {Object} data Additional event data to record
  */
 export function analytics(name, data) {
-  HookStore.get('analytics:event').forEach(cb => cb(name, data));
+  HookStore.get('analytics:event').forEach((cb) => cb(name, data));
 }
 
 export function amplitude(name, organization_id, data) {
-  HookStore.get('amplitude:event').forEach(cb => cb(name, organization_id, data));
+  HookStore.get('amplitude:event').forEach((cb) => cb(name, organization_id, data));
 }
 
 /**
@@ -27,7 +27,7 @@ export function amplitude(name, organization_id, data) {
  * @param {Object} tags An additional tags object
  */
 export function metric(name, value, tags) {
-  HookStore.get('metrics:event').forEach(cb => cb(name, value, tags));
+  HookStore.get('metrics:event').forEach((cb) => cb(name, value, tags));
 }
 
 // JSDOM implements window.performance but not window.performance.mark
@@ -85,7 +85,7 @@ metric.measure = function metricMeasure({name, start, end, data, noCleanup} = {}
   // Retrieve measurement entries
   performance
     .getEntriesByName(name, 'measure')
-    .forEach(measurement => metric(measurement.name, measurement.duration, data));
+    .forEach((measurement) => metric(measurement.name, measurement.duration, data));
 
   // By default, clean up measurements
   if (!noCleanup) {

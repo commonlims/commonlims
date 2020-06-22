@@ -37,8 +37,8 @@ const CONTEXT_BROWSER = {
   name: 'Chrome',
 };
 
-describe('ContextSummary', function() {
-  describe('render()', function() {
+describe('ContextSummary', function () {
+  describe('render()', function () {
     it('should render nothing without contexts', () => {
       const event = {
         id: '',
@@ -136,8 +136,8 @@ describe('ContextSummary', function() {
   });
 });
 
-describe('OsSummary', function() {
-  describe('render()', function() {
+describe('OsSummary', function () {
+  describe('render()', function () {
     it('should render the version string', () => {
       const os = {
         kernel_version: '17.5.0',
@@ -176,8 +176,8 @@ describe('OsSummary', function() {
   });
 });
 
-describe('GpuSummary', function() {
-  describe('render()', function() {
+describe('GpuSummary', function () {
+  describe('render()', function () {
     it('should render name and vendor', () => {
       const gpu = {
         name: 'Mali-T880',

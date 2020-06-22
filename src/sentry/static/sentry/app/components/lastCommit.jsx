@@ -12,7 +12,7 @@ class LastCommit extends React.Component {
     headerClass: PropTypes.string,
   };
 
-  renderMessage = message => {
+  renderMessage = (message) => {
     if (!message) {
       return t('No message provided');
     }
@@ -45,9 +45,8 @@ class LastCommit extends React.Component {
             {this.renderMessage(commit.message)}
           </div>
           <div className="commit-meta">
-            <strong>
-              {(commitAuthor && commitAuthor.name) || t('Unknown Author')}
-            </strong>&nbsp;
+            <strong>{(commitAuthor && commitAuthor.name) || t('Unknown Author')}</strong>
+            &nbsp;
             <TimeSince date={commit.dateCreated} />
           </div>
         </div>

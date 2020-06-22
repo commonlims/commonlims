@@ -9,7 +9,7 @@ import GlobalSelectionStore from 'app/stores/globalSelectionStore';
  * Higher order component that uses GlobalSelectionStore and provides the
  * active project
  */
-const withGlobalSelection = WrappedComponent =>
+const withGlobalSelection = (WrappedComponent) =>
   createReactClass({
     displayName: `withGlobalSelection(${getDisplayName(WrappedComponent)})`,
     mixins: [Reflux.listenTo(GlobalSelectionStore, 'onUpdate')],

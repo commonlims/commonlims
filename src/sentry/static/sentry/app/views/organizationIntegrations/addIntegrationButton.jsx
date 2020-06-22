@@ -33,7 +33,7 @@ export default class AddIntegrationButton extends React.Component {
       >
         <span>
           <AddIntegration provider={provider} onInstall={onAddIntegration}>
-            {onClick => (
+            {(onClick) => (
               <Button
                 disabled={!provider.canAdd}
                 {...buttonProps}

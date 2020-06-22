@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import ConfigStore from 'app/stores/configStore';
 import TimeRangeSelector from 'app/components/organizations/timeRangeSelector';
 
-describe('TimeRangeSelector', function() {
+describe('TimeRangeSelector', function () {
   let wrapper;
   const onChange = jest.fn();
   const routerContext = TestStubs.routerContext();
@@ -15,14 +15,14 @@ describe('TimeRangeSelector', function() {
       routerContext
     );
 
-  beforeEach(function() {
+  beforeEach(function () {
     ConfigStore.loadInitialData({
       user: {options: {timezone: 'America/New_York'}},
     });
     onChange.mockReset();
   });
 
-  it('hides relative and absolute selectors', async function() {
+  it('hides relative and absolute selectors', async function () {
     wrapper = mount(
       <TimeRangeSelector showAbsolute={false} showRelative={false} />,
       routerContext
@@ -32,7 +32,7 @@ describe('TimeRangeSelector', function() {
     expect(wrapper.find('SelectorItem[value="absolute"]')).toHaveLength(0);
   });
 
-  it('selects absolute item', async function() {
+  it('selects absolute item', async function () {
     wrapper = createWrapper();
     await wrapper.find('HeaderItem').simulate('click');
 
@@ -52,7 +52,7 @@ describe('TimeRangeSelector', function() {
     expect(wrapper.find('[data-test-id="date-range"]')).toHaveLength(1);
   });
 
-  it('selects absolute item with utc enabled', async function() {
+  it('selects absolute item with utc enabled', async function () {
     wrapper = createWrapper({utc: true});
     await wrapper.find('HeaderItem').simulate('click');
 
@@ -72,7 +72,7 @@ describe('TimeRangeSelector', function() {
     expect(wrapper.find('[data-test-id="date-range"]')).toHaveLength(1);
   });
 
-  it('switches from relative to absolute while maintaining equivalent date range', async function() {
+  it('switches from relative to absolute while maintaining equivalent date range', async function () {
     wrapper = createWrapper({
       relative: '7d',
     });
@@ -105,7 +105,7 @@ describe('TimeRangeSelector', function() {
     });
   });
 
-  it('switches from relative to absolute while maintaining equivalent date range (in utc)', async function() {
+  it('switches from relative to absolute while maintaining equivalent date range (in utc)', async function () {
     wrapper = createWrapper({
       relative: '7d',
       utc: true,
@@ -139,7 +139,7 @@ describe('TimeRangeSelector', function() {
     });
   });
 
-  it('switches from relative to absolute and then toggling UTC', async function() {
+  it('switches from relative to absolute and then toggling UTC', async function () {
     wrapper = createWrapper({
       relative: '7d',
       utc: true,
@@ -171,7 +171,7 @@ describe('TimeRangeSelector', function() {
     });
   });
 
-  it('maintains time when switching UTC to local time', async function() {
+  it('maintains time when switching UTC to local time', async function () {
     let state;
     wrapper = createWrapper({
       relative: null,

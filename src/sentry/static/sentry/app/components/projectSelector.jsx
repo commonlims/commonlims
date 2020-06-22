@@ -77,9 +77,9 @@ class ProjectSelector extends React.Component {
   getProjects() {
     const {organization, projects} = this.props;
     const projectList =
-      projects || organization.projects.filter(project => project.isMember);
+      projects || organization.projects.filter((project) => project.isMember);
 
-    return sortArray(projectList, project => {
+    return sortArray(projectList, (project) => {
       return [!project.isBookmarked, project.name];
     });
   }
@@ -94,7 +94,7 @@ class ProjectSelector extends React.Component {
       return;
     }
 
-    this.setState(state => {
+    this.setState((state) => {
       const selectedProjects = new Map(state.selectedProjects.entries());
 
       if (selectedProjects.has(slug)) {
@@ -134,7 +134,7 @@ class ProjectSelector extends React.Component {
 
     if (hasCallback) {
       if (isControlled) {
-        const selectedProjectsMap = new Map(selectedProjects.map(p => [p.slug, p]));
+        const selectedProjectsMap = new Map(selectedProjects.map((p) => [p.slug, p]));
         if (selectedProjectsMap.has(project.slug)) {
           // unselected a project
 
@@ -164,7 +164,7 @@ class ProjectSelector extends React.Component {
     const access = new Set(org.access);
 
     const projects = this.getProjects();
-    const projectList = sortArray(projects, project => {
+    const projectList = sortArray(projects, (project) => {
       return [!project.isBookmarked, project.name];
     });
 
@@ -189,7 +189,7 @@ class ProjectSelector extends React.Component {
         noResultsMessage={t('No projects found')}
         virtualizedHeight={40}
         emptyHidesInput
-        menuFooter={renderProps => {
+        menuFooter={(renderProps) => {
           const renderedFooter =
             typeof menuFooter === 'function' ? menuFooter(renderProps) : menuFooter;
           const showCreateProjectButton = !hasProjects && hasProjectWrite;
@@ -213,7 +213,7 @@ class ProjectSelector extends React.Component {
             </React.Fragment>
           );
         }}
-        items={projectList.map(project => ({
+        items={projectList.map((project) => ({
           value: project,
           searchKey: project.slug,
           label: ({inputValue}) => (
@@ -232,14 +232,15 @@ class ProjectSelector extends React.Component {
           ),
         }))}
       >
-        {renderProps =>
+        {(renderProps) =>
           children({
             ...renderProps,
             activeProject,
             selectedProjects: this.isControlled()
               ? this.props.selectedProjects
               : Array.from(this.state.selectedProjects.values()),
-          })}
+          })
+        }
       </DropdownAutoComplete>
     );
   }
@@ -255,12 +256,12 @@ class ProjectSelectorItem extends React.PureComponent {
     onMultiSelect: PropTypes.func,
   };
 
-  handleMultiSelect = e => {
+  handleMultiSelect = (e) => {
     const {project, onMultiSelect} = this.props;
     onMultiSelect(project, e);
   };
 
-  handleClick = e => {
+  handleClick = (e) => {
     e.stopPropagation();
     this.handleMultiSelect(e);
   };
@@ -283,7 +284,7 @@ class ProjectSelectorItem extends React.PureComponent {
           {multi && (
             <SettingsIconLink
               to={`/settings/${organization.slug}/${project.slug}/`}
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <InlineSvg src="icon-settings" />
             </SettingsIconLink>
@@ -302,12 +303,12 @@ class ProjectSelectorItem extends React.PureComponent {
 
 const BookmarkIcon = styled(InlineSvg)`
   margin-left: ${space(0.5)};
-  color: ${p => p.theme.yellowOrange};
+  color: ${(p) => p.theme.yellowOrange};
   margin-top: -2px; /* trivial alignment bump */
 `;
 
 const SettingsIconLink = styled(Link)`
-  color: ${p => p.theme.gray2};
+  color: ${(p) => p.theme.gray2};
   display: flex;
   padding: ${space(0.5)};
   opacity: 0;
@@ -315,7 +316,7 @@ const SettingsIconLink = styled(Link)`
   transition: 0.2s all;
 
   &:hover {
-    color: ${p => p.theme.gray4};
+    color: ${(p) => p.theme.gray4};
   }
 `;
 
@@ -346,7 +347,7 @@ const CreateProjectButton = styled(Button)`
 
 const BadgeWrapper = styled('div')`
   display: flex;
-  ${p => !p.multi && 'flex: 1'};
+  ${(p) => !p.multi && 'flex: 1'};
   white-space: nowrap;
   overflow: hidden;
 `;

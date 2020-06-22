@@ -27,7 +27,7 @@ class KeyValueList extends React.Component {
     if (data === undefined || data === null) {
       data = [];
     } else if (!(data instanceof Array)) {
-      data = Object.keys(data).map(key => [key, data[key]]);
+      data = Object.keys(data).map((key) => [key, data[key]]);
     }
 
     data = this.props.isSorted ? _.sortBy(data, [([key]) => key]) : data;

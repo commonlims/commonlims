@@ -5,7 +5,7 @@ import {Client} from 'app/api';
 import {mount} from 'enzyme';
 import OrganizationDeveloperSettings from 'app/views/settings/organizationDeveloperSettings/index';
 
-describe('Organization Developer Settings', function() {
+describe('Organization Developer Settings', function () {
   const org = TestStubs.Organization();
   const sentryApp = TestStubs.SentryApp();
   const routerContext = TestStubs.routerContext();
@@ -58,10 +58,7 @@ describe('Organization Developer Settings', function() {
       wrapper.find('[icon="icon-trash"]').simulate('click');
       // confirm deletion by entering in app slug
       wrapper.find('input').simulate('change', {target: {value: 'sample-app'}});
-      wrapper
-        .find('ConfirmDelete Button')
-        .last()
-        .simulate('click');
+      wrapper.find('ConfirmDelete Button').last().simulate('click');
       await tick();
       wrapper.update();
       expect(wrapper.state('applications')).toEqual([]);

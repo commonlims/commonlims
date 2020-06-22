@@ -6,8 +6,8 @@ const divFactory = React.createFactory('div');
 const originalCreateElement = React.createElement;
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default function(stubber, stubbedComponents) {
-  stubber.stub(React, 'createElement', function(component, props) {
+export default function (stubber, stubbedComponents) {
+  stubber.stub(React, 'createElement', function (component, props) {
     props = props || {};
     if (stubbedComponents.indexOf(component) === -1) {
       return originalCreateElement.apply(React, arguments);

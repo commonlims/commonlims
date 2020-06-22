@@ -31,7 +31,7 @@ export default class InstallWizard extends AsyncView {
     const options = this.state.data;
 
     let missingOptions = new Set(
-      Object.keys(options).filter(option => !options[option].field.isSet)
+      Object.keys(options).filter((option) => !options[option].field.isSet)
     );
     // This is to handle the initial installation case.
     // Even if all options are filled out, we want to prompt to confirm
@@ -59,7 +59,7 @@ export default class InstallWizard extends AsyncView {
   getInitialData() {
     const options = this.state.data;
     const data = {};
-    Object.keys(options).forEach(optionName => {
+    Object.keys(options).forEach((optionName) => {
       const option = options[optionName];
       if (!option.field.isSet) {
         data[optionName] = option.value;
@@ -86,8 +86,8 @@ export default class InstallWizard extends AsyncView {
             {this.state.loading
               ? this.renderLoading()
               : this.state.error
-                ? this.renderError(new Error('Unable to load all required endpoints'))
-                : this.renderBody()}
+              ? this.renderError(new Error('Unable to load all required endpoints'))
+              : this.renderBody()}
           </div>
         </div>
       </DocumentTitle>

@@ -130,7 +130,7 @@ class AccountSecurityEnroll extends AsyncView {
         `${ENDPOINT}${this.props.params.authId}/enroll/`,
         {},
         {
-          allowError: err => {
+          allowError: (err) => {
             const alreadyEnrolled =
               err &&
               err.status === 400 &&
@@ -189,7 +189,7 @@ class AccountSecurityEnroll extends AsyncView {
   };
 
   // Handles
-  handleSmsSubmit = dataModel => {
+  handleSmsSubmit = (dataModel) => {
     const {authenticator, hasSentCode} = this.state;
 
     // Don't submit if empty
@@ -238,7 +238,7 @@ class AccountSecurityEnroll extends AsyncView {
             });
           }
         },
-        error => {
+        (error) => {
           this._form = {};
           const isSmsInterface = authenticator.id === 'sms';
 
@@ -258,7 +258,7 @@ class AccountSecurityEnroll extends AsyncView {
   };
 
   // Handle u2f device tap
-  handleU2fTap = data => {
+  handleU2fTap = (data) => {
     return this.api
       .requestPromise(`${ENDPOINT}${this.props.params.authId}/enroll/`, {
         data: {
@@ -271,7 +271,7 @@ class AccountSecurityEnroll extends AsyncView {
   };
 
   // Currently only TOTP uses this
-  handleSubmit = dataModel => {
+  handleSubmit = (dataModel) => {
     const {authenticator} = this.state;
 
     const data = {
@@ -357,8 +357,8 @@ class AccountSecurityEnroll extends AsyncView {
     // Attempt to extract `defaultValue` from server generated form fields
     const defaultValues = fields
       ? fields
-          .filter(field => typeof field.defaultValue !== 'undefined')
-          .map(field => [field.name, field.defaultValue])
+          .filter((field) => typeof field.defaultValue !== 'undefined')
+          .map((field) => [field.name, field.defaultValue])
           .reduce((acc, [name, value]) => {
             acc[name] = value;
             return acc;
@@ -386,19 +386,18 @@ class AccountSecurityEnroll extends AsyncView {
 
         <TextBlock>{authenticator.description}</TextBlock>
 
-        {authenticator.form &&
-          !!authenticator.form.length && (
-            <Form
-              apiMethod="POST"
-              onFieldChange={this.handleFieldChange}
-              apiEndpoint={endpoint}
-              onSubmit={this.handleSubmit}
-              initialData={{...defaultValues, ...authenticator}}
-              hideFooter
-            >
-              <JsonForm {...this.props} forms={[{title: 'Configuration', fields}]} />
-            </Form>
-          )}
+        {authenticator.form && !!authenticator.form.length && (
+          <Form
+            apiMethod="POST"
+            onFieldChange={this.handleFieldChange}
+            apiEndpoint={endpoint}
+            onSubmit={this.handleSubmit}
+            initialData={{...defaultValues, ...authenticator}}
+            hideFooter
+          >
+            <JsonForm {...this.props} forms={[{title: 'Configuration', fields}]} />
+          </Form>
+        )}
       </div>
     );
   }

@@ -51,10 +51,10 @@ class PluginSettings extends PluginComponentBase {
     this.api.request(this.getPluginEndpoint(), {
       data: parsedFormData,
       method: 'PUT',
-      success: this.onSaveSuccess.bind(this, data => {
+      success: this.onSaveSuccess.bind(this, (data) => {
         const formData = {};
         const initialData = {};
-        data.config.forEach(field => {
+        data.config.forEach((field) => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
         });
@@ -65,7 +65,7 @@ class PluginSettings extends PluginComponentBase {
           errors: {},
         });
       }),
-      error: this.onSaveError.bind(this, error => {
+      error: this.onSaveError.bind(this, (error) => {
         this.setState({
           errors: (error.responseJSON || {}).errors || {},
         });
@@ -76,7 +76,7 @@ class PluginSettings extends PluginComponentBase {
 
   fetchData() {
     this.api.request(this.getPluginEndpoint(), {
-      success: data => {
+      success: (data) => {
         if (!data.config) {
           this.setState(
             {
@@ -88,7 +88,7 @@ class PluginSettings extends PluginComponentBase {
         }
         const formData = {};
         const initialData = {};
-        data.config.forEach(field => {
+        data.config.forEach((field) => {
           formData[field.name] = field.value || field.defaultValue;
           initialData[field.name] = field.value;
         });
@@ -159,7 +159,7 @@ class PluginSettings extends PluginComponentBase {
               </ul>
             </div>
           )}
-          {this.state.fieldList.map(f => {
+          {this.state.fieldList.map((f) => {
             return this.renderField({
               key: f.name,
               config: f,

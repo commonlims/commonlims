@@ -118,7 +118,7 @@ const WorkBatches = createReactClass({
     }
 
     const workBatches = nextProps.workBatches;
-    const groupIds = workBatches.map(item => item.id.toString());
+    const groupIds = workBatches.map((item) => item.id.toString());
     if (!utils.valueIsEqual(groupIds, this.state.groupIds)) {
       this.setState({
         groupIds,
@@ -139,7 +139,7 @@ const WorkBatches = createReactClass({
     const {searchId} = this.state;
 
     this.api.request(`/projects/${orgId}/internal/searches/`, {
-      success: data => {
+      success: (data) => {
         const newState = {
           isDefaultSearch: false,
           savedSearchLoading: false,
@@ -148,7 +148,7 @@ const WorkBatches = createReactClass({
         };
         const needsData = this.state.loading;
         if (searchId) {
-          const match = data.find(search => search.id === searchId);
+          const match = data.find((search) => search.id === searchId);
 
           if (match) {
             newState.query = match.query;
@@ -165,8 +165,8 @@ const WorkBatches = createReactClass({
           }
         } else if (!this.hasQuery()) {
           const defaultResult =
-            data.find(search => search.isUserDefault) ||
-            data.find(search => search.isDefault);
+            data.find((search) => search.isUserDefault) ||
+            data.find((search) => search.isDefault);
 
           if (defaultResult) {
             newState.searchId = defaultResult.id;
@@ -177,7 +177,7 @@ const WorkBatches = createReactClass({
 
         this.setState(newState, needsData ? this.fetchData : null);
       },
-      error: error => {
+      error: (error) => {
         // XXX(dcramer): fail gracefully by still loading the stream
         logAjaxError(error);
         this.setState({
@@ -195,14 +195,14 @@ const WorkBatches = createReactClass({
   fetchProcessingIssues() {
     const {orgId} = this.props.params;
     this.api.request(`/projects/${orgId}/internal/processingissues/`, {
-      success: data => {
+      success: (data) => {
         if (data.hasIssues || data.resolveableIssues > 0 || data.issuesProcessing > 0) {
           this.setState({
             processingIssues: data,
           });
         }
       },
-      error: error => {
+      error: (error) => {
         logAjaxError(error);
         // this is okay. it's just a ui hint
       },
@@ -249,7 +249,7 @@ const WorkBatches = createReactClass({
 
     if (searchId) {
       const searchResult = this.state.savedSearchList.find(
-        search => search.id === searchId
+        (search) => search.id === searchId
       );
       if (searchResult) {
         newState.query = searchResult.query;
@@ -261,7 +261,7 @@ const WorkBatches = createReactClass({
         newState.searchId = null;
       }
     } else if (!hasQuery) {
-      const defaultResult = this.state.savedSearchList.find(search => search.isDefault);
+      const defaultResult = this.state.savedSearchList.find((search) => search.isDefault);
       if (defaultResult) {
         newState.isDefaultSearch = true;
         newState.searchId = defaultResult.id;
@@ -324,8 +324,7 @@ const WorkBatches = createReactClass({
         if (jqXHR.getResponseHeader('X-Sentry-Direct-Hit') === '1') {
           if (data && data[0].matchingEventId) {
             const {id, matchingEventId} = data[0];
-            const redirect = `/${this.props.params
-              .orgId}/internal/issues/${id}/events/${matchingEventId}/`;
+            const redirect = `/${this.props.params.orgId}/internal/issues/${id}/events/${matchingEventId}/`;
             return void browserHistory.push(redirect);
           }
         }
@@ -346,7 +345,7 @@ const WorkBatches = createReactClass({
           pageLinks: jqXHR.getResponseHeader('Link'),
         });
       },
-      error: err => {
+      error: (err) => {
         let error = err.responseJSON || true;
         error = error.detail || true;
         this.setState({
@@ -354,7 +353,7 @@ const WorkBatches = createReactClass({
           dataLoading: false,
         });
       },
-      complete: jqXHR => {
+      complete: (jqXHR) => {
         this.lastRequest = null;
       },
     });
@@ -371,7 +370,7 @@ const WorkBatches = createReactClass({
         {
           statsPeriod: period,
         },
-        function() {
+        function () {
           this.transitionTo();
         }
       );
@@ -459,9 +458,11 @@ const WorkBatches = createReactClass({
       );
       lastEvent = (
         <span className="last-seen">
-          ({tct('last event from [ago]', {
+          (
+          {tct('last event from [ago]', {
             ago: <TimeSince date={pi.lastSeen} />,
-          })})
+          })}
+          )
         </span>
       );
       className['alert-error'] = true;
@@ -512,8 +513,8 @@ const WorkBatches = createReactClass({
     const topIssue = ids[0];
 
     const {orgId} = this.props.params;
-    const groupNodes = ids.map(id => {
-      const workBatch = workBatches.find(ut => ut.id == id);
+    const groupNodes = ids.map((id) => {
+      const workBatch = workBatches.find((ut) => ut.id == id);
       const hasGuideAnchor = userDateJoined > dateCutoff && id === topIssue;
       const title = workBatch.name;
       const culprit = title;
@@ -522,7 +523,13 @@ const WorkBatches = createReactClass({
       const type = 'default'; // ["error","csp","hpkp","expectct","expectstaple","default"]
       const count = 1;
       const userCount = 1;
-      const stats = {'24h': [[0, 10], [1, 20], [3, 35]]};
+      const stats = {
+        '24h': [
+          [0, 10],
+          [1, 20],
+          [3, 35],
+        ],
+      };
       const level = Math.floor(Math.random() * Math.floor(2)).toString();
       const eventID = null;
       const numComments = workBatch.num_comments;
@@ -673,11 +680,11 @@ const WorkBatches = createReactClass({
   },
 });
 
-const mapStateToProps = state => state.workBatch;
+const mapStateToProps = (state) => state.workBatch;
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getWorkBatches: () => dispatch(workBatchesGet()),
-  toggleWorkBatchSelect: id => dispatch(workBatchToggleSelect(id)),
+  toggleWorkBatchSelect: (id) => dispatch(workBatchToggleSelect(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WorkBatches);
