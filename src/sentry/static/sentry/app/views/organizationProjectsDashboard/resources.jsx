@@ -1,5 +1,5 @@
 import React from 'react';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import styled from '@emotion/styled';
 
 import {analytics} from 'app/utils/analytics';

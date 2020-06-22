@@ -1,4 +1,4 @@
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 import styled from '@emotion/styled';
 
 import space from 'app/styles/space';

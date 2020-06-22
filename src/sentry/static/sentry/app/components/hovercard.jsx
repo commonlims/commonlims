@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
-import styled, {css, keyframes} from 'react-emotion';
+import styled from '@emotion/styled';
+import {css, keyframes} from 'emotion';
 
 import {fadeIn} from 'app/styles/animations';
 import space from 'app/styles/space';

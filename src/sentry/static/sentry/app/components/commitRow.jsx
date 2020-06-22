@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 
 import Avatar from 'app/components/avatar';
 import TimeSince from 'app/components/timeSince';

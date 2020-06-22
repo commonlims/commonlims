@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import {browserHistory} from 'react-router';
 import DocumentTitle from 'react-document-title';
 import SentryTypes from 'app/sentryTypes';

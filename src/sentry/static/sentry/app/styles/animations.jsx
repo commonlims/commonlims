@@ -1,4 +1,4 @@
-import {keyframes} from 'react-emotion';
+import {keyframes} from 'emotion';
 
 export const growIn = keyframes`
   0% {

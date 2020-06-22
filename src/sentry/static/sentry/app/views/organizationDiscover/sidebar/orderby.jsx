@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 
 import {t} from 'app/locale';
 import SelectControl from 'app/components/forms/selectControl';

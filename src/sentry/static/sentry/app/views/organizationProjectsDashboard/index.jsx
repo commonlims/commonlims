@@ -3,7 +3,7 @@ import LazyLoad from 'react-lazyload';
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import styled from '@emotion/styled';
 
 import SentryTypes from 'app/sentryTypes';

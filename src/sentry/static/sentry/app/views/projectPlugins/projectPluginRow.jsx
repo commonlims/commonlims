@@ -1,8 +1,9 @@
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import {Link} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {css} from 'react-emotion';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
 
 import {t} from 'app/locale';
 import DynamicWrapper from 'app/components/dynamicWrapper';

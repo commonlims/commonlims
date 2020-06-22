@@ -7,7 +7,7 @@ import IssueSyncListElement from 'app/components/issueSyncListElement';
 import AlertLink from 'app/components/alertLink';
 import SentryTypes from 'app/sentryTypes';
 import PluginActions from 'app/components/group/pluginActions';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 import {t} from 'app/locale';
 
 class ExternalIssueList extends AsyncComponent {

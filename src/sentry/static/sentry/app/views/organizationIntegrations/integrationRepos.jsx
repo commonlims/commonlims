@@ -1,4 +1,4 @@
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
 import React from 'react';

@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 
 import SentryTypes from 'app/sentryTypes';
 import getDynamicText from 'app/utils/getDynamicText';

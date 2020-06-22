@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 
 const Header = styled(Flex)`
   border-bottom: 1px solid ${(p) => p.theme.borderDark};

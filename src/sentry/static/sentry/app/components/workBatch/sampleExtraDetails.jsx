@@ -3,7 +3,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import {Link} from 'react-router';
 import styled from '@emotion/styled';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 
 import ProjectState from 'app/mixins/projectState';
 import ShortId from 'app/components/shortId';

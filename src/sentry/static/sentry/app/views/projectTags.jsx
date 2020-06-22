@@ -1,4 +1,4 @@
-import {Box, Flex} from 'grid-emotion';
+import {Box, Flex} from 'reflexbox';
 import React from 'react';
 
 import {Panel, PanelBody, PanelHeader, PanelItem} from 'app/components/panels';

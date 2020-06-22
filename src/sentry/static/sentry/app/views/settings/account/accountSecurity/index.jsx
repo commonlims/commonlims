@@ -1,7 +1,7 @@
 /**
  * Lists 2fa devices + password change form
  */
-import {Box, Flex} from 'grid-emotion';
+import {Box, Flex} from 'reflexbox';
 import React from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Link, withRouter} from 'react-router';
 import styled from '@emotion/styled';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 
 import TimeSince from 'app/components/timeSince';
 import ShortId from 'app/components/shortId';

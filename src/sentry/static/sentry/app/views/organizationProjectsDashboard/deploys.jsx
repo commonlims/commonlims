@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 import moment from 'moment-timezone';
 
 import SentryTypes from 'app/sentryTypes';

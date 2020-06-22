@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Flex} from 'grid-emotion';
+import {Box, Flex} from 'reflexbox';
 import {Link} from 'react-router';
 import Button from 'app/components/button';
 import Confirm from 'app/components/confirm';

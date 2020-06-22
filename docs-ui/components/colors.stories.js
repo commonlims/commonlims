@@ -1,8 +1,8 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
-import styled from 'react-emotion';
-import {Flex} from 'grid-emotion';
+import styled from '@emotion/styled';
+import {Flex} from 'reflexbox';
 
 import theme from 'app/utils/theme';
 
@@ -26,9 +26,9 @@ storiesOf('Style|Colors', module).add(
 );
 
 const Swatch = styled(Flex)`
-  background-color: ${p => p.color};
-  color: ${p => (p.color[1].match(/[0-8]{1}/) ? p.theme.offWhite : p.theme.gray5)};
-  font-size: ${p => p.theme.fontSizeSmall};
+  background-color: ${(p) => p.color};
+  color: ${(p) => (p.color[1].match(/[0-8]{1}/) ? p.theme.offWhite : p.theme.gray5)};
+  font-size: ${(p) => p.theme.fontSizeSmall};
   width: 80px;
   height: 80px;
   margin: 8px;

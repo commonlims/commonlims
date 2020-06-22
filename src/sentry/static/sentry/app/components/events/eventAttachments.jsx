@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import FileSize from 'app/components/fileSize';

@@ -1,7 +1,7 @@
 // NOTE: this is a WIP copy of stream/actions.jsx.
 // We are porting only relevant functionality bit by bit.
 import Checkbox from 'app/components/checkbox';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';

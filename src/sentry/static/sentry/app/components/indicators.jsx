@@ -40,6 +40,7 @@ class Indicators extends React.Component {
   };
 
   render() {
+    // TODO!!!! UPDATED EMOTION
     const {items, className, ...props} = this.props;
 
     return (

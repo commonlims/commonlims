@@ -1,4 +1,4 @@
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import {isEqual} from 'lodash';
 import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';

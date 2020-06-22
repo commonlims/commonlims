@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 import {browserHistory} from 'react-router';
 
 import Button from 'app/components/button';

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 
 import ApiMixin from 'app/mixins/apiMixin';
 import IndicatorStore from 'app/stores/indicatorStore';

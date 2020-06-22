@@ -1,4 +1,4 @@
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 import {keyframes} from 'emotion';
 import React from 'react';
 import styled from '@emotion/styled';

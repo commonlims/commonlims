@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import AvatarList from 'app/components/avatar/avatarList';
 
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 import Button from 'app/components/button';
 import LastCommit from 'app/components/lastCommit';
 import LoadingIndicator from 'app/components/loadingIndicator';

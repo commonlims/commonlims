@@ -1,7 +1,7 @@
 import React from 'react';
 import {Value} from 'react-select';
 import PropTypes from 'prop-types';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 import {t} from 'app/locale';
 import SelectControl from 'app/components/forms/selectControl';
 

@@ -4,7 +4,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from '@emotion/styled';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 
 import AssigneeSelector from 'app/components/assigneeSelector';
 import Count from 'app/components/count';

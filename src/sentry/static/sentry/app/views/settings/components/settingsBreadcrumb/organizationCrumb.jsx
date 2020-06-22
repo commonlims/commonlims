@@ -1,4 +1,4 @@
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 import {browserHistory} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';

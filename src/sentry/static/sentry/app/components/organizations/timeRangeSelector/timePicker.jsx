@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {cx} from 'react-emotion';
+// import styled, {cx} from 'react-emotion';  TODO: cx
+import styled from '@emotion/styled';
 
 const TimePicker = styled(
   class TimePicker extends React.Component {

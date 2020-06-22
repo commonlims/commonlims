@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 
 import {tct, t} from 'app/locale';
 

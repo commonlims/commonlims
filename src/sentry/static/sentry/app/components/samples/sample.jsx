@@ -4,7 +4,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import styled from '@emotion/styled';
-import {Box} from 'grid-emotion';
+import {Box} from 'reflexbox';
 
 import SampleCheckBox from 'app/components/samples/sampleCheckBox';
 import ProjectState from 'app/mixins/projectState';

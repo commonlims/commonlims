@@ -10,7 +10,7 @@ import 'app/utils/emotion-setup';
 import {renderToStaticMarkup} from 'react-dom/server';
 import * as Emotion from 'emotion';
 import * as EmotionTheming from 'emotion-theming';
-import * as GridEmotion from 'grid-emotion';
+import * as GridEmotion from 'reflexbox';
 import JsCookie from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';

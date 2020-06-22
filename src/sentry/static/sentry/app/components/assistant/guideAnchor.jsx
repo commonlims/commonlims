@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import React from 'react';
-import styled, {keyframes} from 'react-emotion';
+import {keyframes} from 'emotion';
+import styled from '@emotion/styled';
 import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import $ from 'jquery';

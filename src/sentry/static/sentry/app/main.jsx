@@ -5,6 +5,8 @@ import {Router, browserHistory} from 'react-router';
 
 import routes from 'app/routes';
 import {loadPreferencesState} from 'app/actionCreators/preferences';
+import {cache} from 'emotion';
+import {CacheProvider} from '@emotion/core';
 
 class Main extends React.Component {
   componentDidMount() {
@@ -12,7 +14,13 @@ class Main extends React.Component {
   }
 
   render() {
-    return <Router history={browserHistory}>{routes()}</Router>;
+    // This step is necessary if you still use css, keyframes or injectGlobal from emotion.
+    // Once you remove all the usages of them in your app, you can remove this.
+    return (
+      <CacheProvider value={cache}>
+        <Router history={browserHistory}>{routes()}</Router>;
+      </CacheProvider>
+    );
   }
 }
 

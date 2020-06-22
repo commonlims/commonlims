@@ -4,7 +4,7 @@
  *
  * Also displays 2fa method specific details.
  */
-import {Box, Flex} from 'grid-emotion';
+import {Box, Flex} from 'reflexbox';
 import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';

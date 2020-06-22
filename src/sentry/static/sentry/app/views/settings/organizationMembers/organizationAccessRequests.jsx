@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 
 import {t, tct} from 'app/locale';
 import Button from 'app/components/button';

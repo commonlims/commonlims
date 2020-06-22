@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Flex} from 'grid-emotion';
+import {Flex} from 'reflexbox';
 
 import SentryTypes from 'app/sentryTypes';
 import Tooltip from 'app/components/tooltip';

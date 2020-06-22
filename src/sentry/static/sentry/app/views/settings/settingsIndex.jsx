@@ -1,8 +1,9 @@
-import {Flex, Box} from 'grid-emotion';
+import {Flex, Box} from 'reflexbox';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled, {css} from 'react-emotion';
+import styled from '@emotion/styled';
+import {css} from 'emotion';
 
 import {t} from 'app/locale';
 import Avatar from 'app/components/avatar';

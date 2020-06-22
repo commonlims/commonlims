@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {cx} from 'react-emotion';
+// import {cx} from 'react-emotion';  TODO
 
 class Badge extends React.Component {
   static propTypes = {
