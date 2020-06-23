@@ -1,6 +1,10 @@
 import React from 'react';
-import {shallow} from 'enzyme';
 import Toolbar from 'app/components/toolbar';
+
+import {render} from 'app-test/helpers/render';
+
+import serializer from 'jest-emotion';
+expect.addSnapshotSerializer(serializer);
 
 describe('Toolbar', function () {
   let sandbox;
@@ -14,11 +18,11 @@ describe('Toolbar', function () {
   });
 
   it('renders', function () {
-    const wrapper = shallow(
+    const rendered = render(
       <Toolbar>
         <div />
       </Toolbar>
     );
-    expect(wrapper).toMatchSnapshot();
+    expect(rendered).toMatchSnapshot();
   });
 });

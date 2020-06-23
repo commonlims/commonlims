@@ -1,9 +1,8 @@
 import {Modal} from 'react-bootstrap';
 import React from 'react';
-
 import {createTeam} from 'app/actionCreators/teams';
-import {mount} from 'enzyme';
 import CreateTeamModal from 'app/components/modals/createTeamModal';
+import {mountWithThemeAndContext} from 'app-test/helpers/render';
 
 jest.mock('app/actionCreators/teams', () => ({
   createTeam: jest.fn((...args) => new Promise((resolve) => resolve(...args))),
@@ -23,7 +22,7 @@ describe('CreateTeamModal', function () {
   afterEach(function () {});
 
   it('calls createTeam action creator on submit', async function () {
-    const wrapper = mount(
+    const wrapper = mountWithThemeAndContext(
       <CreateTeamModal
         Body={Modal.Body}
         Header={Modal.Header}
@@ -31,8 +30,7 @@ describe('CreateTeamModal', function () {
         closeModal={closeModal}
         onClose={onClose}
         onSuccess={onSuccess}
-      />,
-      TestStubs.routerContext()
+      />
     );
 
     wrapper

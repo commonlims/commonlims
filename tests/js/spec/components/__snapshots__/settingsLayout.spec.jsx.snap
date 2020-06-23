@@ -1,31 +1,194 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SettingsLayout renders 1`] = `
-<Fragment>
-  <withOrganizations(withLatestContext(withRouter(SidebarContainer))) />
-  <SettingsColumn>
-    <SettingsHeader>
-      <Flex
-        align="center"
-        width={1}
+Array [
+  <div
+    className="css-18ej6sk-StyledSidebar e1sgxx350"
+  >
+    <div
+      className="css-1ardvtt-SidebarSectionGroup e1sgxx351"
+    >
+      <div
+        className="css-k6qko3-SidebarSectionGroup-SidebarSection e1sgxx352"
       >
-        <Box
-          flex="1"
+        <div
+          className="css-9k9y4m-SidebarDropdownRoot e1fowdfw3"
         >
-          <ConnectedSettingsBreadcrumb
-            route={Object {}}
-            routes={Array []}
+          <div
+            className="css-1bagylm-SidebarDropdownActor e1fowdfw7"
+            data-test-id="sidebar-dropdown"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            style={
+              Object {
+                "outline": "none",
+              }
+            }
+            tabIndex={-1}
+          >
+            <div
+              style={
+                Object {
+                  "alignItems": "flex-start",
+                  "display": "flex",
+                }
+              }
+            >
+              <span
+                className="avatar e1fowdfw8 css-1n3qnpl-StyledBaseAvatar-StyledAvatar e1z0ohzl0"
+                style={
+                  Object {
+                    "height": "32px",
+                    "width": "32px",
+                  }
+                }
+              >
+                <svg
+                  className="css-3xmr0j-Svg e1knxa8x0"
+                  viewBox="0 0 120 120"
+                >
+                  <rect
+                    fill="#315cac"
+                    height="120"
+                    rx="15"
+                    ry="15"
+                    width="120"
+                    x="0"
+                    y="0"
+                  />
+                  <text
+                    fill="#FFFFFF"
+                    fontSize="65"
+                    style={
+                      Object {
+                        "dominantBaseline": "central",
+                      }
+                    }
+                    textAnchor="middle"
+                    x="50%"
+                    y="50%"
+                  >
+                    FB
+                  </text>
+                </svg>
+              </span>
+              <div
+                className="css-lg6ezi-OrgAndUserWrapper e1fowdfw4"
+              >
+                <div
+                  className="css-ix2jor-TextOverflow-OrgOrUserName e1fowdfw5"
+                >
+                  Foo Bar
+                   
+                  <i
+                    className="icon-arrow-down"
+                  />
+                </div>
+                <div
+                  className="css-zumxhm-TextOverflow-UserNameOrEmail e1fowdfw6"
+                >
+                  foo@example.com
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div
+    className="css-srkfus-SettingsColumn ervyuv13"
+  >
+    <div
+      className="css-1b5ey59-SettingsHeader e16e5sy70"
+    >
+      <div
+        className="css-knfhfe"
+      >
+        <div
+          className="css-1pysja1"
+        >
+          <div
+            className="css-11dln98-Breadcrumbs e18utnk40"
           />
-        </Box>
-        <StyledSettingsSearch
-          routes={Array []}
-        />
-      </Flex>
-    </SettingsHeader>
-    <MaxWidthContainer>
-      <Content />
-    </MaxWidthContainer>
-    <Footer />
-  </SettingsColumn>
-</Fragment>
+        </div>
+        <div
+          className="css-7gnmdq-SearchWrapper ed7560h1"
+        >
+          <div
+            className="css-17mgn7r-SearchInputWrapper e146h9au1"
+          >
+            <svg
+              className="e146h9au2 css-a56pm8-StyledSvg-SearchInputIcon e2idor0"
+              height="14px"
+              viewBox={Object {}}
+              width="14px"
+            >
+              <use
+                href="#test"
+                xlinkHref="#test"
+              />
+            </svg>
+            <input
+              className="css-134g8uj-SearchInput e146h9au3"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              placeholder="Search"
+              style={
+                Object {
+                  "outline": "none",
+                }
+              }
+              tabIndex={-1}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="css-wm0ppo-MaxWidthContainer ervyuv10"
+    >
+      <div
+        className="css-1qa7uz4-Content ervyuv14"
+      />
+    </div>
+    <footer>
+      <div
+        className="container"
+      >
+        <div
+          className="pull-right"
+        >
+          <a
+            className="hidden-xs"
+            href="/api/"
+          >
+            API
+          </a>
+          <a
+            href="/docs/"
+          >
+            Docs
+          </a>
+          <a
+            className="hidden-xs"
+            href="https://github.com/commonlims/commonlims"
+            rel="noreferrer"
+          >
+            Contribute
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>,
+]
 `;
