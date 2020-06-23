@@ -64,7 +64,7 @@ class JsonForm extends React.Component {
     this.scrollToHash();
   }
 
-  componentWillReceiveProps(nextProps, e) {
+  UNSAFE_componentWillReceiveProps(nextProps, e) {
     if (this.getLocation(this.props).hash !== this.getLocation(nextProps).hash) {
       const hash = this.getLocation(nextProps).hash;
       this.scrollToHash(hash);

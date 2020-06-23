@@ -44,7 +44,7 @@ const ActivityFeed = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const location = this.props.location;
     const nextLocation = nextProps.location;
     if (

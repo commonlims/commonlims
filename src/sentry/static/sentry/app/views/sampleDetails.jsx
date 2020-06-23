@@ -61,7 +61,7 @@ const SampleDetails = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.params.groupId !== this.props.params.groupId) {
       this.remountComponent();
     }

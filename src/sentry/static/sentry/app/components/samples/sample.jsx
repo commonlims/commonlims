@@ -42,7 +42,7 @@ const SampleComponent = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         data: SampleStore.get(this.props.id),

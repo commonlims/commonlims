@@ -82,7 +82,7 @@ const AssigneeSelectorComponent = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const loading = WorkBatchStore.hasStatus(nextProps.id, 'assignTo');
     if (nextProps.id !== this.props.id || loading !== this.state.loading) {
       const group = WorkBatchStore.get(this.props.id);

@@ -79,7 +79,7 @@ class OrganizationDiscoverContainer extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!nextProps.params.savedQueryId) {
       this.setState({savedQuery: null});
       // Reset querybuilder if we're switching from a saved query

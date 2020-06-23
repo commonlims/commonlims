@@ -16,7 +16,7 @@ class Tooltip extends React.Component {
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   };
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     const {disabled} = this.props;
     if (newProps.disabled && !disabled) {
       this.removeTooltips(this.ref);

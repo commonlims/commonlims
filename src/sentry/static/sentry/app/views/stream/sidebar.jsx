@@ -38,7 +38,7 @@ const StreamSidebar = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If query was updated by another source (e.g. SearchBar),
     // clobber state of sidebar with new query.
     const query = objToQuery(this.state.queryObj);

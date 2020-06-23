@@ -77,7 +77,7 @@ const ProjectContext = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.projectId === this.props.projectId) {
       return;
     }

@@ -41,7 +41,7 @@ class StreamTagFilter extends React.Component {
     this.api = new Client();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.state.value) {
       this.setState({
         value: nextProps.value,

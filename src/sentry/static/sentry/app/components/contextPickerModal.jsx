@@ -100,14 +100,14 @@ class ContextPickerModal extends React.Component {
       return;
     }
 
-    // Since user belongs to only 1 org, we can set it as active and componentWillReceiveProps handle the rest
+    // Since user belongs to only 1 org, we can set it as active and UNSAFE_componentWillReceiveProps handle the rest
     fetchOrganizationDetails(organizations[0].slug, {
       setActive: true,
       loadProjects: true,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // Should only check the case where there is no latestContext.organization and we're waiting
     // for it to be set (after fetch in DidMount)
     const {latestContext} = this.props;

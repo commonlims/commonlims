@@ -56,7 +56,7 @@ const OrganizationBadgeContainer = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.organization === nextProps.organization) {
       return;
     }

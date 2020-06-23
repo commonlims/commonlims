@@ -51,7 +51,7 @@ const WorkBatchListItem = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         data: this.props.data, //GroupStore.get(this.props.id),

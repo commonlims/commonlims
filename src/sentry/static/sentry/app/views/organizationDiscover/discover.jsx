@@ -80,7 +80,7 @@ export default class OrganizationDiscover extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {
       queryBuilder,
       location: {search},

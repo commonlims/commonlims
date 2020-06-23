@@ -78,7 +78,7 @@ export default class AsyncComponent extends React.Component {
   }
 
   // Compatiblity shim for child classes that call super on this hook.
-  componentWillReceiveProps(newProps, newContext) {}
+  UNSAFE_componentWillReceiveProps(newProps, newContext) {}
 
   componentDidUpdate(prevProps, prevContext) {
     const isRouterInContext = !!prevContext.router;

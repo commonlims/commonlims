@@ -21,7 +21,7 @@ const SampleCheckBox = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         isSelected: SelectedSampleStore.isSelected(nextProps.id),

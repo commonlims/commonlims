@@ -35,7 +35,7 @@ export default createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.since !== nextProps.since) {
       this.setState(this.getInitialState(), this.fetchData);
     }

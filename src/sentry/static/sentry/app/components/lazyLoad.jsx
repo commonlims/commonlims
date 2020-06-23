@@ -39,7 +39,7 @@ class LazyLoad extends React.Component {
     this.fetchComponent();
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
     // This is to handle the following case:
     // <Route path="a/">
     //   <Route path="b/" component={LazyLoad} componentPromise={...} />

@@ -33,7 +33,7 @@ export default class SavedQueries extends React.Component {
     this.fetchAll();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // Refetch on deletion
     if (!nextProps.savedQuery && this.props.savedQuery !== nextProps.savedQuery) {
       this.fetchAll();

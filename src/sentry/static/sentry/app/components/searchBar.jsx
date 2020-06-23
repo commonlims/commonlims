@@ -24,7 +24,7 @@ class SearchBar extends React.PureComponent {
     this.searchInputRef = React.createRef();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.query !== this.props.query) {
       this.setState({
         query: nextProps.query,

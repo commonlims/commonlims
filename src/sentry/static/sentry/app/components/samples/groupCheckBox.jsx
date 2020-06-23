@@ -21,7 +21,7 @@ const GroupCheckBox = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         isSelected: SelectedGroupStore.isSelected(nextProps.id),

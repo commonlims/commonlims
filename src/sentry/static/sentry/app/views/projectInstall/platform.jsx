@@ -65,7 +65,7 @@ const ProjectInstallPlatform = createReactClass({
     window.scrollTo(0, 0);
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.params.platform !== this.props.params.platform) {
       this.setState(this.getInitialState(nextProps), this.fetchData);
       window.scrollTo(0, 0);

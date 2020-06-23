@@ -34,7 +34,7 @@ const ProcessTaskSettings = createReactClass({
     this.loadPluginDetails(this.props.pluginId);
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.loadPluginDetails(this.props.pluginId);
   },
 

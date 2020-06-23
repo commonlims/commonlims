@@ -60,7 +60,7 @@ const SampleProcesses = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If query has changed, update the environment with the query environment
     if (nextProps.location.search !== this.props.location.search) {
       const queryParams = nextProps.location.query;

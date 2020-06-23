@@ -109,7 +109,7 @@ const Stream = createReactClass({
     }
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.environment !== this.props.environment) {
       this.setState(
         {

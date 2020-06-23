@@ -54,7 +54,7 @@ export default class FormField extends React.PureComponent {
 
   componentDidMount() {}
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     const newError = this.getError(nextProps, nextContext);
     if (newError != this.state.error) {
       this.setState({error: newError});

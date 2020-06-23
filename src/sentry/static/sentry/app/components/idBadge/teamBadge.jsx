@@ -54,7 +54,7 @@ const TeamBadgeContainer = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.team === nextProps.team) {
       return;
     }

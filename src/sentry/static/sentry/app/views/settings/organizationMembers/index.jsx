@@ -28,8 +28,8 @@ class OrganizationMembersView extends AsyncView {
     organization: SentryTypes.Organization,
   };
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    super.componentWillReceiveProps(nextProps, nextContext);
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
+    super.UNSAFE_componentWillReceiveProps(nextProps, nextContext);
     const searchQuery = nextProps?.location?.query?.query;
     if (searchQuery !== this.props?.location?.query?.query) {
       this.setState({searchQuery});

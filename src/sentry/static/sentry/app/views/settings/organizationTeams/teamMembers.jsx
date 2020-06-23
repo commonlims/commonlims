@@ -40,7 +40,7 @@ const TeamMembers = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const params = this.props.params;
     if (
       nextProps.params.teamId !== params.teamId ||

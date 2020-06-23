@@ -94,7 +94,7 @@ const WorkBatches = createReactClass({
     this.props.getWorkBatches();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // you cannot apply both a query and a saved search (our routes do not
     // support it), so the searchId takes priority
     const nextSearchId = nextProps.params.searchId || null;

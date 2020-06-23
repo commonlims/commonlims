@@ -201,7 +201,7 @@ const ResultGrid = createReactClass({
     this.fetchData();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const queryParams = (nextProps.location || {}).query || {};
     this.setState(
       {

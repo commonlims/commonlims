@@ -23,7 +23,7 @@ class OrganizationWorkBatchList extends React.Component {
     this.state = this.getQueryStringState(props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.location.search !== this.props.location.search) {
       this.setState(this.getQueryStringState(nextProps), this.fetchData);
     }

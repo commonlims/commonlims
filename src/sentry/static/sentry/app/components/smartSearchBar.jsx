@@ -115,7 +115,7 @@ class SmartSearchBar extends React.Component {
     this.searchInput = React.createRef();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // query was updated by another source (e.g. sidebar filters)
     if (nextProps.query !== this.props.query) {
       this.setState({

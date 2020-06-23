@@ -49,7 +49,7 @@ const SamplesGroup = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         data: GroupStore.get(this.props.id),

@@ -21,7 +21,7 @@ const ProcessCheckBox = createReactClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.id != this.props.id) {
       this.setState({
         isSelected: SelectedProcessStore.isSelected(nextProps.id),

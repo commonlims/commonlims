@@ -29,7 +29,7 @@ export default createReactClass({
     this.fetchData(this.props.event);
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.event && nextProps.event) {
       if (this.props.event.id !== nextProps.event.id) {
         //two events, with different IDs

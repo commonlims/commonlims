@@ -65,7 +65,7 @@ const ProjectEnvironments = createReactClass({
     this.fetchProjectDetails();
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const isHidden = this.props.location.pathname.endsWith('hidden/');
     const environments = isHidden
       ? EnvironmentStore.getHidden()

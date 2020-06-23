@@ -43,7 +43,7 @@ const PluginConfig = createReactClass({
     this.loadPlugin(this.props.data);
   },
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.loadPlugin(nextProps.data);
   },
 
