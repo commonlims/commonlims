@@ -1,10 +1,10 @@
 {
-  "name": "Sentry",
+  "name": "CommonLIMS",
   "version": "0.0.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/getsentry/sentry.git"
+    "url": "git://github.com/commonlims/commonlims.git"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
