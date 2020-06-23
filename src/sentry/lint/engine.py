@@ -209,7 +209,7 @@ def is_prettier_valid(project_root, prettier_path):
 
     prettier_version = subprocess.check_output(
         [prettier_path, '--version']).rstrip()
-    if prettier_version != package_version:
+    if prettier_version != package_version.replace("^", ""):
         print(  # noqa: B314
             u'[sentry.lint] Prettier is out of date: {} (expected {}). Please run `yarn install`.'.format(
                 prettier_version,
