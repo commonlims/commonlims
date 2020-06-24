@@ -320,17 +320,6 @@ function routes() {
       </Route>
 
       <Route
-        path="rate-limits/"
-        name="Rate Limits"
-        componentPromise={() =>
-          import(
-            /* webpackChunkName: "OrganizationRateLimits" */ './views/settings/organizationRateLimits'
-          )
-        }
-        component={errorHandler(LazyLoad)}
-      />
-
-      <Route
         path="settings/"
         componentPromise={() =>
           import(
