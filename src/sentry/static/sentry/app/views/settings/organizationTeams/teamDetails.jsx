@@ -101,7 +101,6 @@ const TeamDetails = createReactClass({
 
         <NavTabs underlined={true}>
           <ListLink to={`${routePrefix}members/`}>{t('Members')}</ListLink>
-          <ListLink to={`${routePrefix}projects/`}>{t('Projects')}</ListLink>
           <ListLink to={`${routePrefix}settings/`}>{t('Settings')}</ListLink>
         </NavTabs>
 
