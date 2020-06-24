@@ -520,13 +520,6 @@ function routes() {
           component={errorHandler(LazyLoad)}
         />
         <Route
-          path="relays/"
-          componentPromise={() =>
-            import(/* webpackChunkName: "AdminRelays" */ 'app/views/admin/adminRelays')
-          }
-          component={errorHandler(LazyLoad)}
-        />
-        <Route
           path="organizations/"
           componentPromise={() =>
             import(
