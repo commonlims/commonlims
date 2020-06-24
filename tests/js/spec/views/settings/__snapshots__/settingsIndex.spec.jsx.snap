@@ -41,7 +41,7 @@ exports[`SettingsIndex renders 1`] = `
         px={2}
         w={0.3333333333333333}
       >
-        <Panel>
+        <Styled(Component)>
           <HomePanelHeader>
             <HomeLinkIcon
               to="/settings/account/"
@@ -101,13 +101,13 @@ exports[`SettingsIndex renders 1`] = `
               </li>
             </ul>
           </HomePanelBody>
-        </Panel>
+        </Styled(Component)>
       </Box>
       <Box
         px={2}
         w={0.3333333333333333}
       >
-        <Panel>
+        <Styled(Component)>
           <HomePanelHeader>
             <HomeLinkIcon
               to="/settings/org-slug/"
@@ -181,13 +181,13 @@ exports[`SettingsIndex renders 1`] = `
               </li>
             </ul>
           </HomePanelBody>
-        </Panel>
+        </Styled(Component)>
       </Box>
       <Box
         px={2}
         w={0.3333333333333333}
       >
-        <Panel>
+        <Styled(Component)>
           <HomePanelHeader>
             <ExternalHomeLink
               className="css-1rszxb1-flexCenter"
@@ -237,13 +237,13 @@ exports[`SettingsIndex renders 1`] = `
               </li>
             </ul>
           </HomePanelBody>
-        </Panel>
+        </Styled(Component)>
       </Box>
       <Box
         px={2}
         w={0.3333333333333333}
       >
-        <Panel>
+        <Styled(Component)>
           <HomePanelHeader>
             <SupportLinkComponent
               className="css-1rszxb1-flexCenter"
@@ -268,36 +268,21 @@ exports[`SettingsIndex renders 1`] = `
             </h3>
             <ul>
               <li>
-                <SupportLinkComponent
-                  href="https://forum.sentry.io/"
-                  to="/settings/org-slug/support"
-                >
-                  Contact Support
-                </SupportLinkComponent>
-              </li>
-              <li>
                 <ExternalHomeLink
-                  href="https://github.com/getsentry/sentry/issues"
+                  href="https://github.com/commonlims/commonlims/issues"
                 >
-                  Sentry on GitHub
-                </ExternalHomeLink>
-              </li>
-              <li>
-                <ExternalHomeLink
-                  href="https://status.sentry.io/"
-                >
-                  Service Status
+                  Common LIMS on GitHub
                 </ExternalHomeLink>
               </li>
             </ul>
           </HomePanelBody>
-        </Panel>
+        </Styled(Component)>
       </Box>
       <Box
         px={2}
         w={0.3333333333333333}
       >
-        <Panel>
+        <Styled(Component)>
           <HomePanelHeader>
             <HomeLinkIcon
               to="/settings/account/api/"
@@ -340,7 +325,7 @@ exports[`SettingsIndex renders 1`] = `
               </li>
             </ul>
           </HomePanelBody>
-        </Panel>
+        </Styled(Component)>
       </Box>
     </Flex>
   </SettingsLayout>

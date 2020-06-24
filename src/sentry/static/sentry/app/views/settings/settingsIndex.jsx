@@ -28,8 +28,7 @@ const LINKS = {
   API_APPLICATIONS: '/settings/account/api/applications/',
   MANAGE: '/manage/',
   FORUM: 'https://forum.sentry.io/',
-  GITHUB_ISSUES: 'https://github.com/getsentry/sentry/issues',
-  SERVICE_STATUS: 'https://status.sentry.io/',
+  GITHUB_ISSUES: 'https://github.com/commonlims/commonlims/issues',
 };
 
 const HOME_ICON_SIZE = 76;
@@ -208,18 +207,8 @@ class SettingsIndex extends React.Component {
                   <h3>{t('Quick links')}:</h3>
                   <ul>
                     <li>
-                      <SupportLinkComponent {...supportLinkProps}>
-                        {supportText}
-                      </SupportLinkComponent>
-                    </li>
-                    <li>
                       <ExternalHomeLink href={LINKS.GITHUB_ISSUES}>
-                        {t('Sentry on GitHub')}
-                      </ExternalHomeLink>
-                    </li>
-                    <li>
-                      <ExternalHomeLink href={LINKS.SERVICE_STATUS}>
-                        {t('Service Status')}
+                        {t('Common LIMS on GitHub')}
                       </ExternalHomeLink>
                     </li>
                   </ul>

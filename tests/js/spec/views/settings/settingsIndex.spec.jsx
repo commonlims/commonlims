@@ -29,12 +29,6 @@ describe('SettingsIndex', function () {
         'HomePanelHeader SupportLinkComponent[href="https://forum.sentry.io/"]'
       )
     ).toHaveLength(1);
-
-    expect(
-      wrapper
-        .find('HomePanelBody SupportLinkComponent[href="https://forum.sentry.io/"]')
-        .prop('children')
-    ).toBe('Community Forums');
   });
 
   describe('Fetch org details for Sidebar', function () {
