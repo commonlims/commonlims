@@ -529,15 +529,6 @@ function routes() {
           component={errorHandler(LazyLoad)}
         />
         <Route
-          path="projects/"
-          componentPromise={() =>
-            import(
-              /* webpackChunkName: "AdminProjects" */ 'app/views/admin/adminProjects'
-            )
-          }
-          component={errorHandler(LazyLoad)}
-        />
-        <Route
           path="queue/"
           componentPromise={() =>
             import(/* webpackChunkName: "AdminQueue" */ 'app/views/admin/adminQueue')
