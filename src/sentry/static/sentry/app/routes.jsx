@@ -429,15 +429,6 @@ function routes() {
   return (
     <Route path="/" component={errorHandler(App)}>
       <Route
-        path="/accept-transfer/"
-        componentPromise={() =>
-          import(
-            /* webpackChunkName: "AcceptProjectTransfer" */ 'app/views/acceptProjectTransfer'
-          )
-        }
-        component={errorHandler(LazyLoad)}
-      />
-      <Route
         path="/extensions/external-install/:providerId/:installationId"
         componentPromise={() =>
           import(
