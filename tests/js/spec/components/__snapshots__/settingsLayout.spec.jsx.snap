@@ -3,13 +3,13 @@
 exports[`SettingsLayout renders 1`] = `
 Array [
   <div
-    className="css-18ej6sk-StyledSidebar e1sgxx350"
+    className="css-18ej6sk-StyledSidebar ea1p9lf0"
   >
     <div
-      className="css-1ardvtt-SidebarSectionGroup e1sgxx351"
+      className="css-1ardvtt-SidebarSectionGroup ea1p9lf1"
     >
       <div
-        className="css-k6qko3-SidebarSectionGroup-SidebarSection e1sgxx352"
+        className="css-1nshi6c-SidebarSectionGroup-SidebarSection ea1p9lf2"
       >
         <div
           className="css-9k9y4m-SidebarDropdownRoot e1fowdfw3"

@@ -194,6 +194,8 @@ describe('OrganizationEventsErrors', function () {
         </OrganizationEventsContainer>,
         newRouterContext
       );
+      console.log("HERE?", wrapper);
+
       mockRouterPush(wrapper, router);
 
       // XXX: Note this spy happens AFTER initial render!

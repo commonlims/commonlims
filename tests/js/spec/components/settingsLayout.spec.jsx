@@ -1,4 +1,5 @@
 import React from 'react';
+import {render} from 'app-test/helpers/render';
 import {shallow} from 'enzyme';
 
 import {Client} from 'app/api';
@@ -32,9 +33,8 @@ describe('SettingsLayout', function () {
   });
 
   it('renders', function () {
-    const wrapper = shallow(<SettingsLayout route={{}} routes={[]} />);
-
-    expect(wrapper).toMatchSnapshot();
+    const rendered = render(<SettingsLayout route={{}} routes={[]} />);
+    expect(rendered).toMatchSnapshot();
   });
 
   it('can render navigation', function () {
