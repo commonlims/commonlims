@@ -438,15 +438,6 @@ function routes() {
         component={errorHandler(LazyLoad)}
       />
 
-      <Route
-        path="/extensions/vsts/link/"
-        getComponent={(loc, cb) =>
-          import(
-            /* webpackChunkName: "VSTSOrganizationLink" */ './views/vstsOrganizationLink'
-          ).then(lazyLoad(cb))
-        }
-      />
-
       <Redirect from="/account/" to="/settings/account/details/" />
 
       <Route path="/settings/" name="Settings" component={SettingsWrapper}>
