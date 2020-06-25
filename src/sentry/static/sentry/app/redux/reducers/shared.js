@@ -149,9 +149,9 @@ const createResourceReducer = (resource, initialState) => (
       return getListSuccess(state, action);
     case `GET_${resource}_LIST_FAILURE`:
       return getListFailure(state, action);
-    case `TOGGLE_SELECT_${resource}`:
+    case `SELECT_${resource}`:
       return selectSingle(state, action);
-    case `TOGGLE_SELECT_PAGE_OF_${resource}`:
+    case `SELECT_PAGE_OF_${resource}`:
       return selectAll(state, action);
     case `GET_${resource}_REQUEST`:
       return getEntryRequest(state, action);
@@ -159,6 +159,13 @@ const createResourceReducer = (resource, initialState) => (
       return getEntrySuccess(state, action);
     case `GET_${resource}_FAILURE`:
       return getEntryFailure(state, action);
+    case `CREATE_${resource}_REQUEST`:
+      return createEntryRequest(state, action);
+    case `CREATE_${resource}_SUCCESS`:
+      return createEntrySuccess(state, action);
+    case `CREATE_${resource}_FAILURE`:
+      return createEntryFailure(state, action);
+
     default:
       return state;
   }
