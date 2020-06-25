@@ -61,7 +61,7 @@ class UploadSubstancesButton extends React.Component {
         a.click();
         window.URL.revokeObjectURL(url);
       })
-      .catch(() => {
+      .catch((e) => {
         this.setState({
           state: FormState.ERROR,
           // TODO: Add error message
@@ -71,6 +71,7 @@ class UploadSubstancesButton extends React.Component {
 
   handleUpload(event) {
     if (!this.state.selectedFile) {
+      // TODO: Message
       return;
     }
 

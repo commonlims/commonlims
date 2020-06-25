@@ -16,6 +16,7 @@ from clims.api.serializers.models.organization_file import OrganizationFileSeria
 from clims.plugins import PluginError
 from clims.api.serializers.models.plugin_error import PluginErrorSerializer
 from clims.api.serializers.models.validation_issue import ValidationIssueSerializer
+from clims.handlers import UsageError
 
 
 class SubstanceFileEndpoint(OrganizationEndpoint):
@@ -26,11 +27,10 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
         List all substance submission files in the system
         `````````````````````````````````````````````````
 
-        :pparam string organization_slug: the slug of the organization the
-                                          release belongs to.
+        :pparam string organization_slug: the slug of the organization the file belongs to
         :auth: required
         """
-        file_list = self.app.substances.all_files(organization)
+        file_list = self.app.substances.get_submission_files(self.context)
 
         return self.paginate(
             request=request,
@@ -88,8 +88,10 @@ class SubstanceFileEndpoint(OrganizationEndpoint):
                 'No registered handler that supports the request. Please install a plugin that '
                 'supports handling substance files.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except UsageError as ex:
+            return Response({'detail': ex.message}, status=400)
         except FileNameValidationError as ex:
-            return Response({'detail': ex.msg}, status=400)
+            return Response({'detail': ex.message}, status=400)
         except IntegrityError as ex:
             # TODO This error message is not always accurate. An IntegrityError will for example also be raised
             #      when there is a problem with adding the same sample to the organization again.

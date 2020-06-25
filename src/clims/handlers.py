@@ -266,6 +266,18 @@ class Handler(object):
         self.warning = self.logger.warning
         self.error = self.logger.error
 
+    def usage_error(self, msg):
+        """
+        Raises a UsageError from the plugin. The message of a UsageError is intended to be
+        read by the end user of the application and will be displayed in the UI.
+
+        This has the same effect as raising a UsageError but doesn't require an import of that
+        type.
+        """
+        raise UsageError(msg)
+
+    # TODO: port usage_error_defer
+
     @property
     def has_validation_errors(self):
         return len([issue for issue in self.validation_issues if issue.type == "error"]) > 0
@@ -364,3 +376,7 @@ class CreateExampleDataHandler(Handler):
 
     def handle(self):
         pass
+
+
+class UsageError(Exception):
+    pass
