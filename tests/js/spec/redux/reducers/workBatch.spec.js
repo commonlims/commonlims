@@ -166,4 +166,14 @@ describe('workBatch reducer', () => {
     };
     expect(stateAfterDeselectFirst).toEqual(expectedStateAfterDeselectFirst);
   });
+
+  it('should handle requesting creation of an entry', () => {
+    const state = workBatch(
+      initialState,
+      workBatchActions.createRequest('search', 'groupby', 'cursor')
+    );
+    console.log(state);
+
+
+  });
 });
