@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-import pytest
 from django.core.urlresolvers import reverse
 
 from sentry.testutils import APITestCase
@@ -49,13 +48,12 @@ class ContainerTest(APITestCase):
         assert sample_name.startswith('sample-')
         type_full_name = response.data[0]['contents'][0]['type_full_name']
         assert type_full_name == 'tests.fixtures.plugins.gemstones_inc.models.GemstoneSample'
-        wells = [d['container_index']['index'] for d in response.data[0]['contents']]
+        wells = [d['location']['index'] for d in response.data[0]['contents']]
         assert wells == ['A:1', 'B:1']
 
         serializer = ContainerExpandedSerializer(data=response.data[0])
         assert serializer.is_valid()
 
-    @pytest.mark.dev_edvard
     def test_expanded_search_with_no_query_arguments__the_single_container_is_returned(self):
         # Arrange
         self.create_container_with_samples(
@@ -74,7 +72,7 @@ class ContainerTest(APITestCase):
         assert sample_name.startswith('sample-')
         type_full_name = response.data[0]['contents'][0]['type_full_name']
         assert type_full_name == 'tests.fixtures.plugins.gemstones_inc.models.GemstoneSample'
-        wells = [d['container_index']['index'] for d in response.data[0]['contents']]
+        wells = [d['location']['index'] for d in response.data[0]['contents']]
         assert wells == ['A:1', 'B:1']
 
         serializer = ContainerExpandedSerializer(data=response.data[0])

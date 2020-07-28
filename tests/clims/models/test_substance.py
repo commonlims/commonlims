@@ -431,17 +431,17 @@ class TestSubstance(SubstanceTestCase):
 
         assert squirkyness.display_name == 'The Squirkyness Display Value'
 
-    def test__with_sample_has_no_container__container_index_returns_none(self):
+    def test__with_sample_has_no_container__location_is_none(self):
         # Arrange
         self.register_extensible(QuirkSample)
         sample = QuirkSample(
             name='sample-{}'.format(uuid.uuid4()))
 
         # Act
-        container_index = sample.container_index
+        location = sample.location
 
         # Assert
-        assert container_index is None
+        assert location is None
 
 
 class ExampleSample(SubstanceBase):
