@@ -12,8 +12,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 logger = logging.getLogger("lint")
 
 
-def run(files, js, python, format, cache):
+def run(files, js, python, format, cache, check_deps_only):
     from sentry.lint import engine
+
+    if check_deps_only:
+        # Checks if all dependencies are as expected
+        return engine.check_dependencies()
 
     if js and not python:
         python = False
@@ -38,4 +42,5 @@ if __name__ == '__main__':
     parser.add_argument('--python', default=None, action='store_true')
     parser.add_argument('--format', action='store_true')
     parser.add_argument('--cache', default=False, action='store_true')
+    parser.add_argument('--check-deps-only', default=False, action='store_true')
     sys.exit(run(**vars(parser.parse_args())))

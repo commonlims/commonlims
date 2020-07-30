@@ -15,12 +15,21 @@ import logging
 import sys
 import subprocess
 import json
+from distutils.spawn import find_executable
 
 from subprocess import check_output, Popen
 logger = logging.getLogger("lint")
 
 os.environ['PYFLAKES_NODOCTEST'] = '1'
 os.environ['SENTRY_PRECOMMIT'] = '1'
+
+
+class ToolNotFoundException(Exception):
+    pass
+
+
+class IncorrectVersion(Exception):
+    pass
 
 
 def execute_subprocess(cmd, args):
@@ -34,17 +43,47 @@ def get_project_root():
     return os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir)
 
 
+def get_bin(path, name):
+    path = os.path.abspath(os.path.join(path, name))
+    if not os.path.exists(path):
+        raise ToolNotFoundException('Tool not found: {}'.format(path))
+    return path
+
+
 def get_sentry_bin(name):
-    return os.path.join(get_project_root(), 'bin', name)
+    return get_bin(os.path.join(get_project_root(), 'bin'), name)
 
 
 def get_node_modules_bin(name):
-    return os.path.join(
-        get_project_root(), 'node_modules', '.bin', name)
+    return get_bin(os.path.join(get_project_root(), 'node_modules', '.bin'), name)
 
 
 def get_prettier_path():
-    return get_node_modules_bin('prettier')
+    path = get_node_modules_bin('prettier')
+    version = subprocess.check_output([path, '--version']).rstrip()
+
+    # Make sure that the prettier tool is using the same version as in package.json:
+    require_package_json_version(get_project_root(), 'prettier', version)
+    return path
+
+
+def require_tool_module(module_name):
+    try:
+        __import__(module_name)
+    except ImportError:
+        raise ToolNotFoundException('Tool not pip installed: {}'.format(module_name))
+
+
+def require_exe(exe):
+    if not find_executable(exe):
+        raise ToolNotFoundException('Tool not available: {}'.format(exe))
+
+
+def require_git_hooks():
+    require_exe('pre-commit')
+
+    # We still have a legacy commit hook file:
+    return get_bin(os.path.join(get_project_root(), '.git', 'hooks'), 'pre-commit.legacy')
 
 
 def get_files(path):
@@ -111,9 +150,6 @@ def js_lint(file_list=None, parseable=False, format=False, cache=False):
     eslint_path = get_node_modules_bin('eslint')
     eslint_wrapper_path = get_sentry_bin('eslint-travis-wrapper')
 
-    if not os.path.exists(eslint_path):
-        raise Exception('Missing the tool eslint')
-
     js_file_list = get_js_files(file_list, snapshots=True)
 
     has_errors = False
@@ -145,10 +181,6 @@ def js_stylelint(file_list=None, parseable=False, format=False, cache=False):
     # TODO-easy create a decorator for this logging pattern
     logger.info("Begin js_stylelint")
     stylelint_path = get_node_modules_bin('stylelint')
-
-    if not os.path.exists(stylelint_path):
-        print('!! Skipping JavaScript styled-components linting because "stylelint" is not installed.')  # noqa: B314
-        return False
 
     js_file_list = get_js_files(file_list, snapshots=False)
 
@@ -190,33 +222,15 @@ To skip this check, run `SKIP_YARN_CHECK=1 git commit [options]`""" + '\033[0m')
     return False
 
 
-def is_prettier_valid(project_root, prettier_path):
-    if not os.path.exists(prettier_path):
-        print('[sentry.lint] Skipping JavaScript formatting because prettier is not installed.', file=sys.stderr)  # noqa: B314
-        return False
-
-    # Get Prettier version from package.json
+def require_package_json_version(project_root, package, version, section='devDependencies'):
     package_version = None
-    package_json_path = os.path.join(project_root, 'package.json')
+    package_json_path = os.path.abspath(os.path.join(project_root, 'package.json'))
     with open(package_json_path) as package_json:
-        try:
-            package_version = json.load(package_json)[
-                'devDependencies']['prettier']
-        except KeyError:
-            print('!! Prettier missing from package.json', file=sys.stderr)  # noqa: B314
-            return False
+        package_version = json.load(package_json)[section][package]
 
-    prettier_version = subprocess.check_output(
-        [prettier_path, '--version']).rstrip()
-    if prettier_version != package_version:
-        print(  # noqa: B314
-            u'[sentry.lint] Prettier is out of date: {} (expected {}). Please run `yarn install`.'.format(
-                prettier_version,
-                package_version),
-            file=sys.stderr)
-        return False
-
-    return True
+    if version != package_version:
+        raise IncorrectVersion('Expected version "{}" of "{}" but got "{}"'.format(version,
+            package, package_version))
 
 
 def js_lint_format(file_list=None):
@@ -226,15 +240,7 @@ def js_lint_format(file_list=None):
     """
     logger.info("Begin js_lint_format")
     eslint_path = get_node_modules_bin('eslint')
-    project_root = get_project_root()
-    prettier_path = get_prettier_path()
-
-    if not os.path.exists(eslint_path):
-        print('!! Skipping JavaScript linting and formatting because eslint is not installed.')  # noqa: B314
-        return False
-
-    if not is_prettier_valid(project_root, prettier_path):
-        return False
+    get_prettier_path()  # Only checking for the dependency
 
     js_file_list = get_js_files(file_list)
 
@@ -275,11 +281,7 @@ def less_format(file_list=None):
     of the lint engine.
     """
     logger.info("Begin less_format")
-    project_root = get_project_root()
     prettier_path = get_prettier_path()
-
-    if not is_prettier_valid(project_root, prettier_path):
-        return False
 
     less_file_list = get_less_files(file_list)
     result = run_formatter(
@@ -295,10 +297,7 @@ def less_format(file_list=None):
 def py_format(file_list=None):
     logger.info("Begin py_format")
 
-    try:
-        __import__('autopep8')
-    except ImportError:
-        raise Exception('Missing autopep8')
+    require_tool_module('autopep8')
 
     py_file_list = get_python_files(file_list)
 
@@ -399,3 +398,17 @@ def run(file_list=None, format=True, lint=True, js=True, py=True,
         return 0
     finally:
         sys.argv = old_sysargv
+
+
+def check_dependencies():
+    # Checks if all dependencies are correctly setup for linting locally
+    try:
+        get_node_modules_bin('eslint')
+        get_sentry_bin('eslint-travis-wrapper')
+        get_node_modules_bin('stylelint')
+        get_prettier_path()
+        require_tool_module('autopep8')
+        require_git_hooks()
+    except ToolNotFoundException as ex:
+        print(ex)
+        sys.exit(1)
