@@ -112,8 +112,7 @@ def js_lint(file_list=None, parseable=False, format=False, cache=False):
     eslint_wrapper_path = get_sentry_bin('eslint-travis-wrapper')
 
     if not os.path.exists(eslint_path):
-        print('!! Skipping JavaScript linting because eslint is not installed.')  # noqa: B314
-        return False
+        raise Exception('Missing the tool eslint')
 
     js_file_list = get_js_files(file_list, snapshots=True)
 
@@ -299,8 +298,7 @@ def py_format(file_list=None):
     try:
         __import__('autopep8')
     except ImportError:
-        print('[sentry.lint] Skipping Python autoformat because autopep8 is not installed.', file=sys.stderr)  # noqa: B314
-        return False
+        raise Exception('Missing autopep8')
 
     py_file_list = get_python_files(file_list)
 
