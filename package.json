@@ -136,7 +136,7 @@
     "jest-junit": "^3.4.1",
     "mockdate": "2.0.2",
     "moxios": "^0.4.0",
-    "prettier": "^2.0.5",
+    "prettier": "2.0.5",
     "react-test-renderer": "16.5.0",
     "sinon": "1.17.2",
     "sinon-chai": "2.8.0",
