@@ -150,7 +150,6 @@ class ContainerBase(ExtensibleBase):
         """
         Creates a new item of DefaultLocatableType.
         """
-        kwargs["organization"] = self.organization
         return self.DefaultLocatableType(**kwargs)
 
     def add(self, location, **kwargs):
@@ -188,7 +187,7 @@ class ContainerBase(ExtensibleBase):
 
         Items are returned based on the default traverse order of this container (self.traverse_by)
         """
-        return (content for ix, content in self if content)
+        return (self._locatables[ix.raw] for ix in self if ix.raw in self._locatables)
 
     def __iter__(self):
         """
@@ -197,7 +196,7 @@ class ContainerBase(ExtensibleBase):
 
         Uses the default traverse method of the container, specified by self.traverse_by
         """
-        return ((ix, self[ix]) for ix in self._traverse(self.traverse_by))
+        return (ix for ix in self._traverse(self.traverse_by))
 
     def _save_custom(self, creating):
         # Triggers a save for any substance that was added to this container.

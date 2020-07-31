@@ -4,12 +4,15 @@ from __future__ import absolute_import
 
 from tests.clims.models.test_substance import SubstanceTestCase
 from clims.api.serializers.models.substance import SubstanceSerializer
+from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
 
 
 class SubstanceSerializerTest(SubstanceTestCase):
     def setUp(self):
         # TODO: It would be better if the serializer tests wouldn't require a context
         self.has_context()
+        self.register_extensible(GemstoneContainer)
+        self.register_extensible(GemstoneSample)
 
     def test_simple(self):
         sample = self.create_gemstone(color='red')
@@ -35,7 +38,7 @@ class SubstanceSerializerTest(SubstanceTestCase):
         assert serializer.errors['type_full_name'] == [u'This field is required.']
 
     def test_substance_in_container_has_location(self):
-        container = self.GemstoneContainer(name="container1", organization=self.organization)
+        container = GemstoneContainer(name="container1")
         sample = container.add("a1", name="something", color="red")
         container.save()
 
