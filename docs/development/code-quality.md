@@ -4,6 +4,8 @@ The whole project can be linted explicitly at once (python and javascript) by ru
 
 Run `./bin/lint --check-deps-only` to check if all dependencies have been installed
 
+![Overview of the linting process](../img/clims-lint.png)
+
 ## The lint tool
 
 There is a python tool at ./bin/lint which proxies some of the linting tools. It takes care of
