@@ -4,23 +4,25 @@ from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
 from clims.configuration.step import Step
 from clims.configuration.hooks import button
+from clims.api.serializers.models.step import StepSerializer
 
 
 class TestStepConfiguration(APITestCase):
     @pytest.mark.dev_edvard
-    def test_get_step_configuration__with_name_as_input__returns_list_of_buttons(self):
-        self.register_extensible(MyFancyStep)
+    def test_get_step_template__fetched_from_name__returns_list_of_buttons(self):
+        # This test case is thought of to happen when user enters a step, and
+        # the UI should conform to the step configuration.
+        self.app.workbatches.register_step_template(MyFancyStep)
         url = reverse('clims-api-0-steps', args=(self.organization.name,))
         self.login_as(self.user)
-        step_name = 'clims.plugins.demo.dnaseq.configuration.my_fancy_step.MyFancyStep'
+        step_name = 'My fancy step'
         response = self.client.get(url + '?name=' + step_name)
         assert response.status_code == 200, response.content
         assert len(response.data) == 1, len(response.data)
         assert response.data[0]['name'] == step_name
-        # serializer = ContainerSerializer(data=response.data[0])
-        # expanded_serializer = ContainerExpandedSerializer(data=response.data[0])
-        # assert serializer.is_valid()
-        # assert expanded_serializer.is_valid() is False
+        serializer = StepSerializer(data=response.data[0])
+        assert serializer.is_valid()
+        assert response.data[0]['buttons'] == ['My submit button']
 
 
 class MyFancyStep(Step):

@@ -31,6 +31,7 @@ from sentry.plugins.base.configuration import (
 from sentry.utils.hashlib import md5_text
 from clims.services.workflow import WorkflowBase
 from clims.services.extensible import ExtensibleBase
+from clims.configuration.step import Step
 
 logger = logging.getLogger(__name__)
 
@@ -536,6 +537,16 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
             for _, mod_name, _ in pkgutil.walk_packages(path=module.__path__, prefix=module.__name__ + "."):
                 ret.update(find_implementations_in(mod_name, parent_cls))
             return ret
+
+    @classmethod
+    def get_step_templates(cls):
+        """
+        Returns all step template classes for this plugin class. These can be defined
+        anywhere in the plugin classes module, or any submodule of it.
+        """
+        logger.debug("Searching for extensible objects in {}".format(cls))
+        root_module = importlib.import_module(cls.__module__)
+        return cls._find_subclasses_of(Step, root_module)
 
     @classmethod
     def get_extensible_objects(cls):

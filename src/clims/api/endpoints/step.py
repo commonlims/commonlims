@@ -1,14 +1,11 @@
 from __future__ import absolute_import
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
 
 from sentry.api.base import DEFAULT_AUTHENTICATION
 from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.step import StepSerializer
-from clims.services.substance import SubstanceQueryBuilder
 
 
 class StepEndpoint(OrganizationEndpoint):
@@ -20,11 +17,7 @@ class StepEndpoint(OrganizationEndpoint):
         step_name = request.GET.get('name', '')
         serializer_class = StepSerializer
 
-        from pprint import pprint
-        print('implementations')
-        pprint(self.app.extensibles.implementations)
-
-        step_cls = self.app.extensibles.get_implementation(step_name)
+        step_cls = self.app.workbatches.get_step_template(step_name)
         step = step_cls()
 
         def handle_results(steps):

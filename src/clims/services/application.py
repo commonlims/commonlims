@@ -5,6 +5,7 @@ from clims.services.substance import SubstanceService
 from clims.services.container import ContainerService
 from clims.services.project import ProjectService
 from clims.services.workflow import WorkflowService
+from clims.services.workbatch import WorkbatchService
 
 
 class ApplicationService(object):
@@ -24,6 +25,7 @@ class ApplicationService(object):
         from sentry.plugins import PluginManager
         self.plugins = PluginManager(self)
         self.workflows = WorkflowService(self)
+        self.workbatches = WorkbatchService(self)
 
 
 class InversionOfControl(object):
