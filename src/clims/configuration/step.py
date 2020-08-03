@@ -1,5 +1,6 @@
 from __future__ import absolute_import, print_function
 from six import iteritems
+from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
 
 
 class Step:
@@ -33,6 +34,22 @@ class Step:
     def buttons(cls):
         buttons = list()
         for _, v in iteritems(cls.__dict__):
-            if callable(v) and hasattr(v, '_hook_button_name'):
-                buttons.append(v._hook_button_name)
+            if callable(v) and hasattr(v, HOOK_TAG):
+                buttons.append(getattr(v, HOOK_TAG))
         return buttons
+
+    @classmethod
+    def trigger_script(cls, event_type, event_tag, workbatch):
+        class_dict = dict(cls.__dict__)
+        for _, v in iteritems(class_dict):
+            if cls._matches_event_type(v, event_type):
+                if hasattr(v, HOOK_TAG) and getattr(v, HOOK_TAG) == event_tag:
+                    # TODO: None as self is not pretty
+                    v(None, workbatch)
+                elif not hasattr(v, HOOK_TAG):
+                    v(None, workbatch)
+
+    @classmethod
+    def _matches_event_type(cls, class_attr, event_type):
+        a = class_attr
+        return callable(a) and hasattr(a, HOOK_TYPE) and getattr(a, HOOK_TYPE) == event_type

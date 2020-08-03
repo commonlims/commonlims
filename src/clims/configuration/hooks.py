@@ -1,9 +1,13 @@
 from __future__ import absolute_import, print_function
 
+HOOK_TYPE = '_hook_type'
+
+HOOK_TAG = '_hook_tag'
+
 
 def button(button_text):
     def button_decorator(fn):
-        fn._hook_type = 'button'
-        fn._hook_button_name = button_text
+        setattr(fn, HOOK_TYPE, 'button')
+        setattr(fn, HOOK_TAG, button_text)
         return fn
     return button_decorator
