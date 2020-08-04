@@ -31,14 +31,14 @@ else
 fi
 
 
-if [ ! -d ~/.pyenv/versions/2.7.15 ]; then
-    echo "Installing Python 2.7.15..."
-    pyenv install 2.7.15
+if [ ! -d ~/.pyenv/versions/2.7.18 ]; then
+    echo "Installing Python 2.7.18..."
+    pyenv install 2.7.18
 fi
 
 if [ ! -d ~/.pyenv/versions/clims2 ]; then
     echo "Creating virtualenv ..."
-    pyenv virtualenv 2.7.15 clims2
+    pyenv virtualenv 2.7.18 clims2
 fi
 
 pyenv activate clims2
