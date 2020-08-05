@@ -46,7 +46,8 @@ class ExtensibleService(object):
         try:
             return self.implementations[extensible_type_full_name]
         except KeyError:
-            raise ExtensibleTypeNotRegistered(extensible_type_full_name)
+            raise ExtensibleTypeNotRegistered("The type {} is not registered anymore".format(
+                extensible_type_full_name))
 
     def get_extensible_type(self, name):
         """
@@ -436,6 +437,10 @@ class ExtensibleBase(ExtensibleCore):
         Use (self.id, self.version) as a unique key for versions of an extensible.
         """
         return self._archetype.id
+
+    @property
+    def organization(self):
+        return self._archetype.organization
 
     @property
     def type_full_name(self):

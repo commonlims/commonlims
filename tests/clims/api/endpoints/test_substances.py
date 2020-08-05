@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from sentry.testutils import APITestCase
 
 from rest_framework import status
-from clims.models import Substance
+from clims.models.substance import Substance
 from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample
 
 
@@ -68,7 +68,6 @@ class SubstancesTest(APITestCase):
                 type_full_name=sample.type_full_name,
                 location=None,
                 global_id="Substance-{}".format(sample.id),
-                container_index=None,
             )
 
         asserts(first, data_by_id[first.id])
@@ -97,7 +96,6 @@ class SubstancesTest(APITestCase):
                 type_full_name=sample.type_full_name,
                 location=None,
                 global_id="Substance-{}".format(sample.id),
-                container_index=None,
             )
 
         asserts(stone1, data_by_id[stone1.id])

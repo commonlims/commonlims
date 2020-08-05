@@ -17,6 +17,11 @@ class GemstoneSample(SubstanceBase):
 
 
 class GemstoneContainer(PlateBase):
+    # This will lead `container.add(name="sample1")` to use GemstoneSample rather than the
+    # basic SubstanceBase. You can still add other types of "locatables", like another sample type
+    # or container.
+    DefaultLocatableType = GemstoneSample
+
     rows = 8
     columns = 12
 

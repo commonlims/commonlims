@@ -3,9 +3,10 @@ from __future__ import absolute_import
 import re
 import six
 from clims.services.extensible import ExtensibleBase
-from clims.models import Container, ContainerVersion
+from clims.models.container import Container, ContainerVersion
 from clims.services.base_extensible_service import BaseExtensibleService
 from clims.services.base_extensible_service import BaseQueryBuilder
+from clims.services.substance import SubstanceBase
 
 
 class IndexOutOfBounds(Exception):
@@ -17,10 +18,19 @@ class ContainerIndex(object):
     Represent an index into a regular Container.
     """
 
-    def __init__(self, x=None, y=None, z=None):
+    def __init__(self, container, x=None, y=None, z=None):
+        self.container = container
         self.x = x
         self.y = y
         self.z = z
+
+    @classmethod
+    def from_internal_coordinates(cls, container, x, y, z):
+        """
+        All subclasses should define their own version of this method which fits the
+        parameters in the constructor.
+        """
+        return cls(container, x, y, z)
 
     @property
     def raw(self):
@@ -28,20 +38,25 @@ class ContainerIndex(object):
         return self.x, self.y, self.z
 
     @classmethod
-    def from_string(s):
+    def from_string(cls, container, s):
         raise NotImplementedError("It's not possible to use this index type with a string")
 
     @classmethod
-    def from_any_type(cls, key):
-        # Creates an index for the input key if possible.
-        if isinstance(key, ContainerIndex):
-            return key
-        elif isinstance(key, (six.text_type, six.binary_type)):
-            return cls.from_string(key)
+    def from_any_type(cls, container, key):
+        """
+        Creates an index for the input key if possible:
+          * If the key is a string, tries to set using `from_string`
+          * If the key is a tuple, tries to create using the constructor
+        """
+        if isinstance(key, six.string_types):
+            return cls.from_string(container, key)
         elif isinstance(key, tuple):
-            return cls(*key)
+            return cls(container, *key)
         else:
             raise NotImplementedError("Can't use {} as an index".format(type(key)))
+
+    def __repr__(self):
+        return repr(self.raw)
 
 
 class InvalidContainerIndex(Exception):
@@ -61,8 +76,12 @@ class PlateIndex(ContainerIndex):
 
     STRING_PATTERN = re.compile(r'(?P<row>\w):?(?P<col>\d+)')
 
-    def __init__(self, row, column):
-        super(PlateIndex, self).__init__(column, row, 0)
+    def __init__(self, container, row, column):
+        super(PlateIndex, self).__init__(container, column, row, 0)
+
+    @classmethod
+    def from_internal_coordinates(cls, container, x, y, z):
+        return cls(container, row=y, column=x)
 
     @property
     def row(self):
@@ -73,7 +92,7 @@ class PlateIndex(ContainerIndex):
         return self.x
 
     @classmethod
-    def from_string(cls, key):
+    def from_string(cls, container, key):
         """
         Given a human-readable index into the container, e.g. "A:1", creates a new index.
         """
@@ -84,7 +103,7 @@ class PlateIndex(ContainerIndex):
         row = m.group('row').upper()
         col = int(m.group('col')) - 1
         row_num = ord(row) - 65
-        return cls(row_num, col)
+        return cls(container, row_num, col)
 
     def __repr__(self):
         return "{}:{}".format(chr(self.row + 65), self.column + 1)
@@ -102,6 +121,11 @@ class ContainerBase(ExtensibleBase):
     WrappedArchetype = Container
     WrappedVersion = ContainerVersion
     IndexType = ContainerIndex
+
+    # Override this in your subclass to set a default type for a locatable for the container.
+    # This is the class that's used to in the `create` and `add` to conveniently create
+    # items in the container.
+    DefaultLocatableType = SubstanceBase
 
     # Override this in subclasses to a subclass-specific value
     # that specifies the ordering when traversing and appending
@@ -121,6 +145,20 @@ class ContainerBase(ExtensibleBase):
             # TODO: Make sure callers are prefetching!
             for location in self._wrapped_version.archetype.substance_locations.filter(current=True):
                 self._locatables[location.raw] = self._app.substances.to_wrapper(location.substance)
+
+    def create(self, **kwargs):
+        """
+        Creates a new item of DefaultLocatableType.
+        """
+        return self.DefaultLocatableType(**kwargs)
+
+    def add(self, location, **kwargs):
+        """
+        Adds a new item to the location. The item is of the container's default locatable type.
+        """
+        item = self.create(**kwargs)
+        self[location] = item
+        return item
 
     def append(self, value):
         """
@@ -149,7 +187,7 @@ class ContainerBase(ExtensibleBase):
 
         Items are returned based on the default traverse order of this container (self.traverse_by)
         """
-        return (content for ix, content in self if content)
+        return (self._locatables[ix.raw] for ix in self if ix.raw in self._locatables)
 
     def __iter__(self):
         """
@@ -158,7 +196,7 @@ class ContainerBase(ExtensibleBase):
 
         Uses the default traverse method of the container, specified by self.traverse_by
         """
-        return ((ix, self[ix]) for ix in self._traverse(self.traverse_by))
+        return (ix for ix in self._traverse(self.traverse_by))
 
     def _save_custom(self, creating):
         # Triggers a save for any substance that was added to this container.
@@ -171,7 +209,7 @@ class ContainerBase(ExtensibleBase):
         raise NotImplementedError("Implement in a subclass")
 
     def __setitem__(self, key, value):
-        ix = self.IndexType.from_any_type(key)
+        ix = self.IndexType.from_any_type(self, key)
         self._validate_boundaries(ix)
 
         # Update the value. This will not actually move it in the backend until either
@@ -179,7 +217,7 @@ class ContainerBase(ExtensibleBase):
         self._locatables[ix.raw] = value
 
     def __getitem__(self, key):
-        ix = self.IndexType.from_any_type(key)
+        ix = self.IndexType.from_any_type(self, key)
         self._validate_boundaries(ix)
         return self._locatables.get(ix.raw, None)
 
@@ -224,9 +262,9 @@ class PlateBase(ContainerBase):
         cols = range(self.columns)
 
         if order == self.TRAVERSE_BY_ROW:
-            return (PlateIndex(column=col, row=row) for row in rows for col in cols)
+            return (PlateIndex(self, column=col, row=row) for row in rows for col in cols)
         elif order == self.TRAVERSE_BY_COLUMN:
-            return (PlateIndex(column=col, row=row) for col in cols for row in rows)
+            return (PlateIndex(self, column=col, row=row) for col in cols for row in rows)
         else:
             raise AssertionError("Unexpected order requested: {}".format(order))
 
