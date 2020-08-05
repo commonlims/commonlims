@@ -123,7 +123,6 @@ class SubstancesTest(APITestCase):
                 type_full_name=sample.type_full_name,
                 location=None,
                 global_id="Substance-{}".format(sample.id),
-                container_index=None,
             )
 
         asserts(stone1, data_by_id[stone1.id])
