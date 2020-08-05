@@ -26,11 +26,13 @@
   },
 
   "[javascript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
   "[javascriptreact]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
   "[less]": {
@@ -44,16 +46,18 @@
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": ["--global-config", "${workspaceRoot}/setup.cfg"],
-  "python.pythonPath": "~/.pyenv/versions/clims2/bin/python",
+  "python.formatting.autopep8Args": [
+    "--global-config",
+    "${workspaceRoot}/setup.cfg"
+  ],
   // test discovery is sluggish and the UI around running
   // tests is often in your way and misclicked
-  "python.testing.pyTestEnabled": true,
+  "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
   "prettier-eslint.prettierPath":
     "${env.WORKON_HOME}/node_modules/prettier/bin/prettier.js",
   "editor.tabSize": 4,
-  "python.testing.pyTestArgs": ["tests/clims/"],
+  "python.testing.pytestArgs": ["tests/clims/"],
   "python.linting.enabled": true
 }

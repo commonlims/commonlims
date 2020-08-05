@@ -92,6 +92,10 @@ Testing is currently almost only in form of integration tests, that at a minimum
 
 See [frontend.md](frontend.md)
 
+# Code quality
+
+See [./development/code-quality.md](code-quality.md)
+
 # Troubleshooting
 
 Some problems are difficult to track down because of e.g. caching in different layers, mismatched
