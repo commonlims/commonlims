@@ -36,6 +36,10 @@ fresh: clean middleware-teardown middleware
 	@echo "--> Add example data"
 	lims createexampledata
 
+# Runs all the tests required for the branch to be merged on github. This does generally not
+# need to be run locally as github will take care of it (and asynchronously)
+validate: lint-python test-python-unit test-python-integration lint-js test-js
+
 clean:
 	@echo "--> Cleaning static cache"
 	rm -rf dist/* static/dist/*
