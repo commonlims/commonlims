@@ -3,7 +3,7 @@ import {Client} from 'app/api';
 
 // Helper function that creates an action creator.
 // From: https://redux.js.org/recipes/reducing-boilerplate
-export function makeActionCreator(type, ...argNames) {
+export function ac(type, ...argNames) {
   return function (...args) {
     const action = {type};
     argNames.forEach((arg, index) => {
@@ -17,13 +17,13 @@ export function makeActionCreator(type, ...argNames) {
 
 // List actions:
 const acGetListRequest = (resource) =>
-  makeActionCreator(`GET_${resource}_LIST_REQUEST`, 'search', 'groupBy', 'cursor');
+  ac(`GET_${resource}_LIST_REQUEST`, 'search', 'groupBy', 'cursor');
 
 const acGetListSuccess = (resource) =>
-  makeActionCreator(`GET_${resource}_LIST_SUCCESS`, 'entries', 'link');
+  ac(`GET_${resource}_LIST_SUCCESS`, 'entries', 'link');
 
 const acGetListFailure = (resource) =>
-  makeActionCreator(`GET_${resource}_LIST_FAILURE`, 'message');
+  ac(`GET_${resource}_LIST_FAILURE`, 'message');
 
 const acGetList = (resource, url) => {
   return (search, groupBy, cursor) => (dispatch) => {
@@ -45,39 +45,46 @@ const acGetList = (resource, url) => {
 
 // Selection actions
 const acSelectPage = (resource) =>
-  makeActionCreator(`SELECT_PAGE_OF_${resource}`, 'doSelect');
+  ac(`SELECT_PAGE_OF_${resource}`, 'doSelect');
 
-const acSelect = (resource) => makeActionCreator(`SELECT_${resource}`, 'id', 'doSelect');
+const acSelect = (resource) => ac(`SELECT_${resource}`, 'id', 'doSelect');
 
 // Create actions
 const acCreateRequest = (resource) =>
-  makeActionCreator(`CREATE_${resource}_REQUEST`, 'entry');
+  ac(`CREATE_${resource}_REQUEST`, 'entry');
 
 const acCreateSuccess = (resource) =>
-  makeActionCreator(`CREATE_${resource}_SUCCESS`, 'entry');
+  ac(`CREATE_${resource}_SUCCESS`, 'entry');
 
 const acCreateFailure = (resource) =>
-  makeActionCreator(`CREATE_${resource}_FAILURE`, 'message');
+  ac(`CREATE_${resource}_FAILURE`, 'message');
 
-const acCreate = (org, data, redirect) => (dispatch) => {
-  dispatch(workBatchesCreateRequest());
+const acCreate = (resource, urlTemplate) => {
 
-  const api = new Client();
+  return (org, data, redirect) => (dispatch) => {
+    dispatch(acCreateRequest(resource)());
 
-  api.request(`/api/0/organizations/${org.slug}/work-batches/`, {
-    method: 'POST',
-    data,
-    success: (res) => {
-      dispatch(workBatchesCreateSuccess(res.workBatch));
-      const createdId = res.workBatch.id;
-      if (redirect) {
-        browserHistory.push(`/${org.slug}/workbatches/${createdId}/`);
-      }
-    },
-    error: (err) => {
-      dispatch(workBatchesCreateFailure(err));
-    },
-  });
+    const api = new Client();
+    console.log('ORIGINAL url: ' + urlTemplate);
+    const url = urlTemplate.replace('{org}', org.slug);
+    console.log('MODIFIED url: ' + url);
+
+    api.request(url, {
+      method: 'POST',
+      data,
+      success: (res) => {
+        dispatch(acCreateSuccess(resource)(res.workBatch));
+        const createdId = res.workBatch.id;
+        if (redirect) {
+          browserHistory.push(`/${org.slug}/workbatches/${createdId}/`);  // TODO-NOCOMMIT: configurable in creator
+        }
+      },
+      error: (err) => {
+        dispatch(acCreateFailure(resource)(err));
+      },
+    });
+  };
+
 };
 
 export const resourceActionCreators = {
@@ -94,20 +101,20 @@ export const resourceActionCreators = {
 };
 
 // Creates all actions required for a regular resource
-export const makeResourceActions = (resourceName, getListUrl, createUrl) => {
+export const makeResourceActions = (resourceName, listUrl) => {
   return {
     // Fetching a list
     getListRequest: acGetListRequest(resourceName),
     getListSuccess: acGetListSuccess(resourceName),
     getListFailure: acGetListFailure(resourceName),
-    getList: acGetList(resourceName, getListUrl),
+    getList: acGetList(resourceName, listUrl),
 
     // Select entries in the list or pages of it
     select: acSelect(resourceName),
     selectPage: acSelectPage(resourceName),
 
     // Create entries
-    create: acCreate(resourceName, createUrl),
+    create: acCreate(resourceName, listUrl),
     createRequest: acCreateRequest(resourceName),
     createSuccess: acCreateSuccess(resourceName),
     createFailure: acCreateFailure(resourceName),

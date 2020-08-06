@@ -1,6 +1,7 @@
 import {t} from 'app/locale';
 import {Client} from 'app/api';
 import {substanceSearchEntriesToggleSelectAll} from 'app/redux/actions/substanceSearchEntry';
+
 import {ac} from 'app/redux/actions/shared';
 
 // Assigning substances to processes.

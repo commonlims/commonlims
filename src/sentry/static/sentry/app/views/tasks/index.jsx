@@ -8,7 +8,7 @@ import {
   toggleSelectTask,
   toggleSelectPageOfTask,
 } from 'app/redux/actions/task';
-import {createWorkBatch} from 'app/redux/actions/workBatch';
+import {workBatchActions} from 'app/redux/actions/workBatch';
 import {getTaskDefinition} from 'app/redux/actions/taskDefinition';
 import ClimsTypes from 'app/climsTypes';
 
@@ -97,7 +97,7 @@ const mapDispatchToProps = dispatch => ({
   toggleSingle: id => dispatch(toggleSelectTask(id)),
   toggleAll: () => dispatch(toggleSelectPageOfTask()),
   createWorkBatch: (org, tasks, redirect) =>
-    dispatch(createWorkBatch(org, tasks, redirect)),
+    dispatch(workBatchActions.create(org, tasks, redirect)),
   getTaskDefinition: (taskDefinitionKey, processDefinitionKey) =>
     dispatch(getTaskDefinition(taskDefinitionKey, processDefinitionKey)),
 });
