@@ -7,6 +7,7 @@ import {
   substanceSearchEntriesGet,
   substanceSearchEntriesToggleSelectAll,
   substanceSearchEntryToggleSelect,
+  substanceSearchEntryExpandCollapse,
 } from 'app/redux/actions/substanceSearchEntry';
 import {t} from 'app/locale';
 import ListFilters from 'app/components/listFilters';
@@ -76,30 +77,26 @@ class Substances extends React.Component {
       {
         Header: 'Sample name',
         id: 'name',
-        accessor: 'name',
-        fontstyle: (d) => (d.isGroupHeader ? 'italic' : 'normal'),
+        accessor: (d) => d.name,
+        fontstyle: (isGroupHeader) => (isGroupHeader ? 'italic' : 'normal'),
       },
       {
         Header: 'Container',
         id: 'container',
-        accessor: (d) =>
-          d.isGroupHeader
-            ? null
-            : d.location
-            ? d.location.container.name
-            : '<No location>',
+        accessor: (d, isGroupHeader) =>
+          isGroupHeader ? null : d.location ? d.location.container.name : '<No location>',
       },
       {
         Header: 'Index',
         id: 'index',
-        accessor: (d) =>
-          d.isGroupHeader ? null : d.location ? d.location.index : '<No location>',
+        accessor: (d, isGroupHeader) =>
+          isGroupHeader ? null : d.location ? d.location.index : '<No location>',
       },
       {
         Header: 'Volume',
         id: 'volume',
-        accessor: (d) =>
-          d.isGroupHeader
+        accessor: (d, isGroupHeader) =>
+          isGroupHeader
             ? null
             : d.properties && d.properties.volume
             ? showRounded(d.properties.volume.value)
@@ -108,8 +105,8 @@ class Substances extends React.Component {
       {
         Header: 'Sample Type',
         id: 'sample_type',
-        accessor: (d) =>
-          d.isGroupHeader
+        accessor: (d, isGroupHeader) =>
+          isGroupHeader
             ? null
             : d.properties && d.properties.sample_type
             ? d.properties.sample_type.value
@@ -118,12 +115,12 @@ class Substances extends React.Component {
       {
         Header: 'Priority',
         id: 'priority',
-        accessor: (d) => (d.isGroupHeader ? null : d.priority),
+        accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.priority),
       },
       {
         Header: 'Waiting',
         id: 'days_waiting',
-        accessor: (d) => (d.isGroupHeader ? null : d.days_waiting),
+        accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.days_waiting),
       },
     ];
   }
@@ -197,6 +194,7 @@ class Substances extends React.Component {
             toggleAll={this.toggleAll}
             toggleSingle={this.props.substanceSearchEntryToggleSelect}
             listActionBar={actionBar}
+            expandCollapse={this.props.substanceSearchEntryExpandCollapse}
           />
 
           {this.props.substanceSearchEntry.paginationEnabled &&
@@ -219,6 +217,7 @@ Substances.propTypes = {
   groupBy: PropTypes.string.isRequired,
   substanceSearchEntriesGet: PropTypes.func.isRequired,
   substanceSearchEntriesToggleSelectAll: PropTypes.func.isRequired,
+  substanceSearchEntryExpandCollapse: PropTypes.func.isRequired,
   byIds: PropTypes.object,
   substanceSearchEntryToggleSelect: PropTypes.func.isRequired,
   substanceSearchEntry: PropTypes.object,
@@ -240,6 +239,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(substanceSearchEntriesToggleSelectAll(doSelect)),
   substanceSearchEntryToggleSelect: (id, doSelect) =>
     dispatch(substanceSearchEntryToggleSelect(id, doSelect)),
+  substanceSearchEntryExpandCollapse: (parentEntry) =>
+    dispatch(substanceSearchEntryExpandCollapse(parentEntry)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Substances);

@@ -66,6 +66,7 @@ class ListView extends React.Component {
     selectedIds: PropTypes.instanceOf(Set),
     dataById: PropTypes.object.isRequired,
     listActionBar: PropTypes.object,
+    expandCollapse: PropTypes.func,
   };
 
   constructor() {
@@ -90,9 +91,7 @@ class ListView extends React.Component {
     if (!entryData.isGroupHeader) {
       return '';
     }
-    const currentlyExpandedRows = this.state.expandedRows;
-    const isRowExpanded = currentlyExpandedRows.includes(entryId);
-    if (isRowExpanded) {
+    if (entryData.children.isExpanded) {
       return <CaretDown />;
     } else {
       return <CaretRight />;
@@ -102,7 +101,7 @@ class ListView extends React.Component {
   getFontStyle(entryId, header) {
     const row = this.props.dataById[entryId];
     if (header.fontstyle !== undefined) {
-      return header.fontstyle(row);
+      return header.fontstyle(row.isGroupHeader);
     }
     return 'normal';
   }
@@ -110,7 +109,7 @@ class ListView extends React.Component {
   getDisplayCell(entryId, header) {
     const row = this.props.dataById[entryId];
     if (typeof header.accessor === 'function') {
-      return header.accessor(row);
+      return header.accessor(row.entity, row.isGroupHeader);
     }
     return row[header.accessor];
   }
@@ -158,7 +157,13 @@ class ListView extends React.Component {
                 {this.props.visibleIds.map((entryId) => {
                   return (
                     <tr key={'parent-' + entryId}>
-                      <td>{this.renderRowExpander(entryId)}</td>
+                      <td
+                        onClick={() =>
+                          this.props.expandCollapse(this.props.dataById[entryId])
+                        }
+                      >
+                        {this.renderRowExpander(entryId)}
+                      </td>
                       {this.props.canSelect && (
                         <td>
                           <Checkbox
