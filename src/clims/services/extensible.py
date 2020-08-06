@@ -630,7 +630,8 @@ class FloatField(ExtensibleBaseField):
 
 class TextField(ExtensibleBaseField):
     def validate(self, prop_type, value):
-        if not isinstance(value, six.string_types):
+        # None compatibility is already validated in base class.
+        if value is not None and not isinstance(value, six.string_types):
             raise ExtensibleTypeValidationError("Expected string")
 
     @property
