@@ -6,20 +6,21 @@ import {connect} from 'react-redux';
 
 import {t} from 'app/locale';
 import SelectControl from 'app/components/forms/selectControl';
-import {processDefinitionsGet} from 'app/redux/actions/processDefinition';
-import {processesPost} from 'app/redux/actions/process';
 
 import JsonForm from 'app/views/settings/components/forms/jsonForm';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import Link from 'app/components/link';
 import Bpmn from 'app/components/bpmn';
 import styled from 'react-emotion';
+import {sortBy} from 'lodash';
 
 import {
+  processDefinitionsGet,
   processAssignSelectPreset,
   processAssignSelectProcess,
   processAssignSetVariable,
-} from 'app/redux/actions/processAssign';
+  processAssignmentsPost,
+} from 'app/redux/actions/process';
 
 const StyledBpmn = styled(Bpmn)`
   height: 500px;
@@ -27,6 +28,7 @@ const StyledBpmn = styled(Bpmn)`
 
 // TODO: Write tests for this component
 // TODO: Change to JS6 class
+// TODO-simple: Rename to AssignToProcess for consistency
 const AssignToWorkflowButton = createReactClass({
   displayName: 'AssignToWorkflowButton',
 
@@ -35,10 +37,9 @@ const AssignToWorkflowButton = createReactClass({
     style: PropTypes.object,
     tooltip: PropTypes.string,
     buttonTitle: PropTypes.string,
-    processDefinition: PropTypes.object,
     process: PropTypes.object,
     substanceSearchEntry: PropTypes.object,
-    processesPost: PropTypes.func,
+    processAssignmentsPost: PropTypes.func,
     processDefinitionsGet: PropTypes.func,
     processAssignSelectPreset: PropTypes.func.isRequired,
     processAssignSelectProcess: PropTypes.func.isRequired,
@@ -101,15 +102,17 @@ const AssignToWorkflowButton = createReactClass({
   onSubmit(e) {
     e.preventDefault();
 
-    if (this.props.process.saving) {
+    if (this.props.process.assignmentSaving) {
       return;
     }
 
     // TODO: substances already selected
-    this.props.processesPost(
-      this.state.selectedProcess,
-      this.state.variables,
-      this.props.substanceSearchEntry.selectedIds.toArray()
+    this.props.processAssignmentsPost(
+      this.props.process.assignProcessDefinition.definition_id,
+      this.props.process.assignVariables,
+      this.props.substanceSearchEntry.selectedIds.toArray(),
+      [], // only if assigning containers
+      'lab' // TODO: Get from URL
     );
   },
 
@@ -123,7 +126,7 @@ const AssignToWorkflowButton = createReactClass({
 
   renderSettings() {
     let fields = null;
-    const {assignProcessDefinition, assignVariables} = this.props.processDefinition;
+    const {assignProcessDefinition, assignVariables} = this.props.process;
 
     if (assignProcessDefinition) {
       fields = this.createFieldsFromDefinition(assignProcessDefinition);
@@ -139,23 +142,28 @@ const AssignToWorkflowButton = createReactClass({
   },
 
   render() {
-    if (this.props.processDefinition.loading) {
+    if (this.props.process.processDefinitionLoading) {
       return <LoadingIndicator />;
     }
 
-    const presets = Object.entries(this.props.processDefinition.presetsById).map(
-      (entry) => {
-        return {value: entry[0], label: entry[1].name};
-      }
-    );
+    const presets = Object.entries(this.props.process.presetsById).map((entry) => {
+      return {value: entry[0], label: entry[1].name};
+    });
+    const presetsSorted = sortBy(presets, 'label');
+
+    // TODO: Here we should handle the case where two workflows have the same name (but different
+    // namespaces), by showing the full name in that case
 
     const processDefinitions = Object.entries(
-      this.props.processDefinition.processDefinitionsById
+      this.props.process.processDefinitionsById
     ).map((entry) => {
-      return {value: entry[0], label: entry[1].id};
+      const processId = entry[1].definition_id; // TODO: use javascript casing
+      const elements = processId.split('.');
+      const processName = elements[elements.length - 1];
+      return {value: entry[0], label: processName};
     });
 
-    const {assignPreset, assignProcessDefinition} = this.props.processDefinition;
+    const {assignPreset, assignProcessDefinition} = this.props.process;
 
     // TODO: Remove the <br/>s!
     return (
@@ -180,7 +188,7 @@ const AssignToWorkflowButton = createReactClass({
               <SelectControl
                 onChange={(preset) => this.props.processAssignSelectPreset(preset.value)}
                 placeholder="Select a preset of workflow and variables"
-                options={presets}
+                options={presetsSorted}
                 value={assignPreset}
               />
             </div>
@@ -191,7 +199,9 @@ const AssignToWorkflowButton = createReactClass({
                 onChange={(sel) => this.props.processAssignSelectProcess(sel.value)}
                 placeholder="Select a workflow or subprocess"
                 options={processDefinitions}
-                value={assignProcessDefinition ? assignProcessDefinition.id : null}
+                value={
+                  assignProcessDefinition ? assignProcessDefinition.definition_id : null
+                } // TODO: use id instead of definition_id
               />
             </div>
             <br />
@@ -202,7 +212,7 @@ const AssignToWorkflowButton = createReactClass({
               <button
                 type="button"
                 className="btn btn-default"
-                disabled={this.props.process.saving}
+                disabled={this.props.process.assignmentSaving}
                 onClick={this.onToggle}
               >
                 {t('Cancel')}
@@ -210,7 +220,7 @@ const AssignToWorkflowButton = createReactClass({
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={this.props.process.saving}
+                disabled={this.props.process.assignmentSaving}
               >
                 {t('Assign')}
               </button>
@@ -227,18 +237,21 @@ const mapStateToProps = (state) => {
     processDefinition: state.processDefinition,
     substanceSearchEntry: state.substanceSearchEntry,
     process: state.process,
+    processAssign: state.processAssign,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   processDefinitionsGet: () => dispatch(processDefinitionsGet()),
-  processesPost: (definitionId, variables, instances) =>
-    dispatch(processesPost(definitionId, variables, instances)),
-
   processAssignSelectPreset: (preset) => dispatch(processAssignSelectPreset(preset)),
   processAssignSelectProcess: (process) => dispatch(processAssignSelectProcess(process)),
   processAssignSetVariable: (key, value) =>
     dispatch(processAssignSetVariable(key, value)),
+
+  processAssignmentsPost: (definitionId, variables, substances, containers, org) =>
+    dispatch(
+      processAssignmentsPost(definitionId, variables, substances, containers, org)
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssignToWorkflowButton);
