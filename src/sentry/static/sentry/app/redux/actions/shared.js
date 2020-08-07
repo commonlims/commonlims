@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Client} from 'app/api';
+import {browserHistory} from 'react-router';
 
 // Helper function that creates an action creator.
 // From: https://redux.js.org/recipes/reducing-boilerplate
@@ -23,7 +24,7 @@ const acGetListSuccess = (resource) =>
   ac(`GET_${resource}_LIST_SUCCESS`, 'entries', 'link');
 
 const acGetListFailure = (resource) =>
-  ac(`GET_${resource}_LIST_FAILURE`, 'message');
+  ac(`GET_${resource}_LIST_FAILURE`, 'statusCode', 'message');
 
 const acGetList = (resource, url) => {
   return (search, groupBy, cursor) => (dispatch) => {
@@ -39,7 +40,7 @@ const acGetList = (resource, url) => {
     return axios
       .get(url, config)
       .then((res) => dispatch(acGetListSuccess(resource)(res.data, res.headers.link)))
-      .catch((err) => dispatch(acGetListFailure(resource)(err)));
+      .catch((err) => dispatch(acGetListFailure(resource)(err.statusCode, err.statusText)));
   };
 };
 
@@ -57,30 +58,29 @@ const acCreateSuccess = (resource) =>
   ac(`CREATE_${resource}_SUCCESS`, 'entry');
 
 const acCreateFailure = (resource) =>
-  ac(`CREATE_${resource}_FAILURE`, 'message');
+  ac(`CREATE_${resource}_FAILURE`, 'statusCode', 'message');
 
 const acCreate = (resource, urlTemplate) => {
 
   return (org, data, redirect) => (dispatch) => {
+    console.log("HERE", data, data['tasks']);
     dispatch(acCreateRequest(resource)());
 
     const api = new Client();
-    console.log('ORIGINAL url: ' + urlTemplate);
     const url = urlTemplate.replace('{org}', org.slug);
-    console.log('MODIFIED url: ' + url);
 
     api.request(url, {
       method: 'POST',
       data,
       success: (res) => {
-        dispatch(acCreateSuccess(resource)(res.workBatch));
-        const createdId = res.workBatch.id;
+        dispatch(acCreateSuccess(resource)(res));
+        const createdId = res.workBatch.id;  // TODO-nocommit
         if (redirect) {
           browserHistory.push(`/${org.slug}/workbatches/${createdId}/`);  // TODO-NOCOMMIT: configurable in creator
         }
       },
       error: (err) => {
-        dispatch(acCreateFailure(resource)(err));
+        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText));
       },
     });
   };
