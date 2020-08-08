@@ -33,9 +33,10 @@ describe('shared action creators', () => {
   });
 
   it('should create getListFailure', () => {
-    const action = resourceActionCreators.acGetListFailure(RESOURCE_NAME)('some error');
+    const action = resourceActionCreators.acGetListFailure(RESOURCE_NAME)(500, 'some error');
     expect(action).toEqual({
       type: 'GET_RESOURCE_NAME_LIST_FAILURE',
+      statusCode: 500,
       message: 'some error',
     });
   });
