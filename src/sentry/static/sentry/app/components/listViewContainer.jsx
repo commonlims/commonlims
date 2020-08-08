@@ -1,10 +1,11 @@
 import React from 'react';
+import {browserHistory} from 'react-router';
 
 import ListView from 'app/components/listView';
 import ListFilters from 'app/components/listFilters';
 import ClimsTypes from 'app/climsTypes';
 import SentryTypes from 'app/sentryTypes';
-import {browserHistory} from 'react-router';
+import Pagination from 'app/components/pagination';
 
 // A wrapper around the presentational components ListView, ListFilters and Pagination,
 // that handles actions in the view
@@ -102,12 +103,18 @@ class ListViewContainer extends React.Component {
             visibleIds={this.props.listViewState.visibleIds}
             selectedIds={this.props.listViewState.selectedIds}
             loading={this.props.loading}
-            canSelect={true}
+            canSelect={this.props.canSelect}
             allVisibleSelected={this.props.listViewState.allVisibleSelected}
             toggleAll={this.toggleAll}
             toggleSingle={this.props.toggleSingle}
             listActionBar={null}
           />
+          {this.props.paginationEnabled && this.props.pagination.pageLinks && (
+            <Pagination
+              pageLinks={this.props.pagination.pageLinks}
+              onCursor={this.onCursor}
+            />
+          )}
         </div>
       </div>
     );
