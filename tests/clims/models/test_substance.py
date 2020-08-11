@@ -123,6 +123,23 @@ class TestSubstance(SubstanceTestCase):
         expected = {(1, original_name), (2, substance.name)}
         assert actual == expected
 
+    @pytest.mark.dev_edvard
+    def test_update_name__the_new_name_is_searchable(self):
+        # Arrange
+        substance = self.create_gemstone()
+        original_name = substance.name
+        new_name = original_name + '-UPDATED'
+        substance.name = new_name
+        substance.save()
+
+        # Act
+        # fetched = self.app.substances.get_by_name(original_name)
+
+        fetched = self.app.substances.get_by_name(new_name)
+
+        # Assert
+        assert fetched.name == new_name
+
     def test_names_are_unique(self):
         substance = self.create_gemstone()
         with pytest.raises(IntegrityError):
