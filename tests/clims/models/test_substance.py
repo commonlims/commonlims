@@ -86,6 +86,29 @@ class SubstancePropertiesTestCase(TestCase):
         assert fetched_sample.cool == cool
         assert fetched_sample.erudite == erudite
 
+    @pytest.mark.dev_edvard
+    def test_set_text_property_to_none__with_nullable_field__it_works(self):
+        name = "sample-{}".format(random.randint(1, 1000000))
+
+        sample = ExampleSample(name=name)
+        sample.mox_feeling = None
+        sample.save()
+
+        fetched_sample = self.app.substances.get(name=sample.name)
+        assert fetched_sample.mox_feeling is None
+
+    @pytest.mark.dev_edvard
+    def test_set_text_property_to_none__with_not_nullable_field__exception(self):
+        name = "sample-{}".format(random.randint(1, 1000000))
+
+        # TODO: what should the expected behaviour for not-nullable fields be?
+        # Here, the cool_feeling can be omitted in the constructor, and then
+        # the sample can be saved. When trying to get value of sample.cool_feeling,
+        # a very non-descriptive error message shows.
+        sample = ExampleSample(name=name)
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.cool_feeling = None
+
     def test_cannot_create_substance_with_property_set_to_none_unless_nullable(self):
         name = "sample-{}".format(random.randint(1, 1000000))
         cool = random.randint(1, 100)
@@ -415,7 +438,6 @@ class TestSubstance(SubstanceTestCase):
         #       this directly to the frontend
         assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)
 
-    @pytest.mark.dev_edvard
     def test_with_no_display_name__default_display_name_is_shown(self):
         self.register_extensible(QuirkSample)
         ext_type_name = QuirkSample.type_full_name_cls()
@@ -448,6 +470,8 @@ class ExampleSample(SubstanceBase):
     moxy = FloatField("moxy")
     cool = FloatField("cool")
     erudite = FloatField("erudite", nullable=False)
+    mox_feeling = TextField()
+    cool_feeling = TextField(nullable=False)
 
 
 class QuirkSample(SubstanceBase):
