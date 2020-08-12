@@ -151,6 +151,8 @@ class BaseExtensibleService(object):
                 get_args['{}'.format(key)] = value
             elif key.startswith('properties'):
                 get_args[key] = value
+            elif key == 'name':
+                get_args[key] = value
             else:
                 get_args['archetype__{}'.format(key)] = value
         return get_args

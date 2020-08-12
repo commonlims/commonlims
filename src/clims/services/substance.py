@@ -262,7 +262,10 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
             extensible_type=self.extensible_type)
         child.depth = self.depth + 1
         child.save()
-        version = SubstanceVersion(archetype=child)
+        version = SubstanceVersion(
+            archetype=child,
+            name=name,
+        )
         version.save()
 
         # Origin points to the first ancestor(s) of this substance. If the substance being cloned

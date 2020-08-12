@@ -463,7 +463,7 @@ class ExtensibleBase(ExtensibleCore):
 
     @property
     def name(self):
-        return self._archetype.name
+        return self._wrapped_version.name
 
     @name.setter
     def name(self, value):

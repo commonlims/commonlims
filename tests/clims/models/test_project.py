@@ -27,6 +27,20 @@ class TestProject(TestCase):
         with pytest.raises(IntegrityError):
             project2.save()
 
+    def test_rename__the_new_name_is_searchable(self):
+        # Arrange
+        project = VampireFangStudyProject(name='my project')
+        project.save()
+        project.name = 'new name'
+        project.save()
+
+        # Act
+        fetched = self.app.projects.get_by_name('new name')
+
+        # Assert
+        assert fetched.name == 'new name'
+        assert fetched.version == 2
+
     def test_can_add_custom_property(self):
         project = VampireFangStudyProject(name="project1")
         project.comment = "test"

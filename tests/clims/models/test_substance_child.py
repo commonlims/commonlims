@@ -1,6 +1,5 @@
 from __future__ import absolute_import
-
-from clims.models import Substance
+import pytest
 from tests.clims.models.test_substance import SubstanceTestCase
 
 
@@ -93,7 +92,7 @@ class TestSubstanceParentChild(SubstanceTestCase):
 
         do_asserts(child)
         # Assert the same is true if we fetch the child by name:
-        child = self.app.substances.to_wrapper(Substance.objects.get(name=child.name))
+        child = self.app.substances.get_by_name(child.name)
         do_asserts(child)
 
     def test_can_get_ancestry_from_substance(self):
@@ -110,6 +109,7 @@ class TestSubstanceParentChild(SubstanceTestCase):
             actual = {entry.id for entry in member.to_ancestry().items()}
             assert expected == actual
 
+    @pytest.mark.dev_edvard
     def test_children_retain_origin(self):
         original = self.create_gemstone()
         child = original.create_child()

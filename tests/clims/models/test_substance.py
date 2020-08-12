@@ -86,7 +86,6 @@ class SubstancePropertiesTestCase(TestCase):
         assert fetched_sample.cool == cool
         assert fetched_sample.erudite == erudite
 
-    @pytest.mark.dev_edvard
     def test_set_text_property_to_none__with_nullable_field__it_works(self):
         name = "sample-{}".format(random.randint(1, 1000000))
 
@@ -97,7 +96,6 @@ class SubstancePropertiesTestCase(TestCase):
         fetched_sample = self.app.substances.get(name=sample.name)
         assert fetched_sample.mox_feeling is None
 
-    @pytest.mark.dev_edvard
     def test_set_text_property_to_none__with_not_nullable_field__exception(self):
         name = "sample-{}".format(random.randint(1, 1000000))
 
@@ -145,6 +143,22 @@ class TestSubstance(SubstanceTestCase):
         actual = {(entry.version, entry.name) for entry in model.versions.all()}
         expected = {(1, original_name), (2, substance.name)}
         assert actual == expected
+
+    @pytest.mark.dev_edvard
+    def test_update_name__the_new_name_is_searchable(self):
+        # Arrange
+        substance = self.create_gemstone()
+        original_name = substance.name
+        new_name = original_name + '-UPDATED'
+        substance.name = new_name
+        substance.save()
+
+        # Act
+        fetched = self.app.substances.get_by_name(new_name)
+
+        # Assert
+        assert fetched.name == new_name
+        assert fetched.version == 2
 
     def test_names_are_unique(self):
         substance = self.create_gemstone()

@@ -18,25 +18,32 @@ class TestContainer(TestCase):
         self.register_extensible(HairSample)
         self.has_context()
 
-    def test_can_register_container(self):
-        self.register_extensible(HairSampleContainer)
-
     def test_can_create_container(self):
-        self.register_extensible(HairSampleContainer)
         container = HairSampleContainer(name="container1")
         container.save()
         Container.objects.get(name=container.name)  # Raises DoesNotExist if it wasn't created
 
     def test_name_is_unique(self):
-        self.register_extensible(HairSampleContainer)
         container = HairSampleContainer(name="container1")
         container.save()
         container2 = HairSampleContainer(name=container.name)
         with pytest.raises(IntegrityError):
             container2.save()
 
+    def test_rename__the_new_name_is_searchable(self):
+        # Arrange
+        container = self.create_container(HairSampleContainer, name='container1')
+        container.name = 'new name'
+        container.save()
+
+        # Act
+        fetched = self.app.containers.get_by_name('new name')
+
+        # Assert
+        assert fetched.name == 'new name'
+        assert fetched.version == 2
+
     def test_can_add_custom_property(self):
-        self.register_extensible(HairSampleContainer)
         container = HairSampleContainer(name="container1")
         container.comment = "test"
         container.save()
@@ -45,9 +52,6 @@ class TestContainer(TestCase):
         assert container.comment == container_fetched_again.comment
 
     def test_can_add_sample(self):
-        self.register_extensible(HairSampleContainer)
-        self.register_extensible(HairSample)
-
         sample = HairSample(name="sample1")
         sample.length = 10
         sample.width = 20
@@ -82,15 +86,13 @@ class TestContainer(TestCase):
                     'A:2', 'B:2', 'C:2', 'D:2', 'E:2'])
 
     def test_can_address_plate_with_zero_based_row_col(self):
-        self.register_extensible(HairSampleContainer)
-        self.register_extensible(HairSample)
-
         container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
 
         container["A:1"] = HairSample(name="sample-{}".format(container.name))
         container.save()
         assert container[(0, 0)] == container["A:1"]
 
+    @pytest.mark.dev_edvard
     def test_can_add_samples_without_location(self):
         # Ensure one can just append directly to the container, like if it were a list
         # The order is specific to the particular container being used, but since
@@ -109,6 +111,8 @@ class TestContainer(TestCase):
 
         container_fresh = self.app.containers.get_by_name(container.name)
         assert container_fresh["A:1"].id == in_original_order[0].id
+        assert len(list(container.contents)) == 2
+        assert container["B:1"].id == in_original_order[1].id
 
     def test_can_output_default_string_info(self):
         # One should be able to get a detailed text version of the container for debugging
