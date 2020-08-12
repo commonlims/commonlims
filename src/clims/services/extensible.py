@@ -427,6 +427,7 @@ class ExtensibleBase(ExtensibleCore):
             self._archetype.versions.add(new_version)
             self._property_bag.save(new_version)
             self._wrapped_version = new_version
+            self._archetype.save()
 
         self._save_custom(creating)
 
