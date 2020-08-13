@@ -5,6 +5,9 @@ from django.conf import urls
 
 from .endpoints.work_batch import WorkBatchEndpoint
 
+from .endpoints.step import StepEndpoint
+from .endpoints.trigger_script import TriggerScriptEndpoint
+
 from .endpoints.substance import SubstanceEndpoint
 from .endpoints.substance_details import SubstanceDetailsEndpoint
 from .endpoints.substance_property import SubstancePropertyEndpoint
@@ -68,6 +71,14 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/tasks/$',
         TasksEndpoint.as_view(),
         name='clims-api-0-tasks'),
+    # Steps
+    url(r'^organizations/{org}/steps/$',
+        StepEndpoint.as_view(),
+        name='clims-api-0-steps'),
+    url(r'^organizations/{org}/scripts/$',
+        TriggerScriptEndpoint.as_view(),
+        name='clims-api-0-script-trigger'),
+
     # Substances
     url(r'^substances/(?P<substance_id>[^\/]+)/$',
         SubstanceDetailsEndpoint.as_view(),
