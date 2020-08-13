@@ -52,6 +52,10 @@ class ContainerIndex(object):
             return cls.from_string(container, key)
         elif isinstance(key, tuple):
             return cls(container, *key)
+        elif issubclass(type(key), ContainerIndex):
+            # This has to be refactored in case there is problem
+            assert container == key.container, "containers are not matching in container index"
+            return key
         else:
             raise NotImplementedError("Can't use {} as an index".format(type(key)))
 

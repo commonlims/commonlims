@@ -86,10 +86,24 @@ class TestContainer(TestCase):
         self.register_extensible(HairSample)
 
         container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
+        sample = HairSample(name="sample-{}".format(container.name))
 
-        container["A:1"] = HairSample(name="sample-{}".format(container.name))
+        container["A:1"] = sample
         container.save()
         assert container[(0, 0)] == container["A:1"]
+        assert container["A:1"] == sample
+
+    @pytest.mark.dev_edvard
+    def test_can_address_plate_with_plate_index(self):
+        self.register_extensible(HairSampleContainer)
+        self.register_extensible(HairSample)
+
+        container = HairSampleContainer(name="cont-{}".format(uuid.uuid4()))
+        sample = HairSample(name="sample-{}".format(container.name))
+
+        container["A:1"] = sample
+        container.save()
+        assert container[sample.location] == sample
 
     def test_can_add_samples_without_location(self):
         # Ensure one can just append directly to the container, like if it were a list
