@@ -60,6 +60,32 @@ describe('shared action creators', () => {
       id: 'id',
     });
   });
+
+  it('should create get request', () => {
+    const action = resourceActionCreators.acGetRequest(RESOURCE_NAME)('id');
+    expect(action).toEqual({
+      id: 'id',
+      type: 'GET_RESOURCE_NAME_REQUEST',
+    });
+  });
+
+  it('should create get success', () => {
+    const fetchedEntry = {name: 'sample1'};
+    const action = resourceActionCreators.acGetSuccess(RESOURCE_NAME)(fetchedEntry);
+    expect(action).toEqual({
+      entry: fetchedEntry,
+      type: 'GET_RESOURCE_NAME_SUCCESS',
+    });
+  });
+
+  it('should create get failure', () => {
+    const action = resourceActionCreators.acGetFailure(RESOURCE_NAME)(500, 'My bad');
+    expect(action).toEqual({
+      message: 'My bad',
+      statusCode: 500,
+      type: 'GET_RESOURCE_NAME_FAILURE',
+    });
+  });
 });
 
 const middlewares = [thunk];
@@ -74,7 +100,7 @@ describe('shared async actions', () => {
     moxios.uninstall();
   });
 
-  it('handles 200', () => {
+  it('can get a list', () => {
     const store = mockStore({});
     const url = '/url?search=search&cursor=cursor';
 
@@ -91,7 +117,7 @@ describe('shared async actions', () => {
     });
 
     const actionCreator = resourceActionCreators.acGetList(RESOURCE_NAME, url);
-    const action = actionCreator('search', 'groupBy', 'cursor');
+    const action = actionCreator('org', 'search', 'groupBy', 'cursor');
     const expectedActions = [
       {
         type: 'GET_RESOURCE_NAME_LIST_REQUEST',
@@ -111,4 +137,38 @@ describe('shared async actions', () => {
       expect(moxios.requests.count()).toEqual(1);
     });
   }, 500);
+
+  it('can get a single entry', () => {
+    const store = mockStore({});
+    const url = '/url?search=search&cursor=cursor';
+
+    // NOTE: Using this instead of stubRequest as it's easier to debug
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {some: 'object'},
+        headers: {
+          link: 'link',
+        },
+      });
+    });
+
+    const actionCreator = resourceActionCreators.acGet(RESOURCE_NAME, url);
+    const action = actionCreator();
+    const expectedActions = [
+      {
+        type: 'GET_RESOURCE_NAME_REQUEST',
+      },
+      {
+        type: 'GET_RESOURCE_NAME_SUCCESS',
+        entry: {some: 'object'},
+      },
+    ];
+
+    return store.dispatch(action).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(moxios.requests.count()).toEqual(1);
+    });
+  });
 });

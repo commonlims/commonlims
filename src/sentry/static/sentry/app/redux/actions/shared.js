@@ -26,10 +26,11 @@ const acGetListSuccess = (resource) =>
 const acGetListFailure = (resource) =>
   makeActionCreator(`GET_${resource}_LIST_FAILURE`, 'statusCode', 'message');
 
-const acGetList = (resource, url) => {
-  return (search, groupBy, cursor) => (dispatch) => {
+const acGetList = (resource, urlTemplate) => {
+  return (org, search, groupBy, cursor) => (dispatch) => {
     dispatch(acGetListRequest(resource)(search, groupBy, cursor));
 
+    const url = urlTemplate.replace('{org}', org.slug);
     const config = {
       params: {
         search,
@@ -64,7 +65,6 @@ const acCreateFailure = (resource) =>
 
 const acCreate = (resource, urlTemplate) => {
   return (org, data, redirect) => (dispatch) => {
-    console.log('HERE', data, data['tasks']);
     dispatch(acCreateRequest(resource)());
 
     const api = new Client();
@@ -87,6 +87,27 @@ const acCreate = (resource, urlTemplate) => {
   };
 };
 
+////////////////////////
+// Fetch single resource
+const acGetRequest = (resource) => makeActionCreator(`GET_${resource}_REQUEST`, 'id');
+
+const acGetSuccess = (resource) => makeActionCreator(`GET_${resource}_SUCCESS`, 'entry');
+
+const acGetFailure = (resource) =>
+  makeActionCreator(`GET_${resource}_FAILURE`, 'statusCode', 'message');
+
+const acGet = (resource, urlTemplate) => {
+  return (id) => (dispatch) => {
+    dispatch(acGetRequest(resource)(id));
+
+    const url = urlTemplate.replace('{id}', id);
+    return axios
+      .get(url)
+      .then((res) => dispatch(acGetSuccess(resource)(res.data)))
+      .catch((err) => dispatch(acGetFailure(resource)(err)));
+  };
+};
+
 export const resourceActionCreators = {
   acGetList,
   acGetListRequest,
@@ -98,10 +119,14 @@ export const resourceActionCreators = {
   acCreateRequest,
   acCreateSuccess,
   acCreateFailure,
+  acGet,
+  acGetRequest,
+  acGetSuccess,
+  acGetFailure,
 };
 
 // Creates all actions required for a regular resource
-export const makeResourceActions = (resourceName, listUrl) => {
+export const makeResourceActions = (resourceName, listUrl, entryUrl) => {
   return {
     // Fetching a list
     getListRequest: acGetListRequest(resourceName),
@@ -118,5 +143,11 @@ export const makeResourceActions = (resourceName, listUrl) => {
     createRequest: acCreateRequest(resourceName),
     createSuccess: acCreateSuccess(resourceName),
     createFailure: acCreateFailure(resourceName),
+
+    // Get a single resource
+    get: acGet(resourceName, entryUrl),
+    getRequest: acGetRequest(resourceName),
+    getSuccess: acGetSuccess(resourceName),
+    getFailure: acGetFailure(resourceName),
   };
 };
