@@ -42,5 +42,5 @@ while ! nc -z localhost ${POSTGRES_PORT} </dev/null; do sleep 1; done
 echo "Waiting for postgres (${POSTGRES_TESTS_PORT}) to respond..."
 while ! nc -z localhost ${POSTGRES_TESTS_PORT} </dev/null; do sleep 1; done
 
-echo "--> Setting up Camunda"
-$DIR/.././middleware/camunda/setup.sh
+echo "--> Setting up Camunda (ignored for now)"
+#$DIR/.././middleware/camunda/setup.sh

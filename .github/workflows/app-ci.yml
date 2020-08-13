@@ -6,36 +6,6 @@ on: [push, pull_request]
 # TODO: Add acceptance tests (see the old travis file for reference)
 
 jobs:
-  server-unittests:
-    # In addition to unit tests, checks code quality and does a vulnerability scan
-    # (TODO, scan temporarily disabled)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [2.7]
-    steps:
-    - name: Install apt packages
-      run: |
-          sudo apt-get update
-          sudo apt-get install libxmlsec1-dev
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v1
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: setup clims
-      run: make install-clims-dev
-    - name: lint python
-      run: make lint-python
-    - name: test
-      run: make test-python-unit
-
   server-integrationtests:
     # Python tests that require the entire stack (integration). Note that currently these
     # are all the tests for simplicity, but pure unit tests should be moved to
@@ -68,32 +38,3 @@ jobs:
       run: |
           scripts/build-install-docker
           make middleware
-    - name: test
-      run: make test-python-integration
-      env:
-        DB: postgres
-        CLIMS_SKIP_BACKEND_VALIDATION: 1
-
-  frontend-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '10.16.0'  # TODO: Use .nvmrc
-    - name: install yarn
-      run: make install-yarn-pkgs
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
-    - uses: actions/cache@v1
-      id: yarn-cache
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - name: linting javascript
-      run: make lint-js
-    - name: testing javascript
-      run: make test-js
