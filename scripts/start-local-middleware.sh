@@ -4,7 +4,6 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-export CAMUNDA_VERSION=7.12.0
 
 # Even though we're using docker, we're currently executing some commands via the exposed
 # ports on the host. To make sure we're not using the default postgres instance, we connect
@@ -43,4 +42,4 @@ echo "Waiting for postgres (${POSTGRES_TESTS_PORT}) to respond..."
 while ! nc -z localhost ${POSTGRES_TESTS_PORT} </dev/null; do sleep 1; done
 
 echo "--> Setting up Camunda (ignored for now)"
-#$DIR/.././middleware/camunda/setup.sh
+bash -x $DIR/.././middleware/camunda/setup.sh
