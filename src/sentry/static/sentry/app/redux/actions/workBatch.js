@@ -1,4 +1,4 @@
-import axios from 'axios';
+import {makeResourceActions} from './shared';
 
 export const WORK_BATCHES_GET_REQUEST = 'WORK_BATCHES_GET_REQUEST';
 export const WORK_BATCHES_GET_SUCCESS = 'WORK_BATCHES_GET_SUCCESS';
