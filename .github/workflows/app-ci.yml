@@ -40,7 +40,7 @@ jobs:
     # Python tests that require the entire stack (integration). Note that currently these
     # are all the tests for simplicity, but pure unit tests should be moved to
     # another job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         python-version: [2.7]
@@ -49,6 +49,9 @@ jobs:
       run: |
           sudo apt-get update
           sudo apt-get install libxmlsec1-dev
+    - name: Remove ipv6 localhost setting
+      run: |
+          sudo sed -i 's/::1     localhost ip6-localhost ip6-loopback/::1 ip6-localhost ip6-loopback/g' /etc/hosts
     - uses: actions/checkout@v2
     - uses: actions/cache@v1
       with:
@@ -68,6 +71,8 @@ jobs:
       run: |
           scripts/build-install-docker
           make middleware
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v2
     - name: test
       run: make test-python-integration
       env:
