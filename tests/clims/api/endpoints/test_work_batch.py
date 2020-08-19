@@ -58,13 +58,9 @@ class WorkBatchEndpointTest(APITestCase):
         tasks = get_tasks()
         tasks = [t.id for t in tasks]
 
-        payload = {
-            "tasks": tasks,
-        }
-
         response = self.client.post(
             path=url,
-            data=json.dumps(payload),
+            data=json.dumps(tasks),
             content_type='application/json',
         )
         assert response.status_code == 201
