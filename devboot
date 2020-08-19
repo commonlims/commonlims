@@ -5,7 +5,6 @@
 #
 # It's not required to run this script if you want to specify node and python
 # versions in another way.
-
 if [ ! -d ~/.pyenv ]; then
     echo "Installing pyenv..."
     git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -30,16 +29,24 @@ else
     echo "pyenv-virtualenv already exists"
 fi
 
+CLIMS_PY2_VERSION=2.7.18
+CLIMS_PY3_VERSION=3.8.5
 
-if [ ! -d ~/.pyenv/versions/2.7.18 ]; then
-    echo "Installing Python 2.7.18..."
-    pyenv install 2.7.18
-fi
+for version in $CLIMS_PY2_VERSION $CLIMS_PY3_VERSION; do
+  major=${version%.*.*};
+  echo $version
+  if [ ! -d ~/.pyenv/versions/${version} ]; then
+      echo "Installing Python ${version}..."
+      pyenv install ${version}
+  fi
 
-if [ ! -d ~/.pyenv/versions/clims2 ]; then
-    echo "Creating virtualenv ..."
-    pyenv virtualenv 2.7.18 clims2
-fi
+  name=clims${major}
+  if [ ! -d ~/.pyenv/versions/${name} ]; then
+      echo "Creating ${name} virtualenv ..."
+      pyenv virtualenv ${version} ${name}
+  fi
+done
+
 
 pyenv activate clims2
 
