@@ -108,7 +108,7 @@ cmdclass = {
 
 
 setup(
-    name='sentry',
+    name='clims',
     version=VERSION,
     author='https://github.com/commonlims/commonlims/AUTHORS',
     author_email='https://gitter.im/commonlims/community',
