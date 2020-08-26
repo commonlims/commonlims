@@ -1,9 +1,10 @@
 from __future__ import absolute_import, print_function
 from six import iteritems
 from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
+from clims.handlers import Handler
 
 
-class Step:
+class Step(Handler):
     """
     Configuration classes in plugins must inherit from this class. by
     doing so, the trigger points (hooks) will be recognized in UI.
