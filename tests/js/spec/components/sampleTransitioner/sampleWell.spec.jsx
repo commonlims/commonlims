@@ -88,7 +88,6 @@ describe('SampleWell', function () {
     expect(td.hasClass('sample-well')).toBe(true);
     expect(td.hasClass('selected')).toBe(false);
     expect(td.hasClass('highlighted')).toBe(false);
-    expect(td.hasClass('highlighted-background')).toBe(true);
   });
 
   it('invokes click handler on click', () => {
