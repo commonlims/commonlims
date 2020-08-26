@@ -266,14 +266,15 @@ class PluginManager(object):
                     "why the plugin can not load.".format(
                         plugin_registration.name, plugin_registration.version))
 
-        # Registers handlers. Handlers must be in a module directly below
-        # the plugin's module:
-        mod = self.get_plugin_module(plugin, 'handlers')
-        if not mod:
-            logger.info("No handlers module found in plugin '{}'".format(plugin))
-        else:
-            logger.info("Loading all handlers in plugin '{}'".format(plugin.get_name_and_version()))
-            self.handlers.load_handlers(mod)
+        # Registers handlers. Handlers can be defined in the submodule `handlers` or `workflows`
+        # directly below the plugin (TODO: Allow it to be defined anywhere)
+        for module_name in ["handlers", "workflows"]:
+            mod = self.get_plugin_module(plugin, module_name)
+            if not mod:
+                logger.info("No handlers module found in plugin '{}'".format(plugin))
+            else:
+                logger.info("Loading all handlers in plugin '{}'".format(plugin.get_name_and_version()))
+                self.handlers.load_handlers(mod)
 
     def init_plugin_instance(plugin):
         # TODO: Call this when the plugin is run on load time (review requirements first)
