@@ -23,10 +23,6 @@ class WorkflowBase(ExternalExtensibleBase):
     require_name = False
     assign_substances_rather_than_containers = True
 
-    # Override this to add tasks from this workflow that should register for available work.
-    # These will show up in the available work view and can be used to form a WorkBatch
-    available_work = []
-
     def __init__(self, **kwargs):
         super(WorkflowBase, self).__init__(**kwargs)
         self._presets = dict()
