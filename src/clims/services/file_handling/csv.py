@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 import six
 from collections import namedtuple
+from six.moves import map
 
 
 class Csv:

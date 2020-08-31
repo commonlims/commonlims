@@ -9,7 +9,8 @@ exclude: >
         ^src/sentry/static/sentry/vendor/|
         ^tests/sentry/lang/javascript/example-project/|
         ^src/.*/locale/|
-        ^src/sentry/data/
+        ^src/sentry/data/|
+        ^src/clims/legacy/
     )
 repos:
 # TODO: Enable black when using python3
