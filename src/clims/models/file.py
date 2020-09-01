@@ -167,7 +167,7 @@ class MultiFormatFile(object):
 
     def as_csv(self):
         self._validate_file_path()
-        from clims.services.file_service.csv import Csv
+        from clims.services.file_handling.csv import Csv
         return Csv(self.file_path, file_name=self.file_context.file_name)
 
     def _validate_file_path(self):

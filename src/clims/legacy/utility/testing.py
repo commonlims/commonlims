@@ -161,7 +161,7 @@ class DilutionTestDataHelper:
 def mock_context(**kwargs):
     """Creates a mock with the service provided as keyword arguments, filling the rest with MagicMock"""
     # TODO: Needs to be updated when the signature is updated. Fix that (or use a better approach)
-    for arg in ["session", "artifact_service", "file_service", "current_user", "step_logger_service",
+    for arg in ["session", "artifact_service", "file_handling", "current_user", "step_logger_service",
                 "step_repo", "legacy_service", "dilution_service", "process_service",
                 "upload_file_service", "validation_service"]:
         kwargs.setdefault(arg, MagicMock())
@@ -206,7 +206,7 @@ class TestExtensionContext(object):
                 for call in self.context.validation_service.handle_single_validation.call_args_list]
 
     def count_logged_validation_results_of_type(self, t):
-        return len([result for result in self.logged_validation_results() if type(result) == t])
+        return len([result for result in self.logged_validation_results() if isinstance(result, t)])
 
     def count_logged_validation_results_with_msg(self, msg):
         return len([result for result in self.logged_validation_results()

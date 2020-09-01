@@ -4,6 +4,7 @@ import six
 import re
 import logging
 from datetime import datetime
+from uuid import uuid4
 
 from clims import utils
 from clims.models.substance import Substance, SubstanceVersion
@@ -13,13 +14,12 @@ from clims.models.file import MultiFormatFile
 from clims.services.extensible import (ExtensibleBase, HasLocationMixin)
 from django.db import transaction
 from django.db.models import QuerySet
-from uuid import uuid4
-from sentry.models.file import File
 from clims.models.file import OrganizationFile
 from clims.handlers import SubstancesSubmissionHandler
 from clims.handlers import SubstancesValidationHandler
 from clims.services.base_extensible_service import BaseExtensibleService
 from clims.services.base_extensible_service import BaseQueryBuilder
+from clims.services.file_handling.file_service import FileService
 from clims.models.base import ResultIterator
 from clims.handlers import context_store
 
@@ -363,9 +363,11 @@ class SubstanceService(BaseExtensibleService):
                 non_error_validation_issues.extend(handler.validation_issues)
 
         logger.info('substance_batch_import.start')
-
-        org_file = self._create_organization_file(file_stream, full_path,
-                context_store.current.organization.id)
+        file_service = FileService()
+        org_file = file_service.create_organization_file(
+            file_stream, full_path,
+            context_store.current.organization.id,
+            file_type='substance-batch-file')
 
         with MultiFormatFile.from_organization_file(org_file) as wrapped_org_file:
             self._app.plugins.handlers.handle(
@@ -373,30 +375,6 @@ class SubstanceService(BaseExtensibleService):
                 multi_format_file=wrapped_org_file)
 
         return org_file, non_error_validation_issues
-
-    def _create_organization_file(self, file_stream, full_path, organization_id):
-        """
-        Uploads file to the server and wrap it in a organization file
-        """
-        name = full_path.rsplit('/', 1)[-1]
-        if FILENAME_RE.search(name):
-            raise FileNameValidationError('File name must not contain special whitespace characters')
-
-        file_model = File.objects.create(
-            name=name,
-            type='substance-batch-file',
-            headers=list(),
-        )
-
-        file_stream.seek(0)
-        file_model.putfile(file_stream, logger=logger)
-
-        org_file = OrganizationFile.objects.create(
-            organization_id=organization_id,
-            file=file_model,
-            name=full_path,
-        )
-        return org_file
 
     def create_submission_demo(self, file_type):
         """
