@@ -1,7 +1,8 @@
 from __future__ import absolute_import
-
+import pytest
 from clims.models import Substance
 from tests.clims.models.test_substance import SubstanceTestCase
+from tests.fixtures.plugins.gemstones_inc.models import GemstoneContainer
 
 
 class TestSubstanceParentChild(SubstanceTestCase):
@@ -17,6 +18,23 @@ class TestSubstanceParentChild(SubstanceTestCase):
     def test_original_substance_has_no_parent(self):
         sample = self.create_gemstone()
         assert len(sample.parents) == 0
+
+    @pytest.mark.dev_edvard
+    def test_can_add_child_to_new_container(self):
+        # Arrange
+        parent = self.create_gemstone(name='parent')
+        parent_container = self.create_container(GemstoneContainer, name='parent_container')
+        parent_container.append(parent)
+        parent_container.save()
+        assert parent.location is not None
+        child = parent.create_child(name='child')
+        child_container = self.create_container(GemstoneContainer, name='child-container')
+        child_container.append(child)
+        child_container.save()
+        contents = list(child_container.contents)
+        print(contents[0].name)
+        print(child_container._locatables)
+        assert child.location is not None
 
     def test_children_get_increased_depth(self):
         original = self.create_gemstone()
