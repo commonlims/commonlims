@@ -151,11 +151,22 @@ class HasLocationMixin(object):
         self._new_location = (container, x, y, z)
         self.is_dirty = True
 
+    def _reset_previous_locations(self):
+        # reset "current" flag on previous location instances
+        previous_locations = SubstanceLocation.objects.filter(
+            substance=self._wrapped_version.archetype,
+            current=True,
+        )
+        for loc in previous_locations:
+            loc.current = False
+            loc.save()
+
     def _save_location(self):
         """
         Saves the current location. Needs to be called in any class that uses this mixin.
         """
         if self._new_location:
+            self._reset_previous_locations()
             container, x, y, z = self._new_location
             new_location = SubstanceLocation(
                 container=container._wrapped_version.archetype,
