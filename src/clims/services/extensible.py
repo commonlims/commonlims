@@ -149,6 +149,7 @@ class HasLocationMixin(object):
         # in the end
         x, y, z = index
         self._new_location = (container, x, y, z)
+        self.is_dirty = True
 
     def _save_location(self):
         """
@@ -430,6 +431,7 @@ class ExtensibleBase(ExtensibleCore):
             self._archetype.save()
 
         self._save_custom(creating)
+        self.is_dirty = False
 
     @property
     def id(self):
