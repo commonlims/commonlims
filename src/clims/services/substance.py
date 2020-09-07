@@ -238,7 +238,9 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
             origins = self._get_origins()
             self._archetype.origins.add(*origins)
 
-        self._save_location()
+        # TODO: The is_dirty flag is currently only used here
+        if self.is_dirty:
+            self._save_location()
 
     @transaction.atomic
     def create_child(self, name=None, **kwargs):

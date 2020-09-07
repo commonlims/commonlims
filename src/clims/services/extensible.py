@@ -135,6 +135,46 @@ class ExtensibleService(object):
         return extensible_type
 
 
+class Location(object):
+    """
+    Encapsulate equal operation and unpacking of a simple working
+    unit of Location
+    """
+
+    def __init__(self, container, x, y, z):
+        self.container = container
+        self.x = x
+        self.y = y
+        self.z = z
+        self.gen = self.mygen()
+
+    def __eq__(self, other):
+        return other.container.id == self.container.id and \
+            other.x == self.x and other.y == self.y and other.z == self.z
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def mygen(self):
+        yield self.container
+        yield self.x
+        yield self.y
+        yield self.z
+
+    def next(self):
+        return self.__next__()
+
+    def __next__(self):
+        try:
+            return next(self.gen)
+        except StopIteration:
+            self.gen = self.mygen()
+            raise StopIteration
+
+    def __iter__(self):
+        return self
+
+
 class HasLocationMixin(object):
     """
     A mixin for extensibles that have a location
@@ -148,8 +188,12 @@ class HasLocationMixin(object):
         # NOTE: This only saves the current location to the list of items we want to apply
         # in the end
         x, y, z = index
-        self._new_location = (container, x, y, z)
-        self.is_dirty = True
+        trial_new_location = Location(container, x, y, z)
+        has_new_location = not self.location or self.location != trial_new_location
+        self._new_location = trial_new_location if has_new_location else None
+        if has_new_location:
+            # TODO: is dirty flag must be fully implemented
+            self.is_dirty = True
 
     def _reset_previous_locations(self):
         # reset "current" flag on previous location instances
