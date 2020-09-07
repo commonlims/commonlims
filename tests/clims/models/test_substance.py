@@ -86,7 +86,6 @@ class SubstancePropertiesTestCase(TestCase):
         assert fetched_sample.cool == cool
         assert fetched_sample.erudite == erudite
 
-    @pytest.mark.dev_edvard
     def test_set_text_property_to_none__with_nullable_field__it_works(self):
         name = "sample-{}".format(random.randint(1, 1000000))
 
@@ -97,7 +96,6 @@ class SubstancePropertiesTestCase(TestCase):
         fetched_sample = self.app.substances.get(name=sample.name)
         assert fetched_sample.mox_feeling is None
 
-    @pytest.mark.dev_edvard
     def test_set_text_property_to_none__with_not_nullable_field__exception(self):
         name = "sample-{}".format(random.randint(1, 1000000))
 
@@ -146,7 +144,6 @@ class TestSubstance(SubstanceTestCase):
         expected = {(1, original_name), (2, substance.name)}
         assert actual == expected
 
-    @pytest.mark.dev_edvard
     def test_update_name__the_new_name_is_searchable(self):
         # Arrange
         substance = self.create_gemstone()
@@ -454,6 +451,15 @@ class TestSubstance(SubstanceTestCase):
         #       Then it would be enough to check first.location == "a1" and we could return
         #       this directly to the frontend
         assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)
+
+    @pytest.mark.dev_edvard
+    def test_location_is_set_twice__location_is_still_accessible(self):
+        container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
+        first = container["a1"]
+        new_position = (0, 0, 0)
+        first.move(container, new_position)
+        first.save()
+        assert first.location is not None
 
     def test_with_no_display_name__default_display_name_is_shown(self):
         self.register_extensible(QuirkSample)
