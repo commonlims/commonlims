@@ -10,13 +10,15 @@ from clims.services.substance import SubstanceBase
 from clims.services.extensible import FloatField
 from clims.services.extensible import TextField
 from django.db import IntegrityError
-from tests.fixtures.plugins.gemstones_inc.models import GemstoneSample, GemstoneContainer
+from tests.fixtures.plugins.gemstones_inc.models import \
+    GemstoneSample, GemstoneContainer, GemstoneProject
 
 
 class SubstanceTestCase(TestCase):
     # Expose these types to the testcase so imports are not required
     GemstoneSample = GemstoneSample
     GemstoneContainer = GemstoneContainer
+    GemstoneProject = GemstoneProject
 
     def setUp(self):
         self.register_extensible(GemstoneSample)
@@ -27,6 +29,9 @@ class SubstanceTestCase(TestCase):
 
     def create_gemstone_container(self, *args, **kwargs):
         return self.create_container(GemstoneContainer, *args, **kwargs)
+
+    def create_gemstone_project(self, *args, **kwargs):
+        return self.create_clims_project(GemstoneProject, *args, **kwargs)
 
     def register_gemstone_type(self):
         return self.register_extensible(GemstoneSample)
