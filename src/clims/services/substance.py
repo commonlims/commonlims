@@ -241,7 +241,7 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         self._save_location()
 
     @transaction.atomic
-    def create_child(self, name=None, **kwargs):
+    def create_child(self, name=None, project=None, **kwargs):
         """
         Creates a child from this substance, giving it a name. If name is not supplied it
         will get a unique name based on the name of the parent.
@@ -299,7 +299,14 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
             prop.save()
             version.properties.add(prop)
 
-        return self._app.substances.to_wrapper(child)
+        # Handle project
+        child_realization = self._app.substances.to_wrapper(child)
+        child_project = project or self.project
+        if child_project:
+            child_realization.project = child_project
+            child_realization.save()
+
+        return child_realization
 
 
 class SubstanceService(BaseExtensibleService):
