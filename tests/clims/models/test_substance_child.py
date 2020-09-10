@@ -19,9 +19,7 @@ class TestSubstanceParentChild(SubstanceTestCase):
         sample = self.create_gemstone()
         assert len(sample.parents) == 0
 
-    @pytest.mark.dev_edvard
     def test_can_add_child_to_new_container(self):
-        # Arrange
         parent = self.create_gemstone(name='parent')
         parent_container = self.create_container(GemstoneContainer, name='parent_container')
         parent_container.append(parent)
@@ -31,10 +29,26 @@ class TestSubstanceParentChild(SubstanceTestCase):
         child_container = self.create_container(GemstoneContainer, name='child-container')
         child_container.append(child)
         child_container.save()
-        contents = list(child_container.contents)
-        print(contents[0].name)
-        print(child_container._locatables)
         assert child.location is not None
+
+    @pytest.mark.dev_edvard
+    def test__project_is_included_by_default(self):
+        parent_project = self.create_gemstone_project(continent='europe')
+        parent = self.create_gemstone(name='parent', project=parent_project)
+        child = parent.create_child()
+        assert child.project.continent == 'europe'
+
+    def test__project_added_as_input__default_is_overridden(self):
+        new_project = self.create_gemstone_project(continent='asia')
+        parent_project = self.create_gemstone_project(continent='europe')
+        parent = self.create_gemstone(name='parent', project=parent_project)
+        child = parent.create_child(project=new_project)
+        assert child.project.continent == 'asia'
+
+    def test__parent_has_no_project__child_has_no_project(self):
+        parent = self.create_gemstone(name='parent')
+        child = parent.create_child()
+        assert child.project is None
 
     def test_children_get_increased_depth(self):
         original = self.create_gemstone()
