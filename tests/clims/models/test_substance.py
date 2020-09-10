@@ -457,14 +457,35 @@ class TestSubstance(SubstanceTestCase):
         #       this directly to the frontend
         assert (first.location.x, first.location.y, first.location.z) == (0, 0, 0)
 
-    @pytest.mark.dev_edvard
     def test_location_is_set_twice__location_is_still_accessible(self):
+        # This test was created after a bugfix
         container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
         first = container["a1"]
-        new_position = (0, 0, 0)
+        new_position = (0, 1, 0)
         first.move(container, new_position)
         first.save()
         assert first.location is not None
+
+    @pytest.mark.dev_edvard
+    def test_location_changed_after_a_fetch__update_is_ok(self):
+        container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
+        first = container["a1"]
+        fetched = self.app.substances.get_by_name(first.name)
+        new_position = (0, 1, 0)
+        fetched.move(container, new_position)
+        fetched.save()
+        assert str(fetched.location) == 'B:1'
+
+    def test_set_same_location_twice__unique_location_entry_in_db(self):
+        sample = self.create_gemstone()
+        container = self.create_gemstone_container()
+        new_position = (0, 0, 0)
+        sample.move(container, new_position)
+        sample.save()
+        sample.move(container, new_position)
+        sample.save()
+        locations = sample._archetype.locations.filter()
+        assert len(locations) == 1
 
     def test_with_no_display_name__default_display_name_is_shown(self):
         self.register_extensible(QuirkSample)
