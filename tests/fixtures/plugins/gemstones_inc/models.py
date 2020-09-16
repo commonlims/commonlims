@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from clims.services import (SubstanceBase, ProjectBase, TextField, IntField, JsonField, BoolField)
+from clims.services import (SubstanceBase, ProjectBase, TextField, IntField, JsonField, BoolField, FloatField)
 from clims.services import PlateBase
 
 
@@ -12,6 +12,7 @@ class GemstoneSample(SubstanceBase):
     color = TextField()
     index = IntField()
     weight = IntField()
+    volume = FloatField()
     payload = JsonField()
     has_something = BoolField()
 

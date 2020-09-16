@@ -262,10 +262,19 @@ class ExtensibleBaseField(object):
         # TODO-simple: Rename prop_name to simply name
         return self.prop_name
 
+    def validate_numeric_zero(self, value, fn):
+        # None and zero are valid numerical non-values
+        if not value and value is False:
+            raise ExtensibleTypeValidationError(
+                "Value can not be interpreted as '{}'".format(fn.__name__))
+
     def validate_with_casting(self, value, fn):
+        # None, zero or False values has to be tested specifically for each type!
+        if not value:
+            return
         valid = True
         try:
-            cast = fn(value) if value else None
+            cast = fn(value)
             if cast != value:
                 valid = False
         except ValueError:
@@ -655,6 +664,7 @@ class DjangoBackedObjectPropertyBag(object):
 
 class IntField(ExtensibleBaseField):
     def validate(self, prop_type, value):
+        self.validate_numeric_zero(value, int)
         self.validate_with_casting(value, int)
 
     @property
@@ -679,6 +689,7 @@ class BoolField(ExtensibleBaseField):
 
 class FloatField(ExtensibleBaseField):
     def validate(self, prop_type, value):
+        self.validate_numeric_zero(value, float)
         self.validate_with_casting(value, float)
 
     @property
