@@ -25,6 +25,7 @@ class SubstanceTestCase(TestCase):
         self.register_extensible(GemstoneContainer)
 
     def create_gemstone(self, *args, **kwargs):
+        self.user
         return self.create_substance(GemstoneSample, *args, **kwargs)
 
     def create_gemstone_container(self, *args, **kwargs):
@@ -347,6 +348,25 @@ class TestSubstance(SubstanceTestCase):
     def test_assigning_int_to_float_field_succeeds(self):
         sample = self.create_gemstone(color='red')
         sample.weight = 10
+
+    @pytest.mark.dev_edvard
+    def test_assign_zero_to_int_field_succeeds(self):
+        sample = self.create_gemstone()
+        sample.weight = 0
+
+    def test_assign_zero_to_float_field_succeeds(self):
+        sample = self.create_gemstone()
+        sample.volume = 0
+
+    def test_assign_false_to_int_field_fails(self):
+        sample = self.create_gemstone()
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.weight = False
+
+    def test_assign_false_to_float_field_fails(self):
+        sample = self.create_gemstone()
+        with pytest.raises(ExtensibleTypeValidationError):
+            sample.volume = False
 
     def test_assigning_float_to_int_field_succeeds_if_not_lossy(self):
         sample = self.create_gemstone(color='red')
