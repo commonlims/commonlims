@@ -16,6 +16,11 @@ import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransiti
 import WorkBatchHeader from './header';
 
 class WorkBatchDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {selectedTab: props.workBatch.tabs[0]};
+  }
+
   getTitle() {
     return this.props.workBatch.name;
   }
@@ -37,44 +42,26 @@ class WorkBatchDetails extends React.Component {
   }
 
   renderTabComponent() {
-    const tab = {};
-    // TODO: Quick hack. This will be revisited in a commit that's soon-to-come
-    tab.id = 'samples';
-    if (tab.id == 'samples') {
+    if (this.state.selectedTab.type == 'Transition') {
       return <SampleTransitioner workBatch={this.props.workBatch} />;
-    } else if (tab.id == 'details') {
-      return <WorkBatchDetailsFields workBatch={this.state.workBatch} />;
-    } else if (tab.id == 'files') {
-      return <WorkBatchDetailsFiles workBatch={this.state.workBatch} />;
-    } else if (tab.id == 'activity') {
-      return <WorkBatchDetailsActivity workBatch={this.state.workBatch} />;
-    } else {
-      throw new Error('Unexpected tab id ' + tab.id);
+    } else if (this.state.selectedTab.type == 'Files') {
+      return <WorkBatchDetailsFiles workBatch={this.props.workBatch} />;
+    } else if (this.state.selectedTab.type == 'Comments') {
+      return <WorkBatchDetailsActivity workBatch={this.props.workBatch} />;
     }
-  }
-
-  activeTab() {
-    for (const tab of this.workBatch.tabs) {
-      if (tab.active) {
-        return tab;
-      }
-    }
-    throw new Error('No active tab found');
   }
 
   render() {
     return (
       <DocumentTitle title={this.getTitle()}>
         <div>
-          <WorkBatchHeader workBatch={this.props.workBatch} />
+          <WorkBatchHeader
+            selectedTab={this.state.selectedTab}
+            workBatch={this.props.workBatch}
+            tabSelected={(tab) => this.setState({selectedTab: tab})}
+          />
           <div className="work-batch-details-container">
             <div className="primary">{this.renderTabComponent()}</div>
-            <div className="secondary">
-              <div className="work-batch-todo-container">
-                <h6>Task list</h6>
-                {this.renderTodoItems()}
-              </div>
-            </div>
           </div>
         </div>
       </DocumentTitle>

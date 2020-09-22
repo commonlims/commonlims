@@ -25,24 +25,12 @@ const WorkBatchHeader = createReactClass({
 
   mixins: [ApiMixin, OrganizationState],
 
-  getMessage() {
-    const data = this.props.workBatch;
-    const metadata = data.metadata;
-    switch (data.type) {
-      case 'error':
-        return metadata.value;
-      case 'csp':
-        return metadata.message;
-      default:
-        return this.props.workBatch.culprit || '';
-    }
-  },
-
   buildLinks() {
     return this.props.workBatch.tabs.map((tab) => {
+      const active = tab.title == this.props.selectedTab.title;
       return (
-        <li className={tab.active ? 'active' : ''} key={tab.id}>
-          <a onClick={() => this.props.tabSelected(tab.id)}>{tab.title}</a>
+        <li className={active ? 'active' : ''} key={tab.title}>
+          <a onClick={() => this.props.tabSelected(tab)}>{tab.title}</a>
         </li>
       );
     });
