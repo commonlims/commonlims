@@ -215,6 +215,8 @@ class AssignmentError(Exception):
 class WorkflowService(object):
     AssignmentError = AssignmentError
 
+    WORKFLOW_ENGINE_CAMUNDA = "camunda"
+
     def __init__(self, app):
 
         self._app = app
@@ -224,8 +226,8 @@ class WorkflowService(object):
 
         # A dict of handlers that proxy an external workflow management system:
         self.handlers = {
-            "camunda": {
-                "key": "camunda",
+            self.WORKFLOW_ENGINE_CAMUNDA: {
+                "key": self.WORKFLOW_ENGINE_CAMUNDA,
                 "cls": CamundaWorkflow,
                 "handler": CamundaClient(self._app.settings.CAMUNDA_API_URL)
             }
@@ -562,8 +564,13 @@ class TaskDefinitionInfo(object):
 class ProcessTask(object):
     """Represents a single instance of a step running in a workflow process."""
 
-    def __init__(self, id, process_instance_id, provider_type,
-                 tracked_object_global_id, name):
+    def __init__(self,
+                 id,
+                 process_instance_id,
+                 provider_type,
+                 tracked_object_global_id,
+                 name,
+                 form_key):
         # TODO-simple: Also use a slash for global ids of e.g. substances
         self.id = "{}/{}".format(provider_type, id)
         self.process_instance_id = process_instance_id
@@ -573,6 +580,7 @@ class ProcessTask(object):
         self.tracked_object_global_id = tracked_object_global_id
         self.tracked_object = None
         self.name = name
+        self.form_key = form_key
 
     @property
     def tracked_object_category(self):
