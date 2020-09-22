@@ -36,26 +36,27 @@ class CamundaClient(object):
             self.start_workflow(workflow, item)
 
     def start_workflow(self, workflow, item):
+
         # Camunda expects a particular format:
         variables = {k: {"value": v} for k, v in workflow.variables.items()}
         json = {"businessKey": item.global_id, "variables": variables}
 
         url = self._url("process-definition/key/{}/start".format(
             workflow.get_full_name()))
+
         response = requests.post(url,
                                  json=json,
                                  headers={"Accept": "application/json"})
         json = response.json()
         logger.debug("Reply from Camunda [{}]: {}".format(
             response.status_code, json))
+
         if response.status_code == 200:
             return json
         else:
             raise UnexpectedHttpResponse(json["message"], response.status_code)
 
     def get_tasks_by_ids(self, task_ids):
-        """
-        """
         # TODO-perf: We must be able to fetch this in a batch call. Look into setting up
         # https://github.com/camunda/camunda-bpm-graphql (preferably) or direct DB access to resolve
         # this, as it's expected that these will be many calls
@@ -64,8 +65,14 @@ class CamundaClient(object):
         ret = list()
         for task_id in task_ids:
             task = self.api.task(id=task_id).get()
-            task = ProcessTask(task.json["id"], task.json["processInstanceId"],
-                               Workflow.BACKEND_CAMUNDA, None, task.json["name"])
+            json = task.json
+            task = ProcessTask(json["id"],
+                               json["processInstanceId"],
+                               Workflow.BACKEND_CAMUNDA,
+                               None,
+                               json["name"],
+                               json["formKey"])
+
             ret.append(task)
 
         self._add_tracked_object_id(ret)
@@ -106,8 +113,13 @@ class CamundaClient(object):
         for res in self.api.tasks().get(
                 taskDefinitionKey=task_definition_key,
                 processDefinitionKey=process_definition_key):
-            task = ProcessTask(res.json["id"], res.json["processInstanceId"],
-                               Workflow.BACKEND_CAMUNDA, None, res.json["name"])
+            json = res.json
+            task = ProcessTask(json["id"],
+                               json["processInstanceId"],
+                               Workflow.BACKEND_CAMUNDA,
+                               None,
+                               json["name"],
+                               json["formKey"])
             # TODO: In the demo data from Camunda, there is an entry that doesn't have a
             # processInstanceId for some reason. Filtering it out now. Can be removed when
             # the demo data isn't added.
