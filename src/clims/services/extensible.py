@@ -460,7 +460,7 @@ class ExtensibleBase(ExtensibleCore):
 
     @property
     def global_id(self):
-        return "{}-{}".format(self._archetype.__class__.__name__, self.id)
+        return self._archetype.global_id
 
     @transaction.atomic
     def save(self):
