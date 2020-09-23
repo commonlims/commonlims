@@ -139,6 +139,18 @@ class HandlerManager(object):
         if count == 0:
             raise RequiredHandlerNotFound("No handler that implements '{}' found".format(cls))
 
+    def init_by_name(self, handler_name, *args, **kwargs):
+        """
+        Initializes a handler implementation by full name.
+
+        Raises a `RequiredHandlerNotFound` if the handler wasn't found.
+        """
+        for impls in self.handlers.values():
+            for impl in impls:
+                if handler_name == "{}.{}".format(impl.__module__, impl.__name__):
+                    return impl(self._app, context_store.current, *args, **kwargs)
+        raise RequiredHandlerNotFound()
+
     def handle(self, cls, context, required, *args, **kwargs):
         """
         Runs all handlers registered for cls in sequence. *args are sent to the handler as arguments.

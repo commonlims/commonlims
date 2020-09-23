@@ -19,6 +19,10 @@ class ExtensibleModel(Model):
     # and auditing purposes.
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def global_id(self):
+        return "{}-{}".format(self.__class__.__name__, self.id)
+
     class Meta:
         abstract = True
 
