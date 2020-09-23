@@ -66,6 +66,7 @@ from .helpers import (
 )
 
 from clims.services import ApplicationService, ioc
+from clims.utils import UnexpectedLengthError
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 
@@ -495,6 +496,19 @@ class APITestCase(BaseTestCase, BaseAPITestCase):
         if org:
             kwargs["organization_slug"] = self.organization.slug
         return reverse(self.endpoint, kwargs=kwargs)
+
+    def wait_for_endpoint_list(self, url, expected_length, tries=3, delay_sec=0.5):
+        from retry import retry
+
+        @retry(UnexpectedLengthError, tries=tries, delay=delay_sec)
+        def get_list():
+            response = self.client.get(path=url)
+            if response.status_code != 200:
+                raise AssertionError("Didn't get status code 200 from endpoint")
+            if len(response.data) != expected_length:
+                raise UnexpectedLengthError()
+            return response
+        return get_list()
 
 
 class TwoFactorAPITestCase(APITestCase):
