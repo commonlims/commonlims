@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Usage: test-mark [mark]
+# Tests and watches only clims tests that have the specified mark
+
+watchmedo shell-command \
+--patterns="*.py" \
+--recursive \
+--drop \
+--ignore-directories \
+--command="make clean; clear; pytest ./tests/clims/ -m $1 --no-print-logs --log-level=WARN" .
