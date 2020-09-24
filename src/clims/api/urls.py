@@ -57,6 +57,11 @@ def url(endpoint, *args, **kwargs):
     return urls.url(fmt(endpoint), *args, **kwargs)
 
 
+def url2(pattern, cls):
+    # Returns a url when the cls has the name. Will eventually replace url
+    return url(pattern, cls.as_view(), name=cls.name)
+
+
 urlpatterns = patterns(
     '',
     # Workflow
