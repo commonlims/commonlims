@@ -29,7 +29,7 @@ export const getWorkBatchDetails = (org, id) => (dispatch) => {
 
   const data = {
     id: 22,
-    name: 'Data entry', // TODO: backend must set this when creating it
+    name: 'Fragment analyzer', // TODO: backend must set this when creating it
     // TODO: Not included in backend yet
     processDefinitionKey: 'clims.plugins.demo.dnaseq.workflows.sequence.SequenceSimple',
     handler: '', // TODO: This we can remove
@@ -39,6 +39,64 @@ export const getWorkBatchDetails = (org, id) => (dispatch) => {
     num_comments: 0,
     status: 0,
     organization: 1,
+    files: [
+      {
+        sha1: 'ea40a664346c0cb7d4326830d76b8ef468a512d7',
+        name: '108620_190321_FA_Sample_List.txt',
+        dateCreated: '2019-03-08T14:18:01.371Z',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          Description: 'Sample list',
+        },
+        id: '30',
+        size: 7566,
+      },
+      {
+        sha1: 'ea40a664346c0cb7d4326830d76b8ef468a512d7',
+        name: 'quality.csv',
+        dateCreated: '2019-03-06T14:32:04.056Z',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          Description: 'Quality table',
+        },
+        id: '20',
+        size: 7566,
+      },
+      {
+        sha1: 'ea40a664346c0cb7d4326830d76b8ef468a512d7',
+        name: 'PDF report',
+        dateCreated: '2019-03-06T14:32:04.056Z',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          Description: 'PDF report from the robot',
+        },
+        id: '20',
+        size: 7566,
+      },
+      {
+        sha1: 'ea40a664346c0cb7d4326830d76b8ef468a512d7',
+        name: 'file.bmf',
+        dateCreated: '2019-03-06T14:33:16.353Z',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          Description: 'Robot file (bmf)',
+        },
+        id: '24',
+        size: 7566,
+      },
+      {
+        sha1: 'ea40a664346c0cb7d4326830d76b8ef468a512d7',
+        name: 'raw.zip',
+        dateCreated: '2019-03-06T14:33:33.306Z',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          Description: 'Raw data from the robot',
+        },
+        id: '26',
+        size: 7566,
+      },
+    ],
+
     subtasks: [{description: 'first do this'}, {description: 'then do that'}],
 
     // TODO: synch with backend
@@ -82,9 +140,14 @@ export const getWorkBatchDetails = (org, id) => (dispatch) => {
     },
 
     tabs: [
-      {title: 'Move samples', active: true, id: 1},
-      {title: 'Files', active: false, id: 2},
-      {title: 'Comments', active: false, id: 3},
+      {
+        title: 'Move samples',
+        type: 'Transition',
+      },
+      {
+        title: 'Files',
+        type: 'Files',
+      },
     ],
   };
 
