@@ -159,22 +159,35 @@ class CamundaClient(object):
 
     def _refine_xml(self, tree, namespace):
         """
-        Adds a fully qualifed name to relative ones
+        Adds a fully qualifed name to relative ones. This ensures that all IDs that require
+        it will always have a fully qualified name so they will not clash with other plugins.
+
+        Example: User creates a diagram with the ID "SequenceSimple" and then registers it
+        through the plugin clims.plugins.demo.dnaseq, the process will actually be registered
+        as clims.plugins.demo.dnaseq.SequenceSimple. Furthermore, all calls to to subprocesses
+        will be made to fully qualified names using the same module.
+
+        Form keys are also changed to the fully qualified version.
+
+        If the user does fully qualify names (they contain a dot), no change takes place.
         """
 
         # Load the xml and make sure that we have fully qualified proccesses:
         root = tree.getroot()
         ns = {
             "bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL",
-            "bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI"
+            "bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
+            "camunda": "http://camunda.org/schema/1.0/bpmn"
         }
         process = utils.single(root.findall("bpmn:process", ns))
         diagram = utils.single(root.findall("bpmndi:BPMNDiagram", ns))
 
         def is_relative(name):
             # Process names are relative to the module of the defining workflow class
-            # if there are no dots in them. If there are dots, we assume a namespaced entry.
-            return "." not in name
+            # if there are no dots in them, except at the beginning.
+            # Example: .workflows.DataEntry => relative
+            #          clims.workflows.DataEntry => absolute
+            return "." not in name[1:]
 
         # A dict of all renamed elements (in particular relative process names that we're fully
         # qualifying):
@@ -203,6 +216,14 @@ class CamundaClient(object):
                     namespace, called_process_id)
                 call_activity.attrib[
                     "calledElement"] = called_process_id_fully_qualified
+
+        # Qualify all form keys
+        user_tasks = process.findall("bpmn:userTask", ns)
+        for user_task in user_tasks:
+            form_key = user_task.attrib.get("{http://camunda.org/schema/1.0/bpmn}formKey", None)
+            if form_key and is_relative(form_key):
+                form_key_qualified = "{}.{}".format(namespace, form_key)
+                user_task.attrib["{http://camunda.org/schema/1.0/bpmn}formKey"] = form_key_qualified
 
         # Since we might have renamed the process ID, let's update the refs in the diagram:
         for dia_element in diagram.iter():
