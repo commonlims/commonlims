@@ -17,12 +17,14 @@ class Container(ExtensibleModel):
     parent = FlexibleForeignKey('Container', null=True, related_name="children_set")
 
     # TODO: Benefits of FlexibleForeignKey
-    # TODO: Decide on naming for related_name
     container_type = FlexibleForeignKey('ContainerType', null=True, related_name="containers")
 
     name = models.TextField(null=True)
 
     organization = FlexibleForeignKey('sentry.Organization')
+
+    # The work batch in which this container was created, if it was created in a work batch context.
+    work_batch = FlexibleForeignKey("WorkBatch", null=True, related_name="output_containers")
 
     class Meta:
         app_label = 'clims'
