@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from retry import retry
 import logging
 import six
 from clims import utils
@@ -122,6 +123,22 @@ class WorkflowBase(ExternalExtensibleBase):
 
         # No definitions found
         return dict()
+
+    def wait_for_usertasks(self, task_name, num, tries=2, timeout_sec=0.5):
+        """
+        Waits until the workflow has `num` user tasks with the name `task_name` waiting in the
+        workflow.
+
+        This method is mainly intended for integration tests.
+        """
+        @retry(tries=tries, delay=timeout_sec)
+        def get_tasks():
+            tasks = self._context.app.workflows.get_tasks(task_definition_key=task_name,
+                    process_definition_key=self.get_full_name())
+            if len(tasks) != num:
+                raise AssertionError()
+            return tasks
+        return get_tasks()
 
 
 def create_preset(name, **kwargs):
@@ -291,6 +308,7 @@ class WorkflowService(object):
         task_ids_by_provider = defaultdict(list)
 
         for task_id in task_ids:
+            print(task_id, "HERE")
             provider_id, id = task_id.split("/")
             task_ids_by_provider[provider_id].append(id)
 
