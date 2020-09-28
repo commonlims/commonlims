@@ -73,13 +73,21 @@ class ExtensibleService(object):
                 self._implementations[full_name] = ext_class
         return self._implementations
 
+    def _list_all_cls_attributes_rec(self, cls, seed):
+        for b in cls.__bases__:
+            seed = self._list_all_cls_attributes_rec(b, seed)
+        seed.update(cls.__dict__)
+        return seed
+
     def register(self, plugin_reg, extensible_base):
         logger.info("Installing '{}' from plugin '{}@{}'".format(
             utils.class_full_name(extensible_base), plugin_reg.name,
             plugin_reg.version))
 
         property_types = list()
-        for field in extensible_base.__dict__.values():
+        seed = dict()
+        cls_attributes = self._list_all_cls_attributes_rec(extensible_base, seed)
+        for field in cls_attributes.values():
             if not isinstance(field, ExtensibleBaseField):
                 continue
 
