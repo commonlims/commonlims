@@ -29,6 +29,8 @@ create-example-data:
 
 fresh: clean middleware-teardown middleware
 # Resets all data (by tearing down the middleware) and then installs new test data
+	@echo "--> Add new config files"
+	lims init --dev
 	@echo "--> Applying migrations"
 	lims upgrade
 	@echo "--> Adding user admin@localhost. WARNING: NOT FOR PRODUCTION USE"
@@ -42,14 +44,16 @@ validate: lint-python test-python-unit test-python-integration lint-js test-js
 
 clean:
 	@echo "--> Cleaning static cache"
-	rm -rf dist/* static/dist/*
+	rm -r dist/* static/dist/* || true
 	@echo "--> Cleaning integration docs cache"
-	rm -rf src/sentry/integration-docs
+	rm -r src/sentry/integration-docs || true
 	@echo "--> Cleaning pyc files"
 	find . -name "*.pyc" -delete
 	@echo "--> Cleaning python build artifacts"
-	rm -rf build/ dist/ src/sentry/assets.json
-	@echo ""
+	rm -r build/ dist/ src/sentry/assets.json || true
+	@echo "--> Remove configuration files"
+	rm ~/.clims/clims.conf.py || true
+	rm ~/.clims/config.yml || true
 
 setup-git:
 	@echo "--> Installing git hooks"
@@ -86,6 +90,8 @@ install-clims-dev:
 	# Install overrides
 	pip install -r requirements-not-pypi.txt
 	NODE_ENV=development $(PIP) install -e ".[dev,tests,optional]"
+	@echo "--> Create a fresh configuration file"
+	lims init
 
 build-js-po: node-version-check
 	mkdir -p build
