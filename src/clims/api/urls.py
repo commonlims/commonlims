@@ -33,8 +33,9 @@ from .endpoints.work_batch_notes_details import WorkBatchNotesDetailsEndpoint
 from .endpoints.plugin_actions import PluginActionsEndpoint
 
 from .endpoints.workflow import WorkflowEndpoint
-from .endpoints.task_definition import TaskDefinitionEndpoint
-from .endpoints.task_definition_details import TaskDefinitionDetailsEndpoint
+from .endpoints.available_work import AvailableWorkEndpoint
+from .endpoints.work_definition_details import WorkDefinitionDetailsEndpoint
+from .endpoints.work_definition_details import WorkUnitsByWorkDefinitionEndpoint
 
 from .endpoints.substance_file import SubstanceFileEndpoint
 from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
@@ -44,7 +45,7 @@ from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
 from .endpoints.organization_searches import OrganizationSearchesEndpoint
 
 from .endpoints.process_assignments import ProcessAssignmentsEndpoint
-from .endpoints.tasks import TasksEndpoint
+from .endpoints.work_units import WorkUnitsEndpoint
 
 
 def fmt(s):
@@ -65,20 +66,20 @@ def url2(pattern, cls):
 urlpatterns = patterns(
     '',
     # Workflow
-    url(r'^organizations/{org}/task-definitions/', TaskDefinitionEndpoint.as_view(),
-        name='clims-api-0-task-definitions'),
-    url(r'^task-definitions/(?P<process_definition_key>[^\/]+)/(?P<task_definition_key>[^\/]+)/$',
-        TaskDefinitionDetailsEndpoint.as_view(),
-        name='clims-api-0-task-definition-details'),
+    url2(r'^organizations/{org}/available-work/$', AvailableWorkEndpoint),  # Returns summary
+    url2(r'^work-definitions/(?P<work_definition_id>[^\/]+)/$', WorkDefinitionDetailsEndpoint),
+    url2(r'^work-definitions/(?P<work_definition_id>[^\/]+)/available-work/$',
+        WorkUnitsByWorkDefinitionEndpoint),  # Returns work units
+
     url(r'^organizations/{org}/workflow/(?P<workflow_endpoint>[^\/]+)/$',
         WorkflowEndpoint.as_view(),
         name='clims-api-0-workflow-root'),
     url(r'^organizations/{org}/process-assignments/$',
         ProcessAssignmentsEndpoint.as_view(),
         name='clims-api-0-process-assignments'),
-    url(r'^organizations/{org}/tasks/$',
-        TasksEndpoint.as_view(),
-        name='clims-api-0-tasks'),
+    url(r'^organizations/{org}/work-units/$',
+        WorkUnitsEndpoint.as_view(),
+        name='clims-api-0-work-units'),
     # Steps
     url(r'^organizations/{org}/steps/$',
         StepEndpoint.as_view(),
@@ -142,7 +143,7 @@ urlpatterns = patterns(
         WorkBatchSettingsDetailsEndpoint.as_view(),
         name='clims-api-0-work-batch-settings-details'),
 
-    # Processes and Tasks
+    # Processes and WorkUnits
     url(r'^process-definitions/$',
         ProcessDefinitionsEndpoint.as_view(),
         name='clims-api-0-process-definitions'),

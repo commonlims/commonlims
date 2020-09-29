@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
 from sentry.testutils import APITestCase
-from clims.api.endpoints.work_unit_definition import WorkDefinitionEndpoint
+from clims.api.endpoints.work_definition_details import WorkDefinitionDetailsEndpoint
 
 
-class WorkDefinitionTest(APITestCase):
-    endpoint = WorkDefinitionEndpoint.name
+class WorkDefinitionDetailsTest(APITestCase):
+    endpoint = WorkDefinitionDetailsEndpoint.name
 
     def setUp(self):
         self.clean_workflow_engine_state()
@@ -13,6 +13,7 @@ class WorkDefinitionTest(APITestCase):
         self.has_context()
 
     def test_get(self):
+        raise NotImplementedError()
         from clims.plugins.demo.dnaseq.workflows.sequence import SequenceSimple
         from clims.plugins.demo.dnaseq.models import ExamplePlate, ExampleSample
 
