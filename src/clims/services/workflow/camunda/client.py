@@ -6,6 +6,7 @@ import requests
 from lxml import etree
 from simplejson import JSONDecodeError
 from six.moves.urllib.parse import urljoin
+from clims.services.workflow import ExternalWorkUnit
 
 from .api import CamundaApi, UnexpectedHttpResponse
 from clims import utils
@@ -56,17 +57,17 @@ class CamundaClient(object):
         else:
             raise UnexpectedHttpResponse(json["message"], response.status_code)
 
-    def get_tasks_by_ids(self, task_ids):
+    def get_work_units_by_ids(self, task_ids):
         # TODO-perf: We must be able to fetch this in a batch call. Look into setting up
         # https://github.com/camunda/camunda-bpm-graphql (preferably) or direct DB access to resolve
         # this, as it's expected that these will be many calls
         # TODO: paging
-        from clims.services.workflow import ProcessTask
+        raise NotImplementedError()
         ret = list()
         for task_id in task_ids:
             task = self.api.task(id=task_id).get()
             json = task.json
-            task = ProcessTask(json["id"],
+            task = ExternalWorkUnit(json["id"],
                                json["processInstanceId"],
                                Workflow.BACKEND_CAMUNDA,
                                None,
@@ -78,57 +79,59 @@ class CamundaClient(object):
         self._add_tracked_object_id(ret)
         return ret
 
-    def _add_tracked_object_id(self, tasks):
+    def _add_tracked_object_id(self, work_units):
         map_process_instance_id_to_business_object = dict({
-            (task.process_instance_id, None)
-            for task in tasks
+            (work_unit.workflow_instance_id, None)
+            for work_unit in work_units
         })
 
         keys = ",".join(map_process_instance_id_to_business_object.keys())
 
+        # TODO: Solve paging in one go in the api
         for process_instance in self.api.process_instances().get(
                 processInstanceIds=keys):
             id = process_instance.json["id"]
             business_key = process_instance.json["businessKey"]
             map_process_instance_id_to_business_object[id] = business_key
-        for task in tasks:
-            task.tracked_object_global_id = map_process_instance_id_to_business_object[
-                task.process_instance_id]
 
-    def get_tasks(self, task_definition_key=None, process_definition_key=None):
+        for work_unit in work_units:
+            work_unit.tracked_object_global_id = map_process_instance_id_to_business_object[
+                work_unit.workflow_instance_id]
+
+    def get_work_units(self, task_definition_key=None, process_definition_key=None):
         """
-        Returns the objects matching the search parameters.
+        Returns WorkUnits as expected by Clims. These map to user tasks in camunda
         """
 
         logger.debug(
             "Fetching tasks in Camunda from search filters: task_definition_key='{}', "
             "process_definition_key='{}'".format(task_definition_key,
                                                  process_definition_key))
-
-        # TODO: Paging
-        from clims.services.workflow import ProcessTask
+        # TODO: Paging. Since we use the api, we must go through the paging mechanism.
+        # TODO: We're using the formKey to tell clims which work configuration to use.
+        # It would be simpler to just use the ID of the task (and it doesn't require a camunda
+        # extension for bpmn)
 
         # 1. Fetch outstanding tasks matching the filters
-        tasks = list()
+        work_units = list()
         for res in self.api.tasks().get(
                 taskDefinitionKey=task_definition_key,
                 processDefinitionKey=process_definition_key):
             json = res.json
-            task = ProcessTask(json["id"],
-                               json["processInstanceId"],
+            work_unit = ExternalWorkUnit(json["id"],
                                Workflow.BACKEND_CAMUNDA,
-                               None,
-                               json["name"],
-                               json["formKey"])
+                               json["processInstanceId"],
+                None,
+                json["formKey"])
             # TODO: In the demo data from Camunda, there is an entry that doesn't have a
             # processInstanceId for some reason. Filtering it out now. Can be removed when
             # the demo data isn't added.
-            if not task.process_instance_id:
+            if not work_unit.workflow_instance_id:
                 continue
-            tasks.append(task)
-        logger.debug("Fetched {} tasks".format(len(tasks)))
-        self._add_tracked_object_id(tasks)
-        return tasks
+            work_units.append(work_unit)
+        logger.debug("Fetched {} tasks".format(len(work_units)))
+        self._add_tracked_object_id(work_units)
+        return work_units
 
     def unsafe_delete_deployment(self, deployment_id):
         """
