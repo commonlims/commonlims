@@ -1,9 +1,9 @@
-from clims.configuration.step import Step
+from clims.configuration.work import Work
 from clims.configuration.hooks import button
 
 
-class MyFancyStep(Step):
-    name = 'My fancy step'
+class MyFancyWork(Work):
+    name = 'My fancy work'
 
     @button('My submit button')
     def on_button_click1(self):

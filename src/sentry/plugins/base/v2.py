@@ -31,7 +31,7 @@ from sentry.plugins.base.configuration import (
 from sentry.utils.hashlib import md5_text
 from clims.services.workflow import WorkflowBase
 from clims.services.extensible import ExtensibleBase
-from clims.configuration.step import Step
+from clims.configuration.work import Work
 
 logger = logging.getLogger(__name__)
 
@@ -546,7 +546,7 @@ class IPlugin2(local, PluginConfigMixin, PluginStatusMixin):
         """
         logger.debug("Searching for extensible objects in {}".format(cls))
         root_module = importlib.import_module(cls.__module__)
-        return cls._find_subclasses_of(Step, root_module)
+        return cls._find_subclasses_of(Work, root_module)
 
     @classmethod
     def get_extensible_objects(cls):
