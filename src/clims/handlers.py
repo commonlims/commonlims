@@ -149,7 +149,7 @@ class HandlerManager(object):
             for impl in impls:
                 if handler_name == "{}.{}".format(impl.__module__, impl.__name__):
                     return impl(self._app, context_store.current, *args, **kwargs)
-        raise RequiredHandlerNotFound()
+        raise RequiredHandlerNotFound(handler_name)
 
     def handle(self, cls, context, required, *args, **kwargs):
         """
