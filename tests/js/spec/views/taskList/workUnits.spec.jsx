@@ -1,64 +1,64 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import {Tasks} from 'app/views/taskList/tasks';
-import ProcessListItem from 'app/components/task/processListItem';
+import {WorkUnits} from 'app/views/workUnitList/workUnits';
+import ProcessListItem from 'app/components/workUnit/processListItem';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import LoadingError from 'app/components/loadingError';
 
-describe('Tasks', function () {
+describe('WorkUnits', function () {
   let mockProps;
-  let getTasks;
-  let tasks;
+  let getWorkUnits;
+  let workUnits;
   let loading;
   let errorMessage;
 
-  const task1 = {
-    name: 'Task1',
+  const workUnit1 = {
+    name: 'WorkUnit1',
     count: 2,
-    taskDefinitionKey: 'task1',
+    workDefinitionKey: 'workUnit1',
     processDefinitionKey: 'process1',
     processDefinitionName: 'Process1',
   };
 
-  const task2 = {
-    name: 'Task2',
+  const workUnit2 = {
+    name: 'WorkUnit2',
     count: 3,
-    taskDefinitionKey: 'task2',
+    workDefinitionKey: 'workUnit2',
     processDefinitionKey: 'process2',
     processDefinitionName: 'Process2',
   };
 
-  const task3 = {
-    name: 'Task3',
+  const workUnit3 = {
+    name: 'WorkUnit3',
     count: 3,
-    taskDefinitionKey: 'task3',
+    workDefinitionKey: 'workUnit3',
     processDefinitionKey: 'process1',
     processDefinitionName: 'Process1',
   };
 
   beforeEach(() => {
-    getTasks = jest.fn();
-    tasks = [];
+    getWorkUnits = jest.fn();
+    workUnits = [];
     loading = false;
     errorMessage = null;
 
     mockProps = {
-      getTasks,
-      tasks,
+      getWorkUnits,
+      workUnits,
       loading,
       errorMessage,
     };
   });
 
-  const mountTasks = (props = {}) => {
+  const mountWorkUnits = (props = {}) => {
     const mergedProps = {...mockProps, ...props};
-    return shallow(<Tasks {...mergedProps} />);
+    return shallow(<WorkUnits {...mergedProps} />);
   };
 
-  it('groups tasks by process', () => {
-    tasks = [task1, task2, task3];
-    const wrapper = mountTasks({tasks});
+  it('groups workUnits by process', () => {
+    workUnits = [workUnit1, workUnit2, workUnit3];
+    const wrapper = mountWorkUnits({workUnits});
     const procs = wrapper.find(ProcessListItem);
 
     const proc1 = procs.at(0);
@@ -66,9 +66,9 @@ describe('Tasks', function () {
     expect(props1.count).toBe(5);
     expect(props1.processDefinitionName).toBe('Process1');
     expect(props1.processDefinitionKey).toBe('process1');
-    expect(props1.tasks).toEqual([
-      {name: 'Task1', count: 2, taskDefinitionKey: 'task1'},
-      {name: 'Task3', count: 3, taskDefinitionKey: 'task3'},
+    expect(props1.workUnits).toEqual([
+      {name: 'WorkUnit1', count: 2, workDefinitionKey: 'workUnit1'},
+      {name: 'WorkUnit3', count: 3, workDefinitionKey: 'workUnit3'},
     ]);
 
     const proc2 = procs.at(1);
@@ -76,25 +76,27 @@ describe('Tasks', function () {
     expect(props2.count).toBe(3);
     expect(props2.processDefinitionName).toBe('Process2');
     expect(props2.processDefinitionKey).toBe('process2');
-    expect(props2.tasks).toEqual([{name: 'Task2', count: 3, taskDefinitionKey: 'task2'}]);
+    expect(props2.workUnits).toEqual([
+      {name: 'WorkUnit2', count: 3, workDefinitionKey: 'workUnit2'},
+    ]);
   });
 
   it('renders loader while loading data', () => {
-    const wrapper = mountTasks({loading: true});
+    const wrapper = mountWorkUnits({loading: true});
     expect(wrapper.find(LoadingIndicator).length).toBe(1);
   });
 
   it('renders error component if there is an error loading data', () => {
-    const wrapper = mountTasks({errorMessage: 'Oopsy Daisy'});
+    const wrapper = mountWorkUnits({errorMessage: 'Oopsy Daisy'});
     const error = wrapper.find(LoadingError);
     expect(error.length).toBe(1);
     const props = error.at(0).props();
     expect(props.message).toBe('Oopsy Daisy');
-    expect(props.onRetry).toBe(getTasks);
+    expect(props.onRetry).toBe(getWorkUnits);
   });
 
-  it('renders empty component if there are no tasks', () => {
-    const wrapper = mountTasks();
+  it('renders empty component if there are no workUnits', () => {
+    const wrapper = mountWorkUnits();
     const error = wrapper.find('.empty-stream');
     expect(error.length).toBe(1);
   });

@@ -1,33 +1,33 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {connect} from 'react-redux';
+//import {connect} from 'react-redux';
 import {t} from 'app/locale';
-import {tasksGet} from 'app/redux/actions/task';
+import {workUnitsGet} from 'app/redux/actions/workUnit';
 import {Panel, PanelBody} from 'app/components/panels';
-import ProcessListItem from 'app/components/task/processListItem';
+import ProcessListItem from 'app/components/workUnit/processListItem';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 
-export class Tasks extends React.Component {
+export class WorkUnits extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
-    const {getTasks} = this.props;
-    getTasks();
+    const {getWorkUnits} = this.props;
+    getWorkUnits();
   }
 
   renderBody() {
-    const {tasks, loading, errorMessage, getTasks} = this.props;
+    const {workUnits, loading, errorMessage, getWorkUnits} = this.props;
 
     let body;
     if (loading) {
       body = this.renderLoading();
     } else if (errorMessage) {
-      body = <LoadingError message={errorMessage} onRetry={getTasks} />;
-    } else if (tasks.length > 0) {
+      body = <LoadingError message={errorMessage} onRetry={getWorkUnits} />;
+    } else if (workUnits.length > 0) {
       body = this.renderProcesses();
     } else {
       body = this.renderEmpty();
@@ -35,28 +35,28 @@ export class Tasks extends React.Component {
     return body;
   }
 
-  groupTasksByProcess(tasks) {
-    const processes = tasks.reduce((r, task) => {
+  groupWorkUnitsByProcess(workUnits) {
+    const processes = workUnits.reduce((r, workUnit) => {
       const {
         count,
         name,
         processDefinitionKey,
         processDefinitionName,
-        taskDefinitionKey,
-      } = task;
+        workDefinitionKey,
+      } = workUnit;
 
-      const prunedTask = {count, name, taskDefinitionKey};
+      const prunedWorkUnit = {count, name, workDefinitionKey};
 
       r[processDefinitionKey] = r[processDefinitionKey]
         ? {...r[processDefinitionKey]}
         : {
-            tasks: [],
+            workUnits: [],
             count: 0,
             processDefinitionKey,
             processDefinitionName,
           };
       r[processDefinitionKey].count += count;
-      r[processDefinitionKey].tasks.push(prunedTask);
+      r[processDefinitionKey].workUnits.push(prunedWorkUnit);
 
       return r;
     }, {});
@@ -70,8 +70,8 @@ export class Tasks extends React.Component {
   }
 
   renderProcesses() {
-    const {tasks} = this.props;
-    const processes = this.groupTasksByProcess(tasks);
+    const {workUnits} = this.props;
+    const processes = this.groupWorkUnitsByProcess(workUnits);
 
     const items = processes.map((p, i) => {
       return <ProcessListItem {...p} key={i} />;
@@ -85,7 +85,7 @@ export class Tasks extends React.Component {
   }
 
   renderEmpty() {
-    const message = t('Sorry, no tasks match your filters.');
+    const message = t('Sorry, no workUnits match your filters.');
 
     return (
       <div className="empty-stream" style={{border: 0}}>
@@ -105,13 +105,13 @@ export class Tasks extends React.Component {
   }
 }
 
-Tasks.propTypes = {
-  getTasks: PropTypes.func,
-  tasks: PropTypes.arrayOf(
+WorkUnits.propTypes = {
+  getWorkUnits: PropTypes.func,
+  workUnits: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       count: PropTypes.number.isRequired,
-      taskDefinitionKey: PropTypes.string.isRequired,
+      workDefinitionKey: PropTypes.string.isRequired,
       processDefinitionKey: PropTypes.string.isRequired,
       processDefinitionName: PropTypes.string,
     })
@@ -119,12 +119,6 @@ Tasks.propTypes = {
   loading: PropTypes.bool,
   errorMessage: PropTypes.string,
 };
-Tasks.displayName = 'Tasks';
+WorkUnits.displayName = 'WorkUnits';
 
-const mapStateToProps = (state) => state.task;
-
-const mapDispatchToProps = (dispatch) => ({
-  getTasks: () => dispatch(tasksGet()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
+export default WorkUnits;

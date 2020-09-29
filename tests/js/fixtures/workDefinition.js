@@ -1,5 +1,4 @@
-// Example: const workbatch = TestStubs.WorkBatch(5);
-export function TaskDefinition(id) {
+export function WorkDefinition(id) {
   return {
     id: id ? id : 1,
     name: 'Test' + (id ? id : 1),
