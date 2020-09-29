@@ -10,7 +10,9 @@ class Csv:
     def __init__(self, file_stream=None, delim=",", file_name=None, newline="\n", header=None):
         self.header = list()
         self.data = list()
-        if file_stream:
+        # "if file_stream" is not working for some reason with the file stream given here,
+        # always returns False. "if file_stream is not None" works.
+        if file_stream is not None:
             if isinstance(file_stream, six.string_types):
                 with open(file_stream, "r") as fs:
                     self._init_from_file_stream(fs, delim, None)

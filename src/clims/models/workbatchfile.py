@@ -24,10 +24,11 @@ class WorkBatchFile(Model):
     __core__ = False
 
     organization = FlexibleForeignKey('sentry.Organization')
-    work_batch = FlexibleForeignKey('clims.WorkBatch')
+    work_batch = FlexibleForeignKey('clims.WorkBatch', related_name='files')
     file = FlexibleForeignKey('sentry.File')
     ident = models.CharField(max_length=40)
     name = models.TextField()
+    file_handle = models.CharField(max_length=200, null=True)
 
     __repr__ = sane_repr('work_batch', 'ident')
 
