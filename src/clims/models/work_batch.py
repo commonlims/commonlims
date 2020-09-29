@@ -28,8 +28,6 @@ class WorkBatch(Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # Note that extensible models should never be updated. This is provided for consistency
-    # and auditing purposes.
     updated_at = models.DateTimeField(auto_now=True)
 
     # TODO: Remove
