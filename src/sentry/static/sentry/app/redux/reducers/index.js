@@ -6,11 +6,12 @@ import processDefinition from './processDefinition';
 import savedSearch from './savedSearch';
 import substanceSearchEntry from './substanceSearchEntry';
 import tag from './tag';
-import task from './task';
-import taskDefinition from './taskDefinition';
+import workDefinition from './workDefinition';
 import workBatch from './workBatch';
 import workBatchDetails from './workBatchDetails';
 import projectSearchEntry from './projectSearchEntry';
+import availableWork from './availableWork';
+import availableWorkUnit from './availableWorkUnit';
 
 export default combineReducers({
   process,
@@ -19,9 +20,10 @@ export default combineReducers({
   savedSearch,
   substanceSearchEntry,
   tag,
-  task,
-  taskDefinition,
+  workDefinition,
   workBatch,
   workBatchDetails,
   projectSearchEntry,
+  availableWork,
+  availableWorkUnit,
 });

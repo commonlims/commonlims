@@ -1,12 +1,12 @@
 import {Set} from 'immutable';
-import taskDefinition, {initialState} from 'app/redux/reducers/taskDefinition';
-import {taskDefinitionActions} from 'app/redux/actions/taskDefinition';
+import workDefinition, {initialState} from 'app/redux/reducers/workDefinition';
+import {workDefinitionActions} from 'app/redux/actions/workDefinition';
 
-describe('taskDefinition reducer, list protocol', () => {
+describe('workDefinition reducer, list protocol', () => {
   it('has expected state after requesting getting a list', () => {
-    const requested = taskDefinition(
+    const requested = workDefinition(
       initialState,
-      taskDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
+      workDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
     );
     const expected = {
       loading: true,
@@ -31,14 +31,14 @@ describe('taskDefinition reducer, list protocol', () => {
   });
 
   it('expected state after ListSuccess', () => {
-    const requested = taskDefinition(
+    const requested = workDefinition(
       initialState,
-      taskDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
+      workDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
     );
-    const entries = [TestStubs.TaskDefinition(1), TestStubs.TaskDefinition(2)];
-    const succeeded = taskDefinition(
+    const entries = [TestStubs.WorkDefinition(1), TestStubs.WorkDefinition(2)];
+    const succeeded = workDefinition(
       requested,
-      taskDefinitionActions.getListSuccess(entries, 'pageLinks')
+      workDefinitionActions.getListSuccess(entries, 'pageLinks')
     );
 
     const expected = {

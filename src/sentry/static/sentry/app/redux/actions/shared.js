@@ -32,11 +32,14 @@ const acGetListSuccess = (resource) =>
 const acGetListFailure = (resource) =>
   makeActionCreator(`GET_${resource}_LIST_FAILURE`, 'statusCode', 'message');
 
-const acGetList = (resource, urlTemplate) => {
-  return (org, search, groupBy, cursor, getParams) => (dispatch) => {
+// Lists are either on organization level (e.g. organizations/{org}/available-work/)
+// or they are lists under some resource (e.g. work-definitions/{id}/available-work/).
+// For orgs use key='org', otherwise use key='id'
+const acGetList = (resource, urlTemplate, key = 'org') => {
+  return (orgSlugOrResourceId, search, groupBy, cursor, getParams) => (dispatch) => {
     dispatch(acGetListRequest(resource)(search, groupBy, cursor, getParams));
 
-    const url = urlTemplate.replace('{org}', org.slug);
+    const url = urlTemplate.replace('{' + key + '}', orgSlugOrResourceId);
     const config = {
       params: {
         ...getParams,
@@ -133,13 +136,18 @@ export const resourceActionCreators = {
 };
 
 // Creates all actions required for a regular resource
-export const makeResourceActions = (resourceName, listUrl, entryUrl) => {
+export const makeResourceActions = (
+  resourceName,
+  listUrl,
+  entryUrl,
+  getListKey = 'org'
+) => {
   return {
     // Fetching a list
     getListRequest: acGetListRequest(resourceName),
     getListSuccess: acGetListSuccess(resourceName),
     getListFailure: acGetListFailure(resourceName),
-    getList: acGetList(resourceName, listUrl),
+    getList: acGetList(resourceName, listUrl, getListKey),
 
     // Select entries in the list or pages of it
     select: acSelect(resourceName),
