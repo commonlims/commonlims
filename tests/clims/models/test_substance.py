@@ -11,7 +11,7 @@ from clims.services.extensible import FloatField
 from clims.services.extensible import TextField
 from django.db import IntegrityError
 from tests.fixtures.plugins.gemstones_inc.models import \
-    GemstoneSample, GemstoneContainer, GemstoneProject
+    GemstoneSample, GemstoneContainer, GemstoneProject, InheritedSample
 
 
 class SubstanceTestCase(TestCase):
@@ -127,6 +127,14 @@ class SubstancePropertiesTestCase(TestCase):
 class TestSubstance(SubstanceTestCase):
     def setUp(self):
         self.has_context()
+
+    @pytest.mark.dev_edvard
+    def test_gemstone_inheritance(self):
+        self.register_extensible(InheritedSample)
+        sample = InheritedSample(name='sample1')
+        sample.save()
+        sample.color = 'blue'
+        assert sample.color == 'blue'
 
     def test_can_create_substance(self):
         substance = self.create_gemstone()
@@ -349,7 +357,6 @@ class TestSubstance(SubstanceTestCase):
         sample = self.create_gemstone(color='red')
         sample.weight = 10
 
-    @pytest.mark.dev_edvard
     def test_assign_zero_to_int_field_succeeds(self):
         sample = self.create_gemstone()
         sample.weight = 0
@@ -486,7 +493,6 @@ class TestSubstance(SubstanceTestCase):
         first.save()
         assert first.location is not None
 
-    @pytest.mark.dev_edvard
     def test_location_changed_after_a_fetch__update_is_ok(self):
         container = self.create_container_with_samples(GemstoneContainer, GemstoneSample)
         first = container["a1"]
