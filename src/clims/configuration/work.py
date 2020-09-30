@@ -81,5 +81,6 @@ class Column(object):
     Configures a column in a view.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, name, accessor):
+        self.name = name
+        self.accessor = accessor

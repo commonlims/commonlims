@@ -25,7 +25,7 @@ export default class WorkUnits extends React.Component {
               )
             }
           >
-            {`Start work (${len})`}
+            {`Start work`}
           </button>
         </div>
       </ListActionBar>
