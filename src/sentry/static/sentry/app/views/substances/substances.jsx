@@ -168,7 +168,7 @@ class Substances extends React.Component {
   render() {
     // TODO: Rename css classes to something else than stream
     const groupOptions = [
-      {key: 'substance', title: t('Substance')},
+      {key: 'substance', title: t('None')},
       {key: 'container', title: t('Container')},
       {key: 'sample_type', title: t('Sample type')},
     ];
