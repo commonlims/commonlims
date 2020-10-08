@@ -25,7 +25,7 @@ Redux code is in the directory `app/redux`. Common LIMS configures Redux as foll
 
 This configuration, together with an example Redux implementation, is illustrated in [this pull request](https://github.com/commonlims/commonlims/pull/17/files).
 
-To enable advanced Redux logging, set the "diff" option to "true" in store.js.
+To enable advanced Redux logging, set the "diff" option to "true" in store.js#createLogger.
 
 ### Actions and Reducers
 
