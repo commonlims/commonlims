@@ -7,7 +7,8 @@ import reducer from './reducers/index';
 const middleware = [thunk];
 
 const logger = createLogger({
-  diff: true,
+  // Set to true to enable advanced debug output
+  diff: false,
 });
 
 if (process.env.NODE_ENV !== 'production') {
