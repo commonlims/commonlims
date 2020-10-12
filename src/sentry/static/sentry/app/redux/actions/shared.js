@@ -71,26 +71,17 @@ const acCreateFailure = (resource) =>
   makeActionCreator(`CREATE_${resource}_FAILURE`, 'statusCode', 'message');
 
 const acCreate = (resource, urlTemplate) => {
-  return (org, data, redirect) => (dispatch) => {
-    dispatch(acCreateRequest(resource)());
+  return (org, data) => (dispatch) => {
+    dispatch(acCreateRequest(resource)(data));
 
-    const api = new Client();
     const url = urlTemplate.replace('{org}', org.slug);
 
-    api.request(url, {
-      method: 'POST',
-      data,
-      success: (res) => {
-        dispatch(acCreateSuccess(resource)(res));
-        const createdId = res.workBatch.id; // TODO-nocommit
-        if (redirect) {
-          browserHistory.push(`/${org.slug}/workbatches/${createdId}/`); // TODO-NOCOMMIT: configurable in creator
-        }
-      },
-      error: (err) => {
-        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText));
-      },
-    });
+    return axios
+      .post(url, data)
+      .then(() => dispatch(acCreateSuccess(resource)(data)))
+      .catch((err) =>
+        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText))
+      );
   };
 };
 
