@@ -74,57 +74,89 @@ class Substances extends React.Component {
   }
 
   getHeaders() {
-    // TODO: This should be returned as a contract from the plugin that is registered for this.
-    return [
-      {
-        Header: 'Sample name',
-        id: 'name',
-        accessor: (d) => d.name,
-        fontstyle: (isGroupHeader) => (isGroupHeader ? 'italic' : 'normal'),
-      },
-      {
-        Header: 'Container',
-        id: 'container',
-        accessor: (d, isGroupHeader) =>
-          isGroupHeader ? null : d.location ? d.location.container.name : '<No location>',
-      },
-      {
-        Header: 'Index',
-        id: 'index',
-        accessor: (d, isGroupHeader) =>
-          isGroupHeader ? null : d.location ? d.location.index : '<No location>',
-      },
-      {
-        Header: 'Volume',
-        id: 'volume',
-        accessor: (d, isGroupHeader) =>
-          isGroupHeader
-            ? null
-            : d.properties && d.properties.volume
-            ? showRounded(d.properties.volume.value)
-            : null,
-      },
-      {
-        Header: 'Sample Type',
-        id: 'sample_type',
-        accessor: (d, isGroupHeader) =>
-          isGroupHeader
-            ? null
-            : d.properties && d.properties.sample_type
-            ? d.properties.sample_type.value
-            : null,
-      },
-      {
-        Header: 'Priority',
-        id: 'priority',
-        accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.priority),
-      },
-      {
-        Header: 'Waiting',
-        id: 'days_waiting',
-        accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.days_waiting),
-      },
-    ];
+    // TODO: Headers should be returned as a contract from the plugin that is registered for this.
+    let {groupBy} = this.props.substanceSearchEntry;
+
+    let nameHeaderName = '';
+    switch (groupBy) {
+      case 'container':
+        nameHeaderName = 'Container';
+        break;
+      case 'sample_type':
+        nameHeaderName = 'Sample Type';
+        break;
+      default:
+        nameHeaderName = 'Name';
+    }
+
+    let nameHeader = {
+      Header: nameHeaderName,
+      id: 'name',
+      accessor: (d) => d.name,
+      fontstyle: (isGroupHeader) => (isGroupHeader ? 'italic' : 'normal'),
+    };
+
+    let containerHeader = {
+      Header: 'Container',
+      id: 'container',
+      accessor: (d, isGroupHeader) =>
+        isGroupHeader ? null : d.location ? d.location.container.name : '<No location>',
+    };
+
+    let indexHeader = {
+      Header: 'Index',
+      id: 'index',
+      accessor: (d, isGroupHeader) =>
+        isGroupHeader ? null : d.location ? d.location.index : '<No location>',
+    };
+
+    let volumeHeader = {
+      Header: 'Volume',
+      id: 'volume',
+      accessor: (d, isGroupHeader) =>
+        isGroupHeader
+          ? null
+          : d.properties && d.properties.volume
+          ? showRounded(d.properties.volume.value)
+          : null,
+    };
+
+    let sampleTypeHeader = {
+      Header: 'Sample Type',
+      id: 'sample_type',
+      accessor: (d, isGroupHeader) =>
+        isGroupHeader
+          ? null
+          : d.properties && d.properties.sample_type
+          ? d.properties.sample_type.value
+          : null,
+    };
+
+    let priorityHeader = {
+      Header: 'Priority',
+      id: 'priority',
+      accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.priority),
+    };
+
+    let waitingHeader = {
+      Header: 'Waiting',
+      id: 'days_waiting',
+      accessor: (d, isGroupHeader) => (isGroupHeader ? null : d.days_waiting),
+    };
+
+    let headers = [nameHeader];
+    if (groupBy !== 'container') {
+      headers.push(containerHeader);
+    }
+    headers.push(indexHeader);
+    headers.push(volumeHeader);
+    if (groupBy !== 'sample_type') {
+      headers.push(sampleTypeHeader);
+    }
+    headers.push(priorityHeader);
+    headers.push(waitingHeader);
+
+    return headers;
   }
 
   onImported() {
