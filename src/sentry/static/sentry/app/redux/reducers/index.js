@@ -11,6 +11,18 @@ import taskDefinition from './taskDefinition';
 import workBatch from './workBatch';
 import workBatchDetails from './workBatchDetails';
 import projectSearchEntry from './projectSearchEntry';
+import {resource} from './shared';
+
+const sharedInitialState = {
+  ...resource.initialState,
+};
+
+export const WORK_CONFIGURATION = 'WORK_CONFIGURATION';
+
+const workConfigurationEntry = resource.createReducer(
+  WORK_CONFIGURATION,
+  sharedInitialState
+);
 
 export default combineReducers({
   process,
@@ -24,4 +36,5 @@ export default combineReducers({
   workBatch,
   workBatchDetails,
   projectSearchEntry,
+  workConfigurationEntry,
 });

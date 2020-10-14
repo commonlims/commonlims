@@ -3,16 +3,52 @@ import React from 'react';
 import withOrganization from 'app/utils/withOrganization';
 import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
-import {getWorkBatchDetails} from 'app/redux/actions/workBatchDetails';
 import LoadingIndicator from 'app/components/loadingIndicator';
+import moxios from 'moxios';
+import {WORK_CONFIGURATION} from 'app/redux/reducers/index';
 
 class ExampleWorkbatchContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.props.getWorkConfiguration(this.props.organization, 2);
   }
 
   render() {
+    const buttonsFromConfig = [];
+    let workConfigurationEntry = this.props.workConfigurationEntry;
+    if (workConfigurationEntry == null) {
+      return <LoadingIndicator />;
+    }
+    let {byIds, detailsId} = workConfigurationEntry;
+    if (detailsId == null) {
+      return <LoadingIndicator />;
+    }
+    const workConfiguration = byIds[detailsId];
+    let {buttons: buttonConfigurations, id: configId} = workConfiguration;
+    for (const entry of buttonConfigurations) {
+      const buttonClick = () => {
+        this.sendButtonClickedEvent(entry.name, configId);
+      };
+      buttonsFromConfig.push(
+        <button
+          className="btn btn-sm btn-default"
+          onClick={buttonClick}
+          name={entry.name}
+        >
+          {entry.caption}
+        </button>
+      );
+    }
+    return (
+      <div>
+        <h1>Workbatch details proxy</h1>
+        {buttonsFromConfig}
+      </div>
+    );
   }
+
+  sendButtonClickedEvent(clickedButtonName, workBatchId) {}
+}
 
 ExampleWorkbatchContainer.propTypes = {
   ...ClimsTypes.List,
@@ -20,9 +56,43 @@ ExampleWorkbatchContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+  return {
+    workConfigurationEntry: state.workConfigurationEntry,
+  };
 };
 
+const mockedWorkConfiguration = {
+  id: 2,
+  buttons: [
+    {
+      name: 'button1',
+      caption: 'button 1',
+    },
+    {
+      name: 'button2',
+      caption: 'Button 2',
+    },
+  ],
+};
 const mapDispatchToProps = (dispatch) => ({
+  getWorkConfiguration: (org, id) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-configrations/';
+    const getWorkConfigurationRoutine = resourceActionCreators.acGet(
+      WORK_CONFIGURATION,
+      urlTemplate
+    );
+    // TODO: remove this mock response
+    moxios.install();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: mockedWorkConfiguration,
+        headers: [],
+      });
+    });
+    dispatch(getWorkConfigurationRoutine(org, id));
+  },
 });
 
 export default withOrganization(
