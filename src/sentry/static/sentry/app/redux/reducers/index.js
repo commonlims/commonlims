@@ -18,6 +18,7 @@ const sharedInitialState = {
 };
 
 export const WORK_CONFIGURATION = 'WORK_CONFIGURATION';
+export const EVENTS = 'EVENTS';
 
 const workConfigurationEntry = resource.createReducer(
   WORK_CONFIGURATION,
