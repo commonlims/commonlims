@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {t} from 'app/locale';
 import {Panel, PanelBody} from 'app/components/panels';
+import {browserHistory} from 'react-router';
 import ProcessListItem from 'app/views/taskDefinitions/processListItem';
 import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
@@ -83,14 +84,21 @@ export class TaskDefinitions extends React.Component {
     return <LoadingIndicator />;
   }
 
+  redirectToExample() {
+    const redirect = `/lab/example-workbatch/`;
+    return void browserHistory.push(redirect);
+  }
+
   renderEmpty() {
     const message = t('Sorry, no tasks match your filters.');
-
     return (
       <div className="empty-stream" style={{border: 0}}>
         <p>
           <span className="icon icon-exclamation" /> {message}
         </p>
+        <button className="btn btn-sm btn-default" onClick={this.redirectToExample}>
+          {'Show example workbatch'}
+        </button>
       </div>
     );
   }
