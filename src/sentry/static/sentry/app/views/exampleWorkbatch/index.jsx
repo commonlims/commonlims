@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import moxios from 'moxios';
-import {WORK_CONFIGURATION} from 'app/redux/reducers/index';
+import {WORK_CONFIGURATION, EVENTS} from 'app/redux/reducers/index';
 
 class ExampleWorkbatchContainer extends React.Component {
   constructor(props) {
@@ -47,7 +47,13 @@ class ExampleWorkbatchContainer extends React.Component {
     );
   }
 
-  sendButtonClickedEvent(clickedButtonName, workBatchId) {}
+  sendButtonClickedEvent(clickedButtonName, workBatchId) {
+    const buttonEvent = {
+      event: clickedButtonName,
+      workBatchId,
+    };
+    this.props.sendButtonClickedEvent(this.props.organization, buttonEvent);
+  }
 }
 
 ExampleWorkbatchContainer.propTypes = {
@@ -75,6 +81,14 @@ const mockedWorkConfiguration = {
   ],
 };
 const mapDispatchToProps = (dispatch) => ({
+  sendButtonClickedEvent: (org, buttonEvent) => {
+    const urlTemplate = '/api/0/organizations/{org}/events/';
+    const sendButtonClickedEventRoutine = resourceActionCreators.acCreate(
+      EVENTS,
+      urlTemplate
+    );
+    dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
+  },
   getWorkConfiguration: (org, id) => {
     const urlTemplate = '/api/0/organizations/{org}/work-configrations/';
     const getWorkConfigurationRoutine = resourceActionCreators.acGet(
