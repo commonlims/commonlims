@@ -1,15 +1,16 @@
-// import axios from 'axios';
+import axios from 'axios';
 // import {Client} from 'app/api';
 
 export const WORK_BATCH_DETAILS_GET_REQUEST = 'WORK_BATCH_DETAILS_GET_REQUEST';
-export const getWorkBatchDetailsRequest = () => {
+export const workBatchDetailsGetRequest = (id) => {
   return {
     type: WORK_BATCH_DETAILS_GET_REQUEST,
+    id,
   };
 };
 
 export const WORK_BATCH_DETAILS_GET_SUCCESS = 'WORK_BATCH_DETAILS_GET_SUCCESS';
-export const getWorkBatchDetailsSuccess = (workBatch) => {
+export const workBatchDetailsGetSuccess = (workBatch) => {
   return {
     type: WORK_BATCH_DETAILS_GET_SUCCESS,
     workBatch,
@@ -17,13 +18,13 @@ export const getWorkBatchDetailsSuccess = (workBatch) => {
 };
 
 export const WORK_BATCH_DETAILS_GET_FAILURE = 'WORK_BATCH_DETAILS_GET_FAILURE';
-export const getWorkBatchDetailsFailure = (err) => ({
+export const workBatchDetailsGetFailure = (err) => ({
   type: WORK_BATCH_DETAILS_GET_FAILURE,
   message: err,
 });
 
 export const getWorkBatchDetails = (org, id) => (dispatch) => {
-  dispatch(getWorkBatchDetailsRequest());
+  dispatch(workBatchDetailsGetRequest(id));
   // A) Fetch the work batch itself and B) fetch the setting for it if we don't already have it
   // TODO: for that kind of thing to work, we need to join the reducers!
 
@@ -152,10 +153,10 @@ export const getWorkBatchDetails = (org, id) => (dispatch) => {
   };
 
   // TODO: hook up with bakend
-  dispatch(getWorkBatchDetailsSuccess(data));
+  // dispatch(getWorkBatchDetailsSuccess(data));
 
-  // return axios
-  //   .get(`/api/0/organizations/${org}/work-batches/${id}`)
-  //   .then(res => dispatch(workBatchDetailsGetSuccess(res.data)))
-  //   .catch(err => dispatch(workBatchDetailsGetFailure(err)));
+  return axios
+    .get(`/api/0/organizations/${org}/workbatch-details/${id}`)
+    .then((res) => dispatch(workBatchDetailsGetSuccess(res.data)))
+    .catch((err) => dispatch(workBatchDetailsGetFailure(err)));
 };
