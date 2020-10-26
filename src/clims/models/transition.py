@@ -28,10 +28,10 @@ class Transition(Model):
     # TODO: should we disallow nulls here? Are transitions ever created outside a work batch context?
     work_batch = FlexibleForeignKey('WorkBatch', null=True, related_name='transitions')
 
-    source_location = FlexibleForeignKey('Location', related_name='transitions')
-    target_location = FlexibleForeignKey('Location', related_name='transitions')
-    source_substance = FlexibleForeignKey('Substance', related_name='transitions')
-    target_substance = FlexibleForeignKey('Substance', related_name='transitions')
+    source_location = FlexibleForeignKey('SubstanceLocation', related_name='source_transitions')
+    target_location = FlexibleForeignKey('SubstanceLocation', related_name='target_transitions')
+    source_substance = FlexibleForeignKey('Substance', related_name='source_transitions')
+    target_substance = FlexibleForeignKey('Substance', related_name='target_transitions')
 
     transition_type = models.IntegerField(default=TransitionType.MOVE)
 
