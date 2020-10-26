@@ -95,10 +95,10 @@ const acGetFailure = (resource) =>
   makeActionCreator(`GET_${resource}_FAILURE`, 'statusCode', 'message');
 
 const acGet = (resource, urlTemplate) => {
-  return (id) => (dispatch) => {
+  return (org, id) => (dispatch) => {
     dispatch(acGetRequest(resource)(id));
-
-    const url = urlTemplate.replace('{id}', id);
+    let url = urlTemplate.replace('{org}', org.slug);
+    url = url.replace('{id}', id + '/');
     return axios
       .get(url)
       .then((res) => dispatch(acGetSuccess(resource)(res.data)))

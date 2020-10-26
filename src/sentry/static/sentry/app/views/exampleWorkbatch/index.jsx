@@ -10,7 +10,10 @@ import {WORK_CONFIGURATION, EVENTS} from 'app/redux/reducers/index';
 class ExampleWorkbatchContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getWorkConfiguration(this.props.organization, 2);
+    this.props.getWorkConfiguration(
+      this.props.organization,
+      'clims.plugins.demo.dnaseq.configuration.my_fancy_step.MyFancyStep'
+    );
   }
 
   render() {
@@ -89,8 +92,8 @@ const mapDispatchToProps = (dispatch) => ({
     );
     dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
-  getWorkConfiguration: (org, id) => {
-    const urlTemplate = '/api/0/organizations/{org}/work-configrations/';
+  getWorkConfiguration: (org, cls_full_name) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-definition-details/{id}';
     const getWorkConfigurationRoutine = resourceActionCreators.acGet(
       WORK_CONFIGURATION,
       urlTemplate

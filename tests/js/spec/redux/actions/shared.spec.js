@@ -172,7 +172,7 @@ describe('shared async actions', () => {
 
   it('can get a single entry', () => {
     const store = mockStore({});
-    const url = '/url?search=search&cursor=cursor';
+    const urlTemplate = '/api/0/organizations/{org}/resource-details/{id}';
 
     // NOTE: Using this instead of stubRequest as it's easier to debug
     moxios.wait(() => {
@@ -186,11 +186,15 @@ describe('shared async actions', () => {
       });
     });
 
-    const actionCreator = resourceActionCreators.acGet(RESOURCE_NAME, url);
-    const action = actionCreator();
+    const actionCreator = resourceActionCreators.acGet(RESOURCE_NAME, urlTemplate);
+    const org = {
+      slug: 'lab',
+    };
+    const action = actionCreator(org, 2);
     const expectedActions = [
       {
         type: 'GET_RESOURCE_NAME_REQUEST',
+        id: 2,
       },
       {
         type: 'GET_RESOURCE_NAME_SUCCESS',
@@ -201,6 +205,8 @@ describe('shared async actions', () => {
     return store.dispatch(action).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
       expect(moxios.requests.count()).toEqual(1);
+      const request = moxios.requests.mostRecent();
+      expect(request.url).toBe('/api/0/organizations/lab/resource-details/2/');
     });
   });
   it('can send POST event', () => {
