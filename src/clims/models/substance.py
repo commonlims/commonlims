@@ -57,4 +57,4 @@ class SubstanceVersion(ExtensibleVersion):
 
     archetype = models.ForeignKey("clims.Substance", related_name='versions')
 
-    __repr__ = sane_repr('substance_id', 'version', 'latest')
+    __repr__ = sane_repr('archetype_id', 'version', 'latest')

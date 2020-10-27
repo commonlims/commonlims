@@ -125,6 +125,10 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-work-batches'),
+    url(r'^organizations/{org}/work-batches/(?P<work_batch_id>[^\/]+)/transitions/$',
+        WorkBatchTransitionsEndpoint.as_view(),
+        name='clims-api-0-work-batch-transitions'),
+    # TODO: the following URL's should contain organization id
     url(r'^work-batches/(?P<work_batch_id>[^\/]+)/files/$',
         WorkBatchFilesEndpoint.as_view(),
         name='clims-api-0-user-task-files'),
@@ -143,12 +147,6 @@ urlpatterns = patterns(
     url(r'^work-batch-settings/(?P<work_batch_type>[^\/]+)/$',
         WorkBatchSettingsDetailsEndpoint.as_view(),
         name='clims-api-0-work-batch-settings-details'),
-    # Transitions within a workbatch
-
-    url(r'^work-batches/(?P<work_batch_id>[^\/]+)/transitions/$',
-        # WorkBatchFilesEndpoint.as_view(),
-        WorkBatchTransitionsEndpoint.as_view(),
-        name='clims-api-0-work-batch-transitions'),
 
     # Processes and Tasks
     url(r'^process-definitions/$',
