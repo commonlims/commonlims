@@ -5,12 +5,12 @@ import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import moxios from 'moxios';
-import {WORK_CONFIGURATION, EVENTS} from 'app/redux/reducers/index';
+import {WORK_DEFINITION, EVENTS} from 'app/redux/reducers/index';
 
 class ExampleWorkbatchContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getWorkConfiguration(
+    this.props.getWorkDefinition(
       this.props.organization,
       'clims.plugins.demo.dnaseq.configuration.my_fancy_step.MyFancyStep'
     );
@@ -18,17 +18,17 @@ class ExampleWorkbatchContainer extends React.Component {
 
   render() {
     const buttonsFromConfig = [];
-    let workConfigurationEntry = this.props.workConfigurationEntry;
-    if (workConfigurationEntry == null) {
+    let workDefinitionEntry = this.props.workDefinitionEntry;
+    if (workDefinitionEntry == null) {
       return <LoadingIndicator />;
     }
-    let {byIds, detailsId} = workConfigurationEntry;
+    let {byIds, detailsId} = workDefinitionEntry;
     if (detailsId == null) {
       return <LoadingIndicator />;
     }
-    const workConfiguration = byIds[detailsId];
-    let {buttons: buttonConfigurations, id: configId} = workConfiguration;
-    for (const entry of buttonConfigurations) {
+    const workDefinition = byIds[detailsId];
+    let {buttons: buttonDefinitions, id: configId} = workDefinition;
+    for (const entry of buttonDefinitions) {
       const buttonClick = () => {
         this.sendButtonClickedEvent(entry.name, configId);
       };
@@ -66,11 +66,11 @@ ExampleWorkbatchContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    workConfigurationEntry: state.workConfigurationEntry,
+    workDefinitionEntry: state.workDefinitionEntry,
   };
 };
 
-const mockedWorkConfiguration = {
+const mockedWorkDefinition = {
   id: 2,
   buttons: [
     {
@@ -92,10 +92,10 @@ const mapDispatchToProps = (dispatch) => ({
     );
     dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
-  getWorkConfiguration: (org, cls_full_name) => {
+  getWorkDefinition: (org, cls_full_name) => {
     const urlTemplate = '/api/0/organizations/{org}/work-definition-details/{id}';
-    const getWorkConfigurationRoutine = resourceActionCreators.acGet(
-      WORK_CONFIGURATION,
+    const getWorkDefinitionRoutine = resourceActionCreators.acGet(
+      WORK_DEFINITION,
       urlTemplate
     );
     // TODO: remove this mock response
@@ -104,11 +104,11 @@ const mapDispatchToProps = (dispatch) => ({
       const request = moxios.requests.mostRecent();
       request.respondWith({
         status: 200,
-        response: mockedWorkConfiguration,
+        response: mockedWorkDefinition,
         headers: [],
       });
     });
-    dispatch(getWorkConfigurationRoutine(org, id));
+    dispatch(getWorkDefinitionRoutine(org, cls_full_name));
   },
 });
 
