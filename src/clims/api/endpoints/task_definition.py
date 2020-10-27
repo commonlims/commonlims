@@ -4,6 +4,8 @@ from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.task_definition import TaskDefinitionSerializer
 
+# TODO: this module should probably be removed and replaced by work_definition.py
+
 
 class TaskDefinitionEndpoint(OrganizationEndpoint):
     def get(self, request, organization):

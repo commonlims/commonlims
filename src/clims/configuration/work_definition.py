@@ -1,9 +1,12 @@
 from __future__ import absolute_import, print_function
 from six import iteritems
+from collections import namedtuple
 from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
+from clims.services.extensible import ExtensibleBase
+from clims.models.step import Step, StepVersion
 
 
-class Step:
+class WorkDefinitionBase(ExtensibleBase):
     """
     Configuration classes in plugins must inherit from this class. by
     doing so, the trigger points (hooks) will be recognized in UI.
@@ -30,12 +33,22 @@ class Step:
         > The method "on_button_click1xx" is triggered
 
     """
+
+    WrappedArchetype = Step
+    WrappedVersion = StepVersion
+
+    @classmethod
+    def full_name(cls):
+        # Corresponds to 'full_name' in serializer
+        return cls.type_full_name_cls()
+
     @classmethod
     def buttons(cls):
         buttons = list()
         for _, v in iteritems(cls.__dict__):
             if callable(v) and hasattr(v, HOOK_TAG):
-                buttons.append(getattr(v, HOOK_TAG))
+                b = Button(name=v.__name__, caption=getattr(v, HOOK_TAG))
+                buttons.append(b)
         return buttons
 
     @classmethod
@@ -53,3 +66,7 @@ class Step:
     def _matches_event_type(cls, class_attr, event_type):
         a = class_attr
         return callable(a) and hasattr(a, HOOK_TYPE) and getattr(a, HOOK_TYPE) == event_type
+
+
+class Button(namedtuple("Button", ['name', 'caption'])):
+    pass
