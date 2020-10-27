@@ -17,13 +17,10 @@ const sharedInitialState = {
   ...resource.initialState,
 };
 
-export const WORK_CONFIGURATION = 'WORK_CONFIGURATION';
+export const WORK_DEFINITION = 'WORK_DEFINITION';
 export const EVENTS = 'EVENTS';
 
-const workConfigurationEntry = resource.createReducer(
-  WORK_CONFIGURATION,
-  sharedInitialState
-);
+const workDefinitionEntry = resource.createReducer(WORK_DEFINITION, sharedInitialState);
 
 export default combineReducers({
   process,
@@ -37,5 +34,5 @@ export default combineReducers({
   workBatch,
   workBatchDetails,
   projectSearchEntry,
-  workConfigurationEntry,
+  workDefinitionEntry,
 });
