@@ -3,7 +3,7 @@ from six import iteritems
 from collections import namedtuple
 from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
 from clims.services.extensible import ExtensibleBase
-from clims.models.step import Step, StepVersion
+from clims.models.workdefinition import WorkDefinition, WorkDefinitionVersion
 
 
 class WorkDefinitionBase(ExtensibleBase):
@@ -34,8 +34,8 @@ class WorkDefinitionBase(ExtensibleBase):
 
     """
 
-    WrappedArchetype = Step
-    WrappedVersion = StepVersion
+    WrappedArchetype = WorkDefinition
+    WrappedVersion = WorkDefinitionVersion
 
     @classmethod
     def full_name(cls):
