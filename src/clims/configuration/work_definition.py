@@ -2,11 +2,10 @@ from __future__ import absolute_import, print_function
 from six import iteritems
 from collections import namedtuple
 from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
-from clims.services.extensible import ExtensibleBase
-from clims.models.step import Step, StepVersion
+from clims.services.workbatch import WorkBatchBase
 
 
-class WorkDefinitionBase(ExtensibleBase):
+class WorkDefinitionBase(WorkBatchBase):
     """
     Configuration classes in plugins must inherit from this class. by
     doing so, the trigger points (hooks) will be recognized in UI.
@@ -33,9 +32,6 @@ class WorkDefinitionBase(ExtensibleBase):
         > The method "on_button_click1xx" is triggered
 
     """
-
-    WrappedArchetype = Step
-    WrappedVersion = StepVersion
 
     @classmethod
     def full_name(cls):

@@ -1,8 +1,10 @@
 from __future__ import absolute_import
 from sentry.models.file import File
 from clims.services.file_handling.file_service import FILENAME_RE, FileNameValidationError
-from clims.models.workbatchfile import WorkBatchFile as WorkBatchFileModel
+from clims.services.extensible import ExtensibleBase
 from clims.services.base_extensible_service import BaseExtensibleService
+from clims.models.workbatchfile import WorkBatchFile as WorkBatchFileModel
+from clims.models.work_batch import WorkBatch, WorkBatchVersion
 
 
 class WorkbatchService(BaseExtensibleService):
@@ -10,9 +12,9 @@ class WorkbatchService(BaseExtensibleService):
         self._app = app
 
 
-class WorkBatch(object):
-    def __init__(self, work_batch_model):
-        self.archetype = work_batch_model
+class WorkBatchBase(ExtensibleBase):
+    WrappedArchetype = WorkBatch
+    WrappedVersion = WorkBatchVersion
 
     def add_file(self, file_stream, name, file_handle):
         if FILENAME_RE.search(name):
@@ -22,18 +24,18 @@ class WorkBatch(object):
         file_stream.seek(0)
         file_model.putfile(file_stream)
         work_batch_file = WorkBatchFileModel(
-            organization=self.organization, work_batch=self.archetype,
+            organization=self.organization, work_batch=self._archetype,
             name=name, file=file_model, file_handle=file_handle
         )
         work_batch_file.save()
-        self.archetype.files.add(work_batch_file)
+        self._archetype.files.add(work_batch_file)
         self.save()
 
     def get_single_file(self, file_handle=None):
         from clims.utils import single_or_default, UnexpectedLengthError
         try:
             file_model = single_or_default(
-                [f for f in self.archetype.files.all() if f.file_handle == file_handle]
+                [f for f in self._archetype.files.all() if f.file_handle == file_handle]
             )
         except UnexpectedLengthError:
             raise ValueError(
@@ -47,18 +49,10 @@ class WorkBatch(object):
         return WorkBatchFile(file_model)
 
     @classmethod
-    def create(cls, organization):
-        from clims.models.work_batch import WorkBatch as WorkBatchModel
-        model = WorkBatchModel(organization=organization)
-        model.save()
-        return WorkBatch(model)
-
-    @property
-    def organization(self):
-        return self.archetype.organization
-
-    def save(self):
-        self.archetype.save()
+    def create(cls, name):
+        instance = WorkBatchBase(name=name)
+        instance.save()
+        return instance
 
 
 class WorkBatchFile(object):
