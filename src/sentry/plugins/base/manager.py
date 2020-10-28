@@ -67,7 +67,6 @@ class PluginManager(object):
                 plugin_reg = self.install_plugin(plugin)
                 self.install_extensible_types(plugin)
                 self.install_workflows_in_plugin(plugin, plugin_reg)
-                self.install_step_templates(plugin)
 
     def install_workflows_in_plugin(self, plugin_cls, plugin_reg):
         """
@@ -117,16 +116,6 @@ class PluginManager(object):
         reg, _ = PluginRegistration.objects.get_or_create(
             name=plugin_cls.get_full_name(), version=plugin_cls.version)
         return reg
-
-    def install_step_templates(self, plugin):
-        """
-        Installs all the step tempalates found in the plugin.
-        """
-        logger.info("Installing step templates found in plugin class '{}'".format(
-            plugin.get_name_and_version()))
-
-        for step_template_cls in plugin.get_step_templates():
-            self._app.workbatches.register_step_template(step_template_cls)
 
     def install_extensible_types(self, plugin):
         """
