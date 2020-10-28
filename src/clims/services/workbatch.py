@@ -2,19 +2,12 @@ from __future__ import absolute_import
 from sentry.models.file import File
 from clims.services.file_handling.file_service import FILENAME_RE, FileNameValidationError
 from clims.models.workbatchfile import WorkBatchFile as WorkBatchFileModel
+from clims.services.base_extensible_service import BaseExtensibleService
 
 
-class WorkbatchService:
+class WorkbatchService(BaseExtensibleService):
     def __init__(self, app):
         self._app = app
-        self.step_templates = list()
-
-    def register_step_template(self, step_template_cls):
-        self.step_templates.append(step_template_cls)
-
-    def get_step_template(self, name):
-        from clims.utils import single
-        return single([step for step in self.step_templates if step.name == name])
 
 
 class WorkBatch(object):
