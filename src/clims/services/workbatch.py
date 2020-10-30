@@ -48,12 +48,6 @@ class WorkBatchBase(ExtensibleBase):
                 "file-handle: {}".format(file_handle))
         return WorkBatchFile(file_model)
 
-    @classmethod
-    def create(cls, name):
-        instance = WorkBatchBase(name=name)
-        instance.save()
-        return instance
-
 
 class WorkBatchFile(object):
     def __init__(self, work_batch_file_model):
