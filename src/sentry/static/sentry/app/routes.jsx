@@ -21,7 +21,7 @@ import errorHandler from 'app/utils/errorHandler';
 
 // CLIMS
 import SubstancesContainer from 'app/views/substances/index';
-import ExampleWorkbatchContainer from 'app/views/exampleWorkbatch/index';
+import WorkBatchDetailsWaitingToBeMergedContainer from 'app/views/workBatchDetailsWaitingToBeMerged/index';
 import ProjectsContainer from 'app/views/projects/index';
 import WorkBatchListContainer from 'app/views/workBatchList/index';
 import WorkBatchDetailsContainer from 'app/views/workBatchDetails/organization/index';
@@ -606,8 +606,8 @@ function routes() {
           <Route path="work-batches/" component={errorHandler(WorkBatchListContainer)} />
           <Route path="substances/" component={errorHandler(SubstancesContainer)} />
           <Route
-            path="example-workbatch/"
-            component={errorHandler(ExampleWorkbatchContainer)}
+            path="workbatch-details/"
+            component={errorHandler(WorkBatchDetailsWaitingToBeMergedContainer)}
           />
 
           <Route

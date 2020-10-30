@@ -7,7 +7,7 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import moxios from 'moxios';
 import {WORK_DEFINITION, EVENTS} from 'app/redux/reducers/index';
 
-class ExampleWorkbatchContainer extends React.Component {
+class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
     this.props.getWorkDefinition(
@@ -17,6 +17,7 @@ class ExampleWorkbatchContainer extends React.Component {
   }
 
   render() {
+    //TODO: merge this with files in the workBatchDetails folder
     const buttonsFromConfig = [];
     let workDefinitionEntry = this.props.workDefinitionEntry;
     if (workDefinitionEntry == null) {
@@ -59,7 +60,7 @@ class ExampleWorkbatchContainer extends React.Component {
   }
 }
 
-ExampleWorkbatchContainer.propTypes = {
+WorkbatchDetails.propTypes = {
   ...ClimsTypes.List,
   organization: ClimsTypes.Organization.isRequired,
 };
@@ -113,5 +114,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withOrganization(
-  connect(mapStateToProps, mapDispatchToProps)(ExampleWorkbatchContainer)
+  connect(mapStateToProps, mapDispatchToProps)(WorkbatchDetails)
 );
