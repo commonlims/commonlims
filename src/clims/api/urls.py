@@ -82,7 +82,7 @@ urlpatterns = patterns(
     # Steps
     url(r'^organizations/{org}/work-definition-details/(?P<cls_full_name>[^\/]+)/$',
         WorkBatchDetailsDefinitionEndpoint.as_view(),
-        name='clims-api-0-work-definition-details'),
+        name='clims-api-0-work-batch-definition-details'),
     url(r'^organizations/{org}/events/$',
         EventEndpoint.as_view(),
         name='clims-api-0-events'),

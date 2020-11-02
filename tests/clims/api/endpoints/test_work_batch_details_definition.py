@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import pytest
 from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
-from clims.configuration.work_definition import WorkBatchDefinitionBase
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
 from clims.configuration.hooks import button
 from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 
@@ -17,7 +17,7 @@ class TestWorkDefinition(APITestCase):
         # the UI should conform to the step configuration.
         step_full_name = 'endpoints.test_work_definition.MyFancyStep'
         url = reverse(
-            'clims-api-0-work-definition-details',
+            'clims-api-0-work-batch-definition-details',
             args=(self.organization.name, step_full_name)
         )
         self.login_as(self.user)

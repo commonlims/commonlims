@@ -4,7 +4,7 @@ import json
 from rest_framework import status
 from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
-from clims.configuration.work_definition import WorkDefinitionBase
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
 from clims.configuration.hooks import button
 
 
@@ -34,7 +34,7 @@ class TestEvent(APITestCase):
         assert getattr(MyFancyStep, 'was_called') is True
 
 
-class MyFancyStep(WorkDefinitionBase):
+class MyFancyStep(WorkBatchDefinitionBase):
     name = 'My fancy step'
 
     @button('My submit button')

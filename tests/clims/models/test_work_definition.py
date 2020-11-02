@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import pytest
 from sentry.testutils import TestCase
-from clims.configuration.work_definition import WorkBatchDefinitionBase, Button
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase, Button
 from clims.configuration.hooks import button
 from clims.services.extensible import FloatField
 

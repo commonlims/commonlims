@@ -21,9 +21,9 @@ class EventEndpoint(OrganizationEndpoint):
             return self.respond(serializer.errors, status=400)
 
         work_batch_id = serializer.validated_data.get('work_batch_id')
-        event_tag = serializer.validated_data.get('event')
+        event = serializer.validated_data.get('event')
 
         workbatch = self.app.workbatches.get(id=work_batch_id)
-        workbatch.trigger_script(event_tag)
+        workbatch.trigger(event)
         ret = {}
         return Response(ret, status=status.HTTP_201_CREATED)

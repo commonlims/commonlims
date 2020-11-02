@@ -7,16 +7,14 @@ from clims.services.workbatch import WorkBatchBase
 
 class WorkBatchDefinitionBase(WorkBatchBase):
     """
-    Configuration classes in plugins must inherit from this class. by
-    doing so, the trigger points (hooks) will be recognized in UI.
+    In plugin configuration, an event triggered at a button click
+    is created as this:
 
-    In plugin configuration, a trigger point is created as this:
-
-    from configuration.step import Step
+    from configuration.work_batch_defintion import WorkBatchDefinitionBase
     from configuration.hooks import button
     from clims.services import TextField
 
-    class MyFancyStep(Step):
+    class MyFancyStep(WorkBatchDefinitionBase):
         todays_flavour = TextField()
 
         @button('My submit button')

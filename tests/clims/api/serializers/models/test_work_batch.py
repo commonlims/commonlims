@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from sentry.testutils import TestCase
 
-from clims.api.serializers.models.workbatch import WorkBatchSerializer
+from clims.api.serializers.models.work_batch import WorkBatchSerializer
 from clims.models.work_batch import WorkBatch
 
 

@@ -5,25 +5,22 @@ import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import moxios from 'moxios';
-import {WORK_DEFINITION, EVENTS} from 'app/redux/reducers/index';
+import {WORK_BATCH_DEFINITION, EVENTS} from 'app/redux/reducers/index';
 
 class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getWorkDefinition(
-      this.props.organization,
-      'clims.plugins.demo.dnaseq.configuration.my_fancy_step.MyFancyStep'
-    );
+    this.props.getConfiguredStaticContents(this.props.organization, 1);
   }
 
   render() {
     //TODO: merge this with files in the workBatchDetails folder
     const buttonsFromConfig = [];
-    let workDefinitionEntry = this.props.workDefinitionEntry;
-    if (workDefinitionEntry == null) {
+    let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
+    if (workBatchDefinitionEntry == null) {
       return <LoadingIndicator />;
     }
-    let {byIds, detailsId} = workDefinitionEntry;
+    let {byIds, detailsId} = workBatchDefinitionEntry;
     if (detailsId == null) {
       return <LoadingIndicator />;
     }
@@ -67,7 +64,7 @@ WorkbatchDetails.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    workDefinitionEntry: state.workDefinitionEntry,
+    workBatchDefinitionEntry: state.workBatchDefinitionEntry,
   };
 };
 
@@ -93,10 +90,10 @@ const mapDispatchToProps = (dispatch) => ({
     );
     dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
-  getWorkDefinition: (org, cls_full_name) => {
+  getConfiguredStaticContents: (org, workbatchId) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batch-definition-details/{id}';
-    const getWorkDefinitionRoutine = resourceActionCreators.acGet(
-      WORK_DEFINITION,
+    const getConfiguredStaticContentsRoutine = resourceActionCreators.acGet(
+      WORK_BATCH_DEFINITION,
       urlTemplate
     );
     // TODO: remove this mock response

@@ -4,7 +4,7 @@ import logging
 from rest_framework.response import Response
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.models import WorkBatch
-from clims.api.serializers.models.workbatch import WorkBatchSerializer
+from clims.api.serializers.models.work_batch import WorkBatchSerializer
 from sentry.api.paginator import OffsetPaginator
 
 logger = logging.getLogger(__name__)
