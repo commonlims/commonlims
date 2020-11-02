@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 from six import iteritems
 from collections import namedtuple
-from clims.configuration.hooks import HOOK_TAG
+from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
 from clims.services.workbatch import WorkBatchBase
 
 
@@ -40,7 +40,8 @@ class WorkBatchDefinitionBase(WorkBatchBase):
     def buttons(cls):
         buttons = list()
         for _, v in iteritems(cls.__dict__):
-            if callable(v) and hasattr(v, HOOK_TAG):
+            if callable(v) and hasattr(v, HOOK_TAG) and \
+                    hasattr(v, HOOK_TYPE) and getattr(v, HOOK_TYPE) == 'button':
                 b = Button(name=v.__name__, caption=getattr(v, HOOK_TAG))
                 buttons.append(b)
         return buttons
