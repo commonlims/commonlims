@@ -21,11 +21,10 @@ class EventEndpoint(OrganizationEndpoint):
             return self.respond(serializer.errors, status=400)
 
         step_full_name = serializer.validated_data.get('full_name')
-        event_type = serializer.validated_data.get('event_type')
-        event_tag = serializer.validated_data.get('event_tag')
+        event_tag = serializer.validated_data.get('event')
 
         step_cls = self.app.extensibles.implementations[step_full_name]
         step = step_cls()
-        step.trigger_script(event_type, event_tag, None)
+        step.trigger_script(event_tag, None)
         ret = {}
         return Response(ret, status=status.HTTP_201_CREATED)

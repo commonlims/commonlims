@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 from six import iteritems
 from collections import namedtuple
-from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
+from clims.configuration.hooks import HOOK_TAG
 from clims.services.workbatch import WorkBatchBase
 
 
@@ -48,20 +48,16 @@ class WorkBatchDefinitionBase(WorkBatchBase):
         return buttons
 
     @classmethod
-    def trigger_script(cls, event_type, event_tag, workbatch):
+    def trigger_script(cls, event, workbatch):
         class_dict = dict(cls.__dict__)
-        for _, v in iteritems(class_dict):
-            if cls._matches_event_type(v, event_type):
-                if hasattr(v, HOOK_TAG) and getattr(v, HOOK_TAG) == event_tag:
-                    # TODO: None as self is not pretty
-                    v(None, workbatch)
-                elif not hasattr(v, HOOK_TAG):
-                    v(None, workbatch)
+        for k, v in iteritems(class_dict):
+            if cls._matches_event(k, v, event):
+                # TODO: None as self is not pretty
+                v(None, workbatch)
 
     @classmethod
-    def _matches_event_type(cls, class_attr, event_type):
-        a = class_attr
-        return callable(a) and hasattr(a, HOOK_TYPE) and getattr(a, HOOK_TYPE) == event_type
+    def _matches_event(cls, attribute_key, attribute_value, event):
+        return callable(attribute_value) and attribute_key == event
 
 
 class Button(namedtuple("Button", ['name', 'caption'])):

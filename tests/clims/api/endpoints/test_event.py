@@ -18,8 +18,7 @@ class TestEvent(APITestCase):
         url = reverse('clims-api-0-events', args=(self.organization.name,))
         specification_payload = {
             'full_name': 'endpoints.test_event.MyFancyStep',
-            'event_type': 'button',
-            'event_tag': 'My submit button',
+            'event': 'on_button_click1',
         }
         self.login_as(self.user)
         response = self.client.post(
