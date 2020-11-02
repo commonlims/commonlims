@@ -4,9 +4,9 @@ import json
 from rest_framework import status
 from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
-from clims.configuration.work_definition import WorkDefinitionBase
+from clims.configuration.work_definition import WorkBatchDefinitionBase
 from clims.configuration.hooks import button
-from clims.api.serializers.models.work_definition import WorkDefinitionSerializer
+from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 
 
 class TestWorkDefinition(APITestCase):
@@ -28,7 +28,7 @@ class TestWorkDefinition(APITestCase):
         assert response.status_code == 200, response.content
         assert response.data['name'] == step_name
         assert response.data['full_name'] == step_full_name
-        serializer = WorkDefinitionSerializer(data=response.data)
+        serializer = WorkBatchDetailsDefinitionSerializer(data=response.data)
         assert serializer.is_valid()
         assert response.data['buttons'] == \
             [{"caption": "My submit button", "event": "on_button_click1"}]
@@ -51,7 +51,7 @@ class TestWorkDefinition(APITestCase):
         assert getattr(MyFancyStep, 'was_called') is True
 
 
-class MyFancyStep(WorkDefinitionBase):
+class MyFancyStep(WorkBatchDefinitionBase):
     name = 'My fancy step'
 
     @button('My submit button')

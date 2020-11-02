@@ -5,7 +5,7 @@ from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
 from clims.services.workbatch import WorkBatchBase
 
 
-class WorkDefinitionBase(WorkBatchBase):
+class WorkBatchDefinitionBase(WorkBatchBase):
     """
     Configuration classes in plugins must inherit from this class. by
     doing so, the trigger points (hooks) will be recognized in UI.

@@ -10,7 +10,7 @@ class ButtonField(serializers.Field):
         }
 
 
-class WorkDefinitionSerializer(serializers.Serializer):
+class WorkBatchDetailsDefinitionSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True, source="full_name")
     full_name = serializers.CharField(read_only=True)
     name = serializers.CharField(read_only=True)
