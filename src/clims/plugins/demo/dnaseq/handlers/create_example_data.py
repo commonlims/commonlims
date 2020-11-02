@@ -78,3 +78,4 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             workbatch = ExampleWorkBatch(name=name,
                                          status=_ix)
             workbatch.save()
+            logger.info("Created workbatch: {}".format(workbatch.name))
