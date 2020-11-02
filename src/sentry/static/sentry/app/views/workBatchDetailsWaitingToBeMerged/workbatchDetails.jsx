@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
   getWorkDefinition: (org, cls_full_name) => {
-    const urlTemplate = '/api/0/organizations/{org}/work-definition-details/{id}';
+    const urlTemplate = '/api/0/organizations/{org}/work-batch-definition-details/{id}';
     const getWorkDefinitionRoutine = resourceActionCreators.acGet(
       WORK_DEFINITION,
       urlTemplate
