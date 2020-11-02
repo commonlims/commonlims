@@ -3,7 +3,7 @@ from clims.services.substance import SubstanceBase
 from clims.services.project import ProjectBase
 from clims.services.extensible import FloatField, TextField
 from clims.services.container import PlateBase
-from clims.services.workbatch import WorkBatch
+from clims.services.workbatch import WorkBatchBase
 
 
 class ExampleSample(SubstanceBase):
@@ -31,6 +31,5 @@ class PandorasBox(PlateBase):
 
 
 # TODO: attach files
-class ExampleWorkBatch(WorkBatch):
-    def __init__(self, **kwargs):
-        super(ExampleWorkBatch, self).__init__(self, kwargs)
+class ExampleWorkBatch(WorkBatchBase):
+    pass
