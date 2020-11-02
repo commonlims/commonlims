@@ -10,14 +10,18 @@ from clims.configuration.hooks import button
 
 class TestEvent(APITestCase):
     def setUp(self):
+        self.has_context()
         self.register_extensible(MyFancyStep)
+        workbatch = MyFancyStep(name='instance name')
+        workbatch.save()
+        self.workbatch = workbatch
 
     @pytest.mark.dev_edvard
     def test_trigger_button_call__from_step_template_and_button_name(self):
         # This endpoint is called when user presses a button within a step
         url = reverse('clims-api-0-events', args=(self.organization.name,))
         specification_payload = {
-            'full_name': 'endpoints.test_event.MyFancyStep',
+            'work_batch_id': self.workbatch.id,
             'event': 'on_button_click1',
         }
         self.login_as(self.user)
@@ -34,5 +38,5 @@ class MyFancyStep(WorkDefinitionBase):
     name = 'My fancy step'
 
     @button('My submit button')
-    def on_button_click1(self, workbatch):
+    def on_button_click1(self):
         setattr(MyFancyStep, 'was_called', True)

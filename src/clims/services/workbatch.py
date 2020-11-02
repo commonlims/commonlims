@@ -9,7 +9,7 @@ from clims.models.work_batch import WorkBatch, WorkBatchVersion
 
 class WorkbatchService(BaseExtensibleService):
     def __init__(self, app):
-        self._app = app
+        super(WorkbatchService, self).__init__(app, WorkBatchBase)
 
 
 class WorkBatchBase(ExtensibleBase):

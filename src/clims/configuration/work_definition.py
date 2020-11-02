@@ -47,16 +47,13 @@ class WorkBatchDefinitionBase(WorkBatchBase):
                 buttons.append(b)
         return buttons
 
-    @classmethod
-    def trigger_script(cls, event, workbatch):
-        class_dict = dict(cls.__dict__)
+    def trigger(self, event):
+        class_dict = dict(self.__class__.__dict__)
         for k, v in iteritems(class_dict):
-            if cls._matches_event(k, v, event):
-                # TODO: None as self is not pretty
-                v(None, workbatch)
+            if self._matches_event(k, v, event):
+                v(self)
 
-    @classmethod
-    def _matches_event(cls, attribute_key, attribute_value, event):
+    def _matches_event(self, attribute_key, attribute_value, event):
         return callable(attribute_value) and attribute_key == event
 
 

@@ -4,5 +4,5 @@ from rest_framework import serializers
 
 
 class EventSerializer(serializers.Serializer):
-    full_name = serializers.CharField()
+    work_batch_id = serializers.CharField()
     event = serializers.CharField()

@@ -20,11 +20,10 @@ class EventEndpoint(OrganizationEndpoint):
         if not serializer.is_valid():
             return self.respond(serializer.errors, status=400)
 
-        step_full_name = serializer.validated_data.get('full_name')
+        work_batch_id = serializer.validated_data.get('work_batch_id')
         event_tag = serializer.validated_data.get('event')
 
-        step_cls = self.app.extensibles.implementations[step_full_name]
-        step = step_cls()
-        step.trigger_script(event_tag, None)
+        workbatch = self.app.workbatches.get(id=work_batch_id)
+        workbatch.trigger_script(event_tag)
         ret = {}
         return Response(ret, status=status.HTTP_201_CREATED)
