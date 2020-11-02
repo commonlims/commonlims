@@ -4,7 +4,7 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from ..models import ExampleSample, ExampleProject, PandorasBox
+from ..models import ExampleSample, ExampleProject, PandorasBox, ExampleWorkBatch
 
 
 logger = logging.getLogger(__name__)
@@ -71,3 +71,12 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                     pi=random.choice(pis))
             project.save()
             logger.info("Created project: {}".format(project.name))
+
+        # Create a workbatch of each type
+        for _ix in range(5):
+            name = "demoplugin-workbatch-{}".format(uuid4().hex)
+            # TODO: non-zero status doesn't get written to DB, figure out why
+            workbatch = ExampleWorkBatch(name=name,
+                                         status=_ix)
+            workbatch.save()
+            logger.info("Created workbatch: {}".format(workbatch.name))
