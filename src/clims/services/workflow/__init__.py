@@ -292,8 +292,9 @@ class WorkflowService(object):
         name = name[0]
 
         # 2. Create a work batch with the "tracked objects" we just fetched
-        from clims.models.work_batch import WorkBatch
-        batch = WorkBatch(organization=organization, name=name)
+        from clims.services.workbatch import WorkBatchBase
+        # TODO: This is an extensible "base" class, that shouldn't be instantiated
+        batch = WorkBatchBase(name=name)
         batch.save()
 
         for task in tasks:

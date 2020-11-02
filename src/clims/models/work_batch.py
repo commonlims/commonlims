@@ -1,8 +1,9 @@
 from __future__ import absolute_import, print_function
 from django.db import models
-from sentry.db.models import Model, FlexibleForeignKey, BoundedPositiveIntegerField
+from sentry.db.models import FlexibleForeignKey, BoundedPositiveIntegerField, sane_repr
 from django.db.models.fields import TextField
 from django.utils.translation import ugettext_lazy as _
+from clims.models.extensible import ExtensibleModel, ExtensibleVersion
 
 
 class WorkBatchStatus(object):
@@ -13,22 +14,21 @@ class WorkBatchStatus(object):
     DELETION_IN_PROGRESS = 4
 
 
-class WorkBatch(Model):
+class WorkBatch(ExtensibleModel):
     """
     Represents a task that needs to be fulfilled by a user. May involve several steps
     and views to be fully processed.
     """
+
+    def __init__(self, *args, **kwargs):
+        super(WorkBatch, self).__init__(*args, **kwargs)
+
     __core__ = True
 
     name = models.CharField('name', max_length=200, blank=True)
     organization = FlexibleForeignKey('sentry.Organization')
 
-    # plugin = FlexibleForeignKey('clims.PluginRegistration', null=True)
     handler = models.TextField('handler')
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(auto_now=True)
 
     # TODO: Remove
     extra_fields = TextField('extra_fields')
@@ -49,3 +49,11 @@ class WorkBatch(Model):
     class Meta:
         app_label = 'clims'
         db_table = 'clims_workbatch'
+
+
+class WorkBatchVersion(ExtensibleVersion):
+    __core__ = True
+
+    archetype = models.ForeignKey("clims.WorkBatch", related_name='versions')
+
+    __repr__ = sane_repr('workbatch_id', 'version', 'latest')

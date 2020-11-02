@@ -4,34 +4,40 @@ import json
 from rest_framework import status
 from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
-from clims.configuration.step import Step
+from clims.configuration.work_definition import WorkBatchDefinitionBase
 from clims.configuration.hooks import button
-from clims.api.serializers.models.step import StepSerializer
+from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 
 
-class TestStepConfiguration(APITestCase):
+class TestWorkDefinition(APITestCase):
+    def setUp(self):
+        self.register_extensible(MyFancyStep)
+
     @pytest.mark.dev_edvard
     def test_get_step_template__fetched_from_name__returns_list_of_buttons(self):
         # This test case is thought of to happen when user enters a step, and
         # the UI should conform to the step configuration.
-        self.app.workbatches.register_step_template(MyFancyStep)
-        url = reverse('clims-api-0-steps', args=(self.organization.name,))
+        step_full_name = 'endpoints.test_work_definition.MyFancyStep'
+        url = reverse(
+            'clims-api-0-work-definition-details',
+            args=(self.organization.name, step_full_name)
+        )
         self.login_as(self.user)
         step_name = 'My fancy step'
-        response = self.client.get(url + '?name=' + step_name)
+        response = self.client.get(url)
         assert response.status_code == 200, response.content
-        assert len(response.data) == 1, len(response.data)
-        assert response.data[0]['name'] == step_name
-        serializer = StepSerializer(data=response.data[0])
+        assert response.data['name'] == step_name
+        assert response.data['full_name'] == step_full_name
+        serializer = WorkBatchDetailsDefinitionSerializer(data=response.data)
         assert serializer.is_valid()
-        assert response.data[0]['buttons'] == ['My submit button']
+        assert response.data['buttons'] == \
+            [{"caption": "My submit button", "event": "on_button_click1"}]
 
     def test_trigger_button_call__from_step_template_and_button_name(self):
         # This endpoint is called when user presses a button within a step
-        self.app.workbatches.register_step_template(MyFancyStep)
-        url = reverse('clims-api-0-script-trigger', args=(self.organization.name,))
+        url = reverse('clims-api-0-events', args=(self.organization.name,))
         specification_payload = {
-            'name': 'My fancy step',
+            'full_name': 'endpoints.test_work_definition.MyFancyStep',
             'event_type': 'button',
             'event_tag': 'My submit button',
         }
@@ -45,7 +51,7 @@ class TestStepConfiguration(APITestCase):
         assert getattr(MyFancyStep, 'was_called') is True
 
 
-class MyFancyStep(Step):
+class MyFancyStep(WorkBatchDefinitionBase):
     name = 'My fancy step'
 
     @button('My submit button')
