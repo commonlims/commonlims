@@ -16,6 +16,9 @@ class WorkBatchBase(ExtensibleBase):
     WrappedArchetype = WorkBatch
     WrappedVersion = WorkBatchVersion
 
+    def __init__(self, **kwargs):
+        super(WorkBatchBase, self).__init__(**kwargs)
+
     def add_file(self, file_stream, name, file_handle):
         if FILENAME_RE.search(name):
             raise FileNameValidationError('File name must not contain special whitespace characters')
@@ -47,6 +50,14 @@ class WorkBatchBase(ExtensibleBase):
                 "There were no file in this workbatch, "
                 "file-handle: {}".format(file_handle))
         return WorkBatchFile(file_model)
+
+    @property
+    def status(self):
+        return self._archetype.status
+
+    @status.setter
+    def status(self, value):
+        self._archetype.status = value
 
 
 class WorkBatchFile(object):
