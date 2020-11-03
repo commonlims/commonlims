@@ -1,12 +1,8 @@
-
 from __future__ import absolute_import
-
-from clims.models.work_batch import WorkBatch
-
-from rest_framework import serializers as django_serializers
+from rest_framework import serializers
 
 
-class WorkBatchSerializer(django_serializers.ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = WorkBatch
+class WorkBatchSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    cls_full_name = serializers.CharField(read_only=True)

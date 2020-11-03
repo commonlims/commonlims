@@ -15,17 +15,17 @@ class TestWorkDefinition(APITestCase):
     def test_get_step_template__fetched_from_name__returns_list_of_buttons(self):
         # This test case is thought of to happen when user enters a step, and
         # the UI should conform to the step configuration.
-        step_full_name = 'endpoints.test_work_definition.MyFancyStep'
+        cls_full_name = 'endpoints.test_work_batch_details_definition.MyFancyStep'
         url = reverse(
             'clims-api-0-work-batch-definition-details',
-            args=(self.organization.name, step_full_name)
+            args=(self.organization.name, cls_full_name)
         )
         self.login_as(self.user)
         step_name = 'My fancy step'
         response = self.client.get(url)
         assert response.status_code == 200, response.content
         assert response.data['name'] == step_name
-        assert response.data['full_name'] == step_full_name
+        assert response.data['cls_full_name'] == cls_full_name
         serializer = WorkBatchDetailsDefinitionSerializer(data=response.data)
         assert serializer.is_valid()
         assert response.data['buttons'] == \

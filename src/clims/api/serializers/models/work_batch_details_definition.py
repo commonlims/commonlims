@@ -11,7 +11,7 @@ class ButtonField(serializers.Field):
 
 
 class WorkBatchDetailsDefinitionSerializer(serializers.Serializer):
-    id = serializers.CharField(read_only=True, source="full_name")
-    full_name = serializers.CharField(read_only=True)
+    id = serializers.CharField(read_only=True, source='cls_full_name')
+    cls_full_name = serializers.CharField(read_only=True)
     name = serializers.CharField(read_only=True)
     buttons = serializers.ListField(child=ButtonField(), read_only=True)

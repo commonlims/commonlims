@@ -32,7 +32,7 @@ class WorkBatchDefinitionBase(WorkBatchBase):
     """
 
     @classmethod
-    def full_name(cls):
+    def cls_full_name(cls):
         # Corresponds to 'full_name' in serializer
         return cls.type_full_name_cls()
 

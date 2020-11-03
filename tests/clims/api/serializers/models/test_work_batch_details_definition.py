@@ -13,10 +13,10 @@ class WorkBatchDetailsDefintionSerializerTest(TestCase):
         self.register_extensible(MyFancyStep)
 
     def test_can_serialize_work_definition(self):
-        work_definition = MyFancyStep()
-        result = WorkBatchDetailsDefinitionSerializer(work_definition).data
+        workbatch = MyFancyStep()
+        result = WorkBatchDetailsDefinitionSerializer(workbatch).data
         assert result.get('id') == 'serializers.models.test_work_batch_details_definition.MyFancyStep'
-        assert result.get('full_name') == 'serializers.models.test_work_batch_details_definition.MyFancyStep'
+        assert result.get('cls_full_name') == 'serializers.models.test_work_batch_details_definition.MyFancyStep'
         assert result.get('name') == 'My fancy step'
         assert result.get('buttons') == [{'caption': 'My submit button', 'event': 'on_button_click1'}]
 
