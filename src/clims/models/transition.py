@@ -26,6 +26,11 @@ class Transition(Model):
 
     transition_type = models.IntegerField(default=TransitionType.MOVE)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Note that transitions should never be updated. This is provided for consistency
+    # and auditing purposes.
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         app_label = 'clims'
         db_table = 'clims_transition'
