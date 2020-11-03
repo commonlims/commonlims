@@ -138,6 +138,38 @@ describe('shared async actions', () => {
     });
   }, 500);
 
+  it('can handle GET failure', () => {
+    const store = mockStore({});
+
+    // NOTE: Using this instead of stubRequest as it's easier to debug
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        headers: [],
+      });
+    });
+
+    const actionCreator = resourceActionCreators.acGetList(RESOURCE_NAME, '/url');
+    const action = actionCreator('org', 'search', 'groupBy', 'cursor');
+    const expectedActions = [
+      {
+        type: 'GET_RESOURCE_NAME_LIST_REQUEST',
+        search: 'search',
+        groupBy: 'groupBy',
+        cursor: 'cursor',
+      },
+      {
+        type: 'GET_RESOURCE_NAME_LIST_FAILURE',
+      },
+    ];
+
+    return store.dispatch(action).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(moxios.requests.count()).toEqual(1);
+    });
+  }, 500);
+
   it('can get a single entry', () => {
     const store = mockStore({});
     const url = '/url?search=search&cursor=cursor';
@@ -169,6 +201,77 @@ describe('shared async actions', () => {
     return store.dispatch(action).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
       expect(moxios.requests.count()).toEqual(1);
+    });
+  });
+  it('can send POST event', () => {
+    const store = mockStore({});
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+      });
+    });
+
+    const newState = {
+      someEntry: 'new value',
+    };
+    const expectedActions = [
+      {
+        type: 'CREATE_RESOURCE_NAME_REQUEST',
+        entry: newState,
+      },
+      {
+        type: 'CREATE_RESOURCE_NAME_SUCCESS',
+        entry: newState,
+      },
+    ];
+    const org = {
+      slug: 'lab',
+    };
+    const urlTemplate = '/api/0/organizations/{org}/resource-name/';
+    const actionCreator = resourceActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
+    const action = actionCreator(org, newState);
+
+    return store.dispatch(action).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(moxios.requests.count()).toEqual(1);
+      const request = moxios.requests.mostRecent();
+      expect(request.url).toBe('/api/0/organizations/lab/resource-name/');
+    });
+  });
+  it('can handle POST failure', () => {
+    const store = mockStore({});
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+      });
+    });
+
+    const newState = {
+      someEntry: 'new value',
+    };
+    const expectedActions = [
+      {
+        type: 'CREATE_RESOURCE_NAME_REQUEST',
+        entry: newState,
+      },
+      {
+        type: 'CREATE_RESOURCE_NAME_FAILURE',
+      },
+    ];
+    const org = {
+      slug: 'lab',
+    };
+    const urlTemplate = '/api/0/organizations/{org}/resource-name/';
+    const actionCreator = resourceActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
+    const action = actionCreator(org, newState);
+
+    return store.dispatch(action).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(moxios.requests.count()).toEqual(1);
+      const request = moxios.requests.mostRecent();
+      expect(request.url).toBe('/api/0/organizations/lab/resource-name/');
     });
   });
 });

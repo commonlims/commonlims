@@ -3,6 +3,7 @@ from clims.services.substance import SubstanceBase
 from clims.services.project import ProjectBase
 from clims.services.extensible import FloatField, TextField
 from clims.services.container import PlateBase
+from clims.services.workbatch import WorkBatchBase
 
 
 class ExampleSample(SubstanceBase):
@@ -27,3 +28,8 @@ class ExampleProject(ProjectBase):
 class PandorasBox(PlateBase):
     rows = 3
     columns = 3
+
+
+# TODO: attach files
+class ExampleWorkBatch(WorkBatchBase):
+    pass
