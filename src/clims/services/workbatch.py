@@ -48,6 +48,14 @@ class WorkBatchBase(ExtensibleBase):
                 "file-handle: {}".format(file_handle))
         return WorkBatchFile(file_model)
 
+    @property
+    def status(self):
+        return self._archetype.status
+
+    @status.setter
+    def status(self, value):
+        self._archetype.status = value
+
 
 class WorkBatchFile(object):
     def __init__(self, work_batch_file_model):
