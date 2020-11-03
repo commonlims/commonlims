@@ -16,9 +16,6 @@ class WorkBatchBase(ExtensibleBase):
     WrappedArchetype = WorkBatch
     WrappedVersion = WorkBatchVersion
 
-    def __init__(self, **kwargs):
-        super(WorkBatchBase, self).__init__(**kwargs)
-
     def add_file(self, file_stream, name, file_handle):
         if FILENAME_RE.search(name):
             raise FileNameValidationError('File name must not contain special whitespace characters')
