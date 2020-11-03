@@ -75,7 +75,6 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         # Create a workbatch of each type
         for _ix in range(5):
             name = "demoplugin-workbatch-{}".format(uuid4().hex)
-            # TODO: non-zero status doesn't get written to DB, figure out why
             workbatch = ExampleWorkBatch(name=name,
                                          status=_ix)
             workbatch.save()
