@@ -8,10 +8,10 @@ from sentry.testutils import APITestCase
 from clims.plugins.demo.dnaseq import DemoDnaSeqPlugin
 from clims.plugins.demo.dnaseq.models import ExamplePlate, ExampleSample
 from clims.plugins.demo.dnaseq.workflows.sequence import SequenceSimple
-from clims.api.endpoints.work_definition_details import WorkUnitsByWorkDefinitionEndpoint
+from clims.api.endpoints.work_units import WorkUnitsByWorkDefinitionEndpoint
 
 
-class WorkUnitEndpointTest(APITestCase):
+class WorkUnitsEndpointTest(APITestCase):
     def setUp(self):
         """
         Installs the demo plugin in a clean environment.
@@ -20,6 +20,7 @@ class WorkUnitEndpointTest(APITestCase):
         self.app.plugins.install_plugins(DemoDnaSeqPlugin)
         self.has_context()
 
+    @pytest.mark.testme
     def test_get(self):
         self.login_as(self.user)
 
@@ -74,7 +75,7 @@ class WorkUnitsByWorkDefinitionEndpointTest(APITestCase):
             sample = ExampleSample(name="sample-{}".format(x))
             cont.append(sample)
         cont.save()
-        created_samples = {s.id for s in cont.contents}
+        created_samples_ids = {s.id for s in cont.contents}
 
         workflow = SequenceSimple()
         workflow.comment = "Let's sequence some stuff"
@@ -92,13 +93,11 @@ class WorkUnitsByWorkDefinitionEndpointTest(APITestCase):
         for entry in data:
             assert len(entry) == 6
 
-            assert entry["id"].startswith("camunda/")
             assert entry["workflow_provider"] == "camunda"
             assert len(entry["external_work_unit_id"]) == 36  # expecting guid string
             assert entry["work_type"] == "clims.plugins.demo.dnaseq.workflows.sequence.DataEntry"
             assert entry["external_workflow_instance_id"]
-            tracked_object_type, tracked_object_id = entry["tracked_object_global_id"].split("-")
-            assert tracked_object_type == "Substance"
-            assert int(tracked_object_id) in created_samples
-            created_samples.remove(int(tracked_object_id))
-        assert not created_samples
+
+            tracked_object_id = entry["tracked_object"]["id"]
+            created_samples_ids.remove(int(tracked_object_id))
+        assert not created_samples_ids
