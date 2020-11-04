@@ -55,16 +55,24 @@ function getColumns() {
       // TODO: Missing tracked object!
       //accessor: (workUnit) => workUnit.tracked_object.name,
       accessor: (workUnit) => {
-        return workUnit.tracked_object_global_id;
+        return workUnit.tracked_object.name;
       },
+    },
+    {
+      Header: 'Index',
+      id: 'index',
+      accessor: (workUnit) =>
+        workUnit.tracked_object.location
+          ? workUnit.tracked_object.location.index
+          : '<No location>',
     },
     {
       Header: 'Container',
       id: 'container',
-      // accessor: (workUnit) =>
-      //   workUnit.tracked_object.location
-      //     ? workUnit.tracked_object.location.container.name
-      //     : '<No location>',
+      accessor: (workUnit) =>
+        workUnit.tracked_object.location
+          ? workUnit.tracked_object.location.container.name
+          : '<No location>',
     },
   ];
 }
@@ -125,8 +133,8 @@ const mapDispatchToProps = (dispatch) => ({
   //   ),
   toggleSingle: (id) => dispatch(availableWorkUnitActions.select(id)),
   toggleAll: () => dispatch(availableWorkUnitActions.selectPage()),
-  // createWorkBatch: (org, workUnits, redirect) =>
-  //   dispatch(workBatchActions.create(org, workUnits, redirect)),
+  createWorkBatch: (org, workUnits, redirect) =>
+    dispatch(workBatchActions.create(org, workUnits, redirect)),
   getWorkDefinition: (workDefinitionId) =>
     dispatch(workDefinitionActions.get(workDefinitionId)),
   getAvailableWorkUnits: (workDefinitionId) =>
