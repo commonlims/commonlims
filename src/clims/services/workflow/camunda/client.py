@@ -6,7 +6,7 @@ import requests
 from lxml import etree
 from simplejson import JSONDecodeError
 from six.moves.urllib.parse import urljoin
-from clims.services.workflow import ExternalWorkUnit
+from clims.models.workunit import WorkUnit, ExternalWorkUnit
 
 from .api import CamundaApi, UnexpectedHttpResponse
 from clims import utils
@@ -62,29 +62,28 @@ class CamundaClient(object):
         # https://github.com/camunda/camunda-bpm-graphql (preferably) or direct DB access to resolve
         # this, as it's expected that these will be many calls
         # TODO: paging
-        raise NotImplementedError()
+
         ret = list()
         for task_id in task_ids:
             task = self.api.task(id=task_id).get()
             json = task.json
-            task = ExternalWorkUnit(json["id"],
-                               json["processInstanceId"],
-                               Workflow.BACKEND_CAMUNDA,
-                               None,
-                               json["name"],
-                               json["formKey"])
 
-            ret.append(task)
+            # Map to WorkUnit (TODO: use a mapper class or function)
+            # TODO: Do we need the external_workflow_instance_id?
+            work_unit = WorkUnit(
+                external_work_unit_id=json["id"],
+                workflow_provider=Workflow.BACKEND_CAMUNDA,
+                external_workflow_instance_id=json["processInstanceId"])
+            ret.append(work_unit)
 
         self._add_tracked_object_id(ret)
         return ret
 
-    def _add_tracked_object_id(self, work_units):
+    def _add_tracked_object_ids(self, external_work_units):
         map_process_instance_id_to_business_object = dict({
-            (work_unit.workflow_instance_id, None)
-            for work_unit in work_units
+            (external_work_unit.work_unit.external_workflow_instance_id, None)
+            for external_work_unit in external_work_units
         })
-
         keys = ",".join(map_process_instance_id_to_business_object.keys())
 
         # TODO: Solve paging in one go in the api
@@ -94,13 +93,13 @@ class CamundaClient(object):
             business_key = process_instance.json["businessKey"]
             map_process_instance_id_to_business_object[id] = business_key
 
-        for work_unit in work_units:
-            work_unit.tracked_object_global_id = map_process_instance_id_to_business_object[
-                work_unit.workflow_instance_id]
+        for external_work_unit in external_work_units:
+            external_work_unit.tracked_object_global_id = map_process_instance_id_to_business_object[
+                external_work_unit.work_unit.external_workflow_instance_id]
 
     def get_work_units(self, task_definition_key=None, process_definition_key=None):
         """
-        Returns WorkUnits as expected by Clims. These map to user tasks in camunda
+        Returns ExternalWorkUnits. These map to user tasks in camunda.
         """
 
         logger.debug(
@@ -118,19 +117,24 @@ class CamundaClient(object):
                 taskDefinitionKey=task_definition_key,
                 processDefinitionKey=process_definition_key):
             json = res.json
-            work_unit = ExternalWorkUnit(json["id"],
-                               Workflow.BACKEND_CAMUNDA,
-                               json["processInstanceId"],
-                None,
-                json["formKey"])
+
+            print(json)
+
+            work_unit = WorkUnit(
+                external_work_unit_id=json["id"],
+                workflow_provider=Workflow.BACKEND_CAMUNDA,
+                external_workflow_instance_id=json["processInstanceId"],
+                work_type=json["formKey"])
+            external_work_unit = ExternalWorkUnit(work_unit, None)
+
             # TODO: In the demo data from Camunda, there is an entry that doesn't have a
             # processInstanceId for some reason. Filtering it out now. Can be removed when
             # the demo data isn't added.
-            if not work_unit.workflow_instance_id:
+            if not work_unit.external_workflow_instance_id:
                 continue
-            work_units.append(work_unit)
-        logger.debug("Fetched {} tasks".format(len(work_units)))
-        self._add_tracked_object_id(work_units)
+            work_units.append(external_work_unit)
+        logger.debug("Fetched {} tasks from Camunda".format(len(work_units)))
+        self._add_tracked_object_ids(work_units)
         return work_units
 
     def unsafe_delete_deployment(self, deployment_id):
