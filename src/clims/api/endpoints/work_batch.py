@@ -29,7 +29,7 @@ class WorkBatchEndpoint(OrganizationEndpoint):
         logger.debug("Creating workbatches for task list: {}".format(tasks))
 
         # Creating a workbatch takes a list of tasks that are ready for a work batch:
-        work_batch = self.app.workflows.create_work_batch(tasks, organization)
+        work_batch = self.app.workflows.start_work(tasks, organization)
         work_batch = WorkBatchSerializer(work_batch).data
 
         return Response({"workBatch": work_batch}, 201)
