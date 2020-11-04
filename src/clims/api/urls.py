@@ -35,7 +35,7 @@ from .endpoints.plugin_actions import PluginActionsEndpoint
 from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.available_work import AvailableWorkEndpoint
 from .endpoints.work_definition_details import WorkDefinitionDetailsEndpoint
-from .endpoints.work_definition_details import WorkUnitsByWorkDefinitionEndpoint
+from .endpoints.work_units import WorkUnitsByWorkDefinitionEndpoint
 
 from .endpoints.substance_file import SubstanceFileEndpoint
 from .endpoints.substance_file_details import (SubstanceFileDetailsEndpoint,
