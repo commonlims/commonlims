@@ -4,13 +4,25 @@ import withOrganization from 'app/utils/withOrganization';
 import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import moxios from 'moxios';
-import {WORK_BATCH_DEFINITION, EVENTS} from 'app/redux/reducers/index';
+import {WORK_BATCH, WORK_BATCH_DEFINITION, EVENTS} from 'app/redux/reducers/index';
 
 class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getConfiguredStaticContents(this.props.organization, 1);
+    this.fetchStaticContentsFromWip = this.fetchStaticContentsFromWip.bind(this);
+    const getWipWorkbatch = this.props.getWipWorkbatch;
+    const org = this.props.organization;
+    Promise.all([getWipWorkbatch(org)]).then(this.fetchStaticContentsFromWip);
+  }
+
+  fetchStaticContentsFromWip() {
+    const byIds = this.props.workBatchEntry.byIds;
+    const arr = Object.values(byIds);
+    let wipWorkbatch = arr[0];
+    this.props.getConfiguredStaticContents(
+      this.props.organization,
+      wipWorkbatch.cls_full_name
+    );
   }
 
   render() {
@@ -62,11 +74,10 @@ WorkbatchDetails.propTypes = {
   organization: ClimsTypes.Organization.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    workBatchDefinitionEntry: state.workBatchDefinitionEntry,
-  };
-};
+const mapStateToProps = (state) => ({
+  workBatchDefinitionEntry: state.workBatchDefinitionEntry,
+  workBatchEntry: state.workBatchEntry,
+});
 
 const mockedWorkDefinition = {
   id: 2,
@@ -96,17 +107,12 @@ const mapDispatchToProps = (dispatch) => ({
       WORK_BATCH_DEFINITION,
       urlTemplate
     );
-    // TODO: remove this mock response
-    moxios.install();
-    moxios.wait(() => {
-      const request = moxios.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-        response: mockedWorkDefinition,
-        headers: [],
-      });
-    });
-    dispatch(getWorkDefinitionRoutine(org, cls_full_name));
+    dispatch(getConfiguredStaticContentsRoutine(org, workbatchId));
+  },
+  getWipWorkbatch: (org) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-batches/';
+    const getWorkBatchRoutine = resourceActionCreators.acGetList(WORK_BATCH, urlTemplate);
+    return dispatch(getWorkBatchRoutine(org, 'workbatch.name:wip-workbatch'));
   },
 });
 
