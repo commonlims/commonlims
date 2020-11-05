@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from sentry.testutils import TestCase
 
 from clims.api.serializers.models.work_batch import WorkBatchSerializer
-from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
+from clims.services.workbatch import WorkBatchBase
 
 
 class WorkBatchSerializerTest(TestCase):
@@ -19,5 +19,5 @@ class WorkBatchSerializerTest(TestCase):
         assert result.get('cls_full_name') == 'serializers.models.test_work_batch.MyWorkbatchImplementation'
 
 
-class MyWorkbatchImplementation(WorkBatchDefinitionBase):
+class MyWorkbatchImplementation(WorkBatchBase):
     pass

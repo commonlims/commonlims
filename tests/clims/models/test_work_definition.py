@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 import pytest
 from sentry.testutils import TestCase
-from clims.configuration.work_batch_definition import WorkBatchDefinitionBase, Button
+from clims.services.workbatch import WorkBatchBase
+from clims.services.workbatch import Button
 from clims.configuration.hooks import button
 from clims.services.extensible import FloatField
 
@@ -25,7 +26,7 @@ class TestWorkDefinition(TestCase):
         assert buttons[0] == Button(name='on_button_click1', caption='My submit button')
 
 
-class MyFancyWork(WorkBatchDefinitionBase):
+class MyFancyWork(WorkBatchBase):
     name = 'My fancy step'
     concentration = FloatField(display_name='Concentration (ng/ul)')
 

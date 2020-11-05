@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import pytest
 from sentry.testutils import APITestCase
 from django.core.urlresolvers import reverse
-from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
+from clims.services.workbatch import WorkBatchBase
 from clims.configuration.hooks import button
 from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 
@@ -32,7 +32,7 @@ class TestWorkDefinition(APITestCase):
             [{"caption": "My submit button", "event": "on_button_click1"}]
 
 
-class MyFancyStep(WorkBatchDefinitionBase):
+class MyFancyStep(WorkBatchBase):
     name = 'My fancy step'
 
     @button('My submit button')
