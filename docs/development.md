@@ -76,10 +76,23 @@ You can get a fresh install of your database by running: `make reset-db`
 
 Testing is currently almost only in form of integration tests, that at a minimum require postgres (and Django). The plan is to move these gradually to conform to the following:
 
+## Must-have tests
+
 * Endpoint tests (tests/clims/api/endpoints) should be integration tests, requiring various middleware, e.g. postgres. These generally require no mocking but do require cleanup code or be run in transactions.
-* Serializer tests (tests/clims/api/serializers): Should be unit tests.
-* Service tests (tests/clims/services) are unit tests as we want to test the business logic within the service with mocked data. Queries to the db layer should be mocked, as well as any other calls to backends. Endpoint tests should cover accessing real data.
+* Browser based integration tests (Selenium) for all use cases
+
+## Should-have tests
+
+Adding these types of unit tests can aid in development, as they are more focused on particular functionality and run faster:
+
+* UI component unit tests with mocked redux stores (tests/js/spec/components)
+* Serializer unit tests (tests/clims/api/serializers)
+* Service tests (tests/clims/services). Are unit tests as we want to test the business logic within the service with mocked data. Queries to the db layer should be mocked, as well as any other calls to backends.
 * Thick objects (tests/clims/models) are unit tests. These test that objects such as those that inherit from SubstanceBase work correctly. These are strongly related to the service tests as they may expose service logic. Note that db models do not need to be tested.
+
+## Could-have tests
+
+Other tests can be added as requried if the developer feels that they are required, but remember that they add to the complexity of the project as they have to be maintained.
 
 # Adding workflows
 
