@@ -3,13 +3,14 @@ from sentry.models.file import File
 from clims.services.file_handling.file_service import FILENAME_RE, FileNameValidationError
 from clims.services.extensible import ExtensibleBase
 from clims.services.base_extensible_service import BaseExtensibleService
+from clims.services.base_extensible_service import BaseQueryBuilder
 from clims.models.workbatchfile import WorkBatchFile as WorkBatchFileModel
 from clims.models.work_batch import WorkBatch, WorkBatchVersion
 
 
 class WorkbatchService(BaseExtensibleService):
     def __init__(self, app):
-        self._app = app
+        super(WorkbatchService, self).__init__(app, WorkBatchBase)
 
 
 class WorkBatchBase(ExtensibleBase):
@@ -74,3 +75,13 @@ class WorkBatchFile(object):
     @property
     def name(self):
         return self.archetype.name
+
+
+class WorkBatchQueryBuilder(BaseQueryBuilder):
+    def parse_params_for_class(self, key, val):
+        query_params = {}
+        if key == "workbatch.name":
+            query_params['name__icontains'] = val
+        else:
+            raise NotImplementedError("The key {} is not implemented".format(key))
+        return query_params

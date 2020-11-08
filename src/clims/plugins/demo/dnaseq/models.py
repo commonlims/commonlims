@@ -3,7 +3,8 @@ from clims.services.substance import SubstanceBase
 from clims.services.project import ProjectBase
 from clims.services.extensible import FloatField, TextField
 from clims.services.container import PlateBase
-from clims.services.workbatch import WorkBatchBase
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
+from clims.configuration.hooks import button
 
 
 class ExampleSample(SubstanceBase):
@@ -31,5 +32,15 @@ class PandorasBox(PlateBase):
 
 
 # TODO: attach files
-class ExampleWorkBatch(WorkBatchBase):
+class ExampleWorkBatch(WorkBatchDefinitionBase):
     pass
+
+
+class WorkInProgressWorkBatch(WorkBatchDefinitionBase):
+    @button("Start some work")
+    def start_work(self):
+        print("start work button clicked")
+
+    @button("Some other work")
+    def other_work(self):
+        print("other work was clicked")

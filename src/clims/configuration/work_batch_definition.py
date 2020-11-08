@@ -7,16 +7,14 @@ from clims.services.workbatch import WorkBatchBase
 
 class WorkBatchDefinitionBase(WorkBatchBase):
     """
-    Configuration classes in plugins must inherit from this class. by
-    doing so, the trigger points (hooks) will be recognized in UI.
+    In plugin configuration, an event triggered at a button click
+    is created as this:
 
-    In plugin configuration, a trigger point is created as this:
-
-    from configuration.step import Step
+    from configuration.work_batch_defintion import WorkBatchDefinitionBase
     from configuration.hooks import button
     from clims.services import TextField
 
-    class MyFancyStep(Step):
+    class MyFancyStep(WorkBatchDefinitionBase):
         todays_flavour = TextField()
 
         @button('My submit button')
@@ -34,7 +32,7 @@ class WorkBatchDefinitionBase(WorkBatchBase):
     """
 
     @classmethod
-    def full_name(cls):
+    def cls_full_name(cls):
         # Corresponds to 'full_name' in serializer
         return cls.type_full_name_cls()
 
@@ -42,26 +40,20 @@ class WorkBatchDefinitionBase(WorkBatchBase):
     def buttons(cls):
         buttons = list()
         for _, v in iteritems(cls.__dict__):
-            if callable(v) and hasattr(v, HOOK_TAG):
+            if callable(v) and hasattr(v, HOOK_TAG) and \
+                    hasattr(v, HOOK_TYPE) and getattr(v, HOOK_TYPE) == 'button':
                 b = Button(name=v.__name__, caption=getattr(v, HOOK_TAG))
                 buttons.append(b)
         return buttons
 
-    @classmethod
-    def trigger_script(cls, event_type, event_tag, workbatch):
-        class_dict = dict(cls.__dict__)
-        for _, v in iteritems(class_dict):
-            if cls._matches_event_type(v, event_type):
-                if hasattr(v, HOOK_TAG) and getattr(v, HOOK_TAG) == event_tag:
-                    # TODO: None as self is not pretty
-                    v(None, workbatch)
-                elif not hasattr(v, HOOK_TAG):
-                    v(None, workbatch)
+    def trigger(self, event):
+        class_dict = dict(self.__class__.__dict__)
+        for k, v in iteritems(class_dict):
+            if self._matches_event(k, v, event):
+                v(self)
 
-    @classmethod
-    def _matches_event_type(cls, class_attr, event_type):
-        a = class_attr
-        return callable(a) and hasattr(a, HOOK_TYPE) and getattr(a, HOOK_TYPE) == event_type
+    def _matches_event(self, attribute_key, attribute_value, event):
+        return callable(attribute_value) and attribute_key == event
 
 
 class Button(namedtuple("Button", ['name', 'caption'])):

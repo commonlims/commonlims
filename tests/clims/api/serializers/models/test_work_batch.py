@@ -2,16 +2,22 @@ from __future__ import absolute_import
 
 from sentry.testutils import TestCase
 
-from clims.api.serializers.models.workbatch import WorkBatchSerializer
-from clims.models.work_batch import WorkBatch
+from clims.api.serializers.models.work_batch import WorkBatchSerializer
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
 
 
 class WorkBatchSerializerTest(TestCase):
-    def test_can_serialize_task(self):
-        model = WorkBatch(id=1, name="Test1", organization_id=1, handler="somehandler")
-        result = WorkBatchSerializer(model).data
-        assert result.get('handler') == 'somehandler'
-        assert result.get('id') == 1
+    def setUp(self):
+        self.has_context()
+        self.register_extensible(MyWorkbatchImplementation)
+
+    def test_can_serialize_workbatch(self):
+        workbatch = MyWorkbatchImplementation(name="Test1")
+        result = WorkBatchSerializer(workbatch).data
+        assert result.get('id') == workbatch.id
         assert result.get('name') == 'Test1'
-        assert result.get('organization') == 1
-        assert result.get('status') == 0
+        assert result.get('cls_full_name') == 'serializers.models.test_work_batch.MyWorkbatchImplementation'
+
+
+class MyWorkbatchImplementation(WorkBatchDefinitionBase):
+    pass

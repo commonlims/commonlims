@@ -606,6 +606,10 @@ function routes() {
           <Route path="work-batches/" component={errorHandler(WorkBatchListContainer)} />
           <Route path="substances/" component={errorHandler(SubstancesContainer)} />
           <Route
+            path="example-workbatch/"
+            component={errorHandler(WorkBatchDetailsWaitingToBeMergedContainer)}
+          />
+          <Route
             path="workbatch-details/"
             component={errorHandler(WorkBatchDetailsWaitingToBeMergedContainer)}
           />

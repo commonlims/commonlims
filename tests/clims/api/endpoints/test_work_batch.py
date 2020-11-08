@@ -20,8 +20,30 @@ class WorkBatchEndpointTest(APITestCase):
         """
         self.clean_workflow_engine_state()
         self.app.plugins.install_plugins(DemoDnaSeqPlugin)
-        self.register_extensible(WorkBatchBase)
+        self.register_extensible(MyWorkbatchImplementation)
         self.has_context()
+
+    def test_find_single_by_name(self):
+        # Arrange
+        workbatch = MyWorkbatchImplementation(name='my_workbatch')
+        workbatch.save()
+
+        another_workbatch = MyWorkbatchImplementation(name='another workbatch')
+        another_workbatch.save()
+
+        search = 'workbatch.name:my_workbatch'
+
+        url = reverse('clims-api-0-work-batches', args=(self.organization.name,))
+        self.login_as(self.user)
+
+        # Act
+        response = self.client.get(url + '?search=' + search)
+
+        # Assert
+        assert response.status_code == 200, response.content
+        # The search is for a unique name, so this must be true:
+        assert len(response.data) == 1, len(response.data)
+        assert response.data[0]['name'] == 'my_workbatch'
 
     @pytest.mark.skip("I'm waiting for Steinars PR to be merged before fixing this one")
     def test_simple(self):
@@ -68,3 +90,7 @@ class WorkBatchEndpointTest(APITestCase):
             content_type='application/json',
         )
         assert response.status_code == 201
+
+
+class MyWorkbatchImplementation(WorkBatchBase):
+    pass

@@ -3,9 +3,10 @@ from __future__ import absolute_import
 import logging
 from rest_framework.response import Response
 from sentry.api.bases.organization import OrganizationEndpoint
-from clims.models import WorkBatch
-from clims.api.serializers.models.workbatch import WorkBatchSerializer
+from clims.api.serializers.models.work_batch import WorkBatchSerializer
+from clims.services.workbatch import WorkBatchQueryBuilder
 from sentry.api.paginator import OffsetPaginator
+
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +14,13 @@ logger = logging.getLogger(__name__)
 class WorkBatchEndpoint(OrganizationEndpoint):
     def get(self, request, organization):
         logging.debug("Fetching workbatches for {}".format(organization))
+        query_from_url = request.GET.get('search', None)
+        query_builder = WorkBatchQueryBuilder(query_from_url)
+        filtered_workbatches = self.app.workbatches.filter_from(query_builder)
 
-        work_batches = WorkBatch.objects.filter(organization=organization)
         return self.paginate(
             request=request,
-            queryset=work_batches,
+            queryset=filtered_workbatches,
             paginator_cls=OffsetPaginator,
             on_results=lambda x: WorkBatchSerializer(x, many=True).data,
         )

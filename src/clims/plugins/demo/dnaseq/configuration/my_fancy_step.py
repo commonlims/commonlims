@@ -1,4 +1,4 @@
-from clims.configuration.work_definition import WorkBatchDefinitionBase
+from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
 from clims.configuration.hooks import button
 
 

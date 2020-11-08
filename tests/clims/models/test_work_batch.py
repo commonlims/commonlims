@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import absolute_import
 import pytest
 from sentry.testutils import TestCase
 from clims.services.workbatch import WorkBatchBase

@@ -4,26 +4,35 @@ import withOrganization from 'app/utils/withOrganization';
 import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import moxios from 'moxios';
-import {WORK_DEFINITION, EVENTS} from 'app/redux/reducers/index';
+import {WORK_BATCH, WORK_BATCH_DEFINITION, EVENTS} from 'app/redux/reducers/index';
 
 class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getWorkDefinition(
+    this.fetchStaticContentsFromWip = this.fetchStaticContentsFromWip.bind(this);
+    const getWipWorkbatch = this.props.getWipWorkbatch;
+    const org = this.props.organization;
+    Promise.all([getWipWorkbatch(org)]).then(this.fetchStaticContentsFromWip);
+  }
+
+  fetchStaticContentsFromWip() {
+    const byIds = this.props.workBatchEntry.byIds;
+    const arr = Object.values(byIds);
+    let wipWorkbatch = arr[0];
+    this.props.getConfiguredStaticContents(
       this.props.organization,
-      'clims.plugins.demo.dnaseq.configuration.my_fancy_step.MyFancyStep'
+      wipWorkbatch.cls_full_name
     );
   }
 
   render() {
     //TODO: merge this with files in the workBatchDetails folder
     const buttonsFromConfig = [];
-    let workDefinitionEntry = this.props.workDefinitionEntry;
-    if (workDefinitionEntry == null) {
+    let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
+    if (workBatchDefinitionEntry == null) {
       return <LoadingIndicator />;
     }
-    let {byIds, detailsId} = workDefinitionEntry;
+    let {byIds, detailsId} = workBatchDefinitionEntry;
     if (detailsId == null) {
       return <LoadingIndicator />;
     }
@@ -65,11 +74,10 @@ WorkbatchDetails.propTypes = {
   organization: ClimsTypes.Organization.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    workDefinitionEntry: state.workDefinitionEntry,
-  };
-};
+const mapStateToProps = (state) => ({
+  workBatchDefinitionEntry: state.workBatchDefinitionEntry,
+  workBatchEntry: state.workBatchEntry,
+});
 
 const mockedWorkDefinition = {
   id: 2,
@@ -93,23 +101,18 @@ const mapDispatchToProps = (dispatch) => ({
     );
     dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
-  getWorkDefinition: (org, cls_full_name) => {
+  getConfiguredStaticContents: (org, workbatchId) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batch-definition-details/{id}';
-    const getWorkDefinitionRoutine = resourceActionCreators.acGet(
-      WORK_DEFINITION,
+    const getConfiguredStaticContentsRoutine = resourceActionCreators.acGet(
+      WORK_BATCH_DEFINITION,
       urlTemplate
     );
-    // TODO: remove this mock response
-    moxios.install();
-    moxios.wait(() => {
-      const request = moxios.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-        response: mockedWorkDefinition,
-        headers: [],
-      });
-    });
-    dispatch(getWorkDefinitionRoutine(org, cls_full_name));
+    dispatch(getConfiguredStaticContentsRoutine(org, workbatchId));
+  },
+  getWipWorkbatch: (org) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-batches/';
+    const getWorkBatchRoutine = resourceActionCreators.acGetList(WORK_BATCH, urlTemplate);
+    return dispatch(getWorkBatchRoutine(org, 'workbatch.name:wip-workbatch'));
   },
 });
 
