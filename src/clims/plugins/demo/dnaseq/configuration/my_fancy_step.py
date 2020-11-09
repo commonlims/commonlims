@@ -1,8 +1,8 @@
-from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
+from clims.services.workbatch import WorkBatchBase
 from clims.configuration.hooks import button
 
 
-class MyFancyStep(WorkBatchDefinitionBase):
+class MyFancyStep(WorkBatchBase):
     name = 'My fancy step'
 
     @button('My submit button')

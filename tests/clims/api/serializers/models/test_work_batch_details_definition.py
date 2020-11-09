@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from sentry.testutils import TestCase
 
 from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
-from clims.configuration.work_batch_definition import WorkBatchDefinitionBase
+from clims.services.workbatch import WorkBatchBase
 from clims.configuration.hooks import button
 
 
@@ -21,9 +21,9 @@ class WorkBatchDetailsDefintionSerializerTest(TestCase):
         assert result.get('buttons') == [{'caption': 'My submit button', 'event': 'on_button_click1'}]
 
 
-class MyFancyStep(WorkBatchDefinitionBase):
+class MyFancyStep(WorkBatchBase):
     name = 'My fancy step'
 
     @button('My submit button')
-    def on_button_click1(self, workbatch):
+    def on_button_click1(self):
         setattr(MyFancyStep, 'was_called', True)
