@@ -19,6 +19,7 @@ const sharedInitialState = {
 
 export const WORK_BATCH_DEFINITION = 'WORK_BATCH_DEFINITION';
 export const WORK_BATCH = 'WORK_BATCH';
+export const WORK_BATCH_DETAILS = 'WORK_BATCH_DETAILS';
 export const EVENTS = 'EVENTS';
 
 const workBatchDefinitionEntry = resource.createReducer(
@@ -27,6 +28,10 @@ const workBatchDefinitionEntry = resource.createReducer(
 );
 
 const workBatchEntry = resource.createReducer(WORK_BATCH, sharedInitialState);
+const workBatchDetailsEntry = resource.createReducer(
+  WORK_BATCH_DETAILS,
+  sharedInitialState
+);
 
 export default combineReducers({
   process,
@@ -42,4 +47,5 @@ export default combineReducers({
   projectSearchEntry,
   workBatchDefinitionEntry,
   workBatchEntry,
+  workBatchDetailsEntry,
 });

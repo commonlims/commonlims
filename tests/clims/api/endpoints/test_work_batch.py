@@ -43,6 +43,7 @@ class WorkBatchEndpointTest(APITestCase):
         assert response.status_code == 200, response.content
         # The search is for a unique name, so this must be true:
         assert len(response.data) == 1, len(response.data)
+        assert response.data[0]['id'] == workbatch.id
         assert response.data[0]['name'] == 'my_workbatch'
 
     @pytest.mark.skip("I'm waiting for Steinars PR to be merged before fixing this one")
