@@ -75,13 +75,25 @@ const acCreate = (resource, urlTemplate) => {
     dispatch(acCreateRequest(resource)(data));
 
     const url = urlTemplate.replace('{org}', org.slug);
-
-    return axios
-      .post(url, data)
-      .then(() => dispatch(acCreateSuccess(resource)(data)))
-      .catch((err) =>
-        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText))
-      );
+    // use client that sentry is using
+    //
+    const api = new Client(); // TODO: use axios (must send same headers as Client does).
+    api.request(url, {
+      method: 'POST',
+      data,
+      success: () => {
+        dispatch(acCreateSuccess(resource)(data));
+      },
+      error: (err) => {
+        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText));
+      },
+    });
+    // return axios
+    //   .post(url, data)
+    //   .then(() => dispatch(acCreateSuccess(resource)(data)))
+    //   .catch((err) =>
+    //     dispatch(acCreateFailure(resource)(err.statusCode, err.statusText))
+    //   );
   };
 };
 
