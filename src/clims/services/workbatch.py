@@ -59,6 +59,19 @@ class WorkBatchBase(ExtensibleBase):
                 buttons.append(b)
         return buttons
 
+    @classmethod
+    def fields(cls):
+        extensible_base_fields = cls.get_fields()
+        fields = list()
+        for extensible_field in extensible_base_fields:
+            f = Field(
+                type=extensible_field.type,
+                caption=extensible_field.display_name,
+                prop_name=extensible_field.prop_name,
+            )
+            fields.append(f)
+        return fields
+
     def trigger(self, event):
         class_dict = dict(self.__class__.__dict__)
         for k, v in iteritems(class_dict):
@@ -110,6 +123,10 @@ class WorkBatchBase(ExtensibleBase):
 
 
 class Button(namedtuple("Button", ['name', 'caption'])):
+    pass
+
+
+class Field(namedtuple("Field", ["type", "caption", "prop_name"])):
     pass
 
 

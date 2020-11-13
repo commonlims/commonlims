@@ -19,6 +19,8 @@ class WorkBatchSerializerTest(TestCase):
         result = WorkBatchDetailsSerializer(workbatch).data
         assert result.get('id') == workbatch.id
         assert result.get('name') == 'Test1'
+        properties = result.get('properties')
+        assert properties['kit_type']['value'] == 'kit type value'
 
 
 class MyWorkbatchImplementation(WorkBatchBase):

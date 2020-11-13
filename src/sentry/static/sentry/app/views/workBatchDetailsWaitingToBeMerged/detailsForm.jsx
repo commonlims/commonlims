@@ -31,6 +31,25 @@ class DetailsForm extends React.Component {
             );
           })}
         </div>
+        <p></p>
+        <div>
+          {fieldDefinitions.map((entry) => (
+            <div key={'property-div-' + entry.prop_name}>
+              <label key={'property-label-' + entry.prop_name} htmlFor={entry.prop_name}>
+                {entry.caption}
+              </label>
+              <br />
+              <input
+                id={entry.prop_name}
+                key={'property-field-' + entry.prop_name}
+                name={entry.prop_name}
+                type={entry.type}
+                value={this.props.currentFieldValues[entry.prop_name] || ''}
+                onChange={this.props.handleChange}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

@@ -7,3 +7,4 @@ from clims.api.serializers.models.extensible_property import ExtensiblePropertyS
 class WorkBatchDetailsSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
+    properties = DictField(child=ExtensiblePropertySerializer(read_only=True))

@@ -19,22 +19,17 @@ class WorkbatchDetails extends React.Component {
     super(props);
     this.fetchStaticContentsFromWip = this.fetchStaticContentsFromWip.bind(this);
     this.fetchDetailedContentFromWip = this.fetchDetailedContentFromWip.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.sendButtonClickedEvent = this.sendButtonClickedEvent.bind(this);
+    this.initCurrentFieldValues = this.initCurrentFieldValues.bind(this);
     this.setFetched = this.setFetched.bind(this);
-    this.initState = this.initState.bind(this);
     const getWipWorkbatch = this.props.getWipWorkbatch;
     const org = this.props.organization;
     getWipWorkbatch(org)
       .then(this.fetchStaticContentsFromWip)
       .then(this.fetchDetailedContentFromWip)
-      .then(this.initState)
+      .then(this.initCurrentFieldValues)
       .then(this.setFetched);
-  }
-
-  initState() {
-    return new Promise((resolve) => {
-      this.setState({}, resolve);
-    });
   }
 
   setFetched() {
@@ -97,15 +92,49 @@ class WorkbatchDetails extends React.Component {
       <DetailsForm
         workDefinition={workDefinition}
         sendButtonClickedEvent={this.sendButtonClickedEvent}
+        handleChange={this.handleChange}
+        currentFieldValues={this.state.currentFieldValues}
         workBatchId={workbatchId}
       />
     );
+  }
+
+  initCurrentFieldValues() {
+    let {detailsId, byIds} = this.props.workBatchDetailsEntry;
+    let workbatch = byIds[detailsId];
+    let propertyNames = Object.keys(workbatch.properties);
+    let currentFieldValues = propertyNames.reduce((previous, attr) => {
+      return {
+        ...previous,
+        [attr]: workbatch.properties[attr].value,
+      };
+    }, {});
+    return new Promise((resolve) => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          currentFieldValues,
+        };
+      }, resolve);
+    });
+  }
+
+  handleChange(e) {
+    let {name, value} = e.target;
+    this.setState((prevState) => {
+      let {currentFieldValues} = {...prevState};
+      currentFieldValues[name] = value;
+      return {
+        currentFieldValues,
+      };
+    });
   }
 }
 
 WorkbatchDetails.propTypes = {
   ...ClimsTypes.List,
   organization: ClimsTypes.Organization.isRequired,
+  edvardtext: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
