@@ -33,10 +33,7 @@ class PandorasBox(PlateBase):
 
 # TODO: attach files
 class ExampleWorkBatch(WorkBatchBase):
-    pass
 
-
-class WorkInProgressWorkBatch(WorkBatchBase):
     @button("Start some work")
     def start_work(self):
         print("start work button clicked")
