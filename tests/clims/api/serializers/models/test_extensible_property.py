@@ -44,5 +44,5 @@ class ExtensiblePropertyTypeSerializerTestCase(TestCase):
         string_prop = self.create_string_prop(name, disp_name, value)
         serializer = ExtensiblePropertySerializer(string_prop)
         assert serializer.data['name'] == name
-        assert serializer.data['value'] == value
+        assert serializer.data['value'] == str(value)
         assert serializer.data['display_name'] == disp_name
