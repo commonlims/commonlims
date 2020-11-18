@@ -81,35 +81,6 @@ describe('shared resource reducer', () => {
     });
   });
 
-  it('has expected state when getting a failed response', () => {
-    const originalState = {...initialState};
-    const requestedState = reducer(
-      originalState,
-      actions.getListRequest('search', 'groupby', 'cursor')
-    );
-    const failedState = reducer(
-      requestedState,
-      actions.getListFailure(500, 'some error')
-    );
-    expect(failedState).toEqual({
-      loadingDetails: false,
-      detailsId: null,
-      loading: false,
-      updating: false,
-      errorMessage: 'some error',
-      byIds: {},
-      listViewState: {
-        allVisibleSelected: false,
-        groupBy: 'groupby',
-        search: 'search',
-        visibleIds: [],
-        selectedIds: new Set(),
-        pagination: {pageLinks: null, cursor: 'cursor'},
-      },
-      creating: false,
-    });
-  });
-
   it('has expected state when selecting/deselecting a page', () => {
     const successState = createGetListSuccessState();
     const selectedPageState = reducer(successState, actions.selectPage(true));
