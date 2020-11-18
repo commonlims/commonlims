@@ -47,9 +47,10 @@ const acGetList = (resource, urlTemplate) => {
     return axios
       .get(url, config)
       .then((res) => dispatch(acGetListSuccess(resource)(res.data, res.headers.link)))
-      .catch((err) =>
-        dispatch(acGetListFailure(resource)(err.statusCode, err.statusText))
-      );
+      .catch((response) => {
+        const message = getErrorMessage(response.request);
+        dispatch(acGetListFailure(resource)(response.request.status, message));
+      });
   };
 };
 
@@ -75,7 +76,6 @@ const acCreate = (resource, urlTemplate) => {
 
     const url = urlTemplate.replace('{org}', org.slug);
     // use client that sentry is using
-    //
     const api = new Client(); // TODO: use axios (must send same headers as Client does).
     api.request(url, {
       method: 'POST',
@@ -84,17 +84,23 @@ const acCreate = (resource, urlTemplate) => {
         dispatch(acCreateSuccess(resource)(data));
       },
       error: (err) => {
-        dispatch(acCreateFailure(resource)(err.statusCode, err.statusText));
+        const message = getErrorMessage(err);
+        dispatch(acCreateFailure(resource)(err.status, message));
       },
     });
     // return axios
     //   .post(url, data)
     //   .then(() => dispatch(acCreateSuccess(resource)(data)))
-    //   .catch((err) =>
-    //     dispatch(acCreateFailure(resource)(err.statusCode, err.statusText))
-    //   );
+    //   .catch((response) => {
+    //     const message = getErrorMessage(response.request);
+    //     dispatch(acCreateFailure(resource)(response.request.status, message));
+    //   });
   };
 };
+
+function getErrorMessage(err) {
+  return `(${err.statusText}) ${err.responseText}`;
+}
 
 ////////////////////////
 // Update single resource
@@ -155,7 +161,10 @@ const acGet = (resource, urlTemplate) => {
     return axios
       .get(url)
       .then((res) => dispatch(acGetSuccess(resource)(res.data)))
-      .catch((err) => dispatch(acGetFailure(resource)(err)));
+      .catch((response) => {
+        const message = getErrorMessage(response.request);
+        dispatch(acGetFailure(resource)(response.request.status, message));
+      });
   };
 };
 

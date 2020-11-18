@@ -144,10 +144,16 @@ describe('shared async actions', () => {
     // NOTE: Using this instead of stubRequest as it's easier to debug
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
-      request.respondWith({
+      const errResp = {
         status: 400,
+        request: {
+          status: 400,
+          statusText: 'a bad request',
+          responseText: 'response text',
+        },
         headers: [],
-      });
+      };
+      request.reject(errResp);
     });
 
     const actionCreator = resourceActionCreators.acGetList(RESOURCE_NAME, '/url');
@@ -161,6 +167,8 @@ describe('shared async actions', () => {
       },
       {
         type: 'GET_RESOURCE_NAME_LIST_FAILURE',
+        statusCode: 400,
+        message: '(a bad request) response text',
       },
     ];
 
