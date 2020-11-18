@@ -119,8 +119,6 @@ const acUpdate = (resource, urlTemplate) => {
         dispatch(acUpdateSuccess(resource)(data));
       },
       error: (err) => {
-        console.log('ac udpate');
-        console.log(err);
         const message = getErrorMessage(err);
         dispatch(acUpdateFailure(resource)(err.status, message));
       },

@@ -186,7 +186,7 @@ describe('shared resource reducer', () => {
     expect(requestedState).toEqual(expectedState);
   });
 
-  it('has expected state when a single entry update has been succeeded', () => {
+  it('has expected state when a single entry update has succeeded', () => {
     const originalState = {
       ...initialState,
       detailsId: 5,
@@ -215,6 +215,35 @@ describe('shared resource reducer', () => {
     };
 
     expect(successState).toEqual(expectedState);
+  });
+
+  it('has expected state when a single entry update has failed', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      updating: true,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const err = {
+      statusCode: 1,
+      message: 'oops',
+    };
+    const failedState = reducer(
+      originalState,
+      actions.updateFailure(err.statusCode, err.message)
+    );
+    const expectedState = {
+      ...originalState,
+      updating: false,
+      errorMessage: 'oops',
+    };
+
+    expect(failedState).toEqual(expectedState);
   });
 
   it('has expected state after requesting a single entry', () => {

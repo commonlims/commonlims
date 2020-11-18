@@ -122,13 +122,21 @@ export function updateEntryRequest(state, action) {
   };
 }
 
-export function updateEntrySucess(state, action) {
+export function updateEntrySuccess(state, action) {
   const byIds = {};
   byIds[action.entry.id] = action.entry;
   return {
     ...state,
     updating: false,
     byIds: merge({}, state.byIds, byIds),
+  };
+}
+
+export function updateEntryFailure(state, action) {
+  return {
+    ...state,
+    updating: false,
+    errorMessage: action.message,
   };
 }
 
@@ -189,7 +197,9 @@ const createResourceReducer = (resource, initialState) => (
     case `UPDATE_${resource}_REQUEST`:
       return updateEntryRequest(state, action);
     case `UPDATE_${resource}_SUCCESS`:
-      return updateEntrySucess(state, action);
+      return updateEntrySuccess(state, action);
+    case `UPDATE_${resource}_FAILURE`:
+      return updateEntryFailure(state, action);
 
     default:
       return state;
@@ -240,7 +250,8 @@ export const entry = {
   getEntrySuccess,
   getEntryFailure,
   updateEntryRequest,
-  updateEntrySucess,
+  updateEntrySuccess,
+  updateEntryFailure,
 };
 
 // A resource follows both the list and entry protocols
