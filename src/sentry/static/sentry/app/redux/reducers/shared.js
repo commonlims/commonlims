@@ -206,6 +206,7 @@ export const entry = {
   // Required state for following an entry protocol
   initialState: {
     loadingDetails: false,
+    updating: false,
     detailsId: null,
   },
 

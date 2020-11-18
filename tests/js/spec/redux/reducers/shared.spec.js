@@ -41,6 +41,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: true,
+      updating: false,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -61,6 +62,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: false,
+      updating: false,
       errorMessage: null,
       byIds: {'1': {id: '1', name: 'entry1'}, '2': {id: '2', name: 'entry2'}},
       listViewState: {
@@ -89,6 +91,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: false,
+      updating: false,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {
@@ -218,6 +221,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: false,
+      updating: false,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {
