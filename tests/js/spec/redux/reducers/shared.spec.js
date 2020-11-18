@@ -10,7 +10,11 @@ const initialState = {
 };
 
 const reducer = resource.createReducer(RESOURCE_NAME, initialState);
-const actions = makeResourceActions(RESOURCE_NAME, '/api/0/some-resource/');
+const actions = makeResourceActions(
+  RESOURCE_NAME,
+  '/api/0/some-resource/',
+  '/api/0/some-resource/5/'
+);
 
 function createGetListSuccessState() {
   const originalState = {...initialState};
@@ -183,6 +187,63 @@ describe('shared resource reducer', () => {
         '3': newItem,
       },
     });
+  });
+
+  it('has expected state when a single entry update has been requested', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      errorMessage: 'oops',
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const entry = {
+      id: 5,
+      name: 'new-name',
+    };
+    const requestedState = reducer(originalState, actions.updateRequest(entry));
+    const expectedState = {
+      ...originalState,
+      updating: true,
+      errorMessage: null,
+    };
+
+    expect(requestedState).toEqual(expectedState);
+  });
+
+  it('has expected state when a single entry update has been succeeded', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      updating: true,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const entry = {
+      id: 5,
+      name: 'new-name',
+    };
+    const successState = reducer(originalState, actions.updateSuccess(entry));
+    const expectedState = {
+      ...originalState,
+      updating: false,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'new-name',
+        },
+      },
+    };
+
+    expect(successState).toEqual(expectedState);
   });
 
   it('has expected state after requesting a single entry', () => {

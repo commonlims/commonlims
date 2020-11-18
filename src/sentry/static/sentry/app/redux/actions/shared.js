@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {Client} from 'app/api';
-import {browserHistory} from 'react-router';
 
 // Helper function that creates an action creator.
 // From: https://redux.js.org/recipes/reducing-boilerplate
@@ -98,6 +97,48 @@ const acCreate = (resource, urlTemplate) => {
 };
 
 ////////////////////////
+// Update single resource
+const acUpdate = (resource, urlTemplate) => {
+  return (org, data) => (dispatch) => {
+    dispatch(acUpdateRequest(resource)(data));
+
+    let url = urlTemplate.replace('{org}', org.slug);
+    url = url.replace('{id}', data['id'] + '/');
+    // use client that sentry is using
+    const api = new Client(); // TODO: use axios (must send same headers as Client does).
+    api.request(url, {
+      method: 'PUT',
+      data,
+      success: () => {
+        dispatch(acUpdateSuccess(resource)(data));
+      },
+      error: (err) => {
+        console.log('ac udpate');
+        console.log(err);
+        const message = getErrorMessage(err);
+        dispatch(acUpdateFailure(resource)(err.status, message));
+      },
+    });
+    // return axios
+    //   .put(url, data)
+    //   .then(() => dispatch(acUpdateSuccess(resource)(data)))
+    //   .catch((response) => {
+    //     const message = getErrorMessage(response.request);
+    //     dispatch(acUpdateFailure(resource)(response.request.status, message));
+    //   });
+  };
+};
+
+const acUpdateRequest = (resource) =>
+  makeActionCreator(`UPDATE_${resource}_REQUEST`, 'entry');
+
+const acUpdateSuccess = (resource) =>
+  makeActionCreator(`UPDATE_${resource}_SUCCESS`, 'entry');
+
+const acUpdateFailure = (resource) =>
+  makeActionCreator(`UPDATE_${resource}_FAILURE`, 'statusCode', 'message');
+
+////////////////////////
 // Fetch single resource
 const acGetRequest = (resource) => makeActionCreator(`GET_${resource}_REQUEST`, 'id');
 
@@ -133,6 +174,10 @@ export const resourceActionCreators = {
   acGetRequest,
   acGetSuccess,
   acGetFailure,
+  acUpdate,
+  acUpdateRequest,
+  acUpdateSuccess,
+  acUpdateFailure,
 };
 
 // Creates all actions required for a regular resource
@@ -159,5 +204,11 @@ export const makeResourceActions = (resourceName, listUrl, entryUrl) => {
     getRequest: acGetRequest(resourceName),
     getSuccess: acGetSuccess(resourceName),
     getFailure: acGetFailure(resourceName),
+
+    // Update single resource
+    update: acUpdate(resourceName, entryUrl),
+    updateRequest: acUpdateRequest(resourceName),
+    updateSuccess: acUpdateSuccess(resourceName),
+    updateFailure: acUpdateFailure(resourceName),
   };
 };

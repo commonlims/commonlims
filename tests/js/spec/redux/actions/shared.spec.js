@@ -280,4 +280,41 @@ describe('shared async actions', () => {
       expect(request.url).toBe('/api/0/organizations/lab/resource-name/');
     });
   });
+  it.skip('can handle PUT event', () => {
+    const store = mockStore({});
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+      });
+    });
+
+    const newState = {
+      id: 5,
+      someEntry: 'new value',
+    };
+    const expectedActions = [
+      {
+        type: 'UPDATE_RESOURCE_NAME_REQUEST',
+        entry: newState,
+      },
+      {
+        type: 'UPDATE_RESOURCE_NAME_SUCCESS',
+        entry: newState,
+      },
+    ];
+    const org = {
+      slug: 'lab',
+    };
+    const urlTemplate = '/api/0/organizations/{org}/resource-name/{id}';
+    const acUpdateRoutine = resourceActionCreators.acUpdate(RESOURCE_NAME, urlTemplate);
+    const action = acUpdateRoutine(org, newState);
+
+    return store.dispatch(action).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(moxios.requests.count()).toEqual(1);
+      const request = moxios.requests.mostRecent();
+      expect(request.url).toBe('/api/0/organizations/lab/resource-name/5/');
+    });
+  });
 });
