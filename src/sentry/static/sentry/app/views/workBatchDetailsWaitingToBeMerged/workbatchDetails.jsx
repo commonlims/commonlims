@@ -1,7 +1,8 @@
 import ClimsTypes from 'app/climsTypes';
 import React from 'react';
-import withOrganization from 'app/utils/withOrganization';
+import merge from 'lodash/merge';
 import {connect} from 'react-redux';
+import withOrganization from 'app/utils/withOrganization';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import DetailsForm from './detailsForm';
@@ -10,7 +11,17 @@ import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
 import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
 import {EVENTS} from 'app/redux/reducers/event';
 
-class WorkbatchDetails extends React.Component {
+function WorkBatchDetailsWrapper(props) {
+  // class component WorkBatchDetails is here wrapped within a
+  // function component, in order to getUpdatedWorkBatch into test.
+  const extendedProps = {
+    ...props,
+    getUpdatedWorkBatch,
+  };
+  return <WorkbatchDetails {...extendedProps} />;
+}
+
+export class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -68,29 +79,11 @@ class WorkbatchDetails extends React.Component {
     });
   };
 
-  getUpdatedWorkbatch = () => {
-    let {detailsId, byIds} = this.props.workBatchDetailsEntry;
-    let fetched_workbatch = byIds[detailsId];
-    let currentFieldValues = this.state.currentFieldValues;
-    let properties = Object.keys(currentFieldValues);
-    let updatedProperties = properties.reduce((previous, current) => {
-      let entry = {
-        value: currentFieldValues[current],
-      };
-      return {
-        ...previous,
-        [current]: entry,
-      };
-    }, {});
-    let mergedProperties = merge({}, fetched_workbatch.properties, updatedProperties);
-    return {
-      ...fetched_workbatch,
-      properties: mergedProperties,
-    };
-  };
-
   sendButtonClickedEvent = (buttonEvent) => {
-    let updatedWorkbatch = this.getUpdatedWorkbatch();
+    let updatedWorkbatch = this.props.getUpdatedWorkBatch(
+      this.props.workBatchDetailsEntry,
+      this.state.currentFieldValues
+    );
     this.props.updateWorkBatchDetails(this.props.organization, updatedWorkbatch);
     this.props.sendButtonClickedEvent(this.props.organization, buttonEvent);
   };
@@ -190,6 +183,14 @@ const mapDispatchToProps = (dispatch) => ({
     );
     return dispatch(getWorkBatchDetialsRoutine(org, workbatchId));
   },
+  updateWorkBatchDetails: (org, workbatch) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-batch-details/{id}';
+    const updateWorkBatchDetailsRoutine = resourceActionCreators.acUpdate(
+      WORK_BATCH_DETAILS,
+      urlTemplate
+    );
+    return dispatch(updateWorkBatchDetailsRoutine(org, workbatch));
+  },
   getWipWorkbatch: (org) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batches/';
     const getWorkBatchRoutine = resourceActionCreators.acGetList(WORK_BATCH, urlTemplate);
@@ -197,6 +198,26 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
+export function getUpdatedWorkBatch(workBatchDetailsEntry, currentFieldValues) {
+  let {detailsId, byIds} = workBatchDetailsEntry;
+  let fetched_workbatch = byIds[detailsId];
+  let properties = Object.keys(currentFieldValues);
+  let updatedProperties = properties.reduce((previous, current) => {
+    let entry = {
+      value: currentFieldValues[current],
+    };
+    return {
+      ...previous,
+      [current]: entry,
+    };
+  }, {});
+  let mergedProperties = merge({}, fetched_workbatch.properties, updatedProperties);
+  return {
+    ...fetched_workbatch,
+    properties: mergedProperties,
+  };
+}
+
 export default withOrganization(
-  connect(mapStateToProps, mapDispatchToProps)(WorkbatchDetails)
+  connect(mapStateToProps, mapDispatchToProps)(WorkBatchDetailsWrapper)
 );
