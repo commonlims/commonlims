@@ -4,7 +4,7 @@ import logging
 from uuid import uuid4
 
 from clims.handlers import CreateExampleDataHandler
-from ..models import ExampleSample, ExampleProject, PandorasBox, ExampleWorkBatch, WorkInProgressWorkBatch
+from ..models import ExampleSample, ExampleProject, PandorasBox, ExampleWorkBatch
 
 
 logger = logging.getLogger(__name__)
@@ -74,7 +74,8 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
 
         # Create workbatch to be used at wip workbatch details page. The
         # name of the workbatch has to be known here.
-        workbatch = WorkInProgressWorkBatch(name='wip-workbatch', status=1)
+        workbatch = ExampleWorkBatch(name='wip-workbatch', status=1)
+        workbatch.kit_type = "X"
         workbatch.save()
         logger.info("Created wip workbatch")
 

@@ -12,7 +12,7 @@ class TestWorkDefinition(APITestCase):
         self.register_extensible(MyFancyStep)
 
     @pytest.mark.dev_edvard
-    def test_get_step_template__fetched_from_name__returns_list_of_buttons(self):
+    def test__fetched_from_name__returns_list_of_buttons(self):
         # This test case is thought of to happen when user enters a step, and
         # the UI should conform to the step configuration.
         cls_full_name = 'endpoints.test_work_batch_details_definition.MyFancyStep'

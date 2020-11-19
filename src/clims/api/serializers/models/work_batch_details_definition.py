@@ -10,8 +10,18 @@ class ButtonField(serializers.Field):
         }
 
 
+class FieldPropertyField(serializers.Field):
+    def to_representation(self, value):
+        return {
+            "type": value.type,
+            "caption": value.caption,
+            "prop_name": value.prop_name,
+        }
+
+
 class WorkBatchDetailsDefinitionSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True, source='cls_full_name')
     cls_full_name = serializers.CharField(read_only=True)
     name = serializers.CharField(read_only=True)
     buttons = serializers.ListField(child=ButtonField(), read_only=True)
+    fields = serializers.ListField(child=FieldPropertyField(), read_only=True)

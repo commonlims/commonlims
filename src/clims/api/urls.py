@@ -4,6 +4,7 @@ from django.conf.urls import patterns
 from django.conf import urls
 
 from .endpoints.work_batch import WorkBatchEndpoint
+from .endpoints.work_batch_details import WorkBatchDetailsEndpoint
 
 from .endpoints.work_batch_details_definition import WorkBatchDetailsDefinitionEndpoint
 from .endpoints.events import EventEndpoint
@@ -154,6 +155,9 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-work-batches'),
+    url(r'^organizations/{org}/work-batch-details/(?P<work_batch_id>[^\/]+)/$',
+        WorkBatchDetailsEndpoint.as_view(),
+        name='clims-api-0-work-batch-details'),
     url(r'^user-tasks/(?P<user_task_id>[^\/]+)/files/$',
         WorkBatchFilesEndpoint.as_view(),
         name='clims-api-0-work-batch-files'),

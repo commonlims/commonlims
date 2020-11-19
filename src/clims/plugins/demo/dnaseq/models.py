@@ -33,10 +33,9 @@ class PandorasBox(PlateBase):
 
 # TODO: attach files
 class ExampleWorkBatch(WorkBatchBase):
-    pass
+    kit_type = TextField(display_name="Kit type")
+    reagent_lot = TextField(display_name="Reagent lot #")
 
-
-class WorkInProgressWorkBatch(WorkBatchBase):
     @button("Start some work")
     def start_work(self):
         print("start work button clicked")

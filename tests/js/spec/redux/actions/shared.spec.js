@@ -209,7 +209,7 @@ describe('shared async actions', () => {
       expect(request.url).toBe('/api/0/organizations/lab/resource-details/2/');
     });
   });
-  it('can send POST event', () => {
+  it.skip('can send POST event', () => {
     const store = mockStore({});
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
@@ -245,7 +245,7 @@ describe('shared async actions', () => {
       expect(request.url).toBe('/api/0/organizations/lab/resource-name/');
     });
   });
-  it('can handle POST failure', () => {
+  it.skip('can handle POST failure', () => {
     const store = mockStore({});
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
