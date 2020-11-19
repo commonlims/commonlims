@@ -4,7 +4,6 @@ import withOrganization from 'app/utils/withOrganization';
 import {connect} from 'react-redux';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
-import PropTypes from 'prop-types';
 import DetailsForm from './detailsForm';
 import {WORK_BATCH_DEFINITION} from 'app/redux/reducers/workBatchDefinitionEntry';
 import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
@@ -52,17 +51,17 @@ class WorkbatchDetails extends React.Component {
 
   fetchDefinitionsFromProps() {
     let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
-    if (workBatchDefinitionEntry == null) {
-      return null;
+    if (!workBatchDefinitionEntry) {
+      return;
     }
     let {byIds, detailsId} = workBatchDefinitionEntry;
-    if (detailsId == null) {
-      return null;
+    if (!detailsId) {
+      return;
     }
     let workDefinition = byIds[detailsId];
     let {fields, buttons, id} = workDefinition;
-    if (fields === null || buttons === null || id === null) {
-      return null;
+    if (!fields || !buttons || !id) {
+      return;
     }
     return workDefinition;
   }
@@ -75,13 +74,13 @@ class WorkbatchDetails extends React.Component {
     //TODO: merge this with files in the workBatchDetails folder
     if (
       this.props.workBatchDetailsEntry.loadingDetails ||
-      this.state === null ||
+      !this.state ||
       !this.state.fetched
     ) {
       return <LoadingIndicator />;
     }
     let workDefinition = this.fetchDefinitionsFromProps();
-    if (workDefinition === null) {
+    if (!workDefinition) {
       return <LoadingIndicator />;
     }
     let {detailsId: workbatchId} = this.props.workBatchDetailsEntry;
@@ -98,6 +97,9 @@ class WorkbatchDetails extends React.Component {
 
   initCurrentFieldValues() {
     let {detailsId, byIds} = this.props.workBatchDetailsEntry;
+    if (!(detailsId in byIds)) {
+      throw new Error('No matching entry for detailsId');
+    }
     let workbatch = byIds[detailsId];
     let propertyNames = Object.keys(workbatch.properties);
     let currentFieldValues = propertyNames.reduce((previous, attr) => {
@@ -131,7 +133,6 @@ class WorkbatchDetails extends React.Component {
 WorkbatchDetails.propTypes = {
   ...ClimsTypes.List,
   organization: ClimsTypes.Organization.isRequired,
-  edvardtext: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
