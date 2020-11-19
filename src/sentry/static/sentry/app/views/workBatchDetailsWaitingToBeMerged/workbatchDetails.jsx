@@ -6,13 +6,10 @@ import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import PropTypes from 'prop-types';
 import DetailsForm from './detailsForm';
-
-import {
-  WORK_BATCH,
-  WORK_BATCH_DETAILS,
-  WORK_BATCH_DEFINITION,
-  EVENTS,
-} from 'app/redux/reducers/index';
+import {WORK_BATCH_DEFINITION} from 'app/redux/reducers/workBatchDefinitionEntry';
+import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
+import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
+import {EVENTS} from 'app/redux/reducers/event';
 
 class WorkbatchDetails extends React.Component {
   constructor(props) {

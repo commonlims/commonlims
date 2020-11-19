@@ -11,27 +11,9 @@ import taskDefinition from './taskDefinition';
 import workBatch from './workBatch';
 import workBatchDetails from './workBatchDetails';
 import projectSearchEntry from './projectSearchEntry';
-import {resource} from './shared';
-
-const sharedInitialState = {
-  ...resource.initialState,
-};
-
-export const WORK_BATCH_DEFINITION = 'WORK_BATCH_DEFINITION';
-export const WORK_BATCH = 'WORK_BATCH';
-export const WORK_BATCH_DETAILS = 'WORK_BATCH_DETAILS';
-export const EVENTS = 'EVENTS';
-
-const workBatchDefinitionEntry = resource.createReducer(
-  WORK_BATCH_DEFINITION,
-  sharedInitialState
-);
-
-const workBatchEntry = resource.createReducer(WORK_BATCH, sharedInitialState);
-const workBatchDetailsEntry = resource.createReducer(
-  WORK_BATCH_DETAILS,
-  sharedInitialState
-);
+import workBatchDefinitionEntry from './workBatchDefinitionEntry';
+import workBatchEntry from './workBatchEntry';
+import workBatchDetailsEntry from './workBatchDetailsEntry';
 
 export default combineReducers({
   process,
