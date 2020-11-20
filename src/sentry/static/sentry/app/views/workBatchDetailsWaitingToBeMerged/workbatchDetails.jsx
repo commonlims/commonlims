@@ -66,12 +66,12 @@ class WorkbatchDetails extends React.Component {
       return;
     }
     return new Promise((resolve) => {
-      this.setState((prevState) => {
-        return {
-          ...prevState,
+      this.setState(
+        {
           workDefinition,
-        };
-      }, resolve);
+        },
+        resolve
+      );
     });
   }
 
@@ -117,12 +117,12 @@ class WorkbatchDetails extends React.Component {
       };
     }, {});
     return new Promise((resolve) => {
-      this.setState((prevState) => {
-        return {
-          ...prevState,
+      this.setState(
+        {
           currentFieldValues,
-        };
-      }, resolve);
+        },
+        resolve
+      );
     });
   }
 
