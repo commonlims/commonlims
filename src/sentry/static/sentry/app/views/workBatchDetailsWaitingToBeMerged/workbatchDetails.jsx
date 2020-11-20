@@ -46,17 +46,14 @@ class WorkbatchDetails extends React.Component {
 
   fetchDefinitionsFromProps = () => {
     let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
-    if (!workBatchDefinitionEntry) {
-      return;
-    }
     let {byIds, detailsId} = workBatchDefinitionEntry;
-    if (!detailsId) {
-      return;
-    }
     let workDefinition = byIds[detailsId];
+    if (!workDefinition) {
+      throw new Error('Something went wrong when parsing static contents');
+    }
     let {fields, buttons, id} = workDefinition;
     if (!fields || !buttons || !id) {
-      return;
+      throw new Error('Something went wrong when parsing static contents');
     }
     return new Promise((resolve) => {
       this.setState(
