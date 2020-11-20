@@ -13,13 +13,6 @@ import {EVENTS} from 'app/redux/reducers/event';
 class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.fetchStaticContentsFromWip = this.fetchStaticContentsFromWip.bind(this);
-    this.fetchDetailedContentFromWip = this.fetchDetailedContentFromWip.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.sendButtonClickedEvent = this.sendButtonClickedEvent.bind(this);
-    this.initCurrentFieldValues = this.initCurrentFieldValues.bind(this);
-    this.fetchDefinitionsFromProps = this.fetchDefinitionsFromProps.bind(this);
-    this.setFetched = this.setFetched.bind(this);
     const getWipWorkbatch = this.props.getWipWorkbatch;
     const org = this.props.organization;
     getWipWorkbatch(org)
@@ -30,11 +23,11 @@ class WorkbatchDetails extends React.Component {
       .then(this.setFetched);
   }
 
-  setFetched() {
+  setFetched = () => {
     this.setState({fetched: true});
-  }
+  };
 
-  fetchStaticContentsFromWip() {
+  fetchStaticContentsFromWip = () => {
     const byIds = this.props.workBatchEntry.byIds;
     const arr = Object.values(byIds);
     let wipWorkbatch = arr[0];
@@ -42,16 +35,16 @@ class WorkbatchDetails extends React.Component {
       this.props.organization,
       wipWorkbatch.cls_full_name
     );
-  }
+  };
 
-  fetchDetailedContentFromWip() {
+  fetchDetailedContentFromWip = () => {
     const byIds = this.props.workBatchEntry.byIds;
     const arr = Object.values(byIds);
     let wipWorkbatch = arr[0];
     return this.props.getWorkBatchDetails(this.props.organization, wipWorkbatch.id);
-  }
+  };
 
-  fetchDefinitionsFromProps() {
+  fetchDefinitionsFromProps = () => {
     let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
     if (!workBatchDefinitionEntry) {
       return;
@@ -73,13 +66,36 @@ class WorkbatchDetails extends React.Component {
         resolve
       );
     });
-  }
+  };
 
-  sendButtonClickedEvent(buttonEvent) {
+  getUpdatedWorkbatch = () => {
+    let {detailsId, byIds} = this.props.workBatchDetailsEntry;
+    let fetched_workbatch = byIds[detailsId];
+    let currentFieldValues = this.state.currentFieldValues;
+    let properties = Object.keys(currentFieldValues);
+    let updatedProperties = properties.reduce((previous, current) => {
+      let entry = {
+        value: currentFieldValues[current],
+      };
+      return {
+        ...previous,
+        [current]: entry,
+      };
+    }, {});
+    let mergedProperties = merge({}, fetched_workbatch.properties, updatedProperties);
+    return {
+      ...fetched_workbatch,
+      properties: mergedProperties,
+    };
+  };
+
+  sendButtonClickedEvent = (buttonEvent) => {
+    let updatedWorkbatch = this.getUpdatedWorkbatch();
+    this.props.updateWorkBatchDetails(this.props.organization, updatedWorkbatch);
     this.props.sendButtonClickedEvent(this.props.organization, buttonEvent);
-  }
+  };
 
-  render() {
+  render = () => {
     //TODO: merge this with files in the workBatchDetails folder
     if (
       this.props.workBatchDetailsEntry.loadingDetails ||
@@ -101,9 +117,9 @@ class WorkbatchDetails extends React.Component {
         workBatchId={workbatchId}
       />
     );
-  }
+  };
 
-  initCurrentFieldValues() {
+  initCurrentFieldValues = () => {
     let {detailsId, byIds} = this.props.workBatchDetailsEntry;
     if (!(detailsId in byIds)) {
       throw new Error('No matching entry for detailsId');
@@ -124,9 +140,9 @@ class WorkbatchDetails extends React.Component {
         resolve
       );
     });
-  }
+  };
 
-  handleChange(e) {
+  handleChange = (e) => {
     let {name, value} = e.target;
     this.setState((prevState) => {
       let {currentFieldValues} = {...prevState};
@@ -135,7 +151,7 @@ class WorkbatchDetails extends React.Component {
         currentFieldValues,
       };
     });
-  }
+  };
 }
 
 WorkbatchDetails.propTypes = {
