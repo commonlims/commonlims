@@ -18,6 +18,7 @@ class WorkbatchDetails extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.sendButtonClickedEvent = this.sendButtonClickedEvent.bind(this);
     this.initCurrentFieldValues = this.initCurrentFieldValues.bind(this);
+    this.fetchDefinitionsFromProps = this.fetchDefinitionsFromProps.bind(this);
     this.setFetched = this.setFetched.bind(this);
     const getWipWorkbatch = this.props.getWipWorkbatch;
     const org = this.props.organization;
@@ -25,6 +26,7 @@ class WorkbatchDetails extends React.Component {
       .then(this.fetchStaticContentsFromWip)
       .then(this.fetchDetailedContentFromWip)
       .then(this.initCurrentFieldValues)
+      .then(this.fetchDefinitionsFromProps)
       .then(this.setFetched);
   }
 
@@ -63,7 +65,14 @@ class WorkbatchDetails extends React.Component {
     if (!fields || !buttons || !id) {
       return;
     }
-    return workDefinition;
+    return new Promise((resolve) => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          workDefinition,
+        };
+      }, resolve);
+    });
   }
 
   sendButtonClickedEvent(buttonEvent) {
@@ -79,14 +88,13 @@ class WorkbatchDetails extends React.Component {
     ) {
       return <LoadingIndicator />;
     }
-    let workDefinition = this.fetchDefinitionsFromProps();
-    if (!workDefinition) {
+    if (!this.state.workDefinition) {
       return <LoadingIndicator />;
     }
     let {detailsId: workbatchId} = this.props.workBatchDetailsEntry;
     return (
       <DetailsForm
-        workDefinition={workDefinition}
+        workDefinition={this.state.workDefinition}
         sendButtonClickedEvent={this.sendButtonClickedEvent}
         handleChange={this.handleChange}
         currentFieldValues={this.state.currentFieldValues}
