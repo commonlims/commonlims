@@ -13,6 +13,9 @@ import {EVENTS} from 'app/redux/reducers/event';
 class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
     const getWipWorkbatch = this.props.getWipWorkbatch;
     const org = this.props.organization;
     getWipWorkbatch(org)
