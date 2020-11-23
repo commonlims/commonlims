@@ -27,7 +27,7 @@ class WorkBatchTransitionsEndpoint(WorkBatchBaseEndpoint):
         # Validate Work Batch
         # TODO: scope by organization id
         try:
-            work_batch = WorkBatch.objects.get(pk=int(work_batch_id))
+            work_batch = self.app.workbatches.get(pk=int(work_batch_id))
         except WorkBatch.DoesNotExist:
             raise ResourceDoesNotExist
 
