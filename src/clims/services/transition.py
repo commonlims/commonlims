@@ -18,15 +18,15 @@ class TransitionService:
     # 2. set "current" on source location record to false
     # 3. create transition record
     @transaction.atomic
-    def create(self, obj, work_batch_id):
+    def create(self, transition, work_batch_id):
         """
         Creates a new Transition
         """
-        transition_type = obj["transition_type"]
+        transition_type = transition["transition_type"]
         assert(TransitionType.valid(transition_type))
 
         # Validate source location
-        source_location_id = obj["source_location_id"]
+        source_location_id = transition["source_location_id"]
         try:
             source_location = LocationModel.objects.get(pk=int(source_location_id))
             assert source_location.current is True
@@ -44,7 +44,7 @@ class TransitionService:
             substance = substance.create_child()
 
         # TODO: CLIMS-464 - validate target location
-        target_location = obj["target_location"]
+        target_location = transition["target_location"]
         container_id = target_location["container_id"]
         x = target_location["x"]
         y = target_location["y"]

@@ -70,10 +70,10 @@ class TestTransitionService(TestCase):
         return location
 
     @classmethod
-    def create_request_object(cls):
+    def create_transition_request(cls):
         ctr = TestTransitionService.create_container()
         loc = TestTransitionService.create_sample_at_location(ctr, 0, 0)
-        obj = {
+        transition = {
             "source_location_id": loc.id,
             "target_location": {
                 "container_id": ctr.id,
@@ -82,11 +82,11 @@ class TestTransitionService(TestCase):
             },
             "transition_type": TransitionType.MOVE
         }
-        return obj, ctr, loc
+        return transition, ctr, loc
 
     def test__create_move_transition(self):
-        obj, ctr, loc = TestTransitionService.create_request_object()
-        transition = self.ts.create(obj, self.work_batch.id)
+        transition, ctr, loc = TestTransitionService.create_transition_request()
+        transition = self.ts.create(transition, self.work_batch.id)
         assert transition.id
 
         # Check that the substance now has the new location
@@ -97,9 +97,9 @@ class TestTransitionService(TestCase):
         assert new_loc.y == 2
 
     def test__create_spawn_transition(self):
-        obj, ctr, loc = TestTransitionService.create_request_object()
-        obj["transition_type"] = TransitionType.SPAWN
-        transition = self.ts.create(obj, self.work_batch.id)
+        transition, ctr, loc = TestTransitionService.create_transition_request()
+        transition["transition_type"] = TransitionType.SPAWN
+        transition = self.ts.create(transition, self.work_batch.id)
         assert transition.id
 
         # Check that the transitioned substance now has a child
@@ -111,22 +111,22 @@ class TestTransitionService(TestCase):
         assert source_location_substance_id == target_substance_parent_id
 
     def test__create_transition_invalid_source_location(self):
-        obj, ctr, loc = TestTransitionService.create_request_object()
-        obj["source_location_id"] = -5
+        transition, ctr, loc = TestTransitionService.create_transition_request()
+        transition["source_location_id"] = -5
         with self.assertRaises(Exception):
-            self.ts.create(obj, self.work_batch.id)
+            self.ts.create(transition, self.work_batch.id)
 
     def test__create_transition_invalid_container_id(self):
-        obj, ctr, loc = TestTransitionService.create_request_object()
-        obj["target_location"]["container_id"] = -5
+        transition, ctr, loc = TestTransitionService.create_transition_request()
+        transition["target_location"]["container_id"] = -5
         with self.assertRaises(Exception):
-            self.ts.create(obj, self.work_batch.id)
+            self.ts.create(transition, self.work_batch.id)
 
     def test__create_transition_invalid_type(self):
-        obj, ctr, loc = TestTransitionService.create_request_object()
-        obj["transition_type"] = -5
+        transition, ctr, loc = TestTransitionService.create_transition_request()
+        transition["transition_type"] = -5
         with self.assertRaises(Exception):
-            self.ts.create(obj, self.work_batch.id)
+            self.ts.create(transition, self.work_batch.id)
 
 
 class MyWorkbatchImplementation(WorkBatchBase):
