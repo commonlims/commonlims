@@ -6,6 +6,7 @@ from clims.models.transition import TransitionType
 from clims.models.location import SubstanceLocation as LocationModel
 from clims.models.container import Container as ContainerModel
 from clims.models.substance import Substance as SubstanceModel
+from clims.services.container import IndexOutOfBounds
 
 
 class TransitionService:
@@ -86,3 +87,36 @@ class TransitionService:
         transition.save()
 
         return transition
+
+    """
+    Validates the coordinates of a container.
+    """
+
+    def _validate_location(self, container_id, container_index):
+        try:
+            container = self._app.containers.get(id=container_id)
+        except ContainerModel.DoesNotExist:
+            raise AssertionError("Target location container not found: '{}'".format(container_id))
+
+        try:
+            ix = container.IndexType.from_any_type(self, container_index)
+            container._validate_boundaries(ix)
+        except IndexOutOfBounds:
+            raise AssertionError("Target location index out of bounds: '{}'".format(container_index))
+
+        return container
+
+    """
+    Validates source location.
+    """
+
+    def validate_source_location(self, container_id, container_index):
+        container = self._validate_location(container_id, container_index)
+        return container[container_index]  # This is always empty!
+
+    """
+    Validates target location.
+    """
+
+    def validate_target_location(self, container_id, container_index):
+        return self._validate_location(container_id, container_index)
