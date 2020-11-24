@@ -86,21 +86,3 @@ class TransitionService:
         transition.save()
 
         return transition
-
-
-class Transition(object):
-    def __init__(self, transition_model):
-        self.archetype = transition_model
-
-    @classmethod
-    def create(cls, organization):
-        model = TransitionModel(organization=organization)
-        model.save()
-        return Transition(model)
-
-    @property
-    def organization(self):
-        return self.archetype.organization
-
-    def save(self):
-        self.archetype.save()
