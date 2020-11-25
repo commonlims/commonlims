@@ -114,6 +114,32 @@ export function createEntryFailure(state, action) {
   };
 }
 
+export function updateEntryRequest(state, action) {
+  return {
+    ...state,
+    updating: true,
+    errorMessage: null,
+  };
+}
+
+export function updateEntrySuccess(state, action) {
+  const byIds = {};
+  byIds[action.entry.id] = action.entry;
+  return {
+    ...state,
+    updating: false,
+    byIds: merge({}, state.byIds, byIds),
+  };
+}
+
+export function updateEntryFailure(state, action) {
+  return {
+    ...state,
+    updating: false,
+    errorMessage: action.message,
+  };
+}
+
 export function getEntryRequest(state, action) {
   return {
     ...state,
@@ -168,6 +194,12 @@ const createResourceReducer = (resource, initialState) => (
       return createEntrySuccess(state, action);
     case `CREATE_${resource}_FAILURE`:
       return createEntryFailure(state, action);
+    case `UPDATE_${resource}_REQUEST`:
+      return updateEntryRequest(state, action);
+    case `UPDATE_${resource}_SUCCESS`:
+      return updateEntrySuccess(state, action);
+    case `UPDATE_${resource}_FAILURE`:
+      return updateEntryFailure(state, action);
 
     default:
       return state;
@@ -206,6 +238,7 @@ export const entry = {
   // Required state for following an entry protocol
   initialState: {
     loadingDetails: false,
+    updating: false,
     detailsId: null,
   },
 
@@ -216,6 +249,9 @@ export const entry = {
   getEntryRequest,
   getEntrySuccess,
   getEntryFailure,
+  updateEntryRequest,
+  updateEntrySuccess,
+  updateEntryFailure,
 };
 
 // A resource follows both the list and entry protocols
