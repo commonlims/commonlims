@@ -43,6 +43,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
             available_containers.append(container)
 
         available_sample_types = ["Vampire Fang", "Zombie Brain", "Hydra Claw"]
+        available_samples = []
         for _ix in range(100):
             # id = ix + 1
             id = random.randint(1, 10000000)
@@ -53,6 +54,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                                    erudite=random.randint(1, 100),
                                    sample_type=random.choice(available_sample_types))
             sample.save()
+            available_samples.append(sample)
             logger.info("Created sample: {}".format(sample.name))
             plate = random.choice(available_containers)
             if not sample.location and len(list(plate.contents)) < plate.rows * plate.columns:
@@ -86,3 +88,10 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
                                          status=_ix)
             workbatch.save()
             logger.info("Created workbatch: {}".format(workbatch.name))
+
+        # TODO: Create transitions
+        # Select random samples for source
+        num_transitions = 5
+        source_samples = random.sample(available_samples, num_transitions)
+        for source_sample in source_samples:
+            logger.info("TODO: create transition from sample: {}".format(source_sample.name))

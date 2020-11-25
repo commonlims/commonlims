@@ -8,6 +8,10 @@ class TransitionType(object):
     MOVE = 0
     SPAWN = 1
 
+    @classmethod
+    def valid(cls, tt):
+        return tt == cls.MOVE or tt == cls.SPAWN
+
 
 class Transition(Model):
     """
@@ -16,7 +20,8 @@ class Transition(Model):
     __core__ = True
 
     # Added in case we want to be able to audit a user's history directly.
-    user = FlexibleForeignKey('sentry.User', related_name='transitions')
+    # TODO: null=False
+    user = FlexibleForeignKey('sentry.User', related_name='transitions', null=True)
 
     # The work batch in which this transition was created, if it was created in a work batch context.
     work_batch = FlexibleForeignKey('WorkBatch', null=True, related_name='transitions')
@@ -35,4 +40,4 @@ class Transition(Model):
         app_label = 'clims'
         db_table = 'clims_transition'
 
-    __repr__ = sane_repr('work_batch_id', 'source_location_id', 'source_substance_id', 'target_location_id', 'target_substance_id')
+    __repr__ = sane_repr('work_batch_id', 'source_location_id', 'target_location_id')

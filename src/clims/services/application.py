@@ -6,6 +6,7 @@ from clims.services.container import ContainerService
 from clims.services.project import ProjectService
 from clims.services.workflow import WorkflowService
 from clims.services.workbatch import WorkbatchService
+from clims.services.transition import TransitionService
 
 
 class ApplicationService(object):
@@ -26,6 +27,7 @@ class ApplicationService(object):
         self.plugins = PluginManager(self)
         self.workflows = WorkflowService(self)
         self.workbatches = WorkbatchService(self)
+        self.transitions = TransitionService(self)
 
 
 class InversionOfControl(object):

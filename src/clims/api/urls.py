@@ -25,6 +25,8 @@ from .endpoints.user_files import UserFilesEndpoint
 from .endpoints.work_batch_files import WorkBatchFilesEndpoint
 from .endpoints.work_batch_file_details import WorkBatchFileDetailsEndpoint
 
+from .endpoints.work_batch_transitions import WorkBatchTransitionsEndpoint
+
 from .endpoints.work_batch_settings import (WorkBatchSettingsEndpoint,
                                             WorkBatchSettingsDetailsEndpoint)
 
@@ -63,6 +65,7 @@ def url2(pattern, cls):
     return url(pattern, cls.as_view(), name=cls.name)
 
 
+# TODO: scoping all relevant resources by org id. See CLIMS-469
 urlpatterns = patterns(
     '',
     # Workflow
@@ -124,6 +127,9 @@ urlpatterns = patterns(
     url(r'^organizations/{org}/work-batches/$',
         WorkBatchEndpoint.as_view(),
         name='clims-api-0-work-batches'),
+    url(r'^organizations/{org}/work-batches/(?P<work_batch_id>[^\/]+)/transitions/$',
+        WorkBatchTransitionsEndpoint.as_view(),
+        name='clims-api-0-work-batch-transitions'),
     url(r'^work-batches/(?P<work_batch_id>[^\/]+)/files/$',
         WorkBatchFilesEndpoint.as_view(),
         name='clims-api-0-user-task-files'),
