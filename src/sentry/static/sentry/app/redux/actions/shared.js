@@ -88,6 +88,7 @@ const acCreate = (resource, urlTemplate) => {
         dispatch(acCreateFailure(resource)(err.status, message));
       },
     });
+    // TODO: uncomment this when clims-465 is completed
     // return axios
     //   .post(url, data)
     //   .then(() => dispatch(acCreateSuccess(resource)(data)))
@@ -123,6 +124,7 @@ const acUpdate = (resource, urlTemplate) => {
         dispatch(acUpdateFailure(resource)(err.status, message));
       },
     });
+    // TODO: uncomment this when clims-465 is completed
     // return axios
     //   .put(url, data)
     //   .then(() => dispatch(acUpdateSuccess(resource)(data)))
