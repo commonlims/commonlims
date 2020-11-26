@@ -21,13 +21,7 @@ describe('workbatch details', () => {
     const initialState = {...resource.initialState};
     const workBatchDetailsEntry = {
       ...initialState,
-      detailsId: 1000,
-      byIds: {
-        ...initialState.byIds,
-        1000: {
-          ...originalWorkbatch,
-        },
-      },
+      entry: originalWorkbatch,
     };
     const currentFieldValues = {
       property1: 'new value',
