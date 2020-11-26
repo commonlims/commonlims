@@ -1,15 +1,20 @@
 import {Set} from 'immutable';
-import {resource} from 'app/redux/reducers/shared';
+import {resource} from 'app/redux/reducers/sharedList';
 import {makeResourceActions} from 'app/redux/actions/shared';
 
 const RESOURCE_NAME = 'SOME_RESOURCE';
 
 // Tests the shared functionality of resource reducers
-const initialState = {
+const initialStateEntry = {
   ...resource.initialState,
 };
 
-const reducer = resource.createReducer(RESOURCE_NAME, initialState);
+const initialStateList = {
+  ...resource.initialState,
+};
+
+const reducerList = resource.createReducer(RESOURCE_NAME, initialStateList);
+const reducerEntry = resource.createReducer(RESOURCE_NAME, initialStateEntry);
 const actions = makeResourceActions(
   RESOURCE_NAME,
   '/api/0/some-resource/',
@@ -17,12 +22,12 @@ const actions = makeResourceActions(
 );
 
 function createGetListSuccessState() {
-  const originalState = {...initialState};
-  const requestedState = reducer(
+  const originalState = {...initialStateList};
+  const requestedState = reducerList(
     originalState,
     actions.getListRequest('search', 'groupby', 'cursor')
   );
-  return reducer(
+  return reducerList(
     requestedState,
     actions.getListSuccess(
       [
@@ -36,16 +41,13 @@ function createGetListSuccessState() {
 
 describe('shared resource reducer', () => {
   it('has expected state after requesting a list', () => {
-    const originalState = {...initialState};
-    const requestedState = reducer(
+    const originalState = {...initialStateList};
+    const requestedState = reducerList(
       originalState,
       actions.getListRequest('search', 'groupby', 'cursor')
     );
     expect(requestedState).toEqual({
-      loadingDetails: false,
-      detailsId: null,
       loading: true,
-      updating: false,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -63,10 +65,7 @@ describe('shared resource reducer', () => {
   it('has expected state when getting a successful list response', () => {
     const successState = createGetListSuccessState();
     expect(successState).toEqual({
-      loadingDetails: false,
-      detailsId: null,
       loading: false,
-      updating: false,
       errorMessage: null,
       byIds: {'1': {id: '1', name: 'entry1'}, '2': {id: '2', name: 'entry2'}},
       listViewState: {
@@ -83,7 +82,7 @@ describe('shared resource reducer', () => {
 
   it('has expected state when selecting/deselecting a page', () => {
     const successState = createGetListSuccessState();
-    const selectedPageState = reducer(successState, actions.selectPage(true));
+    const selectedPageState = reducerList(successState, actions.selectPage(true));
     const expectedSelectedPageState = {
       ...successState,
       listViewState: {
@@ -93,7 +92,7 @@ describe('shared resource reducer', () => {
       },
     };
     expect(selectedPageState).toEqual(expectedSelectedPageState);
-    const unSelectedPageState = reducer(selectedPageState, actions.selectPage(false));
+    const unSelectedPageState = reducerList(selectedPageState, actions.selectPage(false));
 
     expect(unSelectedPageState).toEqual({
       ...expectedSelectedPageState,
@@ -107,7 +106,7 @@ describe('shared resource reducer', () => {
 
   it('has expected state when selecting/deselecting a single entry', () => {
     const successState = createGetListSuccessState();
-    const selectedEntryState = reducer(successState, actions.select('1', true));
+    const selectedEntryState = reducerList(successState, actions.select('1', true));
     const expectedSelectedEntryState = {
       ...successState,
       listViewState: {
@@ -117,7 +116,10 @@ describe('shared resource reducer', () => {
     };
     expect(selectedEntryState).toEqual(expectedSelectedEntryState);
 
-    const unSelectedEntryState = reducer(selectedEntryState, actions.select('1', false));
+    const unSelectedEntryState = reducerList(
+      selectedEntryState,
+      actions.select('1', false)
+    );
     expect(unSelectedEntryState).toEqual({
       ...selectedEntryState,
       listViewState: {
@@ -129,7 +131,7 @@ describe('shared resource reducer', () => {
 
   it('has expected state when requesting an entry to be created', () => {
     const successState = createGetListSuccessState();
-    const createEntryRequestState = reducer(
+    const createEntryRequestState = reducerList(
       successState,
       actions.createRequest({id: '1'})
     );
@@ -145,8 +147,11 @@ describe('shared resource reducer', () => {
       name: 'entry3',
     };
     const successState = createGetListSuccessState();
-    const createEntryRequestState = reducer(successState, actions.createRequest(newItem));
-    const createEntrySuccessState = reducer(
+    const createEntryRequestState = reducerList(
+      successState,
+      actions.createRequest(newItem)
+    );
+    const createEntrySuccessState = reducerList(
       createEntryRequestState,
       actions.createSuccess(newItem)
     );
@@ -160,129 +165,18 @@ describe('shared resource reducer', () => {
     });
   });
 
-  it('has expected state when a single entry update has been requested', () => {
-    const originalState = {
-      ...initialState,
-      detailsId: 5,
-      errorMessage: 'oops',
-      byIds: {
-        5: {
-          id: 5,
-          name: 'orig-name',
-        },
-      },
-    };
-    const entry = {
-      id: 5,
-      name: 'new-name',
-    };
-    const requestedState = reducer(originalState, actions.updateRequest(entry));
-    const expectedState = {
-      ...originalState,
-      updating: true,
-      errorMessage: null,
-    };
-
-    expect(requestedState).toEqual(expectedState);
-  });
-
-  it('has expected state when a single entry update has succeeded', () => {
-    const originalState = {
-      ...initialState,
-      detailsId: 5,
-      updating: true,
-      byIds: {
-        5: {
-          id: 5,
-          name: 'orig-name',
-        },
-      },
-    };
-    const entry = {
-      id: 5,
-      name: 'new-name',
-    };
-    const successState = reducer(originalState, actions.updateSuccess(entry));
-    const expectedState = {
-      ...originalState,
-      updating: false,
-      byIds: {
-        5: {
-          id: 5,
-          name: 'new-name',
-        },
-      },
-    };
-
-    expect(successState).toEqual(expectedState);
-  });
-
-  it('has expected state when a single entry update has failed', () => {
-    const originalState = {
-      ...initialState,
-      detailsId: 5,
-      updating: true,
-      byIds: {
-        5: {
-          id: 5,
-          name: 'orig-name',
-        },
-      },
-    };
-    const err = {
-      statusCode: 1,
-      message: 'oops',
-    };
-    const failedState = reducer(
-      originalState,
-      actions.updateFailure(err.statusCode, err.message)
-    );
-    const expectedState = {
-      ...originalState,
-      updating: false,
-      errorMessage: 'oops',
-    };
-
-    expect(failedState).toEqual(expectedState);
-  });
-
-  it('has expected state after requesting a single entry', () => {
-    const requestedState = reducer(initialState, actions.getRequest());
-    expect(requestedState).toEqual({
-      ...initialState,
-      loadingDetails: true,
-    });
-  });
-
-  it('has expected state when getting a successful single entry response', () => {
-    const requestedState = reducer(initialState, actions.getRequest());
-    // We must get an item with an id back:
-    const fetchedItem = {
-      id: 1,
-    };
-    const successState = reducer(requestedState, actions.getSuccess(fetchedItem));
-    expect(successState).toEqual({
-      ...initialState,
-      detailsId: 1,
-      byIds: {1: {id: 1}},
-    });
-  });
-
   it('has expected state when getting a failed response', () => {
-    const originalState = {...initialState};
-    const requestedState = reducer(
+    const originalState = {...initialStateList};
+    const requestedState = reducerList(
       originalState,
       actions.getListRequest('search', 'groupby', 'cursor')
     );
-    const failedState = reducer(
+    const failedState = reducerList(
       requestedState,
       actions.getListFailure(500, 'some error')
     );
     expect(failedState).toEqual({
-      loadingDetails: false,
-      detailsId: null,
       loading: false,
-      updating: false,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {

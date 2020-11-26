@@ -1,4 +1,4 @@
-import {resource} from 'app/redux/reducers/shared';
+import {resource} from 'app/redux/reducers/sharedList';
 
 export const WORK_BATCH = 'WORK_BATCH';
 

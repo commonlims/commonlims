@@ -1,5 +1,5 @@
 import React from 'react';
-import {resource} from 'app/redux/reducers/shared';
+import {resource} from 'app/redux/reducers/sharedList';
 import {getUpdatedWorkBatch} from 'app/views/workBatchDetailsWaitingToBeMerged/workbatchDetails';
 
 describe('workbatch details', () => {

@@ -10,7 +10,6 @@ describe('workDefinition reducer, list protocol', () => {
     );
     const expected = {
       loading: true,
-      updating: false,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -25,8 +24,6 @@ describe('workDefinition reducer, list protocol', () => {
         },
       },
       creating: false,
-      loadingDetails: false,
-      detailsId: null,
     };
     expect(requested).toEqual(expected);
   });
@@ -44,7 +41,6 @@ describe('workDefinition reducer, list protocol', () => {
 
     const expected = {
       loading: false,
-      updating: false,
       errorMessage: null,
       byIds: {
         1: entries[0],
@@ -62,8 +58,6 @@ describe('workDefinition reducer, list protocol', () => {
         },
       },
       creating: false,
-      loadingDetails: false,
-      detailsId: null,
     };
     expect(succeeded).toEqual(expected);
   });
