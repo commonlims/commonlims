@@ -148,7 +148,6 @@ export class WorkbatchDetails extends React.Component {
 }
 
 WorkbatchDetails.propTypes = {
-  ...ClimsTypes.List,
   organization: ClimsTypes.Organization.isRequired,
 };
 
