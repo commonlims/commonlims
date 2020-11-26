@@ -204,6 +204,7 @@ export function getUpdatedWorkBatch(workBatchDetailsEntry, currentFieldValues) {
   let properties = Object.keys(currentFieldValues);
   let updatedProperties = properties.reduce((previous, current) => {
     let entry = {
+      name: current,
       value: currentFieldValues[current],
     };
     return {

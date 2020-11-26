@@ -9,12 +9,10 @@ describe('workbatch details', () => {
       id: 1000,
       properties: {
         property1: {
-          id: 1,
           name: 'property1',
           value: 'orig value',
         },
         property2: {
-          id: 2,
           name: 'property2',
           value: 'orig value',
         },
@@ -47,16 +45,15 @@ describe('workbatch details', () => {
       id: 1000,
       properties: {
         property1: {
-          id: 1,
           name: 'property1',
           value: 'new value',
         },
         property2: {
-          id: 2,
           name: 'property2',
           value: 'orig value',
         },
         property3: {
+          name: 'property3',
           value: 'new value 3',
         },
       },
