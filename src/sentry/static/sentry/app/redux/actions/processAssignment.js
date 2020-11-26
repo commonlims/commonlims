@@ -2,7 +2,7 @@ import {t} from 'app/locale';
 import {Client} from 'app/api';
 import {substanceSearchEntriesToggleSelectAll} from 'app/redux/actions/substanceSearchEntry';
 
-import {makeActionCreator} from 'app/redux/actions/shared';
+import {makeActionCreator} from 'app/redux/actions/sharedList';
 
 // Assigning substances to processes.
 // TODO-nomerge: Rename actions to processAssignments

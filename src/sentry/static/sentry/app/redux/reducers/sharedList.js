@@ -88,32 +88,6 @@ export function getListFailure(state, action) {
   };
 }
 
-export function createEntryRequest(state, action) {
-  return {
-    ...state,
-    creating: true,
-  };
-}
-
-export function createEntrySuccess(state, action) {
-  return {
-    ...state,
-    creating: false,
-    byIds: {
-      ...state.byIds,
-      [action.entry.id]: action.entry,
-    },
-  };
-}
-
-export function createEntryFailure(state, action) {
-  return {
-    ...state,
-    creating: false,
-    errorMessage: action.message,
-  };
-}
-
 const createResourceReducer = (resource, initialState) => (
   state = initialState,
   action
@@ -129,12 +103,6 @@ const createResourceReducer = (resource, initialState) => (
       return selectSingle(state, action);
     case `SELECT_PAGE_OF_${resource}`:
       return selectAll(state, action);
-    case `CREATE_${resource}_REQUEST`:
-      return createEntryRequest(state, action);
-    case `CREATE_${resource}_SUCCESS`:
-      return createEntrySuccess(state, action);
-    case `CREATE_${resource}_FAILURE`:
-      return createEntryFailure(state, action);
     default:
       return state;
   }
@@ -157,13 +125,9 @@ export const list = {
         cursor: null,
       },
     },
-    creating: false,
   },
 
   // All reducers available for that list:
-  createEntryRequest,
-  createEntrySuccess,
-  createEntryFailure,
   selectSingle,
   selectAll,
   getListRequest,

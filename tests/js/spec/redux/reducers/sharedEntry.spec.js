@@ -1,5 +1,5 @@
 import {resource} from 'app/redux/reducers/sharedEntry';
-import {makeResourceActions} from 'app/redux/actions/shared';
+import {makeResourceActions} from 'app/redux/actions/sharedEntry';
 
 const RESOURCE_NAME = 'SOME_RESOURCE';
 
@@ -8,11 +8,7 @@ const initialStateEntry = {
 };
 
 const reducerEntry = resource.createReducer(RESOURCE_NAME, initialStateEntry);
-const actions = makeResourceActions(
-  RESOURCE_NAME,
-  '/api/0/some-resource/',
-  '/api/0/some-resource/5/'
-);
+const actions = makeResourceActions(RESOURCE_NAME, '/api/0/some-resource/5/');
 
 describe('shared resource reducer', () => {
   it('has expected state after requesting a single entry', () => {
@@ -106,5 +102,40 @@ describe('shared resource reducer', () => {
       errorMessage: 'oops',
     };
     expect(failedState).toEqual(expectedState);
+  });
+
+  it('has expected state when requesting an entry to be created', () => {
+    const successState = {
+      ...initialStateEntry,
+      creating: true,
+      entry: {id: '1'},
+    };
+    const createEntryRequestState = reducerEntry(
+      successState,
+      actions.createRequest({id: '1'})
+    );
+    expect(createEntryRequestState).toEqual({
+      ...successState,
+    });
+  });
+
+  it('has expected state when requesting an entry has successfully been created', () => {
+    const newItem = {
+      id: '3',
+      name: 'entry3',
+    };
+    const createEntryRequestState = reducerEntry(
+      {...initialStateEntry},
+      actions.createRequest(newItem)
+    );
+    const createEntrySuccessState = reducerEntry(
+      createEntryRequestState,
+      actions.createSuccess(newItem)
+    );
+
+    expect(createEntrySuccessState).toEqual({
+      ...initialStateEntry,
+      entry: newItem,
+    });
   });
 });

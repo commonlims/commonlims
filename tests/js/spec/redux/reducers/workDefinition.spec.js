@@ -23,7 +23,6 @@ describe('workDefinition reducer, list protocol', () => {
           cursor: 'cursor',
         },
       },
-      creating: false,
     };
     expect(requested).toEqual(expected);
   });
@@ -57,7 +56,6 @@ describe('workDefinition reducer, list protocol', () => {
           cursor: 'cursor',
         },
       },
-      creating: false,
     };
     expect(succeeded).toEqual(expected);
   });

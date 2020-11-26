@@ -3,7 +3,7 @@ import React from 'react';
 import merge from 'lodash/merge';
 import {connect} from 'react-redux';
 import withOrganization from 'app/utils/withOrganization';
-import {resourceActionCreators} from 'app/redux/actions/shared';
+import {listActionCreators} from 'app/redux/actions/sharedList';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import DetailsForm from './detailsForm';
 import {WORK_BATCH_DEFINITION} from 'app/redux/reducers/workBatchDefinitionEntry';
@@ -161,7 +161,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   sendButtonClickedEvent: (org, buttonEvent) => {
     const urlTemplate = '/api/0/organizations/{org}/events/';
-    const sendButtonClickedEventRoutine = resourceActionCreators.acCreate(
+    const sendButtonClickedEventRoutine = listActionCreators.acCreate(
       EVENTS,
       urlTemplate
     );
@@ -169,7 +169,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getConfiguredStaticContents: (org, workbatchId) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batch-definition-details/{id}';
-    const getConfiguredStaticContentsRoutine = resourceActionCreators.acGet(
+    const getConfiguredStaticContentsRoutine = listActionCreators.acGet(
       WORK_BATCH_DEFINITION,
       urlTemplate
     );
@@ -177,7 +177,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getWorkBatchDetails: (org, workbatchId) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batch-details/{id}';
-    const getWorkBatchDetialsRoutine = resourceActionCreators.acGet(
+    const getWorkBatchDetialsRoutine = listActionCreators.acGet(
       WORK_BATCH_DETAILS,
       urlTemplate
     );
@@ -185,7 +185,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   updateWorkBatchDetails: (org, workbatch) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batch-details/{id}';
-    const updateWorkBatchDetailsRoutine = resourceActionCreators.acUpdate(
+    const updateWorkBatchDetailsRoutine = listActionCreators.acUpdate(
       WORK_BATCH_DETAILS,
       urlTemplate
     );
@@ -193,7 +193,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getWipWorkbatch: (org) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batches/';
-    const getWorkBatchRoutine = resourceActionCreators.acGetList(WORK_BATCH, urlTemplate);
+    const getWorkBatchRoutine = listActionCreators.acGetList(WORK_BATCH, urlTemplate);
     return dispatch(getWorkBatchRoutine(org, 'workbatch.name:wip-workbatch'));
   },
 });

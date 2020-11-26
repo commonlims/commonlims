@@ -1,7 +1,7 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
-import {resourceActionCreators} from 'app/redux/actions/shared';
+import {listActionCreators} from 'app/redux/actions/sharedList';
 
 const EVENT = 'EVENT';
 
@@ -46,7 +46,7 @@ describe('button event redux action', () => {
         slug: 'lab',
       };
       const urlTemplate = '/api/0/organizations/{org}/events/';
-      const startButtonClickedEvent = resourceActionCreators.acCreate(EVENT, urlTemplate);
+      const startButtonClickedEvent = listActionCreators.acCreate(EVENT, urlTemplate);
       const action = startButtonClickedEvent(org, buttonClickedEvent);
 
       return store.dispatch(action).then(() => {

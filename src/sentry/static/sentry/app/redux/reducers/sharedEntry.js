@@ -46,6 +46,29 @@ export function getEntryFailure(state, action) {
   };
 }
 
+export function createEntryRequest(state, action) {
+  return {
+    ...state,
+    creating: true,
+  };
+}
+
+export function createEntrySuccess(state, action) {
+  return {
+    ...state,
+    creating: false,
+    entry: action.entry,
+  };
+}
+
+export function createEntryFailure(state, action) {
+  return {
+    ...state,
+    creating: false,
+    errorMessage: action.message,
+  };
+}
+
 const createResourceReducer = (resource, initialState) => (
   state = initialState,
   action
@@ -63,6 +86,12 @@ const createResourceReducer = (resource, initialState) => (
       return updateEntrySuccess(state, action);
     case `UPDATE_${resource}_FAILURE`:
       return updateEntryFailure(state, action);
+    case `CREATE_${resource}_REQUEST`:
+      return createEntryRequest(state, action);
+    case `CREATE_${resource}_SUCCESS`:
+      return createEntrySuccess(state, action);
+    case `CREATE_${resource}_FAILURE`:
+      return createEntryFailure(state, action);
     default:
       return state;
   }
@@ -74,6 +103,7 @@ export const entry = {
     loadingDetails: false,
     updating: false,
     entry: null,
+    creating: false,
   },
 
   getEntryRequest,
@@ -82,6 +112,9 @@ export const entry = {
   updateEntryRequest,
   updateEntrySuccess,
   updateEntryFailure,
+  createEntryRequest,
+  createEntrySuccess,
+  createEntryFailure,
 };
 
 export const resource = {

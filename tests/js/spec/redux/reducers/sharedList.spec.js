@@ -1,6 +1,6 @@
 import {Set} from 'immutable';
 import {resource} from 'app/redux/reducers/sharedList';
-import {makeResourceActions} from 'app/redux/actions/shared';
+import {makeResourceActions} from 'app/redux/actions/sharedList';
 
 const RESOURCE_NAME = 'SOME_RESOURCE';
 
@@ -14,12 +14,7 @@ const initialStateList = {
 };
 
 const reducerList = resource.createReducer(RESOURCE_NAME, initialStateList);
-const reducerEntry = resource.createReducer(RESOURCE_NAME, initialStateEntry);
-const actions = makeResourceActions(
-  RESOURCE_NAME,
-  '/api/0/some-resource/',
-  '/api/0/some-resource/5/'
-);
+const actions = makeResourceActions(RESOURCE_NAME, '/api/0/some-resource/');
 
 function createGetListSuccessState() {
   const originalState = {...initialStateList};
@@ -58,7 +53,6 @@ describe('shared resource reducer', () => {
         selectedIds: new Set(),
         pagination: {pageLinks: null, cursor: 'cursor'},
       },
-      creating: false,
     });
   });
 
@@ -76,7 +70,6 @@ describe('shared resource reducer', () => {
         selectedIds: new Set(),
         pagination: {pageLinks: 'link-to-more-results', cursor: 'cursor'},
       },
-      creating: false,
     });
   });
 
@@ -129,42 +122,6 @@ describe('shared resource reducer', () => {
     });
   });
 
-  it('has expected state when requesting an entry to be created', () => {
-    const successState = createGetListSuccessState();
-    const createEntryRequestState = reducerList(
-      successState,
-      actions.createRequest({id: '1'})
-    );
-    expect(createEntryRequestState).toEqual({
-      ...successState,
-      creating: true,
-    });
-  });
-
-  it('has expected state when requesting an entry has successfully been created', () => {
-    const newItem = {
-      id: '3',
-      name: 'entry3',
-    };
-    const successState = createGetListSuccessState();
-    const createEntryRequestState = reducerList(
-      successState,
-      actions.createRequest(newItem)
-    );
-    const createEntrySuccessState = reducerList(
-      createEntryRequestState,
-      actions.createSuccess(newItem)
-    );
-
-    expect(createEntrySuccessState).toEqual({
-      ...successState,
-      byIds: {
-        ...successState.byIds,
-        '3': newItem,
-      },
-    });
-  });
-
   it('has expected state when getting a failed response', () => {
     const originalState = {...initialStateList};
     const requestedState = reducerList(
@@ -187,7 +144,6 @@ describe('shared resource reducer', () => {
         selectedIds: new Set(),
         pagination: {pageLinks: null, cursor: 'cursor'},
       },
-      creating: false,
     });
   });
 });

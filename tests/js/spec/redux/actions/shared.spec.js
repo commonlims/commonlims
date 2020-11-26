@@ -1,13 +1,13 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
-import {resourceActionCreators} from 'app/redux/actions/shared';
+import {listActionCreators} from 'app/redux/actions/sharedList';
 
 const RESOURCE_NAME = 'RESOURCE_NAME';
 
 describe('shared action creators', () => {
   it('should create getListRequest', () => {
-    const action = resourceActionCreators.acGetListRequest(RESOURCE_NAME)(
+    const action = listActionCreators.acGetListRequest(RESOURCE_NAME)(
       'search',
       'groupby',
       'cursor'
@@ -21,7 +21,7 @@ describe('shared action creators', () => {
   });
 
   it('should create getListSuccess', () => {
-    const action = resourceActionCreators.acGetListSuccess(RESOURCE_NAME)(
+    const action = listActionCreators.acGetListSuccess(RESOURCE_NAME)(
       ['entry1', 'entry2'],
       'link'
     );
@@ -33,10 +33,7 @@ describe('shared action creators', () => {
   });
 
   it('should create getListFailure', () => {
-    const action = resourceActionCreators.acGetListFailure(RESOURCE_NAME)(
-      500,
-      'some error'
-    );
+    const action = listActionCreators.acGetListFailure(RESOURCE_NAME)(500, 'some error');
     expect(action).toEqual({
       type: 'GET_RESOURCE_NAME_LIST_FAILURE',
       statusCode: 500,
@@ -45,7 +42,7 @@ describe('shared action creators', () => {
   });
 
   it('should create selectPage', () => {
-    const action = resourceActionCreators.acSelectPage(RESOURCE_NAME)(true);
+    const action = listActionCreators.acSelectPage(RESOURCE_NAME)(true);
     expect(action).toEqual({
       type: 'SELECT_PAGE_OF_RESOURCE_NAME',
       doSelect: true,
@@ -53,37 +50,11 @@ describe('shared action creators', () => {
   });
 
   it('should create select', () => {
-    const action = resourceActionCreators.acSelect(RESOURCE_NAME)('id', true);
+    const action = listActionCreators.acSelect(RESOURCE_NAME)('id', true);
     expect(action).toEqual({
       type: 'SELECT_RESOURCE_NAME',
       doSelect: true,
       id: 'id',
-    });
-  });
-
-  it('should create get request', () => {
-    const action = resourceActionCreators.acGetRequest(RESOURCE_NAME)('id');
-    expect(action).toEqual({
-      id: 'id',
-      type: 'GET_RESOURCE_NAME_REQUEST',
-    });
-  });
-
-  it('should create get success', () => {
-    const fetchedEntry = {name: 'sample1'};
-    const action = resourceActionCreators.acGetSuccess(RESOURCE_NAME)(fetchedEntry);
-    expect(action).toEqual({
-      entry: fetchedEntry,
-      type: 'GET_RESOURCE_NAME_SUCCESS',
-    });
-  });
-
-  it('should create get failure', () => {
-    const action = resourceActionCreators.acGetFailure(RESOURCE_NAME)(500, 'My bad');
-    expect(action).toEqual({
-      message: 'My bad',
-      statusCode: 500,
-      type: 'GET_RESOURCE_NAME_FAILURE',
     });
   });
 });
@@ -116,7 +87,7 @@ describe('shared async actions', () => {
       });
     });
 
-    const actionCreator = resourceActionCreators.acGetList(RESOURCE_NAME, url);
+    const actionCreator = listActionCreators.acGetList(RESOURCE_NAME, url);
     const action = actionCreator('org', 'search', 'groupBy', 'cursor');
     const expectedActions = [
       {
@@ -156,7 +127,7 @@ describe('shared async actions', () => {
       request.reject(errResp);
     });
 
-    const actionCreator = resourceActionCreators.acGetList(RESOURCE_NAME, '/url');
+    const actionCreator = listActionCreators.acGetList(RESOURCE_NAME, '/url');
     const action = actionCreator('org', 'search', 'groupBy', 'cursor');
     const expectedActions = [
       {
@@ -178,45 +149,6 @@ describe('shared async actions', () => {
     });
   }, 500);
 
-  it('can get a single entry', () => {
-    const store = mockStore({});
-    const urlTemplate = '/api/0/organizations/{org}/resource-details/{id}';
-
-    // NOTE: Using this instead of stubRequest as it's easier to debug
-    moxios.wait(() => {
-      const request = moxios.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-        response: {some: 'object'},
-        headers: {
-          link: 'link',
-        },
-      });
-    });
-
-    const actionCreator = resourceActionCreators.acGet(RESOURCE_NAME, urlTemplate);
-    const org = {
-      slug: 'lab',
-    };
-    const action = actionCreator(org, 2);
-    const expectedActions = [
-      {
-        type: 'GET_RESOURCE_NAME_REQUEST',
-        id: 2,
-      },
-      {
-        type: 'GET_RESOURCE_NAME_SUCCESS',
-        entry: {some: 'object'},
-      },
-    ];
-
-    return store.dispatch(action).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-      expect(moxios.requests.count()).toEqual(1);
-      const request = moxios.requests.mostRecent();
-      expect(request.url).toBe('/api/0/organizations/lab/resource-details/2/');
-    });
-  });
   it.skip('can send POST event', () => {
     const store = mockStore({});
     moxios.wait(() => {
@@ -243,7 +175,7 @@ describe('shared async actions', () => {
       slug: 'lab',
     };
     const urlTemplate = '/api/0/organizations/{org}/resource-name/';
-    const actionCreator = resourceActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
+    const actionCreator = listActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
     const action = actionCreator(org, newState);
 
     return store.dispatch(action).then(() => {
@@ -278,7 +210,7 @@ describe('shared async actions', () => {
       slug: 'lab',
     };
     const urlTemplate = '/api/0/organizations/{org}/resource-name/';
-    const actionCreator = resourceActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
+    const actionCreator = listActionCreators.acCreate(RESOURCE_NAME, urlTemplate);
     const action = actionCreator(org, newState);
 
     return store.dispatch(action).then(() => {
@@ -286,43 +218,6 @@ describe('shared async actions', () => {
       expect(moxios.requests.count()).toEqual(1);
       const request = moxios.requests.mostRecent();
       expect(request.url).toBe('/api/0/organizations/lab/resource-name/');
-    });
-  });
-  it.skip('can handle PUT event', () => {
-    const store = mockStore({});
-    moxios.wait(() => {
-      const request = moxios.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-      });
-    });
-
-    const newState = {
-      id: 5,
-      someEntry: 'new value',
-    };
-    const expectedActions = [
-      {
-        type: 'UPDATE_RESOURCE_NAME_REQUEST',
-        entry: newState,
-      },
-      {
-        type: 'UPDATE_RESOURCE_NAME_SUCCESS',
-        entry: newState,
-      },
-    ];
-    const org = {
-      slug: 'lab',
-    };
-    const urlTemplate = '/api/0/organizations/{org}/resource-name/{id}';
-    const acUpdateRoutine = resourceActionCreators.acUpdate(RESOURCE_NAME, urlTemplate);
-    const action = acUpdateRoutine(org, newState);
-
-    return store.dispatch(action).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-      expect(moxios.requests.count()).toEqual(1);
-      const request = moxios.requests.mostRecent();
-      expect(request.url).toBe('/api/0/organizations/lab/resource-name/5/');
     });
   });
 });
