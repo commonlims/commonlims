@@ -1,7 +1,8 @@
 import ClimsTypes from 'app/climsTypes';
 import React from 'react';
-import withOrganization from 'app/utils/withOrganization';
+import merge from 'lodash/merge';
 import {connect} from 'react-redux';
+import withOrganization from 'app/utils/withOrganization';
 import {resourceActionCreators} from 'app/redux/actions/shared';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import DetailsForm from './detailsForm';
@@ -10,29 +11,37 @@ import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
 import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
 import {EVENTS} from 'app/redux/reducers/event';
 
-class WorkbatchDetails extends React.Component {
+function WorkBatchDetailsWrapper(props) {
+  // class component WorkBatchDetails is here wrapped within a
+  // function component, in order to getUpdatedWorkBatch into test.
+  const extendedProps = {
+    ...props,
+    getUpdatedWorkBatch,
+  };
+  return <WorkbatchDetails {...extendedProps} />;
+}
+
+export class WorkbatchDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.fetchStaticContentsFromWip = this.fetchStaticContentsFromWip.bind(this);
-    this.fetchDetailedContentFromWip = this.fetchDetailedContentFromWip.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.sendButtonClickedEvent = this.sendButtonClickedEvent.bind(this);
-    this.initCurrentFieldValues = this.initCurrentFieldValues.bind(this);
-    this.setFetched = this.setFetched.bind(this);
+  }
+
+  componentDidMount() {
     const getWipWorkbatch = this.props.getWipWorkbatch;
     const org = this.props.organization;
     getWipWorkbatch(org)
       .then(this.fetchStaticContentsFromWip)
       .then(this.fetchDetailedContentFromWip)
       .then(this.initCurrentFieldValues)
+      .then(this.fetchDefinitionsFromProps)
       .then(this.setFetched);
   }
 
-  setFetched() {
+  setFetched = () => {
     this.setState({fetched: true});
-  }
+  };
 
-  fetchStaticContentsFromWip() {
+  fetchStaticContentsFromWip = () => {
     const byIds = this.props.workBatchEntry.byIds;
     const arr = Object.values(byIds);
     let wipWorkbatch = arr[0];
@@ -40,37 +49,46 @@ class WorkbatchDetails extends React.Component {
       this.props.organization,
       wipWorkbatch.cls_full_name
     );
-  }
+  };
 
-  fetchDetailedContentFromWip() {
+  fetchDetailedContentFromWip = () => {
     const byIds = this.props.workBatchEntry.byIds;
     const arr = Object.values(byIds);
     let wipWorkbatch = arr[0];
     return this.props.getWorkBatchDetails(this.props.organization, wipWorkbatch.id);
-  }
+  };
 
-  fetchDefinitionsFromProps() {
+  fetchDefinitionsFromProps = () => {
     let workBatchDefinitionEntry = this.props.workBatchDefinitionEntry;
-    if (!workBatchDefinitionEntry) {
-      return;
-    }
     let {byIds, detailsId} = workBatchDefinitionEntry;
-    if (!detailsId) {
-      return;
-    }
     let workDefinition = byIds[detailsId];
+    if (!workDefinition) {
+      throw new Error('Something went wrong when parsing static contents');
+    }
     let {fields, buttons, id} = workDefinition;
     if (!fields || !buttons || !id) {
-      return;
+      throw new Error('Something went wrong when parsing static contents');
     }
-    return workDefinition;
-  }
+    return new Promise((resolve) => {
+      this.setState(
+        {
+          workDefinition,
+        },
+        resolve
+      );
+    });
+  };
 
-  sendButtonClickedEvent(buttonEvent) {
+  sendButtonClickedEvent = (buttonEvent) => {
+    let updatedWorkbatch = this.props.getUpdatedWorkBatch(
+      this.props.workBatchDetailsEntry,
+      this.state.currentFieldValues
+    );
+    this.props.updateWorkBatchDetails(this.props.organization, updatedWorkbatch);
     this.props.sendButtonClickedEvent(this.props.organization, buttonEvent);
-  }
+  };
 
-  render() {
+  render = () => {
     //TODO: merge this with files in the workBatchDetails folder
     if (
       this.props.workBatchDetailsEntry.loadingDetails ||
@@ -79,23 +97,22 @@ class WorkbatchDetails extends React.Component {
     ) {
       return <LoadingIndicator />;
     }
-    let workDefinition = this.fetchDefinitionsFromProps();
-    if (!workDefinition) {
+    if (!this.state.workDefinition) {
       return <LoadingIndicator />;
     }
     let {detailsId: workbatchId} = this.props.workBatchDetailsEntry;
     return (
       <DetailsForm
-        workDefinition={workDefinition}
+        workDefinition={this.state.workDefinition}
         sendButtonClickedEvent={this.sendButtonClickedEvent}
         handleChange={this.handleChange}
         currentFieldValues={this.state.currentFieldValues}
         workBatchId={workbatchId}
       />
     );
-  }
+  };
 
-  initCurrentFieldValues() {
+  initCurrentFieldValues = () => {
     let {detailsId, byIds} = this.props.workBatchDetailsEntry;
     if (!(detailsId in byIds)) {
       throw new Error('No matching entry for detailsId');
@@ -109,16 +126,16 @@ class WorkbatchDetails extends React.Component {
       };
     }, {});
     return new Promise((resolve) => {
-      this.setState((prevState) => {
-        return {
-          ...prevState,
+      this.setState(
+        {
           currentFieldValues,
-        };
-      }, resolve);
+        },
+        resolve
+      );
     });
-  }
+  };
 
-  handleChange(e) {
+  handleChange = (e) => {
     let {name, value} = e.target;
     this.setState((prevState) => {
       let {currentFieldValues} = {...prevState};
@@ -127,7 +144,7 @@ class WorkbatchDetails extends React.Component {
         currentFieldValues,
       };
     });
-  }
+  };
 }
 
 WorkbatchDetails.propTypes = {
@@ -166,6 +183,14 @@ const mapDispatchToProps = (dispatch) => ({
     );
     return dispatch(getWorkBatchDetialsRoutine(org, workbatchId));
   },
+  updateWorkBatchDetails: (org, workbatch) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-batch-details/{id}';
+    const updateWorkBatchDetailsRoutine = resourceActionCreators.acUpdate(
+      WORK_BATCH_DETAILS,
+      urlTemplate
+    );
+    return dispatch(updateWorkBatchDetailsRoutine(org, workbatch));
+  },
   getWipWorkbatch: (org) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batches/';
     const getWorkBatchRoutine = resourceActionCreators.acGetList(WORK_BATCH, urlTemplate);
@@ -173,6 +198,27 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
+export function getUpdatedWorkBatch(workBatchDetailsEntry, currentFieldValues) {
+  let {detailsId, byIds} = workBatchDetailsEntry;
+  let fetched_workbatch = byIds[detailsId];
+  let properties = Object.keys(currentFieldValues);
+  let updatedProperties = properties.reduce((previous, current) => {
+    let entry = {
+      name: current,
+      value: currentFieldValues[current],
+    };
+    return {
+      ...previous,
+      [current]: entry,
+    };
+  }, {});
+  let mergedProperties = merge({}, fetched_workbatch.properties, updatedProperties);
+  return {
+    ...fetched_workbatch,
+    properties: mergedProperties,
+  };
+}
+
 export default withOrganization(
-  connect(mapStateToProps, mapDispatchToProps)(WorkbatchDetails)
+  connect(mapStateToProps, mapDispatchToProps)(WorkBatchDetailsWrapper)
 );

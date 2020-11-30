@@ -10,6 +10,7 @@ describe('taskDefinition reducer, list protocol', () => {
     );
     const expected = {
       loading: true,
+      updating: false,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -43,6 +44,7 @@ describe('taskDefinition reducer, list protocol', () => {
 
     const expected = {
       loading: false,
+      updating: false,
       errorMessage: null,
       byIds: {
         1: entries[0],

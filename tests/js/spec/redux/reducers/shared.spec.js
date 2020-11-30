@@ -10,7 +10,11 @@ const initialState = {
 };
 
 const reducer = resource.createReducer(RESOURCE_NAME, initialState);
-const actions = makeResourceActions(RESOURCE_NAME, '/api/0/some-resource/');
+const actions = makeResourceActions(
+  RESOURCE_NAME,
+  '/api/0/some-resource/',
+  '/api/0/some-resource/5/'
+);
 
 function createGetListSuccessState() {
   const originalState = {...initialState};
@@ -41,6 +45,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: true,
+      updating: false,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -61,6 +66,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: false,
+      updating: false,
       errorMessage: null,
       byIds: {'1': {id: '1', name: 'entry1'}, '2': {id: '2', name: 'entry2'}},
       listViewState: {
@@ -70,34 +76,6 @@ describe('shared resource reducer', () => {
         visibleIds: ['1', '2'],
         selectedIds: new Set(),
         pagination: {pageLinks: 'link-to-more-results', cursor: 'cursor'},
-      },
-      creating: false,
-    });
-  });
-
-  it('has expected state when getting a failed response', () => {
-    const originalState = {...initialState};
-    const requestedState = reducer(
-      originalState,
-      actions.getListRequest('search', 'groupby', 'cursor')
-    );
-    const failedState = reducer(
-      requestedState,
-      actions.getListFailure(500, 'some error')
-    );
-    expect(failedState).toEqual({
-      loadingDetails: false,
-      detailsId: null,
-      loading: false,
-      errorMessage: 'some error',
-      byIds: {},
-      listViewState: {
-        allVisibleSelected: false,
-        groupBy: 'groupby',
-        search: 'search',
-        visibleIds: [],
-        selectedIds: new Set(),
-        pagination: {pageLinks: null, cursor: 'cursor'},
       },
       creating: false,
     });
@@ -182,6 +160,92 @@ describe('shared resource reducer', () => {
     });
   });
 
+  it('has expected state when a single entry update has been requested', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      errorMessage: 'oops',
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const entry = {
+      id: 5,
+      name: 'new-name',
+    };
+    const requestedState = reducer(originalState, actions.updateRequest(entry));
+    const expectedState = {
+      ...originalState,
+      updating: true,
+      errorMessage: null,
+    };
+
+    expect(requestedState).toEqual(expectedState);
+  });
+
+  it('has expected state when a single entry update has succeeded', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      updating: true,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const entry = {
+      id: 5,
+      name: 'new-name',
+    };
+    const successState = reducer(originalState, actions.updateSuccess(entry));
+    const expectedState = {
+      ...originalState,
+      updating: false,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'new-name',
+        },
+      },
+    };
+
+    expect(successState).toEqual(expectedState);
+  });
+
+  it('has expected state when a single entry update has failed', () => {
+    const originalState = {
+      ...initialState,
+      detailsId: 5,
+      updating: true,
+      byIds: {
+        5: {
+          id: 5,
+          name: 'orig-name',
+        },
+      },
+    };
+    const err = {
+      statusCode: 1,
+      message: 'oops',
+    };
+    const failedState = reducer(
+      originalState,
+      actions.updateFailure(err.statusCode, err.message)
+    );
+    const expectedState = {
+      ...originalState,
+      updating: false,
+      errorMessage: 'oops',
+    };
+
+    expect(failedState).toEqual(expectedState);
+  });
+
   it('has expected state after requesting a single entry', () => {
     const requestedState = reducer(initialState, actions.getRequest());
     expect(requestedState).toEqual({
@@ -218,6 +282,7 @@ describe('shared resource reducer', () => {
       loadingDetails: false,
       detailsId: null,
       loading: false,
+      updating: false,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {

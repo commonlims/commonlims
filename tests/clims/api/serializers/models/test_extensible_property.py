@@ -35,7 +35,6 @@ class ExtensiblePropertyTypeSerializerTestCase(TestCase):
         serializer = ExtensiblePropertySerializer(string_prop)
         assert serializer.data['name'] == name
         assert serializer.data['value'] == value
-        assert serializer.data['display_name'] == disp_name
 
     def test_can_serialize_extensible_property_simple_int_prop(self):
         name = "intprop"
@@ -44,5 +43,4 @@ class ExtensiblePropertyTypeSerializerTestCase(TestCase):
         string_prop = self.create_string_prop(name, disp_name, value)
         serializer = ExtensiblePropertySerializer(string_prop)
         assert serializer.data['name'] == name
-        assert serializer.data['value'] == value
-        assert serializer.data['display_name'] == disp_name
+        assert serializer.data['value'] == str(value)
