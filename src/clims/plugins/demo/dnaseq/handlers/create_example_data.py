@@ -77,6 +77,7 @@ class DemoCreateExampleDataHandler(CreateExampleDataHandler):
         # Create workbatch to be used at wip workbatch details page. The
         # name of the workbatch has to be known here.
         workbatch = ExampleWorkBatch(name='wip-workbatch', status=1)
+        # This to test UI that it handles both initialized as well as not initialized fields
         workbatch.kit_type = "X"
         workbatch.save()
         logger.info("Created wip workbatch")
