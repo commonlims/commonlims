@@ -7,7 +7,7 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 import withOrganization from 'app/utils/withOrganization';
 import {
-  getWorkBatchDetails,
+  workBatchDetailsActions,
   createWorkBatchTransition,
 } from 'app/redux/actions/workBatchDetails';
 
@@ -19,6 +19,8 @@ import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransiti
 import WorkBatchHeader from './header';
 import {SampleLocation} from 'app/components/sampleTransitioner/sampleLocation';
 import {Sample} from 'app/components/sampleTransitioner/sample';
+import {resourceActionCreators} from 'app/redux/actions/shared';
+import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
 
 class WorkBatchDetails extends React.Component {
   constructor(props) {
@@ -75,7 +77,7 @@ class WorkBatchDetails extends React.Component {
 }
 
 WorkBatchDetails.propTypes = {
-  workBatch: ClimsTypes.WorkBatch.isRequired,
+  workBatch: ClimsTypes.WorkBatch,
 };
 
 // TODO: Move this further down, to where we actually need this
@@ -115,7 +117,9 @@ class WorkBatchDetailsContainer extends React.Component {
   //
 
   componentDidMount() {
-    this.props.getWorkBatchDetails(0, 0); // TODO
+    const org = this.props.organization.slug;
+    const {workbatchId} = this.props.routeParams;
+    this.props.getWorkBatchDetails(org, workbatchId);
   }
 
   render() {
@@ -163,16 +167,29 @@ TodoItem.propTypes = {
 };
 
 WorkBatchDetailsContainer.propTypes = {
-  workBatch: ClimsTypes.WorkBatch.isRequired,
+  workBatch: ClimsTypes.WorkBatch,
   loading: PropTypes.bool.isRequired,
   getWorkBatchDetails: PropTypes.func.isRequired,
   createWorkBatchTransition: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => state.workBatchDetails;
+const mapStateToProps = (state) => {
+  if (!state.workBatchDetailsEntry) {
+    return state;
+  }
+  let id = state.workBatchDetailsEntry.detailsId;
+  return {workBatch: state.workBatchDetailsEntry.byIds[id]};
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  getWorkBatchDetails: (org, id) => dispatch(getWorkBatchDetails(org, id)),
+  getWorkBatchDetails: (org, workbatchId) => {
+    const urlTemplate = '/api/0/organizations/{org}/work-batch-details/{id}';
+    const getWorkBatchDetailsRoutine = resourceActionCreators.acGet(
+      WORK_BATCH_DETAILS,
+      urlTemplate
+    );
+    return dispatch(getWorkBatchDetailsRoutine(org, workbatchId));
+  },
   createWorkBatchTransition: (workBatch, transition) =>
     dispatch(createWorkBatchTransition(workBatch, transition)),
 });

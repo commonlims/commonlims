@@ -610,12 +610,12 @@ function routes() {
             component={errorHandler(WorkBatchDetailsWaitingToBeMergedContainer)}
           />
           <Route
-            path="workbatch-details/"
+            path="work-batch-details/"
             component={errorHandler(WorkBatchDetailsWaitingToBeMergedContainer)}
           />
 
           <Route
-            path="workbatches/:groupId/"
+            path="workbatches/:workbatchId/"
             component={errorHandler(WorkBatchDetailsContainer)}
             ignoreScrollBehavior
           >
