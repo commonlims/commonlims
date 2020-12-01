@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import random
 import json
-import pytest
 
 from django.core.urlresolvers import reverse
 
@@ -143,7 +142,6 @@ class SubstancesTest(APITestCase):
 
         asserts(stone1, data_by_id[stone1.id])
 
-    @pytest.mark.dev_edvard
     def test_filter_substances_on_container(self):
         # Arrange
         container = self.create_container(GemstoneContainer, name='mycontainer')

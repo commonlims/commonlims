@@ -123,12 +123,27 @@ class SubstancePropertiesTestCase(TestCase):
                           cool=cool,
                           erudite=None)
 
+    @pytest.mark.dev_edvard
+    def test__set_text_property__then_delete_it(self):
+        name = "sample-{}".format(random.randint(1, 1000000))
+
+        sample = ExampleSample(name=name)
+        sample.mox_feeling = 'delirious'
+        sample.save()
+        original_sample_version = sample.version
+
+        sample.mox_feeling = None
+        sample.save()
+
+        fetched_sample = self.app.substances.get(name=sample.name)
+        assert fetched_sample.mox_feeling is None
+        assert sample.version == original_sample_version + 1
+
 
 class TestSubstance(SubstanceTestCase):
     def setUp(self):
         self.has_context()
 
-    @pytest.mark.dev_edvard
     def test_gemstone_inheritance(self):
         self.register_extensible(InheritedSample)
         sample = InheritedSample(name='sample1')
