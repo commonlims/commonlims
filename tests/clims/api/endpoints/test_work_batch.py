@@ -11,6 +11,7 @@ from clims.plugins.demo.dnaseq.workflows.sequence import SequenceSimple
 from clims.services.workbatch import WorkBatchBase
 from clims.api.endpoints.work_batch import WorkBatchEndpoint
 from clims.api.endpoints.work_units import WorkUnitsEndpoint
+from clims.services.extensible import TextField
 
 
 class WorkBatchEndpointTest(APITestCase):
@@ -83,4 +84,4 @@ class WorkBatchEndpointTest(APITestCase):
 
 
 class MyWorkbatchImplementation(WorkBatchBase):
-    pass
+    comment = TextField()

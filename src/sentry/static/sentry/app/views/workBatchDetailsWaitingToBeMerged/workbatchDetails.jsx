@@ -199,7 +199,7 @@ export function getUpdatedWorkBatch(workBatchDetailsEntry, currentFieldValues) {
   let updatedProperties = properties.reduce((previous, current) => {
     let entry = {
       name: current,
-      value: currentFieldValues[current],
+      value: currentFieldValues[current] ? currentFieldValues[current] : null,
     };
     return {
       ...previous,
