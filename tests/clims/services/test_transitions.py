@@ -4,6 +4,7 @@ from sentry.testutils import TestCase
 from clims.services.transition import TransitionService
 from clims.services.workbatch import WorkBatchBase
 from clims.services.substance import SubstanceBase
+import pytest
 from clims.services.container import ContainerBase
 from clims.models.transition import TransitionType
 from clims.models.location import SubstanceLocation as LocationModel
@@ -83,6 +84,17 @@ class TestTransitionService(TestCase):
             "transition_type": TransitionType.MOVE
         }
         return transition, ctr, loc
+
+    @pytest.mark.steinar
+    def test_my_stuff(self):
+        # 1. Create a substance in some container
+        # 2. Create another container
+        # 3. Call the transition service to move to it
+        pass
+        self.install_main_demo_plugin()
+
+        # from clims.plugins.demo.dnaseq.models import PandorasBox
+        # print(PandorasBox)
 
     def test__create_move_transition(self):
         transition, ctr, loc = TestTransitionService.create_transition_request()

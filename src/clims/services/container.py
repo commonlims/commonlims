@@ -212,17 +212,24 @@ class ContainerBase(ExtensibleBase):
     def _validate_boundaries(self, ix):
         raise NotImplementedError("Implement in a subclass")
 
-    def __setitem__(self, key, value):
+    def _key_to_index(self, key):
+        """
+        Parses a key to an index, using the IndexType on
+        this class. Also validates that the index is valid.
+        """
         ix = self.IndexType.from_any_type(self, key)
         self._validate_boundaries(ix)
+        return ix
+
+    def __setitem__(self, key, value):
+        ix = self._key_to_index(key)
 
         # Update the value. This will not actually move it in the backend until either
         # the container is saved
         self._locatables[ix.raw] = value
 
     def __getitem__(self, key):
-        ix = self.IndexType.from_any_type(self, key)
-        self._validate_boundaries(ix)
+        ix = self._key_to_index(key)
         return self._locatables.get(ix.raw, None)
 
     def to_string(self, compressed=False, short=False):

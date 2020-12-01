@@ -8,10 +8,12 @@ from sentry.api.exceptions import ResourceDoesNotExist
 from clims.models import WorkBatch, SubstanceLocation
 from clims.api.bases.work_batch import WorkBatchBaseEndpoint
 
-# from clims.api.serializers.models.transition import TransitionSerializer
+from clims.api.serializers.models.transition import TransitionSerializer
 
 
 class WorkBatchTransitionsEndpoint(WorkBatchBaseEndpoint):
+    name = 'clims-api-0-work-batch-transitions'
+
     def post(self, request, organization_slug, work_batch_id):
         """
         Create a new transition related to a WorkBatch
@@ -20,8 +22,24 @@ class WorkBatchTransitionsEndpoint(WorkBatchBaseEndpoint):
         :param string work_batch_id: the id of the task
         """
 
+        validator = TransitionSerializer(data=request.data, many=True)
+        if not validator.is_valid():
+            return self.respond(validator.errors, status=400)
+
+        for entry in validator.validated_data:
+            print(entry)
+
+        self.app.transitions.create(validator.validated_data)
+
+        raise B
+
+        print(validator.validated_data)
+
+        print("ME HERE")
+        raise Z
+
         # Contract format:
-        # {"source_location_id":1, "target_location": {"container_id": 1, "x":0, "y":0, "z":0}, "transition_type": 1}
+        # { "source_location_id":1, "target_location": {"container_id": 1, "x":0, "y":0, "z":0}, "transition_type": 1}
         data = request.data
 
         # Validate Work Batch

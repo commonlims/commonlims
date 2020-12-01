@@ -19,10 +19,33 @@ class TransitionService:
     # 2. set "current" on source location record to false
     # 3. create transition record
     @transaction.atomic
-    def create(self, transition, work_batch_id):
+    def create(self, transitions):
         """
-        Creates a new Transition
+        Creates transitions from a list of dictionaries on the format:
+        {
+            source_location: {container_id: <id>, index="a1"},
+            target_location: {container_id: <id>, index="h12"},
+            type: [move|spawn]
+        }
+
+        The index must be valid for the container type
         """
+
+        container_ids = set()
+        for transition in transitions:
+            container_ids.add(transition["source_position"]["container_id"])
+            container_ids.add(transition["target_position"]["container_id"])
+
+        print("HEREEE", container_ids)
+
+        # 1. Batch fetch all containers
+        containers = self._app.containers.batch_get(container_ids)
+
+        # 2. Validate all transitions
+
+        # 3. Do the transitions
+
+        raise X
         transition_type = transition["transition_type"]
         assert(TransitionType.valid(transition_type))
 

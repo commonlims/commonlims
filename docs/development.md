@@ -86,7 +86,7 @@ Testing is currently almost only in form of integration tests, that at a minimum
 Adding these types of unit tests can aid in development, as they are more focused on particular functionality and run faster:
 
 * UI component unit tests with mocked redux stores (tests/js/spec/components)
-* Serializer unit tests (tests/clims/api/serializers)
+* Serializer unit or integration tests (tests/clims/api/serializers)
 * Service tests (tests/clims/services). Are unit tests as we want to test the business logic within the service with mocked data. Queries to the db layer should be mocked, as well as any other calls to backends.
 * Thick objects (tests/clims/models) are unit tests. These test that objects such as those that inherit from SubstanceBase work correctly. These are strongly related to the service tests as they may expose service logic. Note that db models do not need to be tested.
 

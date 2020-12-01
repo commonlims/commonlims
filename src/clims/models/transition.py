@@ -21,6 +21,7 @@ class Transition(Model):
 
     # Added in case we want to be able to audit a user's history directly.
     # TODO: null=False
+    # TODO: change name to "created_by" and use the same convention everywhere
     user = FlexibleForeignKey('sentry.User', related_name='transitions', null=True)
 
     # The work batch in which this transition was created, if it was created in a work batch context.
@@ -32,6 +33,7 @@ class Transition(Model):
     transition_type = models.IntegerField(default=TransitionType.MOVE)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
     # Note that transitions should never be updated. This is provided for consistency
     # and auditing purposes.
     updated_at = models.DateTimeField(auto_now=True)

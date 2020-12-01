@@ -44,6 +44,8 @@ class WorkBatchBase(ExtensibleBase):
     WrappedArchetype = WorkBatch
     WrappedVersion = WorkBatchVersion
 
+    # TODO: WorkBatchBase shouldn't require a name
+
     @classmethod
     def cls_full_name(cls):
         # Corresponds to 'full_name' in serializer
