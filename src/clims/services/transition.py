@@ -23,7 +23,7 @@ class TransitionService:
         """
         Creates transitions from a list of dictionaries on the format:
         {
-            source_location: {container_id: <id>, index="a1"},
+            source_location: {substance_id: <id>, container_id: <id>, index="a1"},
             target_location: {container_id: <id>, index="h12"},
             type: [move|spawn]
         }
@@ -39,11 +39,27 @@ class TransitionService:
         print("HEREEE", container_ids)
 
         # 1. Batch fetch all containers
+        # TODO: This method is not implemented, but containers.get(id=someid) is
         containers = self._app.containers.batch_get(container_ids)
 
-        # 2. Validate all transitions
+        # 2. Do the transitions
+        for transition in transitions:
+            # pseudocode:
+            source = containers[transition.source_location.container_id]
+            target = containers[transition.source_location.container_id]
 
-        # 3. Do the transitions
+            # check if spawn or move
+            substance = substance.create_child()
+
+            # TODO: This should be in a batch call
+            target[transition.target_location.index] = substance
+            target.save()
+
+            # last thing: create a transition and save it
+            transition.source_location = source.get_
+            transition.save()
+
+
 
         raise X
         transition_type = transition["transition_type"]
