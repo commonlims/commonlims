@@ -3,82 +3,84 @@ from __future__ import absolute_import
 from django.db import transaction
 from clims.models.transition import Transition as TransitionModel
 from clims.models.transition import TransitionType
-from clims.models.location import SubstanceLocation as LocationModel
-from clims.models.container import Container as ContainerModel
-from clims.models.substance import Substance as SubstanceModel
+from clims.services.container import IndexOutOfBounds, PlateIndex
 
 
 class TransitionService:
     def __init__(self, app):
         self._app = app
 
+    def parse_position(self, transition, containers, prefix):
+        position = transition['{}_position'.format(prefix)]
+        container_id = position["container_id"]
+        container = next((c for c in containers if c.id == container_id), None)
+        index = position["index"]
+        # This will throw an IndexOutOfBounds if the position is invalid
+        substance = container[index]
+        return ({
+            "container": container,
+            "index": index,
+            "substance": substance
+        })
+
+    def batch_create(self, work_batch_id, transitions):
+        container_ids = set()
+        for transition in transitions:
+            container_ids.add(transition["source_position"]["container_id"])
+            container_ids.add(transition["target_position"]["container_id"])
+
+        containers = self._app.containers.batch_get(container_ids)
+        transition_ids = []
+
+        for transition in transitions:
+            tid = self.create(transition, containers, work_batch_id)
+            transition_ids.append(tid)
+
+        return transition_ids
+
     # TODO: CLIMS-401 - ensure atomic transaction only commits after plugin logic runs
-    # Atomic transaction:
-    # 1. create target location record
-    # 2. set "current" on source location record to false
-    # 3. create transition record
     @transaction.atomic
-    def create(self, work_batch_id, transition_type, source_location_id, target_location):
+    def create(self, transition, containers, work_batch_id):
         """
         Creates a new Transition
         """
-
-        # Validate source location
         try:
-            source_location = LocationModel.objects.get(pk=int(source_location_id))
-            assert source_location.current is True
-        except LocationModel.DoesNotExist:
-            raise AssertionError("Source location not found or is not current: '{}'".format(source_location_id))
+            source = self.parse_position(transition, containers, 'source')
+        except IndexOutOfBounds:
+            raise AssertionError("Source position invalid: '{}'".format(transition))
 
-        substance_id = source_location.substance.id
         try:
-            substance = self._app.substances.get(id=substance_id)
-        except SubstanceModel.DoesNotExist:
-            raise AssertionError("Source substance not found: '{}'".format(substance_id))
+            target = self.parse_position(transition, containers, 'target')
+        except IndexOutOfBounds:
+            raise AssertionError("Target position invalid: '{}'".format(transition))
+
+        source_substance = source["substance"]
+        if source_substance is None:
+            raise AssertionError("Source substance not found: '{}'".format(source))
+
+        source_location = source_substance.raw_location()
+
+        transition_type = TransitionType.from_str(transition["type"])
+        if not TransitionType.valid(transition_type):
+            raise AssertionError("Invalid transition type: '{}'".format(transition["type"]))
 
         # If transition type is SPAWN, create a child substance
+        substance = source_substance
         if transition_type == TransitionType.SPAWN:
-            substance = substance.create_child()
+            substance = source_substance.create_child()
 
-        # TODO: CLIMS-464 - validate target location
-        container_id = target_location["container_id"]
-        x = target_location["x"]
-        y = target_location["y"]
-
-        # Z is optional
-        z = 0
-        if "z" in target_location:
-            z = target_location["z"]
-
-        try:
-            container = self._app.containers.get(id=container_id)
-        except ContainerModel.DoesNotExist:
-            raise AssertionError("Target location container not found: '{}'".format(container_id))
-
-        # 1. create target location record
-        # TODO: dry this up using refactored code from extensible.py
-        new_location = LocationModel(
-            container_id=container.id,
-            substance_id=substance.id,
-            x=x,
-            y=y,
-            z=z,
-            container_version=container.version,
-            substance_version=substance.version,
-            current=True)
-        new_location.save()
-
-        # 2. set "current" on source location record to false
-        source_location.current = False
-        source_location.save()
+        # Move substance regardless of whether this is a "spawn" or "move"
+        target_loc = PlateIndex.from_string(target["container"], target["index"])
+        substance.move(target["container"], (target_loc.x, target_loc.y, target_loc.z))
+        substance.save()
+        target_location = substance.raw_location()
 
         # 3. create transition record
         transition = TransitionModel(
             work_batch_id=work_batch_id,
             source_location=source_location,
-            target_location=new_location,
+            target_location=target_location,
             transition_type=transition_type,
         )
         transition.save()
-
-        return transition
+        return transition.id

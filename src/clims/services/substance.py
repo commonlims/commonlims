@@ -208,6 +208,17 @@ class SubstanceBase(HasLocationMixin, ExtensibleBase):
         container = self._app.containers.to_wrapper(loc.container)
         return container.IndexType.from_internal_coordinates(container, loc.x, loc.y, loc.z)
 
+    def raw_location(self):
+        """
+        Returns the SubstanceLocation record of the substance.
+        """
+        try:
+            loc = self._archetype.locations.get(current=True)
+        except SubstanceLocation.DoesNotExist:
+            return None
+
+        return loc
+
     def to_ancestry(self):
         return SubstanceAncestry(self)
 
