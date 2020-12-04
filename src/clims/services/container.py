@@ -316,6 +316,10 @@ class ContainerService(BaseExtensibleService):
     def _filter_by_extensible_version(cls, query_set):
         return query_set.filter(containerversion__latest=True)
 
+    def batch_get(self, keys):
+        return [(self._app.containers.to_wrapper(x))
+            for x in Container.objects.filter(id__in=keys)]
+
 
 class ContainerQueryBuilder(BaseQueryBuilder):
     def parse_params_for_class(self, key, val):

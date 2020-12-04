@@ -12,6 +12,14 @@ class TransitionType(object):
     def valid(cls, tt):
         return tt == cls.MOVE or tt == cls.SPAWN
 
+    @classmethod
+    def from_str(cls, tt):
+        if tt == "move":
+            return cls.MOVE
+        if tt == "spawn":
+            return cls.SPAWN
+        return None
+
 
 class Transition(Model):
     """
