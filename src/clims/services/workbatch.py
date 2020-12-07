@@ -44,6 +44,17 @@ class WorkBatchBase(ExtensibleBase):
     WrappedArchetype = WorkBatch
     WrappedVersion = WorkBatchVersion
 
+    def __init__(self, **kwargs):
+        super(WorkBatchBase, self).__init__(**kwargs)
+        self._update_queue = list()
+
+    def stage_update(self, obj):
+        self._update_queue.append(obj)
+
+    def commit(self):
+        for queued_object in self._update_queue:
+            queued_object.save()
+
     @classmethod
     def cls_full_name(cls):
         # Corresponds to 'full_name' in serializer
