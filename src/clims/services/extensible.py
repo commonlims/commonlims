@@ -688,7 +688,7 @@ class IntField(ExtensibleBaseField):
 
 class BoolField(ExtensibleBaseField):
     def validate(self, prop_type, value):
-        if not isinstance(value, bool):
+        if not isinstance(value, bool) and value is not None:
             raise ExtensibleTypeValidationError(
                 "Value can not be interpreted as bool")
 
