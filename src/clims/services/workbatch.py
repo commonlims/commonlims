@@ -46,6 +46,8 @@ class WorkBatchBase(ExtensibleBase):
 
     def __init__(self, **kwargs):
         super(WorkBatchBase, self).__init__(**kwargs)
+        self.parent_substances = None
+        self.child_substances = None
         self._update_queue = list()
 
     def stage_update(self, obj):
@@ -54,6 +56,13 @@ class WorkBatchBase(ExtensibleBase):
     def commit(self):
         for queued_object in self._update_queue:
             queued_object.save()
+
+    def output_plates(self):
+        ret_dict = {
+            s.location.container.id: s.location.container
+            for s in self.child_substances if s.location
+        }
+        return [ret_dict[id] for id in ret_dict]
 
     @classmethod
     def cls_full_name(cls):
