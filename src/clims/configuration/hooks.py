@@ -13,6 +13,9 @@ def button(button_text):
     return button_decorator
 
 
-def criteria(fn):
-    setattr(fn, HOOK_TYPE, 'criteria')
-    return fn
+def criteria(description):
+    def criteria_decorator(fn):
+        setattr(fn, HOOK_TYPE, 'criteria')
+        setattr(fn, HOOK_TAG, description)
+        return fn
+    return criteria_decorator

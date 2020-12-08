@@ -4,7 +4,7 @@ from sentry.testutils import TestCase
 
 from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 from clims.services.workbatch import WorkBatchBase
-from clims.configuration.hooks import button
+from clims.configuration.hooks import button, criteria
 from clims.services.extensible import TextField
 
 
@@ -22,10 +22,15 @@ class WorkBatchDetailsDefintionSerializerTest(TestCase):
         assert result.get('fields') == [
             {'type': 'string', 'caption': 'Machine entry', 'prop_name': 'machine_entry'}
         ]
+        assert result.get('criteria_descriptions') == ['conc >= 5']
 
 
 class MyFancyStep(WorkBatchBase):
     machine_entry = TextField(display_name="Machine entry")
+
+    @criteria("conc >= 5")
+    def qc_criteria(self, sample):
+        return sample.conc >= 5
 
     @button('My submit button')
     def on_button_click1(self):

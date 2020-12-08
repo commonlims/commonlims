@@ -86,12 +86,17 @@ class WorkBatchBase(ExtensibleBase):
             buttons.append(b)
         return buttons
 
+    @classmethod
+    def criterias(cls):
+        return [c for c in cls._get_hooks_for('criteria')]
+
+    @classmethod
+    def criteria_descriptions(cls):
+        return [c.hook_tag for c in cls.criterias()]
+
     def is_satisfied_by(self, substance):
-        criterias = list()
-        for hook in self.__class__._get_hooks_for('criteria'):
-            criterias.append(hook.callable)
-        for c in criterias:
-            if not c(self, substance):
+        for c in self.__class__.criterias():
+            if not c.callable(self, substance):
                 return False
         return True
 
