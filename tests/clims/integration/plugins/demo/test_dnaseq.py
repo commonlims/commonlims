@@ -58,8 +58,8 @@ class TestDemoDnaSeqPlugin(TestCase):
         assigned_samples = set([x.substance.id for x in delivered])
         assert samples_created == assigned_samples
 
-        tasks = workflow.wait_for_usertasks("data_entry", 5)
-        tracked_objects_in_workflow_engine = [t.tracked_object.id for t in tasks]
+        work_units = workflow.wait_for_work_units("DataEntry", 5)
+        tracked_objects_in_workflow_engine = [w.tracked_object.id for w in work_units]
         assert len(tracked_objects_in_workflow_engine) == sample_count
 
     @pytest.mark.xfail

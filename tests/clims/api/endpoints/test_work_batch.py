@@ -1,8 +1,6 @@
 from __future__ import absolute_import
-import pytest
 import json
 
-from retry import retry
 from django.core.urlresolvers import reverse
 
 from sentry.testutils import APITestCase
@@ -11,6 +9,8 @@ from clims.plugins.demo.dnaseq import DemoDnaSeqPlugin
 from clims.plugins.demo.dnaseq.models import ExamplePlate, ExampleSample
 from clims.plugins.demo.dnaseq.workflows.sequence import SequenceSimple
 from clims.services.workbatch import WorkBatchBase
+from clims.api.endpoints.work_batch import WorkBatchEndpoint
+from clims.api.endpoints.work_units import WorkUnitsEndpoint
 
 
 class WorkBatchEndpointTest(APITestCase):
@@ -46,11 +46,8 @@ class WorkBatchEndpointTest(APITestCase):
         assert response.data[0]['id'] == workbatch.id
         assert response.data[0]['name'] == 'my_workbatch'
 
-    @pytest.mark.skip("I'm waiting for Steinars PR to be merged before fixing this one")
-    def test_simple(self):
+    def test_post(self):
         # TODO: Fix this test, or an equivalent one.
-        url = reverse('clims-api-0-work-batches',
-                      args=(self.organization.name, ))
         self.login_as(self.user)
 
         sample_count = 3
@@ -65,29 +62,21 @@ class WorkBatchEndpointTest(APITestCase):
         workflow.comment = "Let's sequence some stuff"
         workflow.assign(cont)
 
-        # TODO-medium: The high-level API should provide the task_types via `workflow.task_types`
-        # and all pending tasks via `workflow.tasks`
+        # Wait until the work unit enpoint returns these items:
+        work_units_url = reverse(WorkUnitsEndpoint.name, args=(self.organization.name, ))
 
-        # Now, make sure that we've reached the manual work stage. It's possible, albeit unlikely
-        # that the workflow hasn't reached that step yet, so we retry on failure
+        # Wait for getting a large enough response from the endpoint
+        resp = self.wait_for_endpoint_list(work_units_url, sample_count)
+        data = resp.json()
+        ids = [entry["id"] for entry in data]
+        data = {
+            "work_units": ids,
+        }
 
-        @retry(AssertionError, tries=2, delay=1)
-        def get_tasks():
-            tasks = self.app.workflows.get_tasks(
-                task_definition_key="data_entry",
-                process_definition_key=workflow.id)
-            tracked_objects_in_workflow_engine = [
-                t.tracked_object.id for t in tasks
-            ]
-            assert len(tracked_objects_in_workflow_engine) == sample_count
-            return tasks
-
-        tasks = get_tasks()
-        tasks = [t.id for t in tasks]
-
+        work_batch_url = reverse(WorkBatchEndpoint.name, args=(self.organization.name, ))
         response = self.client.post(
-            path=url,
-            data=json.dumps(tasks),
+            path=work_batch_url,
+            data=json.dumps(data),
             content_type='application/json',
         )
         assert response.status_code == 201

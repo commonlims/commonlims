@@ -1,8 +1,5 @@
 from __future__ import absolute_import
 
-import io
-import pytest
-from rest_framework.parsers import JSONParser
 from sentry.testutils import TestCase
 
 from clims.api.serializers.models.work_batch_details import WorkBatchDetailsSerializer
@@ -10,7 +7,7 @@ from clims.services.workbatch import WorkBatchBase
 from clims.services.extensible import TextField
 
 
-class WorkBatchSerializerTest(TestCase):
+class WorkBatchDetailsSerializerTest(TestCase):
     def setUp(self):
         self.has_context()
         self.register_extensible(MyWorkbatchImplementation)
@@ -24,13 +21,17 @@ class WorkBatchSerializerTest(TestCase):
         assert result.get('name') == 'Test1'
         properties = result.get('properties')
         assert properties['kit_type']['value'] == 'kit type value'
+        assert result.get('created_at', None)
+        assert result.get('updated_at', None)
 
     def test_can_instantiate_serializer__with_no_properties(self):
-        json = b'{"properties":null, "id":1,"name":"Test1"}'
-        stream = io.BytesIO(json)
-        data = JSONParser().parse(stream)
+        data = {
+            'properties': None,
+            'id': 1,
+            'name': 'Test1',
+        }
         serializer = WorkBatchDetailsSerializer(data=data)
-        assert serializer.is_valid()
+        assert serializer.is_valid(), serializer.errors
 
     def test_can_update_workbatch_property__from_no_value(self):
         data = {
@@ -89,7 +90,6 @@ class WorkBatchSerializerTest(TestCase):
         updated_workbatch = serializer.save()
         assert updated_workbatch.kit_type is None
 
-    @pytest.mark.dev_edvard
     def test_update_workbatch_properties__with_empty_dict__previous_values_dont_change(self):
         # TODO: is this the intended behavour?
         data = {
