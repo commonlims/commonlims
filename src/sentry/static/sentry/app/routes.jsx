@@ -25,8 +25,8 @@ import WorkBatchDetailsWaitingToBeMergedContainer from 'app/views/workBatchDetai
 import ProjectsContainer from 'app/views/projects/index';
 import WorkBatchListContainer from 'app/views/workBatchList/index';
 import WorkBatchDetailsContainer from 'app/views/workBatchDetails/organization/index';
-import TaskDefinitionsContainer from 'app/views/taskDefinitions/index';
-import TasksContainer from 'app/views/tasks/index';
+import AvailableWorkView from 'app/views/availableWork/index';
+import AvailableWorkDetailsView from 'app/views/availableWorkDetails/index';
 
 function appendTrailingSlash(nextState, replace) {
   const lastChar = nextState.location.pathname.slice(-1);
@@ -598,10 +598,10 @@ function routes() {
         <Route component={errorHandler(OrganizationRoot)}>
           <IndexRoute component={errorHandler(SubstancesContainer)} />
 
-          <Route path="tasks/" component={errorHandler(TaskDefinitionsContainer)} />
+          <Route path="available-work/" component={errorHandler(AvailableWorkView)} />
           <Route
-            path="tasks/:processKey/:taskKey/"
-            component={errorHandler(TasksContainer)}
+            path="available-work/:workDefinitionId/"
+            component={errorHandler(AvailableWorkDetailsView)}
           />
           <Route path="work-batches/" component={errorHandler(WorkBatchListContainer)} />
           <Route path="substances/" component={errorHandler(SubstancesContainer)} />
@@ -615,7 +615,7 @@ function routes() {
           />
 
           <Route
-            path="workbatches/:groupId/"
+            path="work-batches/:workBatchId/"
             component={errorHandler(WorkBatchDetailsContainer)}
             ignoreScrollBehavior
           >

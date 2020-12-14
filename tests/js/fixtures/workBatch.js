@@ -1,4 +1,3 @@
-// Example: const workBatch = TestStubs.TaskDefinition(5);
 export function WorkBatch(id) {
   return {
     id: id,

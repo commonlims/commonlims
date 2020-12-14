@@ -2,15 +2,23 @@ import React from 'react';
 import {t} from 'app/locale';
 import PropTypes from 'prop-types';
 import ListView from 'app/components/listView';
+import {browserHistory} from 'react-router';
 
 import BackButton from 'app/components/backButton';
 import ListActionBar from 'app/components/listActionBar';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 
-export default class Tasks extends React.Component {
+export default class WorkUnits extends React.Component {
+  redirectOnCreated(data) {
+    const createdId = data.id;
+    const org = this.props.organization;
+
+    browserHistory.push(`/${org.slug}/work-batches/${createdId}/`);
+  }
+
   listActionBar() {
-    const len = this.props.listViewState.selectedIds.size;
+    const len = this.props.availableWorkUnit.listViewState.selectedIds.size;
     return (
       <ListActionBar>
         <div className="btn-group">
@@ -20,12 +28,12 @@ export default class Tasks extends React.Component {
             onClick={() =>
               this.props.createWorkBatch(
                 this.props.organization,
-                this.props.listViewState.selectedIds,
-                true
+                {work_units: this.props.availableWorkUnit.listViewState.selectedIds},
+                this.redirectOnCreated.bind(this)
               )
             }
           >
-            {`Start work (${len})`}
+            {`Start work`}
           </button>
         </div>
       </ListActionBar>
@@ -38,25 +46,17 @@ export default class Tasks extends React.Component {
     }
 
     const actionBar = this.listActionBar();
-    const taskName = this.props.taskDefinition ? this.props.taskDefinition.name : '';
-    const processName = this.props.taskDefinition
-      ? this.props.taskDefinition.processDefinitionName
-      : '';
-
     return (
       <div>
-        <h4>Step: {taskName}</h4>
-        <h6>{processName}</h6>
-        <BackButton to={`/${this.props.organization.slug}/tasks/`}>
-          {t('Back to Available Work')}
-        </BackButton>
         <ListView
           orgId={this.props.organization.id}
           columns={this.props.columns}
-          dataById={this.props.byIds}
-          visibleIds={this.props.listViewState.visibleIds}
-          selectedIds={this.props.listViewState.selectedIds}
-          allVisibleSelected={this.props.listViewState.allVisibleSelected}
+          dataById={this.props.availableWorkUnit.byIds}
+          visibleIds={this.props.availableWorkUnit.listViewState.visibleIds}
+          selectedIds={this.props.availableWorkUnit.listViewState.selectedIds}
+          allVisibleSelected={
+            this.props.availableWorkUnit.listViewState.allVisibleSelected
+          }
           loading={this.props.substancesLoading}
           canSelect
           listActionBar={actionBar}
@@ -69,7 +69,7 @@ export default class Tasks extends React.Component {
 }
 
 // TODO: use well defined prop types
-Tasks.propTypes = {
+WorkUnits.propTypes = {
   ...ClimsTypes.List,
 
   organization: PropTypes.exact({
@@ -80,5 +80,5 @@ Tasks.propTypes = {
   toggleSingle: PropTypes.func,
   toggleAll: PropTypes.func,
   createWorkBatch: PropTypes.func,
-  taskDefinition: ClimsTypes.TaskDefinition.isRequired,
+  workDefinition: ClimsTypes.WorkDefinition.isRequired,
 };

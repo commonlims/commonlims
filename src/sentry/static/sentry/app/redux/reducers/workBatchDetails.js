@@ -12,19 +12,6 @@ const initialState = {
   workBatch: null,
 };
 
-function prepareWorkBatchForLocalWork(workBatch) {
-  // Maps the contract we get from the API to contain classes that e.g. implement equality checks
-  // Also adds
-  const sourceSubstances = workBatch.source.substances.map((s) => {
-    const {containerId, row, col} = s.location;
-    const location = new SampleLocation(containerId, row, col); // TODO: rename sample=> substance
-    return new Sample(s.id, s.name, location);
-  });
-
-  workBatch.source.substances = sourceSubstances;
-  return workBatch;
-}
-
 const workBatchDetails = (state = initialState, action) => {
   switch (action.type) {
     case WORK_BATCH_DETAILS_GET_REQUEST:
@@ -34,13 +21,11 @@ const workBatchDetails = (state = initialState, action) => {
         loading: true,
       };
     case WORK_BATCH_DETAILS_GET_SUCCESS: {
-      const workBatch = prepareWorkBatchForLocalWork(action.workBatch);
-
       return {
         ...state,
         errorMessage: null,
         loading: false,
-        workBatch,
+        workBatch: action.workBatch,
       };
     }
     case WORK_BATCH_DETAILS_GET_FAILURE: {

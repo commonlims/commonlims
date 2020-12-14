@@ -4,7 +4,7 @@ import React from 'react';
 import {PanelItem} from 'app/components/panels';
 import {Link} from 'react-router';
 
-class TaskListItem extends React.Component {
+class WorkUnitListItem extends React.Component {
   render() {
     const {name, count, layout} = this.props;
     const {flexMargin, flexWidth} = layout;
@@ -13,14 +13,14 @@ class TaskListItem extends React.Component {
         <Flex flex="1">
           <Box w={flexWidth} mx={flexMargin} justify="flex-start">
             <Link
-              to={`/lab/tasks/${this.props.processDefinitionKey}/${this.props.taskDefinitionKey}/`}
+              to={`/lab/available-work/${this.props.processDefinitionKey}:${this.props.workDefinitionKey}/`}
             >
               {name}
             </Link>
           </Box>
         </Flex>
         <Flex w={flexWidth} mx={flexMargin} justify="flex-start">
-          <span className="task-list-item-sample-count">{count}</span>
+          <span className="workUnit-list-item-sample-count">{count}</span>
         </Flex>
         <Flex w={flexWidth} mx={flexMargin} justify="flex-end" />
       </PanelItem>
@@ -28,24 +28,24 @@ class TaskListItem extends React.Component {
   }
 }
 
-TaskListItem.propTypes = {
+WorkUnitListItem.propTypes = {
   name: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
   processDefinitionKey: PropTypes.string.isRequired,
-  taskDefinitionKey: PropTypes.string.isRequired,
+  workDefinitionKey: PropTypes.string.isRequired,
   layout: PropTypes.shape({
     flexWidth: PropTypes.number,
     flexMargin: PropTypes.number,
   }),
 };
 
-TaskListItem.defaultProps = {
+WorkUnitListItem.defaultProps = {
   layout: {
     flexWidth: 300,
     flexMargin: 2,
   },
 };
 
-TaskListItem.displayName = 'TaskListItem';
+WorkUnitListItem.displayName = 'WorkUnitListItem';
 
-export default TaskListItem;
+export default WorkUnitListItem;
