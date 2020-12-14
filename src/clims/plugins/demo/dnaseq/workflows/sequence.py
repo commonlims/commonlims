@@ -5,10 +5,27 @@ from __future__ import absolute_import
 
 from clims.services.workflow.camunda import CamundaWorkflow
 from clims.services import TextField
+from clims.services.workbatch import WorkBatchBase
+from clims.configuration.hooks import button  # TODO: Use work namespace
 
 SAMPLE_TYPES = ['DNA', 'RNA']
 PREP_METHODS = ['microwave', 'mixer']
 SEQUENCERS = ['iPhone', 'Android', 'Bang & Olufsen']
+
+
+class DataEntry(WorkBatchBase):
+
+    output_container_naming = "OutputContainer-{}"
+
+    def on_created(self):
+        """
+        Called when the WorkBatch related to this step is first created
+        """
+        pass
+
+    @button('Create sample list')
+    def create_sample_list(self):
+        pass
 
 
 class SequenceSimple(CamundaWorkflow):
