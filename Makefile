@@ -29,6 +29,9 @@ create-example-data:
 
 fresh: clean middleware-teardown middleware
 # Resets all data (by tearing down the middleware) and then installs new test data
+	@echo "--> Remove configuration files"
+	@rm ~/.clims/clims.conf.py || true
+	@rm ~/.clims/config.yml || true
 	@echo "--> Add new config files"
 	lims init --dev
 	@echo "--> Applying migrations"
@@ -48,12 +51,9 @@ clean:
 	@echo "--> Cleaning integration docs cache"
 	rm -r src/sentry/integration-docs || true
 	@echo "--> Cleaning pyc files"
-	find . -name "*.pyc" -delete
+	find . -name "*.pyc" -delete || true
 	@echo "--> Cleaning python build artifacts"
 	rm -r build/ dist/ src/sentry/assets.json || true
-	@echo "--> Remove configuration files"
-	rm ~/.clims/clims.conf.py || true
-	rm ~/.clims/config.yml || true
 
 setup-git:
 	@echo "--> Installing git hooks"
