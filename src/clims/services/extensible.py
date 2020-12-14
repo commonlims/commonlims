@@ -270,6 +270,10 @@ class ExtensibleBaseField(object):
         # TODO-simple: Rename prop_name to simply name
         return self.prop_name
 
+    @property
+    def label(self):
+        return self.display_name
+
     def validate_numeric_zero(self, value, fn):
         # None and zero are valid numerical non-values
         if not value and value is False:
