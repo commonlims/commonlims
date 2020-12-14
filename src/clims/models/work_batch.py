@@ -4,6 +4,7 @@ from sentry.db.models import FlexibleForeignKey, BoundedPositiveIntegerField, sa
 from django.db.models.fields import TextField
 from django.utils.translation import ugettext_lazy as _
 from clims.models.extensible import ExtensibleModel, ExtensibleVersion
+from clims.models.container import Container
 
 
 class WorkBatchStatus(object):
@@ -45,6 +46,8 @@ class WorkBatch(ExtensibleModel):
                                               _('Ignored')),
                                          ),
                                          db_index=True)
+
+    input_containers = models.ManyToManyField(Container)
 
     class Meta:
         app_label = 'clims'
