@@ -61,8 +61,6 @@ class BaseExtensibleService(object):
         # which in turn would return the wrapper when materialized. For that to work smoothly,
         # we'll need to look into implementation details of django querysets.
 
-        # TODO: The `to_wrapper` method is NOT on this mixin, which makes this difficult to reason
-        # about and error-prone, refactor
         return ResultIterator(self._all_qs(), self.to_wrapper)
 
     def _all_qs(self):

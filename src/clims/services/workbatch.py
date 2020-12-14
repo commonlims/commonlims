@@ -121,6 +121,18 @@ class WorkBatchBase(ExtensibleBase):
     def status(self, value):
         self._archetype.status = value
 
+    @property
+    def work_units(self):
+        return self._archetype.work_units
+
+    @work_units.setter
+    def work_units(self, value):
+        self._archetype.work_units = value
+
+    @property
+    def transitions(self):
+        return self._archetype.transitions.all()
+
 
 class Button(namedtuple("Button", ['name', 'caption'])):
     pass

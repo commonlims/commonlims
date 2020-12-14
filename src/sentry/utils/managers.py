@@ -38,7 +38,7 @@ class InstanceManager(object):
         self.instances = dict()
 
     def get_class_list(self):
-        return list(self.cache.keys())
+        return list(self.instances.keys())
 
     def add(self, class_path, required_version=None, must_load=False):
         """
@@ -76,13 +76,8 @@ class InstanceManager(object):
 
         return ret
 
-    def _load(self, class_path):
-        """
-        Loads and initializes the instance.
-
-        Raises ImportError if the instance can't be imported and LoadException if it can't
-        be initialized.
-        """
+    @staticmethod
+    def find_cls(class_path):
         module_name, class_name = class_path.rsplit('.', 1)
 
         def reraise_as_import_error():
@@ -101,6 +96,17 @@ class InstanceManager(object):
             cls = getattr(module, class_name)
         except AttributeError:
             reraise_as_import_error()
+
+        return cls
+
+    def _load(self, class_path):
+        """
+        Loads and initializes the instance.
+
+        Raises ImportError if the instance can't be imported and LoadException if it can't
+        be initialized.
+        """
+        cls = self.find_cls(class_path)
 
         try:
             return cls()
