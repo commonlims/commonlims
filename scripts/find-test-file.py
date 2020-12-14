@@ -13,9 +13,9 @@ Create a required test file for all files that have been added in the current br
 
     git diff develop.. --no-renames --name-status | grep -v "^D" | awk '{print $2}' | ./scripts/find-test-file.py | xargs touch
 
-Create a required test file for all clims endpoints:
+Create a required (empty) test file for all clims endpoints:
 
-    find src/clims/api/endpoints/ -type f | ./scripts/find-test-file.py
+    find src/clims/api/endpoints/ -type f | ./scripts/find-test-file.py | xargs touch
 
 Open a test file given its source file
 
