@@ -15,7 +15,7 @@ class ExtensibleBaseFieldSerializer(serializers.Serializer):
     help = serializers.CharField()
     type = serializers.CharField()
     # TODO: It would be nice to change display_name to label everywhere
-    display_name = serializers.CharField()
+    label = serializers.CharField()
 
 
 class ProcessDefinitionSerializer(serializers.Serializer):

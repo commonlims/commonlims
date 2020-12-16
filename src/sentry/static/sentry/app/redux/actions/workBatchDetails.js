@@ -156,7 +156,7 @@ export const getWorkBatchDetails = (org, id) => (dispatch) => {
   // dispatch(getWorkBatchDetailsSuccess(data));
 
   return axios
-    .get(`/api/0/organizations/${org}/workbatch-details/${id}`)
+    .get(`/api/0/organizations/${org}/work-batch-details/${id}/`)
     .then((res) => dispatch(workBatchDetailsGetSuccess(res.data)))
     .catch((err) => dispatch(workBatchDetailsGetFailure(err)));
 };

@@ -74,24 +74,11 @@ WorkBatchDetails.propTypes = {
 };
 
 class WorkBatchDetailsContainer extends React.Component {
-  // TODO: connect to redux
-  //
-
-  // subtaskManualClick(subtask) {
-  //   WorkBatchStore.setSubtaskManualOverride(
-  //     subtask.view,
-  //     !subtask.manualOverride,
-  //   );
-  // },
-
-  // subtaskTitleClick(subtask) {
-  //   WorkBatchStore.activateView(subtask.view);
-  // },
-  //
   componentDidMount() {
-    this.props.getWorkBatchDetails(0, 0); // TODO
+    const org = this.props.organization.slug;
+    const workBatchId = this.props.routeParams.workBatchId;
+    this.props.getWorkBatchDetails(org, workBatchId);
   }
-
   render() {
     if (this.props.loading || !this.props.workBatch) {
       return <LoadingIndicator />;

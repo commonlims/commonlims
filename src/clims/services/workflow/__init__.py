@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from retry import retry
 import logging
 import six
+from collections import defaultdict
 from clims import utils
 from clims.models import Workflow
 from django.db import transaction
@@ -10,9 +11,8 @@ from clims.services.extensible import ExternalExtensibleBase
 from clims.services.substance import SubstanceBase
 from clims.services.container import ContainerBase
 from clims.db import assert_no_transaction
-from sentry.db.models import sane_repr
 from itertools import product
-from collections import defaultdict
+from clims.models import WorkUnit
 
 logger = logging.getLogger(__name__)
 
@@ -124,21 +124,21 @@ class WorkflowBase(ExternalExtensibleBase):
         # No definitions found
         return dict()
 
-    def wait_for_usertasks(self, task_name, num, tries=2, timeout_sec=0.5):
+    def wait_for_work_units(self, work_unit_name, num, tries=2, timeout_sec=0.5):
         """
-        Waits until the workflow has `num` user tasks with the name `task_name` waiting in the
+        Waits until the workflow has `num` work units with the name `work_unit_name` waiting in the
         workflow.
 
         This method is mainly intended for integration tests.
         """
         @retry(tries=tries, delay=timeout_sec)
-        def get_tasks():
-            tasks = self._context.app.workflows.get_tasks(task_definition_key=task_name,
+        def get_work_units():
+            work_units = self._context.app.workflows.get_work_units(work_definition_key=work_unit_name,
                     process_definition_key=self.get_full_name())
-            if len(tasks) != num:
+            if len(work_units) != num:
                 raise AssertionError()
-            return tasks
-        return get_tasks()
+            return work_units
+        return get_work_units()
 
 
 def create_preset(name, **kwargs):
@@ -279,46 +279,47 @@ class WorkflowService(object):
                 .format(installed.version, db_version))
 
     @transaction.atomic
-    def create_work_batch(self, task_ids, organization):
+    def start_work(self, work_unit_ids, organization):
         """
-        Creates a new WorkBatch for a list of tasks
+        Creates a new WorkBatch for a list of WorkUnits.
+
+        Creating a workbatch takes a list of work units that are ready for a work batch.
+        If the work units are all external (exist only in the workflow engine), they will be added
+        to the database at this point.
         """
-
-        # 1. Fetch all the tasks from the task IDs we received
-        tasks = self.get_tasks_by_ids(task_ids)
-        name = list({t.name for t in tasks})
-        if len(name) > 1:
-            raise AssertionError("Expecting only one task name when creating a work batch, got: '{}'".format(name))
-        name = name[0]
-
-        # 2. Create a work batch with the "tracked objects" we just fetched
-        from clims.services.workbatch import WorkBatchBase
-        # TODO: This is an extensible "base" class, that shouldn't be instantiated
-        batch = WorkBatchBase(name=name)
-        batch.save()
-
-        for task in tasks:
-            task.tracked_object._archetype.work_batches.add(batch)
-            task.tracked_object._archetype.save()
-
         # TODO(clims-345): Make sure that we're not adding a substance to another workbatch if
         # it's already "locked".
-        return batch
 
-    def get_tasks_by_ids(self, task_ids):
-        task_ids_by_provider = defaultdict(list)
+        # Assert that we have all the units:
+        work_units = WorkUnit.objects.filter(id__in=work_unit_ids)
 
-        for task_id in task_ids:
-            print(task_id, "HERE")
-            provider_id, id = task_id.split("/")
-            task_ids_by_provider[provider_id].append(id)
+        # 1. Validate that all the work units have the same work type and that it's valid
 
-        tasks = list()
-        for provider_id, ids in task_ids_by_provider.items():
-            handler = self.handlers[provider_id]["handler"]
-            tasks.extend(handler.get_tasks_by_ids(ids))
-        self._materialize_tracked_objects(tasks)
-        return tasks
+        # TODO: we throw an error in the case that there are more than one work type, but the UI
+        # currently doesn't help the user in this case. It is possible that the work type has
+        # changed because of an updated workflow definition.
+
+        work_types = {work_unit.work_type for work_unit in work_units}
+        if len(work_types) != 1:
+            raise AssertionError("Expecting one work_type for all work units")
+        work_type = work_types.pop()
+
+        if not work_type:
+            raise AssertionError("Work type can't be empty")
+
+        missing_ids = set(work_unit_ids) - {work_unit.id for work_unit in work_units}
+        if missing_ids:
+            raise AssertionError("Some work units do not exist: " + missing_ids)
+
+        cls = self._app.plugins.get_work_type(work_type)
+
+        # TODO: Names shouldn't be required for work batches, but they are currently used in the UI
+        work_batch = cls(name=work_type)
+        work_batch.save()
+        work_batch.work_units = work_units
+        work_batch.save()
+
+        return work_batch
 
     def get_handler(self, workflow_cls):
         for handler_config in self.handlers.values():
@@ -351,6 +352,9 @@ class WorkflowService(object):
 
     def assign_item(self, workflow, item, user):
         from clims.models import SubstanceAssignment
+
+        # TODO: Save a record of the workflow in clims' own tables, then connect all assignments
+        # to that table
 
         # Fetch the handler that takes care of creating the workflow in the external workflow engine
         handler = self.get_handler(workflow.__class__)
@@ -392,44 +396,101 @@ class WorkflowService(object):
             raise AssertionError(
                 "Object of category {} is not supported".format(category))
 
-    def _materialize_tracked_objects(self, tasks):
-        """Materializes the tracked objects in the tasks"""
-        tasks_grouped_by_category = defaultdict(list)
-        tasks_grouped_by_global_id = defaultdict(list)
-        for task in tasks:
-            tasks_grouped_by_category[task.tracked_object_category].append(
-                task)
-            tasks_grouped_by_global_id[task.tracked_object_global_id].append(
-                task)
+    def _unwrap_ext_work_units(self, ext_work_units):
+        """
+        Given a list of ExternalWorkUnit, makes sure that all ExternalExtensibleBase have
+        materialized tracked objects. Then returns the wrapped WorkUnits.
+        """
+
+        external_work_units_grouped_by_class = defaultdict(list)
+        external_work_units_grouped_by_global_id = defaultdict(list)
+
+        for ext_work_unit in ext_work_units:
+            external_work_units_grouped_by_class[ext_work_unit.tracked_object_class].append(
+                ext_work_unit)
+            external_work_units_grouped_by_global_id[ext_work_unit.tracked_object_global_id].append(
+                ext_work_unit)
 
         # We fetch all objects for a certain category in a batch
-        for category, tasks in tasks_grouped_by_category.items():
-            keys = [task.tracked_object_local_id for task in tasks]
+        for category, current_work_units in external_work_units_grouped_by_class.items():
+            keys = [work_unit.tracked_object_local_id for work_unit in current_work_units]
             tracked_objects = self.batch_get_tracked_objects(category, keys)
 
             for tracked_object in tracked_objects:
-                for task in tasks_grouped_by_global_id[
-                        tracked_object.global_id]:
-                    task.tracked_object = tracked_object
-        return tasks
+                for ext_work_unit in external_work_units_grouped_by_global_id[tracked_object.global_id]:
+                    ext_work_unit.work_unit.tracked_object = tracked_object
 
-    def get_tasks(self, task_definition_key=None, process_definition_key=None):
-        # TODO: If we ever have more than one workflow engine, fetching asynchronously would make
-        # a lot of sense here
+        return [ext_work_unit.work_unit for ext_work_unit in ext_work_units]
+
+    def get_work_units(self, work_definition_key=None, process_definition_key=None):
+        """
+        Fetches all WorkUnits from all workflow providers that match the parameters.
+
+        Returns a list of `WorkUnit`
+        """
+
         # TODO: Handle paging, sorting and so on.
-        all_tasks = list()
+
+        print("ME HERE", work_definition_key, process_definition_key)
+
+        # 1. Fetch ExternalWorkUnit instances from the workflow engine. These may or may not
+        # map to instances that already exist in Common LIMS.
+        external_work_units = list()
 
         for handler_config in self.handlers.values():
             handler = handler_config["handler"]
-            tasks_in_handler = handler.get_tasks(task_definition_key,
-                                                 process_definition_key)
-            all_tasks.extend(tasks_in_handler)
+            work_unit_in_handler = handler.get_work_units(work_definition_key,
+                                                          process_definition_key)
+            external_work_units.extend(work_unit_in_handler)
 
-        # The clients return only the global_id of the tracked objects. We must fetch the objects here
-        # for the caller:
-        self._materialize_tracked_objects(all_tasks)
+        # The clients return only the global_id of the tracked objects.
+        # We must fetch the objects here for the caller:
+        in_memory_work_units = self._unwrap_ext_work_units(external_work_units)
 
-        return all_tasks
+        # 2. Ensure that all the work units exist in CLIMS too and return those instances.
+        ret = self._sync_work_units(in_memory_work_units)
+
+        return ret
+
+    def _sync_work_units(self, work_units):
+        """
+        Given a list of in memory WorkUnits, ensures that they already exist in the datastore.
+        WorkUnits originally exist only in the external workflow engine.
+
+        :work_units: A list of work units that might exist only in the external workflow system
+        """
+
+        if not work_units:
+            return work_units
+
+        # 1. Batch query for existing work units by (workflow_provider, external_work_unit_id)
+        existing = list(WorkUnit.by_external_ids(work_units))
+
+        # 2. Find the set of non existing items
+        only_in_workflow_engine = ({curr.external_work_unit_key for curr in work_units} -
+                                   {curr.external_work_unit_key for curr in existing})
+
+        # 3. Create the missing WorkUnits in bulk.
+        should_be_created = [curr for curr in work_units
+                             if curr.external_work_unit_key in only_in_workflow_engine]
+
+        WorkUnit.objects.bulk_create(should_be_created)
+
+        # TODO: The IDs in the call above should be set automatically when using postgresql, but
+        # it's not working it seems. So we'll do another roundtrip to fetch the IDs as a temporary
+        # solution. (I assume that this must be a question of upgrading)
+        created = list(WorkUnit.by_external_ids(should_be_created)) if should_be_created else []
+
+        ret = existing + created
+
+        # Finally, move the tracked object over to the work units that don't have them. We already
+        # have them materialized in the list that was sent in
+        work_units_by_external_key = {curr.external_work_unit_key: curr for curr in work_units}
+        for curr in ret:
+            curr.tracked_object = work_units_by_external_key[
+                curr.external_work_unit_key].tracked_object
+
+        return ret
 
     def batch_assign_items(self, category, items):
         """
@@ -513,83 +574,52 @@ class WorkflowService(object):
         """
         Assigns all containers in the list. If an entry is an integer, it's assumed to be
         an id of a container. Otherwise it must inherit from ContainerBase.
+
         """
         # TODO
         raise NotImplementedError()
 
-    def get_task_definitions(self, process_definition_key=None, task_definition_key=None):
+    def get_work_definitions(self, process_definition_key=None, work_definition_key=None):
         from clims.models import CamundaTask
         from django.db.models import Count
         from django.db.models import Q
 
         # TODO: Only supports camunda
-        task_definitions = CamundaTask.objects.select_related('process_definition')
+        camunda_task_definitions = CamundaTask.objects.select_related('process_definition')
 
         # Temporary: Remove Camunda demo data results:
-        task_definitions = task_definitions.filter(~Q(process_definition__key='invoice'))
+        camunda_task_definitions = camunda_task_definitions.filter(~Q(process_definition__key='invoice'))
 
         if process_definition_key:
-            task_definitions = task_definitions.filter(process_definition__key=process_definition_key)
-        if task_definition_key:
-            task_definitions = task_definitions.filter(task_definition_key=task_definition_key)
+            camunda_task_definitions = camunda_task_definitions.filter(process_definition__key=process_definition_key)
+        if work_definition_key:
+            camunda_task_definitions = camunda_task_definitions.filter(task_definition_key=work_definition_key)
 
-        task_definitions_with_instance_count = task_definitions.values(
-            'task_definition_key', 'name', 'process_definition__name',
+        camunda_task_definitions_with_instance_count = camunda_task_definitions.values(
+            'task_definition_key',
+            'name',
+            'process_definition__name',
             'process_definition__key').annotate(count=Count('name'))
 
         ret = list()
-        for entry in task_definitions_with_instance_count:
-            entry["id"] = "{}/{}".format(
+        for entry in camunda_task_definitions_with_instance_count:
+            entry["id"] = "{}:{}".format(
                 entry["process_definition__key"], entry["task_definition_key"])
             ret.append(
-                TaskDefinitionInfo(entry["id"], entry["name"], entry["process_definition__key"],
+                WorkDefinitionInfo(entry["id"], entry["name"], entry["process_definition__key"],
                         entry["task_definition_key"],
                     entry["process_definition__name"], entry["count"]))
         return ret
 
 
-class TaskDefinitionInfo(object):
-    def __init__(self, id, name, process_definition_key, task_definition_key, process_definition_name, count):
+class WorkDefinitionInfo(object):
+    def __init__(self, id, name, process_definition_key, work_definition_key, process_definition_name, count):
         self.id = id
         self.name = name
         self.process_definition_key = process_definition_key
         self.process_definition_name = process_definition_name
-        self.task_definition_key = task_definition_key
+        self.work_definition_key = work_definition_key
         self.count = count
-
-
-class ProcessTask(object):
-    """Represents a single instance of a step running in a workflow process."""
-
-    def __init__(self,
-                 id,
-                 process_instance_id,
-                 provider_type,
-                 tracked_object_global_id,
-                 name,
-                 form_key):
-        # TODO-simple: Also use a slash for global ids of e.g. substances
-        self.id = "{}/{}".format(provider_type, id)
-        self.process_instance_id = process_instance_id
-
-        # The ID of the "tracked object" in the external. This is (for now) either
-        # Substance_<internal_id> or Container_<internal_id>
-        self.tracked_object_global_id = tracked_object_global_id
-        self.tracked_object = None
-        self.name = name
-        self.form_key = form_key
-
-    @property
-    def tracked_object_category(self):
-        category, _ = self.tracked_object_global_id.split("-")
-        return category
-
-    @property
-    def tracked_object_local_id(self):
-        _, id = self.tracked_object_global_id.split("-")
-        return id
-
-    __repr__ = sane_repr('process_instance_id', 'tracked_object_global_id')
 
 
 class WorkflowProcessNotFound(Exception):

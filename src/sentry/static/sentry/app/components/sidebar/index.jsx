@@ -248,7 +248,7 @@ class Sidebar extends React.Component {
                   onClick={this.hidePanel}
                   icon={<icons.AvailableWork />}
                   label={t('Available Work')}
-                  to={`/${organization.slug}/tasks/`}
+                  to={`/${organization.slug}/available-work/`}
                 />
                 <SidebarItem
                   {...sidebarItemProps}
@@ -256,7 +256,7 @@ class Sidebar extends React.Component {
                   onClick={this.hidePanel}
                   icon={<icons.WorkInProgress />}
                   label={t('Work in Progress')}
-                  to={`/${organization.slug}/workbatches/`}
+                  to={`/${organization.slug}/work-batches/`}
                 />
                 <SidebarItem
                   {...sidebarItemProps}

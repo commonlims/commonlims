@@ -43,6 +43,7 @@ class PluginManager(object):
     def __init__(self, app, instance_manager=None):
         self._app = app
         self.handlers = HandlerManager(app)
+        self.work_types = dict()  # TODO: Add to a manager class
         self.instance_manager = instance_manager or InstanceManager()
 
     # Install (during upgrade)
@@ -132,6 +133,13 @@ class PluginManager(object):
         for extensible_cls in plugin.get_extensible_objects():
             self._app.extensibles.register(plugin_model, extensible_cls)
 
+    def get_work_type(self, full_name):
+        # TODO: Validate that this is a work type class
+        if full_name not in self.work_types:
+            cls = InstanceManager.find_cls(full_name)
+            self.work_types[full_name] = cls
+        return self.work_types[full_name]
+
     def get_extensible_types_from_db(self):
         """
         :return: class objects of extensible types
@@ -146,7 +154,11 @@ class PluginManager(object):
             extensible_class_name = split_type_name[-1]
             module = self._import_module(full_module_name)
             extensible_class = getattr(module, extensible_class_name, None)
-            yield extensible_class
+            # NOTE: Silently returning nothing if the class wasn't loaded
+            if extensible_class:
+                yield extensible_class
+            else:
+                logger.warn("Not able to load registered extensible {}".format(type_name))
 
     def find_plugins_by_entry_points(self):
         """

@@ -14,7 +14,7 @@ class WorkBatchListContainer extends React.Component {
 
   componentDidMount() {
     // TODO: Should we get the data initially in this didMount or just in the child's didMount?
-    this.props.getWorkBatches();
+    this.props.getWorkBatches(this.props.organization.slug);
   }
 
   getColumns() {
@@ -23,7 +23,7 @@ class WorkBatchListContainer extends React.Component {
         Header: 'Task',
         id: 'name',
         accessor: (row) => (
-          <Link to={`/${this.props.organization.slug}/workbatches/${row.id}`}>
+          <Link to={`/${this.props.organization.slug}/work-batches/${row.id}`}>
             {row.name}
           </Link>
         ),
@@ -72,7 +72,7 @@ WorkBatchListContainer.propTypes = {
 const mapStateToProps = (state) => state.workBatch;
 
 const mapDispatchToProps = (dispatch) => ({
-  getWorkBatches: () => dispatch(workBatchActions.getList()),
+  getWorkBatches: (org) => dispatch(workBatchActions.getList(org)),
   toggleSingle: (id) => dispatch(workBatchActions.select(id)),
 });
 

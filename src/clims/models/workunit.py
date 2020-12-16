@@ -24,7 +24,7 @@ class WorkUnit(models.Model):
 
     external_workflow_instance_id = models.TextField(null=True)
 
-    # The ID of the external workflow provider, e.g. Camunda. If the item is being worked on
+    # The ID of the external workflow provider, e.g. camunda. If the item is being worked on
     # without a workflow engine, this is None
     workflow_provider = models.TextField(null=True)
 
@@ -45,22 +45,57 @@ class WorkUnit(models.Model):
 
     @property
     def tracked_object(self):
-        if self.substance is not None:
-            return self.substance
-        elif self.container is not None:
-            return self.container
-        else:
-            return None
+        """
+        Returns the extensible (Substance or Container) that's being tracked in this WorkUnit.
+        """
+        return getattr(self, '_tracked_object', None)
 
     @tracked_object.setter
     def tracked_object(self, value):
-        value = value._archetype
-        if isinstance(value, Substance):
-            self.substance = value
-        elif isinstance(value, Container):
-            self.container = value
+        """
+        Sets the extensible that's being tracked in this WorkUnit.
+        """
+        model = value._archetype
+        if isinstance(model, Substance):
+            self.substance = model
+        elif isinstance(model, Container):
+            self.container = model
         else:
-            raise AssertionError("Unexpected tracked_object type {}".format(type(value)))
+            raise AssertionError("Unexpected tracked_object model type {}".format(type(model)))
+        self._tracked_object = value
+
+    @property
+    def external_work_unit_key(self):
+        """
+        Returns both the workflow_provider and the external_work_unit_id as one tuple (key).
+        This is required for fully identifying a work unit between different workflow providers.
+        """
+        return (self.workflow_provider, self.external_work_unit_id)
+
+    @staticmethod
+    def by_external_ids(work_units):
+        """
+        Batch fetches all WorkUnits based on the external id. Requires the workflow provider
+        and the external_work_unit_id to be set on all entries.
+        """
+        sql_args = list()  # The arguments we'll add in the sql text, must be %s to avoid sql inj.
+        sql_params = list()
+
+        for cur in work_units:
+            # Note that the following is not an error although it may be non-intuitive. We need
+            # to list all the params to the sql statement in order and they should not be touples.
+            sql_params.append(cur.workflow_provider)
+            sql_params.append(cur.external_work_unit_id)
+            sql_args.append("(%s, %s)")
+
+        # It might be that django supports in searches on composite keys, but I haven't seen it
+        sql_args_comma_sep = ",".join(sql_args)
+        sql = ("SELECT * "
+               "FROM clims_workunit "
+               "WHERE "
+               "(workflow_provider, external_work_unit_id) IN ( " + sql_args_comma_sep + " )")
+        work_units = WorkUnit.objects.raw(sql, sql_params)
+        return work_units
 
     class Meta:
         app_label = 'clims'
@@ -68,3 +103,24 @@ class WorkUnit(models.Model):
 
     __repr__ = sane_repr('workflow_provider',
             'external_work_unit_id', 'external_workflow_instance_id')
+
+
+class ExternalWorkUnit(object):
+    """
+    Represents a WorkUnit that's in an external workflow engine but does not necessarily yet
+    have a corresponding entry in the datastore.
+    """
+
+    def __init__(self, work_unit, tracked_object_global_id):
+        self.work_unit = work_unit
+        self.tracked_object_global_id = tracked_object_global_id
+
+    @property
+    def tracked_object_class(self):
+        category, _ = self.tracked_object_global_id.split("-")
+        return category
+
+    @property
+    def tracked_object_local_id(self):
+        _, id = self.tracked_object_global_id.split("-")
+        return id

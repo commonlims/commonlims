@@ -16,28 +16,28 @@ expected_sequence_simple = {
     'id':
     u'clims.plugins.demo.dnaseq.workflows.sequence.SequenceSimple',
     'fields': [{
-        'display_name': u'Comment',
+        'label': u'Comment',
         'help': None,
         'required': False,
         'choices': [],
         'type': u'textarea',
         'name': u'comment'
     }, {
-        'display_name': u'Sample prep',
+        'label': u'Sample prep',
         'help': u'The method used for preparing the sample',
         'required': True,
         'choices': ['microwave', 'mixer'],
         'type': u'select',
         'name': u'sample_prep'
     }, {
-        'display_name': u'Sequencer',
+        'label': u'Sequencer',
         'help': u'Instrument where the sample will be sequenced',
         'required': True,
         'choices': ['iPhone', 'Android', 'Bang & Olufsen'],
         'type': u'select',
         'name': u'sequencer'
     }, {
-        'display_name': u'Sample type',
+        'label': u'Sample type',
         'help': u'The type of the sample',
         'required': True,
         'choices': ['DNA', 'RNA'],

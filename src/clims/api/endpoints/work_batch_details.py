@@ -9,6 +9,7 @@ from clims.api.serializers.models.work_batch_details import WorkBatchDetailsSeri
 class WorkBatchDetailsEndpoint(WorkBatchBaseEndpoint):
     def get(self, request, organization_slug, work_batch_id):
         workbatch = self.app.workbatches.get(id=work_batch_id)
+
         return Response(WorkBatchDetailsSerializer(workbatch).data, status=200)
 
     def put(self, request, organization_slug, work_batch_id):
