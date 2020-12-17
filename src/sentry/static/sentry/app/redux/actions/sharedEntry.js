@@ -88,7 +88,7 @@ const acCreateFailure = (resource) =>
   makeActionCreator(`CREATE_${resource}_FAILURE`, 'statusCode', 'message');
 
 const acCreate = (resource, urlTemplate) => {
-  return (org, data) => (dispatch) => {
+  return (org, data, onSuccess) => (dispatch) => {
     dispatch(acCreateRequest(resource)(data));
 
     const url = urlTemplate.replace('{org}', org.slug);
@@ -97,8 +97,14 @@ const acCreate = (resource, urlTemplate) => {
     api.request(url, {
       method: 'POST',
       data,
-      success: () => {
+      success: (response) => {
         dispatch(acCreateSuccess(resource)(data));
+
+        // TODO: This is to handle redirects. There is perhaps a better
+        // pattern for this using redux only?
+        if (onSuccess) {
+          onSuccess(response);
+        }
       },
       error: (err) => {
         const message = getErrorMessage(err);

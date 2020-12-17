@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {makeResourceActions} from './shared';
+import {makeResourceActions} from './sharedList';
 
 export const RESOURCE_NAME = 'AVAILABLE_WORK';
 
@@ -7,6 +7,5 @@ export const RESOURCE_NAME = 'AVAILABLE_WORK';
 // and with count of work items
 export const availableWorkActions = makeResourceActions(
   RESOURCE_NAME,
-  '/api/0/organizations/{org}/available-work/',
-  '/api/0/available-work/{id}/'
+  '/api/0/organizations/{org}/available-work/'
 );

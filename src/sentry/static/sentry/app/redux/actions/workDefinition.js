@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {makeResourceActions} from './shared';
+import {makeResourceActions} from './sharedList';
 
 export const RESOURCE_NAME = 'WORK_DEFINITION';
 
