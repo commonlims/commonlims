@@ -44,20 +44,61 @@ class WorkBatchBase(ExtensibleBase):
     WrappedArchetype = WorkBatch
     WrappedVersion = WorkBatchVersion
 
+    def __init__(self, **kwargs):
+        super(WorkBatchBase, self).__init__(**kwargs)
+        self.parent_substances = None
+        self.child_substances = None
+        self._update_queue = list()
+
+    def stage_update(self, obj):
+        self._update_queue.append(obj)
+
+    def commit(self):
+        for queued_object in self._update_queue:
+            queued_object.save()
+
+    def output_plates(self):
+        ret_dict = {
+            s.location.container.id: s.location.container
+            for s in self.child_substances if s.location
+        }
+        return [ret_dict[id] for id in ret_dict]
+
     @classmethod
     def cls_full_name(cls):
         # Corresponds to 'full_name' in serializer
         return cls.type_full_name_cls()
 
     @classmethod
+    def _get_hooks_for(cls, hook_type):
+        hooks = list()
+        for _, v in iteritems(cls.__dict__):
+            if callable(v) and \
+                    hasattr(v, HOOK_TYPE) and getattr(v, HOOK_TYPE) == hook_type:
+                hooks.append(Hook(callable=v, hook_tag=getattr(v, HOOK_TAG, None)))
+        return hooks
+
+    @classmethod
     def buttons(cls):
         buttons = list()
-        for _, v in iteritems(cls.__dict__):
-            if callable(v) and hasattr(v, HOOK_TAG) and \
-                    hasattr(v, HOOK_TYPE) and getattr(v, HOOK_TYPE) == 'button':
-                b = Button(name=v.__name__, caption=getattr(v, HOOK_TAG))
-                buttons.append(b)
+        for hook in cls._get_hooks_for('button'):
+            b = Button(name=hook.callable.__name__, caption=hook.hook_tag)
+            buttons.append(b)
         return buttons
+
+    @classmethod
+    def criterias(cls):
+        return [c for c in cls._get_hooks_for('criteria')]
+
+    @classmethod
+    def criteria_descriptions(cls):
+        return [c.hook_tag for c in cls.criterias()]
+
+    def is_satisfied_by(self, substance):
+        for c in self.__class__.criterias():
+            if not c.callable(self, substance):
+                return False
+        return True
 
     @classmethod
     def fields(cls):
@@ -169,3 +210,7 @@ class WorkBatchQueryBuilder(BaseQueryBuilder):
         else:
             raise NotImplementedError("The key {} is not implemented".format(key))
         return query_params
+
+
+class Hook(namedtuple('Hook', ['callable', 'hook_tag'])):
+    pass

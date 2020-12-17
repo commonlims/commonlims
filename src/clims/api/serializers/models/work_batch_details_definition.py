@@ -25,3 +25,4 @@ class WorkBatchDetailsDefinitionSerializer(serializers.Serializer):
     name = serializers.CharField(read_only=True)
     buttons = serializers.ListField(child=ButtonField(), read_only=True)
     fields = serializers.ListField(child=FieldPropertyField(), read_only=True)
+    criteria_descriptions = serializers.ListField(read_only=True)
