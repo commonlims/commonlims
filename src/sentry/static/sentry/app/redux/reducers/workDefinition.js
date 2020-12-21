@@ -1,4 +1,4 @@
-import {resource} from './sharedList';
+import {resource} from './sharedEntry';
 import {RESOURCE_NAME} from '../actions/workDefinition.js';
 
 export const initialState = {

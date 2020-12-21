@@ -25,9 +25,7 @@ class AvailableWorkDetailsView extends React.Component {
   }
 
   render() {
-    const workDefinition = this.props.workDefinition.detailsId
-      ? this.props.workDefinition.byIds[this.props.workDefinition.detailsId]
-      : null;
+    const workDefinition = this.props.workDefinition.entry;
 
     if (workDefinition === null) {
       return <LoadingIndicator />;
@@ -94,6 +92,7 @@ AvailableWorkDetailsView.propTypes = {
   organization: ClimsTypes.Organization.isRequired,
 
   workDefinitionsByIds: PropTypes.array.isRequired,
+  workDefinition: PropTypes.object.isRequired,
   detailsId: PropTypes.string.isRequired,
 
   getWorkUnits: PropTypes.func.isRequired,
