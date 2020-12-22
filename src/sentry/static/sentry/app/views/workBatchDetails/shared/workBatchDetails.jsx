@@ -120,7 +120,6 @@ TodoItem.propTypes = {
 };
 
 WorkBatchDetailsContainer.propTypes = {
-  workBatch: ClimsTypes.WorkBatch.isRequired,
   loading: PropTypes.bool.isRequired,
   getWorkBatchDetails: PropTypes.func.isRequired,
 };

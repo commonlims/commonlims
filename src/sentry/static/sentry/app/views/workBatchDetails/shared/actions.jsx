@@ -96,7 +96,9 @@ const WorkBatchActionsComponent = createReactClass({
   displayName: 'WorkBatchActions',
 
   propTypes: {
-    group: SentryTypes.Group.isRequired,
+    group: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }),
   },
 
   mixins: [ApiMixin, OrganizationState],
