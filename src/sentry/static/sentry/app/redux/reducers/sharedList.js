@@ -88,85 +88,6 @@ export function getListFailure(state, action) {
   };
 }
 
-export function createEntryRequest(state, action) {
-  return {
-    ...state,
-    creating: true,
-  };
-}
-
-export function createEntrySuccess(state, action) {
-  return {
-    ...state,
-    creating: false,
-    byIds: {
-      ...state.byIds,
-      [action.entry.id]: action.entry,
-    },
-  };
-}
-
-export function createEntryFailure(state, action) {
-  return {
-    ...state,
-    creating: false,
-    errorMessage: action.message,
-  };
-}
-
-export function updateEntryRequest(state, action) {
-  return {
-    ...state,
-    updating: true,
-    errorMessage: null,
-  };
-}
-
-export function updateEntrySuccess(state, action) {
-  const byIds = {};
-  byIds[action.entry.id] = action.entry;
-  return {
-    ...state,
-    updating: false,
-    byIds: merge({}, state.byIds, byIds),
-  };
-}
-
-export function updateEntryFailure(state, action) {
-  return {
-    ...state,
-    updating: false,
-    errorMessage: action.message,
-  };
-}
-
-export function getEntryRequest(state, action) {
-  return {
-    ...state,
-    loadingDetails: true,
-    detailsId: null,
-  };
-}
-
-export function getEntrySuccess(state, action) {
-  const byIds = {};
-  byIds[action.entry.id] = action.entry;
-  return {
-    ...state,
-    loadingDetails: false,
-    detailsId: action.entry.id,
-    byIds: merge({}, state.byIds, byIds),
-  };
-}
-
-export function getEntryFailure(state, action) {
-  return {
-    ...state,
-    errorMessage: action.message,
-    loadingDetails: false,
-  };
-}
-
 const createResourceReducer = (resource, initialState) => (
   state = initialState,
   action
@@ -182,25 +103,6 @@ const createResourceReducer = (resource, initialState) => (
       return selectSingle(state, action);
     case `SELECT_PAGE_OF_${resource}`:
       return selectAll(state, action);
-    case `GET_${resource}_REQUEST`:
-      return getEntryRequest(state, action);
-    case `GET_${resource}_SUCCESS`:
-      return getEntrySuccess(state, action);
-    case `GET_${resource}_FAILURE`:
-      return getEntryFailure(state, action);
-    case `CREATE_${resource}_REQUEST`:
-      return createEntryRequest(state, action);
-    case `CREATE_${resource}_SUCCESS`:
-      return createEntrySuccess(state, action);
-    case `CREATE_${resource}_FAILURE`:
-      return createEntryFailure(state, action);
-    case `UPDATE_${resource}_REQUEST`:
-      return updateEntryRequest(state, action);
-    case `UPDATE_${resource}_SUCCESS`:
-      return updateEntrySuccess(state, action);
-    case `UPDATE_${resource}_FAILURE`:
-      return updateEntryFailure(state, action);
-
     default:
       return state;
   }
@@ -223,7 +125,6 @@ export const list = {
         cursor: null,
       },
     },
-    creating: false,
   },
 
   // All reducers available for that list:
@@ -234,32 +135,9 @@ export const list = {
   getListFailure,
 };
 
-export const entry = {
-  // Required state for following an entry protocol
-  initialState: {
-    loadingDetails: false,
-    updating: false,
-    detailsId: null,
-  },
-
-  // All reducers
-  createEntryRequest,
-  createEntrySuccess,
-  createEntryFailure,
-  getEntryRequest,
-  getEntrySuccess,
-  getEntryFailure,
-  updateEntryRequest,
-  updateEntrySuccess,
-  updateEntryFailure,
-};
-
 // A resource follows both the list and entry protocols
 export const resource = {
-  initialState: {
-    ...entry.initialState,
-    ...list.initialState,
-  },
+  initialState: {...list.initialState},
 
   createReducer: createResourceReducer,
 };

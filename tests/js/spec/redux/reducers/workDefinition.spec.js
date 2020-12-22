@@ -2,68 +2,34 @@ import {Set} from 'immutable';
 import workDefinition, {initialState} from 'app/redux/reducers/workDefinition';
 import {workDefinitionActions} from 'app/redux/actions/workDefinition';
 
-describe('workDefinition reducer, list protocol', () => {
-  it('has expected state after requesting getting a list', () => {
+describe('workDefinition reducer, entry protocol', () => {
+  it('has expected state after requesting an item', () => {
     const requested = workDefinition(
       initialState,
-      workDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
+      workDefinitionActions.getRequest('id')
     );
     const expected = {
-      loading: true,
-      updating: false,
-      errorMessage: null,
-      byIds: {},
-      listViewState: {
-        allVisibleSelected: false,
-        visibleIds: [],
-        selectedIds: Set(),
-        search: 'search',
-        groupBy: 'groupBy',
-        pagination: {
-          pageLinks: null,
-          cursor: 'cursor',
-        },
-      },
+      loadingDetails: true,
       creating: false,
-      loadingDetails: false,
-      detailsId: null,
+      entry: null,
+      updating: false,
     };
     expect(requested).toEqual(expected);
   });
 
-  it('expected state after ListSuccess', () => {
+  it('expected state after get success', () => {
     const requested = workDefinition(
       initialState,
-      workDefinitionActions.getListRequest('search', 'groupBy', 'cursor')
+      workDefinitionActions.getRequest('id')
     );
-    const entries = [TestStubs.WorkDefinition(1), TestStubs.WorkDefinition(2)];
-    const succeeded = workDefinition(
-      requested,
-      workDefinitionActions.getListSuccess(entries, 'pageLinks')
-    );
+    const entry = TestStubs.WorkDefinition('work-definition-name');
+    const succeeded = workDefinition(requested, workDefinitionActions.getSuccess(entry));
 
     const expected = {
-      loading: false,
-      updating: false,
-      errorMessage: null,
-      byIds: {
-        1: entries[0],
-        2: entries[1],
-      },
-      listViewState: {
-        allVisibleSelected: false,
-        visibleIds: [entries[0].id, entries[1].id],
-        selectedIds: Set(),
-        search: 'search',
-        groupBy: 'groupBy',
-        pagination: {
-          pageLinks: 'pageLinks',
-          cursor: 'cursor',
-        },
-      },
-      creating: false,
       loadingDetails: false,
-      detailsId: null,
+      entry: entry,
+      creating: false,
+      updating: false,
     };
     expect(succeeded).toEqual(expected);
   });

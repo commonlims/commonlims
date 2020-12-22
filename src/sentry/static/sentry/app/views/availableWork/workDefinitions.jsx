@@ -58,6 +58,7 @@ export class WorkDefinitions extends React.Component {
   }
 
   renderProcesses() {
+    // TODO: This method has to be cleaned up
     const {workDefinitions} = this.props;
     const workDefinitionsGroupedByProcess = this.groupWorkUnitsByProcess(workDefinitions);
 

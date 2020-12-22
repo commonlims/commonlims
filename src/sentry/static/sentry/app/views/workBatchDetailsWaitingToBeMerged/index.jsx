@@ -15,7 +15,6 @@ class WorkBatchDetailsWaitingToBeMergedContainer extends React.Component {
 }
 
 WorkBatchDetailsWaitingToBeMergedContainer.propTypes = {
-  ...ClimsTypes.List,
   organization: ClimsTypes.Organization.isRequired,
 };
 

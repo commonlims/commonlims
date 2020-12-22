@@ -1,5 +1,5 @@
 import React from 'react';
-import {resource} from 'app/redux/reducers/shared';
+import {resource} from 'app/redux/reducers/sharedList';
 import {getUpdatedWorkBatch} from 'app/views/workBatchDetailsWaitingToBeMerged/workbatchDetails';
 
 describe('workbatch details', () => {
@@ -21,13 +21,7 @@ describe('workbatch details', () => {
     const initialState = {...resource.initialState};
     const workBatchDetailsEntry = {
       ...initialState,
-      detailsId: 1000,
-      byIds: {
-        ...initialState.byIds,
-        1000: {
-          ...originalWorkbatch,
-        },
-      },
+      entry: originalWorkbatch,
     };
     const currentFieldValues = {
       property1: 'new value',

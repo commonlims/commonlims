@@ -4,7 +4,7 @@ import {
   WORK_BATCH_DETAILS_GET_REQUEST,
   WORK_BATCH_DETAILS_GET_SUCCESS,
   WORK_BATCH_DETAILS_GET_FAILURE,
-} from '../actions/workBatchDetails';
+} from '../actions/workBatchDetails_old';
 
 const initialState = {
   loading: false,

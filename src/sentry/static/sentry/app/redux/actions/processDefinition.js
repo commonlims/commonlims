@@ -1,4 +1,4 @@
-import {makeResourceActions} from './shared';
+import {makeResourceActions} from 'app/redux/actions/sharedList';
 
 export const RESOURCE_NAME = 'PROCESS_DEFINITION';
 

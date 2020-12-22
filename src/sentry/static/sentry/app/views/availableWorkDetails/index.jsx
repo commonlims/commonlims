@@ -3,7 +3,7 @@ import React from 'react';
 import withOrganization from 'app/utils/withOrganization';
 import WorkUnits from './workUnits';
 import {connect} from 'react-redux';
-import {workBatchActions} from 'app/redux/actions/workBatch';
+import {workBatchActions} from 'app/redux/actions/workBatchDetails';
 import {workDefinitionActions} from 'app/redux/actions/workDefinition';
 import {availableWorkUnitActions} from 'app/redux/actions/availableWorkUnit';
 import ClimsTypes from 'app/climsTypes';
@@ -25,9 +25,7 @@ class AvailableWorkDetailsView extends React.Component {
   }
 
   render() {
-    const workDefinition = this.props.workDefinition.detailsId
-      ? this.props.workDefinition.byIds[this.props.workDefinition.detailsId]
-      : null;
+    const workDefinition = this.props.workDefinition.entry;
 
     if (workDefinition === null) {
       return <LoadingIndicator />;
@@ -94,6 +92,7 @@ AvailableWorkDetailsView.propTypes = {
   organization: ClimsTypes.Organization.isRequired,
 
   workDefinitionsByIds: PropTypes.array.isRequired,
+  workDefinition: PropTypes.object.isRequired,
   detailsId: PropTypes.string.isRequired,
 
   getWorkUnits: PropTypes.func.isRequired,
