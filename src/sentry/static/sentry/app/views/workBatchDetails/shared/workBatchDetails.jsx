@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 import withOrganization from 'app/utils/withOrganization';
-import {getWorkBatchDetails} from 'app/redux/actions/workBatchDetails_old';
+import {getWorkBatchDetails} from 'app/redux/actions/workBatchDetails';
 
 import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
