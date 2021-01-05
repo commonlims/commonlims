@@ -88,6 +88,29 @@ export function getListFailure(state, action) {
   };
 }
 
+export function createEntryRequest(state, action) {
+  return {
+    ...state,
+    creating: true,
+  };
+}
+
+export function createEntrySuccess(state, action) {
+  return {
+    ...state,
+    creating: false,
+    createdEntry: action.entry,
+  };
+}
+
+export function createEntryFailure(state, action) {
+  return {
+    ...state,
+    creating: false,
+    errorMessage: action.message,
+  };
+}
+
 const createResourceReducer = (resource, initialState) => (
   state = initialState,
   action
@@ -103,6 +126,12 @@ const createResourceReducer = (resource, initialState) => (
       return selectSingle(state, action);
     case `SELECT_PAGE_OF_${resource}`:
       return selectAll(state, action);
+    case `CREATE_${resource}_REQUEST`:
+      return createEntryRequest(state, action);
+    case `CREATE_${resource}_SUCCESS`:
+      return createEntrySuccess(state, action);
+    case `CREATE_${resource}_FAILURE`:
+      return createEntryFailure(state, action);
     default:
       return state;
   }
@@ -112,7 +141,9 @@ export const list = {
   // State we require for following a list protocol
   initialState: {
     loading: false,
+    creating: false,
     errorMessage: null,
+    createdEntry: null,
     byIds: {},
     listViewState: {
       allVisibleSelected: false,
@@ -133,6 +164,9 @@ export const list = {
   getListRequest,
   getListSuccess,
   getListFailure,
+  createEntryRequest,
+  createEntrySuccess,
+  createEntryFailure,
 };
 
 // A resource follows both the list and entry protocols

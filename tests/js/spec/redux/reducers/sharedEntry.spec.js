@@ -103,39 +103,4 @@ describe('shared resource reducer', () => {
     };
     expect(failedState).toEqual(expectedState);
   });
-
-  it('has expected state when requesting an entry to be created', () => {
-    const successState = {
-      ...initialStateEntry,
-      creating: true,
-      entry: {id: '1'},
-    };
-    const createEntryRequestState = reducerEntry(
-      successState,
-      actions.createRequest({id: '1'})
-    );
-    expect(createEntryRequestState).toEqual({
-      ...successState,
-    });
-  });
-
-  it('has expected state when requesting an entry has successfully been created', () => {
-    const newItem = {
-      id: '3',
-      name: 'entry3',
-    };
-    const createEntryRequestState = reducerEntry(
-      {...initialStateEntry},
-      actions.createRequest(newItem)
-    );
-    const createEntrySuccessState = reducerEntry(
-      createEntryRequestState,
-      actions.createSuccess(newItem)
-    );
-
-    expect(createEntrySuccessState).toEqual({
-      ...initialStateEntry,
-      entry: newItem,
-    });
-  });
 });

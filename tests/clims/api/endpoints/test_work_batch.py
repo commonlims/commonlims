@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 import json
-
+import pytest
 from django.core.urlresolvers import reverse
 
 from sentry.testutils import APITestCase

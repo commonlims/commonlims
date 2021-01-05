@@ -77,51 +77,6 @@ const acGet = (resource, urlTemplate) => {
   };
 };
 
-// Create actions
-const acCreateRequest = (resource) =>
-  makeActionCreator(`CREATE_${resource}_REQUEST`, 'entry');
-
-const acCreateSuccess = (resource) =>
-  makeActionCreator(`CREATE_${resource}_SUCCESS`, 'entry');
-
-const acCreateFailure = (resource) =>
-  makeActionCreator(`CREATE_${resource}_FAILURE`, 'statusCode', 'message');
-
-const acCreate = (resource, urlTemplate) => {
-  return (org, data, onSuccess) => (dispatch) => {
-    dispatch(acCreateRequest(resource)(data));
-
-    const url = urlTemplate.replace('{org}', org.slug);
-    // use client that sentry is using
-    const api = new Client(); // TODO: use axios (must send same headers as Client does).
-    api.request(url, {
-      method: 'POST',
-      data,
-      success: (response) => {
-        dispatch(acCreateSuccess(resource)(data));
-
-        // TODO: This is to handle redirects. There is perhaps a better
-        // pattern for this using redux only?
-        if (onSuccess) {
-          onSuccess(response);
-        }
-      },
-      error: (err) => {
-        const message = getErrorMessage(err);
-        dispatch(acCreateFailure(resource)(err.status, message));
-      },
-    });
-    // TODO: uncomment this when clims-465 is completed
-    // return axios
-    //   .post(url, data)
-    //   .then(() => dispatch(acCreateSuccess(resource)(data)))
-    //   .catch((response) => {
-    //     const message = getErrorMessage(response.request);
-    //     dispatch(acCreateFailure(resource)(response.request.status, message));
-    //   });
-  };
-};
-
 function getErrorMessage(err) {
   return `(${err.statusText}) ${err.responseText}`;
 }
@@ -135,10 +90,6 @@ export const entryActionCreators = {
   acUpdateRequest,
   acUpdateSuccess,
   acUpdateFailure,
-  acCreate,
-  acCreateRequest,
-  acCreateSuccess,
-  acCreateFailure,
 };
 
 // Creates all actions required for a regular resource
@@ -155,11 +106,5 @@ export const makeResourceActions = (resourceName, entryUrl) => {
     updateRequest: acUpdateRequest(resourceName),
     updateSuccess: acUpdateSuccess(resourceName),
     updateFailure: acUpdateFailure(resourceName),
-
-    // Create entries
-    create: acCreate(resourceName, entryUrl),
-    createRequest: acCreateRequest(resourceName),
-    createSuccess: acCreateSuccess(resourceName),
-    createFailure: acCreateFailure(resourceName),
   };
 };
