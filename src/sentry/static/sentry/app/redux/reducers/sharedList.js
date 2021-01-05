@@ -100,6 +100,7 @@ export function createEntrySuccess(state, action) {
     ...state,
     creating: false,
     createdEntry: action.entry,
+    byIds: merge({}, state.byIds, {[action.entry.id]: action.entry}),
   };
 }
 

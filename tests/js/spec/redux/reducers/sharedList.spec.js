@@ -5,10 +5,6 @@ import {makeResourceActions} from 'app/redux/actions/sharedList';
 const RESOURCE_NAME = 'SOME_RESOURCE';
 
 // Tests the shared functionality of resource reducers
-const initialStateEntry = {
-  ...resource.initialState,
-};
-
 const initialStateList = {
   ...resource.initialState,
 };
@@ -155,7 +151,7 @@ describe('shared resource reducer', () => {
 
   it('has expected state when requesting an entry to be created', () => {
     const successState = {
-      ...initialStateEntry,
+      ...initialStateList,
       creating: true,
       entry: {id: '1'},
     };
@@ -174,7 +170,7 @@ describe('shared resource reducer', () => {
       name: 'entry3',
     };
     const createEntryRequestState = reducerList(
-      {...initialStateEntry},
+      {...initialStateList},
       actions.createRequest(newItem)
     );
     const createEntrySuccessState = reducerList(
@@ -183,8 +179,9 @@ describe('shared resource reducer', () => {
     );
 
     expect(createEntrySuccessState).toEqual({
-      ...initialStateEntry,
+      ...initialStateList,
       createdEntry: newItem,
+      byIds: {'3': newItem},
     });
   });
 });
