@@ -35,7 +35,6 @@ class WorkBatchDetailsEndpointTest(APITestCase):
         assert response.data['name'] == 'my_workbatch'
         assert response.data['properties']['kit_type']['value'] == 'kit type value'
 
-    @pytest.mark.dev_edvard
     def test_put__update_property(self):
         # Arrange
         workbatch = MyWorkbatchImplementation(name='my_workbatch')
@@ -64,6 +63,36 @@ class WorkBatchDetailsEndpointTest(APITestCase):
         assert response.status_code == status.HTTP_200_OK, response.data
         fetched_workbatch = self.app.workbatches.get(id=workbatch.id)
         assert fetched_workbatch.kit_type == 'updated kit type'
+
+    @pytest.mark.dev_edvard
+    def test_initialize_property__then_delete_it(self):
+        # Arrange
+        workbatch = MyWorkbatchImplementation(name='my_workbatch')
+        workbatch.kit_type = 'kit type value'
+        workbatch.save()
+
+        url = reverse('clims-api-0-work-batch-details',
+                      args=(self.organization.name, workbatch.id))
+        self.login_as(self.user)
+        payload = {
+            'properties': {
+                'kit_type': {
+                    'value': None
+                }
+            }
+        }
+
+        # Act
+        response = self.client.put(
+            path=url,
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+
+        # Assert
+        assert response.status_code == status.HTTP_200_OK, response.data
+        fetched_workbatch = self.app.workbatches.get(id=workbatch.id)
+        assert fetched_workbatch.kit_type is None
 
 
 class MyWorkbatchImplementation(WorkBatchBase):
