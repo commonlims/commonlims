@@ -189,7 +189,7 @@ const mapDispatchToProps = (dispatch) => ({
   getWipWorkbatch: (org) => {
     const urlTemplate = '/api/0/organizations/{org}/work-batches/';
     const getWorkBatchRoutine = listActionCreators.acGetList(WORK_BATCH, urlTemplate);
-    return dispatch(getWorkBatchRoutine(org, 'workbatch.name:wip-workbatch'));
+    return dispatch(getWorkBatchRoutine(org, 'workbatch.name:snpseq-wip-workbatch'));
   },
 });
 

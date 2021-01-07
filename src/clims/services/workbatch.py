@@ -9,6 +9,7 @@ from clims.services.base_extensible_service import BaseQueryBuilder
 from clims.models.workbatchfile import WorkBatchFile as WorkBatchFileModel
 from clims.models.work_batch import WorkBatch, WorkBatchVersion
 from clims.configuration.hooks import HOOK_TAG, HOOK_TYPE
+from clims.script_execution import ScriptExecution
 
 
 class WorkbatchService(BaseExtensibleService):
@@ -49,6 +50,7 @@ class WorkBatchBase(ExtensibleBase):
         self.parent_substances = None
         self.child_substances = None
         self._update_queue = list()
+        self.script_runner = ScriptExecution()
 
     def stage_update(self, obj):
         self._update_queue.append(obj)
