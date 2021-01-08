@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 import withOrganization from 'app/utils/withOrganization';
-import {getWorkBatchDetails} from 'app/redux/actions/workBatchDetails';
+import {workBatchActions} from 'app/redux/actions/workBatchDetails';
 
 import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
@@ -124,10 +124,13 @@ WorkBatchDetailsContainer.propTypes = {
   getWorkBatchDetails: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => state.workBatchDetails;
+const mapStateToProps = (state) => ({
+  workBatchDetails: state.workBatchDetails,
+  workBatch: state.workBatchDetailsEntry.entry,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-  getWorkBatchDetails: (org, id) => dispatch(getWorkBatchDetails(org, id)),
+  getWorkBatchDetails: (org, id) => dispatch(workBatchActions.get(org, id)),
 });
 
 export default withOrganization(
