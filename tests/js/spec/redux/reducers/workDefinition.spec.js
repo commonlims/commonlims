@@ -10,7 +10,6 @@ describe('workDefinition reducer, entry protocol', () => {
     );
     const expected = {
       loadingDetails: true,
-      creating: false,
       entry: null,
       updating: false,
     };
@@ -28,7 +27,6 @@ describe('workDefinition reducer, entry protocol', () => {
     const expected = {
       loadingDetails: false,
       entry: entry,
-      creating: false,
       updating: false,
     };
     expect(succeeded).toEqual(expected);

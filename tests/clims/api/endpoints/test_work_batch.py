@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 import json
-
+import pytest
 from django.core.urlresolvers import reverse
 
 from sentry.testutils import APITestCase
@@ -47,6 +47,7 @@ class WorkBatchEndpointTest(APITestCase):
         assert response.data[0]['id'] == workbatch.id
         assert response.data[0]['name'] == 'my_workbatch'
 
+    @pytest.mark.dev_edvard
     def test_post(self):
         # TODO: Fix this test, or an equivalent one.
         self.login_as(self.user)

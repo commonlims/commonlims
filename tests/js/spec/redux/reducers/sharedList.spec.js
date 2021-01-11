@@ -5,10 +5,6 @@ import {makeResourceActions} from 'app/redux/actions/sharedList';
 const RESOURCE_NAME = 'SOME_RESOURCE';
 
 // Tests the shared functionality of resource reducers
-const initialStateEntry = {
-  ...resource.initialState,
-};
-
 const initialStateList = {
   ...resource.initialState,
 };
@@ -43,6 +39,8 @@ describe('shared resource reducer', () => {
     );
     expect(requestedState).toEqual({
       loading: true,
+      creating: false,
+      createdEntry: null,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -60,6 +58,8 @@ describe('shared resource reducer', () => {
     const successState = createGetListSuccessState();
     expect(successState).toEqual({
       loading: false,
+      creating: false,
+      createdEntry: null,
       errorMessage: null,
       byIds: {'1': {id: '1', name: 'entry1'}, '2': {id: '2', name: 'entry2'}},
       listViewState: {
@@ -134,6 +134,8 @@ describe('shared resource reducer', () => {
     );
     expect(failedState).toEqual({
       loading: false,
+      creating: false,
+      createdEntry: null,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {
@@ -144,6 +146,42 @@ describe('shared resource reducer', () => {
         selectedIds: new Set(),
         pagination: {pageLinks: null, cursor: 'cursor'},
       },
+    });
+  });
+
+  it('has expected state when requesting an entry to be created', () => {
+    const successState = {
+      ...initialStateList,
+      creating: true,
+      entry: {id: '1'},
+    };
+    const createEntryRequestState = reducerList(
+      successState,
+      actions.createRequest({id: '1'})
+    );
+    expect(createEntryRequestState).toEqual({
+      ...successState,
+    });
+  });
+
+  it('has expected state when requesting an entry has successfully been created', () => {
+    const newItem = {
+      id: '3',
+      name: 'entry3',
+    };
+    const createEntryRequestState = reducerList(
+      {...initialStateList},
+      actions.createRequest(newItem)
+    );
+    const createEntrySuccessState = reducerList(
+      createEntryRequestState,
+      actions.createSuccess(newItem)
+    );
+
+    expect(createEntrySuccessState).toEqual({
+      ...initialStateList,
+      createdEntry: newItem,
+      byIds: {'3': newItem},
     });
   });
 });

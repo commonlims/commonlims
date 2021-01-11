@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import _ from 'lodash';
 import styled from 'react-emotion';
@@ -12,7 +13,9 @@ import {t} from 'app/locale';
 
 export default class GroupSeenBy extends React.Component {
   static propTypes = {
-    group: SentryTypes.Group.isRequired,
+    group: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }),
   };
 
   render() {

@@ -34,17 +34,17 @@ export const Organization = PropTypes.shape({
 export const WorkBatch = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  processDefinitionKey: PropTypes.string.isRequired,
+  processDefinitionKey: PropTypes.string,
   created_at: PropTypes.string.isRequired, // TODO: Map to date
   updated_at: PropTypes.string.isRequired,
-  num_comments: PropTypes.number.isRequired,
-  status: PropTypes.string.isRequired,
-  subtasks: PropTypes.array.isRequired, // TODO: Describe
+  num_comments: PropTypes.number,
+  status: PropTypes.string,
+  subtasks: PropTypes.array, // TODO: Describe
   transitions: PropTypes.array.isRequired,
   source: PropTypes.shape({
     substances: PropTypes.array, // TODO: describe
     containers: PropTypes.array,
-  }).isRequired,
+  }),
   target: PropTypes.shape({
     substances: PropTypes.array,
     containers: PropTypes.array,
