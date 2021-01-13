@@ -8,7 +8,7 @@ from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.work_batch_details_definition import WorkBatchDetailsDefinitionSerializer
 
 
-class WorkBatchDetailsDefinitionEndpoint(OrganizationEndpoint):
+class WorkDefinitionDetailsEndpoint(OrganizationEndpoint):
     authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 

@@ -15,9 +15,9 @@ class TestWorkDefinition(APITestCase):
     def test__fetched_from_name__returns_list_of_buttons(self):
         # This test case is thought of to happen when user enters a step, and
         # the UI should conform to the step configuration.
-        cls_full_name = 'endpoints.test_work_batch_details_definition.MyFancyStep'
+        cls_full_name = 'endpoints.test_work_definition_details.MyFancyStep'
         url = reverse(
-            'clims-api-0-work-batch-definition-details',
+            'clims-api-0-work-definition-details',
             args=(self.organization.name, cls_full_name)
         )
         self.login_as(self.user)

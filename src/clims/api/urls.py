@@ -6,7 +6,7 @@ from django.conf import urls
 from .endpoints.work_batch import WorkBatchEndpoint
 from .endpoints.work_batch_details import WorkBatchDetailsEndpoint
 
-from .endpoints.work_batch_details_definition import WorkBatchDetailsDefinitionEndpoint
+from .endpoints.work_definition_details import WorkDefinitionDetailsEndpoint
 from .endpoints.events import EventEndpoint
 
 from .endpoints.substance import SubstanceEndpoint
@@ -83,9 +83,9 @@ urlpatterns = patterns(
         name='clims-api-0-process-assignments'),
     url2(r'^organizations/{org}/work-units/$', WorkUnitsEndpoint),
     # Steps
-    url(r'^organizations/{org}/work-batch-definition-details/(?P<cls_full_name>[^\/]+)/$',
-        WorkBatchDetailsDefinitionEndpoint.as_view(),
-        name='clims-api-0-work-batch-definition-details'),
+    url(r'^organizations/{org}/work-definition-details/(?P<cls_full_name>[^\/]+)/$',
+        WorkDefinitionDetailsEndpoint.as_view(),
+        name='clims-api-0-work-definition-details'),
     url(r'^organizations/{org}/events/$',
         EventEndpoint.as_view(),
         name='clims-api-0-events'),

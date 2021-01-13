@@ -163,7 +163,7 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(sendButtonClickedEventRoutine(org, buttonEvent));
   },
   getConfiguredStaticContents: (org, workbatchId) => {
-    const urlTemplate = '/api/0/organizations/{org}/work-batch-definition-details/{id}';
+    const urlTemplate = '/api/0/organizations/{org}/work-definition-details/{id}';
     const getConfiguredStaticContentsRoutine = entryActionCreators.acGet(
       WORK_BATCH_DEFINITION,
       urlTemplate

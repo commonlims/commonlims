@@ -4,8 +4,6 @@ from sentry.api.paginator import OffsetPaginator
 from sentry.api.bases.organization import OrganizationEndpoint
 from clims.api.serializers.models.work_definition import WorkDefinitionSerializer
 
-# TODO: this module should probably be removed and replaced by work_batch_details_definition.py
-
 
 class AvailableWorkEndpoint(OrganizationEndpoint):
     name = 'clims-api-0-available-work'
