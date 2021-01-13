@@ -9,11 +9,11 @@ from clims.api.serializers.models.work_definition import WorkDefinitionSerialize
 from clims.api.serializers.models.workunit import WorkUnitSerializer
 
 
-class WorkDefinitionDetailsEndpoint(Endpoint):
+class WorkDefinitionsEndpoint(Endpoint):
     authentication_classes = DEFAULT_AUTHENTICATION
     permission_classes = (IsAuthenticated, )
 
-    name = 'clims-api-0-work-definition-details'
+    name = 'clims-api-0-work-definitions'
 
     def get(self, request, work_definition_id):
         # TODO: Here we split the key outside of the service. Move it into it.

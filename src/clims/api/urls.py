@@ -37,7 +37,7 @@ from .endpoints.plugin_actions import PluginActionsEndpoint
 
 from .endpoints.workflow import WorkflowEndpoint
 from .endpoints.available_work import AvailableWorkEndpoint
-from .endpoints.work_definition_details import WorkDefinitionDetailsEndpoint
+from .endpoints.work_definition import WorkDefinitionsEndpoint
 from .endpoints.work_units import WorkUnitsByWorkDefinitionEndpoint
 
 from .endpoints.substance_file import SubstanceFileEndpoint
@@ -71,7 +71,7 @@ urlpatterns = patterns(
     '',
     # Workflow
     url2(r'^organizations/{org}/available-work/$', AvailableWorkEndpoint),  # Returns summary
-    url2(r'^work-definitions/(?P<work_definition_id>[^\/]+)/$', WorkDefinitionDetailsEndpoint),
+    url2(r'^work-definitions/(?P<work_definition_id>[^\/]+)/$', WorkDefinitionsEndpoint),
     url2(r'^work-definitions/(?P<work_definition_id>[^\/]+)/available-work/$',
         WorkUnitsByWorkDefinitionEndpoint),  # Returns work units
 
