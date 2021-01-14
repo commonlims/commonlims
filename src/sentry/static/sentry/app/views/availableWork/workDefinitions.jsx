@@ -8,7 +8,7 @@ import LoadingError from 'app/components/loadingError';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import {groupBy, sum} from 'lodash';
 import ClimsTypes from 'app/climsTypes';
-import {workDefinitionActions} from 'app/redux/actions/workDefinition';
+import {workDefinitionActions} from 'app/redux/actions/workDefinitionEntry';
 
 export class WorkDefinitions extends React.Component {
   constructor(props) {
