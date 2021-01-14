@@ -10,6 +10,7 @@ class WorkBatchDetailsSerializer(serializers.Serializer):
     properties = DictField(child=ExtensiblePropertySerializer(), allow_null=True)
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
+    cls_full_name = serializers.CharField(read_only=True)
 
     # These are still mocked
     transitions = serializers.SerializerMethodField(read_only=True)
