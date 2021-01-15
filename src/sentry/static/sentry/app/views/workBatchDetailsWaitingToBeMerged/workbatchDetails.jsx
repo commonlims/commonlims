@@ -7,7 +7,9 @@ import {listActionCreators} from 'app/redux/actions/sharedList';
 import {entryActionCreators} from 'app/redux/actions/sharedEntry';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import DetailsForm from './detailsForm';
-import {WORK_BATCH_DEFINITION} from 'app/redux/reducers/workBatchDefinitionEntry';
+import workDefinitionDetailsEntry, {
+  WORK_DEFINITION_DETAILS,
+} from 'app/redux/reducers/workDefinitionDetailsEntry';
 import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
 import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
 import {EVENTS} from 'app/redux/reducers/event';
@@ -60,7 +62,7 @@ export class WorkbatchDetails extends React.Component {
   };
 
   fetchDefinitionsFromProps = () => {
-    let {entry: workDefinition} = this.props.workBatchDefinitionEntry;
+    let {entry: workDefinition} = this.props.workDefinitionDetailsEntry;
     if (!workDefinition) {
       throw new Error('Something went wrong when parsing static contents');
     }
@@ -148,7 +150,7 @@ WorkbatchDetails.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  workBatchDefinitionEntry: state.workBatchDefinitionEntry,
+  workDefinitionDetailsEntry: state.workDefinitionDetailsEntry,
   workBatchEntry: state.workBatchEntry,
   workBatchDetailsEntry: state.workBatchDetailsEntry,
 });
@@ -165,7 +167,7 @@ const mapDispatchToProps = (dispatch) => ({
   getConfiguredStaticContents: (org, workbatchId) => {
     const urlTemplate = '/api/0/organizations/{org}/work-definition-details/{id}';
     const getConfiguredStaticContentsRoutine = entryActionCreators.acGet(
-      WORK_BATCH_DEFINITION,
+      WORK_DEFINITION_DETAILS,
       urlTemplate
     );
     dispatch(getConfiguredStaticContentsRoutine(org, workbatchId));

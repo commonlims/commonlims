@@ -10,7 +10,7 @@ import workDefinitionEntry from 'app/redux/reducers/workDefinitionEntry';
 import workBatch from './workBatch';
 import workBatchDetails from './workBatchDetails';
 import projectSearchEntry from './projectSearchEntry';
-import workBatchDefinitionEntry from './workBatchDefinitionEntry';
+import workDefinitionDetailsEntry from './workDefinitionDetailsEntry';
 import workBatchEntry from './workBatchEntry';
 import workBatchDetailsEntry from './workBatchDetailsEntry';
 import availableWork from './availableWork';
@@ -27,7 +27,7 @@ export default combineReducers({
   workBatch,
   workBatchDetails,
   projectSearchEntry,
-  workBatchDefinitionEntry,
+  workDefinitionDetailsEntry,
   workBatchEntry,
   workBatchDetailsEntry,
   availableWork,
