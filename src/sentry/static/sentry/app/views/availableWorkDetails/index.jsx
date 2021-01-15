@@ -26,7 +26,7 @@ class AvailableWorkDetailsView extends React.Component {
   }
 
   render() {
-    const workDefinition = this.props.workDefinitionEntry.entry;
+    const workDefinition = this.props.workDefinitionEntry.resource;
 
     if (workDefinition === null) {
       return <LoadingIndicator />;

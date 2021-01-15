@@ -164,11 +164,11 @@ describe('shared async actions', () => {
     const expectedActions = [
       {
         type: 'CREATE_RESOURCE_NAME_REQUEST',
-        entry: newState,
+        resource: newState,
       },
       {
         type: 'CREATE_RESOURCE_NAME_SUCCESS',
-        entry: newState,
+        resource: newState,
       },
     ];
     const org = {
@@ -200,7 +200,7 @@ describe('shared async actions', () => {
     const expectedActions = [
       {
         type: 'CREATE_RESOURCE_NAME_REQUEST',
-        entry: newState,
+        resource: newState,
       },
       {
         type: 'CREATE_RESOURCE_NAME_FAILURE',

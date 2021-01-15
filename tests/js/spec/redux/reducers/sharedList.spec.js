@@ -40,7 +40,7 @@ describe('shared resource reducer', () => {
     expect(requestedState).toEqual({
       loading: true,
       creating: false,
-      createdEntry: null,
+      createdResource: null,
       errorMessage: null,
       byIds: {},
       listViewState: {
@@ -59,7 +59,7 @@ describe('shared resource reducer', () => {
     expect(successState).toEqual({
       loading: false,
       creating: false,
-      createdEntry: null,
+      createdResource: null,
       errorMessage: null,
       byIds: {'1': {id: '1', name: 'entry1'}, '2': {id: '2', name: 'entry2'}},
       listViewState: {
@@ -135,7 +135,7 @@ describe('shared resource reducer', () => {
     expect(failedState).toEqual({
       loading: false,
       creating: false,
-      createdEntry: null,
+      createdResource: null,
       errorMessage: 'some error',
       byIds: {},
       listViewState: {
@@ -153,7 +153,7 @@ describe('shared resource reducer', () => {
     const successState = {
       ...initialStateList,
       creating: true,
-      entry: {id: '1'},
+      resource: {id: '1'},
     };
     const createEntryRequestState = reducerList(
       successState,
@@ -180,7 +180,7 @@ describe('shared resource reducer', () => {
 
     expect(createEntrySuccessState).toEqual({
       ...initialStateList,
-      createdEntry: newItem,
+      createdResource: newItem,
       byIds: {'3': newItem},
     });
   });

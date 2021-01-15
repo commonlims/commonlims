@@ -196,7 +196,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export function getUpdatedWorkBatch(workBatchDetailsEntry, currentFieldValues) {
-  let {entry: fetched_workbatch} = workBatchDetailsEntry;
+  let {resource: fetched_workbatch} = workBatchDetailsEntry;
   let properties = Object.keys(currentFieldValues);
   let updatedProperties = properties.reduce((previous, current) => {
     let entry = {
