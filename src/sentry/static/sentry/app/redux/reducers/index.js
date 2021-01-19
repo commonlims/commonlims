@@ -6,11 +6,11 @@ import processDefinition from './processDefinition';
 import savedSearch from './savedSearch';
 import substanceSearchEntry from './substanceSearchEntry';
 import tag from './tag';
-import workDefinition from './workDefinition';
+import workDefinitionEntry from 'app/redux/reducers/workDefinitionEntry';
 import workBatch from './workBatch';
 import workBatchDetails from './workBatchDetails';
 import projectSearchEntry from './projectSearchEntry';
-import workBatchDefinitionEntry from './workBatchDefinitionEntry';
+import workDefinitionDetailsEntry from './workDefinitionDetailsEntry';
 import workBatchEntry from './workBatchEntry';
 import workBatchDetailsEntry from './workBatchDetailsEntry';
 import availableWork from './availableWork';
@@ -23,11 +23,11 @@ export default combineReducers({
   savedSearch,
   substanceSearchEntry,
   tag,
-  workDefinition,
+  workDefinitionEntry,
   workBatch,
   workBatchDetails,
   projectSearchEntry,
-  workBatchDefinitionEntry,
+  workDefinitionDetailsEntry,
   workBatchEntry,
   workBatchDetailsEntry,
   availableWork,

@@ -4,12 +4,13 @@ import withOrganization from 'app/utils/withOrganization';
 import WorkUnits from './workUnits';
 import {connect} from 'react-redux';
 import {workBatchActions} from 'app/redux/actions/workBatch';
-import {workDefinitionActions} from 'app/redux/actions/workDefinition';
+import {workDefinitionActions} from 'app/redux/actions/workDefinitionEntry';
 import {availableWorkUnitActions} from 'app/redux/actions/availableWorkUnit';
 import ClimsTypes from 'app/climsTypes';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import BackButton from 'app/components/backButton';
 import {t} from 'app/locale';
+import workDefinitionEntry from 'app/redux/reducers/workDefinitionEntry';
 
 class AvailableWorkDetailsView extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class AvailableWorkDetailsView extends React.Component {
   }
 
   render() {
-    const workDefinition = this.props.workDefinition.entry;
+    const workDefinition = this.props.workDefinitionEntry.resource;
 
     if (workDefinition === null) {
       return <LoadingIndicator />;
@@ -92,7 +93,7 @@ AvailableWorkDetailsView.propTypes = {
   organization: ClimsTypes.Organization.isRequired,
 
   workDefinitionsByIds: PropTypes.array.isRequired,
-  workDefinition: PropTypes.object.isRequired,
+  workDefinitionEntry: PropTypes.object.isRequired,
   detailsId: PropTypes.string.isRequired,
 
   getWorkUnits: PropTypes.func.isRequired,
@@ -106,7 +107,7 @@ AvailableWorkDetailsView.propTypes = {
 const mapStateToProps = (state) => {
   return {
     workBatch: state.workBatch,
-    workDefinition: state.workDefinition,
+    workDefinitionEntry: state.workDefinitionEntry,
     availableWorkUnit: state.availableWorkUnit,
     creatingWorkBatch: state.workBatch.creating,
     columns: getColumns(),

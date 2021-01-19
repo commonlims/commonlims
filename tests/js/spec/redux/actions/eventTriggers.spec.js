@@ -35,11 +35,11 @@ describe('button event redux action', () => {
       const expectedActions = [
         {
           type: 'CREATE_EVENT_REQUEST',
-          entry: buttonClickedEvent,
+          resource: buttonClickedEvent,
         },
         {
           type: 'CREATE_EVENT_SUCCESS',
-          entry: buttonClickedEvent,
+          resource: buttonClickedEvent,
         },
       ];
       const org = {

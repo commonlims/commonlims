@@ -45,10 +45,10 @@ const acUpdate = (resource, urlTemplate) => {
 };
 
 const acUpdateRequest = (resource) =>
-  makeActionCreator(`UPDATE_${resource}_REQUEST`, 'entry');
+  makeActionCreator(`UPDATE_${resource}_REQUEST`, 'resource');
 
 const acUpdateSuccess = (resource) =>
-  makeActionCreator(`UPDATE_${resource}_SUCCESS`, 'entry');
+  makeActionCreator(`UPDATE_${resource}_SUCCESS`, 'resource');
 
 const acUpdateFailure = (resource) =>
   makeActionCreator(`UPDATE_${resource}_FAILURE`, 'statusCode', 'message');
@@ -57,7 +57,8 @@ const acUpdateFailure = (resource) =>
 // Fetch single resource
 const acGetRequest = (resource) => makeActionCreator(`GET_${resource}_REQUEST`, 'id');
 
-const acGetSuccess = (resource) => makeActionCreator(`GET_${resource}_SUCCESS`, 'entry');
+const acGetSuccess = (resource) =>
+  makeActionCreator(`GET_${resource}_SUCCESS`, 'resource');
 
 const acGetFailure = (resource) =>
   makeActionCreator(`GET_${resource}_FAILURE`, 'statusCode', 'message');

@@ -99,8 +99,8 @@ export function createEntrySuccess(state, action) {
   return {
     ...state,
     creating: false,
-    createdEntry: action.entry,
-    byIds: merge({}, state.byIds, {[action.entry.id]: action.entry}),
+    createdResource: action.resource,
+    byIds: merge({}, state.byIds, {[action.resource.id]: action.resource}),
   };
 }
 
@@ -144,7 +144,7 @@ export const list = {
     loading: false,
     creating: false,
     errorMessage: null,
-    createdEntry: null,
+    createdResource: null,
     byIds: {},
     listViewState: {
       allVisibleSelected: false,

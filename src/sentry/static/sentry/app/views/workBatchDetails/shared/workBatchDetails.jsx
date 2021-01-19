@@ -125,8 +125,7 @@ WorkBatchDetailsContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  workBatchDetails: state.workBatchDetails,
-  workBatch: state.workBatchDetailsEntry.entry,
+  workBatch: state.workBatchDetailsEntry.resource,
 });
 
 const mapDispatchToProps = (dispatch) => ({

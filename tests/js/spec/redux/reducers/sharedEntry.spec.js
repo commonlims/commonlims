@@ -28,7 +28,7 @@ describe('shared resource reducer', () => {
     const successState = reducerEntry(requestedState, actions.getSuccess(fetchedItem));
     expect(successState).toEqual({
       ...initialStateEntry,
-      entry: fetchedItem,
+      resource: fetchedItem,
     });
   });
 
@@ -36,7 +36,7 @@ describe('shared resource reducer', () => {
     const originalState = {
       ...initialStateEntry,
       errorMessage: 'oops',
-      entry: {
+      resource: {
         id: 5,
         name: 'orig-name',
       },
@@ -58,7 +58,7 @@ describe('shared resource reducer', () => {
     const originalState = {
       ...initialStateEntry,
       updating: true,
-      entry: {
+      resource: {
         id: 5,
         name: 'orig-name',
       },
@@ -71,7 +71,7 @@ describe('shared resource reducer', () => {
     const expectedState = {
       ...originalState,
       updating: false,
-      entry: {
+      resource: {
         id: 5,
         name: 'new-name',
       },
@@ -83,7 +83,7 @@ describe('shared resource reducer', () => {
     const originalState = {
       ...initialStateEntry,
       updating: true,
-      entry: {
+      resource: {
         id: 5,
         name: 'orig-name',
       },

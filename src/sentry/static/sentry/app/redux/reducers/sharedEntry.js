@@ -10,7 +10,7 @@ export function updateEntrySuccess(state, action) {
   return {
     ...state,
     updating: false,
-    entry: action.entry,
+    resource: action.resource,
   };
 }
 
@@ -26,7 +26,7 @@ export function getEntryRequest(state, action) {
   return {
     ...state,
     loadingDetails: true,
-    entry: null,
+    resource: null,
   };
 }
 
@@ -34,7 +34,7 @@ export function getEntrySuccess(state, action) {
   return {
     ...state,
     loadingDetails: false,
-    entry: action.entry,
+    resource: action.resource,
   };
 }
 
@@ -73,7 +73,7 @@ export const entry = {
   initialState: {
     loadingDetails: false,
     updating: false,
-    entry: null,
+    resource: null,
   },
 
   getEntryRequest,

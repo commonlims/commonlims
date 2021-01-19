@@ -18,7 +18,7 @@ describe('shared action creators', () => {
     const fetchedEntry = {name: 'sample1'};
     const action = entryActionCreators.acGetSuccess(RESOURCE_NAME)(fetchedEntry);
     expect(action).toEqual({
-      entry: fetchedEntry,
+      resource: fetchedEntry,
       type: 'GET_RESOURCE_NAME_SUCCESS',
     });
   });
@@ -72,7 +72,7 @@ describe('shared async actions', () => {
       },
       {
         type: 'GET_RESOURCE_NAME_SUCCESS',
-        entry: {some: 'object'},
+        resource: {some: 'object'},
       },
     ];
 
@@ -100,11 +100,11 @@ describe('shared async actions', () => {
     const expectedActions = [
       {
         type: 'UPDATE_RESOURCE_NAME_REQUEST',
-        entry: newState,
+        resource: newState,
       },
       {
         type: 'UPDATE_RESOURCE_NAME_SUCCESS',
-        entry: newState,
+        resource: newState,
       },
     ];
     const org = {

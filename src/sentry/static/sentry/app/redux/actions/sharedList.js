@@ -64,10 +64,10 @@ const acSelect = (resource) => makeActionCreator(`SELECT_${resource}`, 'id', 'do
 
 // Create actions
 const acCreateRequest = (resource) =>
-  makeActionCreator(`CREATE_${resource}_REQUEST`, 'entry');
+  makeActionCreator(`CREATE_${resource}_REQUEST`, 'resource');
 
 const acCreateSuccess = (resource) =>
-  makeActionCreator(`CREATE_${resource}_SUCCESS`, 'entry');
+  makeActionCreator(`CREATE_${resource}_SUCCESS`, 'resource');
 
 const acCreateFailure = (resource) =>
   makeActionCreator(`CREATE_${resource}_FAILURE`, 'statusCode', 'message');
