@@ -12,6 +12,18 @@ export function makeActionCreator(type, ...argNames) {
     return action;
   };
 }
+
+////////////////////////
+// Update local changes
+const acUpdateLocal = (resource) => {
+  return (localChanges) => (dispatch) => {
+    dispatch(acUpdateLocalRequest(resource)(localChanges));
+  };
+};
+
+const acUpdateLocalRequest = (resource) =>
+  makeActionCreator(`UPDATE_${resource}_LOCAL_REQUEST`, 'localChanges');
+
 ////////////////////////
 // Update single resource
 const acUpdate = (resource, urlTemplate) => {
@@ -91,6 +103,8 @@ export const entryActionCreators = {
   acUpdateRequest,
   acUpdateSuccess,
   acUpdateFailure,
+  acUpdateLocal,
+  acUpdateLocalRequest,
 };
 
 // Creates all actions required for a regular resource
@@ -107,5 +121,7 @@ export const makeResourceActions = (resourceName, entryUrl) => {
     updateRequest: acUpdateRequest(resourceName),
     updateSuccess: acUpdateSuccess(resourceName),
     updateFailure: acUpdateFailure(resourceName),
+    updateLocal: acUpdateLocal(resourceName),
+    updateLocalRequest: acUpdateLocalRequest(resourceName),
   };
 };

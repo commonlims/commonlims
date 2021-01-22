@@ -30,6 +30,14 @@ describe('shared action creators', () => {
       type: 'GET_RESOURCE_NAME_FAILURE',
     });
   });
+  it('should handle local changes', () => {
+    const localChanges = {anAttribute: 'some value'};
+    const action = entryActionCreators.acUpdateLocalRequest(RESOURCE_NAME)(localChanges);
+    expect(action).toEqual({
+      localChanges,
+      type: 'UPDATE_RESOURCE_NAME_LOCAL_REQUEST',
+    });
+  });
 });
 
 const middlewares = [thunk];
