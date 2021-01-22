@@ -1,5 +1,5 @@
 import {resource} from 'app/redux/reducers/sharedList';
-import {RESOURCE_NAME} from '../actions/workBatch.js';
+import {RESOURCE_NAME} from 'app/redux/actions/workBatchEntry.js';
 
 export const initialState = {
   ...resource.initialState,

@@ -1,11 +1,10 @@
 import {resource} from 'app/redux/reducers/sharedList';
-
-export const WORK_BATCH = 'WORK_BATCH';
+import {RESOURCE_NAME} from 'app/redux/actions/workBatchEntry';
 
 const sharedInitialState = {
   ...resource.initialState,
 };
 
-const workBatchEntry = resource.createReducer(WORK_BATCH, sharedInitialState);
+const workBatchEntry = resource.createReducer(RESOURCE_NAME, sharedInitialState);
 
 export default workBatchEntry;

@@ -6,9 +6,7 @@ import DocumentTitle from 'react-document-title';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 import withOrganization from 'app/utils/withOrganization';
-import {workBatchActions} from 'app/redux/actions/workBatchDetails';
-
-import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
+import {workBatchDetailsActions} from 'app/redux/actions/workBatchDetailsEntry';
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
 import WorkBatchDetailsActivity from 'app/views/workBatchDetails/shared/workBatchActivity';
 import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner';
@@ -129,7 +127,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getWorkBatchDetails: (org, id) => dispatch(workBatchActions.get(org, id)),
+  getWorkBatchDetails: (org, id) => dispatch(workBatchDetailsActions.get(org, id)),
 });
 
 export default withOrganization(

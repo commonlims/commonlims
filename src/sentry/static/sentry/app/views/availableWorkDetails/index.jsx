@@ -3,7 +3,7 @@ import React from 'react';
 import withOrganization from 'app/utils/withOrganization';
 import WorkUnits from './workUnits';
 import {connect} from 'react-redux';
-import {workBatchActions} from 'app/redux/actions/workBatch';
+import {workBatchActions} from 'app/redux/actions/workBatchEntry';
 import {workDefinitionActions} from 'app/redux/actions/workDefinitionEntry';
 import {availableWorkUnitActions} from 'app/redux/actions/availableWorkUnit';
 import ClimsTypes from 'app/climsTypes';
