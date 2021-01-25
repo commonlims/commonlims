@@ -111,6 +111,8 @@ See [./development/code-quality.md](code-quality.md)
 
 # Troubleshooting
 
+## Reset
+
 Some problems are difficult to track down because of e.g. caching in different layers, mismatched
 dependencies and so on. You can do this to fully reset the application:
 
@@ -120,3 +122,8 @@ make develop
 lims upgrade  # to execute all plugin-defined dependencies
 # run in a clean browser session (clear cookies)
 ```
+
+## IPv6
+
+Some developers have reported problems running the application on machines that support IPv6.
+If some services mysteriously refuse to start, ensure IPv6 support is disabled on your computer.
