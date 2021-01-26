@@ -9,6 +9,7 @@ describe('workDefinition reducer, entry protocol', () => {
       workDefinitionActions.getRequest('id')
     );
     const expected = {
+      ...initialState,
       loadingDetails: true,
       resource: null,
       updating: false,
@@ -28,6 +29,7 @@ describe('workDefinition reducer, entry protocol', () => {
     );
 
     const expected = {
+      ...initialState,
       loadingDetails: false,
       resource: entry,
       updating: false,

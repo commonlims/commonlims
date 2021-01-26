@@ -25,7 +25,7 @@ import queryString from 'app/utils/queryString';
 import utils from 'app/utils';
 import ProjectState from 'app/mixins/projectState';
 import {connect} from 'react-redux';
-import {workBatchesGet, workBatchToggleSelect} from 'app/redux/actions/workBatch';
+import {workBatchesGet, workBatchToggleSelect} from 'app/redux/actions/workBatchEntry';
 
 const MAX_ITEMS = 25;
 const DEFAULT_SORT = 'date';

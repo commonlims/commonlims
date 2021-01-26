@@ -22,6 +22,13 @@ export function updateEntryFailure(state, action) {
   };
 }
 
+export function updateLocalChanges(state, action) {
+  return {
+    ...state,
+    localChanges: {...action.localChanges},
+  };
+}
+
 export function getEntryRequest(state, action) {
   return {
     ...state,
@@ -63,6 +70,8 @@ const createResourceReducer = (resource, initialState) => (
       return updateEntrySuccess(state, action);
     case `UPDATE_${resource}_FAILURE`:
       return updateEntryFailure(state, action);
+    case `UPDATE_${resource}_LOCAL_REQUEST`:
+      return updateLocalChanges(state, action);
     default:
       return state;
   }
@@ -74,6 +83,7 @@ export const entry = {
     loadingDetails: false,
     updating: false,
     resource: null,
+    localChanges: null,
   },
 
   getEntryRequest,
@@ -82,10 +92,10 @@ export const entry = {
   updateEntryRequest,
   updateEntrySuccess,
   updateEntryFailure,
+  updateLocalChanges,
 };
 
 export const resource = {
   initialState: {...entry.initialState},
-
   createReducer: createResourceReducer,
 };

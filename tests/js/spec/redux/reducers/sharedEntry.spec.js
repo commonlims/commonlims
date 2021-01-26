@@ -54,6 +54,32 @@ describe('shared resource reducer', () => {
     expect(requestedState).toEqual(expectedState);
   });
 
+  it('has expected state for local update', () => {
+    // Arrange
+    const originalState = {
+      ...initialStateEntry,
+      resource: {
+        id: 5,
+        name: 'some resource',
+      },
+    };
+    const localChanges = {
+      anAttribue: 'some value',
+    };
+
+    // Act
+    const updatedState = reducerEntry(
+      originalState,
+      actions.updateLocalRequest(localChanges)
+    );
+
+    // Assert
+    const expectedState = {
+      ...originalState,
+      localChanges,
+    };
+    expect(updatedState).toEqual(expectedState);
+  });
   it('has expected state when a single entry update has succeeded', () => {
     const originalState = {
       ...initialStateEntry,
