@@ -85,11 +85,6 @@ export class WorkDefinitions extends React.Component {
     return <LoadingIndicator />;
   }
 
-  redirectToExample() {
-    const redirect = `/lab/example-workbatch/`;
-    return void browserHistory.push(redirect);
-  }
-
   renderEmpty() {
     const message = t('Sorry, no data was found.');
 
@@ -98,9 +93,6 @@ export class WorkDefinitions extends React.Component {
         <p>
           <span className="icon icon-exclamation" /> {message}
         </p>
-        <button className="btn btn-sm btn-default" onClick={this.redirectToExample}>
-          {'Show example workbatch'}
-        </button>
       </div>
     );
   }
