@@ -1,6 +1,5 @@
 import React from 'react';
-import {resource} from 'app/redux/reducers/sharedList';
-import {getUpdatedWorkBatch} from 'app/views/workBatchDetailsWaitingToBeMerged/workbatchDetails';
+import {getUpdatedWorkBatch} from 'app/views/workBatchDetails/shared/actions';
 import {initCurrentFieldValues} from 'app/views/workBatchDetails/shared/workBatchFields';
 
 describe('workbatch details', () => {
@@ -19,21 +18,13 @@ describe('workbatch details', () => {
         },
       },
     };
-    const initialState = {...resource.initialState};
-    const workBatchDetailsEntry = {
-      ...initialState,
-      resource: originalWorkbatch,
-    };
     const currentFieldValues = {
       property1: 'new value',
       property3: 'new value 3',
     };
 
     // Act
-    const updatedWorkBatch = getUpdatedWorkBatch(
-      workBatchDetailsEntry,
-      currentFieldValues
-    );
+    const updatedWorkBatch = getUpdatedWorkBatch(originalWorkbatch, currentFieldValues);
 
     // Assert
     const expectedMergedWorkbatch = {
@@ -71,21 +62,13 @@ describe('workbatch details', () => {
         },
       },
     };
-    const initialState = {...resource.initialState};
-    const workBatchDetailsEntry = {
-      ...initialState,
-      resource: originalWorkbatch,
-    };
     const currentFieldValues = {
       property1: 'new value',
       property3: '',
     };
 
     // Act
-    const updatedWorkBatch = getUpdatedWorkBatch(
-      workBatchDetailsEntry,
-      currentFieldValues
-    );
+    const updatedWorkBatch = getUpdatedWorkBatch(originalWorkbatch, currentFieldValues);
 
     // Assert
     const expectedMergedWorkbatch = {

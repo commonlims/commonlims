@@ -15,6 +15,7 @@ const WorkBatchHeader = createReactClass({
 
   propTypes: {
     workBatch: PropTypes.object.isRequired,
+    workDefinition: PropTypes.object.isRequired,
     tabSelected: PropTypes.func.isRequired,
   },
 
@@ -71,7 +72,7 @@ const WorkBatchHeader = createReactClass({
           </div>
         </div>
         <WorkBatchSeenBy group={workBatch} />
-        <WorkBatchActions group={workBatch} />
+        <WorkBatchActions group={workBatch} workDefinition={this.props.workDefinition} />
         <NavTabs>{this.buildLinks()}</NavTabs>
       </div>
     );

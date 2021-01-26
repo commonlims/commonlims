@@ -65,6 +65,7 @@ class WorkBatchDetails extends React.Component {
           <WorkBatchHeader
             selectedTab={this.state.selectedTab}
             workBatch={this.props.workBatch}
+            workDefinition={this.props.workDefinition}
             tabSelected={(tab) => this.setState({selectedTab: tab})}
           />
           <div className="work-batch-details-container">
@@ -141,6 +142,7 @@ WorkBatchDetailsContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   workBatch: state.workBatchDetailsEntry.resource,
+  workDefinition: state.workDefinitionDetailsEntry.resource,
 });
 
 const mapDispatchToProps = (dispatch) => ({
