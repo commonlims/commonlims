@@ -10,7 +10,6 @@ import ClimsTypes from 'app/climsTypes';
 import LoadingIndicator from 'app/components/loadingIndicator';
 import BackButton from 'app/components/backButton';
 import {t} from 'app/locale';
-import workDefinitionEntry from 'app/redux/reducers/workDefinitionEntry';
 
 class AvailableWorkDetailsView extends React.Component {
   constructor(props) {
@@ -109,7 +108,6 @@ const mapStateToProps = (state) => {
     workBatch: state.workBatch,
     workDefinitionEntry: state.workDefinitionEntry,
     availableWorkUnit: state.availableWorkUnit,
-    creatingWorkBatch: state.workBatch.creating,
     columns: getColumns(),
   };
 };
