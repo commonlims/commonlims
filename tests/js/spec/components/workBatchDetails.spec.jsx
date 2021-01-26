@@ -1,6 +1,7 @@
 import React from 'react';
 import {resource} from 'app/redux/reducers/sharedList';
 import {getUpdatedWorkBatch} from 'app/views/workBatchDetailsWaitingToBeMerged/workbatchDetails';
+import {initCurrentFieldValues} from 'app/views/workBatchDetails/shared/workBatchFields';
 
 describe('workbatch details', () => {
   it('should merge updated fields with original workbatch', () => {
@@ -105,5 +106,44 @@ describe('workbatch details', () => {
       },
     };
     expect(updatedWorkBatch).toEqual(expectedMergedWorkbatch);
+  });
+  it('init current values can handle non populated fields', () => {
+    // Arrange
+    const workDefinition = {
+      fields: [{prop_name: 'fieldA'}, {prop_name: 'fieldB'}],
+    };
+    const workBatch = {
+      properties: {},
+    };
+    // Act
+    const currentFieldValues = initCurrentFieldValues(workBatch, workDefinition);
+
+    // Assert
+    const expected = {
+      fieldA: null,
+      fieldB: null,
+    };
+    expect(currentFieldValues).toEqual(expected);
+  });
+
+  it('init current values merge non-populated with populated fields', () => {
+    // Arrange
+    const workDefinition = {
+      fields: [{prop_name: 'fieldA'}, {prop_name: 'fieldB'}],
+    };
+    const workBatch = {
+      properties: {
+        fieldB: {value: 'some value'},
+      },
+    };
+    // Act
+    const currentFieldValues = initCurrentFieldValues(workBatch, workDefinition);
+
+    // Assert
+    const expected = {
+      fieldA: null,
+      fieldB: 'some value',
+    };
+    expect(currentFieldValues).toEqual(expected);
   });
 });

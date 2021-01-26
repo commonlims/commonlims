@@ -43,7 +43,8 @@ class WorkBatchDetailsSerializer(serializers.Serializer):
 
     def get_tabs(self, obj):
         return [
-            {'title': 'Move samples', 'active': True, 'id': 1},
-            {'title': 'Files', 'active': False, 'id': 2},
-            {'title': 'Comments', 'active': False, 'id': 3},
+            {'title': 'Move samples', 'active': True, 'id': 1, 'key': 'transition'},
+            {'title': 'Files', 'active': False, 'id': 2, 'key': 'files'},
+            {'title': 'Details', 'active': False, 'id': 3, 'key': 'details'},
+            {'title': 'Comments', 'active': False, 'id': 4, 'key': 'comments'},
         ]

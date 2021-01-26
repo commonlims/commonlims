@@ -12,7 +12,6 @@ import workDefinitionDetailsEntry, {
 } from 'app/redux/reducers/workDefinitionDetailsEntry';
 import {WORK_BATCH} from 'app/redux/reducers/workBatchEntry';
 import {WORK_BATCH_DETAILS} from 'app/redux/reducers/workBatchDetailsEntry';
-import {EVENTS} from 'app/redux/reducers/event';
 
 function WorkBatchDetailsWrapper(props) {
   // class component WorkBatchDetails is here wrapped within a
@@ -115,7 +114,7 @@ export class WorkbatchDetails extends React.Component {
   };
 
   initCurrentFieldValues = () => {
-    let {entry: workbatch} = this.props.workBatchDetailsEntry;
+    let {resource: workbatch} = this.props.workBatchDetailsEntry;
     let propertyNames = Object.keys(workbatch.properties);
     let currentFieldValues = propertyNames.reduce((previous, attr) => {
       return {
@@ -159,7 +158,7 @@ const mapDispatchToProps = (dispatch) => ({
   sendButtonClickedEvent: (org, buttonEvent) => {
     const urlTemplate = '/api/0/organizations/{org}/events/';
     const sendButtonClickedEventRoutine = entryActionCreators.acCreate(
-      EVENTS,
+      'EVENT',
       urlTemplate
     );
     return dispatch(sendButtonClickedEventRoutine(org, buttonEvent));

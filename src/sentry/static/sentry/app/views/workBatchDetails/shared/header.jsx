@@ -27,7 +27,7 @@ const WorkBatchHeader = createReactClass({
 
   buildLinks() {
     return this.props.workBatch.tabs.map((tab) => {
-      const active = tab.title == this.props.selectedTab.title;
+      const active = tab.title === this.props.selectedTab.title;
       return (
         <li className={active ? 'active' : ''} key={tab.title}>
           <a onClick={() => this.props.tabSelected(tab)}>{tab.title}</a>
