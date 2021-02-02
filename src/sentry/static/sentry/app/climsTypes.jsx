@@ -34,6 +34,7 @@ export const Organization = PropTypes.shape({
 export const WorkBatch = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  cls_full_name: PropTypes.string.isRequired,
   processDefinitionKey: PropTypes.string,
   created_at: PropTypes.string.isRequired, // TODO: Map to date
   updated_at: PropTypes.string.isRequired,

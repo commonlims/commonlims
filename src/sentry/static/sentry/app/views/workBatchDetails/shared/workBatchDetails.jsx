@@ -7,6 +7,9 @@ import LoadingIndicator from 'app/components/loadingIndicator';
 import ClimsTypes from 'app/climsTypes';
 import withOrganization from 'app/utils/withOrganization';
 import {workBatchDetailsActions} from 'app/redux/actions/workBatchDetailsEntry';
+import {workDefinitionDetailsActions} from 'app/redux/actions/workDefinitionDetailsEntry';
+import WorkBatchDetailsFields from 'app/views/workBatchDetails/shared/workBatchFields';
+
 import WorkBatchDetailsFiles from 'app/views/workBatchDetails/shared/workBatchFiles';
 import WorkBatchDetailsActivity from 'app/views/workBatchDetails/shared/workBatchActivity';
 import SampleTransitioner from 'app/components/sampleTransitioner/sampleTransitioner';
@@ -40,12 +43,18 @@ class WorkBatchDetails extends React.Component {
   }
 
   renderTabComponent() {
-    if (this.state.selectedTab.type == 'Transition') {
-      return <SampleTransitioner workBatch={this.props.workBatch} />;
-    } else if (this.state.selectedTab.type == 'Files') {
-      return <WorkBatchDetailsFiles workBatch={this.props.workBatch} />;
-    } else if (this.state.selectedTab.type == 'Comments') {
-      return <WorkBatchDetailsActivity workBatch={this.props.workBatch} />;
+    // TODO: Re-activate these components. They get run-time error now.
+    if (this.state.selectedTab.key === 'transition') {
+      // return <SampleTransitioner workBatch={this.props.workBatch} />;
+      return null;
+    } else if (this.state.selectedTab.key === 'files') {
+      // return <WorkBatchDetailsFiles workBatch={this.props.workBatch} />;
+      return null;
+    } else if (this.state.selectedTab.key === 'details') {
+      return <WorkBatchDetailsFields />;
+    } else if (this.state.selectedTab.key === 'comments') {
+      // return <WorkBatchDetailsActivity workBatch={this.props.workBatch} />;
+      return null;
     }
   }
 
@@ -56,6 +65,7 @@ class WorkBatchDetails extends React.Component {
           <WorkBatchHeader
             selectedTab={this.state.selectedTab}
             workBatch={this.props.workBatch}
+            workDefinition={this.props.workDefinition}
             tabSelected={(tab) => this.setState({selectedTab: tab})}
           />
           <div className="work-batch-details-container">
@@ -75,8 +85,16 @@ class WorkBatchDetailsContainer extends React.Component {
   componentDidMount() {
     const org = this.props.organization.slug;
     const workBatchId = this.props.routeParams.workBatchId;
-    this.props.getWorkBatchDetails(org, workBatchId);
+    this.props
+      .getWorkBatchDetails(org, workBatchId)
+      .then(this.fetchWorkDefinitionDetails);
   }
+
+  fetchWorkDefinitionDetails = () => {
+    const org = this.props.organization;
+    this.props.getWorkDefinitionDetails(org, this.props.workBatch.cls_full_name);
+  };
+
   render() {
     if (this.props.loading || !this.props.workBatch) {
       return <LoadingIndicator />;
@@ -124,10 +142,13 @@ WorkBatchDetailsContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   workBatch: state.workBatchDetailsEntry.resource,
+  workDefinition: state.workDefinitionDetailsEntry.resource,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getWorkBatchDetails: (org, id) => dispatch(workBatchDetailsActions.get(org, id)),
+  getWorkDefinitionDetails: (org, id) =>
+    dispatch(workDefinitionDetailsActions.get(org, id)),
 });
 
 export default withOrganization(

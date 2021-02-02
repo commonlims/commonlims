@@ -17,6 +17,12 @@ import LinkWithConfirmation from 'app/components/linkWithConfirmation';
 import ResolveActions from 'app/components/actions/resolve';
 import SentryTypes from 'app/sentryTypes';
 import space from 'app/styles/space';
+import withOrganization from 'app/utils/withOrganization';
+import {connect} from 'react-redux';
+import LoadingIndicator from 'app/components/loadingIndicator';
+import {eventActions} from 'app/redux/actions/event';
+import {workBatchDetailsActions} from 'app/redux/actions/workBatchDetailsEntry';
+import merge from 'lodash/merge';
 
 class DeleteActions extends React.Component {
   static propTypes = {
@@ -92,6 +98,16 @@ class DeleteActions extends React.Component {
   }
 }
 
+function WorkBatchActionsWrapper(props) {
+  // WorkBatchActionsComponent is here wrapped within a function component,
+  // in order to getUpdatedWorkbatch into test
+  const extendedProps = {
+    ...props,
+    getUpdatedWorkBatch,
+  };
+  return <WorkBatchActionsComponent {...extendedProps} />;
+}
+
 const WorkBatchActionsComponent = createReactClass({
   displayName: 'WorkBatchActions',
 
@@ -99,6 +115,9 @@ const WorkBatchActionsComponent = createReactClass({
     group: PropTypes.shape({
       id: PropTypes.number.isRequired,
     }),
+    sendButtonClickedEvent: PropTypes.func.isRequired,
+    getUpdatedWorkBatch: PropTypes.func.isRequired,
+    workDefinition: PropTypes.object.isRequired,
   },
 
   mixins: [ApiMixin, OrganizationState],
@@ -199,6 +218,11 @@ const WorkBatchActionsComponent = createReactClass({
   render() {
     const {group} = this.props;
     const org = this.getOrganization();
+    let {workDefinition} = this.props;
+    if (!workDefinition) {
+      return <LoadingIndicator />;
+    }
+    let {buttons: buttonDefinitions} = workDefinition;
 
     let bookmarkClassName = 'group-bookmark btn btn-default btn-sm';
     if (group.isBookmarked) {
@@ -230,9 +254,76 @@ const WorkBatchActionsComponent = createReactClass({
           onDelete={this.onDelete}
           onDiscard={this.onDiscard}
         />
+        <p></p>
+        <div>
+          {buttonDefinitions.map((entry) => {
+            const buttonClick = () => {
+              this.sendButtonClickedEvent(entry.event, group.id);
+            };
+            return (
+              <button
+                className="btn btn-sm btn-default"
+                key={'button-' + entry.event}
+                onClick={buttonClick}
+                name={entry.event}
+              >
+                {entry.caption}
+              </button>
+            );
+          })}
+        </div>
       </div>
     );
   },
+
+  sendButtonClickedEvent(event, workBatchId) {
+    const buttonEvent = {
+      event,
+      work_batch_id: workBatchId,
+    };
+    let {currentFieldValues} = this.props;
+    let updatedWorkbatch = this.props.getUpdatedWorkBatch(
+      this.props.workBatch,
+      currentFieldValues
+    );
+    this.props.updateWorkBatchDetails(this.props.organization, updatedWorkbatch);
+    this.props.sendButtonClickedEvent(this.props.organization, buttonEvent);
+  },
 });
 
-export default WorkBatchActionsComponent;
+export function getUpdatedWorkBatch(fetched_workbatch, currentFieldValues) {
+  let properties = Object.keys(currentFieldValues);
+  let updatedProperties = properties.reduce((previous, current) => {
+    let entry = {
+      name: current,
+      value: currentFieldValues[current] ? currentFieldValues[current] : null,
+    };
+    return {
+      ...previous,
+      [current]: entry,
+    };
+  }, {});
+  let mergedProperties = merge({}, fetched_workbatch.properties, updatedProperties);
+  return {
+    ...fetched_workbatch,
+    properties: mergedProperties,
+  };
+}
+
+const mapStateToProps = (state) => ({
+  workBatch: state.workBatchDetailsEntry.resource,
+  currentFieldValues: state.workBatchDetailsEntry.localChanges,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  sendButtonClickedEvent: (org, buttonEvent) => {
+    return dispatch(eventActions.create(org, buttonEvent));
+  },
+  updateWorkBatchDetails: (org, workBatch) => {
+    return dispatch(workBatchDetailsActions.update(org, workBatch));
+  },
+});
+
+export default withOrganization(
+  connect(mapStateToProps, mapDispatchToProps)(WorkBatchActionsWrapper)
+);

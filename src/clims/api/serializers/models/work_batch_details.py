@@ -10,6 +10,7 @@ class WorkBatchDetailsSerializer(serializers.Serializer):
     properties = DictField(child=ExtensiblePropertySerializer(), allow_null=True)
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
+    cls_full_name = serializers.CharField(read_only=True)
 
     # These are still mocked
     transitions = serializers.SerializerMethodField(read_only=True)
@@ -42,7 +43,8 @@ class WorkBatchDetailsSerializer(serializers.Serializer):
 
     def get_tabs(self, obj):
         return [
-            {'title': 'Move samples', 'active': True, 'id': 1},
-            {'title': 'Files', 'active': False, 'id': 2},
-            {'title': 'Comments', 'active': False, 'id': 3},
+            {'title': 'Move samples', 'active': True, 'id': 1, 'key': 'transition'},
+            {'title': 'Files', 'active': False, 'id': 2, 'key': 'files'},
+            {'title': 'Details', 'active': False, 'id': 3, 'key': 'details'},
+            {'title': 'Comments', 'active': False, 'id': 4, 'key': 'comments'},
         ]

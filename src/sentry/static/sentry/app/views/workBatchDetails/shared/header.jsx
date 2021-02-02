@@ -15,6 +15,7 @@ const WorkBatchHeader = createReactClass({
 
   propTypes: {
     workBatch: PropTypes.object.isRequired,
+    workDefinition: PropTypes.object.isRequired,
     tabSelected: PropTypes.func.isRequired,
   },
 
@@ -27,7 +28,7 @@ const WorkBatchHeader = createReactClass({
 
   buildLinks() {
     return this.props.workBatch.tabs.map((tab) => {
-      const active = tab.title == this.props.selectedTab.title;
+      const active = tab.title === this.props.selectedTab.title;
       return (
         <li className={active ? 'active' : ''} key={tab.title}>
           <a onClick={() => this.props.tabSelected(tab)}>{tab.title}</a>
@@ -71,7 +72,7 @@ const WorkBatchHeader = createReactClass({
           </div>
         </div>
         <WorkBatchSeenBy group={workBatch} />
-        <WorkBatchActions group={workBatch} />
+        <WorkBatchActions group={workBatch} workDefinition={this.props.workDefinition} />
         <NavTabs>{this.buildLinks()}</NavTabs>
       </div>
     );

@@ -31,7 +31,8 @@ const acUpdate = (resource, urlTemplate) => {
     dispatch(acUpdateRequest(resource)(data));
 
     let url = urlTemplate.replace('{org}', org.slug);
-    url = url.replace('{id}', data['id'] + '/');
+    url = url.replace('{id}', data['id']);
+    url = url.slice(-1) === '/' ? url : url + '/';
     // use client that sentry is using
     const api = new Client(); // TODO: use axios (must send same headers as Client does).
     api.request(url, {
@@ -79,7 +80,8 @@ const acGet = (resource, urlTemplate) => {
   return (org, id) => (dispatch) => {
     dispatch(acGetRequest(resource)(id));
     let url = urlTemplate.replace('{org}', org.slug);
-    url = url.replace('{id}', id + '/');
+    url = url.replace('{id}', id);
+    url = url.slice(-1) === '/' ? url : url + '/';
     return axios
       .get(url)
       .then((res) => dispatch(acGetSuccess(resource)(res.data)))
